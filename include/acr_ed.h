@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Header: include/acr_ed.h
 //
@@ -80,7 +80,7 @@ namespace acr_ed { // update-hdr
     // Bheap -> dmmeta.bheap
     // Thash -> dmmeta.thash
     // Inlary -> dmmeta.inlary
-    void InsertFieldExtras(strptr field, strptr arg, strptr reftype);
+    void InsertFieldExtras(strptr field, algo::strptr arg, strptr reftype);
 
     // Trivial function to make a field indexed by a hash.
     // This is equivalent to creating an FDb.ind_<name>
@@ -100,9 +100,19 @@ namespace acr_ed { // update-hdr
 
     // Request that amc runs after the current script
     void NeedAmc();
+
+    // Retrieve BASE type for CTYPE
     acr_ed::FCtype *Basetype(acr_ed::FCtype &ctype);
-    acr_ed::FField *PkeyField(strptr ctype);
+
+    // Retrieve pkey field for ctype CTYPE
+    // or throw an exception if CTYPE has no fields
+    acr_ed::FField *PkeyField(algo::strptr pkey);
+
+    // Convert string to lower_under format: SomeString -> some_String
     tempstr ToLowerUnder(strptr str);
+
+    // Convert string to CamelCase format: some_string -> SomeString
+    tempstr ToCamelCase(strptr str);
     void InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader);
     void BuildTest();
     void ScriptEditFile(algo_lib::Replscope &R, strptr fname);

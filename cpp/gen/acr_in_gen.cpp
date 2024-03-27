@@ -72,20 +72,33 @@ const char *acr_in_help =
 } // namespace acr_in
 namespace acr_in { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:acr_in.FDb._db.InitReflection
     static void          InitReflection();
+    // func:acr_in.FDb.finput.InputMaybe
     static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.substr.InputMaybe
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.dispsig.InputMaybe
     static bool          dispsig_InputMaybe(dmmeta::Dispsig &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:acr_in.FDb.targdep.InputMaybe
     static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:acr_in.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:acr_in.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:acr_in...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -110,8 +123,8 @@ algo::Smallstr16 acr_in::ns_Get(acr_in::FCtype& ctype) {
 }
 
 // --- acr_in.FCtype.name.Get
-algo::Smallstr50 acr_in::name_Get(acr_in::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 acr_in::name_Get(acr_in::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -289,8 +302,9 @@ void acr_in::FCtype_Uninit(acr_in::FCtype& ctype) {
 }
 
 // --- acr_in.trace..Print
-// print string representation of acr_in::trace to string LHS, no header -- cprint:acr_in.trace.String
-void acr_in::trace_Print(acr_in::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_in.trace.String  printfmt:Tuple
+void acr_in::trace_Print(acr_in::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_in.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -686,7 +700,7 @@ static void acr_in::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'bc6164542bba76ea61fabd74b05f469ac7b8303b'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_in.Input'  signature:'91f2cff6e44f058205924e8f8dcbef22ca167650'");
 }
 
 // --- acr_in.FDb._db.StaticCheck
@@ -1302,7 +1316,7 @@ bool acr_in::ctype_XrefMaybe(acr_in::FCtype &row) {
 // --- acr_in.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_in::FCtype* acr_in::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_in::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_in::FCtype* ret=NULL;
     do {
@@ -1328,7 +1342,7 @@ bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_in::FCtype* ret = *prev;
@@ -1354,7 +1368,7 @@ bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ctype_Remove(acr_in::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1391,7 +1405,7 @@ void acr_in::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_in::FCtype &row        = *elem;
                 acr_in::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3588,8 +3602,8 @@ void acr_in::field_CopyIn(acr_in::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr_in.FField.ctype.Get
-algo::Smallstr50 acr_in::ctype_Get(acr_in::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 acr_in::ctype_Get(acr_in::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -4353,8 +4367,9 @@ bool acr_in::FieldId_ReadStrptrMaybe(acr_in::FieldId &parent, algo::strptr in_st
 }
 
 // --- acr_in.FieldId..Print
-// print string representation of acr_in::FieldId to string LHS, no header -- cprint:acr_in.FieldId.String
-void acr_in::FieldId_Print(acr_in::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_in.FieldId.String  printfmt:Raw
+void acr_in::FieldId_Print(acr_in::FieldId& row, algo::cstring& str) {
     acr_in::value_Print(row, str);
 }
 
@@ -4535,8 +4550,9 @@ bool acr_in::TableId_ReadStrptrMaybe(acr_in::TableId &parent, algo::strptr in_st
 }
 
 // --- acr_in.TableId..Print
-// print string representation of acr_in::TableId to string LHS, no header -- cprint:acr_in.TableId.String
-void acr_in::TableId_Print(acr_in::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_in.TableId.String  printfmt:Raw
+void acr_in::TableId_Print(acr_in::TableId& row, algo::cstring& str) {
     acr_in::value_Print(row, str);
 }
 

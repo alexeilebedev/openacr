@@ -1,0 +1,3 @@
+dmmeta.fastinstr  fastinstr:field  comment:Field
+dmmeta.fastinstr  fastinstr:length  comment:"Length of group or byteVector"
+dmmeta.fastinstr  fastinstr:mantissa  comment:"Individual operator for decimal mantissa"

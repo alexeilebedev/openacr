@@ -1,0 +1,66 @@
+variables:
+  #  These variables are to suppress "tell me who you are" GIT error
+  GIT_AUTHOR_NAME: "sandbox"
+  GIT_COMMITTER_NAME: "sandbox"
+  EMAIL: "sandbox@algo"
+
+cache:
+  paths:
+    - temp/cppcheck.Linux.g++
+
+stages:
+  - build
+  - test
+
+# skip pipeline for master, and for temporary branches not eligible to be merged
+.excludes: &excludes
+  except:
+    - master
+    - /^tmp.*/
+
+before_script:
+  - 'echo "${CI_JOB_STAGE}:${CI_JOB_NAME} host:$(hostname) pwd:$(pwd) user:$(whoami) date:$(date)"'
+  - export PATH=$PATH:bin
+
+build:
+  stage: build
+  script:
+    - bin/ai
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 week
+  <<: *excludes
+
+normalize:
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
+  artifacts:
+    when: on_failure
+    paths:
+      - temp/*.log
+    expire_in: 1 week
+  <<: *excludes
+
+comp:
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: temp/atf_comp/cov.d/cobertura.xml
+    when: on_failure
+    paths:
+      - temp/*.log
+    expire_in: 1 week
+  <<: *excludes
+
+memcheck:
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
+  <<: *excludes
+

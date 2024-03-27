@@ -553,7 +553,7 @@ void lib_json::root_node_Cleanup(lib_json::FParser& parent) {
 // quotation mark, reverse solidus, and the control characters (U+0000
 // through U+001F)."
 //    -- this says that solidus need not be escaped when printing -- only when parsing!
-static void JsonSerializeString(strptr str, cstring &lhs) {
+void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &lhs) {
     lhs << '"';
     frep_(i,elems_N(str)) {
         switch (str[i]) {

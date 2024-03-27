@@ -80,17 +80,22 @@ const char *atf_cmdline_help =
 } // namespace atf_cmdline
 namespace atf_cmdline { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_cmdline.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:atf_cmdline.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_cmdline.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_cmdline...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_cmdline.trace..Print
-// print string representation of atf_cmdline::trace to string LHS, no header -- cprint:atf_cmdline.trace.String
-void atf_cmdline::trace_Print(atf_cmdline::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cmdline.trace.String  printfmt:Tuple
+void atf_cmdline::trace_Print(atf_cmdline::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_cmdline.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -479,8 +484,9 @@ bool atf_cmdline::FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::st
 }
 
 // --- atf_cmdline.FieldId..Print
-// print string representation of atf_cmdline::FieldId to string LHS, no header -- cprint:atf_cmdline.FieldId.String
-void atf_cmdline::FieldId_Print(atf_cmdline::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cmdline.FieldId.String  printfmt:Raw
+void atf_cmdline::FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) {
     atf_cmdline::value_Print(row, str);
 }
 

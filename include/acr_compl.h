@@ -82,7 +82,7 @@ namespace acr_compl { // update-hdr
     // -------------------------------------------------------------------
     // cpp/acr_compl/shell.cpp
     //
-    void Main_SplitLineToArgv();
+    bool Main_SplitLineToArgv();
 
     //
     // Perform single and double quote shell expansion

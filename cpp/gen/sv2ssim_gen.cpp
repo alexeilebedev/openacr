@@ -75,13 +75,19 @@ const char *sv2ssim_help =
 } // namespace sv2ssim
 namespace sv2ssim { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:sv2ssim.FDb._db.InitReflection
     static void          InitReflection();
+    // func:sv2ssim.FDb.svtype.InputMaybe
     static bool          svtype_InputMaybe(dmmeta::Svtype &elem) __attribute__((nothrow));
+    // func:sv2ssim.FDb.bltin.InputMaybe
     static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:sv2ssim.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:sv2ssim.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:sv2ssim...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -112,8 +118,9 @@ void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& bltin) {
 }
 
 // --- sv2ssim.trace..Print
-// print string representation of sv2ssim::trace to string LHS, no header -- cprint:sv2ssim.trace.String
-void sv2ssim::trace_Print(sv2ssim::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sv2ssim.trace.String  printfmt:Tuple
+void sv2ssim::trace_Print(sv2ssim::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "sv2ssim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1020,7 +1027,7 @@ bool sv2ssim::bltin_XrefMaybe(sv2ssim::FBltin &row) {
 // --- sv2ssim.FDb.ind_bltin.Find
 // Find row by key. Return NULL if not found.
 sv2ssim::FBltin* sv2ssim::ind_bltin_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
     sv2ssim::FBltin* *e = &_db.ind_bltin_buckets_elems[index];
     sv2ssim::FBltin* ret=NULL;
     do {
@@ -1063,7 +1070,7 @@ bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
     ind_bltin_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_bltin_next == (sv2ssim::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
         sv2ssim::FBltin* *prev = &_db.ind_bltin_buckets_elems[index];
         do {
             sv2ssim::FBltin* ret = *prev;
@@ -1089,7 +1096,7 @@ bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) {
     if (LIKELY(row.ind_bltin_next != (sv2ssim::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
         sv2ssim::FBltin* *prev = &_db.ind_bltin_buckets_elems[index]; // addr of pointer to current element
         while (sv2ssim::FBltin *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1126,7 +1133,7 @@ void sv2ssim::ind_bltin_Reserve(int n) {
             while (elem) {
                 sv2ssim::FBltin &row        = *elem;
                 sv2ssim::FBltin* next       = row.ind_bltin_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_bltin_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1261,25 +1268,67 @@ void sv2ssim::FField_Init(sv2ssim::FField& field) {
 }
 
 // --- sv2ssim.FField..ReadFieldMaybe
-bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField &parent, algo::strptr field, algo::strptr strval) {
+bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     sv2ssim::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case sv2ssim_FieldId_name: retval = algo::cstring_ReadStrptrMaybe(parent.name, strval); break;
-        case sv2ssim_FieldId_ctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ctype, strval); break;
-        case sv2ssim_FieldId_maxwid: retval = i32_ReadStrptrMaybe(parent.maxwid, strval); break;
-        case sv2ssim_FieldId_minval: retval = double_ReadStrptrMaybe(parent.minval, strval); break;
-        case sv2ssim_FieldId_maxval: retval = double_ReadStrptrMaybe(parent.maxval, strval); break;
-        case sv2ssim_FieldId_minwid_fix1: retval = i32_ReadStrptrMaybe(parent.minwid_fix1, strval); break;
-        case sv2ssim_FieldId_maxwid_fix1: retval = i32_ReadStrptrMaybe(parent.maxwid_fix1, strval); break;
-        case sv2ssim_FieldId_minwid_fix2: retval = i32_ReadStrptrMaybe(parent.minwid_fix2, strval); break;
-        case sv2ssim_FieldId_maxwid_fix2: retval = i32_ReadStrptrMaybe(parent.maxwid_fix2, strval); break;
-        case sv2ssim_FieldId_couldbe_int: retval = bool_ReadStrptrMaybe(parent.couldbe_int, strval); break;
-        case sv2ssim_FieldId_couldbe_bool: retval = bool_ReadStrptrMaybe(parent.couldbe_bool, strval); break;
-        case sv2ssim_FieldId_couldbe_fixwid: retval = bool_ReadStrptrMaybe(parent.couldbe_fixwid, strval); break;
-        case sv2ssim_FieldId_couldbe_double: retval = bool_ReadStrptrMaybe(parent.couldbe_double, strval); break;
-        case sv2ssim_FieldId_rowid: retval = i32_ReadStrptrMaybe(parent.rowid, strval); break;
+        case sv2ssim_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+            break;
+        }
+        case sv2ssim_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+            break;
+        }
+        case sv2ssim_FieldId_maxwid: {
+            retval = i32_ReadStrptrMaybe(parent.maxwid, strval);
+            break;
+        }
+        case sv2ssim_FieldId_minval: {
+            retval = double_ReadStrptrMaybe(parent.minval, strval);
+            break;
+        }
+        case sv2ssim_FieldId_maxval: {
+            retval = double_ReadStrptrMaybe(parent.maxval, strval);
+            break;
+        }
+        case sv2ssim_FieldId_minwid_fix1: {
+            retval = i32_ReadStrptrMaybe(parent.minwid_fix1, strval);
+            break;
+        }
+        case sv2ssim_FieldId_maxwid_fix1: {
+            retval = i32_ReadStrptrMaybe(parent.maxwid_fix1, strval);
+            break;
+        }
+        case sv2ssim_FieldId_minwid_fix2: {
+            retval = i32_ReadStrptrMaybe(parent.minwid_fix2, strval);
+            break;
+        }
+        case sv2ssim_FieldId_maxwid_fix2: {
+            retval = i32_ReadStrptrMaybe(parent.maxwid_fix2, strval);
+            break;
+        }
+        case sv2ssim_FieldId_couldbe_int: {
+            retval = bool_ReadStrptrMaybe(parent.couldbe_int, strval);
+            break;
+        }
+        case sv2ssim_FieldId_couldbe_bool: {
+            retval = bool_ReadStrptrMaybe(parent.couldbe_bool, strval);
+            break;
+        }
+        case sv2ssim_FieldId_couldbe_fixwid: {
+            retval = bool_ReadStrptrMaybe(parent.couldbe_fixwid, strval);
+            break;
+        }
+        case sv2ssim_FieldId_couldbe_double: {
+            retval = bool_ReadStrptrMaybe(parent.couldbe_double, strval);
+            break;
+        }
+        case sv2ssim_FieldId_rowid: {
+            retval = i32_ReadStrptrMaybe(parent.rowid, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1308,15 +1357,16 @@ void sv2ssim::FField_Uninit(sv2ssim::FField& field) {
 }
 
 // --- sv2ssim.FField..Print
-// print string representation of sv2ssim::FField to string LHS, no header -- cprint:sv2ssim.FField.String
-void sv2ssim::FField_Print(sv2ssim::FField & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sv2ssim.FField.String  printfmt:Tuple
+void sv2ssim::FField_Print(sv2ssim::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "sv2ssim.FField";
 
     algo::cstring_Print(row.name, temp);
     PrintAttrSpaceReset(str,"name", temp);
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     i32_Print(row.maxwid, temp);
@@ -1526,8 +1576,9 @@ bool sv2ssim::FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_
 }
 
 // --- sv2ssim.FieldId..Print
-// print string representation of sv2ssim::FieldId to string LHS, no header -- cprint:sv2ssim.FieldId.String
-void sv2ssim::FieldId_Print(sv2ssim::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sv2ssim.FieldId.String  printfmt:Raw
+void sv2ssim::FieldId_Print(sv2ssim::FieldId& row, algo::cstring& str) {
     sv2ssim::value_Print(row, str);
 }
 
@@ -1620,8 +1671,9 @@ bool sv2ssim::TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_
 }
 
 // --- sv2ssim.TableId..Print
-// print string representation of sv2ssim::TableId to string LHS, no header -- cprint:sv2ssim.TableId.String
-void sv2ssim::TableId_Print(sv2ssim::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sv2ssim.TableId.String  printfmt:Raw
+void sv2ssim::TableId_Print(sv2ssim::TableId& row, algo::cstring& str) {
     sv2ssim::value_Print(row, str);
 }
 

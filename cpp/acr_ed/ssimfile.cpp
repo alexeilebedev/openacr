@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/ssimfile.cpp -- Create, delete, rename ssim file
 //
@@ -52,6 +52,29 @@ void acr_ed::edaction_Create_Ssimfile() {
         field_comment.arg = "algo.Comment";
         acr_ed::_db.out_ssim << field_comment << eol;
 
+        // register ssimfile
+        {
+            tempstr fname(SsimFname("data", acr_ed::_db.cmdline.ssimfile));
+            dev::Gitfile gitfile;
+            gitfile.gitfile = fname;
+            acr_ed::_db.out_ssim << gitfile << eol;
+            acr_ed::_db.script << "touch "<<fname<<eol;
+            acr_ed::_db.script << "git add "<<fname<<eol;
+        }
+
+        // create readme
+        {
+            dev::Gitfile gitfile;
+            gitfile.gitfile = tempstr()<<"txt/ssimdb/"<<ns_Get(ssimfile)<<"/"<<name_Get(ssimfile)<<".md";
+            acr_ed::_db.out_ssim << gitfile << eol;
+            dev::Readme readme;
+            readme.gitfile = gitfile.gitfile;
+            acr_ed::_db.out_ssim << readme << eol;
+            acr_ed::_db.script << "mkdir -p "<<GetDirName(readme.gitfile)<<eol;
+            acr_ed::_db.script << "touch "<<gitfile.gitfile<<eol;
+            acr_ed::_db.script << "git add "<<gitfile.gitfile<<eol;
+        }
+
         dmmeta::Cfmt cfmt(tempstr() << acr_ed::_db.cmdline.ctype << "." << dmmeta_Strfmt_strfmt_String
                           , dmmeta_Printfmt_printfmt_Tuple
                           , true
@@ -60,12 +83,6 @@ void acr_ed::edaction_Create_Ssimfile() {
                           , true // genop
                           , algo::Comment());
         acr_ed::_db.out_ssim << cfmt << eol;
-
-        // register file
-        tempstr fname(SsimFname("data", acr_ed::_db.cmdline.ssimfile));
-        acr_ed::_db.script << "touch "<<fname<<eol;
-        acr_ed::_db.script << "git add "<<fname<<eol;
-        acr_ed::_db.script << "update-gitfile"<<eol;
     }
 }
 
@@ -77,32 +94,76 @@ void acr_ed::edaction_Rename_Ssimfile() {
           <<Keyval("rename",acr_ed::_db.cmdline.rename));
     algo_lib::Replscope R;
     acr_ed::FSsimfile &ssimfile = acr_ed::ind_ssimfile_FindX(acr_ed::_db.cmdline.ssimfile);
-    acr_ed::FCtype &ctype = *ssimfile.p_ctype;
+
+    dmmeta::Ssimfile newssimfile;
+    newssimfile.ssimfile=acr_ed::_db.cmdline.rename;
+    newssimfile.ctype=ssimfile.ctype;
+    acr_ed::ind_ns_FindX(ns_Get(newssimfile));// produce a useful error message if fail
 
     Set(R, "$oldkey", acr_ed::_db.cmdline.ssimfile);
     Set(R, "$newkey", acr_ed::_db.cmdline.rename);
 
-    Set(R, "$olddir", GetNs(acr_ed::_db.cmdline.ssimfile));
-    Set(R, "$newdir", GetNs(acr_ed::_db.cmdline.rename));
+    Set(R, "$oldname", name_Get(ssimfile));
+    Set(R, "$newname", name_Get(newssimfile));
 
-    Set(R, "$oldname", StripNs("", acr_ed::_db.cmdline.ssimfile));
-    Set(R, "$newname", StripNs("", acr_ed::_db.cmdline.rename));
+    Set(R, "$oldfname", SsimFname("data", acr_ed::_db.cmdline.ssimfile));
+    Set(R, "$newfname", SsimFname("data", acr_ed::_db.cmdline.rename));
 
-    Set(R, "$oldfname", "data/$olddir/$oldname.ssim");
-    Set(R, "$newfname", "data/$newdir/$newname.ssim");
+    Set(R, "$oldctype", ssimfile.ctype);
 
-    Set(R, "$ctype", ssimfile.ctype);
-
-    // nothing more to do...
-    Ins(&R, acr_ed::_db.script, "bin/acr ssimfile:$oldkey -rename $newkey  -write");
+    Ins(&R, acr_ed::_db.script, "bin/acr ssimfile:$oldkey -rename:$newkey -write");
     Ins(&R, acr_ed::_db.script, "git mv $oldfname $newfname");
-    Ins(&R, acr_ed::_db.script, "sed -i 's/^$oldkey  /$newkey  /' $newfname");    // modify contents of new ssimfile...
-    // update key field
-    if (c_field_N(ctype)>0 && StripNs("", acr_ed::_db.cmdline.ssimfile) == name_Get(*c_field_Find(ctype,0))) {
-        Ins(&R, acr_ed::_db.script, "acr field:$ctype.$oldname  -rename $ctype.$newname  -write");
+    Ins(&R, acr_ed::_db.script, "bin/acr gitfile:$oldfname -rename:$newfname -write");
+
+    // update primary key field if its name is the same as ssimfile name
+    if (c_field_N(*ssimfile.p_ctype)>0 && ns_Get(ssimfile) == name_Get(*c_field_Find(*ssimfile.p_ctype,0))) {
+        command::acr acr;
+        acr.query = tempstr() << "dmmeta.field:"<<ssimfile.ctype<<"."<<name_Get(ssimfile);
+        acr.rename = tempstr() << ssimfile.ctype<<"."<<name_Get(newssimfile);
+        acr.write=true;
+        _db.script << acr_ToCmdline(acr) << eol;
     }
-    Ins(&R, acr_ed::_db.script, "bin/update-gitfile");
-    Ins(&R, acr_ed::_db.script, "acr -check $newkey.% -print:N");    // check result for consistency
+    // rename ctype if it was named consistently with the ssimfile
+    tempstr oldctype = tempstr()<<ns_Get(ssimfile)<<"."<<ToCamelCase(name_Get(ssimfile));
+    if (oldctype == ssimfile.ctype) {
+        tempstr newctype = tempstr()<<ns_Get(newssimfile)<<"."<<ToCamelCase(name_Get(newssimfile));
+        {
+            command::acr acr;
+            acr.query = tempstr() << "dmmeta.ctype:"<<ssimfile.ctype;
+            acr.rename = tempstr() << newctype;
+            acr.write=true;
+            _db.script << acr_ToCmdline(acr) << eol;
+        }
+        // also rename any derived type
+        ind_beg(_db_ctype_curs,ctype,_db) {
+            if (Basetype(ctype) == ssimfile.p_ctype && name_Get(ctype) == (tempstr()<<"F"<<ToCamelCase(name_Get(ssimfile)))) {
+                command::acr acr;
+                acr.query  = tempstr()<< "dmmeta.ctype:"<<ctype.ctype;
+                acr.rename = tempstr()<<ns_Get(ctype)<<".F"<<ToCamelCase(name_Get(newssimfile));
+                acr.write=true;
+                _db.script << acr_ToCmdline(acr) << eol;
+            }
+        }ind_end;
+        // also rename any field referring to derived type
+        ind_beg(_db_field_curs,field,_db) {
+            if (Basetype(*field.p_arg) == ssimfile.p_ctype && name_Get(field) == name_Get(ssimfile)) {
+                command::acr acr;
+                acr.query  = tempstr()<< "dmmeta.field:"<<field.field;
+                acr.rename = tempstr()<<ctype_Get(field)<<"."<<name_Get(newssimfile);
+                acr.write=true;
+                _db.script << acr_ToCmdline(acr) << eol;
+            }
+        }ind_end;
+        // todo: sed-replacement of "ns::F<oldname>" to "ns::F<newname>" in
+        // all source files?
+    }
+    {
+        command::acr acr;
+        acr.query = tempstr() << acr_ed::_db.cmdline.rename<<".%";
+        acr.print=false;
+        acr.check=true;
+        _db.script << acr_ToCmdline(acr) << eol;
+    }
     acr_ed::NeedAmc();
 }
 
@@ -111,14 +172,12 @@ void acr_ed::edaction_Rename_Ssimfile() {
 void acr_ed::edaction_Delete_Ssimfile() {
     prlog("acr_ed.delete_ssimfile  ssimfile:"<<acr_ed::_db.cmdline.ssimfile);
     acr_ed::FSsimfile &ssimfile = acr_ed::ind_ssimfile_FindX(acr_ed::_db.cmdline.ssimfile);
-    acr_ed::FCtype &ctype = *ssimfile.p_ctype;
-    algo_lib::Replscope R;
-    Set(R, "$ctype", ctype.ctype);
-    Set(R, "$ssimfile", ssimfile.ssimfile);
-    Set(R, "$ssimfname", SsimFname("data", ssimfile.ssimfile));
-
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:$ctype -del -write");// kills ssimfile record
-    Ins(&R, acr_ed::_db.script, "bin/acr gitfile:$ssimfname -del -write");
-    Ins(&R, acr_ed::_db.script, "git rm $ssimfname");
+    command::acr acr;
+    acr.query = tempstr()<<"ctype:"<<ssimfile.ctype;
+    acr.del=true;
+    acr.write=true;
+    acr.g=true;// git updates
+    acr.x=true;// use ssimreq
+    acr_ed::_db.script<< acr_ToCmdline(acr)<<eol;
     acr_ed::NeedAmc();
 }

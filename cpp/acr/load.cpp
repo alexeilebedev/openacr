@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -58,8 +58,10 @@ void acr::LoadRecords(acr::FCtype &ctype) {
 // Return default read mode as specified on the command line
 acr::ReadMode acr::DefaultReadMode() {
     acr::ReadMode read_mode;
-    read_mode=acr_ReadMode_acr_insert;// default
-    if (_db.cmdline.replace) {
+    read_mode = acr_ReadMode_acr_insert;
+    if (_db.cmdline.sel) {
+        read_mode=acr_ReadMode_acr_select;
+    } else if (_db.cmdline.replace) {
         read_mode=acr_ReadMode_acr_replace;
     } else if (_db.cmdline.merge) {
         read_mode=acr_ReadMode_acr_merge;
@@ -106,7 +108,7 @@ void acr::Main_ReadIn() {
     // Read data from stdin, insert/replace/update/merge into in-memory store
     // If stdio mode is selected, the incoming records form a background
     // for the query(i.e. they are not considered "new")
-    if (acr::_db.cmdline.insert || acr::_db.cmdline.replace || acr::_db.cmdline.update || acr::_db.cmdline.merge) {
+    if (_db.cmdline.sel || _db.cmdline.insert || _db.cmdline.replace || _db.cmdline.update || _db.cmdline.merge) {
         acr::FFile &file = acr::ind_file_GetOrCreate("stdin");
         ReadLines(file,Fildes(0),acr::DefaultReadMode());
     }

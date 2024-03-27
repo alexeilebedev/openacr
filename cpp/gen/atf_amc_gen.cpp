@@ -90,258 +90,441 @@ namespace atf_amc { // gen:ns_gsymbol
     const algo::strptr atfdb_test_gsymbol_strptr_TestStrptr("TestStrptr");
 } // gen:ns_gsymbol
 namespace atf_amc { // gen:ns_print_proto
+    // func:atf_amc.BitfldType1.bit1.ReadStrptrMaybe
     static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.BitfldType1.bits5.ReadStrptrMaybe
     static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.BitfldType2.bit0.ReadStrptrMaybe
     static bool          bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.BitfldType2.bit1.ReadStrptrMaybe
     static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Bytebuf.in.Shift
     static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.BytebufDyn.in.Shift
     static void          in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
+    // func:atf_amc.Cstr.val.Nextchar
     static int           val_Nextchar(const atf_amc::Cstr& orig, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.strval.ReadStrptrMaybe
     static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.strval_regx.ReadStrptrMaybe
     static bool          strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.strval2.ReadStrptrMaybe
     static bool          strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.strval2_regx.ReadStrptrMaybe
     static bool          strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
     static bool          start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
     static bool          end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.dateval.ReadStrptrMaybe
     static bool          dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.start_intval.ReadStrptrMaybe
     static bool          start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.end_intval.ReadStrptrMaybe
     static bool          end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.DispFilter.intval.ReadStrptrMaybe
     static bool          intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:atf_amc.FCascdel.bh_child_bheap.Downheap
     static int           bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:atf_amc.FCascdel.bh_child_bheap.Upheap
     static int           bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.bh_child_bheap.ElemLt
     static bool          bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.bh_child_bheap.ElemLtval
     static bool          bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.bh_child_bheap_curs.Add
     static void          cascdel_bh_child_bheap_curs_Add(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel& row);
     // Returns the child that has greater height.
+    // func:atf_amc.FCascdel.tr_child_atree.TallerChild
     static atf_amc::FCascdel* tr_child_atree_TallerChild(atf_amc::FCascdel& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
+    // func:atf_amc.FCascdel.tr_child_atree.Disconnect
     static void          tr_child_atree_Disconnect(atf_amc::FCascdel& node) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.tr_child_atree.ElemLt
     static bool          tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.tr_child_atree.UpdateDepth
     static void          tr_child_atree_updateDepth(atf_amc::FCascdel& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
+    // func:atf_amc.FCascdel.tr_child_atree.Turn
     static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
+    // func:atf_amc.FCascdel.tr_child_atree.Connect
     static void          tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:atf_amc.FDb.bh_typec.Downheap
     static int           bh_typec_Downheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:atf_amc.FDb.bh_typec.Upheap
     static int           bh_typec_Upheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
+    // func:atf_amc.FDb.bh_typec.ElemLt
     static bool          bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) __attribute__((nothrow));
+    // func:atf_amc.FDb.bh_typec_curs.Add
     static void          _db_bh_typec_curs_Add(_db_bh_typec_curs &curs, atf_amc::FTypeC& row);
+    // func:atf_amc.FDb.types.InputMaybe
     static bool          types_InputMaybe(atf_amc::TypeS &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:atf_amc.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_amc.FDb.typet.InputMaybe
     static bool          typet_InputMaybe(atf_amc::TypeT &elem) __attribute__((nothrow));
     // First element of index changed.
+    // func:atf_amc.FDb.cd_in_msg.FirstChanged
     static void          cd_in_msg_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:atf_amc.FDb.cd_in_msg.UpdateCycles
     static void          cd_in_msg_UpdateCycles() __attribute__((nothrow));
+    // func:atf_amc.FDb.cd_in_msg.Call
     static void          cd_in_msg_Call() __attribute__((nothrow));
+    // func:atf_amc.FDb.amctest.LoadStatic
     static void          amctest_LoadStatic() __attribute__((nothrow));
     // Returns the child that has greater height.
+    // func:atf_amc.FDb.tr_avl.TallerChild
     static atf_amc::FAvl* tr_avl_TallerChild(atf_amc::FAvl& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
+    // func:atf_amc.FDb.tr_avl.Disconnect
     static void          tr_avl_Disconnect(atf_amc::FAvl& node) __attribute__((nothrow));
+    // func:atf_amc.FDb.tr_avl.ElemLt
     static bool          tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) __attribute__((nothrow));
+    // func:atf_amc.FDb.tr_avl.UpdateDepth
     static void          tr_avl_updateDepth(atf_amc::FAvl& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
+    // func:atf_amc.FDb.tr_avl.Turn
     static void          tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) __attribute__((nothrow));
+    // func:atf_amc.FDb.tr_avl.Connect
     static void          tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
+    // func:atf_amc.FDb.listtype.LoadStatic
     static void          listtype_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_amc.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Swap values elem_a and elem_b
+    // func:atf_amc.FPerfSortString.sorted1.Swap
     static void          sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_amc.FPerfSortString.sorted1.Rotleft
     static void          sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_amc.FPerfSortString.sorted1.Lt
     static bool          sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_amc.FPerfSortString.sorted1.IntInsertionSort
     static void          sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_amc.FPerfSortString.sorted1.IntHeapSort
     static void          sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_amc.FPerfSortString.sorted1.IntQuickSort
     static void          sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:atf_amc.FTypeA.bh_typeb.Downheap
     static int           bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:atf_amc.FTypeA.bh_typeb.Upheap
     static int           bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
+    // func:atf_amc.FTypeA.bh_typeb.ElemLt
     static bool          bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
+    // func:atf_amc.FTypeA.bh_typeb_curs.Add
     static void          typea_bh_typeb_curs_Add(typea_bh_typeb_curs &curs, atf_amc::FTypeB& row);
     // Swap values elem_a and elem_b
+    // func:atf_amc.FUnitSort.tary.Swap
     static void          tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_amc.FUnitSort.tary.Rotleft
     static void          tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_amc.FUnitSort.tary.Lt
     static bool          tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_amc.FUnitSort.tary.IntInsertionSort
     static void          tary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_amc.FUnitSort.tary.IntHeapSort
     static void          tary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_amc.FUnitSort.tary.IntQuickSort
     static void          tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:atf_amc.FUnitSort.c_ptrary.Swap
     static void          c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_amc.FUnitSort.c_ptrary.Rotleft
     static void          c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_amc.FUnitSort.c_ptrary.Lt
     static bool          c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_amc.FUnitSort.c_ptrary.IntInsertionSort
     static void          c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_amc.FUnitSort.c_ptrary.IntHeapSort
     static void          c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_amc.FUnitSort.c_ptrary.IntQuickSort
     static void          c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:atf_amc.FUnitSort.fixary.Swap
     static void          fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_amc.FUnitSort.fixary.Rotleft
     static void          fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_amc.FUnitSort.fixary.Lt
     static bool          fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_amc.FUnitSort.fixary.IntInsertionSort
     static void          fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_amc.FUnitSort.fixary.IntHeapSort
     static void          fixary_IntHeapSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_amc.FUnitSort.fixary.IntQuickSort
     static void          fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
     // Internal function to scan for a message
     //
+    // func:atf_amc.Linebuf.in.Scanmsg
     static void          in_Scanmsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Linebuf.in.Shift
     static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
+    // func:atf_amc.Msgbuf.in.Scanmsg
     static void          in_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Msgbuf.in.Shift
     static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Msgbuf.out_extra.Shift
     static void          out_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
+    // func:atf_amc.Msgbuf.in_extra.Scanmsg
     static void          in_extra_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Msgbuf.in_extra.Shift
     static void          in_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
+    static bool          value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
+    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
+    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
+    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
+    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
+    static bool          value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
+    static bool          value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value.ReadStrptrMaybe
     static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value2.ReadStrptrMaybe
     static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value3.ReadStrptrMaybe
     static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value21.ReadStrptrMaybe
     static bool          value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value22.ReadStrptrMaybe
     static bool          value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value23.ReadStrptrMaybe
     static bool          value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value24.ReadStrptrMaybe
     static bool          value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value25.ReadStrptrMaybe
     static bool          value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value26.ReadStrptrMaybe
     static bool          value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value20.ReadStrptrMaybe
     static bool          value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value28.ReadStrptrMaybe
     static bool          value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value29.ReadStrptrMaybe
     static bool          value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value30.ReadStrptrMaybe
     static bool          value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value31.ReadStrptrMaybe
     static bool          value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value32.ReadStrptrMaybe
     static bool          value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value27.ReadStrptrMaybe
     static bool          value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value19.ReadStrptrMaybe
     static bool          value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value18.ReadStrptrMaybe
     static bool          value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value4.ReadStrptrMaybe
     static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value5.ReadStrptrMaybe
     static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value6.ReadStrptrMaybe
     static bool          value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value7.ReadStrptrMaybe
     static bool          value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value8.ReadStrptrMaybe
     static bool          value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value9.ReadStrptrMaybe
     static bool          value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value69.ReadStrptrMaybe
     static bool          value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value11.ReadStrptrMaybe
     static bool          value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value12.ReadStrptrMaybe
     static bool          value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value13.ReadStrptrMaybe
     static bool          value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value14.ReadStrptrMaybe
     static bool          value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value15.ReadStrptrMaybe
     static bool          value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value16.ReadStrptrMaybe
     static bool          value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value33.ReadStrptrMaybe
     static bool          value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value10.ReadStrptrMaybe
     static bool          value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value17.ReadStrptrMaybe
     static bool          value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value35.ReadStrptrMaybe
     static bool          value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value55.ReadStrptrMaybe
     static bool          value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value56.ReadStrptrMaybe
     static bool          value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value57.ReadStrptrMaybe
     static bool          value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value58.ReadStrptrMaybe
     static bool          value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value59.ReadStrptrMaybe
     static bool          value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value60.ReadStrptrMaybe
     static bool          value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value54.ReadStrptrMaybe
     static bool          value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value62.ReadStrptrMaybe
     static bool          value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value63.ReadStrptrMaybe
     static bool          value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value64.ReadStrptrMaybe
     static bool          value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value65.ReadStrptrMaybe
     static bool          value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value66.ReadStrptrMaybe
     static bool          value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value67.ReadStrptrMaybe
     static bool          value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value68.ReadStrptrMaybe
     static bool          value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value61.ReadStrptrMaybe
     static bool          value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value34.ReadStrptrMaybe
     static bool          value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value52.ReadStrptrMaybe
     static bool          value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value36.ReadStrptrMaybe
     static bool          value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value37.ReadStrptrMaybe
     static bool          value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value38.ReadStrptrMaybe
     static bool          value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value39.ReadStrptrMaybe
     static bool          value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value40.ReadStrptrMaybe
     static bool          value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value41.ReadStrptrMaybe
     static bool          value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value42.ReadStrptrMaybe
     static bool          value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value53.ReadStrptrMaybe
     static bool          value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value44.ReadStrptrMaybe
     static bool          value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value45.ReadStrptrMaybe
     static bool          value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value46.ReadStrptrMaybe
     static bool          value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value47.ReadStrptrMaybe
     static bool          value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value48.ReadStrptrMaybe
     static bool          value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value49.ReadStrptrMaybe
     static bool          value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value50.ReadStrptrMaybe
     static bool          value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value51.ReadStrptrMaybe
     static bool          value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value43.ReadStrptrMaybe
     static bool          value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value70.ReadStrptrMaybe
     static bool          value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU128.value71.ReadStrptrMaybe
     static bool          value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU32.value.ReadStrptrMaybe
     static bool          value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU32.value2.ReadStrptrMaybe
     static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU32.value3.ReadStrptrMaybe
     static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU32.value4.ReadStrptrMaybe
     static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.PmaskU32.value5.ReadStrptrMaybe
     static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
+    // func:atf_amc.SortedStr.novs.Nextchar
     static int           novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
+    // func:atf_amc.SortedStr.vs.Nextchar
     static u64           vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // func:atf_amc.TypeBE64.value.ReadStrptrMaybe
     static bool          value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:atf_amc.VarlenH.typeh.Swap
     static void          typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_amc.VarlenH.typeh.Rotleft
     static void          typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_amc.VarlenH.typeh.Lt
     static bool          typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_amc.VarlenH.typeh.IntInsertionSort
     static void          typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_amc.VarlenH.typeh.IntHeapSort
     static void          typeh_IntHeapSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_amc.VarlenH.typeh.IntQuickSort
     static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
+    // func:atf_amc...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -391,14 +574,23 @@ inline static bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, 
 }
 
 // --- atf_amc.BitfldType1..ReadFieldMaybe
-bool atf_amc::BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = u64_ReadStrptrMaybe(parent.value, strval); break;
-        case atf_amc_FieldId_bit1: retval = bit1_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_bits5: retval = bits5_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = u64_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case atf_amc_FieldId_bit1: {
+            retval = bit1_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case atf_amc_FieldId_bits5: {
+            retval = bits5_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -420,8 +612,9 @@ bool atf_amc::BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::st
 }
 
 // --- atf_amc.BitfldType1..Print
-// print string representation of atf_amc::BitfldType1 to string LHS, no header -- cprint:atf_amc.BitfldType1.String
-void atf_amc::BitfldType1_Print(atf_amc::BitfldType1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BitfldType1.String  printfmt:Tuple
+void atf_amc::BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.BitfldType1";
 
@@ -455,15 +648,27 @@ inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, a
 }
 
 // --- atf_amc.BitfldType2..ReadFieldMaybe
-bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = u64_ReadStrptrMaybe(parent.value, strval); break;
-        case atf_amc_FieldId_bit0: retval = bit0_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_bit1: retval = bit1_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_freebool: retval = bool_ReadStrptrMaybe(parent.freebool, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = u64_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case atf_amc_FieldId_bit0: {
+            retval = bit0_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case atf_amc_FieldId_bit1: {
+            retval = bit1_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case atf_amc_FieldId_freebool: {
+            retval = bool_ReadStrptrMaybe(parent.freebool, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -476,6 +681,11 @@ bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2 &parent, algo::str
 // Read fields of atf_amc::BitfldType2 from an ascii string.
 bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
     bool retval = true;
+    // Clear affected bits first)
+    bit0_Set(parent, false);
+    bit1_Set(parent, false);
+    parent.freebool = false;
+    // Read ','-separated list of bools
     while (ch_N(in_str)) {
         strptr field_name;
         algo::NextSep(in_str,',',field_name);
@@ -485,9 +695,15 @@ bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::st
             bool ok = atf_amc::value_SetStrptrMaybe(field_id,field_name);
             if (ok) {
                 switch (field_id) {
-                    case atf_amc_FieldId_bit0: bit0_Set(parent,true); break;
-                    case atf_amc_FieldId_bit1: bit1_Set(parent,true); break;
-                    case atf_amc_FieldId_freebool: parent.freebool = true; break;
+                    case atf_amc_FieldId_bit0: {
+                        bit0_Set(parent, true);
+                    } break;
+                    case atf_amc_FieldId_bit1: {
+                        bit1_Set(parent, true);
+                    } break;
+                    case atf_amc_FieldId_freebool: {
+                        parent.freebool = true;
+                    } break;
                     default: ok = false; break;
                 }
             }
@@ -501,8 +717,9 @@ bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::st
 }
 
 // --- atf_amc.BitfldType2..Print
-// print string representation of atf_amc::BitfldType2 to string LHS, no header -- cprint:atf_amc.BitfldType2.String
-void atf_amc::BitfldType2_Print(atf_amc::BitfldType2 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BitfldType2.String  printfmt:Bitset
+void atf_amc::BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) {
     algo::ListSep ls(",");
     if (bit0_Get(row)) {
         str << ls << "bit0";
@@ -669,8 +886,9 @@ void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& bytebuf) {
 }
 
 // --- atf_amc.Bytebuf..Print
-// print string representation of atf_amc::Bytebuf to string LHS, no header -- cprint:atf_amc.Bytebuf.String
-void atf_amc::Bytebuf_Print(atf_amc::Bytebuf & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Bytebuf.String  printfmt:Raw
+void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -788,8 +1006,9 @@ void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
 }
 
 // --- atf_amc.BytebufDyn..Print
-// print string representation of atf_amc::BytebufDyn to string LHS, no header -- cprint:atf_amc.BytebufDyn.String
-void atf_amc::BytebufDyn_Print(atf_amc::BytebufDyn & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BytebufDyn.String  printfmt:Raw
+void atf_amc::BytebufDyn_Print(atf_amc::BytebufDyn& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -807,7 +1026,7 @@ inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& orig, algo::strptr 
 
 // --- atf_amc.Cstr..FmtJson
 // Create JSON representation of atf_amc::Cstr under PARENT node -- cprint:atf_amc.Cstr.Json
-lib_json::FNode * atf_amc::Cstr_FmtJson(atf_amc::Cstr & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) {
     return algo::cstring_FmtJson(const_cast<atf_amc::Cstr&>(row).val,parent);;
 }
 
@@ -821,19 +1040,26 @@ bool atf_amc::Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strp
 }
 
 // --- atf_amc.Ctype1Attr..Print
-// print string representation of atf_amc::Ctype1Attr to string LHS, no header -- cprint:atf_amc.Ctype1Attr.String
-void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype1Attr.String  printfmt:Raw
+void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) {
     u32_Print(row.attr1, str);
 }
 
 // --- atf_amc.Ctype2Attr..ReadFieldMaybe
-bool atf_amc::Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_attr1: retval = u32_ReadStrptrMaybe(parent.attr1, strval); break;
-        case atf_amc_FieldId_attr2: retval = u32_ReadStrptrMaybe(parent.attr2, strval); break;
+        case atf_amc_FieldId_attr1: {
+            retval = u32_ReadStrptrMaybe(parent.attr1, strval);
+            break;
+        }
+        case atf_amc_FieldId_attr2: {
+            retval = u32_ReadStrptrMaybe(parent.attr2, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -868,8 +1094,9 @@ bool atf_amc::Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple
 }
 
 // --- atf_amc.Ctype2Attr..Print
-// print string representation of atf_amc::Ctype2Attr to string LHS, no header -- cprint:atf_amc.Ctype2Attr.String
-void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype2Attr.String  printfmt:Tuple
+void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Ctype2Attr";
 
@@ -881,13 +1108,19 @@ void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr & row, algo::cstring &str) {
 }
 
 // --- atf_amc.Ctype2AttrAnon..ReadFieldMaybe
-bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_attr1: retval = u32_ReadStrptrMaybe(parent.attr1, strval); break;
-        case atf_amc_FieldId_attr2: retval = u32_ReadStrptrMaybe(parent.attr2, strval); break;
+        case atf_amc_FieldId_attr1: {
+            retval = u32_ReadStrptrMaybe(parent.attr1, strval);
+            break;
+        }
+        case atf_amc_FieldId_attr2: {
+            retval = u32_ReadStrptrMaybe(parent.attr2, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -913,8 +1146,9 @@ bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, al
 }
 
 // --- atf_amc.Ctype2AttrAnon..Print
-// print string representation of atf_amc::Ctype2AttrAnon to string LHS, no header -- cprint:atf_amc.Ctype2AttrAnon.String
-void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype2AttrAnon.String  printfmt:Tuple
+void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Ctype2AttrAnon";
 
@@ -1045,11 +1279,8 @@ bool atf_amc::DispCase_ReadStrptrMaybe(atf_amc::DispCase &parent, algo::strptr i
 // --- atf_amc.DispFilter.strval.ReadStrptrMaybe
 inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    algo::Smallstr20 strval_tmp;
-    retval = algo::Smallstr20_ReadStrptrMaybe(strval_tmp, in_str);
-    if (retval) {
-        strval_Set(parent, strval_tmp);
-    }
+    retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval, in_str);
+    strval_SetPresent(parent);
     return retval;
 }
 
@@ -1064,11 +1295,8 @@ inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &par
 // --- atf_amc.DispFilter.strval2.ReadStrptrMaybe
 inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    algo::Smallstr20 strval2_tmp;
-    retval = algo::Smallstr20_ReadStrptrMaybe(strval2_tmp, in_str);
-    if (retval) {
-        strval2_Set(parent, strval2_tmp);
-    }
+    retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval2, in_str);
+    strval2_SetPresent(parent);
     return retval;
 }
 
@@ -1083,66 +1311,48 @@ inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &pa
 // --- atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
 inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    algo::UnTime start_dateval_tmp;
-    retval = algo::UnTime_ReadStrptrMaybe(start_dateval_tmp, in_str);
-    if (retval) {
-        start_dateval_Set(parent, start_dateval_tmp);
-    }
+    retval = algo::UnTime_ReadStrptrMaybe(parent.start_dateval, in_str);
+    start_dateval_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
 inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    algo::UnTime end_dateval_tmp;
-    retval = algo::UnTime_ReadStrptrMaybe(end_dateval_tmp, in_str);
-    if (retval) {
-        end_dateval_Set(parent, end_dateval_tmp);
-    }
+    retval = algo::UnTime_ReadStrptrMaybe(parent.end_dateval, in_str);
+    end_dateval_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.DispFilter.dateval.ReadStrptrMaybe
 inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    algo::UnTime dateval_tmp;
-    retval = algo::UnTime_ReadStrptrMaybe(dateval_tmp, in_str);
-    if (retval) {
-        dateval_Set(parent, dateval_tmp);
-    }
+    retval = algo::UnTime_ReadStrptrMaybe(parent.dateval, in_str);
+    dateval_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.DispFilter.start_intval.ReadStrptrMaybe
 inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 start_intval_tmp;
-    retval = u32_ReadStrptrMaybe(start_intval_tmp, in_str);
-    if (retval) {
-        start_intval_Set(parent, start_intval_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.start_intval, in_str);
+    start_intval_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.DispFilter.end_intval.ReadStrptrMaybe
 inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 end_intval_tmp;
-    retval = u32_ReadStrptrMaybe(end_intval_tmp, in_str);
-    if (retval) {
-        end_intval_Set(parent, end_intval_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.end_intval, in_str);
+    end_intval_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.DispFilter.intval.ReadStrptrMaybe
 inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 intval_tmp;
-    retval = u32_ReadStrptrMaybe(intval_tmp, in_str);
-    if (retval) {
-        intval_Set(parent, intval_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.intval, in_str);
+    intval_SetPresent(parent);
     return retval;
 }
 
@@ -1171,22 +1381,85 @@ void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf
 }
 
 // --- atf_amc.DispFilter..ReadFieldMaybe
-bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_pmask: retval = false; break;
-        case atf_amc_FieldId_strval: retval = strval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_strval_regx: retval = strval_regx_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_strval2: retval = strval2_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_strval2_regx: retval = strval2_regx_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_start_dateval: retval = start_dateval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_end_dateval: retval = end_dateval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_dateval: retval = dateval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_start_intval: retval = start_intval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_end_intval: retval = end_intval_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_intval: retval = intval_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_pmask: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_strval: {
+            retval = strval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 0);
+            }
+            break;
+        }
+        case atf_amc_FieldId_strval_regx: {
+            retval = strval_regx_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 1);
+            }
+            break;
+        }
+        case atf_amc_FieldId_strval2: {
+            retval = strval2_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 2);
+            }
+            break;
+        }
+        case atf_amc_FieldId_strval2_regx: {
+            retval = strval2_regx_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 3);
+            }
+            break;
+        }
+        case atf_amc_FieldId_start_dateval: {
+            retval = start_dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 4);
+            }
+            break;
+        }
+        case atf_amc_FieldId_end_dateval: {
+            retval = end_dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 5);
+            }
+            break;
+        }
+        case atf_amc_FieldId_dateval: {
+            retval = dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 6);
+            }
+            break;
+        }
+        case atf_amc_FieldId_start_intval: {
+            retval = start_intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 7);
+            }
+            break;
+        }
+        case atf_amc_FieldId_end_intval: {
+            retval = end_intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 8);
+            }
+            break;
+        }
+        case atf_amc_FieldId_intval: {
+            retval = intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 9);
+            }
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1298,14 +1571,23 @@ bool atf_amc::DispFilter_MatchDispType3(atf_amc::DispFilter &parent, atf_amc::Di
 }
 
 // --- atf_amc.DispType1..ReadFieldMaybe
-bool atf_amc::DispType1_ReadFieldMaybe(atf_amc::DispType1 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_strval: retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval, strval); break;
-        case atf_amc_FieldId_strval2: retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval2, strval); break;
-        case atf_amc_FieldId_dateval: retval = algo::UnTime_ReadStrptrMaybe(parent.dateval, strval); break;
+        case atf_amc_FieldId_strval: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval, strval);
+            break;
+        }
+        case atf_amc_FieldId_strval2: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval2, strval);
+            break;
+        }
+        case atf_amc_FieldId_dateval: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.dateval, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1327,8 +1609,9 @@ bool atf_amc::DispType1_ReadStrptrMaybe(atf_amc::DispType1 &parent, algo::strptr
 }
 
 // --- atf_amc.DispType1..Print
-// print string representation of atf_amc::DispType1 to string LHS, no header -- cprint:atf_amc.DispType1.String
-void atf_amc::DispType1_Print(atf_amc::DispType1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType1.String  printfmt:Tuple
+void atf_amc::DispType1_Print(atf_amc::DispType1& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.DispType1";
 
@@ -1352,19 +1635,26 @@ bool atf_amc::DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr
 }
 
 // --- atf_amc.DispType2..Print
-// print string representation of atf_amc::DispType2 to string LHS, no header -- cprint:atf_amc.DispType2.String
-void atf_amc::DispType2_Print(atf_amc::DispType2 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType2.String  printfmt:Raw
+void atf_amc::DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) {
     u32_Print(row.intval, str);
 }
 
 // --- atf_amc.DispType3..ReadFieldMaybe
-bool atf_amc::DispType3_ReadFieldMaybe(atf_amc::DispType3 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_intval: retval = u32_ReadStrptrMaybe(parent.intval, strval); break;
-        case atf_amc_FieldId_strval: retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval, strval); break;
+        case atf_amc_FieldId_intval: {
+            retval = u32_ReadStrptrMaybe(parent.intval, strval);
+            break;
+        }
+        case atf_amc_FieldId_strval: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.strval, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1386,8 +1676,9 @@ bool atf_amc::DispType3_ReadStrptrMaybe(atf_amc::DispType3 &parent, algo::strptr
 }
 
 // --- atf_amc.DispType3..Print
-// print string representation of atf_amc::DispType3 to string LHS, no header -- cprint:atf_amc.DispType3.String
-void atf_amc::DispType3_Print(atf_amc::DispType3 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType3.String  printfmt:Tuple
+void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.DispType3";
 
@@ -1413,8 +1704,9 @@ void atf_amc::amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) {
 }
 
 // --- atf_amc.FAmctest..Print
-// print string representation of atf_amc::FAmctest to string LHS, no header -- cprint:atf_amc.FAmctest.String
-void atf_amc::FAmctest_Print(atf_amc::FAmctest & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FAmctest.String  printfmt:Tuple
+void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FAmctest";
 
@@ -2477,8 +2769,9 @@ void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
 }
 
 // --- atf_amc.FCascdel..Print
-// print string representation of atf_amc::FCascdel to string LHS, no header -- cprint:atf_amc.FCascdel.String
-void atf_amc::FCascdel_Print(atf_amc::FCascdel & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FCascdel.String  printfmt:Tuple
+void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FCascdel";
 
@@ -2551,8 +2844,9 @@ void atf_amc::trace_Init(atf_amc::trace& parent) {
 }
 
 // --- atf_amc.trace..Print
-// print string representation of atf_amc::trace to string LHS, no header -- cprint:atf_amc.trace.String
-void atf_amc::trace_Print(atf_amc::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.trace.String  printfmt:Tuple
+void atf_amc::trace_Print(atf_amc::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.trace";
 
@@ -4515,7 +4809,7 @@ static void atf_amc::InitReflection() {
     // -- load signatures of existing dispatches --
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Disp'  signature:'d11df8e45dfabb45e515398cd71d30a184879014'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Msgs'  signature:'f80a13e46fff2c18de1f4dbbbb11703d07c170d2'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Ssimfiles'  signature:'9a25d87b6ed236e8b6794b21dc308f66286505af'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Ssimfiles'  signature:'f2409fade5c9373dc13379fe888df9435e3c0987'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'3b9943558be9b03e79fade60297ec50f1d4702a3'");
 }
 
@@ -4549,6 +4843,7 @@ void atf_amc::StaticCheck() {
     algo_assert(_offset_of(atf_amc::OptAlloc_curs, msglen) + sizeof(((atf_amc::OptAlloc_curs*)0)->msglen) == sizeof(atf_amc::OptAlloc_curs));
     algo_assert(_offset_of(atf_amc::OptG_curs, msglen) + sizeof(((atf_amc::OptG_curs*)0)->msglen) == sizeof(atf_amc::OptG_curs));
     algo_assert(_offset_of(atf_amc::OptOptG_curs, msglen) + sizeof(((atf_amc::OptOptG_curs*)0)->msglen) == sizeof(atf_amc::OptOptG_curs));
+    algo_assert(_offset_of(atf_amc::PmaskMultiple, value7) + sizeof(((atf_amc::PmaskMultiple*)0)->value7) == sizeof(atf_amc::PmaskMultiple));
     algo_assert(_offset_of(atf_amc::PmaskU128, value71) + sizeof(((atf_amc::PmaskU128*)0)->value71) == sizeof(atf_amc::PmaskU128));
     algo_assert(_offset_of(atf_amc::PmaskU32, value5) + sizeof(((atf_amc::PmaskU32*)0)->value5) == sizeof(atf_amc::PmaskU32));
     algo_assert(_offset_of(atf_amc::SsimfilesCase, value) + sizeof(((atf_amc::SsimfilesCase*)0)->value) == sizeof(atf_amc::SsimfilesCase));
@@ -5678,6 +5973,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:OptOptG9  comment:\"Print struct with Opt member\"", atf_amc::amctest_OptOptG9 }
         ,{ "atfdb.amctest  amctest:PerfSortString  comment:\"\"", atf_amc::amctest_PerfSortString }
         ,{ "atfdb.amctest  amctest:PerfThashRemove  comment:\"\"", atf_amc::amctest_PerfThashRemove }
+        ,{ "atfdb.amctest  amctest:PmaskMultiple  comment:\"Check Pmask Multiple\"", atf_amc::amctest_PmaskMultiple }
         ,{ "atfdb.amctest  amctest:PrintBase36  comment:\"\"", atf_amc::amctest_PrintBase36 }
         ,{ "atfdb.amctest  amctest:PrintRawGconst  comment:\"Check that gconst field within tuple is printed as raw\"", atf_amc::amctest_PrintRawGconst }
         ,{ "atfdb.amctest  amctest:PtraryCursor  comment:\"Test Ptrary cursor\"", atf_amc::amctest_PtraryCursor }
@@ -7570,8 +7866,9 @@ bool atf_amc::TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeG..Print
-// print string representation of atf_amc::TypeG to string LHS, no header -- cprint:atf_amc.TypeG.String
-void atf_amc::TypeG_Print(atf_amc::TypeG & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeG.String  printfmt:Raw
+void atf_amc::TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) {
     i32_Print(row.typeg, str);
 }
 
@@ -8091,8 +8388,9 @@ void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& typec) {
 }
 
 // --- atf_amc.FTypeC..Print
-// print string representation of atf_amc::FTypeC to string LHS, no header -- cprint:atf_amc.FTypeC.String
-void atf_amc::FTypeC_Print(atf_amc::FTypeC & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeC.String  printfmt:Raw
+void atf_amc::FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
@@ -8560,8 +8858,9 @@ void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& typea) {
 }
 
 // --- atf_amc.FTypeA..Print
-// print string representation of atf_amc::FTypeA to string LHS, no header -- cprint:atf_amc.FTypeA.String
-void atf_amc::FTypeA_Print(atf_amc::FTypeA & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeA.String  printfmt:Tuple
+void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FTypeA";
 
@@ -8599,8 +8898,9 @@ void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& typeb) {
 }
 
 // --- atf_amc.FTypeB..Print
-// print string representation of atf_amc::FTypeB to string LHS, no header -- cprint:atf_amc.FTypeB.String
-void atf_amc::FTypeB_Print(atf_amc::FTypeB & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeB.String  printfmt:Tuple
+void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FTypeB";
 
@@ -8632,8 +8932,9 @@ void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) {
 }
 
 // --- atf_amc.FTypeD..Print
-// print string representation of atf_amc::FTypeD to string LHS, no header -- cprint:atf_amc.FTypeD.String
-void atf_amc::FTypeD_Print(atf_amc::FTypeD & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeD.String  printfmt:Raw
+void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
@@ -8730,8 +9031,9 @@ void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) {
 }
 
 // --- atf_amc.FTypeS..Print
-// print string representation of atf_amc::FTypeS to string LHS, no header -- cprint:atf_amc.FTypeS.String
-void atf_amc::FTypeS_Print(atf_amc::FTypeS & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeS.String  printfmt:Tuple
+void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FTypeS";
 
@@ -8766,8 +9068,9 @@ void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& typet) {
 }
 
 // --- atf_amc.FTypeT..Print
-// print string representation of atf_amc::FTypeT to string LHS, no header -- cprint:atf_amc.FTypeT.String
-void atf_amc::FTypeT_Print(atf_amc::FTypeT & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeT.String  printfmt:Tuple
+void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.FTypeT";
 
@@ -8788,14 +9091,15 @@ bool atf_amc::TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeA..Print
-// print string representation of atf_amc::TypeA to string LHS, no header -- cprint:atf_amc.TypeA.String
-void atf_amc::TypeA_Print(atf_amc::TypeA & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeA.String  printfmt:Raw
+void atf_amc::TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) {
     i32_Print(row.typea, str);
 }
 
 // --- atf_amc.TypeA..FmtJson
 // Create JSON representation of atf_amc::TypeA under PARENT node -- cprint:atf_amc.TypeA.Json
-lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) {
     return i32_FmtJson(const_cast<atf_amc::TypeA&>(row).typea,parent);;
 }
 
@@ -9545,9 +9849,17 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_v             : ret = "v";  break;
         case atf_amc_FieldId_typeg         : ret = "typeg";  break;
         case atf_amc_FieldId_optg          : ret = "optg";  break;
-        case atf_amc_FieldId_pmask         : ret = "pmask";  break;
+        case atf_amc_FieldId_present       : ret = "present";  break;
+        case atf_amc_FieldId_assigned      : ret = "assigned";  break;
+        case atf_amc_FieldId_nullable      : ret = "nullable";  break;
+        case atf_amc_FieldId_value1        : ret = "value1";  break;
         case atf_amc_FieldId_value2        : ret = "value2";  break;
         case atf_amc_FieldId_value3        : ret = "value3";  break;
+        case atf_amc_FieldId_value4        : ret = "value4";  break;
+        case atf_amc_FieldId_value5        : ret = "value5";  break;
+        case atf_amc_FieldId_value6        : ret = "value6";  break;
+        case atf_amc_FieldId_value7        : ret = "value7";  break;
+        case atf_amc_FieldId_pmask         : ret = "pmask";  break;
         case atf_amc_FieldId_value21       : ret = "value21";  break;
         case atf_amc_FieldId_value22       : ret = "value22";  break;
         case atf_amc_FieldId_value23       : ret = "value23";  break;
@@ -9563,10 +9875,6 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_value27       : ret = "value27";  break;
         case atf_amc_FieldId_value19       : ret = "value19";  break;
         case atf_amc_FieldId_value18       : ret = "value18";  break;
-        case atf_amc_FieldId_value4        : ret = "value4";  break;
-        case atf_amc_FieldId_value5        : ret = "value5";  break;
-        case atf_amc_FieldId_value6        : ret = "value6";  break;
-        case atf_amc_FieldId_value7        : ret = "value7";  break;
         case atf_amc_FieldId_value8        : ret = "value8";  break;
         case atf_amc_FieldId_value9        : ret = "value9";  break;
         case atf_amc_FieldId_value69       : ret = "value69";  break;
@@ -9793,6 +10101,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('s','t','r','v','a','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_strval); ret = true; break;
                 }
+                case LE_STR6('v','a','l','u','e','1'): {
+                    value_SetEnum(parent,atf_amc_FieldId_value1); ret = true; break;
+                }
                 case LE_STR6('v','a','l','u','e','2'): {
                     value_SetEnum(parent,atf_amc_FieldId_value2); ret = true; break;
                 }
@@ -9830,6 +10141,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('p','a','y','l','o','a','d'): {
                     value_SetEnum(parent,atf_amc_FieldId_payload); ret = true; break;
+                }
+                case LE_STR7('p','r','e','s','e','n','t'): {
+                    value_SetEnum(parent,atf_amc_FieldId_present); ret = true; break;
                 }
                 case LE_STR7('s','t','r','v','a','l','2'): {
                     value_SetEnum(parent,atf_amc_FieldId_strval2); ret = true; break;
@@ -10025,8 +10339,14 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','s','s','i','g','n','e','d'): {
+                    value_SetEnum(parent,atf_amc_FieldId_assigned); ret = true; break;
+                }
                 case LE_STR8('f','r','e','e','b','o','o','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_freebool); ret = true; break;
+                }
+                case LE_STR8('n','u','l','l','a','b','l','e'): {
+                    value_SetEnum(parent,atf_amc_FieldId_nullable); ret = true; break;
                 }
             }
             break;
@@ -10107,8 +10427,9 @@ bool atf_amc::FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_
 }
 
 // --- atf_amc.FieldId..Print
-// print string representation of atf_amc::FieldId to string LHS, no header -- cprint:atf_amc.FieldId.String
-void atf_amc::FieldId_Print(atf_amc::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FieldId.String  printfmt:Raw
+void atf_amc::FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -10212,13 +10533,19 @@ bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr 
 }
 
 // --- atf_amc.InlaryPrint..ReadFieldMaybe
-bool atf_amc::InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_fixary: retval = fixary_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_inlary: retval = inlary_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_fixary: {
+            retval = fixary_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case atf_amc_FieldId_inlary: {
+            retval = inlary_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -10257,8 +10584,9 @@ void atf_amc::InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) {
 }
 
 // --- atf_amc.InlaryPrint..Print
-// print string representation of atf_amc::InlaryPrint to string LHS, no header -- cprint:atf_amc.InlaryPrint.String
-void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.InlaryPrint.String  printfmt:Tuple
+void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.InlaryPrint";
 
@@ -10496,8 +10824,9 @@ void atf_amc::Linebuf_Init(atf_amc::Linebuf& linebuf) {
 }
 
 // --- atf_amc.Linebuf..Print
-// print string representation of atf_amc::Linebuf to string LHS, no header -- cprint:atf_amc.Linebuf.String
-void atf_amc::Linebuf_Print(atf_amc::Linebuf & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Linebuf.String  printfmt:Raw
+void atf_amc::Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -10570,13 +10899,19 @@ bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
 }
 
 // --- atf_amc.MsgHdrLT..ReadFieldMaybe
-bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_len: retval = false; break;
-        case atf_amc_FieldId_type: retval = type_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_len: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = type_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -10598,8 +10933,9 @@ bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr i
 }
 
 // --- atf_amc.MsgHdrLT..Print
-// print string representation of atf_amc::MsgHdrLT to string LHS, no header -- cprint:atf_amc.MsgHdrLT.String
-void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
+void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgHdrLT";
     (void)row;//only to avoid -Wunused-parameter
@@ -10772,8 +11108,9 @@ bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_
 }
 
 // --- atf_amc.MsgType..Print
-// print string representation of atf_amc::MsgType to string LHS, no header -- cprint:atf_amc.MsgType.String
-void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgType.String  printfmt:Raw
+void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -10787,26 +11124,33 @@ bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr
 }
 
 // --- atf_amc.MsgLength..Print
-// print string representation of atf_amc::MsgLength to string LHS, no header -- cprint:atf_amc.MsgLength.String
-void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLength.String  printfmt:Raw
+void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) {
     u16_Print(row.value, str);
 }
 
 // --- atf_amc.MsgHeader..ReadFieldMaybe
-bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_length: retval = false; break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
         default: break;
     }
-    (void)parent;//only to avoid -Wunused-parameter
-    (void)strval;//only to avoid -Wunused-parameter
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
     }
+    (void)parent;//only to avoid -Wunused-parameter
+    (void)strval;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -10823,8 +11167,9 @@ bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr
 }
 
 // --- atf_amc.MsgHeader..Print
-// print string representation of atf_amc::MsgHeader to string LHS, no header -- cprint:atf_amc.MsgHeader.String
-void atf_amc::MsgHeader_Print(atf_amc::MsgHeader & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
+void atf_amc::MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
@@ -10840,15 +11185,27 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) {
 }
 
 // --- atf_amc.MsgLTA..ReadFieldMaybe
-bool atf_amc::MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_base: retval = false; break;
-        case atf_amc_FieldId_len: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_a: retval = algo::RspaceStr4_ReadStrptrMaybe(parent.a, strval); break;
+        case atf_amc_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_len: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_a: {
+            retval = algo::RspaceStr4_ReadStrptrMaybe(parent.a, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -10870,8 +11227,9 @@ bool atf_amc::MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_st
 }
 
 // --- atf_amc.MsgLTA..Print
-// print string representation of atf_amc::MsgLTA to string LHS, no header -- cprint:atf_amc.MsgLTA.String
-void atf_amc::MsgLTA_Print(atf_amc::MsgLTA & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTA.String  printfmt:Tuple
+void atf_amc::MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgLTA";
 
@@ -10889,15 +11247,27 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) {
 }
 
 // --- atf_amc.MsgLTB..ReadFieldMaybe
-bool atf_amc::MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_base: retval = false; break;
-        case atf_amc_FieldId_len: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_b: retval = algo::RspaceStr6_ReadStrptrMaybe(parent.b, strval); break;
+        case atf_amc_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_len: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_b: {
+            retval = algo::RspaceStr6_ReadStrptrMaybe(parent.b, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -10919,8 +11289,9 @@ bool atf_amc::MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_st
 }
 
 // --- atf_amc.MsgLTB..Print
-// print string representation of atf_amc::MsgLTB to string LHS, no header -- cprint:atf_amc.MsgLTB.String
-void atf_amc::MsgLTB_Print(atf_amc::MsgLTB & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTB.String  printfmt:Tuple
+void atf_amc::MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgLTB";
 
@@ -10976,15 +11347,27 @@ bool atf_amc::o_XrefMaybe(atf_amc::MsgHdrLT &row) {
 }
 
 // --- atf_amc.MsgLTO..ReadFieldMaybe
-bool atf_amc::MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_base: retval = false; break;
-        case atf_amc_FieldId_len: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_o: retval = o_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_len: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_o: {
+            retval = o_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -11007,8 +11390,9 @@ bool atf_amc::MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_st
 }
 
 // --- atf_amc.MsgLTO..Print
-// print string representation of atf_amc::MsgLTO to string LHS, no header -- cprint:atf_amc.MsgLTO.String
-void atf_amc::MsgLTO_Print(atf_amc::MsgLTO & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTO.String  printfmt:Tuple
+void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgLTO";
 
@@ -11052,15 +11436,27 @@ bool atf_amc::v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.MsgLTV..ReadFieldMaybe
-bool atf_amc::MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_base: retval = false; break;
-        case atf_amc_FieldId_len: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_v: retval = v_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_len: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_v: {
+            retval = v_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -11083,8 +11479,9 @@ bool atf_amc::MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_st
 }
 
 // --- atf_amc.MsgLTV..Print
-// print string representation of atf_amc::MsgLTV to string LHS, no header -- cprint:atf_amc.MsgLTV.String
-void atf_amc::MsgLTV_Print(atf_amc::MsgLTV & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTV.String  printfmt:Tuple
+void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgLTV";
 
@@ -11452,8 +11849,9 @@ void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf..Print
-// print string representation of atf_amc::Msgbuf to string LHS, no header -- cprint:atf_amc.Msgbuf.String
-void atf_amc::Msgbuf_Print(atf_amc::Msgbuf & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Msgbuf.String  printfmt:Raw
+void atf_amc::Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -11529,8 +11927,9 @@ bool atf_amc::MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr i
 }
 
 // --- atf_amc.NetBitfld1..Print
-// print string representation of atf_amc::NetBitfld1 to string LHS, no header -- cprint:atf_amc.NetBitfld1.String
-void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetBitfld1.String  printfmt:Raw
+void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) {
     u16_Print(value_Get(row), str);
 }
 
@@ -11570,13 +11969,19 @@ bool atf_amc::typeg_XrefMaybe(atf_amc::TypeG &row) {
 }
 
 // --- atf_amc.OptAlloc..ReadFieldMaybe
-bool atf_amc::OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_typeg: retval = typeg_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_typeg: {
+            retval = typeg_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -11599,8 +12004,9 @@ bool atf_amc::OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr i
 }
 
 // --- atf_amc.OptAlloc..Print
-// print string representation of atf_amc::OptAlloc to string LHS, no header -- cprint:atf_amc.OptAlloc.String
-void atf_amc::OptAlloc_Print(atf_amc::OptAlloc & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptAlloc.String  printfmt:Tuple
+void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.OptAlloc";
 
@@ -11637,13 +12043,19 @@ bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) 
 }
 
 // --- atf_amc.OptG..ReadFieldMaybe
-bool atf_amc::OptG_ReadFieldMaybe(atf_amc::OptG &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptG_ReadFieldMaybe(atf_amc::OptG& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_typeg: retval = typeg_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_typeg: {
+            retval = typeg_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -11666,8 +12078,9 @@ bool atf_amc::OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.OptG..Print
-// print string representation of atf_amc::OptG to string LHS, no header -- cprint:atf_amc.OptG.String
-void atf_amc::OptG_Print(atf_amc::OptG & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptG.String  printfmt:Tuple
+void atf_amc::OptG_Print(atf_amc::OptG& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.OptG";
 
@@ -11713,13 +12126,19 @@ bool atf_amc::optg_XrefMaybe(atf_amc::OptG &row) {
 }
 
 // --- atf_amc.OptOptG..ReadFieldMaybe
-bool atf_amc::OptOptG_ReadFieldMaybe(atf_amc::OptOptG &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptOptG_ReadFieldMaybe(atf_amc::OptOptG& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_optg: retval = optg_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_optg: {
+            retval = optg_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -11742,8 +12161,9 @@ bool atf_amc::OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_
 }
 
 // --- atf_amc.OptOptG..Print
-// print string representation of atf_amc::OptOptG to string LHS, no header -- cprint:atf_amc.OptOptG.String
-void atf_amc::OptOptG_Print(atf_amc::OptOptG & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptOptG.String  printfmt:Tuple
+void atf_amc::OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.OptOptG";
 
@@ -11753,865 +12173,1366 @@ void atf_amc::OptOptG_Print(atf_amc::OptOptG & row, algo::cstring &str) {
     }
 }
 
+// --- atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
+inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value1, in_str);
+    value1_SetNullable(parent);
+    value1_SetAssigned(parent);
+    value1_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value2, in_str);
+    value2_SetAssigned(parent);
+    value2_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value3, in_str);
+    value3_SetNullable(parent);
+    value3_SetAssigned(parent);
+    value3_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value4, in_str);
+    value4_SetAssigned(parent);
+    value4_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value5, in_str);
+    value5_SetNullable(parent);
+    value5_SetAssigned(parent);
+    value5_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
+inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value6, in_str);
+    value6_SetAssigned(parent);
+    value6_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
+inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = u32_ReadStrptrMaybe(parent.value7, in_str);
+    value7_SetAssigned(parent);
+    value7_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.present_bitcurs.Next
+// proceed to next item
+void atf_amc::PmaskMultiple_present_bitcurs_Next(PmaskMultiple_present_bitcurs &curs) {
+    ++curs.bit;
+    int index = curs.bit / 32;
+    int offset = curs.bit % 32;
+    for (; index < curs.n_elems; ++index, offset = 0) {
+        u64 rest = curs.elems[index] >> offset;
+        if (rest) {
+            offset += algo::u64_BitScanForward(rest);
+            break;
+        }
+    }
+    curs.bit = index * 32 + offset;
+}
+
+// --- atf_amc.PmaskMultiple.present_bitcurs.Reset
+void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &present_qFind(parent,0);
+    curs.n_elems = present_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_present_bitcurs_Next(curs);
+}
+
+// --- atf_amc.PmaskMultiple.assigned_bitcurs.Next
+// proceed to next item
+void atf_amc::PmaskMultiple_assigned_bitcurs_Next(PmaskMultiple_assigned_bitcurs &curs) {
+    ++curs.bit;
+    int index = curs.bit / 32;
+    int offset = curs.bit % 32;
+    for (; index < curs.n_elems; ++index, offset = 0) {
+        u64 rest = curs.elems[index] >> offset;
+        if (rest) {
+            offset += algo::u64_BitScanForward(rest);
+            break;
+        }
+    }
+    curs.bit = index * 32 + offset;
+}
+
+// --- atf_amc.PmaskMultiple.assigned_bitcurs.Reset
+void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &assigned_qFind(parent,0);
+    curs.n_elems = assigned_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_assigned_bitcurs_Next(curs);
+}
+
+// --- atf_amc.PmaskMultiple.nullable_bitcurs.Next
+// proceed to next item
+void atf_amc::PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs &curs) {
+    ++curs.bit;
+    int index = curs.bit / 32;
+    int offset = curs.bit % 32;
+    for (; index < curs.n_elems; ++index, offset = 0) {
+        u64 rest = curs.elems[index] >> offset;
+        if (rest) {
+            offset += algo::u64_BitScanForward(rest);
+            break;
+        }
+    }
+    curs.bit = index * 32 + offset;
+}
+
+// --- atf_amc.PmaskMultiple.nullable_bitcurs.Reset
+void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &nullable_qFind(parent,0);
+    curs.n_elems = nullable_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_nullable_bitcurs_Next(curs);
+}
+
+// --- atf_amc.PmaskMultiple..ReadFieldMaybe
+bool atf_amc::PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_present: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_assigned: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_nullable: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_value1: {
+            retval = value1_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                nullable_qSetBit(parent, 0);
+                assigned_qSetBit(parent, 0);
+                present_qSetBit(parent, 0);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value2: {
+            retval = value2_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                assigned_qSetBit(parent, 1);
+                present_qSetBit(parent, 1);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value3: {
+            retval = value3_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                nullable_qSetBit(parent, 1);
+                assigned_qSetBit(parent, 2);
+                present_qSetBit(parent, 2);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value4: {
+            retval = value4_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                assigned_qSetBit(parent, 3);
+                present_qSetBit(parent, 3);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value5: {
+            retval = value5_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                nullable_qSetBit(parent, 2);
+                assigned_qSetBit(parent, 4);
+                present_qSetBit(parent, 4);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value6: {
+            retval = value6_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                assigned_qSetBit(parent, 5);
+                present_qSetBit(parent, 5);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value7: {
+            retval = value7_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                assigned_qSetBit(parent, 6);
+                present_qSetBit(parent, 6);
+            }
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple..ReadStrptrMaybe
+// Read fields of atf_amc::PmaskMultiple from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::PmaskMultiple_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.PmaskMultiple");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && PmaskMultiple_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple..Init
+// Set all fields to initial values.
+void atf_amc::PmaskMultiple_Init(atf_amc::PmaskMultiple& parent) {
+    parent.present = u32(0);
+    parent.assigned = u32(0);
+    parent.nullable = u32(0);
+    parent.value1 = u32(0);
+    parent.value2 = u32(0);
+    parent.value3 = u32(0);
+    parent.value4 = u32(0);
+    parent.value5 = u32(0);
+    parent.value6 = u32(0);
+    parent.value7 = u32(0);
+}
+
+// --- atf_amc.PmaskMultiple..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskMultiple.String  printfmt:Tuple
+void atf_amc::PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.PmaskMultiple";
+
+    if (value1_NullableQ(row)) {
+        u32_Print(row.value1, temp);
+        PrintAttrSpaceReset(str,"value1", temp);
+    }
+
+    u32_Print(row.value2, temp);
+    PrintAttrSpaceReset(str,"value2", temp);
+
+    if (value3_NullableQ(row)) {
+        u32_Print(row.value3, temp);
+        PrintAttrSpaceReset(str,"value3", temp);
+    }
+
+    u32_Print(row.value4, temp);
+    PrintAttrSpaceReset(str,"value4", temp);
+
+    if (value5_NullableQ(row)) {
+        u32_Print(row.value5, temp);
+        PrintAttrSpaceReset(str,"value5", temp);
+    }
+
+    u32_Print(row.value6, temp);
+    PrintAttrSpaceReset(str,"value6", temp);
+
+    u32_Print(row.value7, temp);
+    PrintAttrSpaceReset(str,"value7", temp);
+}
+
 // --- atf_amc.PmaskU128.value.ReadStrptrMaybe
 inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value_tmp;
-    retval = u32_ReadStrptrMaybe(value_tmp, in_str);
-    if (retval) {
-        value_Set(parent, value_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value, in_str);
+    value_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value2.ReadStrptrMaybe
 inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value2_tmp;
-    retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
-    if (retval) {
-        value2_Set(parent, value2_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value2, in_str);
+    value2_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value3.ReadStrptrMaybe
 inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value3_tmp;
-    retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
-    if (retval) {
-        value3_Set(parent, value3_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value3, in_str);
+    value3_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value21.ReadStrptrMaybe
 inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value21_tmp;
-    retval = u32_ReadStrptrMaybe(value21_tmp, in_str);
-    if (retval) {
-        value21_Set(parent, value21_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value21, in_str);
+    value21_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value22.ReadStrptrMaybe
 inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value22_tmp;
-    retval = u32_ReadStrptrMaybe(value22_tmp, in_str);
-    if (retval) {
-        value22_Set(parent, value22_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value22, in_str);
+    value22_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value23.ReadStrptrMaybe
 inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value23_tmp;
-    retval = u32_ReadStrptrMaybe(value23_tmp, in_str);
-    if (retval) {
-        value23_Set(parent, value23_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value23, in_str);
+    value23_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value24.ReadStrptrMaybe
 inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value24_tmp;
-    retval = u32_ReadStrptrMaybe(value24_tmp, in_str);
-    if (retval) {
-        value24_Set(parent, value24_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value24, in_str);
+    value24_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value25.ReadStrptrMaybe
 inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value25_tmp;
-    retval = u32_ReadStrptrMaybe(value25_tmp, in_str);
-    if (retval) {
-        value25_Set(parent, value25_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value25, in_str);
+    value25_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value26.ReadStrptrMaybe
 inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value26_tmp;
-    retval = u32_ReadStrptrMaybe(value26_tmp, in_str);
-    if (retval) {
-        value26_Set(parent, value26_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value26, in_str);
+    value26_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value20.ReadStrptrMaybe
 inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value20_tmp;
-    retval = u32_ReadStrptrMaybe(value20_tmp, in_str);
-    if (retval) {
-        value20_Set(parent, value20_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value20, in_str);
+    value20_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value28.ReadStrptrMaybe
 inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value28_tmp;
-    retval = u32_ReadStrptrMaybe(value28_tmp, in_str);
-    if (retval) {
-        value28_Set(parent, value28_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value28, in_str);
+    value28_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value29.ReadStrptrMaybe
 inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value29_tmp;
-    retval = u32_ReadStrptrMaybe(value29_tmp, in_str);
-    if (retval) {
-        value29_Set(parent, value29_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value29, in_str);
+    value29_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value30.ReadStrptrMaybe
 inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value30_tmp;
-    retval = u32_ReadStrptrMaybe(value30_tmp, in_str);
-    if (retval) {
-        value30_Set(parent, value30_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value30, in_str);
+    value30_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value31.ReadStrptrMaybe
 inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value31_tmp;
-    retval = u32_ReadStrptrMaybe(value31_tmp, in_str);
-    if (retval) {
-        value31_Set(parent, value31_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value31, in_str);
+    value31_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value32.ReadStrptrMaybe
 inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value32_tmp;
-    retval = u32_ReadStrptrMaybe(value32_tmp, in_str);
-    if (retval) {
-        value32_Set(parent, value32_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value32, in_str);
+    value32_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value27.ReadStrptrMaybe
 inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value27_tmp;
-    retval = u32_ReadStrptrMaybe(value27_tmp, in_str);
-    if (retval) {
-        value27_Set(parent, value27_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value27, in_str);
+    value27_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value19.ReadStrptrMaybe
 inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value19_tmp;
-    retval = u32_ReadStrptrMaybe(value19_tmp, in_str);
-    if (retval) {
-        value19_Set(parent, value19_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value19, in_str);
+    value19_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value18.ReadStrptrMaybe
 inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value18_tmp;
-    retval = u32_ReadStrptrMaybe(value18_tmp, in_str);
-    if (retval) {
-        value18_Set(parent, value18_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value18, in_str);
+    value18_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value4.ReadStrptrMaybe
 inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value4_tmp;
-    retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
-    if (retval) {
-        value4_Set(parent, value4_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value4, in_str);
+    value4_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value5.ReadStrptrMaybe
 inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value5_tmp;
-    retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
-    if (retval) {
-        value5_Set(parent, value5_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value5, in_str);
+    value5_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value6.ReadStrptrMaybe
 inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value6_tmp;
-    retval = u32_ReadStrptrMaybe(value6_tmp, in_str);
-    if (retval) {
-        value6_Set(parent, value6_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value6, in_str);
+    value6_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value7.ReadStrptrMaybe
 inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value7_tmp;
-    retval = u32_ReadStrptrMaybe(value7_tmp, in_str);
-    if (retval) {
-        value7_Set(parent, value7_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value7, in_str);
+    value7_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value8.ReadStrptrMaybe
 inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value8_tmp;
-    retval = u32_ReadStrptrMaybe(value8_tmp, in_str);
-    if (retval) {
-        value8_Set(parent, value8_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value8, in_str);
+    value8_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value9.ReadStrptrMaybe
 inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value9_tmp;
-    retval = u32_ReadStrptrMaybe(value9_tmp, in_str);
-    if (retval) {
-        value9_Set(parent, value9_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value9, in_str);
+    value9_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value69.ReadStrptrMaybe
 inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value69_tmp;
-    retval = u32_ReadStrptrMaybe(value69_tmp, in_str);
-    if (retval) {
-        value69_Set(parent, value69_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value69, in_str);
+    value69_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value11.ReadStrptrMaybe
 inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value11_tmp;
-    retval = u32_ReadStrptrMaybe(value11_tmp, in_str);
-    if (retval) {
-        value11_Set(parent, value11_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value11, in_str);
+    value11_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value12.ReadStrptrMaybe
 inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value12_tmp;
-    retval = u32_ReadStrptrMaybe(value12_tmp, in_str);
-    if (retval) {
-        value12_Set(parent, value12_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value12, in_str);
+    value12_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value13.ReadStrptrMaybe
 inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value13_tmp;
-    retval = u32_ReadStrptrMaybe(value13_tmp, in_str);
-    if (retval) {
-        value13_Set(parent, value13_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value13, in_str);
+    value13_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value14.ReadStrptrMaybe
 inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value14_tmp;
-    retval = u32_ReadStrptrMaybe(value14_tmp, in_str);
-    if (retval) {
-        value14_Set(parent, value14_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value14, in_str);
+    value14_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value15.ReadStrptrMaybe
 inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value15_tmp;
-    retval = u32_ReadStrptrMaybe(value15_tmp, in_str);
-    if (retval) {
-        value15_Set(parent, value15_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value15, in_str);
+    value15_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value16.ReadStrptrMaybe
 inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value16_tmp;
-    retval = u32_ReadStrptrMaybe(value16_tmp, in_str);
-    if (retval) {
-        value16_Set(parent, value16_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value16, in_str);
+    value16_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value33.ReadStrptrMaybe
 inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value33_tmp;
-    retval = u32_ReadStrptrMaybe(value33_tmp, in_str);
-    if (retval) {
-        value33_Set(parent, value33_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value33, in_str);
+    value33_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value10.ReadStrptrMaybe
 inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value10_tmp;
-    retval = u32_ReadStrptrMaybe(value10_tmp, in_str);
-    if (retval) {
-        value10_Set(parent, value10_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value10, in_str);
+    value10_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value17.ReadStrptrMaybe
 inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value17_tmp;
-    retval = u32_ReadStrptrMaybe(value17_tmp, in_str);
-    if (retval) {
-        value17_Set(parent, value17_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value17, in_str);
+    value17_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value35.ReadStrptrMaybe
 inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value35_tmp;
-    retval = u32_ReadStrptrMaybe(value35_tmp, in_str);
-    if (retval) {
-        value35_Set(parent, value35_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value35, in_str);
+    value35_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value55.ReadStrptrMaybe
 inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value55_tmp;
-    retval = u32_ReadStrptrMaybe(value55_tmp, in_str);
-    if (retval) {
-        value55_Set(parent, value55_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value55, in_str);
+    value55_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value56.ReadStrptrMaybe
 inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value56_tmp;
-    retval = u32_ReadStrptrMaybe(value56_tmp, in_str);
-    if (retval) {
-        value56_Set(parent, value56_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value56, in_str);
+    value56_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value57.ReadStrptrMaybe
 inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value57_tmp;
-    retval = u32_ReadStrptrMaybe(value57_tmp, in_str);
-    if (retval) {
-        value57_Set(parent, value57_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value57, in_str);
+    value57_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value58.ReadStrptrMaybe
 inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value58_tmp;
-    retval = u32_ReadStrptrMaybe(value58_tmp, in_str);
-    if (retval) {
-        value58_Set(parent, value58_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value58, in_str);
+    value58_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value59.ReadStrptrMaybe
 inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value59_tmp;
-    retval = u32_ReadStrptrMaybe(value59_tmp, in_str);
-    if (retval) {
-        value59_Set(parent, value59_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value59, in_str);
+    value59_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value60.ReadStrptrMaybe
 inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value60_tmp;
-    retval = u32_ReadStrptrMaybe(value60_tmp, in_str);
-    if (retval) {
-        value60_Set(parent, value60_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value60, in_str);
+    value60_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value54.ReadStrptrMaybe
 inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value54_tmp;
-    retval = u32_ReadStrptrMaybe(value54_tmp, in_str);
-    if (retval) {
-        value54_Set(parent, value54_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value54, in_str);
+    value54_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value62.ReadStrptrMaybe
 inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value62_tmp;
-    retval = u32_ReadStrptrMaybe(value62_tmp, in_str);
-    if (retval) {
-        value62_Set(parent, value62_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value62, in_str);
+    value62_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value63.ReadStrptrMaybe
 inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value63_tmp;
-    retval = u32_ReadStrptrMaybe(value63_tmp, in_str);
-    if (retval) {
-        value63_Set(parent, value63_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value63, in_str);
+    value63_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value64.ReadStrptrMaybe
 inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value64_tmp;
-    retval = u32_ReadStrptrMaybe(value64_tmp, in_str);
-    if (retval) {
-        value64_Set(parent, value64_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value64, in_str);
+    value64_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value65.ReadStrptrMaybe
 inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value65_tmp;
-    retval = u32_ReadStrptrMaybe(value65_tmp, in_str);
-    if (retval) {
-        value65_Set(parent, value65_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value65, in_str);
+    value65_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value66.ReadStrptrMaybe
 inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value66_tmp;
-    retval = u32_ReadStrptrMaybe(value66_tmp, in_str);
-    if (retval) {
-        value66_Set(parent, value66_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value66, in_str);
+    value66_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value67.ReadStrptrMaybe
 inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value67_tmp;
-    retval = u32_ReadStrptrMaybe(value67_tmp, in_str);
-    if (retval) {
-        value67_Set(parent, value67_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value67, in_str);
+    value67_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value68.ReadStrptrMaybe
 inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value68_tmp;
-    retval = u32_ReadStrptrMaybe(value68_tmp, in_str);
-    if (retval) {
-        value68_Set(parent, value68_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value68, in_str);
+    value68_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value61.ReadStrptrMaybe
 inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value61_tmp;
-    retval = u32_ReadStrptrMaybe(value61_tmp, in_str);
-    if (retval) {
-        value61_Set(parent, value61_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value61, in_str);
+    value61_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value34.ReadStrptrMaybe
 inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value34_tmp;
-    retval = u32_ReadStrptrMaybe(value34_tmp, in_str);
-    if (retval) {
-        value34_Set(parent, value34_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value34, in_str);
+    value34_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value52.ReadStrptrMaybe
 inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value52_tmp;
-    retval = u32_ReadStrptrMaybe(value52_tmp, in_str);
-    if (retval) {
-        value52_Set(parent, value52_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value52, in_str);
+    value52_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value36.ReadStrptrMaybe
 inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value36_tmp;
-    retval = u32_ReadStrptrMaybe(value36_tmp, in_str);
-    if (retval) {
-        value36_Set(parent, value36_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value36, in_str);
+    value36_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value37.ReadStrptrMaybe
 inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value37_tmp;
-    retval = u32_ReadStrptrMaybe(value37_tmp, in_str);
-    if (retval) {
-        value37_Set(parent, value37_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value37, in_str);
+    value37_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value38.ReadStrptrMaybe
 inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value38_tmp;
-    retval = u32_ReadStrptrMaybe(value38_tmp, in_str);
-    if (retval) {
-        value38_Set(parent, value38_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value38, in_str);
+    value38_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value39.ReadStrptrMaybe
 inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value39_tmp;
-    retval = u32_ReadStrptrMaybe(value39_tmp, in_str);
-    if (retval) {
-        value39_Set(parent, value39_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value39, in_str);
+    value39_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value40.ReadStrptrMaybe
 inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value40_tmp;
-    retval = u32_ReadStrptrMaybe(value40_tmp, in_str);
-    if (retval) {
-        value40_Set(parent, value40_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value40, in_str);
+    value40_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value41.ReadStrptrMaybe
 inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value41_tmp;
-    retval = u32_ReadStrptrMaybe(value41_tmp, in_str);
-    if (retval) {
-        value41_Set(parent, value41_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value41, in_str);
+    value41_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value42.ReadStrptrMaybe
 inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value42_tmp;
-    retval = u32_ReadStrptrMaybe(value42_tmp, in_str);
-    if (retval) {
-        value42_Set(parent, value42_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value42, in_str);
+    value42_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value53.ReadStrptrMaybe
 inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value53_tmp;
-    retval = u32_ReadStrptrMaybe(value53_tmp, in_str);
-    if (retval) {
-        value53_Set(parent, value53_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value53, in_str);
+    value53_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value44.ReadStrptrMaybe
 inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value44_tmp;
-    retval = u32_ReadStrptrMaybe(value44_tmp, in_str);
-    if (retval) {
-        value44_Set(parent, value44_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value44, in_str);
+    value44_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value45.ReadStrptrMaybe
 inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value45_tmp;
-    retval = u32_ReadStrptrMaybe(value45_tmp, in_str);
-    if (retval) {
-        value45_Set(parent, value45_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value45, in_str);
+    value45_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value46.ReadStrptrMaybe
 inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value46_tmp;
-    retval = u32_ReadStrptrMaybe(value46_tmp, in_str);
-    if (retval) {
-        value46_Set(parent, value46_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value46, in_str);
+    value46_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value47.ReadStrptrMaybe
 inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value47_tmp;
-    retval = u32_ReadStrptrMaybe(value47_tmp, in_str);
-    if (retval) {
-        value47_Set(parent, value47_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value47, in_str);
+    value47_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value48.ReadStrptrMaybe
 inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value48_tmp;
-    retval = u32_ReadStrptrMaybe(value48_tmp, in_str);
-    if (retval) {
-        value48_Set(parent, value48_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value48, in_str);
+    value48_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value49.ReadStrptrMaybe
 inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value49_tmp;
-    retval = u32_ReadStrptrMaybe(value49_tmp, in_str);
-    if (retval) {
-        value49_Set(parent, value49_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value49, in_str);
+    value49_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value50.ReadStrptrMaybe
 inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value50_tmp;
-    retval = u32_ReadStrptrMaybe(value50_tmp, in_str);
-    if (retval) {
-        value50_Set(parent, value50_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value50, in_str);
+    value50_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value51.ReadStrptrMaybe
 inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value51_tmp;
-    retval = u32_ReadStrptrMaybe(value51_tmp, in_str);
-    if (retval) {
-        value51_Set(parent, value51_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value51, in_str);
+    value51_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value43.ReadStrptrMaybe
 inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value43_tmp;
-    retval = u32_ReadStrptrMaybe(value43_tmp, in_str);
-    if (retval) {
-        value43_Set(parent, value43_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value43, in_str);
+    value43_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value70.ReadStrptrMaybe
 inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value70_tmp;
-    retval = u32_ReadStrptrMaybe(value70_tmp, in_str);
-    if (retval) {
-        value70_Set(parent, value70_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value70, in_str);
+    value70_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value71.ReadStrptrMaybe
 inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value71_tmp;
-    retval = u32_ReadStrptrMaybe(value71_tmp, in_str);
-    if (retval) {
-        value71_Set(parent, value71_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value71, in_str);
+    value71_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU128..ReadFieldMaybe
-bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_pmask: retval = false; break;
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value2: retval = value2_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value3: retval = value3_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value21: retval = value21_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value22: retval = value22_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value23: retval = value23_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value24: retval = value24_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value25: retval = value25_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value26: retval = value26_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value20: retval = value20_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value28: retval = value28_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value29: retval = value29_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value30: retval = value30_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value31: retval = value31_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value32: retval = value32_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value27: retval = value27_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value19: retval = value19_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value18: retval = value18_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value4: retval = value4_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value5: retval = value5_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value6: retval = value6_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value7: retval = value7_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value8: retval = value8_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value9: retval = value9_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value69: retval = value69_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value11: retval = value11_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value12: retval = value12_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value13: retval = value13_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value14: retval = value14_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value15: retval = value15_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value16: retval = value16_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value33: retval = value33_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value10: retval = value10_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value17: retval = value17_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value35: retval = value35_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value55: retval = value55_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value56: retval = value56_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value57: retval = value57_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value58: retval = value58_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value59: retval = value59_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value60: retval = value60_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value54: retval = value54_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value62: retval = value62_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value63: retval = value63_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value64: retval = value64_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value65: retval = value65_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value66: retval = value66_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value67: retval = value67_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value68: retval = value68_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value61: retval = value61_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value34: retval = value34_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value52: retval = value52_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value36: retval = value36_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value37: retval = value37_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value38: retval = value38_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value39: retval = value39_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value40: retval = value40_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value41: retval = value41_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value42: retval = value42_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value53: retval = value53_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value44: retval = value44_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value45: retval = value45_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value46: retval = value46_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value47: retval = value47_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value48: retval = value48_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value49: retval = value49_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value50: retval = value50_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value51: retval = value51_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value43: retval = value43_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value70: retval = value70_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value71: retval = value71_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_pmask: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 0);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value2: {
+            retval = value2_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 1);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value3: {
+            retval = value3_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 2);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value21: {
+            retval = value21_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 3);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value22: {
+            retval = value22_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 4);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value23: {
+            retval = value23_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 5);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value24: {
+            retval = value24_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 6);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value25: {
+            retval = value25_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 7);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value26: {
+            retval = value26_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 8);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value20: {
+            retval = value20_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 9);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value28: {
+            retval = value28_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 10);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value29: {
+            retval = value29_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 11);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value30: {
+            retval = value30_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 12);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value31: {
+            retval = value31_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 13);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value32: {
+            retval = value32_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 14);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value27: {
+            retval = value27_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 15);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value19: {
+            retval = value19_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 16);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value18: {
+            retval = value18_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 17);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value4: {
+            retval = value4_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 18);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value5: {
+            retval = value5_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 19);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value6: {
+            retval = value6_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 20);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value7: {
+            retval = value7_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 21);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value8: {
+            retval = value8_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 22);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value9: {
+            retval = value9_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 23);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value69: {
+            retval = value69_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 24);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value11: {
+            retval = value11_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 25);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value12: {
+            retval = value12_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 26);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value13: {
+            retval = value13_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 27);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value14: {
+            retval = value14_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 28);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value15: {
+            retval = value15_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 29);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value16: {
+            retval = value16_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 30);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value33: {
+            retval = value33_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 31);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value10: {
+            retval = value10_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 32);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value17: {
+            retval = value17_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 33);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value35: {
+            retval = value35_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 34);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value55: {
+            retval = value55_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 35);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value56: {
+            retval = value56_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 36);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value57: {
+            retval = value57_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 37);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value58: {
+            retval = value58_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 38);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value59: {
+            retval = value59_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 39);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value60: {
+            retval = value60_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 40);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value54: {
+            retval = value54_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 41);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value62: {
+            retval = value62_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 42);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value63: {
+            retval = value63_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 43);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value64: {
+            retval = value64_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 44);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value65: {
+            retval = value65_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 45);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value66: {
+            retval = value66_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 46);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value67: {
+            retval = value67_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 47);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value68: {
+            retval = value68_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 48);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value61: {
+            retval = value61_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 49);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value34: {
+            retval = value34_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 50);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value52: {
+            retval = value52_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 51);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value36: {
+            retval = value36_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 52);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value37: {
+            retval = value37_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 53);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value38: {
+            retval = value38_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 54);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value39: {
+            retval = value39_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 55);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value40: {
+            retval = value40_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 56);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value41: {
+            retval = value41_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 57);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value42: {
+            retval = value42_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 58);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value53: {
+            retval = value53_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 59);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value44: {
+            retval = value44_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 60);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value45: {
+            retval = value45_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 61);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value46: {
+            retval = value46_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 62);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value47: {
+            retval = value47_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 63);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value48: {
+            retval = value48_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 64);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value49: {
+            retval = value49_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 65);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value50: {
+            retval = value50_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 66);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value51: {
+            retval = value51_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 67);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value43: {
+            retval = value43_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 68);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value70: {
+            retval = value70_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 69);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value71: {
+            retval = value71_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 70);
+            }
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -12710,419 +13631,263 @@ void atf_amc::PmaskU128_Init(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128..Print
-// print string representation of atf_amc::PmaskU128 to string LHS, no header -- cprint:atf_amc.PmaskU128.String
-void atf_amc::PmaskU128_Print(atf_amc::PmaskU128 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskU128.String  printfmt:Tuple
+void atf_amc::PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.PmaskU128";
 
-    if (value_PresentQ(row)) {
-        u32_Print(row.value, temp);
-        PrintAttrSpaceReset(str,"value", temp);
-    }
-
-    if (value2_PresentQ(row)) {
-        u32_Print(row.value2, temp);
-        PrintAttrSpaceReset(str,"value2", temp);
-    }
-
-    if (value3_PresentQ(row)) {
-        u32_Print(row.value3, temp);
-        PrintAttrSpaceReset(str,"value3", temp);
-    }
-
-    if (value21_PresentQ(row)) {
-        u32_Print(row.value21, temp);
-        PrintAttrSpaceReset(str,"value21", temp);
-    }
-
-    if (value22_PresentQ(row)) {
-        u32_Print(row.value22, temp);
-        PrintAttrSpaceReset(str,"value22", temp);
-    }
-
-    if (value23_PresentQ(row)) {
-        u32_Print(row.value23, temp);
-        PrintAttrSpaceReset(str,"value23", temp);
-    }
-
-    if (value24_PresentQ(row)) {
-        u32_Print(row.value24, temp);
-        PrintAttrSpaceReset(str,"value24", temp);
-    }
-
-    if (value25_PresentQ(row)) {
-        u32_Print(row.value25, temp);
-        PrintAttrSpaceReset(str,"value25", temp);
-    }
-
-    if (value26_PresentQ(row)) {
-        u32_Print(row.value26, temp);
-        PrintAttrSpaceReset(str,"value26", temp);
-    }
-
-    if (value20_PresentQ(row)) {
-        u32_Print(row.value20, temp);
-        PrintAttrSpaceReset(str,"value20", temp);
-    }
-
-    if (value28_PresentQ(row)) {
-        u32_Print(row.value28, temp);
-        PrintAttrSpaceReset(str,"value28", temp);
-    }
-
-    if (value29_PresentQ(row)) {
-        u32_Print(row.value29, temp);
-        PrintAttrSpaceReset(str,"value29", temp);
-    }
-
-    if (value30_PresentQ(row)) {
-        u32_Print(row.value30, temp);
-        PrintAttrSpaceReset(str,"value30", temp);
-    }
-
-    if (value31_PresentQ(row)) {
-        u32_Print(row.value31, temp);
-        PrintAttrSpaceReset(str,"value31", temp);
-    }
-
-    if (value32_PresentQ(row)) {
-        u32_Print(row.value32, temp);
-        PrintAttrSpaceReset(str,"value32", temp);
-    }
-
-    if (value27_PresentQ(row)) {
-        u32_Print(row.value27, temp);
-        PrintAttrSpaceReset(str,"value27", temp);
-    }
-
-    if (value19_PresentQ(row)) {
-        u32_Print(row.value19, temp);
-        PrintAttrSpaceReset(str,"value19", temp);
-    }
-
-    if (value18_PresentQ(row)) {
-        u32_Print(row.value18, temp);
-        PrintAttrSpaceReset(str,"value18", temp);
-    }
-
-    if (value4_PresentQ(row)) {
-        u32_Print(row.value4, temp);
-        PrintAttrSpaceReset(str,"value4", temp);
-    }
-
-    if (value5_PresentQ(row)) {
-        u32_Print(row.value5, temp);
-        PrintAttrSpaceReset(str,"value5", temp);
-    }
-
-    if (value6_PresentQ(row)) {
-        u32_Print(row.value6, temp);
-        PrintAttrSpaceReset(str,"value6", temp);
-    }
-
-    if (value7_PresentQ(row)) {
-        u32_Print(row.value7, temp);
-        PrintAttrSpaceReset(str,"value7", temp);
-    }
-
-    if (value8_PresentQ(row)) {
-        u32_Print(row.value8, temp);
-        PrintAttrSpaceReset(str,"value8", temp);
-    }
-
-    if (value9_PresentQ(row)) {
-        u32_Print(row.value9, temp);
-        PrintAttrSpaceReset(str,"value9", temp);
-    }
-
-    if (value69_PresentQ(row)) {
-        u32_Print(row.value69, temp);
-        PrintAttrSpaceReset(str,"value69", temp);
-    }
-
-    if (value11_PresentQ(row)) {
-        u32_Print(row.value11, temp);
-        PrintAttrSpaceReset(str,"value11", temp);
-    }
-
-    if (value12_PresentQ(row)) {
-        u32_Print(row.value12, temp);
-        PrintAttrSpaceReset(str,"value12", temp);
-    }
-
-    if (value13_PresentQ(row)) {
-        u32_Print(row.value13, temp);
-        PrintAttrSpaceReset(str,"value13", temp);
-    }
-
-    if (value14_PresentQ(row)) {
-        u32_Print(row.value14, temp);
-        PrintAttrSpaceReset(str,"value14", temp);
-    }
-
-    if (value15_PresentQ(row)) {
-        u32_Print(row.value15, temp);
-        PrintAttrSpaceReset(str,"value15", temp);
-    }
-
-    if (value16_PresentQ(row)) {
-        u32_Print(row.value16, temp);
-        PrintAttrSpaceReset(str,"value16", temp);
-    }
-
-    if (value33_PresentQ(row)) {
-        u32_Print(row.value33, temp);
-        PrintAttrSpaceReset(str,"value33", temp);
-    }
-
-    if (value10_PresentQ(row)) {
-        u32_Print(row.value10, temp);
-        PrintAttrSpaceReset(str,"value10", temp);
-    }
-
-    if (value17_PresentQ(row)) {
-        u32_Print(row.value17, temp);
-        PrintAttrSpaceReset(str,"value17", temp);
-    }
-
-    if (value35_PresentQ(row)) {
-        u32_Print(row.value35, temp);
-        PrintAttrSpaceReset(str,"value35", temp);
-    }
-
-    if (value55_PresentQ(row)) {
-        u32_Print(row.value55, temp);
-        PrintAttrSpaceReset(str,"value55", temp);
-    }
-
-    if (value56_PresentQ(row)) {
-        u32_Print(row.value56, temp);
-        PrintAttrSpaceReset(str,"value56", temp);
-    }
-
-    if (value57_PresentQ(row)) {
-        u32_Print(row.value57, temp);
-        PrintAttrSpaceReset(str,"value57", temp);
-    }
-
-    if (value58_PresentQ(row)) {
-        u32_Print(row.value58, temp);
-        PrintAttrSpaceReset(str,"value58", temp);
-    }
-
-    if (value59_PresentQ(row)) {
-        u32_Print(row.value59, temp);
-        PrintAttrSpaceReset(str,"value59", temp);
-    }
-
-    if (value60_PresentQ(row)) {
-        u32_Print(row.value60, temp);
-        PrintAttrSpaceReset(str,"value60", temp);
-    }
-
-    if (value54_PresentQ(row)) {
-        u32_Print(row.value54, temp);
-        PrintAttrSpaceReset(str,"value54", temp);
-    }
-
-    if (value62_PresentQ(row)) {
-        u32_Print(row.value62, temp);
-        PrintAttrSpaceReset(str,"value62", temp);
-    }
-
-    if (value63_PresentQ(row)) {
-        u32_Print(row.value63, temp);
-        PrintAttrSpaceReset(str,"value63", temp);
-    }
-
-    if (value64_PresentQ(row)) {
-        u32_Print(row.value64, temp);
-        PrintAttrSpaceReset(str,"value64", temp);
-    }
-
-    if (value65_PresentQ(row)) {
-        u32_Print(row.value65, temp);
-        PrintAttrSpaceReset(str,"value65", temp);
-    }
-
-    if (value66_PresentQ(row)) {
-        u32_Print(row.value66, temp);
-        PrintAttrSpaceReset(str,"value66", temp);
-    }
-
-    if (value67_PresentQ(row)) {
-        u32_Print(row.value67, temp);
-        PrintAttrSpaceReset(str,"value67", temp);
-    }
-
-    if (value68_PresentQ(row)) {
-        u32_Print(row.value68, temp);
-        PrintAttrSpaceReset(str,"value68", temp);
-    }
-
-    if (value61_PresentQ(row)) {
-        u32_Print(row.value61, temp);
-        PrintAttrSpaceReset(str,"value61", temp);
-    }
-
-    if (value34_PresentQ(row)) {
-        u32_Print(row.value34, temp);
-        PrintAttrSpaceReset(str,"value34", temp);
-    }
-
-    if (value52_PresentQ(row)) {
-        u32_Print(row.value52, temp);
-        PrintAttrSpaceReset(str,"value52", temp);
-    }
-
-    if (value36_PresentQ(row)) {
-        u32_Print(row.value36, temp);
-        PrintAttrSpaceReset(str,"value36", temp);
-    }
-
-    if (value37_PresentQ(row)) {
-        u32_Print(row.value37, temp);
-        PrintAttrSpaceReset(str,"value37", temp);
-    }
-
-    if (value38_PresentQ(row)) {
-        u32_Print(row.value38, temp);
-        PrintAttrSpaceReset(str,"value38", temp);
-    }
-
-    if (value39_PresentQ(row)) {
-        u32_Print(row.value39, temp);
-        PrintAttrSpaceReset(str,"value39", temp);
-    }
-
-    if (value40_PresentQ(row)) {
-        u32_Print(row.value40, temp);
-        PrintAttrSpaceReset(str,"value40", temp);
-    }
-
-    if (value41_PresentQ(row)) {
-        u32_Print(row.value41, temp);
-        PrintAttrSpaceReset(str,"value41", temp);
-    }
-
-    if (value42_PresentQ(row)) {
-        u32_Print(row.value42, temp);
-        PrintAttrSpaceReset(str,"value42", temp);
-    }
-
-    if (value53_PresentQ(row)) {
-        u32_Print(row.value53, temp);
-        PrintAttrSpaceReset(str,"value53", temp);
-    }
-
-    if (value44_PresentQ(row)) {
-        u32_Print(row.value44, temp);
-        PrintAttrSpaceReset(str,"value44", temp);
-    }
-
-    if (value45_PresentQ(row)) {
-        u32_Print(row.value45, temp);
-        PrintAttrSpaceReset(str,"value45", temp);
-    }
-
-    if (value46_PresentQ(row)) {
-        u32_Print(row.value46, temp);
-        PrintAttrSpaceReset(str,"value46", temp);
-    }
-
-    if (value47_PresentQ(row)) {
-        u32_Print(row.value47, temp);
-        PrintAttrSpaceReset(str,"value47", temp);
-    }
-
-    if (value48_PresentQ(row)) {
-        u32_Print(row.value48, temp);
-        PrintAttrSpaceReset(str,"value48", temp);
-    }
-
-    if (value49_PresentQ(row)) {
-        u32_Print(row.value49, temp);
-        PrintAttrSpaceReset(str,"value49", temp);
-    }
-
-    if (value50_PresentQ(row)) {
-        u32_Print(row.value50, temp);
-        PrintAttrSpaceReset(str,"value50", temp);
-    }
-
-    if (value51_PresentQ(row)) {
-        u32_Print(row.value51, temp);
-        PrintAttrSpaceReset(str,"value51", temp);
-    }
-
-    if (value43_PresentQ(row)) {
-        u32_Print(row.value43, temp);
-        PrintAttrSpaceReset(str,"value43", temp);
-    }
-
-    if (value70_PresentQ(row)) {
-        u32_Print(row.value70, temp);
-        PrintAttrSpaceReset(str,"value70", temp);
-    }
-
-    if (value71_PresentQ(row)) {
-        u32_Print(row.value71, temp);
-        PrintAttrSpaceReset(str,"value71", temp);
-    }
+    u32_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
+
+    u32_Print(row.value2, temp);
+    PrintAttrSpaceReset(str,"value2", temp);
+
+    u32_Print(row.value3, temp);
+    PrintAttrSpaceReset(str,"value3", temp);
+
+    u32_Print(row.value21, temp);
+    PrintAttrSpaceReset(str,"value21", temp);
+
+    u32_Print(row.value22, temp);
+    PrintAttrSpaceReset(str,"value22", temp);
+
+    u32_Print(row.value23, temp);
+    PrintAttrSpaceReset(str,"value23", temp);
+
+    u32_Print(row.value24, temp);
+    PrintAttrSpaceReset(str,"value24", temp);
+
+    u32_Print(row.value25, temp);
+    PrintAttrSpaceReset(str,"value25", temp);
+
+    u32_Print(row.value26, temp);
+    PrintAttrSpaceReset(str,"value26", temp);
+
+    u32_Print(row.value20, temp);
+    PrintAttrSpaceReset(str,"value20", temp);
+
+    u32_Print(row.value28, temp);
+    PrintAttrSpaceReset(str,"value28", temp);
+
+    u32_Print(row.value29, temp);
+    PrintAttrSpaceReset(str,"value29", temp);
+
+    u32_Print(row.value30, temp);
+    PrintAttrSpaceReset(str,"value30", temp);
+
+    u32_Print(row.value31, temp);
+    PrintAttrSpaceReset(str,"value31", temp);
+
+    u32_Print(row.value32, temp);
+    PrintAttrSpaceReset(str,"value32", temp);
+
+    u32_Print(row.value27, temp);
+    PrintAttrSpaceReset(str,"value27", temp);
+
+    u32_Print(row.value19, temp);
+    PrintAttrSpaceReset(str,"value19", temp);
+
+    u32_Print(row.value18, temp);
+    PrintAttrSpaceReset(str,"value18", temp);
+
+    u32_Print(row.value4, temp);
+    PrintAttrSpaceReset(str,"value4", temp);
+
+    u32_Print(row.value5, temp);
+    PrintAttrSpaceReset(str,"value5", temp);
+
+    u32_Print(row.value6, temp);
+    PrintAttrSpaceReset(str,"value6", temp);
+
+    u32_Print(row.value7, temp);
+    PrintAttrSpaceReset(str,"value7", temp);
+
+    u32_Print(row.value8, temp);
+    PrintAttrSpaceReset(str,"value8", temp);
+
+    u32_Print(row.value9, temp);
+    PrintAttrSpaceReset(str,"value9", temp);
+
+    u32_Print(row.value69, temp);
+    PrintAttrSpaceReset(str,"value69", temp);
+
+    u32_Print(row.value11, temp);
+    PrintAttrSpaceReset(str,"value11", temp);
+
+    u32_Print(row.value12, temp);
+    PrintAttrSpaceReset(str,"value12", temp);
+
+    u32_Print(row.value13, temp);
+    PrintAttrSpaceReset(str,"value13", temp);
+
+    u32_Print(row.value14, temp);
+    PrintAttrSpaceReset(str,"value14", temp);
+
+    u32_Print(row.value15, temp);
+    PrintAttrSpaceReset(str,"value15", temp);
+
+    u32_Print(row.value16, temp);
+    PrintAttrSpaceReset(str,"value16", temp);
+
+    u32_Print(row.value33, temp);
+    PrintAttrSpaceReset(str,"value33", temp);
+
+    u32_Print(row.value10, temp);
+    PrintAttrSpaceReset(str,"value10", temp);
+
+    u32_Print(row.value17, temp);
+    PrintAttrSpaceReset(str,"value17", temp);
+
+    u32_Print(row.value35, temp);
+    PrintAttrSpaceReset(str,"value35", temp);
+
+    u32_Print(row.value55, temp);
+    PrintAttrSpaceReset(str,"value55", temp);
+
+    u32_Print(row.value56, temp);
+    PrintAttrSpaceReset(str,"value56", temp);
+
+    u32_Print(row.value57, temp);
+    PrintAttrSpaceReset(str,"value57", temp);
+
+    u32_Print(row.value58, temp);
+    PrintAttrSpaceReset(str,"value58", temp);
+
+    u32_Print(row.value59, temp);
+    PrintAttrSpaceReset(str,"value59", temp);
+
+    u32_Print(row.value60, temp);
+    PrintAttrSpaceReset(str,"value60", temp);
+
+    u32_Print(row.value54, temp);
+    PrintAttrSpaceReset(str,"value54", temp);
+
+    u32_Print(row.value62, temp);
+    PrintAttrSpaceReset(str,"value62", temp);
+
+    u32_Print(row.value63, temp);
+    PrintAttrSpaceReset(str,"value63", temp);
+
+    u32_Print(row.value64, temp);
+    PrintAttrSpaceReset(str,"value64", temp);
+
+    u32_Print(row.value65, temp);
+    PrintAttrSpaceReset(str,"value65", temp);
+
+    u32_Print(row.value66, temp);
+    PrintAttrSpaceReset(str,"value66", temp);
+
+    u32_Print(row.value67, temp);
+    PrintAttrSpaceReset(str,"value67", temp);
+
+    u32_Print(row.value68, temp);
+    PrintAttrSpaceReset(str,"value68", temp);
+
+    u32_Print(row.value61, temp);
+    PrintAttrSpaceReset(str,"value61", temp);
+
+    u32_Print(row.value34, temp);
+    PrintAttrSpaceReset(str,"value34", temp);
+
+    u32_Print(row.value52, temp);
+    PrintAttrSpaceReset(str,"value52", temp);
+
+    u32_Print(row.value36, temp);
+    PrintAttrSpaceReset(str,"value36", temp);
+
+    u32_Print(row.value37, temp);
+    PrintAttrSpaceReset(str,"value37", temp);
+
+    u32_Print(row.value38, temp);
+    PrintAttrSpaceReset(str,"value38", temp);
+
+    u32_Print(row.value39, temp);
+    PrintAttrSpaceReset(str,"value39", temp);
+
+    u32_Print(row.value40, temp);
+    PrintAttrSpaceReset(str,"value40", temp);
+
+    u32_Print(row.value41, temp);
+    PrintAttrSpaceReset(str,"value41", temp);
+
+    u32_Print(row.value42, temp);
+    PrintAttrSpaceReset(str,"value42", temp);
+
+    u32_Print(row.value53, temp);
+    PrintAttrSpaceReset(str,"value53", temp);
+
+    u32_Print(row.value44, temp);
+    PrintAttrSpaceReset(str,"value44", temp);
+
+    u32_Print(row.value45, temp);
+    PrintAttrSpaceReset(str,"value45", temp);
+
+    u32_Print(row.value46, temp);
+    PrintAttrSpaceReset(str,"value46", temp);
+
+    u32_Print(row.value47, temp);
+    PrintAttrSpaceReset(str,"value47", temp);
+
+    u32_Print(row.value48, temp);
+    PrintAttrSpaceReset(str,"value48", temp);
+
+    u32_Print(row.value49, temp);
+    PrintAttrSpaceReset(str,"value49", temp);
+
+    u32_Print(row.value50, temp);
+    PrintAttrSpaceReset(str,"value50", temp);
+
+    u32_Print(row.value51, temp);
+    PrintAttrSpaceReset(str,"value51", temp);
+
+    u32_Print(row.value43, temp);
+    PrintAttrSpaceReset(str,"value43", temp);
+
+    u32_Print(row.value70, temp);
+    PrintAttrSpaceReset(str,"value70", temp);
+
+    u32_Print(row.value71, temp);
+    PrintAttrSpaceReset(str,"value71", temp);
 }
 
 // --- atf_amc.PmaskU32.value.ReadStrptrMaybe
 inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value_tmp;
-    retval = u32_ReadStrptrMaybe(value_tmp, in_str);
-    if (retval) {
-        value_Set(parent, value_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value, in_str);
+    value_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value2.ReadStrptrMaybe
 inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value2_tmp;
-    retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
-    if (retval) {
-        value2_Set(parent, value2_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value2, in_str);
+    value2_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value3.ReadStrptrMaybe
 inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value3_tmp;
-    retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
-    if (retval) {
-        value3_Set(parent, value3_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value3, in_str);
+    value3_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value4.ReadStrptrMaybe
 inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value4_tmp;
-    retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
-    if (retval) {
-        value4_Set(parent, value4_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value4, in_str);
+    value4_SetPresent(parent);
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value5.ReadStrptrMaybe
 inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
     bool retval = true;
-    u32 value5_tmp;
-    retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
-    if (retval) {
-        value5_Set(parent, value5_tmp);
-    }
+    retval = u32_ReadStrptrMaybe(parent.value5, in_str);
+    value5_SetPresent(parent);
     return retval;
 }
 
@@ -13151,17 +13916,50 @@ void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc
 }
 
 // --- atf_amc.PmaskU32..ReadFieldMaybe
-bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_pmask: retval = false; break;
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value2: retval = value2_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value3: retval = value3_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value4: retval = value4_ReadStrptrMaybe(parent, strval); break;
-        case atf_amc_FieldId_value5: retval = value5_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_pmask: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 0);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value2: {
+            retval = value2_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 1);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value3: {
+            retval = value3_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 2);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value4: {
+            retval = value4_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 3);
+            }
+            break;
+        }
+        case atf_amc_FieldId_value5: {
+            retval = value5_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 4);
+            }
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -13183,35 +13981,26 @@ bool atf_amc::PmaskU32_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr i
 }
 
 // --- atf_amc.PmaskU32..Print
-// print string representation of atf_amc::PmaskU32 to string LHS, no header -- cprint:atf_amc.PmaskU32.String
-void atf_amc::PmaskU32_Print(atf_amc::PmaskU32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskU32.String  printfmt:Tuple
+void atf_amc::PmaskU32_Print(atf_amc::PmaskU32& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.PmaskU32";
 
-    if (value_PresentQ(row)) {
-        u32_Print(row.value, temp);
-        PrintAttrSpaceReset(str,"value", temp);
-    }
+    u32_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
 
-    if (value2_PresentQ(row)) {
-        u32_Print(row.value2, temp);
-        PrintAttrSpaceReset(str,"value2", temp);
-    }
+    u32_Print(row.value2, temp);
+    PrintAttrSpaceReset(str,"value2", temp);
 
-    if (value3_PresentQ(row)) {
-        u32_Print(row.value3, temp);
-        PrintAttrSpaceReset(str,"value3", temp);
-    }
+    u32_Print(row.value3, temp);
+    PrintAttrSpaceReset(str,"value3", temp);
 
-    if (value4_PresentQ(row)) {
-        u32_Print(row.value4, temp);
-        PrintAttrSpaceReset(str,"value4", temp);
-    }
+    u32_Print(row.value4, temp);
+    PrintAttrSpaceReset(str,"value4", temp);
 
-    if (value5_PresentQ(row)) {
-        u32_Print(row.value5, temp);
-        PrintAttrSpaceReset(str,"value5", temp);
-    }
+    u32_Print(row.value5, temp);
+    PrintAttrSpaceReset(str,"value5", temp);
 }
 
 // --- atf_amc.PmaskU555.pmask_bitcurs.Next
@@ -13307,12 +14096,15 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strpt
 }
 
 // --- atf_amc.PooledBE64..ReadFieldMaybe
-bool atf_amc::PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -13334,8 +14126,9 @@ bool atf_amc::PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strp
 }
 
 // --- atf_amc.PooledBE64..Print
-// print string representation of atf_amc::PooledBE64 to string LHS, no header -- cprint:atf_amc.PooledBE64.String
-void atf_amc::PooledBE64_Print(atf_amc::PooledBE64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PooledBE64.String  printfmt:Tuple
+void atf_amc::PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.PooledBE64";
 
@@ -13365,7 +14158,7 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -13447,8 +14240,9 @@ bool atf_amc::RnullStr6_U32_ReadStrptrMaybe(atf_amc::RnullStr6_U32 &parent, algo
 }
 
 // --- atf_amc.RnullStr6_U32..Print
-// print string representation of atf_amc::RnullStr6_U32 to string LHS, no header -- cprint:atf_amc.RnullStr6_U32.String
-void atf_amc::RnullStr6_U32_Print(atf_amc::RnullStr6_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.RnullStr6_U32.String  printfmt:Raw
+void atf_amc::RnullStr6_U32_Print(atf_amc::RnullStr6_U32& row, algo::cstring& str) {
     atf_amc::ch_Print(row, str);
 }
 
@@ -13474,7 +14268,7 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs)
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -13554,20 +14348,30 @@ bool atf_amc::RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::st
 }
 
 // --- atf_amc.RpasU32Str6..Print
-// print string representation of atf_amc::RpasU32Str6 to string LHS, no header -- cprint:atf_amc.RpasU32Str6.String
-void atf_amc::RpasU32Str6_Print(atf_amc::RpasU32Str6 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.RpasU32Str6.String  printfmt:Raw
+void atf_amc::RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) {
     atf_amc::ch_Print(row, str);
 }
 
 // --- atf_amc.Sep1..ReadFieldMaybe
-bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_val1: retval = u32_ReadStrptrMaybe(parent.val1, strval); break;
-        case atf_amc_FieldId_val2: retval = u32_ReadStrptrMaybe(parent.val2, strval); break;
-        case atf_amc_FieldId_val3: retval = u32_ReadStrptrMaybe(parent.val3, strval); break;
+        case atf_amc_FieldId_val1: {
+            retval = u32_ReadStrptrMaybe(parent.val1, strval);
+            break;
+        }
+        case atf_amc_FieldId_val2: {
+            retval = u32_ReadStrptrMaybe(parent.val2, strval);
+            break;
+        }
+        case atf_amc_FieldId_val3: {
+            retval = u32_ReadStrptrMaybe(parent.val3, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -13595,8 +14399,9 @@ bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.Sep1..Print
-// print string representation of atf_amc::Sep1 to string LHS, no header -- cprint:atf_amc.Sep1.String
-void atf_amc::Sep1_Print(atf_amc::Sep1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Sep1.String  printfmt:Sep
+void atf_amc::Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) {
     u32_Print(row.val1, str);
     str << '-';
     u32_Print(row.val2, str);
@@ -13643,15 +14448,27 @@ bool atf_amc::payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_s
 }
 
 // --- atf_amc.Seqmsg..ReadFieldMaybe
-bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_msghdr: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_payload: retval = payload_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_msghdr: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_payload: {
+            retval = payload_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -13674,8 +14491,9 @@ bool atf_amc::Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_st
 }
 
 // --- atf_amc.Seqmsg..Print
-// print string representation of atf_amc::Seqmsg to string LHS, no header -- cprint:atf_amc.Seqmsg.String
-void atf_amc::Seqmsg_Print(atf_amc::Seqmsg & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Seqmsg.String  printfmt:Tuple
+void atf_amc::Seqmsg_Print(atf_amc::Seqmsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Seqmsg";
 
@@ -13892,8 +14710,9 @@ bool atf_amc::TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_
 }
 
 // --- atf_amc.TableId..Print
-// print string representation of atf_amc::TableId to string LHS, no header -- cprint:atf_amc.TableId.String
-void atf_amc::TableId_Print(atf_amc::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TableId.String  printfmt:Raw
+void atf_amc::TableId_Print(atf_amc::TableId& row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -14139,12 +14958,15 @@ bool atf_amc::val_ReadStrptrMaybe(atf_amc::TestRegx1& parent, algo::strptr in) {
 }
 
 // --- atf_amc.TestRegx1..ReadFieldMaybe
-bool atf_amc::TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_val: retval = val_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_val: {
+            retval = val_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14166,8 +14988,9 @@ bool atf_amc::TestRegx1_ReadStrptrMaybe(atf_amc::TestRegx1 &parent, algo::strptr
 }
 
 // --- atf_amc.TestRegx1..Print
-// print string representation of atf_amc::TestRegx1 to string LHS, no header -- cprint:atf_amc.TestRegx1.String
-void atf_amc::TestRegx1_Print(atf_amc::TestRegx1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TestRegx1.String  printfmt:Tuple
+void atf_amc::TestRegx1_Print(atf_amc::TestRegx1& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TestRegx1";
 
@@ -14185,8 +15008,9 @@ bool atf_amc::TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr i
 }
 
 // --- atf_amc.TestType..Print
-// print string representation of atf_amc::TestType to string LHS, no header -- cprint:atf_amc.TestType.String
-void atf_amc::TestType_Print(atf_amc::TestType & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TestType.String  printfmt:Raw
+void atf_amc::TestType_Print(atf_amc::TestType& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -14223,15 +15047,27 @@ bool atf_amc::text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.Text..ReadFieldMaybe
-bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_msghdr: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_text: retval = text_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_msghdr: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_text: {
+            retval = text_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14254,8 +15090,9 @@ bool atf_amc::Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.Text..Print
-// print string representation of atf_amc::Text to string LHS, no header -- cprint:atf_amc.Text.String
-void atf_amc::Text_Print(atf_amc::Text & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Text.String  printfmt:Tuple
+void atf_amc::Text_Print(atf_amc::Text& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Text";
 
@@ -14264,13 +15101,19 @@ void atf_amc::Text_Print(atf_amc::Text & row, algo::cstring &str) {
 }
 
 // --- atf_amc.TypeB..ReadFieldMaybe
-bool atf_amc::TypeB_ReadFieldMaybe(atf_amc::TypeB &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_typea: retval = i32_ReadStrptrMaybe(parent.typea, strval); break;
-        case atf_amc_FieldId_j: retval = i32_ReadStrptrMaybe(parent.j, strval); break;
+        case atf_amc_FieldId_typea: {
+            retval = i32_ReadStrptrMaybe(parent.typea, strval);
+            break;
+        }
+        case atf_amc_FieldId_j: {
+            retval = i32_ReadStrptrMaybe(parent.j, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14292,8 +15135,9 @@ bool atf_amc::TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeB..Print
-// print string representation of atf_amc::TypeB to string LHS, no header -- cprint:atf_amc.TypeB.String
-void atf_amc::TypeB_Print(atf_amc::TypeB & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeB.String  printfmt:Tuple
+void atf_amc::TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TypeB";
 
@@ -14306,7 +15150,7 @@ void atf_amc::TypeB_Print(atf_amc::TypeB & row, algo::cstring &str) {
 
 // --- atf_amc.TypeB..FmtJson
 // Create JSON representation of atf_amc::TypeB under PARENT node -- cprint:atf_amc.TypeB.Json
-lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;
@@ -14397,12 +15241,15 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rh
 }
 
 // --- atf_amc.TypeBE32en..ReadFieldMaybe
-bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14434,8 +15281,9 @@ bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple
 }
 
 // --- atf_amc.TypeBE32en..Print
-// print string representation of atf_amc::TypeBE32en to string LHS, no header -- cprint:atf_amc.TypeBE32en.String
-void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeBE32en.String  printfmt:Raw
+void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -14451,12 +15299,15 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, alg
 }
 
 // --- atf_amc.TypeBE64..ReadFieldMaybe
-bool atf_amc::TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64 &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14488,8 +15339,9 @@ bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tu
 }
 
 // --- atf_amc.TypeBE64..Print
-// print string representation of atf_amc::TypeBE64 to string LHS, no header -- cprint:atf_amc.TypeBE64.String
-void atf_amc::TypeBE64_Print(atf_amc::TypeBE64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeBE64.String  printfmt:Raw
+void atf_amc::TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) {
     u64_Print(value_Get(row), str);
 }
 
@@ -14503,8 +15355,9 @@ bool atf_amc::TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeC..Print
-// print string representation of atf_amc::TypeC to string LHS, no header -- cprint:atf_amc.TypeC.String
-void atf_amc::TypeC_Print(atf_amc::TypeC & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeC.String  printfmt:Raw
+void atf_amc::TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
@@ -14518,19 +15371,26 @@ bool atf_amc::TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeH..Print
-// print string representation of atf_amc::TypeH to string LHS, no header -- cprint:atf_amc.TypeH.String
-void atf_amc::TypeH_Print(atf_amc::TypeH & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeH.String  printfmt:Raw
+void atf_amc::TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) {
     i32_Print(row.typeh, str);
 }
 
 // --- atf_amc.TypeS..ReadFieldMaybe
-bool atf_amc::TypeS_ReadFieldMaybe(atf_amc::TypeS &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_types: retval = i32_ReadStrptrMaybe(parent.types, strval); break;
-        case atf_amc_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case atf_amc_FieldId_types: {
+            retval = i32_ReadStrptrMaybe(parent.types, strval);
+            break;
+        }
+        case atf_amc_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14552,8 +15412,9 @@ bool atf_amc::TypeS_ReadStrptrMaybe(atf_amc::TypeS &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeS..Print
-// print string representation of atf_amc::TypeS to string LHS, no header -- cprint:atf_amc.TypeS.String
-void atf_amc::TypeS_Print(atf_amc::TypeS & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeS.String  printfmt:Tuple
+void atf_amc::TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TypeS";
 
@@ -14565,13 +15426,19 @@ void atf_amc::TypeS_Print(atf_amc::TypeS & row, algo::cstring &str) {
 }
 
 // --- atf_amc.TypeT..ReadFieldMaybe
-bool atf_amc::TypeT_ReadFieldMaybe(atf_amc::TypeT &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_types: retval = i32_ReadStrptrMaybe(parent.types, strval); break;
-        case atf_amc_FieldId_j: retval = i32_ReadStrptrMaybe(parent.j, strval); break;
+        case atf_amc_FieldId_types: {
+            retval = i32_ReadStrptrMaybe(parent.types, strval);
+            break;
+        }
+        case atf_amc_FieldId_j: {
+            retval = i32_ReadStrptrMaybe(parent.j, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14593,12 +15460,61 @@ bool atf_amc::TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str)
 }
 
 // --- atf_amc.TypeT..Print
-// print string representation of atf_amc::TypeT to string LHS, no header -- cprint:atf_amc.TypeT.String
-void atf_amc::TypeT_Print(atf_amc::TypeT & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeT.String  printfmt:Tuple
+void atf_amc::TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TypeT";
 
     i32_Print(row.types, temp);
+    PrintAttrSpaceReset(str,"types", temp);
+
+    i32_Print(row.j, temp);
+    PrintAttrSpaceReset(str,"j", temp);
+}
+
+// --- atf_amc.TypeTVal..ReadFieldMaybe
+bool atf_amc::TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_types: {
+            retval = atf_amc::TypeS_ReadStrptrMaybe(parent.types, strval);
+            break;
+        }
+        case atf_amc_FieldId_j: {
+            retval = i32_ReadStrptrMaybe(parent.j, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.TypeTVal..ReadStrptrMaybe
+// Read fields of atf_amc::TypeTVal from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::TypeTVal_ReadStrptrMaybe(atf_amc::TypeTVal &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.TypeTVal");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && TypeTVal_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.TypeTVal..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeTVal.String  printfmt:Tuple
+void atf_amc::TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.TypeTVal";
+
+    atf_amc::TypeS_Print(row.types, temp);
     PrintAttrSpaceReset(str,"types", temp);
 
     i32_Print(row.j, temp);
@@ -14670,12 +15586,15 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rh
 }
 
 // --- atf_amc.Typefconst..ReadFieldMaybe
-bool atf_amc::Typefconst_ReadFieldMaybe(atf_amc::Typefconst &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Typefconst_ReadFieldMaybe(atf_amc::Typefconst& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_value: retval = value_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_value: {
+            retval = value_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14707,8 +15626,9 @@ bool atf_amc::Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple
 }
 
 // --- atf_amc.Typefconst..Print
-// print string representation of atf_amc::Typefconst to string LHS, no header -- cprint:atf_amc.Typefconst.String
-void atf_amc::Typefconst_Print(atf_amc::Typefconst & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Typefconst.String  printfmt:Raw
+void atf_amc::Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -14947,13 +15867,19 @@ bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) {
 }
 
 // --- atf_amc.VarlenK..ReadFieldMaybe
-bool atf_amc::VarlenK_ReadFieldMaybe(atf_amc::VarlenK &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_i: retval = i_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_i: {
+            retval = i_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -14976,8 +15902,9 @@ bool atf_amc::VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_
 }
 
 // --- atf_amc.VarlenK..Print
-// print string representation of atf_amc::VarlenK to string LHS, no header -- cprint:atf_amc.VarlenK.String
-void atf_amc::VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenK.String  printfmt:Tuple
+void atf_amc::VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.VarlenK";
 
@@ -15032,15 +15959,27 @@ bool atf_amc::k_XrefMaybe(atf_amc::VarlenK &row) {
 }
 
 // --- atf_amc.VarlenMsg..ReadFieldMaybe
-bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg &parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_amc_FieldId_base: retval = false; break;
-        case atf_amc_FieldId_type: retval = false; break;
-        case atf_amc_FieldId_length: retval = false; break;
-        case atf_amc_FieldId_k: retval = k_ReadStrptrMaybe(parent, strval); break;
+        case atf_amc_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case atf_amc_FieldId_k: {
+            retval = k_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -15063,8 +16002,9 @@ bool atf_amc::VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr
 }
 
 // --- atf_amc.VarlenMsg..Print
-// print string representation of atf_amc::VarlenMsg to string LHS, no header -- cprint:atf_amc.VarlenMsg.String
-void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenMsg.String  printfmt:Tuple
+void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.VarlenMsg";
 

@@ -60,17 +60,22 @@ const char *strconv_help =
 } // namespace strconv
 namespace strconv { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:strconv.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:strconv.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:strconv.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:strconv...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- strconv.trace..Print
-// print string representation of strconv::trace to string LHS, no header -- cprint:strconv.trace.String
-void strconv::trace_Print(strconv::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:strconv.trace.String  printfmt:Tuple
+void strconv::trace_Print(strconv::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "strconv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -453,8 +458,9 @@ bool strconv::FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::strptr in_
 }
 
 // --- strconv.FieldId..Print
-// print string representation of strconv::FieldId to string LHS, no header -- cprint:strconv.FieldId.String
-void strconv::FieldId_Print(strconv::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:strconv.FieldId.String  printfmt:Raw
+void strconv::FieldId_Print(strconv::FieldId& row, algo::cstring& str) {
     strconv::value_Print(row, str);
 }
 

@@ -1293,3 +1293,25 @@ inline algo::cstring &algo::operator<<(algo::cstring &out, void (*t)(algo::cstri
     t(out);
     return out;
 }
+
+// Compare two strings for equality, case-sensitively
+inline bool algo::strptr_Eq(algo::strptr a, algo::strptr b) {
+    // strncmp is heavily optimized using vector instructions
+    // and is the fastest way to do this
+    return a.n_elems==b.n_elems && strncmp(a.elems,b.elems,a.n_elems)==0;
+}
+
+// Test if string A is lexicographically less than string B.
+inline bool algo::strptr_Lt(algo::strptr a, algo::strptr b) {
+    int n = i32_Min(a.n_elems,b.n_elems);
+    int cmp=strncmp(a.elems,b.elems,n);
+    return cmp==0 ? a.n_elems<b.n_elems : cmp<0;
+}
+
+// reverse bit order in a byte
+inline u8 algo::u8_ReverseBits(u8 b) {
+    b=(b&0x0f)<<4 | (b&0xf0)>>4;
+    b=(b&0x33)<<2 | (b&0xcc)>>2;
+    b=(b&0x55)<<1 | (b&0xaa)>>1;
+    return b;
+}

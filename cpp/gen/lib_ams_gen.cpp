@@ -55,39 +55,59 @@ namespace lib_ams { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_print_proto
     // First element of index changed.
+    // func:lib_ams.FDb.cd_fdin_eof.FirstChanged
     static void          cd_fdin_eof_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.cd_fdin_eof.UpdateCycles
     static void          cd_fdin_eof_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_fdin_eof.Call
     static void          cd_fdin_eof_Call() __attribute__((nothrow));
     // First element of index changed.
+    // func:lib_ams.FDb.cd_fdin_read.FirstChanged
     static void          cd_fdin_read_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.cd_fdin_read.UpdateCycles
     static void          cd_fdin_read_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_fdin_read.Call
     static void          cd_fdin_read_Call() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:lib_ams.FDb._db.InitReflection
     static void          InitReflection();
     // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.zd_flush.UpdateCycles
     static void          zd_flush_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.zd_flush.Call
     static void          zd_flush_Call() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.cd_stream_hb.UpdateCycles
     static void          cd_stream_hb_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_stream_hb.Call
     static void          cd_stream_hb_Call() __attribute__((nothrow));
     // First element of index changed.
+    // func:lib_ams.FDb.cd_poll_read.FirstChanged
     static void          cd_poll_read_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.cd_poll_read.UpdateCycles
     static void          cd_poll_read_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_poll_read.Call
     static void          cd_poll_read_Call() __attribute__((nothrow));
+    // func:lib_ams.FDb.streamtype.LoadStatic
     static void          streamtype_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:lib_ams.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_ams.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Internal function to scan for a message
     //
+    // func:lib_ams.FFdin.in.Scanmsg
     static void          in_Scanmsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:lib_ams.FFdin.in.Shift
     static void          in_Shift(lib_ams::FFdin& fdin) __attribute__((nothrow));
+    // func:lib_ams...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -277,8 +297,9 @@ bool lib_ams::CtlMsgCase_ReadStrptrMaybe(lib_ams::CtlMsgCase &parent, algo::strp
 }
 
 // --- lib_ams.trace..Print
-// print string representation of lib_ams::trace to string LHS, no header -- cprint:lib_ams.trace.String
-void lib_ams::trace_Print(lib_ams::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ams.trace.String  printfmt:Tuple
+void lib_ams::trace_Print(lib_ams::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ams.trace";
 
@@ -2941,8 +2962,9 @@ void lib_ams::FReadfile_Uninit(lib_ams::FReadfile& parent) {
 }
 
 // --- lib_ams.FReadfile..Print
-// print string representation of lib_ams::FReadfile to string LHS, no header -- cprint:lib_ams.FReadfile.String
-void lib_ams::FReadfile_Print(lib_ams::FReadfile & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FReadfile.String  printfmt:Tuple
+void lib_ams::FReadfile_Print(lib_ams::FReadfile& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ams.FReadfile";
 
@@ -3310,8 +3332,9 @@ void lib_ams::FWritefile_Uninit(lib_ams::FWritefile& writefile) {
 }
 
 // --- lib_ams.FWritefile..Print
-// print string representation of lib_ams::FWritefile to string LHS, no header -- cprint:lib_ams.FWritefile.String
-void lib_ams::FWritefile_Print(lib_ams::FWritefile & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FWritefile.String  printfmt:Tuple
+void lib_ams::FWritefile_Print(lib_ams::FWritefile& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ams.FWritefile";
 
@@ -3398,8 +3421,9 @@ bool lib_ams::FieldId_ReadStrptrMaybe(lib_ams::FieldId &parent, algo::strptr in_
 }
 
 // --- lib_ams.FieldId..Print
-// print string representation of lib_ams::FieldId to string LHS, no header -- cprint:lib_ams.FieldId.String
-void lib_ams::FieldId_Print(lib_ams::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FieldId.String  printfmt:Raw
+void lib_ams::FieldId_Print(lib_ams::FieldId& row, algo::cstring& str) {
     lib_ams::value_Print(row, str);
 }
 

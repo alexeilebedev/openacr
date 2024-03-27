@@ -43,7 +43,7 @@ amc_gc::FDb     amc_gc::_db;      // dependency found via dev.targdep
 
 namespace amc_gc {
 const char *amc_gc_help =
-"amc_gc: Empirically eliminate unused records\n"
+"amc_gc: Garbage collector for in-memory databases\n"
 "Usage: amc_gc [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -target     regx    \"%\"     Target to test-build\n"
@@ -61,17 +61,22 @@ const char *amc_gc_help =
 } // namespace amc_gc
 namespace amc_gc { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:amc_gc.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:amc_gc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:amc_gc.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:amc_gc...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- amc_gc.trace..Print
-// print string representation of amc_gc::trace to string LHS, no header -- cprint:amc_gc.trace.String
-void amc_gc::trace_Print(amc_gc::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_gc.trace.String  printfmt:Tuple
+void amc_gc::trace_Print(amc_gc::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_gc.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -437,8 +442,9 @@ bool amc_gc::FieldId_ReadStrptrMaybe(amc_gc::FieldId &parent, algo::strptr in_st
 }
 
 // --- amc_gc.FieldId..Print
-// print string representation of amc_gc::FieldId to string LHS, no header -- cprint:amc_gc.FieldId.String
-void amc_gc::FieldId_Print(amc_gc::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_gc.FieldId.String  printfmt:Raw
+void amc_gc::FieldId_Print(amc_gc::FieldId& row, algo::cstring& str) {
     amc_gc::value_Print(row, str);
 }
 

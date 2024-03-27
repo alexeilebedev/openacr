@@ -104,6 +104,8 @@ bool amc::CanDeleteQ(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
+// Check if this field is a Lenfld and return pointer
+// If not, return NULL
 amc::FLenfld *amc::GetLenfld(amc::FField &field) {
     amc::FLenfld *lenfld = field.p_ctype->c_lenfld;
     return lenfld && lenfld->p_field == &field ? lenfld : NULL;
@@ -325,6 +327,12 @@ amc::FThash *amc::PrimaryIndex(amc::FCtype &ctype) {
     return idx;
 }
 
+// -----------------------------------------------------------------------------
+
+// Compute expression needed to cast the default value (field.dflt) of
+// the field to the value that's being stored in the field
+// By default, this is just the field's cpp_type
+// But if the field has an fcast attached to it, it's the fcast expression
 tempstr amc::Initcast(amc::FField &field) {
     amc::FCtype& valtype = *(field).p_arg;
     tempstr cast_type;
@@ -661,9 +669,16 @@ bool amc::FixaryQ(amc::FField &field) {
 
 // Return C++ expression for accessing the 'value' of the field
 // given parent reference PARNAME.
-// The parent ctype is CTYPE -- it may not necessarily be a direct parent of FIELD.
-// if CTYPE is NULL, it is assumed to be field.p_ctype
-tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr name) {
+// if CTYPE is NULL, it is assumed to be FIELD.P_CTYPE
+// The field may be an immediate field of CTYPE, or a field of one of the Val fields
+// of CTYPE; But the search must yield exactly one match, otherwise it is an error
+// If the field is accessed via a Get function, the corresponding expression is constructed.
+// i.e. the outputs of this function could be
+//     parent.subfield.field
+//     parent.field
+//     field_Get(parent)
+//     field_Get(parent.subfield)
+tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname) {
     tempstr ret;
     bool need_get = field.c_fbigend || FldfuncQ(field) || field.c_bitfld;
     tempstr path;
@@ -718,8 +733,8 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr name) {
         prerr("amc.badref"
               <<Keyval("ctype",ctype->ctype)
               <<Keyval("field",field.field)
-              <<Keyval("name",name)
-              <<Keyval("comment","Value of field is undefined in the context of this ctype (reachable via name)"));
+              <<Keyval("parname",parname)
+              <<Keyval("comment","Value of field is undefined in the context of this ctype (reachable via parname)"));
         algo_lib::_db.exit_code++;
     }
     if (nfound > 1) {
@@ -731,13 +746,14 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr name) {
     }
     // use the shortest form of accessing the field -- omit _Get if necessary
     if (need_get) {
-        ret << name_Get(field)<<"_Get("<<name<<path<<")";
+        ret << name_Get(field)<<"_Get("<<parname<<path<<")";
     } else {
-        ret << name<<path<<"."<<name_Get(field);
+        ret << parname<<path<<"."<<name_Get(field);
     }
     return ret;
 }
 
+// -----------------------------------------------------------------------------
 
 // Return C++ expression computing total length of ctype CTYPE
 // accessible via name NAME.
@@ -760,7 +776,7 @@ tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
 
 // -----------------------------------------------------------------------------
 
-// Return C++ expression string assigning value VALUE to field FIELD
+// Return C++ expression assigning value VALUE to field FIELD
 // given parent reference PARNAME.
 // If NEEDS_CAST is set, a cast is added to the target type
 tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast) {
@@ -816,6 +832,9 @@ bool amc::VarlenQ(amc::FCtype &ctype) {// has varlen or opt field
 
 // check if ctype has a string print function
 bool amc::HasStringPrintQ(amc::FCtype &ctype) {
+    if (ctype.ctype == "algo.strptr") {
+        return true;
+    }
     ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) if (cfmt.print) {
         if (strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_String) {
             return true;
@@ -995,14 +1014,16 @@ bool amc::ExeQ(amc::FNs &ns) {
 
 // -----------------------------------------------------------------------------
 
-tempstr amc::ByvalArgtype(amc::FCtype &ctype) {
-    tempstr ret;
-    if (ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
-        ret = ctype.cpp_type;
-    } else {
-        ret <<""<< ctype.cpp_type<<" &";
-    }
-    return ret;
+// Return C++ expression for the arg type for ctype CTYPE
+// argtype is how the type is passed to a function
+// If the type is "cheap copy", the value is type itself (T). Otherwise
+// it is T&.
+// The optional ISCONST argument marks the expression as const
+// For cheap types, 'const' is omitted since there is no sense in protecting
+// a copy.
+tempstr amc::ByvalArgtype(amc::FCtype &ctype, bool isconst DFLTVAL(false)) {
+    bool cheap = ctype.c_cpptype && ctype.c_cpptype->cheap_copy;
+    return tempstr() << (isconst && !cheap ? "const " : "") << ctype.cpp_type<<(cheap ? "" : "&");
 }
 
 // -----------------------------------------------------------------------------

@@ -54,12 +54,14 @@ struct trace { // atf_cmdline.trace
 };
 #pragma pack(pop)
 
-// print string representation of atf_cmdline::trace to string LHS, no header -- cprint:atf_cmdline.trace.String
-void                 trace_Print(atf_cmdline::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_cmdline.trace.String  printfmt:Tuple
+// func:atf_cmdline.trace..Print
+void                 trace_Print(atf_cmdline::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_cmdline.FDb
 // create: atf_cmdline.FDb._db (Global)
-struct FDb { // atf_cmdline.FDb
+struct FDb { // atf_cmdline.FDb: In-memory database for atf_cmdline
     command::atf_cmdline   cmdline;   //
     atf_cmdline::trace     trace;     //
 };
@@ -68,18 +70,26 @@ struct FDb { // atf_cmdline.FDb
 // The following fields are updated:
 //     atf_cmdline.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:atf_cmdline.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:atf_cmdline.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:atf_cmdline.FDb._db.Step
 void                 Step();
 // Main function
+// func:atf_cmdline.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:atf_cmdline.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:atf_cmdline.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:atf_cmdline.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -87,19 +97,26 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:atf_cmdline.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:atf_cmdline.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:atf_cmdline.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:atf_cmdline.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_cmdline.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Set all fields to initial values.
+// func:atf_cmdline.FDb..Init
 void                 FDb_Init();
+// func:atf_cmdline.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_cmdline.FieldId
@@ -114,37 +131,50 @@ struct FieldId { // atf_cmdline.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_cmdline.FieldId.value.GetEnum
 atf_cmdline_FieldIdEnum value_GetEnum(const atf_cmdline::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_cmdline.FieldId.value.SetEnum
 void                 value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_cmdline.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf_cmdline::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_cmdline.FieldId.value.Print
 void                 value_Print(const atf_cmdline::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_cmdline.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_cmdline.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf_cmdline::FieldId& parent, algo::strptr rhs, atf_cmdline_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_cmdline.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_cmdline::FieldId from an ascii string.
 // The format of the string is the format of the atf_cmdline::FieldId's only field
+// func:atf_cmdline.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_cmdline.FieldId..Init
 void                 FieldId_Init(atf_cmdline::FieldId& parent);
-// print string representation of atf_cmdline::FieldId to string LHS, no header -- cprint:atf_cmdline.FieldId.String
-void                 FieldId_Print(atf_cmdline::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_cmdline.FieldId.String  printfmt:Raw
+// func:atf_cmdline.FieldId..Print
+void                 FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_cmdline { // gen:ns_func
 } // gen:ns_func
+// func:atf_cmdline...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:atf_cmdline...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

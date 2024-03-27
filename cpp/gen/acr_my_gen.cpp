@@ -70,19 +70,26 @@ const char *acr_my_help =
 } // namespace acr_my
 namespace acr_my { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:acr_my.FDb._db.InitReflection
     static void          InitReflection();
+    // func:acr_my.FDb.nsdb.InputMaybe
     static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    // func:acr_my.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:acr_my.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:acr_my.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:acr_my...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- acr_my.trace..Print
-// print string representation of acr_my::trace to string LHS, no header -- cprint:acr_my.trace.String
-void acr_my::trace_Print(acr_my::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_my.trace.String  printfmt:Tuple
+void acr_my::trace_Print(acr_my::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_my.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -848,8 +855,9 @@ bool acr_my::FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_st
 }
 
 // --- acr_my.FieldId..Print
-// print string representation of acr_my::FieldId to string LHS, no header -- cprint:acr_my.FieldId.String
-void acr_my::FieldId_Print(acr_my::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_my.FieldId.String  printfmt:Raw
+void acr_my::FieldId_Print(acr_my::FieldId& row, algo::cstring& str) {
     acr_my::value_Print(row, str);
 }
 
@@ -942,8 +950,9 @@ bool acr_my::TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_st
 }
 
 // --- acr_my.TableId..Print
-// print string representation of acr_my::TableId to string LHS, no header -- cprint:acr_my.TableId.String
-void acr_my::TableId_Print(acr_my::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_my.TableId.String  printfmt:Raw
+void acr_my::TableId_Print(acr_my::TableId& row, algo::cstring& str) {
     acr_my::value_Print(row, str);
 }
 

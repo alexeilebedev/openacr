@@ -31,6 +31,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace fm { // gen:ns_print_proto
+    // func:fm...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -56,7 +57,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Code& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -86,8 +87,9 @@ bool fm::Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str) {
 }
 
 // --- fm.Code..Print
-// print string representation of fm::Code to string LHS, no header -- cprint:fm.Code.String
-void fm::Code_Print(fm::Code & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Code.String  printfmt:Raw
+void fm::Code_Print(fm::Code& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -113,7 +115,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objtype& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -143,8 +145,9 @@ bool fm::Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str) {
 }
 
 // --- fm.Objtype..Print
-// print string representation of fm::Objtype to string LHS, no header -- cprint:fm.Objtype.String
-void fm::Objtype_Print(fm::Objtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Objtype.String  printfmt:Raw
+void fm::Objtype_Print(fm::Objtype& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -170,7 +173,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objinst& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 79);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -200,8 +203,9 @@ bool fm::Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str) {
 }
 
 // --- fm.Objinst..Print
-// print string representation of fm::Objinst to string LHS, no header -- cprint:fm.Objinst.String
-void fm::Objinst_Print(fm::Objinst & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Objinst.String  printfmt:Raw
+void fm::Objinst_Print(fm::Objinst& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -284,8 +288,9 @@ bool fm::Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str) {
 }
 
 // --- fm.Flag..Print
-// print string representation of fm::Flag to string LHS, no header -- cprint:fm.Flag.String
-void fm::Flag_Print(fm::Flag row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Flag.String  printfmt:Raw
+void fm::Flag_Print(fm::Flag row, algo::cstring& str) {
     fm::value_Print(row, str);
 }
 
@@ -372,8 +377,9 @@ bool fm::Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str) {
 }
 
 // --- fm.Severity..Print
-// print string representation of fm::Severity to string LHS, no header -- cprint:fm.Severity.String
-void fm::Severity_Print(fm::Severity row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Severity.String  printfmt:Raw
+void fm::Severity_Print(fm::Severity row, algo::cstring& str) {
     fm::value_Print(row, str);
 }
 
@@ -399,7 +405,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Summary& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 64);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -429,8 +435,9 @@ bool fm::Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str) {
 }
 
 // --- fm.Summary..Print
-// print string representation of fm::Summary to string LHS, no header -- cprint:fm.Summary.String
-void fm::Summary_Print(fm::Summary & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Summary.String  printfmt:Raw
+void fm::Summary_Print(fm::Summary& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -456,7 +463,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Description& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 128);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -486,8 +493,9 @@ bool fm::Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_st
 }
 
 // --- fm.Description..Print
-// print string representation of fm::Description to string LHS, no header -- cprint:fm.Description.String
-void fm::Description_Print(fm::Description & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Description.String  printfmt:Raw
+void fm::Description_Print(fm::Description& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -513,7 +521,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr &rhs) {
+void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -543,8 +551,9 @@ bool fm::Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) {
 }
 
 // --- fm.Source..Print
-// print string representation of fm::Source to string LHS, no header -- cprint:fm.Source.String
-void fm::Source_Print(fm::Source & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.Source.String  printfmt:Raw
+void fm::Source_Print(fm::Source& row, algo::cstring& str) {
     fm::ch_Print(row, str);
 }
 
@@ -558,28 +567,79 @@ void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
 }
 
 // --- fm.AlarmMsg..ReadFieldMaybe
-bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg &parent, algo::strptr field, algo::strptr strval) {
+bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     fm::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case fm_FieldId_base: retval = false; break;
-        case fm_FieldId_type: retval = false; break;
-        case fm_FieldId_length: retval = false; break;
-        case fm_FieldId_code: retval = fm::Code_ReadStrptrMaybe(parent.code, strval); break;
-        case fm_FieldId_objtype: retval = fm::Objtype_ReadStrptrMaybe(parent.objtype, strval); break;
-        case fm_FieldId_objinst: retval = fm::Objinst_ReadStrptrMaybe(parent.objinst, strval); break;
-        case fm_FieldId_flag: retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval); break;
-        case fm_FieldId_severity: retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval); break;
-        case fm_FieldId_n_occurred: retval = i32_ReadStrptrMaybe(parent.n_occurred, strval); break;
-        case fm_FieldId_first_time: retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval); break;
-        case fm_FieldId_last_time: retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval); break;
-        case fm_FieldId_clear_time: retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval); break;
-        case fm_FieldId_update_time: retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval); break;
-        case fm_FieldId_objtype_summary: retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval); break;
-        case fm_FieldId_summary: retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval); break;
-        case fm_FieldId_description: retval = fm::Description_ReadStrptrMaybe(parent.description, strval); break;
-        case fm_FieldId_source: retval = fm::Source_ReadStrptrMaybe(parent.source, strval); break;
+        case fm_FieldId_base: {
+            retval = false;
+            break;
+        }
+        case fm_FieldId_type: {
+            retval = false;
+            break;
+        }
+        case fm_FieldId_length: {
+            retval = false;
+            break;
+        }
+        case fm_FieldId_code: {
+            retval = fm::Code_ReadStrptrMaybe(parent.code, strval);
+            break;
+        }
+        case fm_FieldId_objtype: {
+            retval = fm::Objtype_ReadStrptrMaybe(parent.objtype, strval);
+            break;
+        }
+        case fm_FieldId_objinst: {
+            retval = fm::Objinst_ReadStrptrMaybe(parent.objinst, strval);
+            break;
+        }
+        case fm_FieldId_flag: {
+            retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval);
+            break;
+        }
+        case fm_FieldId_severity: {
+            retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
+            break;
+        }
+        case fm_FieldId_n_occurred: {
+            retval = i32_ReadStrptrMaybe(parent.n_occurred, strval);
+            break;
+        }
+        case fm_FieldId_first_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval);
+            break;
+        }
+        case fm_FieldId_last_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval);
+            break;
+        }
+        case fm_FieldId_clear_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval);
+            break;
+        }
+        case fm_FieldId_update_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval);
+            break;
+        }
+        case fm_FieldId_objtype_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval);
+            break;
+        }
+        case fm_FieldId_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
+            break;
+        }
+        case fm_FieldId_description: {
+            retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
+            break;
+        }
+        case fm_FieldId_source: {
+            retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -609,8 +669,9 @@ void fm::AlarmMsg_Init(fm::AlarmMsg& parent) {
 }
 
 // --- fm.AlarmMsg..Print
-// print string representation of fm::AlarmMsg to string LHS, no header -- cprint:fm.AlarmMsg.String
-void fm::AlarmMsg_Print(fm::AlarmMsg & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.AlarmMsg.String  printfmt:Tuple
+void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "fm.AlarmMsg";
 
@@ -851,8 +912,9 @@ bool fm::FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- fm.FieldId..Print
-// print string representation of fm::FieldId to string LHS, no header -- cprint:fm.FieldId.String
-void fm::FieldId_Print(fm::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fm.FieldId.String  printfmt:Raw
+void fm::FieldId_Print(fm::FieldId& row, algo::cstring& str) {
     fm::value_Print(row, str);
 }
 

@@ -1,4 +1,4 @@
-bin/atf_cmdline  -ASTR -200 0.0002 Y -str:-STR -num:12 -dbl:-0.0003 -flag:Y -dstr:-DSTR -dnum:-45 -ddbl:-0.123 -dflag:N -mstr:-MSTR1 -mstr:-MSTR2 -mstr:-MSTR3 -mnum:-1 -mnum:-2 -mnum:-3 -mdbl:-1.1 -mdbl:-2.2 -mdbl:-3.2 -100 -200 -300 -fconst:medium -cconst:May -verbose -verbose
+bin/atf_cmdline  -astr:-ASTR -anum:-200 -adbl:0.0002 -aflag:Y -str:-STR -num:12 -dbl:-0.0003 -flag:Y -dstr:-DSTR -dnum:-45 -ddbl:-0.123 -dflag:N -mstr:-MSTR1 -mstr:-MSTR2 -mstr:-MSTR3 -mnum:-1 -mnum:-2 -mnum:-3 -mdbl:-1.1 -mdbl:-2.2 -mdbl:-3.2 -amnum:-100 -amnum:-200 -amnum:-300 -fconst:medium -cconst:May -verbose -verbose
 astr:-ASTR
 anum:-200
 adbl:0.0002

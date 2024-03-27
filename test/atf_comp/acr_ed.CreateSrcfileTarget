@@ -1,0 +1,15 @@
+acr_ed.create_srcfile  srcfile:cpp/acr_ed/blah.cpp  target:algo_lib
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+dev.gitfile  gitfile:cpp/acr_ed/blah.cpp
+dev.targsrc  targsrc:algo_lib/cpp/acr_ed/blah.cpp  comment:""
+EOF
+
+cat > cpp/acr_ed/blah.cpp << EOF
+#include "include/algo.h"
+#include "include/algo_lib.h"
+
+EOF
+git add cpp/acr_ed/blah.cpp
+bin/src_hdr -targsrc:algo_lib/% -write
+#  $EDITOR +4 cpp/acr_ed/blah.cpp

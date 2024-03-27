@@ -31,6 +31,7 @@
 #include "include/gen/ams_gen.inl.h"
 //#pragma endinclude
 namespace amsdb { // gen:ns_print_proto
+    // func:amsdb...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -141,20 +142,30 @@ bool amsdb::FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str)
 }
 
 // --- amsdb.FieldId..Print
-// print string representation of amsdb::FieldId to string LHS, no header -- cprint:amsdb.FieldId.String
-void amsdb::FieldId_Print(amsdb::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amsdb.FieldId.String  printfmt:Raw
+void amsdb::FieldId_Print(amsdb::FieldId& row, algo::cstring& str) {
     amsdb::value_Print(row, str);
 }
 
 // --- amsdb.ProcType..ReadFieldMaybe
-bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType &parent, algo::strptr field, algo::strptr strval) {
+bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amsdb_FieldId_proctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.proctype, strval); break;
-        case amsdb_FieldId_id: retval = u32_ReadStrptrMaybe(parent.id, strval); break;
-        case amsdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amsdb_FieldId_proctype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.proctype, strval);
+            break;
+        }
+        case amsdb_FieldId_id: {
+            retval = u32_ReadStrptrMaybe(parent.id, strval);
+            break;
+        }
+        case amsdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -176,8 +187,9 @@ bool amsdb::ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_st
 }
 
 // --- amsdb.ProcType..Print
-// print string representation of amsdb::ProcType to string LHS, no header -- cprint:amsdb.ProcType.String
-void amsdb::ProcType_Print(amsdb::ProcType & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amsdb.ProcType.String  printfmt:Tuple
+void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amsdb.proctype";
 
@@ -192,14 +204,23 @@ void amsdb::ProcType_Print(amsdb::ProcType & row, algo::cstring &str) {
 }
 
 // --- amsdb.StreamType..ReadFieldMaybe
-bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType &parent, algo::strptr field, algo::strptr strval) {
+bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amsdb_FieldId_streamtype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.streamtype, strval); break;
-        case amsdb_FieldId_id: retval = ams::StreamType_ReadStrptrMaybe(parent.id, strval); break;
-        case amsdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amsdb_FieldId_streamtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.streamtype, strval);
+            break;
+        }
+        case amsdb_FieldId_id: {
+            retval = ams::StreamType_ReadStrptrMaybe(parent.id, strval);
+            break;
+        }
+        case amsdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -221,8 +242,9 @@ bool amsdb::StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr i
 }
 
 // --- amsdb.StreamType..Print
-// print string representation of amsdb::StreamType to string LHS, no header -- cprint:amsdb.StreamType.String
-void amsdb::StreamType_Print(amsdb::StreamType & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amsdb.StreamType.String  printfmt:Tuple
+void amsdb::StreamType_Print(amsdb::StreamType& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amsdb.streamtype";
 

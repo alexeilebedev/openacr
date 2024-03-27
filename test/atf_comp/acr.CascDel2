@@ -1,1 +1,6 @@
-report.acr  n_select:0  n_insert:3  n_delete:3  n_ignore:0  n_update:0  n_file_mod:0
+acr.delete  dmmeta.ns  ns:ns1  nstype:exe  license:GPL  comment:"Will be inserted and deleted"
+
+acr.insert  dmmeta.ctype  ctype:ns1.c  comment:"Will be deleted as well"
+
+acr.insert  dmmeta.field  field:ns1.c.d  arg:i32  reftype:Val  dflt:""  comment:"Will be deleted as well"
+report.acr  n_select:3  n_insert:3  n_delete:1  n_ignore:0  n_update:0  n_file_mod:0

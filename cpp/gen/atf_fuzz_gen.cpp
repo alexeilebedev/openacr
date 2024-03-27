@@ -71,19 +71,26 @@ const char *atf_fuzz_help =
 } // namespace atf_fuzz
 namespace atf_fuzz { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_fuzz.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_fuzz.FDb.fuzzstrat.LoadStatic
     static void          fuzzstrat_LoadStatic() __attribute__((nothrow));
+    // func:atf_fuzz.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_fuzz.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_fuzz.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_fuzz...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_fuzz.trace..Print
-// print string representation of atf_fuzz::trace to string LHS, no header -- cprint:atf_fuzz.trace.String
-void atf_fuzz::trace_Print(atf_fuzz::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_fuzz.trace.String  printfmt:Tuple
+void atf_fuzz::trace_Print(atf_fuzz::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_fuzz.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -894,8 +901,9 @@ bool atf_fuzz::FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr i
 }
 
 // --- atf_fuzz.FieldId..Print
-// print string representation of atf_fuzz::FieldId to string LHS, no header -- cprint:atf_fuzz.FieldId.String
-void atf_fuzz::FieldId_Print(atf_fuzz::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_fuzz.FieldId.String  printfmt:Raw
+void atf_fuzz::FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) {
     atf_fuzz::value_Print(row, str);
 }
 
@@ -974,8 +982,9 @@ bool atf_fuzz::TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr i
 }
 
 // --- atf_fuzz.TableId..Print
-// print string representation of atf_fuzz::TableId to string LHS, no header -- cprint:atf_fuzz.TableId.String
-void atf_fuzz::TableId_Print(atf_fuzz::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_fuzz.TableId.String  printfmt:Raw
+void atf_fuzz::TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) {
     atf_fuzz::value_Print(row, str);
 }
 

@@ -11,6 +11,7 @@ dmmeta.main  ns:amc_gc  ismodule:N
 dmmeta.main  ns:amc_vis  ismodule:N
 dmmeta.main  ns:ams_cat  ismodule:N
 dmmeta.main  ns:ams_sendtest  ismodule:N
+dmmeta.main  ns:apm  ismodule:N
 dmmeta.main  ns:atf_amc  ismodule:N
 dmmeta.main  ns:atf_ci  ismodule:N
 dmmeta.main  ns:atf_cmdline  ismodule:N

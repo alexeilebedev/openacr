@@ -67,27 +67,31 @@ acr_dm::FValue &acr_dm::zs_value_GetOrCreate(FAttr &attr, strptr val) {
 // Load all files
 void acr_dm::Main_LoadFiles() {
     vrfy(arg_N(_db.cmdline)<ssizeof(Source)*8,"Too many args");
+    acr_dm::Rowid next_rowid(0,0,0);
     ind_beg(command::acr_dm_arg_curs,arg,_db.cmdline) {
-        acr_dm::Rowid next_rowid(0,0);
         verblog("-- reading file "<<arg<<". next rowid "<<next_rowid);
         ind_beg(algo::FileLine_curs,line,arg) {
             Tuple tuple;
-            if (Tuple_ReadStrptrMaybe(tuple,line)) {
+            if (line != "" && Tuple_ReadStrptrMaybe(tuple,line)) {
                 vrfy(attrs_N(tuple)>=1,"Missing key attribute");
                 cstring tuple_key = tempstr()
                     << tuple.head.value
                     << Keyval(tuple.attrs_elems->name,tuple.attrs_elems->value);
+                int nbefore=ind_tuple_N();
                 FTuple &ftuple = ind_tuple_GetOrCreate(tuple_key);
+                bool isnew=ind_tuple_N() > nbefore;
                 source_SetBit(ftuple.source,ind_curs(arg).index);
-                if (ftuple.rowid.f1 == 0) {// new entry
+                if (isnew) {
                     if (ind_curs(arg).index==0) {// first file
                         next_rowid.f1++;
-                    } else {
+                    } else if (ind_curs(arg).index==1) {// second file
                         next_rowid.f2++;
+                    } else {// third file -- this is the limit
+                        next_rowid.f3++;
                     }
-                    ftuple.rowid = next_rowid;
+                    ftuple.rowid=next_rowid;
                 } else {
-                    next_rowid = ftuple.rowid;
+                    next_rowid=ftuple.rowid;
                 }
                 bh_tuple_Insert(ftuple);// sort it
                 verblog("# tuple "<<tuple_key<<" gets "<<ftuple.rowid<<". next rowid "<<next_rowid);
@@ -174,7 +178,11 @@ void acr_dm::PrintSourceTuple(FTuple &tuple, int source, cstring &out) {
         }ind_end;
     }
     if (ch_N(temp)) {
-        out << temp << eol;
+        out << temp;
+        if (_db.cmdline.rowid) {
+            out << Keyval("acr.rowid", tuple.rowid.f1) << Keyval("acr_dm.rowid", tuple.rowid);
+        }
+        out << eol;
     }
 }
 
@@ -215,7 +223,11 @@ bool acr_dm::MergeTuple(FTuple &tuple, cstring &out) {
         }
     } ind_end;
     if (!RemovedQ(tuple.source) && !conflict) {
-        out << temp << eol;
+        out << temp;
+        if (_db.cmdline.rowid) {
+            out << Keyval("acr.rowid", tuple.rowid) << Keyval("acr_dm.rowid", tuple.rowid);
+        }
+        out << eol;
     }
     return !conflict;
 }

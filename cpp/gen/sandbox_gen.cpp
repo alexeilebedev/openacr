@@ -54,11 +54,14 @@ const char *sandbox_help =
 "    -list                       List existing sandboxes\n"
 "    -reset                      Reset sandbox to match current directory\n"
 "    -clean                      Remove sandbox contents to save space\n"
+"    -shell                      Open interactive shell inside sandbox\n"
 "    -del                        Permanently delete sandbox\n"
 "    -gc                         Run git gc in target dir\n"
 "    [cmd]...    string          Command to execute in sandbox\n"
 "    -diff                       Show diff after running command\n"
 "    -files...   string          Shell regx to diff\n"
+"    -refs       string  \"HEAD\"  Refs to fetch into sandbox\n"
+"    -q                          Quiet mode\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -70,19 +73,26 @@ const char *sandbox_help =
 } // namespace sandbox
 namespace sandbox { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:sandbox.FDb._db.InitReflection
     static void          InitReflection();
+    // func:sandbox.FDb.sandbox.InputMaybe
     static bool          sandbox_InputMaybe(dev::Sandbox &elem) __attribute__((nothrow));
+    // func:sandbox.FDb.sbpath.InputMaybe
     static bool          sbpath_InputMaybe(dev::Sbpath &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:sandbox.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:sandbox.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:sandbox...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- sandbox.trace..Print
-// print string representation of sandbox::trace to string LHS, no header -- cprint:sandbox.trace.String
-void sandbox::trace_Print(sandbox::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sandbox.trace.String  printfmt:Tuple
+void sandbox::trace_Print(sandbox::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "sandbox.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -889,8 +899,9 @@ bool sandbox::FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_
 }
 
 // --- sandbox.FieldId..Print
-// print string representation of sandbox::FieldId to string LHS, no header -- cprint:sandbox.FieldId.String
-void sandbox::FieldId_Print(sandbox::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sandbox.FieldId.String  printfmt:Raw
+void sandbox::FieldId_Print(sandbox::FieldId& row, algo::cstring& str) {
     sandbox::value_Print(row, str);
 }
 
@@ -983,8 +994,9 @@ bool sandbox::TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_
 }
 
 // --- sandbox.TableId..Print
-// print string representation of sandbox::TableId to string LHS, no header -- cprint:sandbox.TableId.String
-void sandbox::TableId_Print(sandbox::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:sandbox.TableId.String  printfmt:Raw
+void sandbox::TableId_Print(sandbox::TableId& row, algo::cstring& str) {
     sandbox::value_Print(row, str);
 }
 

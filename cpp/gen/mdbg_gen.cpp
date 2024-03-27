@@ -74,13 +74,19 @@ const char *mdbg_help =
 } // namespace mdbg
 namespace mdbg { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:mdbg.FDb._db.InitReflection
     static void          InitReflection();
+    // func:mdbg.FDb.cfg.InputMaybe
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    // func:mdbg.FDb.builddir.InputMaybe
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:mdbg.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:mdbg.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:mdbg...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -221,8 +227,9 @@ void mdbg::FCfg_Uninit(mdbg::FCfg& cfg) {
 }
 
 // --- mdbg.trace..Print
-// print string representation of mdbg::trace to string LHS, no header -- cprint:mdbg.trace.String
-void mdbg::trace_Print(mdbg::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:mdbg.trace.String  printfmt:Tuple
+void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "mdbg.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1087,8 +1094,9 @@ bool mdbg::FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- mdbg.FieldId..Print
-// print string representation of mdbg::FieldId to string LHS, no header -- cprint:mdbg.FieldId.String
-void mdbg::FieldId_Print(mdbg::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:mdbg.FieldId.String  printfmt:Raw
+void mdbg::FieldId_Print(mdbg::FieldId& row, algo::cstring& str) {
     mdbg::value_Print(row, str);
 }
 
@@ -1179,8 +1187,9 @@ bool mdbg::TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) {
 }
 
 // --- mdbg.TableId..Print
-// print string representation of mdbg::TableId to string LHS, no header -- cprint:mdbg.TableId.String
-void mdbg::TableId_Print(mdbg::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:mdbg.TableId.String  printfmt:Raw
+void mdbg::TableId_Print(mdbg::TableId& row, algo::cstring& str) {
     mdbg::value_Print(row, str);
 }
 

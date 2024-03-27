@@ -50,6 +50,7 @@ const char *acr_dm_help =
 "    [arg]...     string          Files to merge: older ours theirs...\n"
 "    -write_ours                  Write result to ours file\n"
 "    -msize       int     7       Conflict marker size\n"
+"    -rowid                       Output 'ours' rowid for merging into original ssimfiles\n"
 "    -verbose     int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                        Print help and exit; alias -h\n"
@@ -66,19 +67,27 @@ acr_dm::_db_bh_tuple_curs::~_db_bh_tuple_curs() {
 
 namespace acr_dm { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:acr_dm.FDb._db.InitReflection
     static void          InitReflection();
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:acr_dm.FDb.bh_tuple.Downheap
     static int           bh_tuple_Downheap(acr_dm::FTuple& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:acr_dm.FDb.bh_tuple.Upheap
     static int           bh_tuple_Upheap(acr_dm::FTuple& row, int idx) __attribute__((nothrow));
+    // func:acr_dm.FDb.bh_tuple.ElemLt
     static bool          bh_tuple_ElemLt(acr_dm::FTuple &a, acr_dm::FTuple &b) __attribute__((nothrow));
+    // func:acr_dm.FDb.bh_tuple_curs.Add
     static void          _db_bh_tuple_curs_Add(_db_bh_tuple_curs &curs, acr_dm::FTuple& row);
     // find trace by row id (used to implement reflection)
+    // func:acr_dm.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:acr_dm.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:acr_dm...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -171,8 +180,9 @@ void acr_dm::FAttr_Uninit(acr_dm::FAttr& attr) {
 }
 
 // --- acr_dm.trace..Print
-// print string representation of acr_dm::trace to string LHS, no header -- cprint:acr_dm.trace.String
-void acr_dm::trace_Print(acr_dm::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_dm.trace.String  printfmt:Tuple
+void acr_dm::trace_Print(acr_dm::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_dm.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1182,13 +1192,23 @@ void acr_dm::FDb_Uninit() {
 }
 
 // --- acr_dm.Rowid..ReadFieldMaybe
-bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid &parent, algo::strptr field, algo::strptr strval) {
+bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     acr_dm::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case acr_dm_FieldId_f1: retval = i32_ReadStrptrMaybe(parent.f1, strval); break;
-        case acr_dm_FieldId_f2: retval = i32_ReadStrptrMaybe(parent.f2, strval); break;
+        case acr_dm_FieldId_f1: {
+            retval = i32_ReadStrptrMaybe(parent.f1, strval);
+            break;
+        }
+        case acr_dm_FieldId_f2: {
+            retval = i32_ReadStrptrMaybe(parent.f2, strval);
+            break;
+        }
+        case acr_dm_FieldId_f3: {
+            retval = i32_ReadStrptrMaybe(parent.f3, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1207,17 +1227,23 @@ bool acr_dm::Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str) {
     algo::NextSep(in_str, '.', value);
     retval = retval && i32_ReadStrptrMaybe(parent.f1, value);
 
-    value = in_str;
+    algo::NextSep(in_str, '.', value);
     retval = retval && i32_ReadStrptrMaybe(parent.f2, value);
+
+    value = in_str;
+    retval = retval && i32_ReadStrptrMaybe(parent.f3, value);
     return retval;
 }
 
 // --- acr_dm.Rowid..Print
-// print string representation of acr_dm::Rowid to string LHS, no header -- cprint:acr_dm.Rowid.String
-void acr_dm::Rowid_Print(acr_dm::Rowid & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_dm.Rowid.String  printfmt:Sep
+void acr_dm::Rowid_Print(acr_dm::Rowid& row, algo::cstring& str) {
     i32_Print(row.f1, str);
     str << '.';
     i32_Print(row.f2, str);
+    str << '.';
+    i32_Print(row.f3, str);
 }
 
 // --- acr_dm.Source.source_bitcurs.Next
@@ -1347,6 +1373,7 @@ const char* acr_dm::value_ToCstr(const acr_dm::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_dm_FieldId_f1             : ret = "f1";  break;
         case acr_dm_FieldId_f2             : ret = "f2";  break;
+        case acr_dm_FieldId_f3             : ret = "f3";  break;
         case acr_dm_FieldId_value          : ret = "value";  break;
     }
     return ret;
@@ -1378,6 +1405,9 @@ bool acr_dm::value_SetStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR2('f','2'): {
                     value_SetEnum(parent,acr_dm_FieldId_f2); ret = true; break;
+                }
+                case LE_STR2('f','3'): {
+                    value_SetEnum(parent,acr_dm_FieldId_f3); ret = true; break;
                 }
             }
             break;
@@ -1422,8 +1452,9 @@ bool acr_dm::FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_st
 }
 
 // --- acr_dm.FieldId..Print
-// print string representation of acr_dm::FieldId to string LHS, no header -- cprint:acr_dm.FieldId.String
-void acr_dm::FieldId_Print(acr_dm::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_dm.FieldId.String  printfmt:Raw
+void acr_dm::FieldId_Print(acr_dm::FieldId& row, algo::cstring& str) {
     acr_dm::value_Print(row, str);
 }
 

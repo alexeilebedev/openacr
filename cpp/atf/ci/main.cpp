@@ -148,7 +148,8 @@ void atf_ci::citest_gitfile() {
 
 static bool RunCiTest(atf_ci::FCitest &citest) {
     prlog("atf_ci.begin"
-          <<Keyval("citest",citest.citest));
+          <<Keyval("citest",citest.citest)
+          <<Keyval("sandbox",citest.sandbox));
     algo::UnTime start=algo::CurrUnTime();
     // enter sandbox, if requested
     if (citest.sandbox) {
@@ -160,7 +161,7 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
             sandbox.cmd.clean = true;// quick reset
         }
         sandbox_ExecX(sandbox);
-        algo_lib::SandboxEnter(dev_Sandbox_sandbox_atf_ci);
+        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci));
     }
     try {
         atf_ci::_db.c_citest=&citest;
@@ -180,7 +181,7 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
         algo_lib::_db.exit_code = 1;
     }
     if (citest.sandbox) {
-        algo_lib::SandboxExit();
+        algo_lib::PopDir();
     }
     prlog("atf_ci.citest"
           <<Keyval("citest",citest.citest)

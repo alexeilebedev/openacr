@@ -25,8 +25,6 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_exec_gen.h"
 #include "include/gen/lib_exec_gen.inl.h"
-#include "include/gen/command_gen.h"
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
@@ -43,25 +41,158 @@ lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
 
 namespace lib_exec { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_exec.FDb._db.InitReflection
     static void          InitReflection();
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:lib_exec.FDb.bh_syscmd.Downheap
     static int           bh_syscmd_Downheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:lib_exec.FDb.bh_syscmd.Upheap
     static int           bh_syscmd_Upheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
+    // func:lib_exec.FDb.bh_syscmd.ElemLt
     static bool          bh_syscmd_ElemLt(lib_exec::FSyscmd &a, lib_exec::FSyscmd &b) __attribute__((nothrow));
+    // func:lib_exec.FDb.bh_syscmd_curs.Add
     static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, lib_exec::FSyscmd& row);
     // find trace by row id (used to implement reflection)
+    // func:lib_exec.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_exec.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_exec...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
+// --- lib_exec.Cmdline..ReadFieldMaybe
+bool lib_exec::Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    lib_exec::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case lib_exec_FieldId_dry_run: {
+            retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
+            break;
+        }
+        case lib_exec_FieldId_q: {
+            retval = bool_ReadStrptrMaybe(parent.q, strval);
+            break;
+        }
+        case lib_exec_FieldId_maxjobs: {
+            retval = i32_ReadStrptrMaybe(parent.maxjobs, strval);
+            break;
+        }
+        case lib_exec_FieldId_complooo: {
+            retval = bool_ReadStrptrMaybe(parent.complooo, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- lib_exec.Cmdline..ReadTupleMaybe
+// Read fields of lib_exec::Cmdline from attributes of ascii tuple TUPLE
+bool lib_exec::Cmdline_ReadTupleMaybe(lib_exec::Cmdline &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = Cmdline_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- lib_exec.Cmdline..PrintArgv
+// print command-line args of lib_exec::Cmdline to string  -- cprint:lib_exec.Cmdline.Argv
+void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.dry_run == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dry_run, temp);
+        str << " -dry_run:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.q == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.q, temp);
+        str << " -q:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.maxjobs == 8)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxjobs, temp);
+        str << " -maxjobs:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.complooo == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.complooo, temp);
+        str << " -complooo:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- lib_exec.Cmdline..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline& row) {
+    tempstr ret;
+    ret << "bin/Cmdline ";
+    Cmdline_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- lib_exec.Cmdline..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 lib_exec::Cmdline_NArgs(lib_exec::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case lib_exec_FieldId_dry_run: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case lib_exec_FieldId_q: { // bool: no argument required but value may be specified as dry_run:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case lib_exec_FieldId_maxjobs: { // bool: no argument required but value may be specified as q:Y
+            *out_anon = false;
+        } break;
+        case lib_exec_FieldId_complooo: { // bool: no argument required but value may be specified as q:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
 // --- lib_exec.trace..Print
-// print string representation of lib_exec::trace to string LHS, no header -- cprint:lib_exec.trace.String
-void lib_exec::trace_Print(lib_exec::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_exec.trace.String  printfmt:Tuple
+void lib_exec::trace_Print(lib_exec::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_exec.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1114,8 +1245,9 @@ void lib_exec::FSyscmd_Uninit(lib_exec::FSyscmd& syscmd) {
 }
 
 // --- lib_exec.FSyscmd..Print
-// print string representation of lib_exec::FSyscmd to string LHS, no header -- cprint:lib_exec.FSyscmd.String
-void lib_exec::FSyscmd_Print(lib_exec::FSyscmd & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FSyscmd.String  printfmt:Tuple
+void lib_exec::FSyscmd_Print(lib_exec::FSyscmd& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_exec.FSyscmd";
 
@@ -1193,8 +1325,9 @@ void lib_exec::FSyscmddep_Uninit(lib_exec::FSyscmddep& syscmddep) {
 }
 
 // --- lib_exec.FSyscmddep..Print
-// print string representation of lib_exec::FSyscmddep to string LHS, no header -- cprint:lib_exec.FSyscmddep.String
-void lib_exec::FSyscmddep_Print(lib_exec::FSyscmddep & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FSyscmddep.String  printfmt:Tuple
+void lib_exec::FSyscmddep_Print(lib_exec::FSyscmddep& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_exec.FSyscmddep";
 
@@ -1217,6 +1350,10 @@ void lib_exec::FSyscmddep_Print(lib_exec::FSyscmddep & row, algo::cstring &str) 
 const char* lib_exec::value_ToCstr(const lib_exec::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case lib_exec_FieldId_dry_run      : ret = "dry_run";  break;
+        case lib_exec_FieldId_q            : ret = "q";  break;
+        case lib_exec_FieldId_maxjobs      : ret = "maxjobs";  break;
+        case lib_exec_FieldId_complooo     : ret = "complooo";  break;
         case lib_exec_FieldId_value        : ret = "value";  break;
     }
     return ret;
@@ -1241,10 +1378,37 @@ void lib_exec::value_Print(const lib_exec::FieldId& parent, algo::cstring &lhs) 
 bool lib_exec::value_SetStrptrMaybe(lib_exec::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 1: {
+            switch (u64(rhs[0])) {
+                case 'q': {
+                    value_SetEnum(parent,lib_exec_FieldId_q); ret = true; break;
+                }
+            }
+            break;
+        }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,lib_exec_FieldId_value); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('d','r','y','_','r','u','n'): {
+                    value_SetEnum(parent,lib_exec_FieldId_dry_run); ret = true; break;
+                }
+                case LE_STR7('m','a','x','j','o','b','s'): {
+                    value_SetEnum(parent,lib_exec_FieldId_maxjobs); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','o','m','p','l','o','o','o'): {
+                    value_SetEnum(parent,lib_exec_FieldId_complooo); ret = true; break;
                 }
             }
             break;
@@ -1281,8 +1445,9 @@ bool lib_exec::FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::strptr i
 }
 
 // --- lib_exec.FieldId..Print
-// print string representation of lib_exec::FieldId to string LHS, no header -- cprint:lib_exec.FieldId.String
-void lib_exec::FieldId_Print(lib_exec::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FieldId.String  printfmt:Raw
+void lib_exec::FieldId_Print(lib_exec::FieldId& row, algo::cstring& str) {
     lib_exec::value_Print(row, str);
 }
 

@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/target.cpp -- Create, delete, rename target
 //
@@ -30,6 +30,7 @@ void acr_ed::edaction_Create_Target() {
     prlog("acr_ed.create_target  target:"<<acr_ed::_db.cmdline.target);
     algo_lib::Replscope R;
     Set(R, "$target", acr_ed::_db.cmdline.target);
+    Set(R, "$nstype", acr_ed::_db.cmdline.nstype);
 
     // replace _ with / in arg for composite names
     // this maps "src_func" -> "src/func"
@@ -79,7 +80,9 @@ void acr_ed::edaction_Create_Target() {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
     }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$target.md  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$nstype/$target/README.md  comment:''");
+    Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$nstype/$target/README.md  comment:''");
+
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/gen/$target_gen.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.inl.h  comment:''");
@@ -93,8 +96,6 @@ void acr_ed::edaction_Create_Target() {
     }
 
     Set(R, "$gentarget", is_ssimdb ? "lib_prot" : "$target");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$target.md  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.readmens  readme:txt/$target.md  ns:$target");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/cpp/gen/$target_gen.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.targsrc  targsrc:$gentarget/include/gen/$target_gen.inl.h  comment:''");
@@ -191,16 +192,31 @@ void acr_ed::edaction_Create_Target() {
     Ins(&R, acr_ed::_db.script,"git add cpp/gen/$target_gen.cpp");
     Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.h");
     Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.inl.h");
-    Ins(&R, acr_ed::_db.script,"touch txt/$target.md");
-    Ins(&R, acr_ed::_db.script,"git add txt/$target.md");
 
-    Ins(&R, acr_ed::_db.script,"bin/src_hdr -targsrc:$target/% -write");
-    Ins(&R, acr_ed::_db.script,"abt -install $target");// compile it
-    Ins(&R, acr_ed::_db.script,"abt_md -ns:$target");// create documentation
-    if (is_exe || is_lib) {
-        Ins(&R, acr_ed::_db.script,"bin/update-hdr");
+    Ins(&R, acr_ed::_db.script, "mkdir -p txt/$nstype/$target/");
+    Ins(&R, acr_ed::_db.script,"touch txt/$nstype/$target/README.md");
+    Ins(&R, acr_ed::_db.script,"git add txt/$nstype/$target/README.md");
+
+    // update headers
+    {
+        command::src_hdr src_hdr;
+        src_hdr.targsrc.expr=Subst(R,"$target/%");
+        src_hdr.write=true;
+        Ins(&R, acr_ed::_db.script,src_hdr_ToCmdline(src_hdr));
     }
-    Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to add completions support for new target'");
+    // compile it
+    if (is_exe || is_lib) {
+        command::abt abt;
+        abt.install=true;
+        abt.target.expr=acr_ed::_db.cmdline.target;
+        Ins(&R, acr_ed::_db.script,abt_ToCmdline(abt));
+        Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to add completions support for new target'");
+    }
+    {// update documentation
+        command::abt_md abt_md;
+        abt_md.ns.expr=acr_ed::_db.cmdline.target;
+        Ins(&R, acr_ed::_db.script,abt_md_ToCmdline(abt_md));
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -217,9 +233,15 @@ void acr_ed::edaction_Rename_Target() {
     Set(R, "$oldtarg", acr_ed::_db.cmdline.target);
     Set(R, "$newtarg", acr_ed::_db.cmdline.rename);
 
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:command.$oldtarg -rename command.$newtarg  -write -report:N");
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:report.$oldtarg -rename report.$newtarg  -write -report:N");
-    Ins(&R, acr_ed::_db.script, "bin/acr ns:$oldtarg -rename $newtarg -write -report:N");
+    {
+        command::acr acr;
+        acr.query << "ns:"<<acr_ed::_db.cmdline.target;
+        acr.rename << acr_ed::_db.cmdline.rename;
+        acr.write=true;
+        acr.report=false;
+        acr.x=true;// ssimreqs
+        Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
+    }
 
     // create directories for new target
     Ins(&R, acr_ed::_db.script, "mkdir -p cpp/$newtarg");
@@ -267,11 +289,17 @@ void acr_ed::edaction_Rename_Target() {
     }ind_end;
     acr_ed::_db.script << script2;
 
+    // TODO: rename md file
     // rename md file -- speculative
-    Ins(&R, acr_ed::_db.script, "acr readme:txt/$oldtarg.md -rename txt/$newtarg.md -write -report:N");
-    if (_db.cmdline.target != _db.cmdline.rename) {
-        Ins(&R, acr_ed::_db.script, "git mv txt/$oldtarg.md txt/$newtarg.md");
-    }
+    // {
+    //     command::acr acr;
+    //     acr.query << "readme:txt/"<<acr_ed::_db.cmdline.target<<".md";
+    //     acr.rename << "txt/"<<acr_ed::_db.cmdline.rename<<".md";
+    //     acr.write=true;
+    //     acr.g=true;// issue git mv
+    //     acr.report=false;
+    //     Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
+    // }
 
     if (ns->nstype == dmmeta_Nstype_nstype_exe) {
         Ins(&R, acr_ed::_db.script, "ln -sf ../build/release/$newtarg bin/$oldtarg");
@@ -289,26 +317,18 @@ void acr_ed::edaction_Rename_Target() {
 // -----------------------------------------------------------------------------
 
 void acr_ed::edaction_Delete_Target() {
-    prlog("acr_ed.delete_target"
-          <<Keyval("target",acr_ed::_db.cmdline.target));
-    algo_lib::Replscope R;
-    Set(R, "$target", acr_ed::_db.cmdline.target);
-    Set(R, "$$", "$");
-
-    // remove all sources & gitfiles associated with this target
-    Ins(&R, acr_ed::_db.script, "for X in $$(acr targsrc:$target/% -field:src)"
-        "; do acr gitfile:$$X -del -write; git rm -f $$X"
-        "; done");
-    Ins(&R, acr_ed::_db.script, "bin/acr ns:$target -del -write -tree");
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:command.$target -del -write -tree");
-    Ins(&R, acr_ed::_db.script, "bin/acr ctype:report.$target -del -write -tree");
-    Ins(&R, acr_ed::_db.script, "bin/acr target:$target -del -write -tree");
-    Ins(&R, acr_ed::_db.script, "bin/acr readme:txt/$target.md -del -write -tree");
-    Ins(&R, acr_ed::_db.script, "git rm -f bin/$target");
-    Ins(&R, acr_ed::_db.script, "git rm -f txt/$target.md");
-    Ins(&R, acr_ed::_db.script, "bin/update-gitfile");
-    Ins(&R, acr_ed::_db.script, "bin/src_hdr -write");
-    Ins(&R, acr_ed::_db.script, "bin/abt_md ''");
-    Ins(&R, acr_ed::_db.script, "echo 'please execute $(acr_compl -install) to remove completions support for deleted target'");
+    {
+        command::acr acr;
+        acr.query << "ns:"<<acr_ed::_db.cmdline.target;
+        acr.del=true;
+        acr.write=true;
+        acr.tree=true;
+        acr.x=true;// all related files
+        acr.g=true;// issue 'git rm'
+        acr_ed::_db.script << acr_ToCmdline(acr) << eol;
+    }
+    acr_ed::_db.script << "bin/src_hdr -write" << eol;
+    acr_ed::_db.script << "bin/abt_md ''" << eol;
+    acr_ed::_db.script << "echo 'please execute $(acr_compl -install) to remove completions support for deleted target'" << eol;
     acr_ed::NeedAmc();
 }

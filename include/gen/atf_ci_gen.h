@@ -47,22 +47,22 @@ enum atf_ci_TableIdEnum {                    // atf_ci.TableId.value
     ,atf_ci_TableId_dev_builddir      = 0    // dev.builddir -> atf_ci.FBuilddir
     ,atf_ci_TableId_dev_Cfg           = 1    // dev.Cfg -> atf_ci.FCfg
     ,atf_ci_TableId_dev_cfg           = 1    // dev.cfg -> atf_ci.FCfg
-    ,atf_ci_TableId_dev_Gitfile       = 2    // dev.Gitfile -> atf_ci.FGitfile
-    ,atf_ci_TableId_dev_gitfile       = 2    // dev.gitfile -> atf_ci.FGitfile
-    ,atf_ci_TableId_dev_Msgfile       = 3    // dev.Msgfile -> atf_ci.FMsgfile
-    ,atf_ci_TableId_dev_msgfile       = 3    // dev.msgfile -> atf_ci.FMsgfile
-    ,atf_ci_TableId_dev_Noindent      = 4    // dev.Noindent -> atf_ci.FNoindent
-    ,atf_ci_TableId_dev_noindent      = 4    // dev.noindent -> atf_ci.FNoindent
-    ,atf_ci_TableId_dmmeta_Ns         = 5    // dmmeta.Ns -> atf_ci.FNs
-    ,atf_ci_TableId_dmmeta_ns         = 5    // dmmeta.ns -> atf_ci.FNs
-    ,atf_ci_TableId_dev_Readme        = 6    // dev.Readme -> atf_ci.FReadme
-    ,atf_ci_TableId_dev_readme        = 6    // dev.readme -> atf_ci.FReadme
-    ,atf_ci_TableId_dev_Scriptfile    = 7    // dev.Scriptfile -> atf_ci.FScriptfile
-    ,atf_ci_TableId_dev_scriptfile    = 7    // dev.scriptfile -> atf_ci.FScriptfile
-    ,atf_ci_TableId_dmmeta_Ssimfile   = 8    // dmmeta.Ssimfile -> atf_ci.FSsimfile
-    ,atf_ci_TableId_dmmeta_ssimfile   = 8    // dmmeta.ssimfile -> atf_ci.FSsimfile
-    ,atf_ci_TableId_dev_Ssimfs        = 9    // dev.Ssimfs -> atf_ci.FSsimfs
-    ,atf_ci_TableId_dev_ssimfs        = 9    // dev.ssimfs -> atf_ci.FSsimfs
+    ,atf_ci_TableId_atfdb_Cipackage   = 2    // atfdb.Cipackage -> atf_ci.FCipackage
+    ,atf_ci_TableId_atfdb_cipackage   = 2    // atfdb.cipackage -> atf_ci.FCipackage
+    ,atf_ci_TableId_dev_Gitfile       = 3    // dev.Gitfile -> atf_ci.FGitfile
+    ,atf_ci_TableId_dev_gitfile       = 3    // dev.gitfile -> atf_ci.FGitfile
+    ,atf_ci_TableId_dev_Msgfile       = 4    // dev.Msgfile -> atf_ci.FMsgfile
+    ,atf_ci_TableId_dev_msgfile       = 4    // dev.msgfile -> atf_ci.FMsgfile
+    ,atf_ci_TableId_dev_Noindent      = 5    // dev.Noindent -> atf_ci.FNoindent
+    ,atf_ci_TableId_dev_noindent      = 5    // dev.noindent -> atf_ci.FNoindent
+    ,atf_ci_TableId_dmmeta_Ns         = 6    // dmmeta.Ns -> atf_ci.FNs
+    ,atf_ci_TableId_dmmeta_ns         = 6    // dmmeta.ns -> atf_ci.FNs
+    ,atf_ci_TableId_dev_Readme        = 7    // dev.Readme -> atf_ci.FReadme
+    ,atf_ci_TableId_dev_readme        = 7    // dev.readme -> atf_ci.FReadme
+    ,atf_ci_TableId_dev_Scriptfile    = 8    // dev.Scriptfile -> atf_ci.FScriptfile
+    ,atf_ci_TableId_dev_scriptfile    = 8    // dev.scriptfile -> atf_ci.FScriptfile
+    ,atf_ci_TableId_dmmeta_Ssimfile   = 9    // dmmeta.Ssimfile -> atf_ci.FSsimfile
+    ,atf_ci_TableId_dmmeta_ssimfile   = 9    // dmmeta.ssimfile -> atf_ci.FSsimfile
     ,atf_ci_TableId_dev_Targsrc       = 10   // dev.Targsrc -> atf_ci.FTargsrc
     ,atf_ci_TableId_dev_targsrc       = 10   // dev.targsrc -> atf_ci.FTargsrc
 };
@@ -77,6 +77,7 @@ extern const char *atf_ci_help;
 // gen:ns_fwddecl2
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
+namespace atfdb { struct Cipackage; }
 namespace atfdb { struct Citest; }
 namespace dev { struct Gitfile; }
 namespace dev { struct Msgfile; }
@@ -85,7 +86,6 @@ namespace dmmeta { struct Ns; }
 namespace dev { struct Readme; }
 namespace dev { struct Scriptfile; }
 namespace dmmeta { struct Ssimfile; }
-namespace dev { struct Ssimfs; }
 namespace dev { struct Targsrc; }
 namespace atf_ci { struct _db_citest_curs; }
 namespace atf_ci { struct _db_ssimfile_curs; }
@@ -98,10 +98,11 @@ namespace atf_ci { struct _db_gitfile_curs; }
 namespace atf_ci { struct _db_noindent_curs; }
 namespace atf_ci { struct _db_targsrc_curs; }
 namespace atf_ci { struct _db_msgfile_curs; }
-namespace atf_ci { struct _db_ssimfs_curs; }
 namespace atf_ci { struct _db_file_curs; }
+namespace atf_ci { struct _db_cipackage_curs; }
 namespace atf_ci { struct FBuilddir; }
 namespace atf_ci { struct FCfg; }
+namespace atf_ci { struct FCipackage; }
 namespace atf_ci { struct FCitest; }
 namespace atf_ci { struct trace; }
 namespace atf_ci { struct FDb; }
@@ -113,7 +114,6 @@ namespace atf_ci { struct FNs; }
 namespace atf_ci { struct FReadme; }
 namespace atf_ci { struct FScriptfile; }
 namespace atf_ci { struct FSsimfile; }
-namespace atf_ci { struct FSsimfs; }
 namespace atf_ci { struct FTargsrc; }
 namespace atf_ci { struct FieldId; }
 namespace atf_ci { struct File; }
@@ -133,9 +133,13 @@ namespace atf_ci { // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_gsymbol
     extern const char* dev_scriptfile_bin_find_non_copyrighted; // "bin/find-non-copyrighted"
     extern const char* dev_scriptfile_bin_fix_gen_conflicts; // "bin/fix-gen-conflicts"
+    extern const char* dev_scriptfile_bin_msloc_pl; // "bin/msloc.pl"
     extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
     extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
     extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
+} // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
+    extern const dmmeta::SsimfilePkey dmmeta_ssimfile_atfdb_cipackage; // "atfdb.cipackage"
 } // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_print_struct
 
@@ -143,7 +147,7 @@ namespace atf_ci { // gen:ns_print_struct
 // create: atf_ci.FDb.builddir (Lary)
 // global access: ind_builddir (Thash)
 struct FBuilddir { // atf_ci.FBuilddir
-    algo::Smallstr50     builddir;            //
+    algo::Smallstr50     builddir;            // Primary key - uname.compiler.cfg-arch
     algo::Comment        comment;             //
     atf_ci::FBuilddir*   ind_builddir_next;   // hash next
 private:
@@ -158,20 +162,28 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FBuilddir.base.CopyOut
 void                 builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FBuilddir.base.CopyIn
 void                 builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
 
+// func:atf_ci.FBuilddir.uname.Get
 algo::Smallstr50     uname_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FBuilddir.compiler.Get
 algo::Smallstr50     compiler_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FBuilddir.cfg.Get
 algo::Smallstr50     cfg_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FBuilddir.arch.Get
 algo::Smallstr50     arch_Get(atf_ci::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FBuilddir..Init
 void                 FBuilddir_Init(atf_ci::FBuilddir& builddir);
+// func:atf_ci.FBuilddir..Uninit
 void                 FBuilddir_Uninit(atf_ci::FBuilddir& builddir) __attribute__((nothrow));
 
 // --- atf_ci.FCfg
@@ -189,18 +201,46 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FCfg.base.CopyOut
 void                 cfg_CopyOut(atf_ci::FCfg &row, dev::Cfg &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FCfg.base.CopyIn
 void                 cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) __attribute__((nothrow));
 
+
+// --- atf_ci.FCipackage
+// create: atf_ci.FDb.cipackage (Lary)
+struct FCipackage { // atf_ci.FCipackage
+    algo::Smallstr50   package;   //
+    bool               remove;    //   false
+    bool               build;     //   false
+    algo::Comment      comment;   //
+private:
+    friend atf_ci::FCipackage&  cipackage_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_ci::FCipackage*  cipackage_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cipackage_RemoveAll() __attribute__((nothrow));
+    friend void                 cipackage_RemoveLast() __attribute__((nothrow));
+    FCipackage();
+};
+
+// Copy fields out of row
+// func:atf_ci.FCipackage.base.CopyOut
+void                 cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_ci.FCipackage.base.CopyIn
+void                 cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_ci.FCipackage..Init
+void                 FCipackage_Init(atf_ci::FCipackage& cipackage);
 
 // --- atf_ci.FCitest
 // create: atf_ci.FDb.citest (Lary)
 // global access: c_citest (Ptr)
 // global access: ind_citest (Thash)
 struct FCitest { // atf_ci.FCitest
-    algo::Smallstr50           citest;            //
-    algo::Smallstr50           cijob;             //   "test"
+    algo::Smallstr50           citest;            // Primary key
+    algo::Smallstr50           cijob;             //   "test"  CI job in which this test runs
     bool                       sandbox;           //   false  Run test in sandbox
     algo::Comment              comment;           //
     i32                        nerr;              //   0
@@ -218,15 +258,20 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FCitest.base.CopyOut
 void                 citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FCitest.base.CopyIn
 void                 citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) __attribute__((nothrow));
 
 // Invoke function by pointer
+// func:atf_ci.FCitest.step.Call
 void                 step_Call(atf_ci::FCitest& citest) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FCitest..Init
 void                 FCitest_Init(atf_ci::FCitest& citest);
+// func:atf_ci.FCitest..Uninit
 void                 FCitest_Uninit(atf_ci::FCitest& citest) __attribute__((nothrow));
 
 // --- atf_ci.trace
@@ -236,12 +281,14 @@ struct trace { // atf_ci.trace
 };
 #pragma pack(pop)
 
-// print string representation of atf_ci::trace to string LHS, no header -- cprint:atf_ci.trace.String
-void                 trace_Print(atf_ci::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_ci.trace.String  printfmt:Tuple
+// func:atf_ci.trace..Print
+void                 trace_Print(atf_ci::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_ci.FDb
 // create: atf_ci.FDb._db (Global)
-struct FDb { // atf_ci.FDb
+struct FDb { // atf_ci.FDb: In-memory database for atf_ci
     command::atf_ci         cmdline;                        //
     atf_ci::FCitest*        citest_lary[32];                // level array
     i32                     citest_n;                       // number of elements in array
@@ -284,14 +331,14 @@ struct FDb { // atf_ci.FDb
     atf_ci::FCitest**       ind_citest_buckets_elems;       // pointer to bucket array
     i32                     ind_citest_buckets_n;           // number of elements in bucket array
     i32                     ind_citest_n;                   // number of elements in the hash table
-    atf_ci::FSsimfs*        ssimfs_lary[32];                // level array
-    i32                     ssimfs_n;                       // number of elements in array
     atf_ci::File*           file_lary[32];                  // level array
     i32                     file_n;                         // number of elements in array
     atf_ci::File**          ind_file_buckets_elems;         // pointer to bucket array
     i32                     ind_file_buckets_n;             // number of elements in bucket array
     i32                     ind_file_n;                     // number of elements in the hash table
     bool                    sandbox_need_init;              //   false
+    atf_ci::FCipackage*     cipackage_lary[32];             // level array
+    i32                     cipackage_n;                    // number of elements in array
     atf_ci::trace           trace;                          //
 };
 
@@ -299,18 +346,26 @@ struct FDb { // atf_ci.FDb
 // The following fields are updated:
 //     atf_ci.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:atf_ci.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:atf_ci.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:atf_ci.FDb._db.Step
 void                 Step();
 // Main function
+// func:atf_ci.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:atf_ci.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:atf_ci.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:atf_ci.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -318,599 +373,867 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:atf_ci.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:atf_ci.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:atf_ci.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:atf_ci.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.citest.Alloc
 atf_ci::FCitest&     citest_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.citest.AllocMaybe
 atf_ci::FCitest*     citest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.citest.InsertMaybe
 atf_ci::FCitest*     citest_InsertMaybe(const atfdb::Citest &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.citest.AllocMem
 void*                citest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.citest.EmptyQ
 bool                 citest_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.citest.Find
 atf_ci::FCitest*     citest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.citest.Last
 atf_ci::FCitest*     citest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.citest.N
 i32                  citest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.citest.RemoveAll
 void                 citest_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.citest.RemoveLast
 void                 citest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.citest.qFind
 atf_ci::FCitest&     citest_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.citest.XrefMaybe
 bool                 citest_XrefMaybe(atf_ci::FCitest &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.ssimfile.Alloc
 atf_ci::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.ssimfile.AllocMaybe
 atf_ci::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.ssimfile.InsertMaybe
 atf_ci::FSsimfile*   ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.ssimfile.AllocMem
 void*                ssimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.ssimfile.EmptyQ
 bool                 ssimfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.ssimfile.Find
 atf_ci::FSsimfile*   ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.ssimfile.Last
 atf_ci::FSsimfile*   ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.ssimfile.N
 i32                  ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.ssimfile.qFind
 atf_ci::FSsimfile&   ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.ssimfile.XrefMaybe
 bool                 ssimfile_XrefMaybe(atf_ci::FSsimfile &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_ssimfile.EmptyQ
 bool                 ind_ssimfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_ssimfile.Find
 atf_ci::FSsimfile*   ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_ssimfile.FindX
 atf_ci::FSsimfile&   ind_ssimfile_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_ssimfile.GetOrCreate
 atf_ci::FSsimfile&   ind_ssimfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_ssimfile.N
 i32                  ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_ssimfile.InsertMaybe
 bool                 ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_ssimfile.Remove
 void                 ind_ssimfile_Remove(atf_ci::FSsimfile& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.scriptfile.Alloc
 atf_ci::FScriptfile& scriptfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.scriptfile.AllocMaybe
 atf_ci::FScriptfile* scriptfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.scriptfile.InsertMaybe
 atf_ci::FScriptfile* scriptfile_InsertMaybe(const dev::Scriptfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.scriptfile.AllocMem
 void*                scriptfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.scriptfile.EmptyQ
 bool                 scriptfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.scriptfile.Find
 atf_ci::FScriptfile* scriptfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.scriptfile.Last
 atf_ci::FScriptfile* scriptfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.scriptfile.N
 i32                  scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.scriptfile.RemoveAll
 void                 scriptfile_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.scriptfile.RemoveLast
 void                 scriptfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.scriptfile.qFind
 atf_ci::FScriptfile& scriptfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.scriptfile.XrefMaybe
 bool                 scriptfile_XrefMaybe(atf_ci::FScriptfile &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_scriptfile.EmptyQ
 bool                 ind_scriptfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_scriptfile.Find
 atf_ci::FScriptfile* ind_scriptfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_scriptfile.FindX
 atf_ci::FScriptfile& ind_scriptfile_FindX(const algo::strptr& key);
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_scriptfile.N
 i32                  ind_scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_scriptfile.InsertMaybe
 bool                 ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_scriptfile.Remove
 void                 ind_scriptfile_Remove(atf_ci::FScriptfile& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_scriptfile.Reserve
 void                 ind_scriptfile_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.ns.Alloc
 atf_ci::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.ns.AllocMaybe
 atf_ci::FNs*         ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.ns.InsertMaybe
 atf_ci::FNs*         ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.ns.AllocMem
 void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.ns.EmptyQ
 bool                 ns_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.ns.Find
 atf_ci::FNs*         ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.ns.Last
 atf_ci::FNs*         ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.ns.N
 i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.ns.RemoveAll
 void                 ns_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.ns.qFind
 atf_ci::FNs&         ns_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.ns.XrefMaybe
 bool                 ns_XrefMaybe(atf_ci::FNs &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_ns.EmptyQ
 bool                 ind_ns_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_ns.Find
 atf_ci::FNs*         ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_ns.FindX
 atf_ci::FNs&         ind_ns_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_ns.GetOrCreate
 atf_ci::FNs&         ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_ns.N
 i32                  ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_ns.InsertMaybe
 bool                 ind_ns_InsertMaybe(atf_ci::FNs& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_ns.Remove
 void                 ind_ns_Remove(atf_ci::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.readme.Alloc
 atf_ci::FReadme&     readme_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.readme.AllocMaybe
 atf_ci::FReadme*     readme_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.readme.InsertMaybe
 atf_ci::FReadme*     readme_InsertMaybe(const dev::Readme &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.readme.AllocMem
 void*                readme_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.readme.EmptyQ
 bool                 readme_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.readme.Find
 atf_ci::FReadme*     readme_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.readme.Last
 atf_ci::FReadme*     readme_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.readme.N
 i32                  readme_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.readme.RemoveAll
 void                 readme_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.readme.RemoveLast
 void                 readme_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.readme.qFind
 atf_ci::FReadme&     readme_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.readme.XrefMaybe
 bool                 readme_XrefMaybe(atf_ci::FReadme &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.builddir.Alloc
 atf_ci::FBuilddir&   builddir_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.builddir.AllocMaybe
 atf_ci::FBuilddir*   builddir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.builddir.InsertMaybe
 atf_ci::FBuilddir*   builddir_InsertMaybe(const dev::Builddir &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.builddir.AllocMem
 void*                builddir_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.builddir.EmptyQ
 bool                 builddir_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.builddir.Find
 atf_ci::FBuilddir*   builddir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.builddir.Last
 atf_ci::FBuilddir*   builddir_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.builddir.N
 i32                  builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.builddir.RemoveAll
 void                 builddir_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.builddir.RemoveLast
 void                 builddir_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.builddir.qFind
 atf_ci::FBuilddir&   builddir_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.builddir.XrefMaybe
 bool                 builddir_XrefMaybe(atf_ci::FBuilddir &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.cfg.Alloc
 atf_ci::FCfg&        cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.cfg.AllocMaybe
 atf_ci::FCfg*        cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.cfg.InsertMaybe
 atf_ci::FCfg*        cfg_InsertMaybe(const dev::Cfg &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.cfg.AllocMem
 void*                cfg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.cfg.EmptyQ
 bool                 cfg_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.cfg.Find
 atf_ci::FCfg*        cfg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.cfg.Last
 atf_ci::FCfg*        cfg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.cfg.N
 i32                  cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.cfg.RemoveAll
 void                 cfg_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.cfg.RemoveLast
 void                 cfg_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.cfg.qFind
 atf_ci::FCfg&        cfg_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.cfg.XrefMaybe
 bool                 cfg_XrefMaybe(atf_ci::FCfg &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_builddir.EmptyQ
 bool                 ind_builddir_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_builddir.Find
 atf_ci::FBuilddir*   ind_builddir_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_builddir.FindX
 atf_ci::FBuilddir&   ind_builddir_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_builddir.GetOrCreate
 atf_ci::FBuilddir&   ind_builddir_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_builddir.N
 i32                  ind_builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_builddir.InsertMaybe
 bool                 ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_builddir.Remove
 void                 ind_builddir_Remove(atf_ci::FBuilddir& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_builddir.Reserve
 void                 ind_builddir_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.gitfile.Alloc
 atf_ci::FGitfile&    gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.gitfile.AllocMaybe
 atf_ci::FGitfile*    gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.gitfile.InsertMaybe
 atf_ci::FGitfile*    gitfile_InsertMaybe(const dev::Gitfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.gitfile.AllocMem
 void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.gitfile.EmptyQ
 bool                 gitfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.gitfile.Find
 atf_ci::FGitfile*    gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.gitfile.Last
 atf_ci::FGitfile*    gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.gitfile.N
 i32                  gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.gitfile.RemoveAll
 void                 gitfile_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.gitfile.RemoveLast
 void                 gitfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.gitfile.qFind
 atf_ci::FGitfile&    gitfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.gitfile.XrefMaybe
 bool                 gitfile_XrefMaybe(atf_ci::FGitfile &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_gitfile.EmptyQ
 bool                 ind_gitfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_gitfile.Find
 atf_ci::FGitfile*    ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_gitfile.FindX
 atf_ci::FGitfile&    ind_gitfile_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_gitfile.GetOrCreate
 atf_ci::FGitfile&    ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_gitfile.N
 i32                  ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_gitfile.InsertMaybe
 bool                 ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_gitfile.Remove
 void                 ind_gitfile_Remove(atf_ci::FGitfile& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_gitfile.Reserve
 void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.noindent.Alloc
 atf_ci::FNoindent&   noindent_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.noindent.AllocMaybe
 atf_ci::FNoindent*   noindent_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.noindent.InsertMaybe
 atf_ci::FNoindent*   noindent_InsertMaybe(const dev::Noindent &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.noindent.AllocMem
 void*                noindent_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.noindent.EmptyQ
 bool                 noindent_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.noindent.Find
 atf_ci::FNoindent*   noindent_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.noindent.Last
 atf_ci::FNoindent*   noindent_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.noindent.N
 i32                  noindent_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.noindent.RemoveAll
 void                 noindent_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.noindent.RemoveLast
 void                 noindent_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.noindent.qFind
 atf_ci::FNoindent&   noindent_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.noindent.XrefMaybe
 bool                 noindent_XrefMaybe(atf_ci::FNoindent &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.targsrc.Alloc
 atf_ci::FTargsrc&    targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.targsrc.AllocMaybe
 atf_ci::FTargsrc*    targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.targsrc.InsertMaybe
 atf_ci::FTargsrc*    targsrc_InsertMaybe(const dev::Targsrc &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.targsrc.AllocMem
 void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.targsrc.EmptyQ
 bool                 targsrc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.targsrc.Find
 atf_ci::FTargsrc*    targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.targsrc.Last
 atf_ci::FTargsrc*    targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.targsrc.N
 i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.targsrc.RemoveAll
 void                 targsrc_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.targsrc.qFind
 atf_ci::FTargsrc&    targsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.targsrc.XrefMaybe
 bool                 targsrc_XrefMaybe(atf_ci::FTargsrc &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_ci.FDb.msgfile.Alloc
 atf_ci::FMsgfile&    msgfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.msgfile.AllocMaybe
 atf_ci::FMsgfile*    msgfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.msgfile.InsertMaybe
 atf_ci::FMsgfile*    msgfile_InsertMaybe(const dev::Msgfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.msgfile.AllocMem
 void*                msgfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.msgfile.EmptyQ
 bool                 msgfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.msgfile.Find
 atf_ci::FMsgfile*    msgfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.msgfile.Last
 atf_ci::FMsgfile*    msgfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.msgfile.N
 i32                  msgfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.msgfile.RemoveAll
 void                 msgfile_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.msgfile.RemoveLast
 void                 msgfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.msgfile.qFind
 atf_ci::FMsgfile&    msgfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.msgfile.XrefMaybe
 bool                 msgfile_XrefMaybe(atf_ci::FMsgfile &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_citest.EmptyQ
 bool                 ind_citest_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_citest.Find
 atf_ci::FCitest*     ind_citest_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_citest.FindX
 atf_ci::FCitest&     ind_citest_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_citest.GetOrCreate
 atf_ci::FCitest&     ind_citest_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_citest.N
 i32                  ind_citest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_citest.InsertMaybe
 bool                 ind_citest_InsertMaybe(atf_ci::FCitest& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_citest.Remove
 void                 ind_citest_Remove(atf_ci::FCitest& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_citest.Reserve
 void                 ind_citest_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FSsimfs&     ssimfs_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FSsimfs*     ssimfs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FSsimfs*     ssimfs_InsertMaybe(const dev::Ssimfs &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-void*                ssimfs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-bool                 ssimfs_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-atf_ci::FSsimfs*     ssimfs_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-atf_ci::FSsimfs*     ssimfs_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-i32                  ssimfs_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-void                 ssimfs_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-void                 ssimfs_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-atf_ci::FSsimfs&     ssimfs_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool                 ssimfs_XrefMaybe(atf_ci::FSsimfs &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
+// func:atf_ci.FDb.file.Alloc
 atf_ci::File&        file_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.file.AllocMaybe
 atf_ci::File*        file_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.file.AllocMem
 void*                file_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_ci.FDb.file.EmptyQ
 bool                 file_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.file.Find
 atf_ci::File*        file_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.file.Last
 atf_ci::File*        file_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_ci.FDb.file.N
 i32                  file_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_ci.FDb.file.RemoveAll
 void                 file_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.file.RemoveLast
 void                 file_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.file.qFind
 atf_ci::File&        file_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.file.XrefMaybe
 bool                 file_XrefMaybe(atf_ci::File &row);
 
 // Return true if hash is empty
+// func:atf_ci.FDb.ind_file.EmptyQ
 bool                 ind_file_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_ci.FDb.ind_file.Find
 atf_ci::File*        ind_file_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_ci.FDb.ind_file.FindX
 atf_ci::File&        ind_file_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_ci.FDb.ind_file.GetOrCreate
 atf_ci::File&        ind_file_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_ci.FDb.ind_file.N
 i32                  ind_file_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_ci.FDb.ind_file.InsertMaybe
 bool                 ind_file_InsertMaybe(atf_ci::File& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_ci.FDb.ind_file.Remove
 void                 ind_file_Remove(atf_ci::File& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_ci.FDb.ind_file.Reserve
 void                 ind_file_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_ci.FDb.cipackage.Alloc
+atf_ci::FCipackage&  cipackage_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_ci.FDb.cipackage.AllocMaybe
+atf_ci::FCipackage*  cipackage_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_ci.FDb.cipackage.InsertMaybe
+atf_ci::FCipackage*  cipackage_InsertMaybe(const atfdb::Cipackage &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_ci.FDb.cipackage.AllocMem
+void*                cipackage_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_ci.FDb.cipackage.EmptyQ
+bool                 cipackage_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_ci.FDb.cipackage.Find
+atf_ci::FCipackage*  cipackage_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_ci.FDb.cipackage.Last
+atf_ci::FCipackage*  cipackage_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_ci.FDb.cipackage.N
+i32                  cipackage_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_ci.FDb.cipackage.RemoveAll
+void                 cipackage_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_ci.FDb.cipackage.RemoveLast
+void                 cipackage_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_ci.FDb.cipackage.qFind
+atf_ci::FCipackage&  cipackage_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_ci.FDb.cipackage.XrefMaybe
+bool                 cipackage_XrefMaybe(atf_ci::FCipackage &row);
+
 // cursor points to valid item
+// func:atf_ci.FDb.citest_curs.Reset
 void                 _db_citest_curs_Reset(_db_citest_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.citest_curs.ValidQ
 bool                 _db_citest_curs_ValidQ(_db_citest_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.citest_curs.Next
 void                 _db_citest_curs_Next(_db_citest_curs &curs);
 // item access
+// func:atf_ci.FDb.citest_curs.Access
 atf_ci::FCitest&     _db_citest_curs_Access(_db_citest_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.ssimfile_curs.Reset
 void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.ssimfile_curs.ValidQ
 bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.ssimfile_curs.Next
 void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
 // item access
+// func:atf_ci.FDb.ssimfile_curs.Access
 atf_ci::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.scriptfile_curs.Reset
 void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.scriptfile_curs.ValidQ
 bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.scriptfile_curs.Next
 void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs);
 // item access
+// func:atf_ci.FDb.scriptfile_curs.Access
 atf_ci::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.ns_curs.Reset
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.ns_curs.ValidQ
 bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.ns_curs.Next
 void                 _db_ns_curs_Next(_db_ns_curs &curs);
 // item access
+// func:atf_ci.FDb.ns_curs.Access
 atf_ci::FNs&         _db_ns_curs_Access(_db_ns_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.readme_curs.Reset
 void                 _db_readme_curs_Reset(_db_readme_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.readme_curs.ValidQ
 bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.readme_curs.Next
 void                 _db_readme_curs_Next(_db_readme_curs &curs);
 // item access
+// func:atf_ci.FDb.readme_curs.Access
 atf_ci::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.builddir_curs.Reset
 void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.builddir_curs.ValidQ
 bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.builddir_curs.Next
 void                 _db_builddir_curs_Next(_db_builddir_curs &curs);
 // item access
+// func:atf_ci.FDb.builddir_curs.Access
 atf_ci::FBuilddir&   _db_builddir_curs_Access(_db_builddir_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.cfg_curs.Reset
 void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.cfg_curs.ValidQ
 bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.cfg_curs.Next
 void                 _db_cfg_curs_Next(_db_cfg_curs &curs);
 // item access
+// func:atf_ci.FDb.cfg_curs.Access
 atf_ci::FCfg&        _db_cfg_curs_Access(_db_cfg_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.gitfile_curs.Reset
 void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.gitfile_curs.ValidQ
 bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.gitfile_curs.Next
 void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
 // item access
+// func:atf_ci.FDb.gitfile_curs.Access
 atf_ci::FGitfile&    _db_gitfile_curs_Access(_db_gitfile_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.noindent_curs.Reset
 void                 _db_noindent_curs_Reset(_db_noindent_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.noindent_curs.ValidQ
 bool                 _db_noindent_curs_ValidQ(_db_noindent_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.noindent_curs.Next
 void                 _db_noindent_curs_Next(_db_noindent_curs &curs);
 // item access
+// func:atf_ci.FDb.noindent_curs.Access
 atf_ci::FNoindent&   _db_noindent_curs_Access(_db_noindent_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.targsrc_curs.Reset
 void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.targsrc_curs.ValidQ
 bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.targsrc_curs.Next
 void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
 // item access
+// func:atf_ci.FDb.targsrc_curs.Access
 atf_ci::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs);
 // cursor points to valid item
+// func:atf_ci.FDb.msgfile_curs.Reset
 void                 _db_msgfile_curs_Reset(_db_msgfile_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.msgfile_curs.ValidQ
 bool                 _db_msgfile_curs_ValidQ(_db_msgfile_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.msgfile_curs.Next
 void                 _db_msgfile_curs_Next(_db_msgfile_curs &curs);
 // item access
+// func:atf_ci.FDb.msgfile_curs.Access
 atf_ci::FMsgfile&    _db_msgfile_curs_Access(_db_msgfile_curs &curs);
 // cursor points to valid item
-void                 _db_ssimfs_curs_Reset(_db_ssimfs_curs &curs, atf_ci::FDb &parent);
-// cursor points to valid item
-bool                 _db_ssimfs_curs_ValidQ(_db_ssimfs_curs &curs);
-// proceed to next item
-void                 _db_ssimfs_curs_Next(_db_ssimfs_curs &curs);
-// item access
-atf_ci::FSsimfs&     _db_ssimfs_curs_Access(_db_ssimfs_curs &curs);
-// cursor points to valid item
+// func:atf_ci.FDb.file_curs.Reset
 void                 _db_file_curs_Reset(_db_file_curs &curs, atf_ci::FDb &parent);
 // cursor points to valid item
+// func:atf_ci.FDb.file_curs.ValidQ
 bool                 _db_file_curs_ValidQ(_db_file_curs &curs);
 // proceed to next item
+// func:atf_ci.FDb.file_curs.Next
 void                 _db_file_curs_Next(_db_file_curs &curs);
 // item access
+// func:atf_ci.FDb.file_curs.Access
 atf_ci::File&        _db_file_curs_Access(_db_file_curs &curs);
+// cursor points to valid item
+// func:atf_ci.FDb.cipackage_curs.Reset
+void                 _db_cipackage_curs_Reset(_db_cipackage_curs &curs, atf_ci::FDb &parent);
+// cursor points to valid item
+// func:atf_ci.FDb.cipackage_curs.ValidQ
+bool                 _db_cipackage_curs_ValidQ(_db_cipackage_curs &curs);
+// proceed to next item
+// func:atf_ci.FDb.cipackage_curs.Next
+void                 _db_cipackage_curs_Next(_db_cipackage_curs &curs);
+// item access
+// func:atf_ci.FDb.cipackage_curs.Access
+atf_ci::FCipackage&  _db_cipackage_curs_Access(_db_cipackage_curs &curs);
 // Set all fields to initial values.
+// func:atf_ci.FDb..Init
 void                 FDb_Init();
+// func:atf_ci.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_ci.FExecLimit
@@ -940,29 +1263,40 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FGitfile.base.CopyOut
 void                 gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FGitfile.base.CopyIn
 void                 gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
+// func:atf_ci.FGitfile.ext.Get
 algo::Smallstr50     ext_Get(atf_ci::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
+// func:atf_ci.FGitfile.c_noindent.InsertMaybe
 bool                 c_noindent_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_ci.FGitfile.c_noindent.Remove
 void                 c_noindent_Remove(atf_ci::FGitfile& gitfile, atf_ci::FNoindent& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
+// func:atf_ci.FGitfile.c_scriptfile.InsertMaybe
 bool                 c_scriptfile_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_ci.FGitfile.c_scriptfile.Remove
 void                 c_scriptfile_Remove(atf_ci::FGitfile& gitfile, atf_ci::FScriptfile& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
+// func:atf_ci.FGitfile.c_targsrc.InsertMaybe
 bool                 c_targsrc_InsertMaybe(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_ci.FGitfile.c_targsrc.Remove
 void                 c_targsrc_Remove(atf_ci::FGitfile& gitfile, atf_ci::FTargsrc& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FGitfile..Init
 void                 FGitfile_Init(atf_ci::FGitfile& gitfile);
+// func:atf_ci.FGitfile..Uninit
 void                 FGitfile_Uninit(atf_ci::FGitfile& gitfile) __attribute__((nothrow));
 
 // --- atf_ci.FMsgfile
@@ -980,11 +1314,14 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FMsgfile.base.CopyOut
 void                 msgfile_CopyOut(atf_ci::FMsgfile &row, dev::Msgfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FMsgfile.base.CopyIn
 void                 msgfile_CopyIn(atf_ci::FMsgfile &row, dev::Msgfile &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FMsgfile..Init
 void                 FMsgfile_Init(atf_ci::FMsgfile& msgfile);
 
 // --- atf_ci.FNoindent
@@ -1005,10 +1342,13 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FNoindent.base.CopyOut
 void                 noindent_CopyOut(atf_ci::FNoindent &row, dev::Noindent &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FNoindent.base.CopyIn
 void                 noindent_CopyIn(atf_ci::FNoindent &row, dev::Noindent &in) __attribute__((nothrow));
 
+// func:atf_ci.FNoindent..Uninit
 void                 FNoindent_Uninit(atf_ci::FNoindent& noindent) __attribute__((nothrow));
 
 // --- atf_ci.FNs
@@ -1017,8 +1357,8 @@ void                 FNoindent_Uninit(atf_ci::FNoindent& noindent) __attribute__
 struct FNs { // atf_ci.FNs
     atf_ci::FNs*       ind_ns_next;   // hash next
     algo::Smallstr16   ns;            // Namespace name (primary key)
-    algo::Smallstr50   nstype;        //
-    algo::Smallstr50   license;       //
+    algo::Smallstr50   nstype;        // Namespace type
+    algo::Smallstr50   license;       // Associated license
     algo::Comment      comment;       //
 private:
     friend atf_ci::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1032,12 +1372,16 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FNs.base.CopyOut
 void                 ns_CopyOut(atf_ci::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FNs.base.CopyIn
 void                 ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FNs..Init
 void                 FNs_Init(atf_ci::FNs& ns);
+// func:atf_ci.FNs..Uninit
 void                 FNs_Uninit(atf_ci::FNs& ns) __attribute__((nothrow));
 
 // --- atf_ci.FReadme
@@ -1057,11 +1401,14 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FReadme.base.CopyOut
 void                 readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FReadme.base.CopyIn
 void                 readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FReadme..Init
 void                 FReadme_Init(atf_ci::FReadme& readme);
 
 // --- atf_ci.FScriptfile
@@ -1085,12 +1432,19 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FScriptfile.base.CopyOut
 void                 scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FScriptfile.base.CopyIn
 void                 scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
+// func:atf_ci.FScriptfile.name.Get
+algo::Smallstr50     name_Get(atf_ci::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
+// func:atf_ci.FScriptfile..Init
 void                 FScriptfile_Init(atf_ci::FScriptfile& scriptfile);
+// func:atf_ci.FScriptfile..Uninit
 void                 FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) __attribute__((nothrow));
 
 // --- atf_ci.FSsimfile
@@ -1099,7 +1453,7 @@ void                 FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) __attri
 struct FSsimfile { // atf_ci.FSsimfile
     atf_ci::FSsimfile*   ind_ssimfile_next;   // hash next
     algo::Smallstr50     ssimfile;            //
-    algo::Smallstr50     ctype;               //
+    algo::Smallstr100    ctype;               //
 private:
     friend atf_ci::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_ci::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1111,54 +1465,26 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
+// func:atf_ci.FSsimfile.ssimns.Get
 algo::Smallstr16     ssimns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FSsimfile.ns.Get
 algo::Smallstr16     ns_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FSsimfile.name.Get
 algo::Smallstr50     name_Get(atf_ci::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:atf_ci.FSsimfile..Init
 void                 FSsimfile_Init(atf_ci::FSsimfile& ssimfile);
+// func:atf_ci.FSsimfile..Uninit
 void                 FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) __attribute__((nothrow));
-
-// --- atf_ci.FSsimfs
-// create: atf_ci.FDb.ssimfs (Lary)
-struct FSsimfs { // atf_ci.FSsimfs
-    algo::Smallstr200   ssimfs;     //
-    bool                rmfile;     //   false  Remove extra files from directory
-    bool                needfile;   //   false  File must exist
-    algo::cstring       lscmd;      // Command that produces keys that should be in the table
-    algo_lib::Regx      excl;       // Sql Regx
-    algo::Comment       comment;    //
-private:
-    friend atf_ci::FSsimfs&     ssimfs_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_ci::FSsimfs*     ssimfs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 ssimfs_RemoveAll() __attribute__((nothrow));
-    friend void                 ssimfs_RemoveLast() __attribute__((nothrow));
-    FSsimfs();
-    // reftype Regx of atf_ci.FSsimfs.excl prohibits copy
-    FSsimfs(const FSsimfs&){ /*disallow copy constructor */}
-    void operator =(const FSsimfs&){ /*disallow direct assignment */}
-};
-
-// Copy fields out of row
-void                 ssimfs_CopyOut(atf_ci::FSsimfs &row, dev::Ssimfs &out) __attribute__((nothrow));
-// Copy fields in to row
-void                 ssimfs_CopyIn(atf_ci::FSsimfs &row, dev::Ssimfs &in) __attribute__((nothrow));
-
-algo::Smallstr50     ssimfile_Get(atf_ci::FSsimfs& ssimfs) __attribute__((__warn_unused_result__, nothrow));
-
-algo::Smallstr150    file_Get(atf_ci::FSsimfs& ssimfs) __attribute__((__warn_unused_result__, nothrow));
-
-// Print back to string
-void                 excl_Print(atf_ci::FSsimfs& ssimfs, algo::cstring &out) __attribute__((nothrow));
-
-// Set all fields to initial values.
-void                 FSsimfs_Init(atf_ci::FSsimfs& ssimfs);
 
 // --- atf_ci.FTargsrc
 // create: atf_ci.FDb.targsrc (Lary)
@@ -1178,16 +1504,22 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_ci.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_ci.FTargsrc.base.CopyIn
 void                 targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
+// func:atf_ci.FTargsrc.target.Get
 algo::Smallstr16     target_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FTargsrc.src.Get
 algo::Smallstr200    src_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FTargsrc.ext.Get
 algo::Smallstr10     ext_Get(atf_ci::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_ci.FTargsrc..Uninit
 void                 FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- atf_ci.FieldId
@@ -1202,32 +1534,43 @@ struct FieldId { // atf_ci.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_ci.FieldId.value.GetEnum
 atf_ci_FieldIdEnum   value_GetEnum(const atf_ci::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_ci.FieldId.value.SetEnum
 void                 value_SetEnum(atf_ci::FieldId& parent, atf_ci_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_ci.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf_ci::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_ci.FieldId.value.Print
 void                 value_Print(const atf_ci::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_ci.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_ci.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf_ci::FieldId& parent, algo::strptr rhs, atf_ci_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_ci.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_ci::FieldId from an ascii string.
 // The format of the string is the format of the atf_ci::FieldId's only field
+// func:atf_ci.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf_ci::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_ci.FieldId..Init
 void                 FieldId_Init(atf_ci::FieldId& parent);
-// print string representation of atf_ci::FieldId to string LHS, no header -- cprint:atf_ci.FieldId.String
-void                 FieldId_Print(atf_ci::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_ci.FieldId.String  printfmt:Raw
+// func:atf_ci.FieldId..Print
+void                 FieldId_Print(atf_ci::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_ci.File
 // create: atf_ci.FDb.file (Lary)
@@ -1249,7 +1592,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:atf_ci.File..Init
 void                 File_Init(atf_ci::File& file);
+// func:atf_ci.File..Uninit
 void                 File_Uninit(atf_ci::File& file) __attribute__((nothrow));
 
 // --- atf_ci.TableId
@@ -1262,32 +1607,43 @@ struct TableId { // atf_ci.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:atf_ci.TableId.value.GetEnum
 atf_ci_TableIdEnum   value_GetEnum(const atf_ci::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_ci.TableId.value.SetEnum
 void                 value_SetEnum(atf_ci::TableId& parent, atf_ci_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_ci.TableId.value.ToCstr
 const char*          value_ToCstr(const atf_ci::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_ci.TableId.value.Print
 void                 value_Print(const atf_ci::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_ci.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_ci.TableId.value.SetStrptr
 void                 value_SetStrptr(atf_ci::TableId& parent, algo::strptr rhs, atf_ci_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_ci.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_ci::TableId from an ascii string.
 // The format of the string is the format of the atf_ci::TableId's only field
+// func:atf_ci.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_ci.TableId..Init
 void                 TableId_Init(atf_ci::TableId& parent);
-// print string representation of atf_ci::TableId to string LHS, no header -- cprint:atf_ci.TableId.String
-void                 TableId_Print(atf_ci::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_ci.TableId.String  printfmt:Raw
+// func:atf_ci.TableId..Print
+void                 TableId_Print(atf_ci::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_ci { // gen:ns_curstext
 
@@ -1379,14 +1735,6 @@ struct _db_msgfile_curs {// cursor
 };
 
 
-struct _db_ssimfs_curs {// cursor
-    typedef atf_ci::FSsimfs ChildType;
-    atf_ci::FDb *parent;
-    i64 index;
-    _db_ssimfs_curs(){ parent=NULL; index=0; }
-};
-
-
 struct _db_file_curs {// cursor
     typedef atf_ci::File ChildType;
     atf_ci::FDb *parent;
@@ -1394,75 +1742,157 @@ struct _db_file_curs {// cursor
     _db_file_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_cipackage_curs {// cursor
+    typedef atf_ci::FCipackage ChildType;
+    atf_ci::FDb *parent;
+    i64 index;
+    _db_cipackage_curs(){ parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace atf_ci { // gen:ns_func
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_checkclean
+// this function is 'extrn' and implemented by user
 void                 citest_checkclean();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_amc
+// this function is 'extrn' and implemented by user
 void                 citest_atf_amc();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_gitfile
+// this function is 'extrn' and implemented by user
 void                 citest_gitfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_normalize_acr
+// this function is 'extrn' and implemented by user
 void                 citest_normalize_acr();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-void                 citest_ssimfs();
-// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_src_lim
+// this function is 'extrn' and implemented by user
 void                 citest_src_lim();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_amc
+// this function is 'extrn' and implemented by user
 void                 citest_amc();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_bootstrap
+// this function is 'extrn' and implemented by user
 void                 citest_bootstrap();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_shebang
+// this function is 'extrn' and implemented by user
 void                 citest_shebang();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_encoding
+// this function is 'extrn' and implemented by user
 void                 citest_encoding();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_readme
+// this function is 'extrn' and implemented by user
 void                 citest_readme();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_file_header
+// this function is 'extrn' and implemented by user
 void                 citest_file_header();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_non_copyrighted
+// this function is 'extrn' and implemented by user
 void                 citest_non_copyrighted();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_iffy_src
+// this function is 'extrn' and implemented by user
 void                 citest_iffy_src();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_stray_gen
+// this function is 'extrn' and implemented by user
 void                 citest_stray_gen();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_tempcode
+// this function is 'extrn' and implemented by user
 void                 citest_tempcode();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_lineendings
+// this function is 'extrn' and implemented by user
 void                 citest_lineendings();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_indent_script
+// this function is 'extrn' and implemented by user
 void                 citest_indent_script();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_comptest
+// this function is 'extrn' and implemented by user
 void                 citest_comptest();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_cppcheck
+// this function is 'extrn' and implemented by user
 void                 citest_cppcheck();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_bintests
+// this function is 'extrn' and implemented by user
 void                 citest_bintests();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_indent_srcfile
+// this function is 'extrn' and implemented by user
 void                 citest_indent_srcfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_normalize_amc_vis
+// this function is 'extrn' and implemented by user
 void                 citest_normalize_amc_vis();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-void                 citest_ssimfile();
-// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_normalize_acr_my
+// this function is 'extrn' and implemented by user
 void                 citest_normalize_acr_my();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_unit
+// this function is 'extrn' and implemented by user
 void                 citest_atf_unit();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_comp
+// this function is 'extrn' and implemented by user
 void                 citest_atf_comp();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_comp_cov
+// this function is 'extrn' and implemented by user
 void                 citest_atf_comp_cov();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_atf_comp_mem
+// this function is 'extrn' and implemented by user
 void                 citest_atf_comp_mem();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_acr_ed_ssimfile
+// this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_acr_ed_ssimdb
+// this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimdb();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_acr_ed_target
+// this function is 'extrn' and implemented by user
 void                 citest_acr_ed_target();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_check
+// this function is 'extrn' and implemented by user
+void                 citest_apm_check();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm
+// this function is 'extrn' and implemented by user
+void                 citest_apm();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_reinstall
+// this function is 'extrn' and implemented by user
+void                 citest_apm_reinstall();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_ssimfile
+// this function is 'extrn' and implemented by user
+void                 citest_ssimfile();
 } // gen:ns_func
+// func:atf_ci...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:atf_ci...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

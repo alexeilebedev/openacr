@@ -54,12 +54,14 @@ struct trace { // ams_cat.trace
 };
 #pragma pack(pop)
 
-// print string representation of ams_cat::trace to string LHS, no header -- cprint:ams_cat.trace.String
-void                 trace_Print(ams_cat::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams_cat.trace.String  printfmt:Tuple
+// func:ams_cat.trace..Print
+void                 trace_Print(ams_cat::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams_cat.FDb
 // create: ams_cat.FDb._db (Global)
-struct FDb { // ams_cat.FDb
+struct FDb { // ams_cat.FDb: In-memory database for ams_cat
     command::ams_cat   cmdline;   //
     ams_cat::trace     trace;     //
 };
@@ -68,18 +70,26 @@ struct FDb { // ams_cat.FDb
 // The following fields are updated:
 //     ams_cat.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:ams_cat.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:ams_cat.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:ams_cat.FDb._db.Step
 void                 Step();
 // Main function
+// func:ams_cat.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:ams_cat.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:ams_cat.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:ams_cat.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -87,19 +97,26 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:ams_cat.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:ams_cat.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:ams_cat.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:ams_cat.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ams_cat.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Set all fields to initial values.
+// func:ams_cat.FDb..Init
 void                 FDb_Init();
+// func:ams_cat.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- ams_cat.FieldId
@@ -114,37 +131,50 @@ struct FieldId { // ams_cat.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:ams_cat.FieldId.value.GetEnum
 ams_cat_FieldIdEnum  value_GetEnum(const ams_cat::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:ams_cat.FieldId.value.SetEnum
 void                 value_SetEnum(ams_cat::FieldId& parent, ams_cat_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:ams_cat.FieldId.value.ToCstr
 const char*          value_ToCstr(const ams_cat::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:ams_cat.FieldId.value.Print
 void                 value_Print(const ams_cat::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:ams_cat.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:ams_cat.FieldId.value.SetStrptr
 void                 value_SetStrptr(ams_cat::FieldId& parent, algo::strptr rhs, ams_cat_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:ams_cat.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of ams_cat::FieldId from an ascii string.
 // The format of the string is the format of the ams_cat::FieldId's only field
+// func:ams_cat.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:ams_cat.FieldId..Init
 void                 FieldId_Init(ams_cat::FieldId& parent);
-// print string representation of ams_cat::FieldId to string LHS, no header -- cprint:ams_cat.FieldId.String
-void                 FieldId_Print(ams_cat::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams_cat.FieldId.String  printfmt:Raw
+// func:ams_cat.FieldId..Print
+void                 FieldId_Print(ams_cat::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ams_cat { // gen:ns_func
 } // gen:ns_func
+// func:ams_cat...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:ams_cat...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

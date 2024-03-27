@@ -133,11 +133,11 @@ namespace amcdb { // gen:ns_print_struct
 
 // --- amcdb.Bltin
 struct Bltin { // amcdb.Bltin: Specify properties of a C built-in type
-    algo::Smallstr50   ctype;      //
-    bool               likeu64;    //   false
-    bool               bigendok;   //   false
-    bool               issigned;   //   false
-    algo::Comment      comment;    //
+    algo::Smallstr100   ctype;      //
+    bool                likeu64;    //   false
+    bool                bigendok;   //   false
+    bool                issigned;   //   false
+    algo::Comment       comment;    //
     explicit Bltin(const algo::strptr&            in_ctype
         ,bool                           in_likeu64
         ,bool                           in_bigendok
@@ -146,14 +146,19 @@ struct Bltin { // amcdb.Bltin: Specify properties of a C built-in type
     Bltin();
 };
 
-bool                 Bltin_ReadFieldMaybe(amcdb::Bltin &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Bltin..ReadFieldMaybe
+bool                 Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Bltin from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Bltin..ReadStrptrMaybe
 bool                 Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amcdb.Bltin..Init
 void                 Bltin_Init(amcdb::Bltin& parent);
-// print string representation of amcdb::Bltin to string LHS, no header -- cprint:amcdb.Bltin.String
-void                 Bltin_Print(amcdb::Bltin & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Bltin.String  printfmt:Tuple
+// func:amcdb.Bltin..Print
+void                 Bltin_Print(amcdb::Bltin& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Curstype
 struct Curstype { // amcdb.Curstype: Cursor type
@@ -162,12 +167,16 @@ struct Curstype { // amcdb.Curstype: Cursor type
     Curstype();
 };
 
-bool                 Curstype_ReadFieldMaybe(amcdb::Curstype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Curstype..ReadFieldMaybe
+bool                 Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Curstype from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Curstype..ReadStrptrMaybe
 bool                 Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str);
-// print string representation of amcdb::Curstype to string LHS, no header -- cprint:amcdb.Curstype.String
-void                 Curstype_Print(amcdb::Curstype & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Curstype.String  printfmt:Tuple
+// func:amcdb.Curstype..Print
+void                 Curstype_Print(amcdb::Curstype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.FieldId
 #pragma pack(push,1)
@@ -181,32 +190,43 @@ struct FieldId { // amcdb.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:amcdb.FieldId.value.GetEnum
 amcdb_FieldIdEnum    value_GetEnum(const amcdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:amcdb.FieldId.value.SetEnum
 void                 value_SetEnum(amcdb::FieldId& parent, amcdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:amcdb.FieldId.value.ToCstr
 const char*          value_ToCstr(const amcdb::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:amcdb.FieldId.value.Print
 void                 value_Print(const amcdb::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:amcdb.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:amcdb.FieldId.value.SetStrptr
 void                 value_SetStrptr(amcdb::FieldId& parent, algo::strptr rhs, amcdb_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:amcdb.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of amcdb::FieldId from an ascii string.
 // The format of the string is the format of the amcdb::FieldId's only field
+// func:amcdb.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amcdb.FieldId..Init
 void                 FieldId_Init(amcdb::FieldId& parent);
-// print string representation of amcdb::FieldId to string LHS, no header -- cprint:amcdb.FieldId.String
-void                 FieldId_Print(amcdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.FieldId.String  printfmt:Raw
+// func:amcdb.FieldId..Print
+void                 FieldId_Print(amcdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Gen
 struct Gen { // amcdb.Gen
@@ -216,14 +236,19 @@ struct Gen { // amcdb.Gen
     Gen();
 };
 
-bool                 Gen_ReadFieldMaybe(amcdb::Gen &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Gen..ReadFieldMaybe
+bool                 Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Gen from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Gen..ReadStrptrMaybe
 bool                 Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amcdb.Gen..Init
 void                 Gen_Init(amcdb::Gen& parent);
-// print string representation of amcdb::Gen to string LHS, no header -- cprint:amcdb.Gen.String
-void                 Gen_Print(amcdb::Gen & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Gen.String  printfmt:Tuple
+// func:amcdb.Gen..Print
+void                 Gen_Print(amcdb::Gen& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Regxtype
 struct Regxtype { // amcdb.Regxtype
@@ -232,26 +257,34 @@ struct Regxtype { // amcdb.Regxtype
     Regxtype();
 };
 
-bool                 Regxtype_ReadFieldMaybe(amcdb::Regxtype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Regxtype..ReadFieldMaybe
+bool                 Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Regxtype from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Regxtype..ReadStrptrMaybe
 bool                 Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_str);
-// print string representation of amcdb::Regxtype to string LHS, no header -- cprint:amcdb.Regxtype.String
-void                 Regxtype_Print(amcdb::Regxtype & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxtype.String  printfmt:Tuple
+// func:amcdb.Regxtype..Print
+void                 Regxtype_Print(amcdb::Regxtype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Tclass
-struct Tclass { // amcdb.Tclass
+struct Tclass { // amcdb.Tclass: AMC template class
     algo::Smallstr50   tclass;    //
     algo::Comment      comment;   //
     Tclass();
 };
 
-bool                 Tclass_ReadFieldMaybe(amcdb::Tclass &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Tclass..ReadFieldMaybe
+bool                 Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Tclass from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Tclass..ReadStrptrMaybe
 bool                 Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str);
-// print string representation of amcdb::Tclass to string LHS, no header -- cprint:amcdb.Tclass.String
-void                 Tclass_Print(amcdb::Tclass & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tclass.String  printfmt:Tuple
+// func:amcdb.Tclass..Print
+void                 Tclass_Print(amcdb::Tclass& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Tcurs
 struct Tcurs { // amcdb.Tcurs: Cursor template
@@ -261,20 +294,27 @@ struct Tcurs { // amcdb.Tcurs: Cursor template
     Tcurs();
 };
 
+// func:amcdb.Tcurs.curstype.Get
 algo::Smallstr50     curstype_Get(amcdb::Tcurs& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Tcurs.curstype.Get2
 algo::Smallstr50     Tcurs_curstype_Get(algo::strptr arg) __attribute__((nothrow));
 
-bool                 Tcurs_ReadFieldMaybe(amcdb::Tcurs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Tcurs..ReadFieldMaybe
+bool                 Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Tcurs from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Tcurs..ReadStrptrMaybe
 bool                 Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amcdb.Tcurs..Init
 void                 Tcurs_Init(amcdb::Tcurs& parent);
-// print string representation of amcdb::Tcurs to string LHS, no header -- cprint:amcdb.Tcurs.String
-void                 Tcurs_Print(amcdb::Tcurs & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tcurs.String  printfmt:Tuple
+// func:amcdb.Tcurs..Print
+void                 Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Tfunc
-struct Tfunc { // amcdb.Tfunc
+struct Tfunc { // amcdb.Tfunc: AMC template function
     algo::Smallstr50   tfunc;      //
     bool               hasthrow;   //   false  Important defaults for new tfuncs to work
     bool               leaf;       //   true  Important defaults for new tfuncs to work
@@ -287,21 +327,31 @@ struct Tfunc { // amcdb.Tfunc
     Tfunc();
 };
 
+// func:amcdb.Tfunc.tclass.Get
 algo::Smallstr50     tclass_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Tfunc.tclass.Get2
 algo::Smallstr50     Tfunc_tclass_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:amcdb.Tfunc.name.Get
 algo::Smallstr50     name_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Tfunc.name.Get2
 algo::Smallstr50     Tfunc_name_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:amcdb.Tfunc..Concat_tclass_name
 tempstr              Tfunc_Concat_tclass_name( const algo::strptr& tclass ,const algo::strptr& name );
-bool                 Tfunc_ReadFieldMaybe(amcdb::Tfunc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amcdb.Tfunc..ReadFieldMaybe
+bool                 Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Tfunc from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amcdb.Tfunc..ReadStrptrMaybe
 bool                 Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amcdb.Tfunc..Init
 void                 Tfunc_Init(amcdb::Tfunc& parent);
-// print string representation of amcdb::Tfunc to string LHS, no header -- cprint:amcdb.Tfunc.String
-void                 Tfunc_Print(amcdb::Tfunc & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tfunc.String  printfmt:Tuple
+// func:amcdb.Tfunc..Print
+void                 Tfunc_Print(amcdb::Tfunc& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amcdb { // gen:ns_func
 } // gen:ns_func

@@ -193,12 +193,12 @@ inline u32 amc::Enumstr_Hash(u32 prev, const amc::Enumstr & rhs) {
 }
 
 // --- amc.Enumstr..Lt
-inline bool amc::Enumstr_Lt(amc::Enumstr & lhs, amc::Enumstr & rhs) {
+inline bool amc::Enumstr_Lt(amc::Enumstr& lhs, amc::Enumstr& rhs) {
     return Enumstr_Cmp(lhs,rhs) < 0;
 }
 
 // --- amc.Enumstr..Cmp
-inline i32 amc::Enumstr_Cmp(amc::Enumstr & lhs, amc::Enumstr & rhs) {
+inline i32 amc::Enumstr_Cmp(amc::Enumstr& lhs, amc::Enumstr& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.len, rhs.len);
     if (retval != 0) {
@@ -215,7 +215,7 @@ inline void amc::Enumstr_Init(amc::Enumstr& parent) {
 }
 
 // --- amc.Enumstr..Eq
-inline bool amc::Enumstr_Eq(const amc::Enumstr & lhs,const amc::Enumstr & rhs) {
+inline bool amc::Enumstr_Eq(const amc::Enumstr& lhs, const amc::Enumstr& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.len, rhs.len);
     if (!retval) {
@@ -227,7 +227,7 @@ inline bool amc::Enumstr_Eq(const amc::Enumstr & lhs,const amc::Enumstr & rhs) {
 
 // --- amc.Enumstr..Update
 // Set value. Return true if new value is different from old value.
-inline bool amc::Enumstr_Update(amc::Enumstr &lhs, amc::Enumstr & rhs) {
+inline bool amc::Enumstr_Update(amc::Enumstr &lhs, amc::Enumstr& rhs) {
     bool ret = !Enumstr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -375,6 +375,21 @@ inline void amc::FCextern_Init(amc::FCextern& cextern) {
     cextern.initmemset = bool(false);
     cextern.isstruct = bool(false);
 }
+inline amc::FCfast::FCfast() {
+    amc::FCfast_Init(*this);
+}
+
+inline amc::FCfast::~FCfast() {
+    amc::FCfast_Uninit(*this);
+}
+
+
+// --- amc.FCfast..Init
+// Set all fields to initial values.
+inline void amc::FCfast_Init(amc::FCfast& cfast) {
+    cfast.id = u32(0);
+    cfast.reset = bool(false);
+}
 inline amc::FCfmt::FCfmt() {
     amc::FCfmt_Init(*this);
 }
@@ -433,12 +448,20 @@ inline void amc::FChash_Init(amc::FChash& chash) {
     chash.ind_chash_next = (amc::FChash*)-1; // (amc.FDb.ind_chash) not-in-hash
 }
 inline amc::FCppfunc::FCppfunc() {
+    amc::FCppfunc_Init(*this);
 }
 
 inline amc::FCppfunc::~FCppfunc() {
     amc::FCppfunc_Uninit(*this);
 }
 
+
+// --- amc.FCppfunc..Init
+// Set all fields to initial values.
+inline void amc::FCppfunc_Init(amc::FCppfunc& cppfunc) {
+    cppfunc.print = bool(false);
+    cppfunc.set = bool(false);
+}
 inline amc::FCpptype::FCpptype() {
     amc::FCpptype_Init(*this);
 }
@@ -853,24 +876,62 @@ inline void amc::c_lenfld_Remove(amc::FCtype& ctype, amc::FLenfld& row) {
     }
 }
 
-// --- amc.FCtype.c_pmaskfld.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool amc::c_pmaskfld_InsertMaybe(amc::FCtype& ctype, amc::FPmaskfld& row) {
-    amc::FPmaskfld* ptr = ctype.c_pmaskfld;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        ctype.c_pmaskfld = &row;
+// --- amc.FCtype.c_pmaskfld.EmptyQ
+// Return true if index is empty
+inline bool amc::c_pmaskfld_EmptyQ(amc::FCtype& ctype) {
+    return ctype.c_pmaskfld_n == 0;
+}
+
+// --- amc.FCtype.c_pmaskfld.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FPmaskfld* amc::c_pmaskfld_Find(amc::FCtype& ctype, u32 t) {
+    amc::FPmaskfld *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_pmaskfld_n;
+    if (idx < lim) {
+        retval = ctype.c_pmaskfld_elems[idx];
     }
     return retval;
 }
 
-// --- amc.FCtype.c_pmaskfld.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void amc::c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) {
-    amc::FPmaskfld *ptr = ctype.c_pmaskfld;
-    if (LIKELY(ptr == &row)) {
-        ctype.c_pmaskfld = NULL;
+// --- amc.FCtype.c_pmaskfld.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FPmaskfld*> amc::c_pmaskfld_Getary(amc::FCtype& ctype) {
+    return algo::aryptr<amc::FPmaskfld*>(ctype.c_pmaskfld_elems, ctype.c_pmaskfld_n);
+}
+
+// --- amc.FCtype.c_pmaskfld.N
+// Return number of items in the pointer array
+inline i32 amc::c_pmaskfld_N(const amc::FCtype& ctype) {
+    return ctype.c_pmaskfld_n;
+}
+
+// --- amc.FCtype.c_pmaskfld.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_pmaskfld_RemoveAll(amc::FCtype& ctype) {
+    for (u32 i = 0; i < ctype.c_pmaskfld_n; i++) {
+        // mark all elements as not-in-array
+        ctype.c_pmaskfld_elems[i]->ctype_c_pmaskfld_in_ary = false;
     }
+    ctype.c_pmaskfld_n = 0;
+}
+
+// --- amc.FCtype.c_pmaskfld.qFind
+// Return reference without bounds checking
+inline amc::FPmaskfld& amc::c_pmaskfld_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_pmaskfld_elems[idx];
+}
+
+// --- amc.FCtype.c_pmaskfld.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ctype_c_pmaskfld_InAryQ(amc::FPmaskfld& row) {
+    return row.ctype_c_pmaskfld_in_ary;
+}
+
+// --- amc.FCtype.c_pmaskfld.qLast
+// Reference to last element without bounds checking
+inline amc::FPmaskfld& amc::c_pmaskfld_qLast(amc::FCtype& ctype) {
+    return *ctype.c_pmaskfld_elems[ctype.c_pmaskfld_n-1];
 }
 
 // --- amc.FCtype.c_typefld.InsertMaybe
@@ -1475,6 +1536,84 @@ inline void amc::c_nossimfile_Remove(amc::FCtype& ctype, amc::FNossimfile& row) 
     }
 }
 
+// --- amc.FCtype.c_cfast.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_cfast_InsertMaybe(amc::FCtype& ctype, amc::FCfast& row) {
+    amc::FCfast* ptr = ctype.c_cfast;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_cfast = &row;
+    }
+    return retval;
+}
+
+// --- amc.FCtype.c_cfast.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_cfast_Remove(amc::FCtype& ctype, amc::FCfast& row) {
+    amc::FCfast *ptr = ctype.c_cfast;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_cfast = NULL;
+    }
+}
+
+// --- amc.FCtype.c_ffast.EmptyQ
+// Return true if index is empty
+inline bool amc::c_ffast_EmptyQ(amc::FCtype& ctype) {
+    return ctype.c_ffast_n == 0;
+}
+
+// --- amc.FCtype.c_ffast.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFfast* amc::c_ffast_Find(amc::FCtype& ctype, u32 t) {
+    amc::FFfast *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_ffast_n;
+    if (idx < lim) {
+        retval = ctype.c_ffast_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FCtype.c_ffast.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FCtype& ctype) {
+    return algo::aryptr<amc::FFfast*>(ctype.c_ffast_elems, ctype.c_ffast_n);
+}
+
+// --- amc.FCtype.c_ffast.N
+// Return number of items in the pointer array
+inline i32 amc::c_ffast_N(const amc::FCtype& ctype) {
+    return ctype.c_ffast_n;
+}
+
+// --- amc.FCtype.c_ffast.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_ffast_RemoveAll(amc::FCtype& ctype) {
+    for (u32 i = 0; i < ctype.c_ffast_n; i++) {
+        // mark all elements as not-in-array
+        ctype.c_ffast_elems[i]->ctype_c_ffast_in_ary = false;
+    }
+    ctype.c_ffast_n = 0;
+}
+
+// --- amc.FCtype.c_ffast.qFind
+// Return reference without bounds checking
+inline amc::FFfast& amc::c_ffast_qFind(amc::FCtype& ctype, u32 idx) {
+    return *ctype.c_ffast_elems[idx];
+}
+
+// --- amc.FCtype.c_ffast.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::ctype_c_ffast_InAryQ(amc::FFfast& row) {
+    return row.ctype_c_ffast_in_ary;
+}
+
+// --- amc.FCtype.c_ffast.qLast
+// Reference to last element without bounds checking
+inline amc::FFfast& amc::c_ffast_qLast(amc::FCtype& ctype) {
+    return *ctype.c_ffast_elems[ctype.c_ffast_n-1];
+}
+
 // --- amc.FCtype.zs_cfmt_curs.Reset
 // cursor points to valid item
 inline void amc::ctype_zs_cfmt_curs_Reset(ctype_zs_cfmt_curs &curs, amc::FCtype &parent) {
@@ -1572,6 +1711,31 @@ inline void amc::ctype_c_parent_curs_Next(ctype_c_parent_curs &curs) {
 // --- amc.FCtype.c_parent_curs.Access
 // item access
 inline amc::FCtype& amc::ctype_c_parent_curs_Access(ctype_c_parent_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FCtype.c_pmaskfld_curs.Reset
+inline void amc::ctype_c_pmaskfld_curs_Reset(ctype_c_pmaskfld_curs &curs, amc::FCtype &parent) {
+    curs.elems = parent.c_pmaskfld_elems;
+    curs.n_elems = parent.c_pmaskfld_n;
+    curs.index = 0;
+}
+
+// --- amc.FCtype.c_pmaskfld_curs.ValidQ
+// cursor points to valid item
+inline bool amc::ctype_c_pmaskfld_curs_ValidQ(ctype_c_pmaskfld_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FCtype.c_pmaskfld_curs.Next
+// proceed to next item
+inline void amc::ctype_c_pmaskfld_curs_Next(ctype_c_pmaskfld_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FCtype.c_pmaskfld_curs.Access
+// item access
+inline amc::FPmaskfld& amc::ctype_c_pmaskfld_curs_Access(ctype_c_pmaskfld_curs &curs) {
     return *curs.elems[curs.index];
 }
 
@@ -1747,6 +1911,31 @@ inline void amc::ctype_c_fcurs_curs_Next(ctype_c_fcurs_curs &curs) {
 // --- amc.FCtype.c_fcurs_curs.Access
 // item access
 inline amc::FFcurs& amc::ctype_c_fcurs_curs_Access(ctype_c_fcurs_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FCtype.c_ffast_curs.Reset
+inline void amc::ctype_c_ffast_curs_Reset(ctype_c_ffast_curs &curs, amc::FCtype &parent) {
+    curs.elems = parent.c_ffast_elems;
+    curs.n_elems = parent.c_ffast_n;
+    curs.index = 0;
+}
+
+// --- amc.FCtype.c_ffast_curs.ValidQ
+// cursor points to valid item
+inline bool amc::ctype_c_ffast_curs_ValidQ(ctype_c_ffast_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FCtype.c_ffast_curs.Next
+// proceed to next item
+inline void amc::ctype_c_ffast_curs_Next(ctype_c_ffast_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FCtype.c_ffast_curs.Access
+// item access
+inline amc::FFfast& amc::ctype_c_ffast_curs_Access(ctype_c_ffast_curs &curs) {
     return *curs.elems[curs.index];
 }
 inline amc::FCtypelen::FCtypelen() {
@@ -7560,6 +7749,144 @@ inline amc::FSsimfile& amc::zd_ssimfile_todo_qLast() {
     return *row;
 }
 
+// --- amc.FDb.cfast.EmptyQ
+// Return true if index is empty
+inline bool amc::cfast_EmptyQ() {
+    return _db.cfast_n == 0;
+}
+
+// --- amc.FDb.cfast.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FCfast* amc::cfast_Find(u64 t) {
+    amc::FCfast *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cfast_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cfast_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.cfast.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FCfast* amc::cfast_Last() {
+    return cfast_Find(u64(_db.cfast_n-1));
+}
+
+// --- amc.FDb.cfast.N
+// Return number of items in the pool
+inline i32 amc::cfast_N() {
+    return _db.cfast_n;
+}
+
+// --- amc.FDb.cfast.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FCfast& amc::cfast_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cfast_lary[bsr][index];
+}
+
+// --- amc.FDb.ffast.EmptyQ
+// Return true if index is empty
+inline bool amc::ffast_EmptyQ() {
+    return _db.ffast_n == 0;
+}
+
+// --- amc.FDb.ffast.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFfast* amc::ffast_Find(u64 t) {
+    amc::FFfast *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ffast_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ffast_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.ffast.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FFfast* amc::ffast_Last() {
+    return ffast_Find(u64(_db.ffast_n-1));
+}
+
+// --- amc.FDb.ffast.N
+// Return number of items in the pool
+inline i32 amc::ffast_N() {
+    return _db.ffast_n;
+}
+
+// --- amc.FDb.ffast.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FFfast& amc::ffast_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ffast_lary[bsr][index];
+}
+
+// --- amc.FDb.pmaskfld_member.EmptyQ
+// Return true if index is empty
+inline bool amc::pmaskfld_member_EmptyQ() {
+    return _db.pmaskfld_member_n == 0;
+}
+
+// --- amc.FDb.pmaskfld_member.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FPmaskfldMember* amc::pmaskfld_member_Find(u64 t) {
+    amc::FPmaskfldMember *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.pmaskfld_member_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.pmaskfld_member_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.pmaskfld_member.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FPmaskfldMember* amc::pmaskfld_member_Last() {
+    return pmaskfld_member_Find(u64(_db.pmaskfld_member_n-1));
+}
+
+// --- amc.FDb.pmaskfld_member.N
+// Return number of items in the pool
+inline i32 amc::pmaskfld_member_N() {
+    return _db.pmaskfld_member_n;
+}
+
+// --- amc.FDb.pmaskfld_member.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FPmaskfldMember& amc::pmaskfld_member_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.pmaskfld_member_lary[bsr][index];
+}
+
+// --- amc.FDb.ind_pmaskfld.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_pmaskfld_EmptyQ() {
+    return _db.ind_pmaskfld_n == 0;
+}
+
+// --- amc.FDb.ind_pmaskfld.N
+// Return number of items in the hash
+inline i32 amc::ind_pmaskfld_N() {
+    return _db.ind_pmaskfld_n;
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -10575,6 +10902,81 @@ inline void amc::_db_zd_ssimfile_todo_curs_Next(_db_zd_ssimfile_todo_curs &curs)
 inline amc::FSsimfile& amc::_db_zd_ssimfile_todo_curs_Access(_db_zd_ssimfile_todo_curs &curs) {
     return *curs.row;
 }
+
+// --- amc.FDb.cfast_curs.Reset
+// cursor points to valid item
+inline void amc::_db_cfast_curs_Reset(_db_cfast_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.cfast_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_cfast_curs_ValidQ(_db_cfast_curs &curs) {
+    return curs.index < _db.cfast_n;
+}
+
+// --- amc.FDb.cfast_curs.Next
+// proceed to next item
+inline void amc::_db_cfast_curs_Next(_db_cfast_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.cfast_curs.Access
+// item access
+inline amc::FCfast& amc::_db_cfast_curs_Access(_db_cfast_curs &curs) {
+    return cfast_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.ffast_curs.Reset
+// cursor points to valid item
+inline void amc::_db_ffast_curs_Reset(_db_ffast_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.ffast_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_ffast_curs_ValidQ(_db_ffast_curs &curs) {
+    return curs.index < _db.ffast_n;
+}
+
+// --- amc.FDb.ffast_curs.Next
+// proceed to next item
+inline void amc::_db_ffast_curs_Next(_db_ffast_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.ffast_curs.Access
+// item access
+inline amc::FFfast& amc::_db_ffast_curs_Access(_db_ffast_curs &curs) {
+    return ffast_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.pmaskfld_member_curs.Reset
+// cursor points to valid item
+inline void amc::_db_pmaskfld_member_curs_Reset(_db_pmaskfld_member_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.pmaskfld_member_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_pmaskfld_member_curs_ValidQ(_db_pmaskfld_member_curs &curs) {
+    return curs.index < _db.pmaskfld_member_n;
+}
+
+// --- amc.FDb.pmaskfld_member_curs.Next
+// proceed to next item
+inline void amc::_db_pmaskfld_member_curs_Next(_db_pmaskfld_member_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.pmaskfld_member_curs.Access
+// item access
+inline amc::FPmaskfldMember& amc::_db_pmaskfld_member_curs_Access(_db_pmaskfld_member_curs &curs) {
+    return pmaskfld_member_qFind(u64(curs.index));
+}
 inline amc::FDispatch::FDispatch() {
     amc::FDispatch_Init(*this);
 }
@@ -11150,6 +11552,14 @@ inline amc::FFdelay::~FFdelay() {
 inline void amc::FFdelay_Init(amc::FFdelay& fdelay) {
     fdelay.scale = bool(false);
 }
+inline amc::FFfast::FFfast() {
+    amc::FFfast_Init(*this);
+}
+
+inline amc::FFfast::~FFfast() {
+    amc::FFfast_Uninit(*this);
+}
+
 inline amc::FFflag::FFflag() {
     amc::FFflag_Init(*this);
 }
@@ -12291,6 +12701,182 @@ inline void amc::c_falias_Remove(amc::FField& field, amc::FFalias& row) {
     }
 }
 
+// --- amc.FField.c_ffast_field.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_ffast_field_InsertMaybe(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast* ptr = field.c_ffast_field;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_ffast_field = &row;
+    }
+    return retval;
+}
+
+// --- amc.FField.c_ffast_field.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_ffast_field_Remove(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast *ptr = field.c_ffast_field;
+    if (LIKELY(ptr == &row)) {
+        field.c_ffast_field = NULL;
+    }
+}
+
+// --- amc.FField.c_ffast_length.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_ffast_length_InsertMaybe(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast* ptr = field.c_ffast_length;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_ffast_length = &row;
+    }
+    return retval;
+}
+
+// --- amc.FField.c_ffast_length.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_ffast_length_Remove(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast *ptr = field.c_ffast_length;
+    if (LIKELY(ptr == &row)) {
+        field.c_ffast_length = NULL;
+    }
+}
+
+// --- amc.FField.c_ffast_mantissa.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool amc::c_ffast_mantissa_InsertMaybe(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast* ptr = field.c_ffast_mantissa;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_ffast_mantissa = &row;
+    }
+    return retval;
+}
+
+// --- amc.FField.c_ffast_mantissa.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void amc::c_ffast_mantissa_Remove(amc::FField& field, amc::FFfast& row) {
+    amc::FFfast *ptr = field.c_ffast_mantissa;
+    if (LIKELY(ptr == &row)) {
+        field.c_ffast_mantissa = NULL;
+    }
+}
+
+// --- amc.FField.c_ffast.EmptyQ
+// Return true if index is empty
+inline bool amc::c_ffast_EmptyQ(amc::FField& field) {
+    return field.c_ffast_n == 0;
+}
+
+// --- amc.FField.c_ffast.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFfast* amc::c_ffast_Find(amc::FField& field, u32 t) {
+    amc::FFfast *retval = NULL;
+    u64 idx = t;
+    u64 lim = field.c_ffast_n;
+    if (idx < lim) {
+        retval = field.c_ffast_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FField.c_ffast.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FFfast*> amc::c_ffast_Getary(amc::FField& field) {
+    return algo::aryptr<amc::FFfast*>(field.c_ffast_elems, field.c_ffast_n);
+}
+
+// --- amc.FField.c_ffast.N
+// Return number of items in the pointer array
+inline i32 amc::c_ffast_N(const amc::FField& field) {
+    return field.c_ffast_n;
+}
+
+// --- amc.FField.c_ffast.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_ffast_RemoveAll(amc::FField& field) {
+    for (u32 i = 0; i < field.c_ffast_n; i++) {
+        // mark all elements as not-in-array
+        field.c_ffast_elems[i]->field_c_ffast_in_ary = false;
+    }
+    field.c_ffast_n = 0;
+}
+
+// --- amc.FField.c_ffast.qFind
+// Return reference without bounds checking
+inline amc::FFfast& amc::c_ffast_qFind(amc::FField& field, u32 idx) {
+    return *field.c_ffast_elems[idx];
+}
+
+// --- amc.FField.c_ffast.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::field_c_ffast_InAryQ(amc::FFfast& row) {
+    return row.field_c_ffast_in_ary;
+}
+
+// --- amc.FField.c_ffast.qLast
+// Reference to last element without bounds checking
+inline amc::FFfast& amc::c_ffast_qLast(amc::FField& field) {
+    return *field.c_ffast_elems[field.c_ffast_n-1];
+}
+
+// --- amc.FField.c_pmaskfld_member.EmptyQ
+// Return true if index is empty
+inline bool amc::c_pmaskfld_member_EmptyQ(amc::FField& field) {
+    return field.c_pmaskfld_member_n == 0;
+}
+
+// --- amc.FField.c_pmaskfld_member.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FField& field, u32 t) {
+    amc::FPmaskfldMember *retval = NULL;
+    u64 idx = t;
+    u64 lim = field.c_pmaskfld_member_n;
+    if (idx < lim) {
+        retval = field.c_pmaskfld_member_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FField.c_pmaskfld_member.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FField& field) {
+    return algo::aryptr<amc::FPmaskfldMember*>(field.c_pmaskfld_member_elems, field.c_pmaskfld_member_n);
+}
+
+// --- amc.FField.c_pmaskfld_member.N
+// Return number of items in the pointer array
+inline i32 amc::c_pmaskfld_member_N(const amc::FField& field) {
+    return field.c_pmaskfld_member_n;
+}
+
+// --- amc.FField.c_pmaskfld_member.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_pmaskfld_member_RemoveAll(amc::FField& field) {
+    for (u32 i = 0; i < field.c_pmaskfld_member_n; i++) {
+        // mark all elements as not-in-array
+        field.c_pmaskfld_member_elems[i]->field_c_pmaskfld_member_in_ary = false;
+    }
+    field.c_pmaskfld_member_n = 0;
+}
+
+// --- amc.FField.c_pmaskfld_member.qFind
+// Return reference without bounds checking
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FField& field, u32 idx) {
+    return *field.c_pmaskfld_member_elems[idx];
+}
+
+// --- amc.FField.c_pmaskfld_member.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::field_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) {
+    return row.field_c_pmaskfld_member_in_ary;
+}
+
+// --- amc.FField.c_pmaskfld_member.qLast
+// Reference to last element without bounds checking
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FField& field) {
+    return *field.c_pmaskfld_member_elems[field.c_pmaskfld_member_n-1];
+}
+
 // --- amc.FField.c_ffunc_curs.Reset
 inline void amc::field_c_ffunc_curs_Reset(field_c_ffunc_curs &curs, amc::FField &parent) {
     curs.elems = parent.c_ffunc_elems;
@@ -12401,6 +12987,56 @@ inline amc::FBitfld& amc::field_bh_bitfld_curs_Access(field_bh_bitfld_curs &curs
 // Return true if Access() will return non-NULL.
 inline bool amc::field_bh_bitfld_curs_ValidQ(field_bh_bitfld_curs &curs) {
     return curs.temp_n > 0;
+}
+
+// --- amc.FField.c_ffast_curs.Reset
+inline void amc::field_c_ffast_curs_Reset(field_c_ffast_curs &curs, amc::FField &parent) {
+    curs.elems = parent.c_ffast_elems;
+    curs.n_elems = parent.c_ffast_n;
+    curs.index = 0;
+}
+
+// --- amc.FField.c_ffast_curs.ValidQ
+// cursor points to valid item
+inline bool amc::field_c_ffast_curs_ValidQ(field_c_ffast_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FField.c_ffast_curs.Next
+// proceed to next item
+inline void amc::field_c_ffast_curs_Next(field_c_ffast_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FField.c_ffast_curs.Access
+// item access
+inline amc::FFfast& amc::field_c_ffast_curs_Access(field_c_ffast_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- amc.FField.c_pmaskfld_member_curs.Reset
+inline void amc::field_c_pmaskfld_member_curs_Reset(field_c_pmaskfld_member_curs &curs, amc::FField &parent) {
+    curs.elems = parent.c_pmaskfld_member_elems;
+    curs.n_elems = parent.c_pmaskfld_member_n;
+    curs.index = 0;
+}
+
+// --- amc.FField.c_pmaskfld_member_curs.ValidQ
+// cursor points to valid item
+inline bool amc::field_c_pmaskfld_member_curs_ValidQ(field_c_pmaskfld_member_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FField.c_pmaskfld_member_curs.Next
+// proceed to next item
+inline void amc::field_c_pmaskfld_member_curs_Next(field_c_pmaskfld_member_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FField.c_pmaskfld_member_curs.Access
+// item access
+inline amc::FPmaskfldMember& amc::field_c_pmaskfld_member_curs_Access(field_c_pmaskfld_member_curs &curs) {
+    return *curs.elems[curs.index];
 }
 inline amc::FFindrem::FFindrem() {
 }
@@ -14596,11 +15232,118 @@ inline amc::FPmaskfld::~FPmaskfld() {
 }
 
 
+// --- amc.FPmaskfld.c_pmaskfld_member.EmptyQ
+// Return true if index is empty
+inline bool amc::c_pmaskfld_member_EmptyQ(amc::FPmaskfld& pmaskfld) {
+    return pmaskfld.c_pmaskfld_member_n == 0;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FPmaskfldMember* amc::c_pmaskfld_member_Find(amc::FPmaskfld& pmaskfld, u32 t) {
+    amc::FPmaskfldMember *retval = NULL;
+    u64 idx = t;
+    u64 lim = pmaskfld.c_pmaskfld_member_n;
+    if (idx < lim) {
+        retval = pmaskfld.c_pmaskfld_member_elems[idx];
+    }
+    return retval;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.Getary
+// Return array of pointers
+inline algo::aryptr<amc::FPmaskfldMember*> amc::c_pmaskfld_member_Getary(amc::FPmaskfld& pmaskfld) {
+    return algo::aryptr<amc::FPmaskfldMember*>(pmaskfld.c_pmaskfld_member_elems, pmaskfld.c_pmaskfld_member_n);
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.N
+// Return number of items in the pointer array
+inline i32 amc::c_pmaskfld_member_N(const amc::FPmaskfld& pmaskfld) {
+    return pmaskfld.c_pmaskfld_member_n;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void amc::c_pmaskfld_member_RemoveAll(amc::FPmaskfld& pmaskfld) {
+    for (u32 i = 0; i < pmaskfld.c_pmaskfld_member_n; i++) {
+        // mark all elements as not-in-array
+        pmaskfld.c_pmaskfld_member_elems[i]->pmaskfld_c_pmaskfld_member_in_ary = false;
+    }
+    pmaskfld.c_pmaskfld_member_n = 0;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.qFind
+// Return reference without bounds checking
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qFind(amc::FPmaskfld& pmaskfld, u32 idx) {
+    return *pmaskfld.c_pmaskfld_member_elems[idx];
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.InAryQ
+// True if row is in any ptrary instance
+inline bool amc::pmaskfld_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) {
+    return row.pmaskfld_c_pmaskfld_member_in_ary;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.qLast
+// Reference to last element without bounds checking
+inline amc::FPmaskfldMember& amc::c_pmaskfld_member_qLast(amc::FPmaskfld& pmaskfld) {
+    return *pmaskfld.c_pmaskfld_member_elems[pmaskfld.c_pmaskfld_member_n-1];
+}
+
 // --- amc.FPmaskfld..Init
 // Set all fields to initial values.
 inline void amc::FPmaskfld_Init(amc::FPmaskfld& pmaskfld) {
+    pmaskfld.filter_print = bool(true);
     pmaskfld.p_field = NULL;
     pmaskfld.nextbit = u32(0);
+    pmaskfld.c_pmaskfld_member_elems = NULL; // (amc.FPmaskfld.c_pmaskfld_member)
+    pmaskfld.c_pmaskfld_member_n = 0; // (amc.FPmaskfld.c_pmaskfld_member)
+    pmaskfld.c_pmaskfld_member_max = 0; // (amc.FPmaskfld.c_pmaskfld_member)
+    pmaskfld.ctype_c_pmaskfld_in_ary = bool(false);
+    pmaskfld.ind_pmaskfld_next = (amc::FPmaskfld*)-1; // (amc.FDb.ind_pmaskfld) not-in-hash
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member_curs.Reset
+inline void amc::pmaskfld_c_pmaskfld_member_curs_Reset(pmaskfld_c_pmaskfld_member_curs &curs, amc::FPmaskfld &parent) {
+    curs.elems = parent.c_pmaskfld_member_elems;
+    curs.n_elems = parent.c_pmaskfld_member_n;
+    curs.index = 0;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member_curs.ValidQ
+// cursor points to valid item
+inline bool amc::pmaskfld_c_pmaskfld_member_curs_ValidQ(pmaskfld_c_pmaskfld_member_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member_curs.Next
+// proceed to next item
+inline void amc::pmaskfld_c_pmaskfld_member_curs_Next(pmaskfld_c_pmaskfld_member_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member_curs.Access
+// item access
+inline amc::FPmaskfldMember& amc::pmaskfld_c_pmaskfld_member_curs_Access(pmaskfld_c_pmaskfld_member_curs &curs) {
+    return *curs.elems[curs.index];
+}
+inline amc::FPmaskfldMember::FPmaskfldMember() {
+    amc::FPmaskfldMember_Init(*this);
+}
+
+inline amc::FPmaskfldMember::~FPmaskfldMember() {
+    amc::FPmaskfldMember_Uninit(*this);
+}
+
+
+// --- amc.FPmaskfldMember..Init
+// Set all fields to initial values.
+inline void amc::FPmaskfldMember_Init(amc::FPmaskfldMember& pmaskfld_member) {
+    pmaskfld_member.bit = u32(0);
+    pmaskfld_member.p_field = NULL;
+    pmaskfld_member.p_pmaskfld = NULL;
+    pmaskfld_member.field_c_pmaskfld_member_in_ary = bool(false);
+    pmaskfld_member.pmaskfld_c_pmaskfld_member_in_ary = bool(false);
 }
 inline amc::FPnew::FPnew() {
     amc::FPnew_Init(*this);

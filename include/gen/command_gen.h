@@ -58,265 +58,282 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_readme                     = 25
     ,command_FieldId_ns                         = 26
     ,command_FieldId_section                    = 27
-    ,command_FieldId_print                      = 28
-    ,command_FieldId_query                      = 29
-    ,command_FieldId_where                      = 30
-    ,command_FieldId_select                     = 31
-    ,command_FieldId_del                        = 32
-    ,command_FieldId_insert                     = 33
-    ,command_FieldId_replace                    = 34
-    ,command_FieldId_update                     = 35
-    ,command_FieldId_merge                      = 36
-    ,command_FieldId_unused                     = 37
-    ,command_FieldId_trunc                      = 38
-    ,command_FieldId_check                      = 39
-    ,command_FieldId_selerr                     = 40
-    ,command_FieldId_maxshow                    = 41
-    ,command_FieldId_write                      = 42
-    ,command_FieldId_rename                     = 43
-    ,command_FieldId_nup                        = 44
-    ,command_FieldId_ndown                      = 45
-    ,command_FieldId_xref                       = 46
-    ,command_FieldId_fldfunc                    = 47
-    ,command_FieldId_maxgroup                   = 48
-    ,command_FieldId_pretty                     = 49
-    ,command_FieldId_tree                       = 50
-    ,command_FieldId_loose                      = 51
-    ,command_FieldId_my                         = 52
-    ,command_FieldId_schema                     = 53
-    ,command_FieldId_e                          = 54
-    ,command_FieldId_t                          = 55
-    ,command_FieldId_rowid                      = 56
-    ,command_FieldId_cmt                        = 57
-    ,command_FieldId_cmd                        = 58
-    ,command_FieldId_field                      = 59
-    ,command_FieldId_regxof                     = 60
-    ,command_FieldId_meta                       = 61
-    ,command_FieldId_data                       = 62
-    ,command_FieldId_line                       = 63
-    ,command_FieldId_point                      = 64
-    ,command_FieldId_type                       = 65
-    ,command_FieldId_debug_log                  = 66
-    ,command_FieldId_arg                        = 67
-    ,command_FieldId_write_ours                 = 68
-    ,command_FieldId_msize                      = 69
-    ,command_FieldId_create                     = 70
-    ,command_FieldId_finput                     = 71
-    ,command_FieldId_foutput                    = 72
-    ,command_FieldId_srcfile                    = 73
-    ,command_FieldId_gstatic                    = 74
-    ,command_FieldId_indexed                    = 75
-    ,command_FieldId_nstype                     = 76
-    ,command_FieldId_ctype                      = 77
-    ,command_FieldId_pooltype                   = 78
-    ,command_FieldId_ssimfile                   = 79
-    ,command_FieldId_subset                     = 80
-    ,command_FieldId_subset2                    = 81
-    ,command_FieldId_separator                  = 82
-    ,command_FieldId_dflt                       = 83
-    ,command_FieldId_anon                       = 84
-    ,command_FieldId_bigend                     = 85
-    ,command_FieldId_cascdel                    = 86
-    ,command_FieldId_before                     = 87
-    ,command_FieldId_substr                     = 88
-    ,command_FieldId_alias                      = 89
-    ,command_FieldId_srcfield                   = 90
-    ,command_FieldId_fstep                      = 91
-    ,command_FieldId_inscond                    = 92
-    ,command_FieldId_reftype                    = 93
-    ,command_FieldId_hashfld                    = 94
-    ,command_FieldId_sortfld                    = 95
-    ,command_FieldId_unittest                   = 96
-    ,command_FieldId_citest                     = 97
-    ,command_FieldId_cppfunc                    = 98
-    ,command_FieldId_via                        = 99
-    ,command_FieldId_comment                    = 100
-    ,command_FieldId_sandbox                    = 101
-    ,command_FieldId_test                       = 102
-    ,command_FieldId_showcpp                    = 103
-    ,command_FieldId_msgtype                    = 104
-    ,command_FieldId_anonfld                    = 105
-    ,command_FieldId_sigcheck                   = 106
-    ,command_FieldId_data_dir                   = 107
-    ,command_FieldId_related                    = 108
-    ,command_FieldId_notssimfile                = 109
-    ,command_FieldId_checkable                  = 110
-    ,command_FieldId_r                          = 111
-    ,command_FieldId_nsdb                       = 112
-    ,command_FieldId_fkey                       = 113
-    ,command_FieldId_start                      = 114
-    ,command_FieldId_stop                       = 115
-    ,command_FieldId_abort                      = 116
-    ,command_FieldId_shell                      = 117
-    ,command_FieldId_serv                       = 118
-    ,command_FieldId_in_dir                     = 119
-    ,command_FieldId_proto                      = 120
-    ,command_FieldId_trace                      = 121
-    ,command_FieldId_fconst                     = 122
-    ,command_FieldId_gconst                     = 123
-    ,command_FieldId_key                        = 124
-    ,command_FieldId_include                    = 125
-    ,command_FieldId_dot                        = 126
-    ,command_FieldId_xns                        = 127
-    ,command_FieldId_noinput                    = 128
-    ,command_FieldId_render                     = 129
-    ,command_FieldId_id                         = 130
-    ,command_FieldId_file_prefix                = 131
-    ,command_FieldId_nchild                     = 132
-    ,command_FieldId_blocking                   = 133
-    ,command_FieldId_nmsg                       = 134
-    ,command_FieldId_timeout                    = 135
-    ,command_FieldId_recvdelay_ns               = 136
-    ,command_FieldId_senddelay_ns               = 137
-    ,command_FieldId_msgsize_min                = 138
-    ,command_FieldId_msgsize_max                = 139
-    ,command_FieldId_bufsize                    = 140
-    ,command_FieldId_recvdelay                  = 141
-    ,command_FieldId_amctest                    = 142
-    ,command_FieldId_dofork                     = 143
-    ,command_FieldId_q                          = 144
-    ,command_FieldId_cijob                      = 145
-    ,command_FieldId_capture                    = 146
-    ,command_FieldId_exec                       = 147
-    ,command_FieldId_astr                       = 148
-    ,command_FieldId_anum                       = 149
-    ,command_FieldId_adbl                       = 150
-    ,command_FieldId_aflag                      = 151
-    ,command_FieldId_str                        = 152
-    ,command_FieldId_num                        = 153
-    ,command_FieldId_dbl                        = 154
-    ,command_FieldId_flag                       = 155
-    ,command_FieldId_dstr                       = 156
-    ,command_FieldId_dnum                       = 157
-    ,command_FieldId_ddbl                       = 158
-    ,command_FieldId_dflag                      = 159
-    ,command_FieldId_mstr                       = 160
-    ,command_FieldId_mnum                       = 161
-    ,command_FieldId_mdbl                       = 162
-    ,command_FieldId_amnum                      = 163
-    ,command_FieldId_cconst                     = 164
-    ,command_FieldId_dregx                      = 165
-    ,command_FieldId_dpkey                      = 166
-    ,command_FieldId_comptest                   = 167
-    ,command_FieldId_mdbg                       = 168
-    ,command_FieldId_run                        = 169
-    ,command_FieldId_printinput                 = 170
-    ,command_FieldId_normalize                  = 171
-    ,command_FieldId_covcapture                 = 172
-    ,command_FieldId_covcheck                   = 173
-    ,command_FieldId_compdir                    = 174
-    ,command_FieldId_check_untracked            = 175
-    ,command_FieldId_memcheck                   = 176
-    ,command_FieldId_callgrind                  = 177
-    ,command_FieldId_stream                     = 178
-    ,command_FieldId_i                          = 179
-    ,command_FieldId_b                          = 180
-    ,command_FieldId_covdir                     = 181
-    ,command_FieldId_logfile                    = 182
-    ,command_FieldId_runcmd                     = 183
-    ,command_FieldId_exclude                    = 184
-    ,command_FieldId_mergepath                  = 185
-    ,command_FieldId_gcov                       = 186
-    ,command_FieldId_ssim                       = 187
-    ,command_FieldId_xmlpretty                  = 188
-    ,command_FieldId_summary                    = 189
-    ,command_FieldId_reprofile                  = 190
-    ,command_FieldId_args                       = 191
-    ,command_FieldId_inputfile                  = 192
-    ,command_FieldId_fuzzstrat                  = 193
-    ,command_FieldId_seed                       = 194
-    ,command_FieldId_testprob                   = 195
-    ,command_FieldId_gtblacttst                 = 196
-    ,command_FieldId_mr                         = 197
-    ,command_FieldId_note                       = 198
-    ,command_FieldId_skip_init                  = 199
-    ,command_FieldId_skip_git_init              = 200
-    ,command_FieldId_ncmd                       = 201
-    ,command_FieldId_nofork                     = 202
-    ,command_FieldId_perf_secs                  = 203
-    ,command_FieldId_pertest_timeout            = 204
-    ,command_FieldId_stats                      = 205
-    ,command_FieldId_enable                     = 206
-    ,command_FieldId_disable                    = 207
-    ,command_FieldId_gc                         = 208
-    ,command_FieldId_dir                        = 209
-    ,command_FieldId_hitrate                    = 210
-    ,command_FieldId_after                      = 211
-    ,command_FieldId_selector                   = 212
-    ,command_FieldId_fields                     = 213
-    ,command_FieldId_accept                     = 214
-    ,command_FieldId_approve                    = 215
-    ,command_FieldId_needs_work                 = 216
-    ,command_FieldId_authdir                    = 217
-    ,command_FieldId_gitdir                     = 218
-    ,command_FieldId_show_gitlab_system_notes   = 219
-    ,command_FieldId_complooo                   = 220
-    ,command_FieldId_attach                     = 221
-    ,command_FieldId_catchthrow                 = 222
-    ,command_FieldId_tui                        = 223
-    ,command_FieldId_bcmd                       = 224
-    ,command_FieldId_emacs                      = 225
-    ,command_FieldId_manywin                    = 226
-    ,command_FieldId_follow_child               = 227
-    ,command_FieldId_py                         = 228
-    ,command_FieldId_writessimfile              = 229
-    ,command_FieldId_url                        = 230
-    ,command_FieldId_tables                     = 231
-    ,command_FieldId_nologo                     = 232
-    ,command_FieldId_baddbok                    = 233
-    ,command_FieldId_move                       = 234
-    ,command_FieldId_dedup                      = 235
-    ,command_FieldId_commit                     = 236
-    ,command_FieldId_undo                       = 237
-    ,command_FieldId_hash                       = 238
-    ,command_FieldId_expr                       = 239
-    ,command_FieldId_style                      = 240
-    ,command_FieldId_match                      = 241
-    ,command_FieldId_string                     = 242
-    ,command_FieldId_show                       = 243
-    ,command_FieldId_name                       = 244
-    ,command_FieldId_reset                      = 245
-    ,command_FieldId_diff                       = 246
-    ,command_FieldId_files                      = 247
-    ,command_FieldId_body                       = 248
-    ,command_FieldId_targsrc                    = 249
-    ,command_FieldId_func                       = 250
-    ,command_FieldId_nextfile                   = 251
-    ,command_FieldId_other                      = 252
-    ,command_FieldId_updateproto                = 253
-    ,command_FieldId_listfunc                   = 254
-    ,command_FieldId_iffy                       = 255
-    ,command_FieldId_gen                        = 256
-    ,command_FieldId_showloc                    = 257
-    ,command_FieldId_showstatic                 = 258
-    ,command_FieldId_showsortkey                = 259
-    ,command_FieldId_sortname                   = 260
-    ,command_FieldId_baddecl                    = 261
-    ,command_FieldId_indent                     = 262
-    ,command_FieldId_update_copyright           = 263
-    ,command_FieldId_scriptfile                 = 264
-    ,command_FieldId_linelim                    = 265
-    ,command_FieldId_strayfile                  = 266
-    ,command_FieldId_badchar                    = 267
-    ,command_FieldId_badline                    = 268
-    ,command_FieldId_expand                     = 269
-    ,command_FieldId_ignoreQuote                = 270
-    ,command_FieldId_maxpacket                  = 271
-    ,command_FieldId_db                         = 272
-    ,command_FieldId_createdb                   = 273
-    ,command_FieldId_typetag                    = 274
-    ,command_FieldId_format                     = 275
-    ,command_FieldId_tocamelcase                = 276
-    ,command_FieldId_tolowerunder               = 277
-    ,command_FieldId_pathcomp                   = 278
-    ,command_FieldId_fname                      = 279
-    ,command_FieldId_outseparator               = 280
-    ,command_FieldId_header                     = 281
-    ,command_FieldId_prefer_signed              = 282
-    ,command_FieldId_value                      = 283
+    ,command_FieldId_update                     = 28
+    ,command_FieldId_check                      = 29
+    ,command_FieldId_link                       = 30
+    ,command_FieldId_anchor                     = 31
+    ,command_FieldId_print                      = 32
+    ,command_FieldId_query                      = 33
+    ,command_FieldId_where                      = 34
+    ,command_FieldId_del                        = 35
+    ,command_FieldId_sel                        = 36
+    ,command_FieldId_insert                     = 37
+    ,command_FieldId_replace                    = 38
+    ,command_FieldId_merge                      = 39
+    ,command_FieldId_unused                     = 40
+    ,command_FieldId_trunc                      = 41
+    ,command_FieldId_selerr                     = 42
+    ,command_FieldId_maxshow                    = 43
+    ,command_FieldId_write                      = 44
+    ,command_FieldId_rename                     = 45
+    ,command_FieldId_nup                        = 46
+    ,command_FieldId_ndown                      = 47
+    ,command_FieldId_l                          = 48
+    ,command_FieldId_xref                       = 49
+    ,command_FieldId_fldfunc                    = 50
+    ,command_FieldId_maxgroup                   = 51
+    ,command_FieldId_pretty                     = 52
+    ,command_FieldId_tree                       = 53
+    ,command_FieldId_loose                      = 54
+    ,command_FieldId_my                         = 55
+    ,command_FieldId_schema                     = 56
+    ,command_FieldId_e                          = 57
+    ,command_FieldId_t                          = 58
+    ,command_FieldId_g                          = 59
+    ,command_FieldId_x                          = 60
+    ,command_FieldId_rowid                      = 61
+    ,command_FieldId_cmt                        = 62
+    ,command_FieldId_cmd                        = 63
+    ,command_FieldId_field                      = 64
+    ,command_FieldId_regxof                     = 65
+    ,command_FieldId_meta                       = 66
+    ,command_FieldId_data                       = 67
+    ,command_FieldId_line                       = 68
+    ,command_FieldId_point                      = 69
+    ,command_FieldId_type                       = 70
+    ,command_FieldId_debug_log                  = 71
+    ,command_FieldId_arg                        = 72
+    ,command_FieldId_write_ours                 = 73
+    ,command_FieldId_msize                      = 74
+    ,command_FieldId_create                     = 75
+    ,command_FieldId_finput                     = 76
+    ,command_FieldId_foutput                    = 77
+    ,command_FieldId_srcfile                    = 78
+    ,command_FieldId_gstatic                    = 79
+    ,command_FieldId_indexed                    = 80
+    ,command_FieldId_nstype                     = 81
+    ,command_FieldId_ctype                      = 82
+    ,command_FieldId_pooltype                   = 83
+    ,command_FieldId_ssimfile                   = 84
+    ,command_FieldId_subset                     = 85
+    ,command_FieldId_subset2                    = 86
+    ,command_FieldId_separator                  = 87
+    ,command_FieldId_dflt                       = 88
+    ,command_FieldId_anon                       = 89
+    ,command_FieldId_bigend                     = 90
+    ,command_FieldId_cascdel                    = 91
+    ,command_FieldId_before                     = 92
+    ,command_FieldId_substr                     = 93
+    ,command_FieldId_alias                      = 94
+    ,command_FieldId_srcfield                   = 95
+    ,command_FieldId_fstep                      = 96
+    ,command_FieldId_inscond                    = 97
+    ,command_FieldId_reftype                    = 98
+    ,command_FieldId_hashfld                    = 99
+    ,command_FieldId_sortfld                    = 100
+    ,command_FieldId_unittest                   = 101
+    ,command_FieldId_citest                     = 102
+    ,command_FieldId_cppfunc                    = 103
+    ,command_FieldId_via                        = 104
+    ,command_FieldId_comment                    = 105
+    ,command_FieldId_sandbox                    = 106
+    ,command_FieldId_test                       = 107
+    ,command_FieldId_showcpp                    = 108
+    ,command_FieldId_msgtype                    = 109
+    ,command_FieldId_anonfld                    = 110
+    ,command_FieldId_sigcheck                   = 111
+    ,command_FieldId_data_dir                   = 112
+    ,command_FieldId_related                    = 113
+    ,command_FieldId_notssimfile                = 114
+    ,command_FieldId_checkable                  = 115
+    ,command_FieldId_r                          = 116
+    ,command_FieldId_nsdb                       = 117
+    ,command_FieldId_fkey                       = 118
+    ,command_FieldId_start                      = 119
+    ,command_FieldId_stop                       = 120
+    ,command_FieldId_abort                      = 121
+    ,command_FieldId_shell                      = 122
+    ,command_FieldId_serv                       = 123
+    ,command_FieldId_in_dir                     = 124
+    ,command_FieldId_proto                      = 125
+    ,command_FieldId_trace                      = 126
+    ,command_FieldId_key                        = 127
+    ,command_FieldId_include                    = 128
+    ,command_FieldId_dot                        = 129
+    ,command_FieldId_xns                        = 130
+    ,command_FieldId_noinput                    = 131
+    ,command_FieldId_render                     = 132
+    ,command_FieldId_id                         = 133
+    ,command_FieldId_file_prefix                = 134
+    ,command_FieldId_nchild                     = 135
+    ,command_FieldId_blocking                   = 136
+    ,command_FieldId_nmsg                       = 137
+    ,command_FieldId_timeout                    = 138
+    ,command_FieldId_recvdelay_ns               = 139
+    ,command_FieldId_senddelay_ns               = 140
+    ,command_FieldId_msgsize_min                = 141
+    ,command_FieldId_msgsize_max                = 142
+    ,command_FieldId_bufsize                    = 143
+    ,command_FieldId_recvdelay                  = 144
+    ,command_FieldId_diff                       = 145
+    ,command_FieldId_push                       = 146
+    ,command_FieldId_remove                     = 147
+    ,command_FieldId_origin                     = 148
+    ,command_FieldId_ref                        = 149
+    ,command_FieldId_showrec                    = 150
+    ,command_FieldId_showfile                   = 151
+    ,command_FieldId_R                          = 152
+    ,command_FieldId_reset                      = 153
+    ,command_FieldId_checkclean                 = 154
+    ,command_FieldId_stat                       = 155
+    ,command_FieldId_annotate                   = 156
+    ,command_FieldId_gen                        = 157
+    ,command_FieldId_data_in                    = 158
+    ,command_FieldId_binpath                    = 159
+    ,command_FieldId_nosort                     = 160
+    ,command_FieldId_amctest                    = 161
+    ,command_FieldId_dofork                     = 162
+    ,command_FieldId_q                          = 163
+    ,command_FieldId_cijob                      = 164
+    ,command_FieldId_capture                    = 165
+    ,command_FieldId_exec                       = 166
+    ,command_FieldId_astr                       = 167
+    ,command_FieldId_anum                       = 168
+    ,command_FieldId_adbl                       = 169
+    ,command_FieldId_aflag                      = 170
+    ,command_FieldId_str                        = 171
+    ,command_FieldId_num                        = 172
+    ,command_FieldId_dbl                        = 173
+    ,command_FieldId_flag                       = 174
+    ,command_FieldId_dstr                       = 175
+    ,command_FieldId_dnum                       = 176
+    ,command_FieldId_ddbl                       = 177
+    ,command_FieldId_dflag                      = 178
+    ,command_FieldId_mstr                       = 179
+    ,command_FieldId_mnum                       = 180
+    ,command_FieldId_mdbl                       = 181
+    ,command_FieldId_amnum                      = 182
+    ,command_FieldId_fconst                     = 183
+    ,command_FieldId_cconst                     = 184
+    ,command_FieldId_dregx                      = 185
+    ,command_FieldId_dpkey                      = 186
+    ,command_FieldId_comptest                   = 187
+    ,command_FieldId_mdbg                       = 188
+    ,command_FieldId_run                        = 189
+    ,command_FieldId_printinput                 = 190
+    ,command_FieldId_normalize                  = 191
+    ,command_FieldId_covcapture                 = 192
+    ,command_FieldId_covcheck                   = 193
+    ,command_FieldId_compdir                    = 194
+    ,command_FieldId_check_untracked            = 195
+    ,command_FieldId_memcheck                   = 196
+    ,command_FieldId_callgrind                  = 197
+    ,command_FieldId_stream                     = 198
+    ,command_FieldId_i                          = 199
+    ,command_FieldId_b                          = 200
+    ,command_FieldId_covdir                     = 201
+    ,command_FieldId_logfile                    = 202
+    ,command_FieldId_runcmd                     = 203
+    ,command_FieldId_exclude                    = 204
+    ,command_FieldId_mergepath                  = 205
+    ,command_FieldId_gcov                       = 206
+    ,command_FieldId_ssim                       = 207
+    ,command_FieldId_xmlpretty                  = 208
+    ,command_FieldId_summary                    = 209
+    ,command_FieldId_reprofile                  = 210
+    ,command_FieldId_args                       = 211
+    ,command_FieldId_inputfile                  = 212
+    ,command_FieldId_fuzzstrat                  = 213
+    ,command_FieldId_seed                       = 214
+    ,command_FieldId_testprob                   = 215
+    ,command_FieldId_gtblacttst                 = 216
+    ,command_FieldId_mr                         = 217
+    ,command_FieldId_note                       = 218
+    ,command_FieldId_skip_init                  = 219
+    ,command_FieldId_skip_git_init              = 220
+    ,command_FieldId_ncmd                       = 221
+    ,command_FieldId_nofork                     = 222
+    ,command_FieldId_perf_secs                  = 223
+    ,command_FieldId_pertest_timeout            = 224
+    ,command_FieldId_stats                      = 225
+    ,command_FieldId_enable                     = 226
+    ,command_FieldId_disable                    = 227
+    ,command_FieldId_gc                         = 228
+    ,command_FieldId_dir                        = 229
+    ,command_FieldId_hitrate                    = 230
+    ,command_FieldId_after                      = 231
+    ,command_FieldId_selector                   = 232
+    ,command_FieldId_fields                     = 233
+    ,command_FieldId_accept                     = 234
+    ,command_FieldId_approve                    = 235
+    ,command_FieldId_needs_work                 = 236
+    ,command_FieldId_authdir                    = 237
+    ,command_FieldId_gitdir                     = 238
+    ,command_FieldId_show_gitlab_system_notes   = 239
+    ,command_FieldId_attach                     = 240
+    ,command_FieldId_catchthrow                 = 241
+    ,command_FieldId_tui                        = 242
+    ,command_FieldId_bcmd                       = 243
+    ,command_FieldId_emacs                      = 244
+    ,command_FieldId_manywin                    = 245
+    ,command_FieldId_follow_child               = 246
+    ,command_FieldId_py                         = 247
+    ,command_FieldId_writessimfile              = 248
+    ,command_FieldId_url                        = 249
+    ,command_FieldId_tables                     = 250
+    ,command_FieldId_nologo                     = 251
+    ,command_FieldId_baddbok                    = 252
+    ,command_FieldId_move                       = 253
+    ,command_FieldId_dedup                      = 254
+    ,command_FieldId_commit                     = 255
+    ,command_FieldId_undo                       = 256
+    ,command_FieldId_hash                       = 257
+    ,command_FieldId_expr                       = 258
+    ,command_FieldId_style                      = 259
+    ,command_FieldId_match                      = 260
+    ,command_FieldId_string                     = 261
+    ,command_FieldId_show                       = 262
+    ,command_FieldId_name                       = 263
+    ,command_FieldId_files                      = 264
+    ,command_FieldId_refs                       = 265
+    ,command_FieldId_body                       = 266
+    ,command_FieldId_targsrc                    = 267
+    ,command_FieldId_func                       = 268
+    ,command_FieldId_nextfile                   = 269
+    ,command_FieldId_other                      = 270
+    ,command_FieldId_updateproto                = 271
+    ,command_FieldId_listfunc                   = 272
+    ,command_FieldId_iffy                       = 273
+    ,command_FieldId_showloc                    = 274
+    ,command_FieldId_showstatic                 = 275
+    ,command_FieldId_showsortkey                = 276
+    ,command_FieldId_sortname                   = 277
+    ,command_FieldId_baddecl                    = 278
+    ,command_FieldId_indent                     = 279
+    ,command_FieldId_update_copyright           = 280
+    ,command_FieldId_scriptfile                 = 281
+    ,command_FieldId_linelim                    = 282
+    ,command_FieldId_strayfile                  = 283
+    ,command_FieldId_badchar                    = 284
+    ,command_FieldId_badline                    = 285
+    ,command_FieldId_expand                     = 286
+    ,command_FieldId_ignoreQuote                = 287
+    ,command_FieldId_maxpacket                  = 288
+    ,command_FieldId_db                         = 289
+    ,command_FieldId_createdb                   = 290
+    ,command_FieldId_typetag                    = 291
+    ,command_FieldId_format                     = 292
+    ,command_FieldId_tocamelcase                = 293
+    ,command_FieldId_tolowerunder               = 294
+    ,command_FieldId_pathcomp                   = 295
+    ,command_FieldId_fname                      = 296
+    ,command_FieldId_outseparator               = 297
+    ,command_FieldId_header                     = 298
+    ,command_FieldId_prefer_signed              = 299
+    ,command_FieldId_value                      = 300
 };
 
-enum { command_FieldIdEnum_N = 284 };
+enum { command_FieldIdEnum_N = 301 };
 
 
 // --- command_abt_cache_Enum
@@ -362,10 +379,11 @@ enum command_ssimfilt_format_Enum {        // command.ssimfilt.format
     ,command_ssimfilt_format_csv     = 1   // First tuple determines header. CSV quoting is used. Newlines are removed
     ,command_ssimfilt_format_field   = 2   // Print selected fields, one per line
     ,command_ssimfilt_format_cmd     = 4   // Emit command for each tuple (implied if -cmd is set)
+    ,command_ssimfilt_format_json    = 6   // Print JSON object for each tuple
     ,command_ssimfilt_format_table   = 5   // ASCII table for each group of tuples
 };
 
-enum { command_ssimfilt_format_Enum_N = 5 };
+enum { command_ssimfilt_format_Enum_N = 6 };
 
 namespace command { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -406,7 +424,6 @@ namespace command { struct acr_my; }
 namespace command { struct acr_my_proc; }
 namespace command { struct acr_proc; }
 namespace command { struct amc; }
-namespace command { struct amc_dml; }
 namespace command { struct amc_gc; }
 namespace command { struct amc_gc_proc; }
 namespace command { struct amc_proc; }
@@ -416,6 +433,8 @@ namespace command { struct ams_cat; }
 namespace command { struct ams_cat_proc; }
 namespace command { struct ams_sendtest; }
 namespace command { struct ams_sendtest_proc; }
+namespace command { struct apm; }
+namespace command { struct apm_proc; }
 namespace command { struct atf_amc; }
 namespace command { struct atf_amc_proc; }
 namespace command { struct atf_ci; }
@@ -442,12 +461,11 @@ namespace command { struct gcache; }
 namespace command { struct gcache_proc; }
 namespace command { struct gcli; }
 namespace command { struct gcli_proc; }
-namespace command { struct lib_ctype; }
-namespace command { struct lib_exec; }
 namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
 namespace command { struct mysql2ssim_proc; }
+namespace command { struct ob; }
 namespace command { struct orgfile; }
 namespace command { struct orgfile_proc; }
 namespace command { struct samp_regx; }
@@ -484,32 +502,43 @@ struct FieldId { // command.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:command.FieldId.value.GetEnum
 command_FieldIdEnum  value_GetEnum(const command::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:command.FieldId.value.SetEnum
 void                 value_SetEnum(command::FieldId& parent, command_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:command.FieldId.value.ToCstr
 const char*          value_ToCstr(const command::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:command.FieldId.value.Print
 void                 value_Print(const command::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:command.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:command.FieldId.value.SetStrptr
 void                 value_SetStrptr(command::FieldId& parent, algo::strptr rhs, command_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(command::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of command::FieldId from an ascii string.
 // The format of the string is the format of the command::FieldId's only field
+// func:command.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:command.FieldId..Init
 void                 FieldId_Init(command::FieldId& parent);
-// print string representation of command::FieldId to string LHS, no header -- cprint:command.FieldId.String
-void                 FieldId_Print(command::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.FieldId.String  printfmt:Raw
+// func:command.FieldId..Print
+void                 FieldId_Print(command::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- command.Protocol
 // access: command.Protocol.proto (Protocol)
@@ -519,6 +548,7 @@ struct Protocol { // command.Protocol: amc-generated struct for internal purpose
 };
 #pragma pack(pop)
 
+// func:command.Protocol.proto.StaticCheck
 void                 StaticCheck();
 
 
@@ -559,51 +589,69 @@ private:
 };
 
 // Print back to string
+// func:command.abt.target.Print
 void                 target_Print(command::abt& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.abt.target.ReadStrptrMaybe
 bool                 target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.abt.disas.Print
 void                 disas_Print(command::abt& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.abt.disas.ReadStrptrMaybe
 bool                 disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) __attribute__((nothrow));
 
 // Get value of field as enum type
+// func:command.abt.cache.GetEnum
 command_abt_cache_Enum cache_GetEnum(const command::abt& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:command.abt.cache.SetEnum
 void                 cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:command.abt.cache.ToCstr
 const char*          cache_ToCstr(const command::abt& parent) __attribute__((nothrow));
 // Convert cache to a string. First, attempt conversion to a known string.
 // If no string matches, print cache as a numeric value.
+// func:command.abt.cache.Print
 void                 cache_Print(const command::abt& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:command.abt.cache.SetStrptrMaybe
 bool                 cache_SetStrptrMaybe(command::abt& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:command.abt.cache.SetStrptr
 void                 cache_SetStrptr(command::abt& parent, algo::strptr rhs, command_abt_cache_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.abt.cache.ReadStrptrMaybe
 bool                 cache_ReadStrptrMaybe(command::abt& parent, algo::strptr rhs) __attribute__((nothrow));
 
-bool                 abt_ReadFieldMaybe(command::abt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.abt..ReadFieldMaybe
+bool                 abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::abt from attributes of ascii tuple TUPLE
+// func:command.abt..ReadTupleMaybe
 bool                 abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.abt..Init
 void                 abt_Init(command::abt& parent);
 // print command-line args of command::abt to string  -- cprint:command.abt.Argv
-void                 abt_PrintArgv(command::abt & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.abt..PrintArgv
+void                 abt_PrintArgv(command::abt& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              abt_ToCmdline(command::abt & row) __attribute__((nothrow));
+// func:command.abt..ToCmdline
+tempstr              abt_ToCmdline(command::abt& row) __attribute__((nothrow));
+// func:command.abt..GetAnon
 algo::strptr         abt_GetAnon(command::abt &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.abt..NArgs
 i32                  abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.abt_md
@@ -611,9 +659,13 @@ i32                  abt_NArgs(command::FieldId field, algo::strptr& out_dflt, b
 struct abt_md { // command.abt_md
     algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
     algo_lib::Regx   readme;    //   "%"  Sql Regx of dev::Readme
-    algo_lib::Regx   ns;        //   ""  Sql Regx of dev::Readmens
+    algo_lib::Regx   ns;        //   ""  Sql Regx of dmmeta::Ns
     algo_lib::Regx   section;   //   "%"  Sql Regx
-    bool             print;     //   false  Print output to screen
+    bool             update;    //   true  (action) Update mode: Re-generate mdfiles
+    bool             check;     //   false  (action) Check mode: Check syntax and links
+    bool             link;      //   false  (with -print) Print links
+    bool             anchor;    //   false  (with -print) Print anchors
+    bool             print;     //   false  (action) Query mode: Print .md section without evaluating
     bool             dry_run;   //   false  Do not write changes to disk
     abt_md();
 private:
@@ -626,37 +678,50 @@ private:
 };
 
 // Print back to string
+// func:command.abt_md.readme.Print
 void                 readme_Print(command::abt_md& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.abt_md.readme.ReadStrptrMaybe
 bool                 readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.abt_md.ns.Print
 void                 ns_Print(command::abt_md& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.abt_md.ns.ReadStrptrMaybe
 bool                 ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.abt_md.section.Print
 void                 section_Print(command::abt_md& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.abt_md.section.ReadStrptrMaybe
 bool                 section_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 abt_md_ReadFieldMaybe(command::abt_md &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.abt_md..ReadFieldMaybe
+bool                 abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::abt_md from attributes of ascii tuple TUPLE
+// func:command.abt_md..ReadTupleMaybe
 bool                 abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.abt_md..Init
 void                 abt_md_Init(command::abt_md& parent);
 // print command-line args of command::abt_md to string  -- cprint:command.abt_md.Argv
-void                 abt_md_PrintArgv(command::abt_md & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.abt_md..PrintArgv
+void                 abt_md_PrintArgv(command::abt_md& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              abt_md_ToCmdline(command::abt_md & row) __attribute__((nothrow));
+// func:command.abt_md..ToCmdline
+tempstr              abt_md_ToCmdline(command::abt_md& row) __attribute__((nothrow));
+// func:command.abt_md..GetAnon
 algo::strptr         abt_md_GetAnon(command::abt_md &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.abt_md..NArgs
 i32                  abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.abt_md_proc
@@ -680,26 +745,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.abt_md_proc.abt_md.Start
 int                  abt_md_Start(command::abt_md_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.abt_md_proc.abt_md.StartRead
 algo::Fildes         abt_md_StartRead(command::abt_md_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.abt_md_proc.abt_md.Kill
 void                 abt_md_Kill(command::abt_md_proc& parent);
 // Wait for subprocess to return
+// func:command.abt_md_proc.abt_md.Wait
 void                 abt_md_Wait(command::abt_md_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.abt_md_proc.abt_md.Exec
 int                  abt_md_Exec(command::abt_md_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.abt_md_proc.abt_md.ExecX
 void                 abt_md_ExecX(command::abt_md_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:abt_md.Argv
+// func:command.abt_md_proc.abt_md.Execv
 int                  abt_md_Execv(command::abt_md_proc& parent) __attribute__((nothrow));
+// func:command.abt_md_proc.abt_md.ToCmdline
 algo::tempstr        abt_md_ToCmdline(command::abt_md_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.abt_md_proc..Init
 void                 abt_md_proc_Init(command::abt_md_proc& parent);
+// func:command.abt_md_proc..Uninit
 void                 abt_md_proc_Uninit(command::abt_md_proc& parent) __attribute__((nothrow));
 
 // --- command.abt_proc
@@ -723,26 +798,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.abt_proc.abt.Start
 int                  abt_Start(command::abt_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.abt_proc.abt.StartRead
 algo::Fildes         abt_StartRead(command::abt_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.abt_proc.abt.Kill
 void                 abt_Kill(command::abt_proc& parent);
 // Wait for subprocess to return
+// func:command.abt_proc.abt.Wait
 void                 abt_Wait(command::abt_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.abt_proc.abt.Exec
 int                  abt_Exec(command::abt_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.abt_proc.abt.ExecX
 void                 abt_ExecX(command::abt_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:abt.Argv
+// func:command.abt_proc.abt.Execv
 int                  abt_Execv(command::abt_proc& parent) __attribute__((nothrow));
+// func:command.abt_proc.abt.ToCmdline
 algo::tempstr        abt_ToCmdline(command::abt_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.abt_proc..Init
 void                 abt_proc_Init(command::abt_proc& parent);
+// func:command.abt_proc..Uninit
 void                 abt_proc_Uninit(command::abt_proc& parent) __attribute__((nothrow));
 
 // --- command.acr
@@ -752,14 +837,15 @@ struct acr { // command.acr
     algo::cstring*   where_elems;   // pointer to elements
     u32              where_n;       // number of elements in array
     u32              where_max;     // max. capacity of array before realloc
-    bool             select;        //   true  Select records matching query (default)
+    algo::cstring    in;            //   "data"  Input directory or filename, - for stdin
     bool             del;           //   false  Delete found item
+    bool             sel;           //   false  Read stdin and select records
     bool             insert;        //   false  Read stdin and insert tuples
     bool             replace;       //   false  Read stdin and replace tuples
     bool             update;        //   false  Read stdin and update attributes of existing tuples
     bool             merge;         //   false  Combination of -update and -insert
     bool             unused;        //   false  Only select records which are not referenced.
-    bool             trunc;         //   false  (with insert or rename): truncate table on first write
+    bool             trunc;         //   false  Truncate table on first write
     bool             check;         //   false  Run cross-reference check on selection
     bool             selerr;        //   true  (with -check): Select error records
     i32              maxshow;       //   100  Limit number of errors per table
@@ -767,6 +853,7 @@ struct acr { // command.acr
     algo::cstring    rename;        //   ""  Change value of found item
     i32              nup;           //   0  Number of levels to go up
     i32              ndown;         //   0  Number of levels to go down
+    bool             l;             //   false  Go down via pkeys only
     bool             xref;          //   false  Short for -nup 100 -ndown 100
     bool             fldfunc;       //   false  Evaluate fldfunc when printing tuple
     i32              maxgroup;      //   25  Max. items per group
@@ -777,8 +864,9 @@ struct acr { // command.acr
     algo::cstring    schema;        //   "data"  Directory for initializing acr meta-data
     bool             e;             //   false  Open selection in editor, write back when done.
     bool             t;             //   false  Short for -tree -xref -loose
+    bool             g;             //   false  Trigger git commands for changes in dev.gitfile table
+    bool             x;             //   false  Propagate select/rename/delete to ssimreq records
     bool             rowid;         //   false  Always print acr.rowid attribute
-    algo::cstring    in;            //   "data"  Input directory or filename, - for stdin
     bool             cmt;           //   false  Print comments for all columns referenced in output
     bool             report;        //   true  Show final report
     bool             print;         //   true  Print selected records
@@ -799,117 +887,173 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.acr.where.Alloc
 algo::cstring&       where_Alloc(command::acr& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr.where.AllocAt
 algo::cstring&       where_AllocAt(command::acr& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr.where.AllocN
 algo::aryptr<algo::cstring> where_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.acr.where.EmptyQ
 bool                 where_EmptyQ(command::acr& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.acr.where.Find
 algo::cstring*       where_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.acr.where.Getary
 algo::aryptr<algo::cstring> where_Getary(command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.acr.where.Last
 algo::cstring*       where_Last(command::acr& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.acr.where.Max
 i32                  where_Max(command::acr& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.acr.where.N
 i32                  where_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.acr.where.Remove
 void                 where_Remove(command::acr& parent, u32 i) __attribute__((nothrow));
+// func:command.acr.where.RemoveAll
 void                 where_RemoveAll(command::acr& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.acr.where.RemoveLast
 void                 where_RemoveLast(command::acr& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.acr.where.Reserve
 void                 where_Reserve(command::acr& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.acr.where.AbsReserve
 void                 where_AbsReserve(command::acr& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.acr.where.Setary
 void                 where_Setary(command::acr& parent, command::acr &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.acr.where.qFind
 algo::cstring&       where_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.acr.where.qLast
 algo::cstring&       where_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.acr.where.rowid_Get
 u64                  where_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr.where.AllocNVal
 algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.acr.where.ReadStrptrMaybe
 bool                 where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.acr.field.Alloc
 algo::cstring&       field_Alloc(command::acr& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr.field.AllocAt
 algo::cstring&       field_AllocAt(command::acr& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr.field.AllocN
 algo::aryptr<algo::cstring> field_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.acr.field.EmptyQ
 bool                 field_EmptyQ(command::acr& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.acr.field.Find
 algo::cstring*       field_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.acr.field.Getary
 algo::aryptr<algo::cstring> field_Getary(command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.acr.field.Last
 algo::cstring*       field_Last(command::acr& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.acr.field.Max
 i32                  field_Max(command::acr& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.acr.field.N
 i32                  field_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.acr.field.Remove
 void                 field_Remove(command::acr& parent, u32 i) __attribute__((nothrow));
+// func:command.acr.field.RemoveAll
 void                 field_RemoveAll(command::acr& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.acr.field.RemoveLast
 void                 field_RemoveLast(command::acr& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.acr.field.Reserve
 void                 field_Reserve(command::acr& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.acr.field.AbsReserve
 void                 field_AbsReserve(command::acr& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.acr.field.Setary
 void                 field_Setary(command::acr& parent, command::acr &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.acr.field.qFind
 algo::cstring&       field_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.acr.field.qLast
 algo::cstring&       field_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.acr.field.rowid_Get
 u64                  field_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.acr.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.acr.where_curs.Next
 void                 acr_where_curs_Next(acr_where_curs &curs);
+// func:command.acr.where_curs.Reset
 void                 acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent);
 // cursor points to valid item
+// func:command.acr.where_curs.ValidQ
 bool                 acr_where_curs_ValidQ(acr_where_curs &curs);
 // item access
+// func:command.acr.where_curs.Access
 algo::cstring&       acr_where_curs_Access(acr_where_curs &curs);
 // proceed to next item
+// func:command.acr.field_curs.Next
 void                 acr_field_curs_Next(acr_field_curs &curs);
+// func:command.acr.field_curs.Reset
 void                 acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent);
 // cursor points to valid item
+// func:command.acr.field_curs.ValidQ
 bool                 acr_field_curs_ValidQ(acr_field_curs &curs);
 // item access
+// func:command.acr.field_curs.Access
 algo::cstring&       acr_field_curs_Access(acr_field_curs &curs);
-bool                 acr_ReadFieldMaybe(command::acr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr..ReadFieldMaybe
+bool                 acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr from attributes of ascii tuple TUPLE
+// func:command.acr..ReadTupleMaybe
 bool                 acr_ReadTupleMaybe(command::acr &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr..Init
 void                 acr_Init(command::acr& parent);
+// func:command.acr..Uninit
 void                 acr_Uninit(command::acr& parent) __attribute__((nothrow));
 // print command-line args of command::acr to string  -- cprint:command.acr.Argv
-void                 acr_PrintArgv(command::acr & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr..PrintArgv
+void                 acr_PrintArgv(command::acr& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_ToCmdline(command::acr & row) __attribute__((nothrow));
+// func:command.acr..ToCmdline
+tempstr              acr_ToCmdline(command::acr& row) __attribute__((nothrow));
+// func:command.acr..GetAnon
 algo::strptr         acr_GetAnon(command::acr &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr..NArgs
 i32                  acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_compl
@@ -925,24 +1069,33 @@ struct acr_compl { // command.acr_compl
     acr_compl();
 };
 
-bool                 acr_compl_ReadFieldMaybe(command::acr_compl &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr_compl..ReadFieldMaybe
+bool                 acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_compl from an ascii string.
 // The format of the string is an ssim Tuple
+// func:command.acr_compl..ReadStrptrMaybe
 bool                 acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr in_str);
 // Read fields of command::acr_compl from attributes of ascii tuple TUPLE
+// func:command.acr_compl..ReadTupleMaybe
 bool                 acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr_compl..Init
 void                 acr_compl_Init(command::acr_compl& parent);
 // print command-line args of command::acr_compl to string  -- cprint:command.acr_compl.Argv
-void                 acr_compl_PrintArgv(command::acr_compl & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_compl..PrintArgv
+void                 acr_compl_PrintArgv(command::acr_compl& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_compl_ToCmdline(command::acr_compl & row) __attribute__((nothrow));
-// print string representation of command::acr_compl to string LHS, no header -- cprint:command.acr_compl.String
-void                 acr_compl_Print(command::acr_compl & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_compl..ToCmdline
+tempstr              acr_compl_ToCmdline(command::acr_compl& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_compl.String  printfmt:Tuple
+// func:command.acr_compl..Print
+void                 acr_compl_Print(command::acr_compl& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr_compl..NArgs
 i32                  acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_compl_proc
@@ -965,26 +1118,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_compl_proc.acr_compl.Start
 int                  acr_compl_Start(command::acr_compl_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_compl_proc.acr_compl.StartRead
 algo::Fildes         acr_compl_StartRead(command::acr_compl_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_compl_proc.acr_compl.Kill
 void                 acr_compl_Kill(command::acr_compl_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_compl_proc.acr_compl.Wait
 void                 acr_compl_Wait(command::acr_compl_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_compl_proc.acr_compl.Exec
 int                  acr_compl_Exec(command::acr_compl_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_compl_proc.acr_compl.ExecX
 void                 acr_compl_ExecX(command::acr_compl_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_compl.Argv
+// func:command.acr_compl_proc.acr_compl.Execv
 int                  acr_compl_Execv(command::acr_compl_proc& parent) __attribute__((nothrow));
+// func:command.acr_compl_proc.acr_compl.ToCmdline
 algo::tempstr        acr_compl_ToCmdline(command::acr_compl_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_compl_proc..Init
 void                 acr_compl_proc_Init(command::acr_compl_proc& parent);
+// func:command.acr_compl_proc..Uninit
 void                 acr_compl_proc_Uninit(command::acr_compl_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_dm
@@ -996,6 +1159,7 @@ struct acr_dm { // command.acr_dm
     u32              arg_max;      // max. capacity of array before realloc
     bool             write_ours;   //   false  Write result to ours file
     u8               msize;        //   7  Conflict marker size
+    bool             rowid;        //   false  Output 'ours' rowid for merging into original ssimfiles
     acr_dm();
     ~acr_dm();
 private:
@@ -1006,68 +1170,100 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.acr_dm.arg.Alloc
 algo::cstring&       arg_Alloc(command::acr_dm& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr_dm.arg.AllocAt
 algo::cstring&       arg_AllocAt(command::acr_dm& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr_dm.arg.AllocN
 algo::aryptr<algo::cstring> arg_AllocN(command::acr_dm& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.acr_dm.arg.EmptyQ
 bool                 arg_EmptyQ(command::acr_dm& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.acr_dm.arg.Find
 algo::cstring*       arg_Find(command::acr_dm& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.acr_dm.arg.Getary
 algo::aryptr<algo::cstring> arg_Getary(command::acr_dm& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.acr_dm.arg.Last
 algo::cstring*       arg_Last(command::acr_dm& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.acr_dm.arg.Max
 i32                  arg_Max(command::acr_dm& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.acr_dm.arg.N
 i32                  arg_N(const command::acr_dm& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.acr_dm.arg.Remove
 void                 arg_Remove(command::acr_dm& parent, u32 i) __attribute__((nothrow));
+// func:command.acr_dm.arg.RemoveAll
 void                 arg_RemoveAll(command::acr_dm& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.acr_dm.arg.RemoveLast
 void                 arg_RemoveLast(command::acr_dm& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.acr_dm.arg.Reserve
 void                 arg_Reserve(command::acr_dm& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.acr_dm.arg.AbsReserve
 void                 arg_AbsReserve(command::acr_dm& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.acr_dm.arg.Setary
 void                 arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.acr_dm.arg.qFind
 algo::cstring&       arg_qFind(command::acr_dm& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.acr_dm.arg.qLast
 algo::cstring&       arg_qLast(command::acr_dm& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.acr_dm.arg.rowid_Get
 u64                  arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.acr_dm.arg.AllocNVal
 algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.acr_dm.arg.ReadStrptrMaybe
 bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.acr_dm.arg_curs.Next
 void                 acr_dm_arg_curs_Next(acr_dm_arg_curs &curs);
+// func:command.acr_dm.arg_curs.Reset
 void                 acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent);
 // cursor points to valid item
+// func:command.acr_dm.arg_curs.ValidQ
 bool                 acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs);
 // item access
+// func:command.acr_dm.arg_curs.Access
 algo::cstring&       acr_dm_arg_curs_Access(acr_dm_arg_curs &curs);
-bool                 acr_dm_ReadFieldMaybe(command::acr_dm &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr_dm..ReadFieldMaybe
+bool                 acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_dm from attributes of ascii tuple TUPLE
+// func:command.acr_dm..ReadTupleMaybe
 bool                 acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr_dm..Init
 void                 acr_dm_Init(command::acr_dm& parent);
+// func:command.acr_dm..Uninit
 void                 acr_dm_Uninit(command::acr_dm& parent) __attribute__((nothrow));
 // print command-line args of command::acr_dm to string  -- cprint:command.acr_dm.Argv
-void                 acr_dm_PrintArgv(command::acr_dm & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_dm..PrintArgv
+void                 acr_dm_PrintArgv(command::acr_dm& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_dm_ToCmdline(command::acr_dm & row) __attribute__((nothrow));
+// func:command.acr_dm..ToCmdline
+tempstr              acr_dm_ToCmdline(command::acr_dm& row) __attribute__((nothrow));
+// func:command.acr_dm..GetAnon
 algo::strptr         acr_dm_GetAnon(command::acr_dm &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr_dm..NArgs
 i32                  acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_dm_proc
@@ -1091,26 +1287,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_dm_proc.acr_dm.Start
 int                  acr_dm_Start(command::acr_dm_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_dm_proc.acr_dm.StartRead
 algo::Fildes         acr_dm_StartRead(command::acr_dm_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_dm_proc.acr_dm.Kill
 void                 acr_dm_Kill(command::acr_dm_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_dm_proc.acr_dm.Wait
 void                 acr_dm_Wait(command::acr_dm_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_dm_proc.acr_dm.Exec
 int                  acr_dm_Exec(command::acr_dm_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_dm_proc.acr_dm.ExecX
 void                 acr_dm_ExecX(command::acr_dm_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_dm.Argv
+// func:command.acr_dm_proc.acr_dm.Execv
 int                  acr_dm_Execv(command::acr_dm_proc& parent) __attribute__((nothrow));
+// func:command.acr_dm_proc.acr_dm.ToCmdline
 algo::tempstr        acr_dm_ToCmdline(command::acr_dm_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_dm_proc..Init
 void                 acr_dm_proc_Init(command::acr_dm_proc& parent);
+// func:command.acr_dm_proc..Uninit
 void                 acr_dm_proc_Uninit(command::acr_dm_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_ed
@@ -1122,19 +1328,19 @@ struct acr_ed { // command.acr_ed
     algo::cstring       rename;      //   ""  Rename to something else
     bool                finput;      //   false  Create in-memory table based on ssimfile
     bool                foutput;     //   false  Declare field as an output
-    algo::cstring       srcfile;     //   ""      Create source file
+    algo::cstring       srcfile;     //   ""  Create/Rename/Delete a source file
     bool                gstatic;     //   false  Like -finput, but data is loaded at compile time
     bool                indexed;     //   false  (with -finput) Add hash index
-    algo::Smallstr16    target;      //   ""  Create new target
+    algo::Smallstr16    target;      //   ""  Create/Rename/Delete target
     algo::Smallstr50    nstype;      //   "exe"  (with -create -target): exe,lib,etc.
-    algo::Smallstr50    ctype;       //   ""  Create new ctype
+    algo::Smallstr100   ctype;       //   ""  Create/Rename/Delete ctype
     algo::Smallstr50    pooltype;    //   ""   Pool reftype (Lary,Lpool etc) for finput/ctype
     algo::Smallstr50    ssimfile;    //   ""    Ssimfile for new ctype
-    algo::Smallstr50    subset;      //   ""    Primary key is a subset of this ctype
-    algo::Smallstr50    subset2;     //   ""    Primary key is also a subset of this ctype
+    algo::Smallstr100   subset;      //   ""    Primary key is a subset of this ctype
+    algo::Smallstr100   subset2;     //   ""    Primary key is also a subset of this ctype
     algo::cstring       separator;   //   "."      Key separator
     algo::Smallstr100   field;       //   ""  Create field
-    algo::Smallstr50    arg;         //   ""    Field type (e.g. u32, etc), (with -ctype) add the base field
+    algo::Smallstr100   arg;         //   ""    Field type (e.g. u32, etc), (with -ctype) add the base field
     algo::cstring       dflt;        //   ""    Field default value
     bool                anon;        //   false    Anonymous field (use with command lines)
     bool                bigend;      //   false    Big-endian field
@@ -1164,23 +1370,29 @@ struct acr_ed { // command.acr_ed
     acr_ed();
 };
 
-bool                 acr_ed_ReadFieldMaybe(command::acr_ed &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr_ed..ReadFieldMaybe
+bool                 acr_ed_ReadFieldMaybe(command::acr_ed& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_ed from attributes of ascii tuple TUPLE
+// func:command.acr_ed..ReadTupleMaybe
 bool                 acr_ed_ReadTupleMaybe(command::acr_ed &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr_ed..Init
 void                 acr_ed_Init(command::acr_ed& parent);
 // print command-line args of command::acr_ed to string  -- cprint:command.acr_ed.Argv
-void                 acr_ed_PrintArgv(command::acr_ed & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_ed..PrintArgv
+void                 acr_ed_PrintArgv(command::acr_ed& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_ed_ToCmdline(command::acr_ed & row) __attribute__((nothrow));
+// func:command.acr_ed..ToCmdline
+tempstr              acr_ed_ToCmdline(command::acr_ed& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr_ed..NArgs
 i32                  acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_ed_proc
-struct acr_ed_proc { // command.acr_ed_proc: Subprocess: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+struct acr_ed_proc { // command.acr_ed_proc: Subprocess: Script generator for common dev tasks
     algo::cstring     path;      //   "bin/acr_ed"  path for executable
     command::acr_ed   cmd;       // command line for child process
     algo::cstring     fstdin;    // redirect for stdin
@@ -1199,26 +1411,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_ed_proc.acr_ed.Start
 int                  acr_ed_Start(command::acr_ed_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_ed_proc.acr_ed.StartRead
 algo::Fildes         acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_ed_proc.acr_ed.Kill
 void                 acr_ed_Kill(command::acr_ed_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_ed_proc.acr_ed.Wait
 void                 acr_ed_Wait(command::acr_ed_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_ed_proc.acr_ed.Exec
 int                  acr_ed_Exec(command::acr_ed_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_ed_proc.acr_ed.ExecX
 void                 acr_ed_ExecX(command::acr_ed_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
+// func:command.acr_ed_proc.acr_ed.Execv
 int                  acr_ed_Execv(command::acr_ed_proc& parent) __attribute__((nothrow));
+// func:command.acr_ed_proc.acr_ed.ToCmdline
 algo::tempstr        acr_ed_ToCmdline(command::acr_ed_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_ed_proc..Init
 void                 acr_ed_proc_Init(command::acr_ed_proc& parent);
+// func:command.acr_ed_proc..Uninit
 void                 acr_ed_proc_Uninit(command::acr_ed_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_in
@@ -1246,37 +1468,50 @@ private:
 };
 
 // Print back to string
+// func:command.acr_in.ns.Print
 void                 ns_Print(command::acr_in& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.acr_in.ns.ReadStrptrMaybe
 bool                 ns_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.acr_in.notssimfile.Print
 void                 notssimfile_Print(command::acr_in& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.acr_in.notssimfile.ReadStrptrMaybe
 bool                 notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.acr_in.r.Print
 void                 r_Print(command::acr_in& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.acr_in.r.ReadStrptrMaybe
 bool                 r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 acr_in_ReadFieldMaybe(command::acr_in &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr_in..ReadFieldMaybe
+bool                 acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_in from attributes of ascii tuple TUPLE
+// func:command.acr_in..ReadTupleMaybe
 bool                 acr_in_ReadTupleMaybe(command::acr_in &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr_in..Init
 void                 acr_in_Init(command::acr_in& parent);
 // print command-line args of command::acr_in to string  -- cprint:command.acr_in.Argv
-void                 acr_in_PrintArgv(command::acr_in & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_in..PrintArgv
+void                 acr_in_PrintArgv(command::acr_in& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_in_ToCmdline(command::acr_in & row) __attribute__((nothrow));
+// func:command.acr_in..ToCmdline
+tempstr              acr_in_ToCmdline(command::acr_in& row) __attribute__((nothrow));
+// func:command.acr_in..GetAnon
 algo::strptr         acr_in_GetAnon(command::acr_in &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr_in..NArgs
 i32                  acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_in_proc
@@ -1300,26 +1535,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_in_proc.acr_in.Start
 int                  acr_in_Start(command::acr_in_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_in_proc.acr_in.StartRead
 algo::Fildes         acr_in_StartRead(command::acr_in_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_in_proc.acr_in.Kill
 void                 acr_in_Kill(command::acr_in_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_in_proc.acr_in.Wait
 void                 acr_in_Wait(command::acr_in_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_in_proc.acr_in.Exec
 int                  acr_in_Exec(command::acr_in_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_in_proc.acr_in.ExecX
 void                 acr_in_ExecX(command::acr_in_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_in.Argv
+// func:command.acr_in_proc.acr_in.Execv
 int                  acr_in_Execv(command::acr_in_proc& parent) __attribute__((nothrow));
+// func:command.acr_in_proc.acr_in.ToCmdline
 algo::tempstr        acr_in_ToCmdline(command::acr_in_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_in_proc..Init
 void                 acr_in_proc_Init(command::acr_in_proc& parent);
+// func:command.acr_in_proc..Uninit
 void                 acr_in_proc_Uninit(command::acr_in_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_my
@@ -1344,25 +1589,34 @@ private:
 };
 
 // Print back to string
+// func:command.acr_my.nsdb.Print
 void                 nsdb_Print(command::acr_my& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.acr_my.nsdb.ReadStrptrMaybe
 bool                 nsdb_ReadStrptrMaybe(command::acr_my& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 acr_my_ReadFieldMaybe(command::acr_my &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.acr_my..ReadFieldMaybe
+bool                 acr_my_ReadFieldMaybe(command::acr_my& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_my from attributes of ascii tuple TUPLE
+// func:command.acr_my..ReadTupleMaybe
 bool                 acr_my_ReadTupleMaybe(command::acr_my &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.acr_my..Init
 void                 acr_my_Init(command::acr_my& parent);
 // print command-line args of command::acr_my to string  -- cprint:command.acr_my.Argv
-void                 acr_my_PrintArgv(command::acr_my & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.acr_my..PrintArgv
+void                 acr_my_PrintArgv(command::acr_my& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              acr_my_ToCmdline(command::acr_my & row) __attribute__((nothrow));
+// func:command.acr_my..ToCmdline
+tempstr              acr_my_ToCmdline(command::acr_my& row) __attribute__((nothrow));
+// func:command.acr_my..GetAnon
 algo::strptr         acr_my_GetAnon(command::acr_my &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.acr_my..NArgs
 i32                  acr_my_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.acr_my_proc
@@ -1386,26 +1640,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_my_proc.acr_my.Start
 int                  acr_my_Start(command::acr_my_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_my_proc.acr_my.StartRead
 algo::Fildes         acr_my_StartRead(command::acr_my_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_my_proc.acr_my.Kill
 void                 acr_my_Kill(command::acr_my_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_my_proc.acr_my.Wait
 void                 acr_my_Wait(command::acr_my_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_my_proc.acr_my.Exec
 int                  acr_my_Exec(command::acr_my_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_my_proc.acr_my.ExecX
 void                 acr_my_ExecX(command::acr_my_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_my.Argv
+// func:command.acr_my_proc.acr_my.Execv
 int                  acr_my_Execv(command::acr_my_proc& parent) __attribute__((nothrow));
+// func:command.acr_my_proc.acr_my.ToCmdline
 algo::tempstr        acr_my_ToCmdline(command::acr_my_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_my_proc..Init
 void                 acr_my_proc_Init(command::acr_my_proc& parent);
+// func:command.acr_my_proc..Uninit
 void                 acr_my_proc_Uninit(command::acr_my_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_proc
@@ -1429,26 +1693,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_proc.acr.Start
 int                  acr_Start(command::acr_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.acr_proc.acr.StartRead
 algo::Fildes         acr_StartRead(command::acr_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.acr_proc.acr.Kill
 void                 acr_Kill(command::acr_proc& parent);
 // Wait for subprocess to return
+// func:command.acr_proc.acr.Wait
 void                 acr_Wait(command::acr_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.acr_proc.acr.Exec
 int                  acr_Exec(command::acr_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.acr_proc.acr.ExecX
 void                 acr_ExecX(command::acr_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:acr.Argv
+// func:command.acr_proc.acr.Execv
 int                  acr_Execv(command::acr_proc& parent) __attribute__((nothrow));
+// func:command.acr_proc.acr.ToCmdline
 algo::tempstr        acr_ToCmdline(command::acr_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.acr_proc..Init
 void                 acr_proc_Init(command::acr_proc& parent);
+// func:command.acr_proc..Uninit
 void                 acr_proc_Uninit(command::acr_proc& parent) __attribute__((nothrow));
 
 // --- command.amc
@@ -1469,60 +1743,35 @@ private:
 };
 
 // Print back to string
+// func:command.amc.trace.Print
 void                 trace_Print(command::amc& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.amc.trace.ReadStrptrMaybe
 bool                 trace_ReadStrptrMaybe(command::amc& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 amc_ReadFieldMaybe(command::amc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.amc..ReadFieldMaybe
+bool                 amc_ReadFieldMaybe(command::amc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::amc from attributes of ascii tuple TUPLE
+// func:command.amc..ReadTupleMaybe
 bool                 amc_ReadTupleMaybe(command::amc &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.amc..Init
 void                 amc_Init(command::amc& parent);
 // print command-line args of command::amc to string  -- cprint:command.amc.Argv
-void                 amc_PrintArgv(command::amc & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.amc..PrintArgv
+void                 amc_PrintArgv(command::amc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              amc_ToCmdline(command::amc & row) __attribute__((nothrow));
+// func:command.amc..ToCmdline
+tempstr              amc_ToCmdline(command::amc& row) __attribute__((nothrow));
+// func:command.amc..GetAnon
 algo::strptr         amc_GetAnon(command::amc &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.amc..NArgs
 i32                  amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
-
-// --- command.amc_dml
-struct amc_dml { // command.amc_dml
-    algo_lib::Regx   ns;       //   "%"  Sql Regx
-    bool             fconst;   //   true  append fconst list at the end
-    bool             gconst;   //   true  append gconst list at the end
-    algo::cstring    in;       //   "data"  Input directory or filename, - for stdin
-    amc_dml();
-private:
-    // reftype Regx of command.amc_dml.ns prohibits copy
-    amc_dml(const amc_dml&){ /*disallow copy constructor */}
-    void operator =(const amc_dml&){ /*disallow direct assignment */}
-};
-
-// Print back to string
-void                 ns_Print(command::amc_dml& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-bool                 ns_ReadStrptrMaybe(command::amc_dml& parent, algo::strptr in) __attribute__((nothrow));
-
-bool                 amc_dml_ReadFieldMaybe(command::amc_dml &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::amc_dml from attributes of ascii tuple TUPLE
-bool                 amc_dml_ReadTupleMaybe(command::amc_dml &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 amc_dml_Init(command::amc_dml& parent);
-// print command-line args of command::amc_dml to string  -- cprint:command.amc_dml.Argv
-void                 amc_dml_PrintArgv(command::amc_dml & row, algo::cstring &str) __attribute__((nothrow));
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr              amc_dml_ToCmdline(command::amc_dml & row) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32                  amc_dml_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.amc_gc
 // access: command.amc_gc_proc.amc_gc (Exec)
@@ -1540,34 +1789,44 @@ private:
 };
 
 // Print back to string
+// func:command.amc_gc.target.Print
 void                 target_Print(command::amc_gc& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.amc_gc.target.ReadStrptrMaybe
 bool                 target_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.amc_gc.key.Print
 void                 key_Print(command::amc_gc& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.amc_gc.key.ReadStrptrMaybe
 bool                 key_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 amc_gc_ReadFieldMaybe(command::amc_gc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.amc_gc..ReadFieldMaybe
+bool                 amc_gc_ReadFieldMaybe(command::amc_gc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::amc_gc from attributes of ascii tuple TUPLE
+// func:command.amc_gc..ReadTupleMaybe
 bool                 amc_gc_ReadTupleMaybe(command::amc_gc &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.amc_gc..Init
 void                 amc_gc_Init(command::amc_gc& parent);
 // print command-line args of command::amc_gc to string  -- cprint:command.amc_gc.Argv
-void                 amc_gc_PrintArgv(command::amc_gc & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.amc_gc..PrintArgv
+void                 amc_gc_PrintArgv(command::amc_gc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              amc_gc_ToCmdline(command::amc_gc & row) __attribute__((nothrow));
+// func:command.amc_gc..ToCmdline
+tempstr              amc_gc_ToCmdline(command::amc_gc& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.amc_gc..NArgs
 i32                  amc_gc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.amc_gc_proc
-struct amc_gc_proc { // command.amc_gc_proc: Subprocess: Empirically eliminate unused records
+struct amc_gc_proc { // command.amc_gc_proc: Subprocess: Garbage collector for in-memory databases
     algo::cstring     path;      //   "bin/amc_gc"  path for executable
     command::amc_gc   cmd;       // command line for child process
     algo::cstring     fstdin;    // redirect for stdin
@@ -1587,26 +1846,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.amc_gc_proc.amc_gc.Start
 int                  amc_gc_Start(command::amc_gc_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.amc_gc_proc.amc_gc.StartRead
 algo::Fildes         amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.amc_gc_proc.amc_gc.Kill
 void                 amc_gc_Kill(command::amc_gc_proc& parent);
 // Wait for subprocess to return
+// func:command.amc_gc_proc.amc_gc.Wait
 void                 amc_gc_Wait(command::amc_gc_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.amc_gc_proc.amc_gc.Exec
 int                  amc_gc_Exec(command::amc_gc_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.amc_gc_proc.amc_gc.ExecX
 void                 amc_gc_ExecX(command::amc_gc_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_gc.Argv
+// func:command.amc_gc_proc.amc_gc.Execv
 int                  amc_gc_Execv(command::amc_gc_proc& parent) __attribute__((nothrow));
+// func:command.amc_gc_proc.amc_gc.ToCmdline
 algo::tempstr        amc_gc_ToCmdline(command::amc_gc_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.amc_gc_proc..Init
 void                 amc_gc_proc_Init(command::amc_gc_proc& parent);
+// func:command.amc_gc_proc..Uninit
 void                 amc_gc_proc_Uninit(command::amc_gc_proc& parent) __attribute__((nothrow));
 
 // --- command.amc_proc
@@ -1630,26 +1899,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.amc_proc.amc.Start
 int                  amc_Start(command::amc_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.amc_proc.amc.StartRead
 algo::Fildes         amc_StartRead(command::amc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.amc_proc.amc.Kill
 void                 amc_Kill(command::amc_proc& parent);
 // Wait for subprocess to return
+// func:command.amc_proc.amc.Wait
 void                 amc_Wait(command::amc_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.amc_proc.amc.Exec
 int                  amc_Exec(command::amc_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.amc_proc.amc.ExecX
 void                 amc_ExecX(command::amc_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:amc.Argv
+// func:command.amc_proc.amc.Execv
 int                  amc_Execv(command::amc_proc& parent) __attribute__((nothrow));
+// func:command.amc_proc.amc.ToCmdline
 algo::tempstr        amc_ToCmdline(command::amc_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.amc_proc..Init
 void                 amc_proc_Init(command::amc_proc& parent);
+// func:command.amc_proc..Uninit
 void                 amc_proc_Uninit(command::amc_proc& parent) __attribute__((nothrow));
 
 // --- command.amc_vis
@@ -1671,29 +1950,38 @@ private:
 };
 
 // Print back to string
+// func:command.amc_vis.ctype.Print
 void                 ctype_Print(command::amc_vis& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.amc_vis.ctype.ReadStrptrMaybe
 bool                 ctype_ReadStrptrMaybe(command::amc_vis& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 amc_vis_ReadFieldMaybe(command::amc_vis &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.amc_vis..ReadFieldMaybe
+bool                 amc_vis_ReadFieldMaybe(command::amc_vis& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::amc_vis from attributes of ascii tuple TUPLE
+// func:command.amc_vis..ReadTupleMaybe
 bool                 amc_vis_ReadTupleMaybe(command::amc_vis &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.amc_vis..Init
 void                 amc_vis_Init(command::amc_vis& parent);
 // print command-line args of command::amc_vis to string  -- cprint:command.amc_vis.Argv
-void                 amc_vis_PrintArgv(command::amc_vis & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.amc_vis..PrintArgv
+void                 amc_vis_PrintArgv(command::amc_vis& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              amc_vis_ToCmdline(command::amc_vis & row) __attribute__((nothrow));
+// func:command.amc_vis..ToCmdline
+tempstr              amc_vis_ToCmdline(command::amc_vis& row) __attribute__((nothrow));
+// func:command.amc_vis..GetAnon
 algo::strptr         amc_vis_GetAnon(command::amc_vis &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.amc_vis..NArgs
 i32                  amc_vis_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.amc_vis_proc
-struct amc_vis_proc { // command.amc_vis_proc: Subprocess: amc: draw access path diagrams
+struct amc_vis_proc { // command.amc_vis_proc: Subprocess: Draw access path diagrams
     algo::cstring      path;      //   "bin/amc_vis"  path for executable
     command::amc_vis   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -1713,26 +2001,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.amc_vis_proc.amc_vis.Start
 int                  amc_vis_Start(command::amc_vis_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.amc_vis_proc.amc_vis.StartRead
 algo::Fildes         amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.amc_vis_proc.amc_vis.Kill
 void                 amc_vis_Kill(command::amc_vis_proc& parent);
 // Wait for subprocess to return
+// func:command.amc_vis_proc.amc_vis.Wait
 void                 amc_vis_Wait(command::amc_vis_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.amc_vis_proc.amc_vis.Exec
 int                  amc_vis_Exec(command::amc_vis_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.amc_vis_proc.amc_vis.ExecX
 void                 amc_vis_ExecX(command::amc_vis_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:amc_vis.Argv
+// func:command.amc_vis_proc.amc_vis.Execv
 int                  amc_vis_Execv(command::amc_vis_proc& parent) __attribute__((nothrow));
+// func:command.amc_vis_proc.amc_vis.ToCmdline
 algo::tempstr        amc_vis_ToCmdline(command::amc_vis_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.amc_vis_proc..Init
 void                 amc_vis_proc_Init(command::amc_vis_proc& parent);
+// func:command.amc_vis_proc..Uninit
 void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attribute__((nothrow));
 
 // --- command.ams_cat
@@ -1742,19 +2040,25 @@ struct ams_cat { // command.ams_cat
     ams_cat();
 };
 
-bool                 ams_cat_ReadFieldMaybe(command::ams_cat &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.ams_cat..ReadFieldMaybe
+bool                 ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ams_cat from attributes of ascii tuple TUPLE
+// func:command.ams_cat..ReadTupleMaybe
 bool                 ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.ams_cat..Init
 void                 ams_cat_Init(command::ams_cat& parent);
 // print command-line args of command::ams_cat to string  -- cprint:command.ams_cat.Argv
-void                 ams_cat_PrintArgv(command::ams_cat & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.ams_cat..PrintArgv
+void                 ams_cat_PrintArgv(command::ams_cat& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              ams_cat_ToCmdline(command::ams_cat & row) __attribute__((nothrow));
+// func:command.ams_cat..ToCmdline
+tempstr              ams_cat_ToCmdline(command::ams_cat& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.ams_cat..NArgs
 i32                  ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ams_cat_proc
@@ -1777,26 +2081,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.ams_cat_proc.ams_cat.Start
 int                  ams_cat_Start(command::ams_cat_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.ams_cat_proc.ams_cat.StartRead
 algo::Fildes         ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.ams_cat_proc.ams_cat.Kill
 void                 ams_cat_Kill(command::ams_cat_proc& parent);
 // Wait for subprocess to return
+// func:command.ams_cat_proc.ams_cat.Wait
 void                 ams_cat_Wait(command::ams_cat_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.ams_cat_proc.ams_cat.Exec
 int                  ams_cat_Exec(command::ams_cat_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.ams_cat_proc.ams_cat.ExecX
 void                 ams_cat_ExecX(command::ams_cat_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:ams_cat.Argv
+// func:command.ams_cat_proc.ams_cat.Execv
 int                  ams_cat_Execv(command::ams_cat_proc& parent) __attribute__((nothrow));
+// func:command.ams_cat_proc.ams_cat.ToCmdline
 algo::tempstr        ams_cat_ToCmdline(command::ams_cat_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.ams_cat_proc..Init
 void                 ams_cat_proc_Init(command::ams_cat_proc& parent);
+// func:command.ams_cat_proc..Uninit
 void                 ams_cat_proc_Uninit(command::ams_cat_proc& parent) __attribute__((nothrow));
 
 // --- command.ams_sendtest
@@ -1824,24 +2138,32 @@ private:
 };
 
 // Print back to string
+// func:command.ams_sendtest.trace.Print
 void                 trace_Print(command::ams_sendtest& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.ams_sendtest.trace.ReadStrptrMaybe
 bool                 trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 ams_sendtest_ReadFieldMaybe(command::ams_sendtest &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.ams_sendtest..ReadFieldMaybe
+bool                 ams_sendtest_ReadFieldMaybe(command::ams_sendtest& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ams_sendtest from attributes of ascii tuple TUPLE
+// func:command.ams_sendtest..ReadTupleMaybe
 bool                 ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.ams_sendtest..Init
 void                 ams_sendtest_Init(command::ams_sendtest& parent);
 // print command-line args of command::ams_sendtest to string  -- cprint:command.ams_sendtest.Argv
-void                 ams_sendtest_PrintArgv(command::ams_sendtest & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.ams_sendtest..PrintArgv
+void                 ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              ams_sendtest_ToCmdline(command::ams_sendtest & row) __attribute__((nothrow));
+// func:command.ams_sendtest..ToCmdline
+tempstr              ams_sendtest_ToCmdline(command::ams_sendtest& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.ams_sendtest..NArgs
 i32                  ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ams_sendtest_proc
@@ -1865,27 +2187,156 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.ams_sendtest_proc.ams_sendtest.Start
 int                  ams_sendtest_Start(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.ams_sendtest_proc.ams_sendtest.StartRead
 algo::Fildes         ams_sendtest_StartRead(command::ams_sendtest_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.ams_sendtest_proc.ams_sendtest.Kill
 void                 ams_sendtest_Kill(command::ams_sendtest_proc& parent);
 // Wait for subprocess to return
+// func:command.ams_sendtest_proc.ams_sendtest.Wait
 void                 ams_sendtest_Wait(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.ams_sendtest_proc.ams_sendtest.Exec
 int                  ams_sendtest_Exec(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.ams_sendtest_proc.ams_sendtest.ExecX
 void                 ams_sendtest_ExecX(command::ams_sendtest_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// func:command.ams_sendtest_proc.ams_sendtest.Execv
 int                  ams_sendtest_Execv(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+// func:command.ams_sendtest_proc.ams_sendtest.ToCmdline
 algo::tempstr        ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.ams_sendtest_proc..Init
 void                 ams_sendtest_proc_Init(command::ams_sendtest_proc& parent);
+// func:command.ams_sendtest_proc..Uninit
 void                 ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+
+// --- command.apm
+// access: command.apm_proc.apm (Exec)
+struct apm { // command.apm
+    algo::cstring       in;           //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx      package;      //   ""  Sql Regx of dev::Package
+    bool                install;      //   false  Install new package (specify -origin)
+    bool                update;       //   false  Update new package (-origin)
+    bool                list;         //   false  List installed packages
+    bool                diff;         //   false  Diff package with respect to installed version
+    bool                push;         //   false  Evaluate package diff and push it to origin
+    bool                check;        //   false  Consistency check
+    bool                remove;       //   false  Remove specified package
+    algo::Smallstr200   origin;       //   ""  Upstream URL of new package
+    algo::Smallstr50    ref;          //   ""  (with -create) Gitref or branch to fetch
+    bool                dry_run;      //   false  Do not execute transaction
+    bool                showrec;      //   false  Show records belonging to package
+    bool                showfile;     //   false  List package files (gitfile records)
+    bool                R;            //   false  reverse the diff direction
+    bool                reset;        //   false  Reset package baseref/origin to those provided by the command line
+    bool                checkclean;   //   true  Ensure that changes are applied to a clean directory
+    bool                t;            //   false  Select dependent packages for operation
+    bool                stat;         //   false  (with -diff) show stats
+    algo::cstring       annotate;     //   ""  Read file and annotate each input tuple with package(s) it belongs to
+    bool                gen;          //   true  Show differences in generated files
+    algo::cstring       data_in;      //   "data"  Dataset from which package records are loaded
+    bool                e;            //   false  Open selected records in editor
+    algo::cstring       binpath;      //   "bin"  (internal use)
+    bool                nosort;       //   false  (with -showrec) don't sort resulting records
+    apm();
+private:
+    // reftype Regx of command.apm.package prohibits copy
+    apm(const apm&){ /*disallow copy constructor */}
+    void operator =(const apm&){ /*disallow direct assignment */}
+};
+
+// Print back to string
+// func:command.apm.package.Print
+void                 package_Print(command::apm& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.apm.package.ReadStrptrMaybe
+bool                 package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) __attribute__((nothrow));
+
+// func:command.apm..ReadFieldMaybe
+bool                 apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::apm from attributes of ascii tuple TUPLE
+// func:command.apm..ReadTupleMaybe
+bool                 apm_ReadTupleMaybe(command::apm &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.apm..Init
+void                 apm_Init(command::apm& parent);
+// print command-line args of command::apm to string  -- cprint:command.apm.Argv
+// func:command.apm..PrintArgv
+void                 apm_PrintArgv(command::apm& row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.apm..ToCmdline
+tempstr              apm_ToCmdline(command::apm& row) __attribute__((nothrow));
+// func:command.apm..GetAnon
+algo::strptr         apm_GetAnon(command::apm &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.apm..NArgs
+i32                  apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.apm_proc
+struct apm_proc { // command.apm_proc: Subprocess: Algo Package Manager
+    algo::cstring   path;      //   "bin/apm"  path for executable
+    command::apm    cmd;       // command line for child process
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
+    pid_t           pid;       //   0  pid of running child process
+    i32             timeout;   //   0  optional timeout for child process
+    i32             status;    //   0  last exit status of child process
+    apm_proc();
+    ~apm_proc();
+private:
+    // reftype Exec of command.apm_proc.apm prohibits copy
+    // value field command.apm_proc.cmd is not copiable
+    apm_proc(const apm_proc&){ /*disallow copy constructor */}
+    void operator =(const apm_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.apm_proc.apm.Start
+int                  apm_Start(command::apm_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.apm_proc.apm.StartRead
+algo::Fildes         apm_StartRead(command::apm_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.apm_proc.apm.Kill
+void                 apm_Kill(command::apm_proc& parent);
+// Wait for subprocess to return
+// func:command.apm_proc.apm.Wait
+void                 apm_Wait(command::apm_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.apm_proc.apm.Exec
+int                  apm_Exec(command::apm_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.apm_proc.apm.ExecX
+void                 apm_ExecX(command::apm_proc& parent);
+// Call execv()
+// Call execv with specified parameters -- cprint:apm.Argv
+// func:command.apm_proc.apm.Execv
+int                  apm_Execv(command::apm_proc& parent) __attribute__((nothrow));
+// func:command.apm_proc.apm.ToCmdline
+algo::tempstr        apm_ToCmdline(command::apm_proc& parent) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.apm_proc..Init
+void                 apm_proc_Init(command::apm_proc& parent);
+// func:command.apm_proc..Uninit
+void                 apm_proc_Uninit(command::apm_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_amc
 // access: command.atf_amc_proc.atf_amc (Exec)
@@ -1902,25 +2353,34 @@ private:
 };
 
 // Print back to string
+// func:command.atf_amc.amctest.Print
 void                 amctest_Print(command::atf_amc& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_amc.amctest.ReadStrptrMaybe
 bool                 amctest_ReadStrptrMaybe(command::atf_amc& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_amc_ReadFieldMaybe(command::atf_amc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_amc..ReadFieldMaybe
+bool                 atf_amc_ReadFieldMaybe(command::atf_amc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_amc from attributes of ascii tuple TUPLE
+// func:command.atf_amc..ReadTupleMaybe
 bool                 atf_amc_ReadTupleMaybe(command::atf_amc &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_amc..Init
 void                 atf_amc_Init(command::atf_amc& parent);
 // print command-line args of command::atf_amc to string  -- cprint:command.atf_amc.Argv
-void                 atf_amc_PrintArgv(command::atf_amc & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_amc..PrintArgv
+void                 atf_amc_PrintArgv(command::atf_amc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_amc_ToCmdline(command::atf_amc & row) __attribute__((nothrow));
+// func:command.atf_amc..ToCmdline
+tempstr              atf_amc_ToCmdline(command::atf_amc& row) __attribute__((nothrow));
+// func:command.atf_amc..GetAnon
 algo::strptr         atf_amc_GetAnon(command::atf_amc &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_amc..NArgs
 i32                  atf_amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_amc_proc
@@ -1944,26 +2404,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_amc_proc.atf_amc.Start
 int                  atf_amc_Start(command::atf_amc_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_amc_proc.atf_amc.StartRead
 algo::Fildes         atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_amc_proc.atf_amc.Kill
 void                 atf_amc_Kill(command::atf_amc_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_amc_proc.atf_amc.Wait
 void                 atf_amc_Wait(command::atf_amc_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_amc_proc.atf_amc.Exec
 int                  atf_amc_Exec(command::atf_amc_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_amc_proc.atf_amc.ExecX
 void                 atf_amc_ExecX(command::atf_amc_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_amc.Argv
+// func:command.atf_amc_proc.atf_amc.Execv
 int                  atf_amc_Execv(command::atf_amc_proc& parent) __attribute__((nothrow));
+// func:command.atf_amc_proc.atf_amc.ToCmdline
 algo::tempstr        atf_amc_ToCmdline(command::atf_amc_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_amc_proc..Init
 void                 atf_amc_proc_Init(command::atf_amc_proc& parent);
+// func:command.atf_amc_proc..Uninit
 void                 atf_amc_proc_Uninit(command::atf_amc_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_ci
@@ -1983,31 +2453,42 @@ private:
 };
 
 // Print back to string
+// func:command.atf_ci.citest.Print
 void                 citest_Print(command::atf_ci& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_ci.citest.ReadStrptrMaybe
 bool                 citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.atf_ci.cijob.Print
 void                 cijob_Print(command::atf_ci& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_ci.cijob.ReadStrptrMaybe
 bool                 cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_ci_ReadFieldMaybe(command::atf_ci &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_ci..ReadFieldMaybe
+bool                 atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_ci from attributes of ascii tuple TUPLE
+// func:command.atf_ci..ReadTupleMaybe
 bool                 atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_ci..Init
 void                 atf_ci_Init(command::atf_ci& parent);
 // print command-line args of command::atf_ci to string  -- cprint:command.atf_ci.Argv
-void                 atf_ci_PrintArgv(command::atf_ci & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_ci..PrintArgv
+void                 atf_ci_PrintArgv(command::atf_ci& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_ci_ToCmdline(command::atf_ci & row) __attribute__((nothrow));
+// func:command.atf_ci..ToCmdline
+tempstr              atf_ci_ToCmdline(command::atf_ci& row) __attribute__((nothrow));
+// func:command.atf_ci..GetAnon
 algo::strptr         atf_ci_GetAnon(command::atf_ci &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_ci..NArgs
 i32                  atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_ci_proc
@@ -2031,61 +2512,71 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_ci_proc.atf_ci.Start
 int                  atf_ci_Start(command::atf_ci_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_ci_proc.atf_ci.StartRead
 algo::Fildes         atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_ci_proc.atf_ci.Kill
 void                 atf_ci_Kill(command::atf_ci_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_ci_proc.atf_ci.Wait
 void                 atf_ci_Wait(command::atf_ci_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_ci_proc.atf_ci.Exec
 int                  atf_ci_Exec(command::atf_ci_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_ci_proc.atf_ci.ExecX
 void                 atf_ci_ExecX(command::atf_ci_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_ci.Argv
+// func:command.atf_ci_proc.atf_ci.Execv
 int                  atf_ci_Execv(command::atf_ci_proc& parent) __attribute__((nothrow));
+// func:command.atf_ci_proc.atf_ci.ToCmdline
 algo::tempstr        atf_ci_ToCmdline(command::atf_ci_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_ci_proc..Init
 void                 atf_ci_proc_Init(command::atf_ci_proc& parent);
+// func:command.atf_ci_proc..Uninit
 void                 atf_ci_proc_Uninit(command::atf_ci_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_cmdline
 // access: command.atf_cmdline_proc.atf_cmdline (Exec)
-struct atf_cmdline { // command.atf_cmdline: Command line for atf_amc_cmd
-    algo::cstring      in;            //   "data"  Input directory or filename, - for stdin
-    bool               exec;          //   false  Execv itself
-    algo::cstring      astr;          // Required anon string
-    i32                anum;          //   0  Anon number
-    double             adbl;          //   0.0  Anon double
-    bool               aflag;         //   false  Anon flag
-    algo::cstring      str;           // Required string
-    i32                num;           //   0  Required Number
-    double             dbl;           //   0.0  Required double
-    bool               flag;          //   false  Required flag
-    algo::cstring      dstr;          //   "blah"  Predefined string
-    i32                dnum;          //   -33  Predefined number
-    double             ddbl;          //   0.0001  Predefined double
-    bool               dflag;         //   true  Predefined flag
-    algo::cstring*     mstr_elems;    // pointer to elements
-    u32                mstr_n;        // number of elements in array
-    u32                mstr_max;      // max. capacity of array before realloc
-    i32*               mnum_elems;    // pointer to elements
-    u32                mnum_n;        // number of elements in array
-    u32                mnum_max;      // max. capacity of array before realloc
-    double*            mdbl_elems;    // pointer to elements
-    u32                mdbl_n;        // number of elements in array
-    u32                mdbl_max;      // max. capacity of array before realloc
-    i32*               amnum_elems;   // pointer to elements
-    u32                amnum_n;       // number of elements in array
-    u32                amnum_max;     // max. capacity of array before realloc
-    u8                 fconst;        //   0  Fconst for field
-    algo::Month        cconst;        // Fconst for arg ctype
-    algo_lib::Regx     dregx;         //   "%"  Sql Regx of dmmeta::Ctype
-    algo::Smallstr50   dpkey;         //   ""  Predefined pkey
+struct atf_cmdline { // command.atf_cmdline
+    algo::cstring       in;            //   "data"  Input directory or filename, - for stdin
+    bool                exec;          //   false  Execv itself
+    algo::cstring       astr;          // Required anon string
+    i32                 anum;          //   0  Anon number
+    double              adbl;          //   0.0  Anon double
+    bool                aflag;         //   false  Anon flag
+    algo::cstring       str;           // Required string
+    i32                 num;           //   0  Required Number
+    double              dbl;           //   0.0  Required double
+    bool                flag;          //   false  Required flag
+    algo::cstring       dstr;          //   "blah"  Predefined string
+    i32                 dnum;          //   -33  Predefined number
+    double              ddbl;          //   0.0001  Predefined double
+    bool                dflag;         //   true  Predefined flag
+    algo::cstring*      mstr_elems;    // pointer to elements
+    u32                 mstr_n;        // number of elements in array
+    u32                 mstr_max;      // max. capacity of array before realloc
+    i32*                mnum_elems;    // pointer to elements
+    u32                 mnum_n;        // number of elements in array
+    u32                 mnum_max;      // max. capacity of array before realloc
+    double*             mdbl_elems;    // pointer to elements
+    u32                 mdbl_n;        // number of elements in array
+    u32                 mdbl_max;      // max. capacity of array before realloc
+    i32*                amnum_elems;   // pointer to elements
+    u32                 amnum_n;       // number of elements in array
+    u32                 amnum_max;     // max. capacity of array before realloc
+    u8                  fconst;        //   0  Fconst for field
+    algo::Month         cconst;        // Fconst for arg ctype
+    algo_lib::Regx      dregx;         //   "%"  Sql Regx of dmmeta::Ctype
+    algo::Smallstr100   dpkey;         //   ""  Predefined pkey
     atf_cmdline();
     ~atf_cmdline();
 private:
@@ -2099,241 +2590,354 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.atf_cmdline.mstr.Alloc
 algo::cstring&       mstr_Alloc(command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mstr.AllocAt
 algo::cstring&       mstr_AllocAt(command::atf_cmdline& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mstr.AllocN
 algo::aryptr<algo::cstring> mstr_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.atf_cmdline.mstr.EmptyQ
 bool                 mstr_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.atf_cmdline.mstr.Find
 algo::cstring*       mstr_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.atf_cmdline.mstr.Getary
 algo::aryptr<algo::cstring> mstr_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.atf_cmdline.mstr.Last
 algo::cstring*       mstr_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.atf_cmdline.mstr.Max
 i32                  mstr_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.atf_cmdline.mstr.N
 i32                  mstr_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.atf_cmdline.mstr.Remove
 void                 mstr_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
+// func:command.atf_cmdline.mstr.RemoveAll
 void                 mstr_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.atf_cmdline.mstr.RemoveLast
 void                 mstr_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mstr.Reserve
 void                 mstr_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mstr.AbsReserve
 void                 mstr_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.atf_cmdline.mstr.Setary
 void                 mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.atf_cmdline.mstr.qFind
 algo::cstring&       mstr_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.atf_cmdline.mstr.qLast
 algo::cstring&       mstr_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.atf_cmdline.mstr.rowid_Get
 u64                  mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mstr.AllocNVal
 algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.atf_cmdline.mstr.ReadStrptrMaybe
 bool                 mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.atf_cmdline.mnum.Alloc
 i32&                 mnum_Alloc(command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mnum.AllocAt
 i32&                 mnum_AllocAt(command::atf_cmdline& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mnum.AllocN
 algo::aryptr<i32>    mnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.atf_cmdline.mnum.EmptyQ
 bool                 mnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.atf_cmdline.mnum.Find
 i32*                 mnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.atf_cmdline.mnum.Getary
 algo::aryptr<i32>    mnum_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.atf_cmdline.mnum.Last
 i32*                 mnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.atf_cmdline.mnum.Max
 i32                  mnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.atf_cmdline.mnum.N
 i32                  mnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.atf_cmdline.mnum.Remove
 void                 mnum_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
+// func:command.atf_cmdline.mnum.RemoveAll
 void                 mnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.atf_cmdline.mnum.RemoveLast
 void                 mnum_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mnum.Reserve
 void                 mnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mnum.AbsReserve
 void                 mnum_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.atf_cmdline.mnum.Setary
 void                 mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.atf_cmdline.mnum.qFind
 i32&                 mnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.atf_cmdline.mnum.qLast
 i32&                 mnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.atf_cmdline.mnum.rowid_Get
 u64                  mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mnum.AllocNVal
 algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.atf_cmdline.mnum.ReadStrptrMaybe
 bool                 mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.atf_cmdline.mdbl.Alloc
 double&              mdbl_Alloc(command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mdbl.AllocAt
 double&              mdbl_AllocAt(command::atf_cmdline& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mdbl.AllocN
 algo::aryptr<double> mdbl_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.atf_cmdline.mdbl.EmptyQ
 bool                 mdbl_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.atf_cmdline.mdbl.Find
 double*              mdbl_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.atf_cmdline.mdbl.Getary
 algo::aryptr<double> mdbl_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.atf_cmdline.mdbl.Last
 double*              mdbl_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.atf_cmdline.mdbl.Max
 i32                  mdbl_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.atf_cmdline.mdbl.N
 i32                  mdbl_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.atf_cmdline.mdbl.Remove
 void                 mdbl_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
+// func:command.atf_cmdline.mdbl.RemoveAll
 void                 mdbl_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.atf_cmdline.mdbl.RemoveLast
 void                 mdbl_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mdbl.Reserve
 void                 mdbl_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.atf_cmdline.mdbl.AbsReserve
 void                 mdbl_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.atf_cmdline.mdbl.Setary
 void                 mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.atf_cmdline.mdbl.qFind
 double&              mdbl_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.atf_cmdline.mdbl.qLast
 double&              mdbl_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.atf_cmdline.mdbl.rowid_Get
 u64                  mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.mdbl.AllocNVal
 algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.atf_cmdline.mdbl.ReadStrptrMaybe
 bool                 mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.atf_cmdline.amnum.Alloc
 i32&                 amnum_Alloc(command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.amnum.AllocAt
 i32&                 amnum_AllocAt(command::atf_cmdline& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.amnum.AllocN
 algo::aryptr<i32>    amnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.atf_cmdline.amnum.EmptyQ
 bool                 amnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.atf_cmdline.amnum.Find
 i32*                 amnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.atf_cmdline.amnum.Getary
 algo::aryptr<i32>    amnum_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.atf_cmdline.amnum.Last
 i32*                 amnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.atf_cmdline.amnum.Max
 i32                  amnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.atf_cmdline.amnum.N
 i32                  amnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.atf_cmdline.amnum.Remove
 void                 amnum_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
+// func:command.atf_cmdline.amnum.RemoveAll
 void                 amnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.atf_cmdline.amnum.RemoveLast
 void                 amnum_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.atf_cmdline.amnum.Reserve
 void                 amnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.atf_cmdline.amnum.AbsReserve
 void                 amnum_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.atf_cmdline.amnum.Setary
 void                 amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.atf_cmdline.amnum.qFind
 i32&                 amnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.atf_cmdline.amnum.qLast
 i32&                 amnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.atf_cmdline.amnum.rowid_Get
 u64                  amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.atf_cmdline.amnum.AllocNVal
 algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.atf_cmdline.amnum.ReadStrptrMaybe
 bool                 amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Get value of field as enum type
+// func:command.atf_cmdline.fconst.GetEnum
 command_atf_cmdline_fconst_Enum fconst_GetEnum(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:command.atf_cmdline.fconst.SetEnum
 void                 fconst_SetEnum(command::atf_cmdline& parent, command_atf_cmdline_fconst_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:command.atf_cmdline.fconst.ToCstr
 const char*          fconst_ToCstr(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Convert fconst to a string. First, attempt conversion to a known string.
 // If no string matches, print fconst as a numeric value.
+// func:command.atf_cmdline.fconst.Print
 void                 fconst_Print(const command::atf_cmdline& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:command.atf_cmdline.fconst.SetStrptrMaybe
 bool                 fconst_SetStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:command.atf_cmdline.fconst.SetStrptr
 void                 fconst_SetStrptr(command::atf_cmdline& parent, algo::strptr rhs, command_atf_cmdline_fconst_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.atf_cmdline.fconst.ReadStrptrMaybe
 bool                 fconst_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Print back to string
+// func:command.atf_cmdline.dregx.Print
 void                 dregx_Print(command::atf_cmdline& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_cmdline.dregx.ReadStrptrMaybe
 bool                 dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.atf_cmdline.mstr_curs.Next
 void                 atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs);
+// func:command.atf_cmdline.mstr_curs.Reset
 void                 atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent);
 // cursor points to valid item
+// func:command.atf_cmdline.mstr_curs.ValidQ
 bool                 atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs);
 // item access
+// func:command.atf_cmdline.mstr_curs.Access
 algo::cstring&       atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs);
 // proceed to next item
+// func:command.atf_cmdline.mnum_curs.Next
 void                 atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs);
+// func:command.atf_cmdline.mnum_curs.Reset
 void                 atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent);
 // cursor points to valid item
+// func:command.atf_cmdline.mnum_curs.ValidQ
 bool                 atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs);
 // item access
+// func:command.atf_cmdline.mnum_curs.Access
 i32&                 atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs);
 // proceed to next item
+// func:command.atf_cmdline.mdbl_curs.Next
 void                 atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs);
+// func:command.atf_cmdline.mdbl_curs.Reset
 void                 atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent);
 // cursor points to valid item
+// func:command.atf_cmdline.mdbl_curs.ValidQ
 bool                 atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs);
 // item access
+// func:command.atf_cmdline.mdbl_curs.Access
 double&              atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs);
 // proceed to next item
+// func:command.atf_cmdline.amnum_curs.Next
 void                 atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs);
+// func:command.atf_cmdline.amnum_curs.Reset
 void                 atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent);
 // cursor points to valid item
+// func:command.atf_cmdline.amnum_curs.ValidQ
 bool                 atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs);
 // item access
+// func:command.atf_cmdline.amnum_curs.Access
 i32&                 atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs);
-bool                 atf_cmdline_ReadFieldMaybe(command::atf_cmdline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_cmdline..ReadFieldMaybe
+bool                 atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_cmdline from attributes of ascii tuple TUPLE
+// func:command.atf_cmdline..ReadTupleMaybe
 bool                 atf_cmdline_ReadTupleMaybe(command::atf_cmdline &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_cmdline..Init
 void                 atf_cmdline_Init(command::atf_cmdline& parent);
+// func:command.atf_cmdline..Uninit
 void                 atf_cmdline_Uninit(command::atf_cmdline& parent) __attribute__((nothrow));
 // print command-line args of command::atf_cmdline to string  -- cprint:command.atf_cmdline.Argv
-void                 atf_cmdline_PrintArgv(command::atf_cmdline & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_cmdline..PrintArgv
+void                 atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_cmdline_ToCmdline(command::atf_cmdline & row) __attribute__((nothrow));
+// func:command.atf_cmdline..ToCmdline
+tempstr              atf_cmdline_ToCmdline(command::atf_cmdline& row) __attribute__((nothrow));
+// func:command.atf_cmdline..GetAnon
 algo::strptr         atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_cmdline..NArgs
 i32                  atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_cmdline_proc
@@ -2357,26 +2961,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_cmdline_proc.atf_cmdline.Start
 int                  atf_cmdline_Start(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_cmdline_proc.atf_cmdline.StartRead
 algo::Fildes         atf_cmdline_StartRead(command::atf_cmdline_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_cmdline_proc.atf_cmdline.Kill
 void                 atf_cmdline_Kill(command::atf_cmdline_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_cmdline_proc.atf_cmdline.Wait
 void                 atf_cmdline_Wait(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_cmdline_proc.atf_cmdline.Exec
 int                  atf_cmdline_Exec(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_cmdline_proc.atf_cmdline.ExecX
 void                 atf_cmdline_ExecX(command::atf_cmdline_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_cmdline.Argv
+// func:command.atf_cmdline_proc.atf_cmdline.Execv
 int                  atf_cmdline_Execv(command::atf_cmdline_proc& parent) __attribute__((nothrow));
+// func:command.atf_cmdline_proc.atf_cmdline.ToCmdline
 algo::tempstr        atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_cmdline_proc..Init
 void                 atf_cmdline_proc_Init(command::atf_cmdline_proc& parent);
+// func:command.atf_cmdline_proc..Uninit
 void                 atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_comp
@@ -2402,7 +3016,7 @@ struct atf_comp { // command.atf_comp
     bool               memcheck;          //   false  Run under memory checker (valgrind)
     bool               force;             //   false  (With -memcheck) run suppressed memcheck
     bool               callgrind;         //   false  Run under callgrind profiler (valgrind)
-    i32                maxjobs;           //   1  Maximum number of tests run in parallel
+    i32                maxjobs;           //   0  Maximum number of tests run in parallel
     bool               stream;            //   false  prints component's output
     bool               i;                 //   false  Read and execute testcase from stdin
     bool               write;             //   true  (implied with -e) Write any changes back to ssim tables
@@ -2416,25 +3030,34 @@ private:
 };
 
 // Print back to string
+// func:command.atf_comp.comptest.Print
 void                 comptest_Print(command::atf_comp& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_comp.comptest.ReadStrptrMaybe
 bool                 comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_comp_ReadFieldMaybe(command::atf_comp &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_comp..ReadFieldMaybe
+bool                 atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_comp from attributes of ascii tuple TUPLE
+// func:command.atf_comp..ReadTupleMaybe
 bool                 atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_comp..Init
 void                 atf_comp_Init(command::atf_comp& parent);
 // print command-line args of command::atf_comp to string  -- cprint:command.atf_comp.Argv
-void                 atf_comp_PrintArgv(command::atf_comp & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_comp..PrintArgv
+void                 atf_comp_PrintArgv(command::atf_comp& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_comp_ToCmdline(command::atf_comp & row) __attribute__((nothrow));
+// func:command.atf_comp..ToCmdline
+tempstr              atf_comp_ToCmdline(command::atf_comp& row) __attribute__((nothrow));
+// func:command.atf_comp..GetAnon
 algo::strptr         atf_comp_GetAnon(command::atf_comp &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_comp..NArgs
 i32                  atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_comp_proc
@@ -2458,26 +3081,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_comp_proc.atf_comp.Start
 int                  atf_comp_Start(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_comp_proc.atf_comp.StartRead
 algo::Fildes         atf_comp_StartRead(command::atf_comp_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_comp_proc.atf_comp.Kill
 void                 atf_comp_Kill(command::atf_comp_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_comp_proc.atf_comp.Wait
 void                 atf_comp_Wait(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_comp_proc.atf_comp.Exec
 int                  atf_comp_Exec(command::atf_comp_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_comp_proc.atf_comp.ExecX
 void                 atf_comp_ExecX(command::atf_comp_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_comp.Argv
+// func:command.atf_comp_proc.atf_comp.Execv
 int                  atf_comp_Execv(command::atf_comp_proc& parent) __attribute__((nothrow));
+// func:command.atf_comp_proc.atf_comp.ToCmdline
 algo::tempstr        atf_comp_ToCmdline(command::atf_comp_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_comp_proc..Init
 void                 atf_comp_proc_Init(command::atf_comp_proc& parent);
+// func:command.atf_comp_proc..Uninit
 void                 atf_comp_proc_Uninit(command::atf_comp_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_cov
@@ -2504,24 +3137,32 @@ private:
 };
 
 // Print back to string
+// func:command.atf_cov.exclude.Print
 void                 exclude_Print(command::atf_cov& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_cov.exclude.ReadStrptrMaybe
 bool                 exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_cov_ReadFieldMaybe(command::atf_cov &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_cov..ReadFieldMaybe
+bool                 atf_cov_ReadFieldMaybe(command::atf_cov& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_cov from attributes of ascii tuple TUPLE
+// func:command.atf_cov..ReadTupleMaybe
 bool                 atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_cov..Init
 void                 atf_cov_Init(command::atf_cov& parent);
 // print command-line args of command::atf_cov to string  -- cprint:command.atf_cov.Argv
-void                 atf_cov_PrintArgv(command::atf_cov & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_cov..PrintArgv
+void                 atf_cov_PrintArgv(command::atf_cov& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_cov_ToCmdline(command::atf_cov & row) __attribute__((nothrow));
+// func:command.atf_cov..ToCmdline
+tempstr              atf_cov_ToCmdline(command::atf_cov& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_cov..NArgs
 i32                  atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_cov_proc
@@ -2545,26 +3186,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_cov_proc.atf_cov.Start
 int                  atf_cov_Start(command::atf_cov_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_cov_proc.atf_cov.StartRead
 algo::Fildes         atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_cov_proc.atf_cov.Kill
 void                 atf_cov_Kill(command::atf_cov_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_cov_proc.atf_cov.Wait
 void                 atf_cov_Wait(command::atf_cov_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_cov_proc.atf_cov.Exec
 int                  atf_cov_Exec(command::atf_cov_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_cov_proc.atf_cov.ExecX
 void                 atf_cov_ExecX(command::atf_cov_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_cov.Argv
+// func:command.atf_cov_proc.atf_cov.Execv
 int                  atf_cov_Execv(command::atf_cov_proc& parent) __attribute__((nothrow));
+// func:command.atf_cov_proc.atf_cov.ToCmdline
 algo::tempstr        atf_cov_ToCmdline(command::atf_cov_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_cov_proc..Init
 void                 atf_cov_proc_Init(command::atf_cov_proc& parent);
+// func:command.atf_cov_proc..Uninit
 void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_fuzz
@@ -2586,25 +3237,34 @@ private:
 };
 
 // Print back to string
+// func:command.atf_fuzz.fuzzstrat.Print
 void                 fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_fuzz.fuzzstrat.ReadStrptrMaybe
 bool                 fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_fuzz_ReadFieldMaybe(command::atf_fuzz &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_fuzz..ReadFieldMaybe
+bool                 atf_fuzz_ReadFieldMaybe(command::atf_fuzz& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_fuzz from attributes of ascii tuple TUPLE
+// func:command.atf_fuzz..ReadTupleMaybe
 bool                 atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_fuzz..Init
 void                 atf_fuzz_Init(command::atf_fuzz& parent);
 // print command-line args of command::atf_fuzz to string  -- cprint:command.atf_fuzz.Argv
-void                 atf_fuzz_PrintArgv(command::atf_fuzz & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_fuzz..PrintArgv
+void                 atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_fuzz_ToCmdline(command::atf_fuzz & row) __attribute__((nothrow));
+// func:command.atf_fuzz..ToCmdline
+tempstr              atf_fuzz_ToCmdline(command::atf_fuzz& row) __attribute__((nothrow));
+// func:command.atf_fuzz..GetAnon
 algo::strptr         atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_fuzz..NArgs
 i32                  atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_fuzz_proc
@@ -2628,26 +3288,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_fuzz_proc.atf_fuzz.Start
 int                  atf_fuzz_Start(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_fuzz_proc.atf_fuzz.StartRead
 algo::Fildes         atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_fuzz_proc.atf_fuzz.Kill
 void                 atf_fuzz_Kill(command::atf_fuzz_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_fuzz_proc.atf_fuzz.Wait
 void                 atf_fuzz_Wait(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_fuzz_proc.atf_fuzz.Exec
 int                  atf_fuzz_Exec(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_fuzz_proc.atf_fuzz.ExecX
 void                 atf_fuzz_ExecX(command::atf_fuzz_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_fuzz.Argv
+// func:command.atf_fuzz_proc.atf_fuzz.Execv
 int                  atf_fuzz_Execv(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+// func:command.atf_fuzz_proc.atf_fuzz.ToCmdline
 algo::tempstr        atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_fuzz_proc..Init
 void                 atf_fuzz_proc_Init(command::atf_fuzz_proc& parent);
+// func:command.atf_fuzz_proc..Uninit
 void                 atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_gcli
@@ -2670,24 +3340,32 @@ private:
 };
 
 // Print back to string
+// func:command.atf_gcli.gtblacttst.Print
 void                 gtblacttst_Print(command::atf_gcli& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_gcli.gtblacttst.ReadStrptrMaybe
 bool                 gtblacttst_ReadStrptrMaybe(command::atf_gcli& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_gcli_ReadFieldMaybe(command::atf_gcli &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_gcli..ReadFieldMaybe
+bool                 atf_gcli_ReadFieldMaybe(command::atf_gcli& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_gcli from attributes of ascii tuple TUPLE
+// func:command.atf_gcli..ReadTupleMaybe
 bool                 atf_gcli_ReadTupleMaybe(command::atf_gcli &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_gcli..Init
 void                 atf_gcli_Init(command::atf_gcli& parent);
 // print command-line args of command::atf_gcli to string  -- cprint:command.atf_gcli.Argv
-void                 atf_gcli_PrintArgv(command::atf_gcli & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_gcli..PrintArgv
+void                 atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_gcli_ToCmdline(command::atf_gcli & row) __attribute__((nothrow));
+// func:command.atf_gcli..ToCmdline
+tempstr              atf_gcli_ToCmdline(command::atf_gcli& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_gcli..NArgs
 i32                  atf_gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_gcli_proc
@@ -2711,26 +3389,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_gcli_proc.atf_gcli.Start
 int                  atf_gcli_Start(command::atf_gcli_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_gcli_proc.atf_gcli.StartRead
 algo::Fildes         atf_gcli_StartRead(command::atf_gcli_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_gcli_proc.atf_gcli.Kill
 void                 atf_gcli_Kill(command::atf_gcli_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_gcli_proc.atf_gcli.Wait
 void                 atf_gcli_Wait(command::atf_gcli_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_gcli_proc.atf_gcli.Exec
 int                  atf_gcli_Exec(command::atf_gcli_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_gcli_proc.atf_gcli.ExecX
 void                 atf_gcli_ExecX(command::atf_gcli_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_gcli.Argv
+// func:command.atf_gcli_proc.atf_gcli.Execv
 int                  atf_gcli_Execv(command::atf_gcli_proc& parent) __attribute__((nothrow));
+// func:command.atf_gcli_proc.atf_gcli.ToCmdline
 algo::tempstr        atf_gcli_ToCmdline(command::atf_gcli_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_gcli_proc..Init
 void                 atf_gcli_proc_Init(command::atf_gcli_proc& parent);
+// func:command.atf_gcli_proc..Uninit
 void                 atf_gcli_proc_Uninit(command::atf_gcli_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_nrun
@@ -2742,20 +3430,27 @@ struct atf_nrun { // command.atf_nrun
     atf_nrun();
 };
 
-bool                 atf_nrun_ReadFieldMaybe(command::atf_nrun &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_nrun..ReadFieldMaybe
+bool                 atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_nrun from attributes of ascii tuple TUPLE
+// func:command.atf_nrun..ReadTupleMaybe
 bool                 atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_nrun..Init
 void                 atf_nrun_Init(command::atf_nrun& parent);
 // print command-line args of command::atf_nrun to string  -- cprint:command.atf_nrun.Argv
-void                 atf_nrun_PrintArgv(command::atf_nrun & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_nrun..PrintArgv
+void                 atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_nrun_ToCmdline(command::atf_nrun & row) __attribute__((nothrow));
+// func:command.atf_nrun..ToCmdline
+tempstr              atf_nrun_ToCmdline(command::atf_nrun& row) __attribute__((nothrow));
+// func:command.atf_nrun..GetAnon
 algo::strptr         atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_nrun..NArgs
 i32                  atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_nrun_proc
@@ -2778,26 +3473,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_nrun_proc.atf_nrun.Start
 int                  atf_nrun_Start(command::atf_nrun_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_nrun_proc.atf_nrun.StartRead
 algo::Fildes         atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_nrun_proc.atf_nrun.Kill
 void                 atf_nrun_Kill(command::atf_nrun_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_nrun_proc.atf_nrun.Wait
 void                 atf_nrun_Wait(command::atf_nrun_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_nrun_proc.atf_nrun.Exec
 int                  atf_nrun_Exec(command::atf_nrun_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_nrun_proc.atf_nrun.ExecX
 void                 atf_nrun_ExecX(command::atf_nrun_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_nrun.Argv
+// func:command.atf_nrun_proc.atf_nrun.Execv
 int                  atf_nrun_Execv(command::atf_nrun_proc& parent) __attribute__((nothrow));
+// func:command.atf_nrun_proc.atf_nrun.ToCmdline
 algo::tempstr        atf_nrun_ToCmdline(command::atf_nrun_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_nrun_proc..Init
 void                 atf_nrun_proc_Init(command::atf_nrun_proc& parent);
+// func:command.atf_nrun_proc..Uninit
 void                 atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_unit
@@ -2821,25 +3526,34 @@ private:
 };
 
 // Print back to string
+// func:command.atf_unit.unittest.Print
 void                 unittest_Print(command::atf_unit& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.atf_unit.unittest.ReadStrptrMaybe
 bool                 unittest_ReadStrptrMaybe(command::atf_unit& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 atf_unit_ReadFieldMaybe(command::atf_unit &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.atf_unit..ReadFieldMaybe
+bool                 atf_unit_ReadFieldMaybe(command::atf_unit& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_unit from attributes of ascii tuple TUPLE
+// func:command.atf_unit..ReadTupleMaybe
 bool                 atf_unit_ReadTupleMaybe(command::atf_unit &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.atf_unit..Init
 void                 atf_unit_Init(command::atf_unit& parent);
 // print command-line args of command::atf_unit to string  -- cprint:command.atf_unit.Argv
-void                 atf_unit_PrintArgv(command::atf_unit & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.atf_unit..PrintArgv
+void                 atf_unit_PrintArgv(command::atf_unit& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              atf_unit_ToCmdline(command::atf_unit & row) __attribute__((nothrow));
+// func:command.atf_unit..ToCmdline
+tempstr              atf_unit_ToCmdline(command::atf_unit& row) __attribute__((nothrow));
+// func:command.atf_unit..GetAnon
 algo::strptr         atf_unit_GetAnon(command::atf_unit &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.atf_unit..NArgs
 i32                  atf_unit_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.atf_unit_proc
@@ -2863,39 +3577,51 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_unit_proc.atf_unit.Start
 int                  atf_unit_Start(command::atf_unit_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.atf_unit_proc.atf_unit.StartRead
 algo::Fildes         atf_unit_StartRead(command::atf_unit_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.atf_unit_proc.atf_unit.Kill
 void                 atf_unit_Kill(command::atf_unit_proc& parent);
 // Wait for subprocess to return
+// func:command.atf_unit_proc.atf_unit.Wait
 void                 atf_unit_Wait(command::atf_unit_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.atf_unit_proc.atf_unit.Exec
 int                  atf_unit_Exec(command::atf_unit_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.atf_unit_proc.atf_unit.ExecX
 void                 atf_unit_ExecX(command::atf_unit_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:atf_unit.Argv
+// func:command.atf_unit_proc.atf_unit.Execv
 int                  atf_unit_Execv(command::atf_unit_proc& parent) __attribute__((nothrow));
+// func:command.atf_unit_proc.atf_unit.ToCmdline
 algo::tempstr        atf_unit_ToCmdline(command::atf_unit_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.atf_unit_proc..Init
 void                 atf_unit_proc_Init(command::atf_unit_proc& parent);
+// func:command.atf_unit_proc..Uninit
 void                 atf_unit_proc_Uninit(command::atf_unit_proc& parent) __attribute__((nothrow));
 
 // --- command.bash
 // access: command.bash_proc.bash (Exec)
-struct bash { // command.bash: One way of invoking the shell
+struct bash { // command.bash
     algo::cstring   c;   //   ""  Shell command to execute
     bash();
 };
 
 // Set all fields to initial values.
+// func:command.bash..Init
 void                 bash_Init(command::bash& parent);
 // print command-line args of command::bash to string  -- cprint:command.bash.Argv
-void                 bash_PrintArgv(command::bash & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.bash..PrintArgv
+void                 bash_PrintArgv(command::bash& row, algo::cstring &str) __attribute__((nothrow));
 
 // --- command.bash2html
 // access: command.bash2html_proc.bash2html (Exec)
@@ -2905,19 +3631,25 @@ struct bash2html { // command.bash2html
     bash2html();
 };
 
-bool                 bash2html_ReadFieldMaybe(command::bash2html &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.bash2html..ReadFieldMaybe
+bool                 bash2html_ReadFieldMaybe(command::bash2html& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::bash2html from attributes of ascii tuple TUPLE
+// func:command.bash2html..ReadTupleMaybe
 bool                 bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.bash2html..Init
 void                 bash2html_Init(command::bash2html& parent);
 // print command-line args of command::bash2html to string  -- cprint:command.bash2html.Argv
-void                 bash2html_PrintArgv(command::bash2html & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.bash2html..PrintArgv
+void                 bash2html_PrintArgv(command::bash2html& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              bash2html_ToCmdline(command::bash2html & row) __attribute__((nothrow));
+// func:command.bash2html..ToCmdline
+tempstr              bash2html_ToCmdline(command::bash2html& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.bash2html..NArgs
 i32                  bash2html_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.bash2html_proc
@@ -2940,30 +3672,40 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.bash2html_proc.bash2html.Start
 int                  bash2html_Start(command::bash2html_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.bash2html_proc.bash2html.StartRead
 algo::Fildes         bash2html_StartRead(command::bash2html_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.bash2html_proc.bash2html.Kill
 void                 bash2html_Kill(command::bash2html_proc& parent);
 // Wait for subprocess to return
+// func:command.bash2html_proc.bash2html.Wait
 void                 bash2html_Wait(command::bash2html_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.bash2html_proc.bash2html.Exec
 int                  bash2html_Exec(command::bash2html_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.bash2html_proc.bash2html.ExecX
 void                 bash2html_ExecX(command::bash2html_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:bash2html.Argv
+// func:command.bash2html_proc.bash2html.Execv
 int                  bash2html_Execv(command::bash2html_proc& parent) __attribute__((nothrow));
+// func:command.bash2html_proc.bash2html.ToCmdline
 algo::tempstr        bash2html_ToCmdline(command::bash2html_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.bash2html_proc..Init
 void                 bash2html_proc_Init(command::bash2html_proc& parent);
+// func:command.bash2html_proc..Uninit
 void                 bash2html_proc_Uninit(command::bash2html_proc& parent) __attribute__((nothrow));
 
 // --- command.bash_proc
-struct bash_proc { // command.bash_proc: Shell subprocess
+struct bash_proc { // command.bash_proc
     algo::cstring   path;      //   "bash"  path for executable
     command::bash   cmd;       // command line for child process
     algo::cstring   fstdin;    // redirect for stdin
@@ -2982,26 +3724,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.bash_proc.bash.Start
 int                  bash_Start(command::bash_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.bash_proc.bash.StartRead
 algo::Fildes         bash_StartRead(command::bash_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.bash_proc.bash.Kill
 void                 bash_Kill(command::bash_proc& parent);
 // Wait for subprocess to return
+// func:command.bash_proc.bash.Wait
 void                 bash_Wait(command::bash_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.bash_proc.bash.Exec
 int                  bash_Exec(command::bash_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.bash_proc.bash.ExecX
 void                 bash_ExecX(command::bash_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:bash.Argv
+// func:command.bash_proc.bash.Execv
 int                  bash_Execv(command::bash_proc& parent) __attribute__((nothrow));
+// func:command.bash_proc.bash.ToCmdline
 algo::tempstr        bash_ToCmdline(command::bash_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.bash_proc..Init
 void                 bash_proc_Init(command::bash_proc& parent);
+// func:command.bash_proc..Uninit
 void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__((nothrow));
 
 // --- command.gcache
@@ -3032,70 +3784,104 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.gcache.cmd.Alloc
 algo::cstring&       cmd_Alloc(command::gcache& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.gcache.cmd.AllocAt
 algo::cstring&       cmd_AllocAt(command::gcache& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.gcache.cmd.AllocN
 algo::aryptr<algo::cstring> cmd_AllocN(command::gcache& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.gcache.cmd.EmptyQ
 bool                 cmd_EmptyQ(command::gcache& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.gcache.cmd.Find
 algo::cstring*       cmd_Find(command::gcache& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.gcache.cmd.Getary
 algo::aryptr<algo::cstring> cmd_Getary(command::gcache& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.gcache.cmd.Last
 algo::cstring*       cmd_Last(command::gcache& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.gcache.cmd.Max
 i32                  cmd_Max(command::gcache& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.gcache.cmd.N
 i32                  cmd_N(const command::gcache& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.gcache.cmd.Remove
 void                 cmd_Remove(command::gcache& parent, u32 i) __attribute__((nothrow));
+// func:command.gcache.cmd.RemoveAll
 void                 cmd_RemoveAll(command::gcache& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.gcache.cmd.RemoveLast
 void                 cmd_RemoveLast(command::gcache& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.gcache.cmd.Reserve
 void                 cmd_Reserve(command::gcache& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.gcache.cmd.AbsReserve
 void                 cmd_AbsReserve(command::gcache& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.gcache.cmd.Setary
 void                 cmd_Setary(command::gcache& parent, command::gcache &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.gcache.cmd.qFind
 algo::cstring&       cmd_qFind(command::gcache& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.gcache.cmd.qLast
 algo::cstring&       cmd_qLast(command::gcache& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.gcache.cmd.rowid_Get
 u64                  cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.gcache.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.gcache.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.gcache.cmd_curs.Next
 void                 gcache_cmd_curs_Next(gcache_cmd_curs &curs);
+// func:command.gcache.cmd_curs.Reset
 void                 gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent);
 // cursor points to valid item
+// func:command.gcache.cmd_curs.ValidQ
 bool                 gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs);
 // item access
+// func:command.gcache.cmd_curs.Access
 algo::cstring&       gcache_cmd_curs_Access(gcache_cmd_curs &curs);
-bool                 gcache_ReadFieldMaybe(command::gcache &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.gcache..ReadFieldMaybe
+bool                 gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcache from attributes of ascii tuple TUPLE
+// func:command.gcache..ReadTupleMaybe
 bool                 gcache_ReadTupleMaybe(command::gcache &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.gcache..Init
 void                 gcache_Init(command::gcache& parent);
+// func:command.gcache..Uninit
 void                 gcache_Uninit(command::gcache& parent) __attribute__((nothrow));
 // print command-line args of command::gcache to string  -- cprint:command.gcache.Argv
-void                 gcache_PrintArgv(command::gcache & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.gcache..PrintArgv
+void                 gcache_PrintArgv(command::gcache& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              gcache_ToCmdline(command::gcache & row) __attribute__((nothrow));
-// print string representation of command::gcache to string LHS, no header -- cprint:command.gcache.String
-void                 gcache_Print(command::gcache & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.gcache..ToCmdline
+tempstr              gcache_ToCmdline(command::gcache& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.gcache.String  printfmt:Tuple
+// func:command.gcache..Print
+void                 gcache_Print(command::gcache& row, algo::cstring& str) __attribute__((nothrow));
+// func:command.gcache..GetAnon
 algo::strptr         gcache_GetAnon(command::gcache &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.gcache..NArgs
 i32                  gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.gcache_proc
@@ -3119,26 +3905,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.gcache_proc.gcache.Start
 int                  gcache_Start(command::gcache_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.gcache_proc.gcache.StartRead
 algo::Fildes         gcache_StartRead(command::gcache_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.gcache_proc.gcache.Kill
 void                 gcache_Kill(command::gcache_proc& parent);
 // Wait for subprocess to return
+// func:command.gcache_proc.gcache.Wait
 void                 gcache_Wait(command::gcache_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.gcache_proc.gcache.Exec
 int                  gcache_Exec(command::gcache_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.gcache_proc.gcache.ExecX
 void                 gcache_ExecX(command::gcache_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:gcache.Argv
+// func:command.gcache_proc.gcache.Execv
 int                  gcache_Execv(command::gcache_proc& parent) __attribute__((nothrow));
+// func:command.gcache_proc.gcache.ToCmdline
 algo::tempstr        gcache_ToCmdline(command::gcache_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.gcache_proc..Init
 void                 gcache_proc_Init(command::gcache_proc& parent);
+// func:command.gcache_proc..Uninit
 void                 gcache_proc_Uninit(command::gcache_proc& parent) __attribute__((nothrow));
 
 // --- command.gcli
@@ -3173,68 +3969,100 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.gcli.fields.Alloc
 algo::cstring&       fields_Alloc(command::gcli& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.gcli.fields.AllocAt
 algo::cstring&       fields_AllocAt(command::gcli& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.gcli.fields.AllocN
 algo::aryptr<algo::cstring> fields_AllocN(command::gcli& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.gcli.fields.EmptyQ
 bool                 fields_EmptyQ(command::gcli& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.gcli.fields.Find
 algo::cstring*       fields_Find(command::gcli& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.gcli.fields.Getary
 algo::aryptr<algo::cstring> fields_Getary(command::gcli& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.gcli.fields.Last
 algo::cstring*       fields_Last(command::gcli& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.gcli.fields.Max
 i32                  fields_Max(command::gcli& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.gcli.fields.N
 i32                  fields_N(const command::gcli& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.gcli.fields.Remove
 void                 fields_Remove(command::gcli& parent, u32 i) __attribute__((nothrow));
+// func:command.gcli.fields.RemoveAll
 void                 fields_RemoveAll(command::gcli& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.gcli.fields.RemoveLast
 void                 fields_RemoveLast(command::gcli& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.gcli.fields.Reserve
 void                 fields_Reserve(command::gcli& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.gcli.fields.AbsReserve
 void                 fields_AbsReserve(command::gcli& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.gcli.fields.Setary
 void                 fields_Setary(command::gcli& parent, command::gcli &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.gcli.fields.qFind
 algo::cstring&       fields_qFind(command::gcli& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.gcli.fields.qLast
 algo::cstring&       fields_qLast(command::gcli& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.gcli.fields.rowid_Get
 u64                  fields_rowid_Get(command::gcli& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.gcli.fields.AllocNVal
 algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.gcli.fields.ReadStrptrMaybe
 bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.gcli.fields_curs.Next
 void                 gcli_fields_curs_Next(gcli_fields_curs &curs);
+// func:command.gcli.fields_curs.Reset
 void                 gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent);
 // cursor points to valid item
+// func:command.gcli.fields_curs.ValidQ
 bool                 gcli_fields_curs_ValidQ(gcli_fields_curs &curs);
 // item access
+// func:command.gcli.fields_curs.Access
 algo::cstring&       gcli_fields_curs_Access(gcli_fields_curs &curs);
-bool                 gcli_ReadFieldMaybe(command::gcli &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.gcli..ReadFieldMaybe
+bool                 gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcli from attributes of ascii tuple TUPLE
+// func:command.gcli..ReadTupleMaybe
 bool                 gcli_ReadTupleMaybe(command::gcli &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.gcli..Init
 void                 gcli_Init(command::gcli& parent);
+// func:command.gcli..Uninit
 void                 gcli_Uninit(command::gcli& parent) __attribute__((nothrow));
 // print command-line args of command::gcli to string  -- cprint:command.gcli.Argv
-void                 gcli_PrintArgv(command::gcli & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.gcli..PrintArgv
+void                 gcli_PrintArgv(command::gcli& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              gcli_ToCmdline(command::gcli & row) __attribute__((nothrow));
+// func:command.gcli..ToCmdline
+tempstr              gcli_ToCmdline(command::gcli& row) __attribute__((nothrow));
+// func:command.gcli..GetAnon
 algo::strptr         gcli_GetAnon(command::gcli &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.gcli..NArgs
 i32                  gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.gcli_proc
@@ -3258,72 +4086,37 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.gcli_proc.gcli.Start
 int                  gcli_Start(command::gcli_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.gcli_proc.gcli.StartRead
 algo::Fildes         gcli_StartRead(command::gcli_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.gcli_proc.gcli.Kill
 void                 gcli_Kill(command::gcli_proc& parent);
 // Wait for subprocess to return
+// func:command.gcli_proc.gcli.Wait
 void                 gcli_Wait(command::gcli_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.gcli_proc.gcli.Exec
 int                  gcli_Exec(command::gcli_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.gcli_proc.gcli.ExecX
 void                 gcli_ExecX(command::gcli_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:gcli.Argv
+// func:command.gcli_proc.gcli.Execv
 int                  gcli_Execv(command::gcli_proc& parent) __attribute__((nothrow));
+// func:command.gcli_proc.gcli.ToCmdline
 algo::tempstr        gcli_ToCmdline(command::gcli_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.gcli_proc..Init
 void                 gcli_proc_Init(command::gcli_proc& parent);
+// func:command.gcli_proc..Uninit
 void                 gcli_proc_Uninit(command::gcli_proc& parent) __attribute__((nothrow));
-
-// --- command.lib_ctype
-struct lib_ctype { // command.lib_ctype
-    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
-    lib_ctype();
-};
-
-bool                 lib_ctype_ReadFieldMaybe(command::lib_ctype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::lib_ctype from attributes of ascii tuple TUPLE
-bool                 lib_ctype_ReadTupleMaybe(command::lib_ctype &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 lib_ctype_Init(command::lib_ctype& parent);
-// print command-line args of command::lib_ctype to string  -- cprint:command.lib_ctype.Argv
-void                 lib_ctype_PrintArgv(command::lib_ctype & row, algo::cstring &str) __attribute__((nothrow));
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr              lib_ctype_ToCmdline(command::lib_ctype & row) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32                  lib_ctype_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
-
-// --- command.lib_exec
-struct lib_exec { // command.lib_exec
-    bool   dry_run;    //   false
-    bool   q;          //   true  Do not print node name
-    i32    maxjobs;    //   8  Maximum number of parallel jobs
-    bool   complooo;   //   false
-    lib_exec();
-};
-
-bool                 lib_exec_ReadFieldMaybe(command::lib_exec &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::lib_exec from attributes of ascii tuple TUPLE
-bool                 lib_exec_ReadTupleMaybe(command::lib_exec &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-void                 lib_exec_Init(command::lib_exec& parent);
-// print command-line args of command::lib_exec to string  -- cprint:command.lib_exec.Argv
-void                 lib_exec_PrintArgv(command::lib_exec & row, algo::cstring &str) __attribute__((nothrow));
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr              lib_exec_ToCmdline(command::lib_exec & row) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32                  lib_exec_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.mdbg
 // access: command.mdbg_proc.mdbg (Exec)
@@ -3358,117 +4151,173 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.mdbg.args.Alloc
 algo::cstring&       args_Alloc(command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.mdbg.args.AllocAt
 algo::cstring&       args_AllocAt(command::mdbg& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.mdbg.args.AllocN
 algo::aryptr<algo::cstring> args_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.mdbg.args.EmptyQ
 bool                 args_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.mdbg.args.Find
 algo::cstring*       args_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.mdbg.args.Getary
 algo::aryptr<algo::cstring> args_Getary(command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.mdbg.args.Last
 algo::cstring*       args_Last(command::mdbg& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.mdbg.args.Max
 i32                  args_Max(command::mdbg& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.mdbg.args.N
 i32                  args_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.mdbg.args.Remove
 void                 args_Remove(command::mdbg& parent, u32 i) __attribute__((nothrow));
+// func:command.mdbg.args.RemoveAll
 void                 args_RemoveAll(command::mdbg& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.mdbg.args.RemoveLast
 void                 args_RemoveLast(command::mdbg& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.mdbg.args.Reserve
 void                 args_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.mdbg.args.AbsReserve
 void                 args_AbsReserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.mdbg.args.Setary
 void                 args_Setary(command::mdbg& parent, command::mdbg &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.mdbg.args.qFind
 algo::cstring&       args_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.mdbg.args.qLast
 algo::cstring&       args_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.mdbg.args.rowid_Get
 u64                  args_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.mdbg.args.AllocNVal
 algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.mdbg.args.ReadStrptrMaybe
 bool                 args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.mdbg.b.Alloc
 algo::cstring&       b_Alloc(command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.mdbg.b.AllocAt
 algo::cstring&       b_AllocAt(command::mdbg& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.mdbg.b.AllocN
 algo::aryptr<algo::cstring> b_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.mdbg.b.EmptyQ
 bool                 b_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.mdbg.b.Find
 algo::cstring*       b_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.mdbg.b.Getary
 algo::aryptr<algo::cstring> b_Getary(command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.mdbg.b.Last
 algo::cstring*       b_Last(command::mdbg& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.mdbg.b.Max
 i32                  b_Max(command::mdbg& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.mdbg.b.N
 i32                  b_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.mdbg.b.Remove
 void                 b_Remove(command::mdbg& parent, u32 i) __attribute__((nothrow));
+// func:command.mdbg.b.RemoveAll
 void                 b_RemoveAll(command::mdbg& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.mdbg.b.RemoveLast
 void                 b_RemoveLast(command::mdbg& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.mdbg.b.Reserve
 void                 b_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.mdbg.b.AbsReserve
 void                 b_AbsReserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.mdbg.b.Setary
 void                 b_Setary(command::mdbg& parent, command::mdbg &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.mdbg.b.qFind
 algo::cstring&       b_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.mdbg.b.qLast
 algo::cstring&       b_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.mdbg.b.rowid_Get
 u64                  b_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.mdbg.b.AllocNVal
 algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.mdbg.b.ReadStrptrMaybe
 bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.mdbg.args_curs.Next
 void                 mdbg_args_curs_Next(mdbg_args_curs &curs);
+// func:command.mdbg.args_curs.Reset
 void                 mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent);
 // cursor points to valid item
+// func:command.mdbg.args_curs.ValidQ
 bool                 mdbg_args_curs_ValidQ(mdbg_args_curs &curs);
 // item access
+// func:command.mdbg.args_curs.Access
 algo::cstring&       mdbg_args_curs_Access(mdbg_args_curs &curs);
 // proceed to next item
+// func:command.mdbg.b_curs.Next
 void                 mdbg_b_curs_Next(mdbg_b_curs &curs);
+// func:command.mdbg.b_curs.Reset
 void                 mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent);
 // cursor points to valid item
+// func:command.mdbg.b_curs.ValidQ
 bool                 mdbg_b_curs_ValidQ(mdbg_b_curs &curs);
 // item access
+// func:command.mdbg.b_curs.Access
 algo::cstring&       mdbg_b_curs_Access(mdbg_b_curs &curs);
-bool                 mdbg_ReadFieldMaybe(command::mdbg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.mdbg..ReadFieldMaybe
+bool                 mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::mdbg from attributes of ascii tuple TUPLE
+// func:command.mdbg..ReadTupleMaybe
 bool                 mdbg_ReadTupleMaybe(command::mdbg &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.mdbg..Init
 void                 mdbg_Init(command::mdbg& parent);
+// func:command.mdbg..Uninit
 void                 mdbg_Uninit(command::mdbg& parent) __attribute__((nothrow));
 // print command-line args of command::mdbg to string  -- cprint:command.mdbg.Argv
-void                 mdbg_PrintArgv(command::mdbg & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.mdbg..PrintArgv
+void                 mdbg_PrintArgv(command::mdbg& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              mdbg_ToCmdline(command::mdbg & row) __attribute__((nothrow));
+// func:command.mdbg..ToCmdline
+tempstr              mdbg_ToCmdline(command::mdbg& row) __attribute__((nothrow));
+// func:command.mdbg..GetAnon
 algo::strptr         mdbg_GetAnon(command::mdbg &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.mdbg..NArgs
 i32                  mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.mdbg_proc
@@ -3492,26 +4341,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.mdbg_proc.mdbg.Start
 int                  mdbg_Start(command::mdbg_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.mdbg_proc.mdbg.StartRead
 algo::Fildes         mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.mdbg_proc.mdbg.Kill
 void                 mdbg_Kill(command::mdbg_proc& parent);
 // Wait for subprocess to return
+// func:command.mdbg_proc.mdbg.Wait
 void                 mdbg_Wait(command::mdbg_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.mdbg_proc.mdbg.Exec
 int                  mdbg_Exec(command::mdbg_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.mdbg_proc.mdbg.ExecX
 void                 mdbg_ExecX(command::mdbg_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:mdbg.Argv
+// func:command.mdbg_proc.mdbg.Execv
 int                  mdbg_Execv(command::mdbg_proc& parent) __attribute__((nothrow));
+// func:command.mdbg_proc.mdbg.ToCmdline
 algo::tempstr        mdbg_ToCmdline(command::mdbg_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.mdbg_proc..Init
 void                 mdbg_proc_Init(command::mdbg_proc& parent);
+// func:command.mdbg_proc..Uninit
 void                 mdbg_proc_Uninit(command::mdbg_proc& parent) __attribute__((nothrow));
 
 // --- command.mysql2ssim
@@ -3528,20 +4387,27 @@ struct mysql2ssim { // command.mysql2ssim
     mysql2ssim();
 };
 
-bool                 mysql2ssim_ReadFieldMaybe(command::mysql2ssim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.mysql2ssim..ReadFieldMaybe
+bool                 mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::mysql2ssim from attributes of ascii tuple TUPLE
+// func:command.mysql2ssim..ReadTupleMaybe
 bool                 mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.mysql2ssim..Init
 void                 mysql2ssim_Init(command::mysql2ssim& parent);
 // print command-line args of command::mysql2ssim to string  -- cprint:command.mysql2ssim.Argv
-void                 mysql2ssim_PrintArgv(command::mysql2ssim & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.mysql2ssim..PrintArgv
+void                 mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              mysql2ssim_ToCmdline(command::mysql2ssim & row) __attribute__((nothrow));
+// func:command.mysql2ssim..ToCmdline
+tempstr              mysql2ssim_ToCmdline(command::mysql2ssim& row) __attribute__((nothrow));
+// func:command.mysql2ssim..GetAnon
 algo::strptr         mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.mysql2ssim..NArgs
 i32                  mysql2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.mysql2ssim_proc
@@ -3564,27 +4430,60 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.mysql2ssim_proc.mysql2ssim.Start
 int                  mysql2ssim_Start(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.mysql2ssim_proc.mysql2ssim.StartRead
 algo::Fildes         mysql2ssim_StartRead(command::mysql2ssim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.mysql2ssim_proc.mysql2ssim.Kill
 void                 mysql2ssim_Kill(command::mysql2ssim_proc& parent);
 // Wait for subprocess to return
+// func:command.mysql2ssim_proc.mysql2ssim.Wait
 void                 mysql2ssim_Wait(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.mysql2ssim_proc.mysql2ssim.Exec
 int                  mysql2ssim_Exec(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.mysql2ssim_proc.mysql2ssim.ExecX
 void                 mysql2ssim_ExecX(command::mysql2ssim_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:mysql2ssim.Argv
+// func:command.mysql2ssim_proc.mysql2ssim.Execv
 int                  mysql2ssim_Execv(command::mysql2ssim_proc& parent) __attribute__((nothrow));
+// func:command.mysql2ssim_proc.mysql2ssim.ToCmdline
 algo::tempstr        mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.mysql2ssim_proc..Init
 void                 mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
+// func:command.mysql2ssim_proc..Uninit
 void                 mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) __attribute__((nothrow));
+
+// --- command.ob
+struct ob { // command.ob
+    ob();
+};
+
+// func:command.ob..ReadFieldMaybe
+bool                 ob_ReadFieldMaybe(command::ob& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::ob from attributes of ascii tuple TUPLE
+// func:command.ob..ReadTupleMaybe
+bool                 ob_ReadTupleMaybe(command::ob &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// print command-line args of command::ob to string  -- cprint:command.ob.Argv
+// func:command.ob..PrintArgv
+void                 ob_PrintArgv(command::ob& row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.ob..ToCmdline
+tempstr              ob_ToCmdline(command::ob& row) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.ob..NArgs
+i32                  ob_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.orgfile
 // access: command.orgfile_proc.orgfile (Exec)
@@ -3603,28 +4502,36 @@ private:
 };
 
 // Print back to string
+// func:command.orgfile.dedup.Print
 void                 dedup_Print(command::orgfile& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.orgfile.dedup.ReadStrptrMaybe
 bool                 dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 orgfile_ReadFieldMaybe(command::orgfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.orgfile..ReadFieldMaybe
+bool                 orgfile_ReadFieldMaybe(command::orgfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::orgfile from attributes of ascii tuple TUPLE
+// func:command.orgfile..ReadTupleMaybe
 bool                 orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.orgfile..Init
 void                 orgfile_Init(command::orgfile& parent);
 // print command-line args of command::orgfile to string  -- cprint:command.orgfile.Argv
-void                 orgfile_PrintArgv(command::orgfile & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.orgfile..PrintArgv
+void                 orgfile_PrintArgv(command::orgfile& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              orgfile_ToCmdline(command::orgfile & row) __attribute__((nothrow));
+// func:command.orgfile..ToCmdline
+tempstr              orgfile_ToCmdline(command::orgfile& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.orgfile..NArgs
 i32                  orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.orgfile_proc
-struct orgfile_proc { // command.orgfile_proc: Subprocess: organize and deduplicate files by timestamp and by contents
+struct orgfile_proc { // command.orgfile_proc: Subprocess: Organize and deduplicate files by timestamp and by contents
     algo::cstring      path;      //   "bin/orgfile"  path for executable
     command::orgfile   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -3644,26 +4551,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.orgfile_proc.orgfile.Start
 int                  orgfile_Start(command::orgfile_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.orgfile_proc.orgfile.StartRead
 algo::Fildes         orgfile_StartRead(command::orgfile_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.orgfile_proc.orgfile.Kill
 void                 orgfile_Kill(command::orgfile_proc& parent);
 // Wait for subprocess to return
+// func:command.orgfile_proc.orgfile.Wait
 void                 orgfile_Wait(command::orgfile_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.orgfile_proc.orgfile.Exec
 int                  orgfile_Exec(command::orgfile_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.orgfile_proc.orgfile.ExecX
 void                 orgfile_ExecX(command::orgfile_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:orgfile.Argv
+// func:command.orgfile_proc.orgfile.Execv
 int                  orgfile_Execv(command::orgfile_proc& parent) __attribute__((nothrow));
+// func:command.orgfile_proc.orgfile.ToCmdline
 algo::tempstr        orgfile_ToCmdline(command::orgfile_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.orgfile_proc..Init
 void                 orgfile_proc_Init(command::orgfile_proc& parent);
+// func:command.orgfile_proc..Uninit
 void                 orgfile_proc_Uninit(command::orgfile_proc& parent) __attribute__((nothrow));
 
 // --- command.samp_regx
@@ -3679,43 +4596,57 @@ struct samp_regx { // command.samp_regx
 };
 
 // Get value of field as enum type
+// func:command.samp_regx.style.GetEnum
 command_samp_regx_style_Enum style_GetEnum(const command::samp_regx& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:command.samp_regx.style.SetEnum
 void                 style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:command.samp_regx.style.ToCstr
 const char*          style_ToCstr(const command::samp_regx& parent) __attribute__((nothrow));
 // Convert style to a string. First, attempt conversion to a known string.
 // If no string matches, print style as a numeric value.
+// func:command.samp_regx.style.Print
 void                 style_Print(const command::samp_regx& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:command.samp_regx.style.SetStrptrMaybe
 bool                 style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:command.samp_regx.style.SetStrptr
 void                 style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.samp_regx.style.ReadStrptrMaybe
 bool                 style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) __attribute__((nothrow));
 
-bool                 samp_regx_ReadFieldMaybe(command::samp_regx &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.samp_regx..ReadFieldMaybe
+bool                 samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::samp_regx from attributes of ascii tuple TUPLE
+// func:command.samp_regx..ReadTupleMaybe
 bool                 samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.samp_regx..Init
 void                 samp_regx_Init(command::samp_regx& parent);
 // print command-line args of command::samp_regx to string  -- cprint:command.samp_regx.Argv
-void                 samp_regx_PrintArgv(command::samp_regx & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.samp_regx..PrintArgv
+void                 samp_regx_PrintArgv(command::samp_regx& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              samp_regx_ToCmdline(command::samp_regx & row) __attribute__((nothrow));
+// func:command.samp_regx..ToCmdline
+tempstr              samp_regx_ToCmdline(command::samp_regx& row) __attribute__((nothrow));
+// func:command.samp_regx..GetAnon
 algo::strptr         samp_regx_GetAnon(command::samp_regx &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.samp_regx..NArgs
 i32                  samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.samp_regx_proc
-struct samp_regx_proc { // command.samp_regx_proc: Subprocess: 
+struct samp_regx_proc { // command.samp_regx_proc: Subprocess: Test tool for regular expressions
     algo::cstring        path;      //   "bin/samp_regx"  path for executable
     command::samp_regx   cmd;       // command line for child process
     algo::cstring        fstdin;    // redirect for stdin
@@ -3734,26 +4665,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.samp_regx_proc.samp_regx.Start
 int                  samp_regx_Start(command::samp_regx_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.samp_regx_proc.samp_regx.StartRead
 algo::Fildes         samp_regx_StartRead(command::samp_regx_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.samp_regx_proc.samp_regx.Kill
 void                 samp_regx_Kill(command::samp_regx_proc& parent);
 // Wait for subprocess to return
+// func:command.samp_regx_proc.samp_regx.Wait
 void                 samp_regx_Wait(command::samp_regx_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.samp_regx_proc.samp_regx.Exec
 int                  samp_regx_Exec(command::samp_regx_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.samp_regx_proc.samp_regx.ExecX
 void                 samp_regx_ExecX(command::samp_regx_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:samp_regx.Argv
+// func:command.samp_regx_proc.samp_regx.Execv
 int                  samp_regx_Execv(command::samp_regx_proc& parent) __attribute__((nothrow));
+// func:command.samp_regx_proc.samp_regx.ToCmdline
 algo::tempstr        samp_regx_ToCmdline(command::samp_regx_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.samp_regx_proc..Init
 void                 samp_regx_proc_Init(command::samp_regx_proc& parent);
+// func:command.samp_regx_proc..Uninit
 void                 samp_regx_proc_Uninit(command::samp_regx_proc& parent) __attribute__((nothrow));
 
 // --- command.sandbox
@@ -3765,6 +4706,7 @@ struct sandbox { // command.sandbox
     bool             list;          //   false  List existing sandboxes
     bool             reset;         //   false  Reset sandbox to match current directory
     bool             clean;         //   false  Remove sandbox contents to save space
+    bool             shell;         //   false  Open interactive shell inside sandbox
     bool             del;           //   false  Permanently delete sandbox
     bool             gc;            //   false  Run git gc in target dir
     algo::cstring*   cmd_elems;     // pointer to elements
@@ -3774,6 +4716,8 @@ struct sandbox { // command.sandbox
     algo::cstring*   files_elems;   // pointer to elements
     u32              files_n;       // number of elements in array
     u32              files_max;     // max. capacity of array before realloc
+    algo::cstring    refs;          //   "HEAD"  Refs to fetch into sandbox
+    bool             q;             //   false  Quiet mode
     sandbox();
     ~sandbox();
 private:
@@ -3786,124 +4730,182 @@ private:
 };
 
 // Print back to string
+// func:command.sandbox.name.Print
 void                 name_Print(command::sandbox& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.sandbox.name.ReadStrptrMaybe
 bool                 name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.sandbox.cmd.Alloc
 algo::cstring&       cmd_Alloc(command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.sandbox.cmd.AllocAt
 algo::cstring&       cmd_AllocAt(command::sandbox& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.sandbox.cmd.AllocN
 algo::aryptr<algo::cstring> cmd_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.sandbox.cmd.EmptyQ
 bool                 cmd_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.sandbox.cmd.Find
 algo::cstring*       cmd_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.sandbox.cmd.Getary
 algo::aryptr<algo::cstring> cmd_Getary(command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.sandbox.cmd.Last
 algo::cstring*       cmd_Last(command::sandbox& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.sandbox.cmd.Max
 i32                  cmd_Max(command::sandbox& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.sandbox.cmd.N
 i32                  cmd_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.sandbox.cmd.Remove
 void                 cmd_Remove(command::sandbox& parent, u32 i) __attribute__((nothrow));
+// func:command.sandbox.cmd.RemoveAll
 void                 cmd_RemoveAll(command::sandbox& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.sandbox.cmd.RemoveLast
 void                 cmd_RemoveLast(command::sandbox& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.sandbox.cmd.Reserve
 void                 cmd_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.sandbox.cmd.AbsReserve
 void                 cmd_AbsReserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.sandbox.cmd.Setary
 void                 cmd_Setary(command::sandbox& parent, command::sandbox &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.sandbox.cmd.qFind
 algo::cstring&       cmd_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.sandbox.cmd.qLast
 algo::cstring&       cmd_qLast(command::sandbox& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.sandbox.cmd.rowid_Get
 u64                  cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.sandbox.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.sandbox.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.sandbox.files.Alloc
 algo::cstring&       files_Alloc(command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.sandbox.files.AllocAt
 algo::cstring&       files_AllocAt(command::sandbox& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.sandbox.files.AllocN
 algo::aryptr<algo::cstring> files_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.sandbox.files.EmptyQ
 bool                 files_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.sandbox.files.Find
 algo::cstring*       files_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.sandbox.files.Getary
 algo::aryptr<algo::cstring> files_Getary(command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.sandbox.files.Last
 algo::cstring*       files_Last(command::sandbox& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.sandbox.files.Max
 i32                  files_Max(command::sandbox& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.sandbox.files.N
 i32                  files_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.sandbox.files.Remove
 void                 files_Remove(command::sandbox& parent, u32 i) __attribute__((nothrow));
+// func:command.sandbox.files.RemoveAll
 void                 files_RemoveAll(command::sandbox& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.sandbox.files.RemoveLast
 void                 files_RemoveLast(command::sandbox& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.sandbox.files.Reserve
 void                 files_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.sandbox.files.AbsReserve
 void                 files_AbsReserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.sandbox.files.Setary
 void                 files_Setary(command::sandbox& parent, command::sandbox &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.sandbox.files.qFind
 algo::cstring&       files_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.sandbox.files.qLast
 algo::cstring&       files_qLast(command::sandbox& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.sandbox.files.rowid_Get
 u64                  files_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.sandbox.files.AllocNVal
 algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.sandbox.files.ReadStrptrMaybe
 bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.sandbox.cmd_curs.Next
 void                 sandbox_cmd_curs_Next(sandbox_cmd_curs &curs);
+// func:command.sandbox.cmd_curs.Reset
 void                 sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent);
 // cursor points to valid item
+// func:command.sandbox.cmd_curs.ValidQ
 bool                 sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs);
 // item access
+// func:command.sandbox.cmd_curs.Access
 algo::cstring&       sandbox_cmd_curs_Access(sandbox_cmd_curs &curs);
 // proceed to next item
+// func:command.sandbox.files_curs.Next
 void                 sandbox_files_curs_Next(sandbox_files_curs &curs);
+// func:command.sandbox.files_curs.Reset
 void                 sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent);
 // cursor points to valid item
+// func:command.sandbox.files_curs.ValidQ
 bool                 sandbox_files_curs_ValidQ(sandbox_files_curs &curs);
 // item access
+// func:command.sandbox.files_curs.Access
 algo::cstring&       sandbox_files_curs_Access(sandbox_files_curs &curs);
-bool                 sandbox_ReadFieldMaybe(command::sandbox &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.sandbox..ReadFieldMaybe
+bool                 sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::sandbox from attributes of ascii tuple TUPLE
+// func:command.sandbox..ReadTupleMaybe
 bool                 sandbox_ReadTupleMaybe(command::sandbox &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.sandbox..Init
 void                 sandbox_Init(command::sandbox& parent);
+// func:command.sandbox..Uninit
 void                 sandbox_Uninit(command::sandbox& parent) __attribute__((nothrow));
 // print command-line args of command::sandbox to string  -- cprint:command.sandbox.Argv
-void                 sandbox_PrintArgv(command::sandbox & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.sandbox..PrintArgv
+void                 sandbox_PrintArgv(command::sandbox& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              sandbox_ToCmdline(command::sandbox & row) __attribute__((nothrow));
+// func:command.sandbox..ToCmdline
+tempstr              sandbox_ToCmdline(command::sandbox& row) __attribute__((nothrow));
+// func:command.sandbox..GetAnon
 algo::strptr         sandbox_GetAnon(command::sandbox &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.sandbox..NArgs
 i32                  sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.sandbox_proc
@@ -3927,26 +4929,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.sandbox_proc.sandbox.Start
 int                  sandbox_Start(command::sandbox_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.sandbox_proc.sandbox.StartRead
 algo::Fildes         sandbox_StartRead(command::sandbox_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.sandbox_proc.sandbox.Kill
 void                 sandbox_Kill(command::sandbox_proc& parent);
 // Wait for subprocess to return
+// func:command.sandbox_proc.sandbox.Wait
 void                 sandbox_Wait(command::sandbox_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.sandbox_proc.sandbox.Exec
 int                  sandbox_Exec(command::sandbox_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.sandbox_proc.sandbox.ExecX
 void                 sandbox_ExecX(command::sandbox_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:sandbox.Argv
+// func:command.sandbox_proc.sandbox.Execv
 int                  sandbox_Execv(command::sandbox_proc& parent) __attribute__((nothrow));
+// func:command.sandbox_proc.sandbox.ToCmdline
 algo::tempstr        sandbox_ToCmdline(command::sandbox_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.sandbox_proc..Init
 void                 sandbox_proc_Init(command::sandbox_proc& parent);
+// func:command.sandbox_proc..Uninit
 void                 sandbox_proc_Uninit(command::sandbox_proc& parent) __attribute__((nothrow));
 
 // --- command.src_func
@@ -3984,55 +4996,74 @@ private:
 };
 
 // Print back to string
+// func:command.src_func.target.Print
 void                 target_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.target.ReadStrptrMaybe
 bool                 target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.name.Print
 void                 name_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.name.ReadStrptrMaybe
 bool                 name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.body.Print
 void                 body_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.body.ReadStrptrMaybe
 bool                 body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.targsrc.Print
 void                 targsrc_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.targsrc.ReadStrptrMaybe
 bool                 targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.func.Print
 void                 func_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.func.ReadStrptrMaybe
 bool                 func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.comment.Print
 void                 comment_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_func.comment.ReadStrptrMaybe
 bool                 comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 src_func_ReadFieldMaybe(command::src_func &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.src_func..ReadFieldMaybe
+bool                 src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::src_func from attributes of ascii tuple TUPLE
+// func:command.src_func..ReadTupleMaybe
 bool                 src_func_ReadTupleMaybe(command::src_func &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.src_func..Init
 void                 src_func_Init(command::src_func& parent);
 // print command-line args of command::src_func to string  -- cprint:command.src_func.Argv
-void                 src_func_PrintArgv(command::src_func & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.src_func..PrintArgv
+void                 src_func_PrintArgv(command::src_func& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              src_func_ToCmdline(command::src_func & row) __attribute__((nothrow));
+// func:command.src_func..ToCmdline
+tempstr              src_func_ToCmdline(command::src_func& row) __attribute__((nothrow));
+// func:command.src_func..GetAnon
 algo::strptr         src_func_GetAnon(command::src_func &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.src_func..NArgs
 i32                  src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.src_func_proc
@@ -4056,26 +5087,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.src_func_proc.src_func.Start
 int                  src_func_Start(command::src_func_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.src_func_proc.src_func.StartRead
 algo::Fildes         src_func_StartRead(command::src_func_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.src_func_proc.src_func.Kill
 void                 src_func_Kill(command::src_func_proc& parent);
 // Wait for subprocess to return
+// func:command.src_func_proc.src_func.Wait
 void                 src_func_Wait(command::src_func_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.src_func_proc.src_func.Exec
 int                  src_func_Exec(command::src_func_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.src_func_proc.src_func.ExecX
 void                 src_func_ExecX(command::src_func_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:src_func.Argv
+// func:command.src_func_proc.src_func.Execv
 int                  src_func_Execv(command::src_func_proc& parent) __attribute__((nothrow));
+// func:command.src_func_proc.src_func.ToCmdline
 algo::tempstr        src_func_ToCmdline(command::src_func_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.src_func_proc..Init
 void                 src_func_proc_Init(command::src_func_proc& parent);
+// func:command.src_func_proc..Uninit
 void                 src_func_proc_Uninit(command::src_func_proc& parent) __attribute__((nothrow));
 
 // --- command.src_hdr
@@ -4096,34 +5137,44 @@ private:
 };
 
 // Print back to string
+// func:command.src_hdr.targsrc.Print
 void                 targsrc_Print(command::src_hdr& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_hdr.targsrc.ReadStrptrMaybe
 bool                 targsrc_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_hdr.scriptfile.Print
 void                 scriptfile_Print(command::src_hdr& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_hdr.scriptfile.ReadStrptrMaybe
 bool                 scriptfile_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 src_hdr_ReadFieldMaybe(command::src_hdr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.src_hdr..ReadFieldMaybe
+bool                 src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::src_hdr from attributes of ascii tuple TUPLE
+// func:command.src_hdr..ReadTupleMaybe
 bool                 src_hdr_ReadTupleMaybe(command::src_hdr &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.src_hdr..Init
 void                 src_hdr_Init(command::src_hdr& parent);
 // print command-line args of command::src_hdr to string  -- cprint:command.src_hdr.Argv
-void                 src_hdr_PrintArgv(command::src_hdr & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.src_hdr..PrintArgv
+void                 src_hdr_PrintArgv(command::src_hdr& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              src_hdr_ToCmdline(command::src_hdr & row) __attribute__((nothrow));
+// func:command.src_hdr..ToCmdline
+tempstr              src_hdr_ToCmdline(command::src_hdr& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.src_hdr..NArgs
 i32                  src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.src_hdr_proc
-struct src_hdr_proc { // command.src_hdr_proc: Subprocess: Update source file / copyright header
+struct src_hdr_proc { // command.src_hdr_proc: Subprocess: Manage source copyright+license header in source files and scripts
     algo::cstring      path;      //   "bin/src_hdr"  path for executable
     command::src_hdr   cmd;       // command line for child process
     algo::cstring      fstdin;    // redirect for stdin
@@ -4143,26 +5194,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.src_hdr_proc.src_hdr.Start
 int                  src_hdr_Start(command::src_hdr_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.src_hdr_proc.src_hdr.StartRead
 algo::Fildes         src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.src_hdr_proc.src_hdr.Kill
 void                 src_hdr_Kill(command::src_hdr_proc& parent);
 // Wait for subprocess to return
+// func:command.src_hdr_proc.src_hdr.Wait
 void                 src_hdr_Wait(command::src_hdr_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.src_hdr_proc.src_hdr.Exec
 int                  src_hdr_Exec(command::src_hdr_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.src_hdr_proc.src_hdr.ExecX
 void                 src_hdr_ExecX(command::src_hdr_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:src_hdr.Argv
+// func:command.src_hdr_proc.src_hdr.Execv
 int                  src_hdr_Execv(command::src_hdr_proc& parent) __attribute__((nothrow));
+// func:command.src_hdr_proc.src_hdr.ToCmdline
 algo::tempstr        src_hdr_ToCmdline(command::src_hdr_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.src_hdr_proc..Init
 void                 src_hdr_proc_Init(command::src_hdr_proc& parent);
+// func:command.src_hdr_proc..Uninit
 void                 src_hdr_proc_Uninit(command::src_hdr_proc& parent) __attribute__((nothrow));
 
 // --- command.src_lim
@@ -4185,30 +5246,40 @@ private:
 };
 
 // Print back to string
+// func:command.src_lim.srcfile.Print
 void                 srcfile_Print(command::src_lim& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_lim.srcfile.ReadStrptrMaybe
 bool                 srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_lim.badline.Print
 void                 badline_Print(command::src_lim& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.src_lim.badline.ReadStrptrMaybe
 bool                 badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 src_lim_ReadFieldMaybe(command::src_lim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.src_lim..ReadFieldMaybe
+bool                 src_lim_ReadFieldMaybe(command::src_lim& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::src_lim from attributes of ascii tuple TUPLE
+// func:command.src_lim..ReadTupleMaybe
 bool                 src_lim_ReadTupleMaybe(command::src_lim &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.src_lim..Init
 void                 src_lim_Init(command::src_lim& parent);
 // print command-line args of command::src_lim to string  -- cprint:command.src_lim.Argv
-void                 src_lim_PrintArgv(command::src_lim & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.src_lim..PrintArgv
+void                 src_lim_PrintArgv(command::src_lim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              src_lim_ToCmdline(command::src_lim & row) __attribute__((nothrow));
+// func:command.src_lim..ToCmdline
+tempstr              src_lim_ToCmdline(command::src_lim& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.src_lim..NArgs
 i32                  src_lim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.src_lim_proc
@@ -4232,26 +5303,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.src_lim_proc.src_lim.Start
 int                  src_lim_Start(command::src_lim_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.src_lim_proc.src_lim.StartRead
 algo::Fildes         src_lim_StartRead(command::src_lim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.src_lim_proc.src_lim.Kill
 void                 src_lim_Kill(command::src_lim_proc& parent);
 // Wait for subprocess to return
+// func:command.src_lim_proc.src_lim.Wait
 void                 src_lim_Wait(command::src_lim_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.src_lim_proc.src_lim.Exec
 int                  src_lim_Exec(command::src_lim_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.src_lim_proc.src_lim.ExecX
 void                 src_lim_ExecX(command::src_lim_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:src_lim.Argv
+// func:command.src_lim_proc.src_lim.Execv
 int                  src_lim_Execv(command::src_lim_proc& parent) __attribute__((nothrow));
+// func:command.src_lim_proc.src_lim.ToCmdline
 algo::tempstr        src_lim_ToCmdline(command::src_lim_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.src_lim_proc..Init
 void                 src_lim_proc_Init(command::src_lim_proc& parent);
+// func:command.src_lim_proc..Uninit
 void                 src_lim_proc_Uninit(command::src_lim_proc& parent) __attribute__((nothrow));
 
 // --- command.ssim2csv
@@ -4262,19 +5343,25 @@ struct ssim2csv { // command.ssim2csv
     ssim2csv();
 };
 
-bool                 ssim2csv_ReadFieldMaybe(command::ssim2csv &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.ssim2csv..ReadFieldMaybe
+bool                 ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ssim2csv from attributes of ascii tuple TUPLE
+// func:command.ssim2csv..ReadTupleMaybe
 bool                 ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.ssim2csv..Init
 void                 ssim2csv_Init(command::ssim2csv& parent);
 // print command-line args of command::ssim2csv to string  -- cprint:command.ssim2csv.Argv
-void                 ssim2csv_PrintArgv(command::ssim2csv & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.ssim2csv..PrintArgv
+void                 ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              ssim2csv_ToCmdline(command::ssim2csv & row) __attribute__((nothrow));
+// func:command.ssim2csv..ToCmdline
+tempstr              ssim2csv_ToCmdline(command::ssim2csv& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.ssim2csv..NArgs
 i32                  ssim2csv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ssim2csv_proc
@@ -4297,26 +5384,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.ssim2csv_proc.ssim2csv.Start
 int                  ssim2csv_Start(command::ssim2csv_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.ssim2csv_proc.ssim2csv.StartRead
 algo::Fildes         ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.ssim2csv_proc.ssim2csv.Kill
 void                 ssim2csv_Kill(command::ssim2csv_proc& parent);
 // Wait for subprocess to return
+// func:command.ssim2csv_proc.ssim2csv.Wait
 void                 ssim2csv_Wait(command::ssim2csv_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.ssim2csv_proc.ssim2csv.Exec
 int                  ssim2csv_Exec(command::ssim2csv_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.ssim2csv_proc.ssim2csv.ExecX
 void                 ssim2csv_ExecX(command::ssim2csv_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2csv.Argv
+// func:command.ssim2csv_proc.ssim2csv.Execv
 int                  ssim2csv_Execv(command::ssim2csv_proc& parent) __attribute__((nothrow));
+// func:command.ssim2csv_proc.ssim2csv.ToCmdline
 algo::tempstr        ssim2csv_ToCmdline(command::ssim2csv_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.ssim2csv_proc..Init
 void                 ssim2csv_proc_Init(command::ssim2csv_proc& parent);
+// func:command.ssim2csv_proc..Uninit
 void                 ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) __attribute__((nothrow));
 
 // --- command.ssim2mysql
@@ -4336,19 +5433,25 @@ struct ssim2mysql { // command.ssim2mysql
     ssim2mysql();
 };
 
-bool                 ssim2mysql_ReadFieldMaybe(command::ssim2mysql &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.ssim2mysql..ReadFieldMaybe
+bool                 ssim2mysql_ReadFieldMaybe(command::ssim2mysql& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ssim2mysql from attributes of ascii tuple TUPLE
+// func:command.ssim2mysql..ReadTupleMaybe
 bool                 ssim2mysql_ReadTupleMaybe(command::ssim2mysql &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.ssim2mysql..Init
 void                 ssim2mysql_Init(command::ssim2mysql& parent);
 // print command-line args of command::ssim2mysql to string  -- cprint:command.ssim2mysql.Argv
-void                 ssim2mysql_PrintArgv(command::ssim2mysql & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.ssim2mysql..PrintArgv
+void                 ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              ssim2mysql_ToCmdline(command::ssim2mysql & row) __attribute__((nothrow));
+// func:command.ssim2mysql..ToCmdline
+tempstr              ssim2mysql_ToCmdline(command::ssim2mysql& row) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.ssim2mysql..NArgs
 i32                  ssim2mysql_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ssim2mysql_proc
@@ -4371,26 +5474,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.ssim2mysql_proc.ssim2mysql.Start
 int                  ssim2mysql_Start(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.ssim2mysql_proc.ssim2mysql.StartRead
 algo::Fildes         ssim2mysql_StartRead(command::ssim2mysql_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.ssim2mysql_proc.ssim2mysql.Kill
 void                 ssim2mysql_Kill(command::ssim2mysql_proc& parent);
 // Wait for subprocess to return
+// func:command.ssim2mysql_proc.ssim2mysql.Wait
 void                 ssim2mysql_Wait(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.ssim2mysql_proc.ssim2mysql.Exec
 int                  ssim2mysql_Exec(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.ssim2mysql_proc.ssim2mysql.ExecX
 void                 ssim2mysql_ExecX(command::ssim2mysql_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:ssim2mysql.Argv
+// func:command.ssim2mysql_proc.ssim2mysql.Execv
 int                  ssim2mysql_Execv(command::ssim2mysql_proc& parent) __attribute__((nothrow));
+// func:command.ssim2mysql_proc.ssim2mysql.ToCmdline
 algo::tempstr        ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.ssim2mysql_proc..Init
 void                 ssim2mysql_proc_Init(command::ssim2mysql_proc& parent);
+// func:command.ssim2mysql_proc..Uninit
 void                 ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 
 // --- command.ssimfilt
@@ -4419,144 +5532,209 @@ private:
 };
 
 // Print back to string
+// func:command.ssimfilt.typetag.Print
 void                 typetag_Print(command::ssimfilt& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.ssimfilt.typetag.ReadStrptrMaybe
 bool                 typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.ssimfilt.match.Alloc
 algo::cstring&       match_Alloc(command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.ssimfilt.match.AllocAt
 algo::cstring&       match_AllocAt(command::ssimfilt& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.ssimfilt.match.AllocN
 algo::aryptr<algo::cstring> match_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.ssimfilt.match.EmptyQ
 bool                 match_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.ssimfilt.match.Find
 algo::cstring*       match_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.ssimfilt.match.Getary
 algo::aryptr<algo::cstring> match_Getary(command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.ssimfilt.match.Last
 algo::cstring*       match_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.ssimfilt.match.Max
 i32                  match_Max(command::ssimfilt& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.ssimfilt.match.N
 i32                  match_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.ssimfilt.match.Remove
 void                 match_Remove(command::ssimfilt& parent, u32 i) __attribute__((nothrow));
+// func:command.ssimfilt.match.RemoveAll
 void                 match_RemoveAll(command::ssimfilt& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.ssimfilt.match.RemoveLast
 void                 match_RemoveLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.ssimfilt.match.Reserve
 void                 match_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.ssimfilt.match.AbsReserve
 void                 match_AbsReserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.ssimfilt.match.Setary
 void                 match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.ssimfilt.match.qFind
 algo::cstring&       match_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.ssimfilt.match.qLast
 algo::cstring&       match_qLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.ssimfilt.match.rowid_Get
 u64                  match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.ssimfilt.match.AllocNVal
 algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.ssimfilt.match.ReadStrptrMaybe
 bool                 match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:command.ssimfilt.field.Alloc
 algo::cstring&       field_Alloc(command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.ssimfilt.field.AllocAt
 algo::cstring&       field_AllocAt(command::ssimfilt& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.ssimfilt.field.AllocN
 algo::aryptr<algo::cstring> field_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:command.ssimfilt.field.EmptyQ
 bool                 field_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:command.ssimfilt.field.Find
 algo::cstring*       field_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:command.ssimfilt.field.Getary
 algo::aryptr<algo::cstring> field_Getary(command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:command.ssimfilt.field.Last
 algo::cstring*       field_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:command.ssimfilt.field.Max
 i32                  field_Max(command::ssimfilt& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:command.ssimfilt.field.N
 i32                  field_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:command.ssimfilt.field.Remove
 void                 field_Remove(command::ssimfilt& parent, u32 i) __attribute__((nothrow));
+// func:command.ssimfilt.field.RemoveAll
 void                 field_RemoveAll(command::ssimfilt& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:command.ssimfilt.field.RemoveLast
 void                 field_RemoveLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.ssimfilt.field.Reserve
 void                 field_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:command.ssimfilt.field.AbsReserve
 void                 field_AbsReserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:command.ssimfilt.field.Setary
 void                 field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:command.ssimfilt.field.qFind
 algo::cstring&       field_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:command.ssimfilt.field.qLast
 algo::cstring&       field_qLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:command.ssimfilt.field.rowid_Get
 u64                  field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.ssimfilt.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.ssimfilt.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Get value of field as enum type
+// func:command.ssimfilt.format.GetEnum
 command_ssimfilt_format_Enum format_GetEnum(const command::ssimfilt& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:command.ssimfilt.format.SetEnum
 void                 format_SetEnum(command::ssimfilt& parent, command_ssimfilt_format_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:command.ssimfilt.format.ToCstr
 const char*          format_ToCstr(const command::ssimfilt& parent) __attribute__((nothrow));
 // Convert format to a string. First, attempt conversion to a known string.
 // If no string matches, print format as a numeric value.
+// func:command.ssimfilt.format.Print
 void                 format_Print(const command::ssimfilt& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:command.ssimfilt.format.SetStrptrMaybe
 bool                 format_SetStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:command.ssimfilt.format.SetStrptr
 void                 format_SetStrptr(command::ssimfilt& parent, algo::strptr rhs, command_ssimfilt_format_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:command.ssimfilt.format.ReadStrptrMaybe
 bool                 format_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // proceed to next item
+// func:command.ssimfilt.match_curs.Next
 void                 ssimfilt_match_curs_Next(ssimfilt_match_curs &curs);
+// func:command.ssimfilt.match_curs.Reset
 void                 ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent);
 // cursor points to valid item
+// func:command.ssimfilt.match_curs.ValidQ
 bool                 ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs);
 // item access
+// func:command.ssimfilt.match_curs.Access
 algo::cstring&       ssimfilt_match_curs_Access(ssimfilt_match_curs &curs);
 // proceed to next item
+// func:command.ssimfilt.field_curs.Next
 void                 ssimfilt_field_curs_Next(ssimfilt_field_curs &curs);
+// func:command.ssimfilt.field_curs.Reset
 void                 ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent);
 // cursor points to valid item
+// func:command.ssimfilt.field_curs.ValidQ
 bool                 ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs);
 // item access
+// func:command.ssimfilt.field_curs.Access
 algo::cstring&       ssimfilt_field_curs_Access(ssimfilt_field_curs &curs);
-bool                 ssimfilt_ReadFieldMaybe(command::ssimfilt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.ssimfilt..ReadFieldMaybe
+bool                 ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ssimfilt from attributes of ascii tuple TUPLE
+// func:command.ssimfilt..ReadTupleMaybe
 bool                 ssimfilt_ReadTupleMaybe(command::ssimfilt &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.ssimfilt..Init
 void                 ssimfilt_Init(command::ssimfilt& parent);
+// func:command.ssimfilt..Uninit
 void                 ssimfilt_Uninit(command::ssimfilt& parent) __attribute__((nothrow));
 // print command-line args of command::ssimfilt to string  -- cprint:command.ssimfilt.Argv
-void                 ssimfilt_PrintArgv(command::ssimfilt & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.ssimfilt..PrintArgv
+void                 ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              ssimfilt_ToCmdline(command::ssimfilt & row) __attribute__((nothrow));
+// func:command.ssimfilt..ToCmdline
+tempstr              ssimfilt_ToCmdline(command::ssimfilt& row) __attribute__((nothrow));
+// func:command.ssimfilt..GetAnon
 algo::strptr         ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.ssimfilt..NArgs
 i32                  ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.ssimfilt_proc
@@ -4580,26 +5758,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.ssimfilt_proc.ssimfilt.Start
 int                  ssimfilt_Start(command::ssimfilt_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.ssimfilt_proc.ssimfilt.StartRead
 algo::Fildes         ssimfilt_StartRead(command::ssimfilt_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.ssimfilt_proc.ssimfilt.Kill
 void                 ssimfilt_Kill(command::ssimfilt_proc& parent);
 // Wait for subprocess to return
+// func:command.ssimfilt_proc.ssimfilt.Wait
 void                 ssimfilt_Wait(command::ssimfilt_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.ssimfilt_proc.ssimfilt.Exec
 int                  ssimfilt_Exec(command::ssimfilt_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.ssimfilt_proc.ssimfilt.ExecX
 void                 ssimfilt_ExecX(command::ssimfilt_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:ssimfilt.Argv
+// func:command.ssimfilt_proc.ssimfilt.Execv
 int                  ssimfilt_Execv(command::ssimfilt_proc& parent) __attribute__((nothrow));
+// func:command.ssimfilt_proc.ssimfilt.ToCmdline
 algo::tempstr        ssimfilt_ToCmdline(command::ssimfilt_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.ssimfilt_proc..Init
 void                 ssimfilt_proc_Init(command::ssimfilt_proc& parent);
+// func:command.ssimfilt_proc..Uninit
 void                 ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) __attribute__((nothrow));
 
 // --- command.strconv
@@ -4613,20 +5801,27 @@ struct strconv { // command.strconv
     strconv();
 };
 
-bool                 strconv_ReadFieldMaybe(command::strconv &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.strconv..ReadFieldMaybe
+bool                 strconv_ReadFieldMaybe(command::strconv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::strconv from attributes of ascii tuple TUPLE
+// func:command.strconv..ReadTupleMaybe
 bool                 strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.strconv..Init
 void                 strconv_Init(command::strconv& parent);
 // print command-line args of command::strconv to string  -- cprint:command.strconv.Argv
-void                 strconv_PrintArgv(command::strconv & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.strconv..PrintArgv
+void                 strconv_PrintArgv(command::strconv& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              strconv_ToCmdline(command::strconv & row) __attribute__((nothrow));
+// func:command.strconv..ToCmdline
+tempstr              strconv_ToCmdline(command::strconv& row) __attribute__((nothrow));
+// func:command.strconv..GetAnon
 algo::strptr         strconv_GetAnon(command::strconv &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.strconv..NArgs
 i32                  strconv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.strconv_proc
@@ -4649,26 +5844,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.strconv_proc.strconv.Start
 int                  strconv_Start(command::strconv_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.strconv_proc.strconv.StartRead
 algo::Fildes         strconv_StartRead(command::strconv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.strconv_proc.strconv.Kill
 void                 strconv_Kill(command::strconv_proc& parent);
 // Wait for subprocess to return
+// func:command.strconv_proc.strconv.Wait
 void                 strconv_Wait(command::strconv_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.strconv_proc.strconv.Exec
 int                  strconv_Exec(command::strconv_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.strconv_proc.strconv.ExecX
 void                 strconv_ExecX(command::strconv_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:strconv.Argv
+// func:command.strconv_proc.strconv.Execv
 int                  strconv_Execv(command::strconv_proc& parent) __attribute__((nothrow));
+// func:command.strconv_proc.strconv.ToCmdline
 algo::tempstr        strconv_ToCmdline(command::strconv_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.strconv_proc..Init
 void                 strconv_proc_Init(command::strconv_proc& parent);
+// func:command.strconv_proc..Uninit
 void                 strconv_proc_Uninit(command::strconv_proc& parent) __attribute__((nothrow));
 
 // --- command.sv2ssim
@@ -4694,25 +5899,34 @@ private:
 };
 
 // Print back to string
+// func:command.sv2ssim.field.Print
 void                 field_Print(command::sv2ssim& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:command.sv2ssim.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 sv2ssim_ReadFieldMaybe(command::sv2ssim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:command.sv2ssim..ReadFieldMaybe
+bool                 sv2ssim_ReadFieldMaybe(command::sv2ssim& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::sv2ssim from attributes of ascii tuple TUPLE
+// func:command.sv2ssim..ReadTupleMaybe
 bool                 sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:command.sv2ssim..Init
 void                 sv2ssim_Init(command::sv2ssim& parent);
 // print command-line args of command::sv2ssim to string  -- cprint:command.sv2ssim.Argv
-void                 sv2ssim_PrintArgv(command::sv2ssim & row, algo::cstring &str) __attribute__((nothrow));
+// func:command.sv2ssim..PrintArgv
+void                 sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr              sv2ssim_ToCmdline(command::sv2ssim & row) __attribute__((nothrow));
+// func:command.sv2ssim..ToCmdline
+tempstr              sv2ssim_ToCmdline(command::sv2ssim& row) __attribute__((nothrow));
+// func:command.sv2ssim..GetAnon
 algo::strptr         sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
+// func:command.sv2ssim..NArgs
 i32                  sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.sv2ssim_proc
@@ -4736,26 +5950,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:command.sv2ssim_proc.sv2ssim.Start
 int                  sv2ssim_Start(command::sv2ssim_proc& parent) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:command.sv2ssim_proc.sv2ssim.StartRead
 algo::Fildes         sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:command.sv2ssim_proc.sv2ssim.Kill
 void                 sv2ssim_Kill(command::sv2ssim_proc& parent);
 // Wait for subprocess to return
+// func:command.sv2ssim_proc.sv2ssim.Wait
 void                 sv2ssim_Wait(command::sv2ssim_proc& parent) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:command.sv2ssim_proc.sv2ssim.Exec
 int                  sv2ssim_Exec(command::sv2ssim_proc& parent) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:command.sv2ssim_proc.sv2ssim.ExecX
 void                 sv2ssim_ExecX(command::sv2ssim_proc& parent);
 // Call execv()
 // Call execv with specified parameters -- cprint:sv2ssim.Argv
+// func:command.sv2ssim_proc.sv2ssim.Execv
 int                  sv2ssim_Execv(command::sv2ssim_proc& parent) __attribute__((nothrow));
+// func:command.sv2ssim_proc.sv2ssim.ToCmdline
 algo::tempstr        sv2ssim_ToCmdline(command::sv2ssim_proc& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:command.sv2ssim_proc..Init
 void                 sv2ssim_proc_Init(command::sv2ssim_proc& parent);
+// func:command.sv2ssim_proc..Uninit
 void                 sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace command { // gen:ns_curstext

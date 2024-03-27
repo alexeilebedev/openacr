@@ -67,7 +67,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:lib_sql.FAttr..Init
 void                 FAttr_Init(lib_sql::FAttr& attr);
+// func:lib_sql.FAttr..Uninit
 void                 FAttr_Uninit(lib_sql::FAttr& attr) __attribute__((nothrow));
 
 // --- lib_sql.trace
@@ -77,12 +79,14 @@ struct trace { // lib_sql.trace
 };
 #pragma pack(pop)
 
-// print string representation of lib_sql::trace to string LHS, no header -- cprint:lib_sql.trace.String
-void                 trace_Print(lib_sql::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_sql.trace.String  printfmt:Tuple
+// func:lib_sql.trace..Print
+void                 trace_Print(lib_sql::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_sql.FDb
 // create: lib_sql.FDb._db (Global)
-struct FDb { // lib_sql.FDb
+struct FDb { // lib_sql.FDb: In-memory database for lib_sql
     lib_sql::FAttr*    attr_lary[32];            // level array
     i32                attr_n;                   // number of elements in array
     lib_sql::FAttr**   ind_attr_buckets_elems;   // pointer to bucket array
@@ -91,11 +95,14 @@ struct FDb { // lib_sql.FDb
     lib_sql::trace     trace;                    //
 };
 
+// func:lib_sql.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:lib_sql.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:lib_sql.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -103,69 +110,99 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:lib_sql.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:lib_sql.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:lib_sql.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:lib_sql.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sql.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_sql.FDb.attr.Alloc
 lib_sql::FAttr&      attr_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sql.FDb.attr.AllocMaybe
 lib_sql::FAttr*      attr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_sql.FDb.attr.AllocMem
 void*                attr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_sql.FDb.attr.EmptyQ
 bool                 attr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_sql.FDb.attr.Find
 lib_sql::FAttr*      attr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_sql.FDb.attr.Last
 lib_sql::FAttr*      attr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_sql.FDb.attr.N
 i32                  attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_sql.FDb.attr.RemoveAll
 void                 attr_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_sql.FDb.attr.RemoveLast
 void                 attr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_sql.FDb.attr.qFind
 lib_sql::FAttr&      attr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sql.FDb.attr.XrefMaybe
 bool                 attr_XrefMaybe(lib_sql::FAttr &row);
 
 // Return true if hash is empty
+// func:lib_sql.FDb.ind_attr.EmptyQ
 bool                 ind_attr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_sql.FDb.ind_attr.Find
 lib_sql::FAttr*      ind_attr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:lib_sql.FDb.ind_attr.FindX
 lib_sql::FAttr&      ind_attr_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_sql.FDb.ind_attr.GetOrCreate
 lib_sql::FAttr&      ind_attr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:lib_sql.FDb.ind_attr.N
 i32                  ind_attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sql.FDb.ind_attr.InsertMaybe
 bool                 ind_attr_InsertMaybe(lib_sql::FAttr& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sql.FDb.ind_attr.Remove
 void                 ind_attr_Remove(lib_sql::FAttr& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sql.FDb.ind_attr.Reserve
 void                 ind_attr_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
+// func:lib_sql.FDb.attr_curs.Reset
 void                 _db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent);
 // cursor points to valid item
+// func:lib_sql.FDb.attr_curs.ValidQ
 bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs);
 // proceed to next item
+// func:lib_sql.FDb.attr_curs.Next
 void                 _db_attr_curs_Next(_db_attr_curs &curs);
 // item access
+// func:lib_sql.FDb.attr_curs.Access
 lib_sql::FAttr&      _db_attr_curs_Access(_db_attr_curs &curs);
 // Set all fields to initial values.
+// func:lib_sql.FDb..Init
 void                 FDb_Init();
+// func:lib_sql.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_sql.FieldId
@@ -180,32 +217,43 @@ struct FieldId { // lib_sql.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_sql.FieldId.value.GetEnum
 lib_sql_FieldIdEnum  value_GetEnum(const lib_sql::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_sql.FieldId.value.SetEnum
 void                 value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_sql.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_sql::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_sql.FieldId.value.Print
 void                 value_Print(const lib_sql::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_sql.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_sql.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_sql::FieldId& parent, algo::strptr rhs, lib_sql_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_sql.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_sql::FieldId from an ascii string.
 // The format of the string is the format of the lib_sql::FieldId's only field
+// func:lib_sql.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_sql.FieldId..Init
 void                 FieldId_Init(lib_sql::FieldId& parent);
-// print string representation of lib_sql::FieldId to string LHS, no header -- cprint:lib_sql.FieldId.String
-void                 FieldId_Print(lib_sql::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_sql.FieldId.String  printfmt:Raw
+// func:lib_sql.FieldId..Print
+void                 FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_sql { // gen:ns_curstext
 

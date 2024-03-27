@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
-// Header: include/acr.h
+// Header: include/acr.h -- Header file
 //
 // ACR: Algo Cross-Reference
 // ACR Interface
@@ -37,8 +37,24 @@ namespace acr { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/acr/check.cpp
+    // cpp/acr/check.cpp -- Check constraints & referential integrity
     //
+
+    // Fill replscope R from tuple TUPLE
+    // using schema from record REC.
+    // Return child record pkey from SSIMREQ
+    tempstr GetChildKey(acr::FRec &rec, acr::FSsimreq &ssimreq, algo::Tuple &tuple, algo_lib::Replscope &R);
+
+    // Fill R with wildcards for every variable that might be required by GetChildKey
+    void FillWildcardKey(acr::FSsimreq &ssimreq, algo_lib::Regx &regx_child);
+
+    // Check ssimreq table
+    // e.g.
+    // dmmeta.ssimreq  ssimreq:atfdb.Comptest.comptest:% child:dev.gitfile:test/atf_comp/$comptest    req:Y  bidir:N  comment:""
+    // here,
+    // parent=atfdb.Comptest
+    // child=dev.Gitfile
+    // We scan parent records and then check that child table records are found
     void CheckSsimreq();
     void Main_Check();
 
@@ -50,6 +66,10 @@ namespace acr { // update-hdr
     // Upon first access of ssimfile, load ssimfile from disk.
     // If -trunc option is set, mark all records for deletion
     acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode);
+
+    // Calculate record's SORTKEY which is a combination
+    // of the value of its SSIMSORT attribute and rowid.
+    void UpdateSortkey(acr::FRec &rec, float rowid);
 
     // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type
     // CTYPE (as found via the type tag).
@@ -82,6 +102,11 @@ namespace acr { // update-hdr
     tempstr EvalAttr(Tuple &tuple, acr::FField &field);
 
     // -------------------------------------------------------------------
+    // cpp/acr/git.cpp -- Git triggers
+    //
+    void Main_GitTriggers();
+
+    // -------------------------------------------------------------------
     // cpp/acr/load.cpp -- Load files
     //
 
@@ -101,21 +126,19 @@ namespace acr { // update-hdr
     bool FileInputQ();
 
     // -------------------------------------------------------------------
-    // cpp/acr/main.cpp
+    // cpp/acr/main.cpp -- Main file
     //
     algo::UnTime FdModTime(algo::Fildes fd);
-
-    // Parse query and return object
-    acr::FQuery& ParseQuery(strptr expr);
     strptr Typetag(acr::FCtype &ctype);
 
     // cached lookup
     // ignore:ptr_byref
     void LookupField(acr::FRec &rec, strptr fieldname, acr::FCtype *&prev_ctype, acr::FField *&prev_field);
+    void Main_CmdQuery();
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/acr/print.cpp
+    // cpp/acr/print.cpp -- Code for output
     //
 
     // Print selected records using formatting options
@@ -127,7 +150,7 @@ namespace acr { // update-hdr
     void PrintToFd(acr::FPrint &print, algo::Fildes fd);
 
     // -------------------------------------------------------------------
-    // cpp/acr/run.cpp -- Run query
+    // cpp/acr/query.cpp -- Run query
     //
 
     // Visit all records matching QUERY.
@@ -140,7 +163,7 @@ namespace acr { // update-hdr
     void RunAllQueries();
 
     // -------------------------------------------------------------------
-    // cpp/acr/select.cpp -- Selection
+    // cpp/acr/select.cpp -- Selection of records
     //
 
     // Remove record from the per-ctype selected set
@@ -151,7 +174,7 @@ namespace acr { // update-hdr
 
     // De-select all records
     // - zd_all_selrec list is cleared
-    // - zd_selrec list is cleared for each ctype
+    // - zd_ctype_selrec list is cleared for each ctype
     // - zd_sel_ctype list is cleared
     void Rec_DeselectAll();
 
@@ -163,7 +186,7 @@ namespace acr { // update-hdr
     void SelectModified();
 
     // Conditionally insert record into selection set
-    // - Record is added to zd_selrec list for is ctype
+    // - Record is added to zd_ctype_selrec list for is ctype
     // - Record is added to zd_all_selrec (global list)
     // - Selected ctype is added to zd_sel_ctype list
     bool Rec_Select(acr::FRec& rec);
@@ -185,8 +208,25 @@ namespace acr { // update-hdr
     void ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype);
 
     // Select ctypes of selected records, deselect records themselves
-    void SelectMeta();
+    void Main_SelectMeta();
+    void Main_SelectUp();
+
+    // Check if field FIELD of type CHILD is the pkey of CHILD
+    // or the leftmost prefix of pkey of CHILD
+    bool LeftCheck(acr::FCtype &child, acr::FField &field);
+
+    // extend selected front down
+    // the search starts with all selected records, where we clear the visit flag
+    // we then create a list C_CTYPE_FRONT of all potential ctypes that might reference these selected records,
+    // we then scan records for these ctypes, and add new records to the selected list
+    // The function returns the number of records added.
+    // The function performs one iteration of the downward transitive closure. Looping until
+    // SelectDown returns 0 finds all downward references.
+    int Main_SelectDown(bool unused);
     void Main_AcrEdit();
+
+    // Mark SSIMREQ child records for deletion
+    void DelChildRecords(acr::FRec &rec);
 
     // Start with selected records
     // Find all dependent records and delete them as well

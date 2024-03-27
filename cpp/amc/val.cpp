@@ -87,8 +87,9 @@ void amc::tfunc_Val_Get() {
 void amc::tfunc_Val_Set() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    bool pmaskfld = field.p_ctype->c_pmaskfld && field.p_ctype->c_pmaskfld->p_field != &field;
-    bool need_set = (field.c_fbigend || (pmaskfld && field.arg != "algo_lib.Regx")) && !PadQ(field);
+    bool need_set = (field.c_fbigend /*|| c_pmaskfld_member_N(field)*/) // conflicts with fldfunc
+        && !PadQ(field)
+        && !(field.arg == "algo_lib.Regx");
     if (need_set) {
         amc::FFunc& set = amc::CreateCurFunc();
         Set(R, "$Fldargtype", Argtype(field));
@@ -100,9 +101,13 @@ void amc::tfunc_Val_Set() {
         } else {
             Ins(&R, set.body, "$parname.$name = rhs;");
         }
-        if (pmaskfld) {
+#if 0 // AP I think this needs to be controlled more precisely, currently unneeded
+        ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+            Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
+            Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
             Ins(&R, set.body, "$pmask_qSetBit($pararg, $bit); // mark presence in pmask");
-        }
+        }ind_end;
+#endif
     }
 }
 
@@ -122,7 +127,7 @@ void amc::tfunc_Val_Init() {
             } else if (field.c_fbigend) {
                 Ins(&R, init.body, "$parname.$name_be = htobe$WID($dflt); // write big-endian value to memory");
             } else {
-                Ins(&R, init.body, "$parname.$name = $initcast($dflt);"); // amc_val.cpp:158");
+                Ins(&R, init.body, "$parname.$name = $initcast($dflt);");
             }
         }
     }

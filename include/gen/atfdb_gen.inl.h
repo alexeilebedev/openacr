@@ -31,6 +31,17 @@ inline atfdb::Amctest::Amctest() {
 inline atfdb::Cijob::Cijob() {
 }
 
+inline atfdb::Cipackage::Cipackage() {
+    atfdb::Cipackage_Init(*this);
+}
+
+
+// --- atfdb.Cipackage..Init
+// Set all fields to initial values.
+inline void atfdb::Cipackage_Init(atfdb::Cipackage& parent) {
+    parent.remove = bool(false);
+    parent.build = bool(false);
+}
 inline atfdb::Citest::Citest() {
     atfdb::Citest_Init(*this);
 }
@@ -123,6 +134,16 @@ inline atfdb::Unittest::Unittest() {
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String
     atfdb::Cijob_Print(const_cast<atfdb::Cijob&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cipackage &row) {// cfmt:atfdb.Cipackage.String
+    atfdb::Cipackage_Print(const_cast<atfdb::Cipackage&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Citest &row) {// cfmt:atfdb.Citest.String
+    atfdb::Citest_Print(const_cast<atfdb::Citest&>(row), str);
     return str;
 }
 

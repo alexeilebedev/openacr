@@ -30,17 +30,22 @@
 //#pragma endinclude
 namespace lib_json { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_json.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:lib_json.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_json.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_json...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_json.trace..Print
-// print string representation of lib_json::trace to string LHS, no header -- cprint:lib_json.trace.String
-void lib_json::trace_Print(lib_json::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_json.trace.String  printfmt:Tuple
+void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.trace";
 
@@ -501,13 +506,17 @@ void lib_json::FDb_Uninit() {
 }
 
 // --- lib_json.FldKey..Print
-// print string representation of lib_json::FldKey to string LHS, no header -- cprint:lib_json.FldKey.String
-void lib_json::FldKey_Print(lib_json::FldKey & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_json.FldKey.String  printfmt:Tuple
+void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.FldKey";
 
     u64_PrintHex(u64((const lib_json::FNode*)row.object), temp, 8, true);
     PrintAttrSpaceReset(str,"object", temp);
+
+    algo::strptr_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
 }
 
 // --- lib_json.FNode.c_child.Cascdel
@@ -691,8 +700,9 @@ void lib_json::FNode_Uninit(lib_json::FNode& node) {
 }
 
 // --- lib_json.FNode..Print
-// print string representation of lib_json::FNode to string LHS, no header -- cprint:lib_json.FNode.String
-void lib_json::FNode_Print(lib_json::FNode & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_json.FNode.String  printfmt:Tuple
+void lib_json::FNode_Print(lib_json::FNode& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.FNode";
 
@@ -847,10 +857,14 @@ void lib_json::FParser_Uninit(lib_json::FParser& parent) {
 }
 
 // --- lib_json.FParser..Print
-// print string representation of lib_json::FParser to string LHS, no header -- cprint:lib_json.FParser.String
-void lib_json::FParser_Print(lib_json::FParser & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_json.FParser.String  printfmt:Tuple
+void lib_json::FParser_Print(lib_json::FParser& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.FParser";
+
+    algo::strptr_Print(row.buf, temp);
+    PrintAttrSpaceReset(str,"buf", temp);
 
     i32_Print(row.ind, temp);
     PrintAttrSpaceReset(str,"ind", temp);
@@ -962,8 +976,9 @@ bool lib_json::FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr i
 }
 
 // --- lib_json.FieldId..Print
-// print string representation of lib_json::FieldId to string LHS, no header -- cprint:lib_json.FieldId.String
-void lib_json::FieldId_Print(lib_json::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_json.FieldId.String  printfmt:Raw
+void lib_json::FieldId_Print(lib_json::FieldId& row, algo::cstring& str) {
     lib_json::value_Print(row, str);
 }
 

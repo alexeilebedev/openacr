@@ -1,6 +1,6 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
-// Source: cpp/acr/select.cpp -- Selection
+// Source: cpp/acr/select.cpp -- Selection of records
 //
 
 #include "include/acr.h"
@@ -31,9 +31,9 @@
 // If the record was the last selected record for its ctype,
 // remove its ctype from the selected list
 void acr::Rec_Deselect(acr::FRec& rec) {
-    acr::zd_selrec_Remove(*rec.p_ctype, rec);
+    acr::zd_ctype_selrec_Remove(*rec.p_ctype, rec);
     acr::zd_all_selrec_Remove(rec);
-    if (zd_selrec_EmptyQ(*rec.p_ctype)) {
+    if (zd_ctype_selrec_EmptyQ(*rec.p_ctype)) {
         acr::zd_sel_ctype_Remove(*rec.p_ctype);
     }
 }
@@ -42,12 +42,12 @@ void acr::Rec_Deselect(acr::FRec& rec) {
 
 // De-select all records
 // - zd_all_selrec list is cleared
-// - zd_selrec list is cleared for each ctype
+// - zd_ctype_selrec list is cleared for each ctype
 // - zd_sel_ctype list is cleared
 void acr::Rec_DeselectAll() {
     acr::zd_all_selrec_RemoveAll();
     while(acr::FCtype *ctype=acr::zd_sel_ctype_First()) {
-        acr::zd_selrec_RemoveAll(*ctype);
+        acr::zd_ctype_selrec_RemoveAll(*ctype);
         acr::zd_sel_ctype_RemoveFirst();
     }
 }
@@ -81,7 +81,7 @@ void acr::SelectModified() {
 // -----------------------------------------------------------------------------
 
 // Conditionally insert record into selection set
-// - Record is added to zd_selrec list for is ctype
+// - Record is added to zd_ctype_selrec list for is ctype
 // - Record is added to zd_all_selrec (global list)
 // - Selected ctype is added to zd_sel_ctype list
 bool acr::Rec_Select(acr::FRec& rec) {
@@ -89,7 +89,7 @@ bool acr::Rec_Select(acr::FRec& rec) {
     if (add) {
         rec.seldist = 0;
         acr::zd_all_selrec_Insert(rec);
-        acr::zd_selrec_Insert(*rec.p_ctype,rec);
+        acr::zd_ctype_selrec_Insert(*rec.p_ctype,rec);
         acr::zd_sel_ctype_Insert(*rec.p_ctype);
     }
     return add;

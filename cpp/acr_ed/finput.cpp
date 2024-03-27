@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/finput.cpp
 //
@@ -55,6 +55,7 @@ void acr_ed::edaction_Create_Finput() {
     dmmeta::Ctype ftype;
     ftype.ctype = tempstr() << acr_ed::_db.cmdline.target << ".F" << name_Get(*fbase);
     ftype.comment.value = acr_ed::_db.cmdline.comment;
+    ctype_InsertMaybe(ftype);
     acr_ed::_db.out_ssim << ftype   << eol;
 
     dmmeta::Field base;

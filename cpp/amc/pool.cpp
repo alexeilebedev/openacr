@@ -70,7 +70,7 @@ void amc::tclass_Pool() {
 
 static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &field) {
     bool poolvarlen = PoolVarlenQ(field);
-    amc::GenRetvalInit(func, *FindArg(func,"row"), Subst(R,"($Cpptype*)$name_AllocMem($pararg)"));
+    amc::AddRetval(func, Subst(R,"$Cpptype*"), "row", Subst(R,"($Cpptype*)$name_AllocMem($pararg)"));
     amc::AddArg(func.body, Subst(R,"$totlenexpr"), poolvarlen);
     Ins(&R, func.body , "if (row) {");
     Ins(&R, func.body , "    new (row) $Cpptype; // call constructor");
@@ -112,15 +112,12 @@ void amc::tfunc_Pool_AllocMaybe() {
     amc::FField &field = *amc::_db.genfield.p_field;
     if (NeedAllocQ(field) && !field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
-        amc::FFunc& func = amc::CreateCurFunc(true); {
-            AddRetval(func,Subst(R,"$Cpptype*"),"row","");
-            AddProtoArg(func,"i32","n_varfld",fldtype.c_varlenfld);
-        }
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddProtoArg(func,"i32","n_varfld",fldtype.c_varlenfld);
         if (NeedAllocExtraQ(field)) {
             // this is a varlen struct -- no opt
             func.inl = true;
-            amc::GenRetvalInit(func, *FindArg(func,"row")
-                               , Subst(R,"$name_AllocExtraMaybe($pararg, NULL, sizeof($vartype) * n_varfld)"));
+            AddRetval(func, Subst(R,"$Cpptype*"), "row", Subst(R,"$name_AllocExtraMaybe($pararg, NULL, sizeof($vartype) * n_varfld)"));
         } else {
             Set(R, "$totlenexpr", "sizeof($Cpptype)");
             GenAllocFunc(R,func,field);
@@ -135,10 +132,9 @@ void amc::tfunc_Pool_Alloc() {
     amc::FField &field = *amc::_db.genfield.p_field;
     if (NeedAllocQ(field) && !field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
-        amc::FFunc& func = amc::CreateCurFunc(true); {
-            AddRetval(func, Subst(R,"$Cpptype&"), "", "");
-            AddProtoArg(func, "i32", "n_varfld", fldtype.c_varlenfld);
-        }
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddProtoArg(func, "i32", "n_varfld", fldtype.c_varlenfld);
+        AddRetval(func, Subst(R,"$Cpptype&"), "", "");
         Ins(&R, func.body , "$Cpptype* row = $name_AllocMaybe($pararg);");
         AddArg(func.body, "n_varfld", fldtype.c_varlenfld);
         if (fldtype.c_varlenfld) {
@@ -163,11 +159,9 @@ void amc::tfunc_Pool_AllocExtraMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     if (NeedAllocExtraQ(field)) {
-        amc::FFunc& func = amc::CreateCurFunc(true); {
-            AddRetval(func, Subst(R,"$Cpptype*"), "row", "");
-            AddProtoArg(func, "void *", "extra");
-            AddProtoArg(func, "i32", "nbyte_extra");
-        }
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddProtoArg(func, "void *", "extra");
+        AddProtoArg(func, "i32", "nbyte_extra");
         Set(R, "$totlenexpr", "sizeof($Cpptype) + nbyte_extra");
         GenAllocFunc(R,func,field);
     }
@@ -181,11 +175,10 @@ void amc::tfunc_Pool_AllocExtra() {
     amc::FField &field = *amc::_db.genfield.p_field;
     if (NeedAllocExtraQ(field)) {
         vrfy_(field.p_reftype->varlen);// sanity
-        amc::FFunc& func = amc::CreateCurFunc(true); {
-            AddRetval(func, Subst(R,"$Cpptype&"), "", "");
-            AddProtoArg(func, "void *", "extra");
-            AddProtoArg(func, "i32", "nbyte_extra");
-        }
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddRetval(func, Subst(R,"$Cpptype&"), "", "");
+        AddProtoArg(func, "void *", "extra");
+        AddProtoArg(func, "i32", "nbyte_extra");
         Ins(&R, func.body, "$Cpptype *row = $name_AllocExtraMaybe($pararg, extra, nbyte_extra);");
         Ins(&R, func.body, "if (UNLIKELY(row == NULL)) {");
         Ins(&R, func.body, "    FatalErrorExit(\"$ns.out_of_mem  field:$field  comment:'Alloc failed'\");");
@@ -350,10 +343,9 @@ void amc::tfunc_Pool_Delete() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     if (NeedAllocQ(field) && field.p_reftype->del) {
-        amc::FFunc& fdel = amc::CreateCurFunc(true); {
-            AddRetval(fdel,"void","","");
-            AddProtoArg(fdel, Subst(R,"$Cpptype &"), "row");
-        }
+        amc::FFunc& fdel = amc::CreateCurFunc(true);
+        AddRetval(fdel,"void","","");
+        AddProtoArg(fdel, Subst(R,"$Cpptype &"), "row");
         Set(R, "$partrace", Refname(*field.p_ctype));
         Ins(&R, fdel.comment, "Remove row from all global and cross indices, then deallocate row");
         bool haslen = PoolVarlenQ(field);

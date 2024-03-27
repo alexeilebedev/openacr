@@ -99,7 +99,10 @@ void atf_ci::citest_bootstrap() {
             // instead the soft link will point to build/Linux-g++.release-x86_64
             abt.cmd.out_dir     = tempstr() << "build/"<<abt.cmd.cfg;
             abt.cmd.install     = true;
-            abt.cmd.target.expr = tempstr()<<dmmeta_Ns_ns_abt<<"|"<<dmmeta_Ns_ns_src_hdr<<"|"<<dmmeta_Ns_ns_gcache;
+            abt.cmd.target.expr = tempstr()<<dmmeta_Ns_ns_abt
+                                           <<"|"<<dmmeta_Ns_ns_src_hdr
+                                           <<"|"<<dmmeta_Ns_ns_gcache
+                                           <<"|"<<dmmeta_Ns_ns_src_func;
             abt.cmd.printcmd    = true;
             abt.cmd.report      = false;// stay quiet
             abt.cmd.build       = false;

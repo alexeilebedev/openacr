@@ -1244,6 +1244,48 @@ inline i32 acr_ed::ind_edaction_N() {
     return _db.ind_edaction_n;
 }
 
+// --- acr_ed.FDb.gitfile.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::gitfile_EmptyQ() {
+    return _db.gitfile_n == 0;
+}
+
+// --- acr_ed.FDb.gitfile.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FGitfile* acr_ed::gitfile_Find(u64 t) {
+    acr_ed::FGitfile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.gitfile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.gitfile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FGitfile* acr_ed::gitfile_Last() {
+    return gitfile_Find(u64(_db.gitfile_n-1));
+}
+
+// --- acr_ed.FDb.gitfile.N
+// Return number of items in the pool
+inline i32 acr_ed::gitfile_N() {
+    return _db.gitfile_n;
+}
+
+// --- acr_ed.FDb.gitfile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FGitfile& acr_ed::gitfile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.gitfile_lary[bsr][index];
+}
+
 // --- acr_ed.FDb.ns_curs.Reset
 // cursor points to valid item
 inline void acr_ed::_db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent) {
@@ -1668,6 +1710,31 @@ inline void acr_ed::_db_edaction_curs_Next(_db_edaction_curs &curs) {
 inline acr_ed::FEdaction& acr_ed::_db_edaction_curs_Access(_db_edaction_curs &curs) {
     return edaction_qFind(u64(curs.index));
 }
+
+// --- acr_ed.FDb.gitfile_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_gitfile_curs_Reset(_db_gitfile_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.gitfile_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) {
+    return curs.index < _db.gitfile_n;
+}
+
+// --- acr_ed.FDb.gitfile_curs.Next
+// proceed to next item
+inline void acr_ed::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.gitfile_curs.Access
+// item access
+inline acr_ed::FGitfile& acr_ed::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
+    return gitfile_qFind(u64(curs.index));
+}
 inline acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
 }
@@ -1690,6 +1757,9 @@ inline acr_ed::FFprefix::~FFprefix() {
 inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& fprefix) {
     fprefix.ind_fprefix_next = (acr_ed::FFprefix*)-1; // (acr_ed.FDb.ind_fprefix) not-in-hash
 }
+inline acr_ed::FGitfile::FGitfile() {
+}
+
 inline acr_ed::FListtype::FListtype() {
     acr_ed::FListtype_Init(*this);
 }
@@ -1758,6 +1828,7 @@ inline acr_ed::FSsimfile::~FSsimfile() {
 // Set all fields to initial values.
 inline void acr_ed::FSsimfile_Init(acr_ed::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
+    ssimfile.p_ns = NULL;
     ssimfile.ind_ssimfile_next = (acr_ed::FSsimfile*)-1; // (acr_ed.FDb.ind_ssimfile) not-in-hash
 }
 inline acr_ed::FTarget::FTarget() {

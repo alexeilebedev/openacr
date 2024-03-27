@@ -32,6 +32,7 @@ static bool TrivialCmpQ(amc::FField &field) {
     return retval;
 }
 
+// Field comparison functions
 void amc::tclass_Cmp() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;
@@ -43,6 +44,7 @@ void amc::tclass_Cmp() {
     }
 }
 
+// Next char function for version sort
 void amc::tfunc_Cmp_Nextchar() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;
@@ -84,6 +86,7 @@ void amc::tfunc_Cmp_Nextchar() {
     }
 }
 
+// Comparison function for field
 void amc::tfunc_Cmp_Cmp() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;
@@ -135,6 +138,7 @@ void amc::tfunc_Cmp_Cmp() {
     }
 }
 
+// Lt function for field
 void amc::tfunc_Cmp_Lt() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;

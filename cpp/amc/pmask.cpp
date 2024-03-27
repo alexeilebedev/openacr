@@ -24,57 +24,147 @@
 
 #include "include/amc.h"
 
-static bool NeedPmaskQ(amc::FField &field) {
-    amc::FPmaskfld *pmaskfld = field.p_ctype->c_pmaskfld;// optional presence mask
+// True if field is suitable for inclusion in a pmask
+static bool InPmaskQ(amc::FField &field) {
     bool need = field.reftype != dmmeta_Reftype_reftype_Base;
-    need &= pmaskfld && pmaskfld->p_field != &field;
+    need &= !field.c_pmaskfld;// not the pmaskfld itself
+    need &= !GetLenfld(field);// no pmask bit for length fields
+    need &= !field.c_typefld;// no pmask bit for type fields
     return need;
 }
 
-void amc::tclass_Pmask() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FPmaskfld *pmaskfld = field.p_ctype->c_pmaskfld;// optional presence mask
-    vrfy(pmaskfld, tempstr()<<"amc.missing_pmask"
-         <<Keyval("field",field.field)
-         <<Keyval("ctype",ctype_Get(field)));
-
-    if (NeedPmaskQ(field)) {
-        int bit = pmaskfld->nextbit;
-        int psizeof = amc::Field_Sizeof(*pmaskfld->p_field);
-        vrfy(bit < psizeof*8, tempstr() << "amc.val"
-             <<Keyval("field",field.field)
-             <<Keyval("pmask",pmaskfld->field)
-             <<Keyval("error","Out of bits. Too many fields"));
-        pmaskfld->nextbit++;
-        Set(R, "$pmask", name_Get(*pmaskfld->p_field));
-        Set(R, "$bit", tempstr() << bit);
-    }
+void amc::gen_pmask() {
+    ind_beg(amc::_db_pmaskfld_curs, pmaskfld, amc::_db) {
+        // initialize name
+        // for compatibility with old code, the word "pmask" maps to "Present"
+        // and other words map to camelcase versions, i.e. nullable -> Nullable
+        if (name_Get(*pmaskfld.p_field) == "pmask") {
+            pmaskfld.funcname="Present";
+        } else {
+            tempstr camel;
+            algo::strptr_PrintCamel(name_Get(*pmaskfld.p_field),camel);
+            pmaskfld.funcname=camel;
+        }
+        // check that only one pmaskfld is labeled print_filter:Y
+        if (pmaskfld.filter_print) {
+            ind_beg(ctype_c_pmaskfld_curs,other,*pmaskfld.p_field->p_ctype) {
+                vrfy(&other==&pmaskfld || !other.filter_print
+                     ,tempstr()<<"amc.multiple_print_filters"
+                     <<Keyval("pmaskfld1",pmaskfld.field)
+                     <<Keyval("pmaskfld2",other.field)
+                     <<Keyval("comment","Only one pmaskfld with filter_print:Y allowed on a ctype"));
+            }ind_end;
+        }
+        // create bitsets for pmask fields
+        if (!pmaskfld.p_field->c_fbitset) {
+            amc::fbitset_InsertMaybe(dmmeta::Fbitset(pmaskfld.field, algo::Comment()));
+        }
+        // create pmaskfld members for all suitable fields, unless
+        // the list of members was explicitly provided
+        if (!c_pmaskfld_member_N(pmaskfld)) {
+            ind_beg(ctype_c_field_curs,field,*pmaskfld.p_field->p_ctype) {
+                if (InPmaskQ(field)) {
+                    dmmeta::PmaskfldMember member;
+                    member.pmaskfld_member = dmmeta::PmaskfldMember_Concat_pmaskfld_field(pmaskfld.field,field.field);
+                    vrfy(pmaskfld_member_InsertMaybe(member)
+                         ,tempstr()<<"error inserting new pmaskfld member "<<member);
+                }
+            }ind_end;
+        }
+        // compute FPmaskfldMember.bit  for each member
+        // Check that it fits parent pmaskfld's width
+        ind_beg(pmaskfld_c_pmaskfld_member_curs,pmaskfld_member,pmaskfld) {
+            int bit = pmaskfld.nextbit;
+            int psizeof = amc::Field_Sizeof(*pmaskfld.p_field);
+            vrfy(bit < psizeof*8, tempstr() << "amc.val"
+                 <<Keyval("field",pmaskfld_member.p_field->field)
+                 <<Keyval("pmask",pmaskfld.field)
+                 <<Keyval("error","Out of bits. Too many fields"));
+            pmaskfld_member.bit = bit;
+            pmaskfld.nextbit++;
+        }ind_end;
+    }ind_end;
 }
 
+void amc::tclass_Pmask() {
+}
+
+// Create multiple functions, one for each pmask of which this field is a member
 void amc::tfunc_Pmask_PresentQ() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
 
-    if (NeedPmaskQ(field)) {
-        amc::FFunc& presentq = amc::CreateCurFunc();
-        presentq.inl = true;
-        Ins(&R, presentq.comment, "Return true if the field is marked in the presence mask");
+    ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
+        Set(R,"$Present",pmaskfld_member.p_pmaskfld->funcname);
+        Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
+        amc::FFunc& presentq = amc::CreateCurFunc(true,Subst(R,"$PresentQ"));
         Ins(&R, presentq.ret  , "bool",false);
-        Ins(&R, presentq.proto, "$name_PresentQ($Parent)",false);
         Ins(&R, presentq.body , "return $pmask_qGetBit($parname, $bit);");
-    }
+    }ind_end;
 }
 
+// Return C++ expression(s) setting the present bit for the field
+// in all presence masks of which the field is a member
+// If no presence masks are defined, return empty string;
+tempstr amc::SetPresentExpr(amc::FField &field, strptr parent) {
+    tempstr out;
+    ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        out << name_Get(*pmaskfld_member.p_pmaskfld->p_field) << "_qSetBit("<<parent<<", "<<pmaskfld_member.bit<<");"<<eol;
+    }ind_end;
+    return out;
+}
+
+// Create multiple functions, one for each pmask of which this field is a member
 void amc::tfunc_Pmask_SetPresent() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
 
-    if (NeedPmaskQ(field)) {
-        amc::FFunc& setpresent = amc::CreateCurFunc();
+    ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
+        Set(R,"$Present",pmaskfld_member.p_pmaskfld->funcname);
+        Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
+        amc::FFunc& setpresent = amc::CreateCurFunc(true,Subst(R,"Set$Present"));
         Ins(&R, setpresent.ret  , "void", false);
-        Ins(&R, setpresent.proto, "$name_SetPresent($Parent)", false);
-        setpresent.inl = true;
         Ins(&R, setpresent.body, "$pmask_qSetBit($pararg, $bit); // mark presence in pmask");
-    }
+    }ind_end;
+}
+
+// Create multiple functions, one for each pmask of which this field is a member
+void amc::tfunc_Pmask_GetBit() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+
+    ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        Set(R,"$Present",pmaskfld_member.p_pmaskfld->funcname);
+        Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
+        amc::FFunc& func = amc::CreateCurFunc(true,Subst(R,"$Present_GetBit"));
+        AddRetval(func,"int","retval",Subst(R,"$bit"));
+    }ind_end;
+}
+
+// Return FPmaskfld which filters printing for ctype CTYPE
+// NULL if none
+amc::FPmaskfld *amc::GetPrintFilter(amc::FCtype &ctype) {
+    amc::FPmaskfld *filter = NULL;
+    ind_beg(amc::ctype_c_pmaskfld_curs,pmaskfld,ctype) {
+        if (pmaskfld.filter_print) {
+            filter=&pmaskfld;
+            break;
+        }
+    }ind_end;
+    return filter;
+}
+
+// Find PMASKFLD_MEMBER record for field FIELD and pmask PMASKFLD
+// NULL if none
+amc::FPmaskfldMember *amc::FindMember(amc::FField &field, amc::FPmaskfld *pmaskfld) {
+    amc::FPmaskfldMember *ret=NULL;
+    ind_beg(amc::field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        if (pmaskfld_member.p_pmaskfld == pmaskfld) {
+            ret=&pmaskfld_member;
+            break;
+        }
+    }ind_end;
+    return ret;
 }

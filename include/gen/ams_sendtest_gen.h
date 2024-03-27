@@ -70,9 +70,12 @@ private:
 };
 
 // Set all fields to initial values.
+// func:ams_sendtest.AmsSendTest..Init
 void                 AmsSendTest_Init(ams_sendtest::AmsSendTest& parent);
-// print string representation of ams_sendtest::AmsSendTest to string LHS, no header -- cprint:ams_sendtest.AmsSendTest.String
-void                 AmsSendTest_Print(ams_sendtest::AmsSendTest & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
+// func:ams_sendtest.AmsSendTest..Print
+void                 AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams_sendtest.FChild
 // create: ams_sendtest.FDb.child (Lary)
@@ -101,26 +104,36 @@ private:
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:ams_sendtest.FChild.child.Start
 int                  child_Start(ams_sendtest::FChild& child) __attribute__((nothrow));
 // Start subprocess & Read output
+// func:ams_sendtest.FChild.child.StartRead
 algo::Fildes         child_StartRead(ams_sendtest::FChild& child, algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:ams_sendtest.FChild.child.Kill
 void                 child_Kill(ams_sendtest::FChild& child);
 // Wait for subprocess to return
+// func:ams_sendtest.FChild.child.Wait
 void                 child_Wait(ams_sendtest::FChild& child) __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:ams_sendtest.FChild.child.Exec
 int                  child_Exec(ams_sendtest::FChild& child) __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:ams_sendtest.FChild.child.ExecX
 void                 child_ExecX(ams_sendtest::FChild& child);
 // Call execv()
 // Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// func:ams_sendtest.FChild.child.Execv
 int                  child_Execv(ams_sendtest::FChild& child) __attribute__((nothrow));
+// func:ams_sendtest.FChild.child.ToCmdline
 algo::tempstr        child_ToCmdline(ams_sendtest::FChild& child) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:ams_sendtest.FChild..Init
 void                 FChild_Init(ams_sendtest::FChild& child);
+// func:ams_sendtest.FChild..Uninit
 void                 FChild_Uninit(ams_sendtest::FChild& child) __attribute__((nothrow));
 
 // --- ams_sendtest.trace
@@ -130,12 +143,14 @@ struct trace { // ams_sendtest.trace
 };
 #pragma pack(pop)
 
-// print string representation of ams_sendtest::trace to string LHS, no header -- cprint:ams_sendtest.trace.String
-void                 trace_Print(ams_sendtest::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.trace.String  printfmt:Tuple
+// func:ams_sendtest.trace..Print
+void                 trace_Print(ams_sendtest::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ams_sendtest.FDb
 // create: ams_sendtest.FDb._db (Global)
-struct FDb { // ams_sendtest.FDb
+struct FDb { // ams_sendtest.FDb: In-memory database for ams_sendtest
     lib_ams::FStream*           c_out;            // Output goes here. optional pointer
     command::ams_sendtest       cmdline;          //
     ams_sendtest::AmsSendTest   ams_send_test;    //
@@ -148,18 +163,26 @@ struct FDb { // ams_sendtest.FDb
 // The following fields are updated:
 //     ams_sendtest.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:ams_sendtest.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:ams_sendtest.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:ams_sendtest.FDb._db.Step
 void                 Step();
 // Main function
+// func:ams_sendtest.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:ams_sendtest.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:ams_sendtest.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:ams_sendtest.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -167,52 +190,74 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:ams_sendtest.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:ams_sendtest.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:ams_sendtest.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:ams_sendtest.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ams_sendtest.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:ams_sendtest.FDb.child.Alloc
 ams_sendtest::FChild& child_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:ams_sendtest.FDb.child.AllocMaybe
 ams_sendtest::FChild* child_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:ams_sendtest.FDb.child.AllocMem
 void*                child_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:ams_sendtest.FDb.child.EmptyQ
 bool                 child_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:ams_sendtest.FDb.child.Find
 ams_sendtest::FChild* child_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:ams_sendtest.FDb.child.Last
 ams_sendtest::FChild* child_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:ams_sendtest.FDb.child.N
 i32                  child_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:ams_sendtest.FDb.child.RemoveAll
 void                 child_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:ams_sendtest.FDb.child.RemoveLast
 void                 child_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:ams_sendtest.FDb.child.qFind
 ams_sendtest::FChild& child_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ams_sendtest.FDb.child.XrefMaybe
 bool                 child_XrefMaybe(ams_sendtest::FChild &row);
 
 // cursor points to valid item
+// func:ams_sendtest.FDb.child_curs.Reset
 void                 _db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent);
 // cursor points to valid item
+// func:ams_sendtest.FDb.child_curs.ValidQ
 bool                 _db_child_curs_ValidQ(_db_child_curs &curs);
 // proceed to next item
+// func:ams_sendtest.FDb.child_curs.Next
 void                 _db_child_curs_Next(_db_child_curs &curs);
 // item access
+// func:ams_sendtest.FDb.child_curs.Access
 ams_sendtest::FChild& _db_child_curs_Access(_db_child_curs &curs);
 // Set all fields to initial values.
+// func:ams_sendtest.FDb..Init
 void                 FDb_Init();
+// func:ams_sendtest.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- ams_sendtest.FieldId
@@ -227,32 +272,43 @@ struct FieldId { // ams_sendtest.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:ams_sendtest.FieldId.value.GetEnum
 ams_sendtest_FieldIdEnum value_GetEnum(const ams_sendtest::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:ams_sendtest.FieldId.value.SetEnum
 void                 value_SetEnum(ams_sendtest::FieldId& parent, ams_sendtest_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:ams_sendtest.FieldId.value.ToCstr
 const char*          value_ToCstr(const ams_sendtest::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:ams_sendtest.FieldId.value.Print
 void                 value_Print(const ams_sendtest::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:ams_sendtest.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:ams_sendtest.FieldId.value.SetStrptr
 void                 value_SetStrptr(ams_sendtest::FieldId& parent, algo::strptr rhs, ams_sendtest_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:ams_sendtest.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of ams_sendtest::FieldId from an ascii string.
 // The format of the string is the format of the ams_sendtest::FieldId's only field
+// func:ams_sendtest.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:ams_sendtest.FieldId..Init
 void                 FieldId_Init(ams_sendtest::FieldId& parent);
-// print string representation of ams_sendtest::FieldId to string LHS, no header -- cprint:ams_sendtest.FieldId.String
-void                 FieldId_Print(ams_sendtest::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.FieldId.String  printfmt:Raw
+// func:ams_sendtest.FieldId..Print
+void                 FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ams_sendtest { // gen:ns_curstext
 
@@ -266,8 +322,10 @@ struct _db_child_curs {// cursor
 } // gen:ns_curstext
 namespace ams_sendtest { // gen:ns_func
 } // gen:ns_func
+// func:ams_sendtest...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:ams_sendtest...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

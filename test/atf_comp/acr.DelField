@@ -1,4 +1,4 @@
-acr.delete  dmmeta.field  field:dmmeta.Ns.license  arg:dev.License  reftype:Pkey  dflt:""  comment:""
+acr.delete  dmmeta.field  field:dmmeta.Ns.license  arg:dev.License  reftype:Pkey  dflt:""  comment:"Associated license"
 
 acr.delete  dmmeta.xref  field:amc.FNs.p_license      inscond:true  via:amc.FDb.ind_license/dmmeta.Ns.license
 acr.delete  dmmeta.xref  field:src_hdr.FNs.p_license  inscond:true  via:src_hdr.FDb.ind_license/dmmeta.Ns.license

@@ -652,7 +652,7 @@ void algo::u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix)
 // -----------------------------------------------------------------------------
 
 // print character as c++ character, surrounded by single quotes
-// and properly escaped.
+// and properly escaped according to c++ rules
 void algo::char_PrintCppSingleQuote(int c, algo::cstring &out) {
     out<<'\'';
     if (c=='\'') {
@@ -663,12 +663,19 @@ void algo::char_PrintCppSingleQuote(int c, algo::cstring &out) {
     out<<'\'';
 }
 
+// -----------------------------------------------------------------------------
+
+// Print contents of memptr as a double-quoted C++ string
+// Bytes with codes 32-126, escept " (ASCII 34) and \ (ascii 92) are printed as-is.
+// All other characters are printed as \xHH where H is a hex digit.
+// NOTE: Compare with strptr_PrintCppQuoted, which \-escapes
+// more characters and uses octal sequences for non-printable characters.
 void algo::memptr_Print(memptr ary, algo::cstring &out) {
     out << '"';
     ind_beg_aryptr(u8,c,ary) {
-        if (c == '\\' || c == '"') {
-            out << "\\" << c;
-        } else if (c >= 20 && c < 128) {
+        if (c >= 32 && c < 127 && !(c == '\\' || c == '"')) {
+            // 0x20 and below: control codes
+            // 127: DEL key
             out << char(c);
         } else {
             out << "\\x";
@@ -1343,8 +1350,9 @@ static void PrintRow(cstring &str, algo_lib::FTxtrow &row, bool use_style) {
     str << eol;
 }
 
-static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
-    start_Alloc(norm) = 0;
+static void Normalize(algo_lib::FTxttbl &txttbl) {
+    algo::U64Ary norm;
+    ary_Alloc(norm) = 0;
     int maxspan = 0;
     ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
         ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
@@ -1359,14 +1367,14 @@ static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
                     int w = i32_Max(ch_N(txtcell.text) + ch_N(txtcell.rsep), txtcell.width);
                     // apply width
                     int r = i + txtcell.span;
-                    while (r >= start_N(norm)) {
-                        int last = start_qLast(norm);
-                        start_Alloc(norm) = last;
+                    while (r >= ary_N(norm)) {
+                        int last = ary_qLast(norm);
+                        ary_Alloc(norm) = last;
                     }
-                    int extra = w - (start_qFind(norm, r) - start_qFind(norm, i));
+                    int extra = w - (ary_qFind(norm, r) - ary_qFind(norm, i));
                     if (extra > 0) {
-                        for (int j = r; j < start_N(norm); j++) {
-                            start_qFind(norm, j) += extra;
+                        for (int j = r; j < ary_N(norm); j++) {
+                            ary_qFind(norm, j) += extra;
                         }
                     }
                 }
@@ -1377,7 +1385,7 @@ static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
     ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
         int i = 0;
         ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
-            txtcell.width = start_qFind(norm, i+txtcell.span) - start_qFind(norm, i);
+            txtcell.width = ary_qFind(norm, i+txtcell.span) - ary_qFind(norm, i);
             i += txtcell.span;
         }ind_end;;
     }ind_end;;
@@ -1386,10 +1394,8 @@ static void Normalize(algo::NormTxttbl &norm, algo_lib::FTxttbl &txttbl) {
 void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str) {
     algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
     bool              use_style = algo::SaneTerminalQ();
-    if (!txttbl.normalized) {
-        algo::NormTxttbl norm;
-        txttbl.normalized = true;
-        Normalize(norm, txttbl);
+    if (bool_Update(txttbl.normalized,true)) {
+        Normalize(txttbl);
     }
     ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
         PrintRow(str,txtrow,use_style);

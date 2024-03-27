@@ -56,8 +56,7 @@ void lib_mysql::MBind(MYSQL *conn, cstring &lhs, strptr y, char quotes) {
     lhs = tmp;
 }
 
-// Execute query and access result
-// Execute query and access result
+// Execute query and access result.
 // Previous result, if present, is discarded.
 // If this is not done, you get
 //   "Commands out of sync; you can't run this command now"

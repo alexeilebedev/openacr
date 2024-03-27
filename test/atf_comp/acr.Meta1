@@ -17,4 +17,3 @@ dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
 
 dmmeta.xref  field:acr_compl.FField.c_anonfld  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Anonfld.field
 dmmeta.xref  field:amc.FField.c_anonfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Anonfld.field
-report.acr  n_select:15  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

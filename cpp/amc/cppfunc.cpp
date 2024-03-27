@@ -34,6 +34,7 @@ void amc::tfunc_Cppfunc_Get() {
     Set(R, "$Fldtype", field.cpp_type);
     Ins(&R, get.ret  , "$Fldtype", false);
     Ins(&R, get.proto, "$name_Get($Parent)", false);
+    Ins(&R, get.body, "(void)$parname;");
     if (field.c_cppfunc && ch_N(field.c_cppfunc->expr.value)) {
         if (Subst(R,"$parname")!="parent") {
             Ins(&R, get.body, "$Partype &parent = $parname; // needed in case 'expr' refers to 'parent'");
@@ -42,10 +43,10 @@ void amc::tfunc_Cppfunc_Get() {
         if (field.reftype==dmmeta_Reftype_reftype_Ptr || field.reftype==dmmeta_Reftype_reftype_Upptr) {
             Set(R, "$Fldtype", "($Fldtype)");
         }
-        // external fldfunc
         get.inl = true;
         Ins(&R, get.body, tempstr()<<"return $Fldtype("<<field.c_cppfunc->expr<<");");
     } else {
+        // external fldfunc
         get.extrn = true;
     }
 }
@@ -58,7 +59,7 @@ void amc::tfunc_Cppfunc_Set() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
 
-    if (field.c_cppfunc) {
+    if (field.c_cppfunc && field.c_cppfunc->set) {
         Set(R, "$Fldargtype", Argtype(field));
         amc::FFunc& set = amc::CreateCurFunc();
         set.extrn = true;

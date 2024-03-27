@@ -23,7 +23,6 @@
 
 
 #pragma once
-#include "include/gen/command_gen.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_lib_gen.h"
@@ -32,11 +31,15 @@
 
 // --- lib_exec_FieldIdEnum
 
-enum lib_exec_FieldIdEnum {        // lib_exec.FieldId.value
-     lib_exec_FieldId_value   = 0
+enum lib_exec_FieldIdEnum {           // lib_exec.FieldId.value
+     lib_exec_FieldId_dry_run    = 0
+    ,lib_exec_FieldId_q          = 1
+    ,lib_exec_FieldId_maxjobs    = 2
+    ,lib_exec_FieldId_complooo   = 3
+    ,lib_exec_FieldId_value      = 4
 };
 
-enum { lib_exec_FieldIdEnum_N = 1 };
+enum { lib_exec_FieldIdEnum_N = 5 };
 
 namespace lib_exec { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -50,12 +53,43 @@ namespace lib_exec { struct _db_bh_syscmd_curs; }
 namespace lib_exec { struct _db_zd_started_curs; }
 namespace lib_exec { struct syscmd_c_prior_curs; }
 namespace lib_exec { struct syscmd_c_next_curs; }
+namespace lib_exec { struct Cmdline; }
 namespace lib_exec { struct trace; }
 namespace lib_exec { struct FDb; }
 namespace lib_exec { struct FSyscmddep; }
 namespace lib_exec { struct FieldId; }
 namespace lib_exec { extern struct lib_exec::FDb _db; }
 namespace lib_exec { // gen:ns_print_struct
+
+// --- lib_exec.Cmdline
+struct Cmdline { // lib_exec.Cmdline
+    bool   dry_run;    //   false
+    bool   q;          //   true  Do not print node name
+    i32    maxjobs;    //   8  Maximum number of parallel jobs
+    bool   complooo;   //   false
+    Cmdline();
+};
+
+// func:lib_exec.Cmdline..ReadFieldMaybe
+bool                 Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of lib_exec::Cmdline from attributes of ascii tuple TUPLE
+// func:lib_exec.Cmdline..ReadTupleMaybe
+bool                 Cmdline_ReadTupleMaybe(lib_exec::Cmdline &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_exec.Cmdline..Init
+void                 Cmdline_Init(lib_exec::Cmdline& parent);
+// print command-line args of lib_exec::Cmdline to string  -- cprint:lib_exec.Cmdline.Argv
+// func:lib_exec.Cmdline..PrintArgv
+void                 Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring &str) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:lib_exec.Cmdline..ToCmdline
+tempstr              Cmdline_ToCmdline(lib_exec::Cmdline& row) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:lib_exec.Cmdline..NArgs
+i32                  Cmdline_NArgs(lib_exec::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- lib_exec.trace
 #pragma pack(push,1)
@@ -64,13 +98,15 @@ struct trace { // lib_exec.trace
 };
 #pragma pack(pop)
 
-// print string representation of lib_exec::trace to string LHS, no header -- cprint:lib_exec.trace.String
-void                 trace_Print(lib_exec::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_exec.trace.String  printfmt:Tuple
+// func:lib_exec.trace..Print
+void                 trace_Print(lib_exec::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_exec.FDb
 // create: lib_exec.FDb._db (Global)
-struct FDb { // lib_exec.FDb
-    command::lib_exec       cmdline;                     //
+struct FDb { // lib_exec.FDb: In-memory database for lib_exec
+    lib_exec::Cmdline       cmdline;                     //
     lib_exec::FSyscmddep*   syscmddep_lary[32];          // level array
     i32                     syscmddep_n;                 // number of elements in array
     u64                     next_syscmd;                 //   0
@@ -88,11 +124,14 @@ struct FDb { // lib_exec.FDb
     lib_exec::trace         trace;                       //
 };
 
+// func:lib_exec.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:lib_exec.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:lib_exec.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -100,178 +139,257 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:lib_exec.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:lib_exec.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:lib_exec.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:lib_exec.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_exec.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_exec.FDb.syscmddep.Alloc
 lib_exec::FSyscmddep& syscmddep_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_exec.FDb.syscmddep.AllocMaybe
 lib_exec::FSyscmddep* syscmddep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_exec.FDb.syscmddep.InsertMaybe
 lib_exec::FSyscmddep* syscmddep_InsertMaybe(const dev::Syscmddep &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_exec.FDb.syscmddep.AllocMem
 void*                syscmddep_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_exec.FDb.syscmddep.EmptyQ
 bool                 syscmddep_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_exec.FDb.syscmddep.Find
 lib_exec::FSyscmddep* syscmddep_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_exec.FDb.syscmddep.Last
 lib_exec::FSyscmddep* syscmddep_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_exec.FDb.syscmddep.N
 i32                  syscmddep_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_exec.FDb.syscmddep.RemoveAll
 void                 syscmddep_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_exec.FDb.syscmddep.RemoveLast
 void                 syscmddep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_exec.FDb.syscmddep.qFind
 lib_exec::FSyscmddep& syscmddep_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_exec.FDb.syscmddep.XrefMaybe
 bool                 syscmddep_XrefMaybe(lib_exec::FSyscmddep &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_exec.FDb.syscmd.Alloc
 lib_exec::FSyscmd&   syscmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_exec.FDb.syscmd.AllocMaybe
 lib_exec::FSyscmd*   syscmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_exec.FDb.syscmd.InsertMaybe
 lib_exec::FSyscmd*   syscmd_InsertMaybe(const dev::Syscmd &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_exec.FDb.syscmd.AllocMem
 void*                syscmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_exec.FDb.syscmd.EmptyQ
 bool                 syscmd_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_exec.FDb.syscmd.Find
 lib_exec::FSyscmd*   syscmd_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_exec.FDb.syscmd.Last
 lib_exec::FSyscmd*   syscmd_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_exec.FDb.syscmd.N
 i32                  syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_exec.FDb.syscmd.RemoveAll
 void                 syscmd_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_exec.FDb.syscmd.RemoveLast
 void                 syscmd_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_exec.FDb.syscmd.qFind
 lib_exec::FSyscmd&   syscmd_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_exec.FDb.syscmd.XrefMaybe
 bool                 syscmd_XrefMaybe(lib_exec::FSyscmd &row);
 
 // Return true if hash is empty
+// func:lib_exec.FDb.ind_running.EmptyQ
 bool                 ind_running_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_exec.FDb.ind_running.Find
 lib_exec::FSyscmd*   ind_running_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_exec.FDb.ind_running.GetOrCreate
 lib_exec::FSyscmd&   ind_running_GetOrCreate(i32 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:lib_exec.FDb.ind_running.N
 i32                  ind_running_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_exec.FDb.ind_running.InsertMaybe
 bool                 ind_running_InsertMaybe(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_exec.FDb.ind_running.Remove
 void                 ind_running_Remove(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_exec.FDb.ind_running.Reserve
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
+// func:lib_exec.FDb.bh_syscmd.Dealloc
 void                 bh_syscmd_Dealloc() __attribute__((nothrow));
 // Return true if index is empty
+// func:lib_exec.FDb.bh_syscmd.EmptyQ
 bool                 bh_syscmd_EmptyQ() __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_exec.FDb.bh_syscmd.First
 lib_exec::FSyscmd*   bh_syscmd_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
+// func:lib_exec.FDb.bh_syscmd.InBheapQ
 bool                 bh_syscmd_InBheapQ(lib_exec::FSyscmd& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:lib_exec.FDb.bh_syscmd.Insert
 void                 bh_syscmd_Insert(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Return number of items in the heap
+// func:lib_exec.FDb.bh_syscmd.N
 i32                  bh_syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
+// func:lib_exec.FDb.bh_syscmd.Reheap
 i32                  bh_syscmd_Reheap(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
+// func:lib_exec.FDb.bh_syscmd.ReheapFirst
 i32                  bh_syscmd_ReheapFirst() __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_exec.FDb.bh_syscmd.Remove
 void                 bh_syscmd_Remove(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Remove all elements from binary heap
+// func:lib_exec.FDb.bh_syscmd.RemoveAll
 void                 bh_syscmd_RemoveAll() __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
+// func:lib_exec.FDb.bh_syscmd.RemoveFirst
 lib_exec::FSyscmd*   bh_syscmd_RemoveFirst() __attribute__((nothrow));
 // Reserve space in index for N more elements
+// func:lib_exec.FDb.bh_syscmd.Reserve
 void                 bh_syscmd_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_exec.FDb.zd_started.EmptyQ
 bool                 zd_started_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_exec.FDb.zd_started.First
 lib_exec::FSyscmd*   zd_started_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_exec.FDb.zd_started.InLlistQ
 bool                 zd_started_InLlistQ(lib_exec::FSyscmd& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_exec.FDb.zd_started.Insert
 void                 zd_started_Insert(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_exec.FDb.zd_started.Last
 lib_exec::FSyscmd*   zd_started_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_exec.FDb.zd_started.N
 i32                  zd_started_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_exec.FDb.zd_started.Next
 lib_exec::FSyscmd*   zd_started_Next(lib_exec::FSyscmd &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_exec.FDb.zd_started.Prev
 lib_exec::FSyscmd*   zd_started_Prev(lib_exec::FSyscmd &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_exec.FDb.zd_started.Remove
 void                 zd_started_Remove(lib_exec::FSyscmd& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_exec.FDb.zd_started.RemoveAll
 void                 zd_started_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_exec.FDb.zd_started.RemoveFirst
 lib_exec::FSyscmd*   zd_started_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_exec.FDb.zd_started.qLast
 lib_exec::FSyscmd&   zd_started_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // cursor points to valid item
+// func:lib_exec.FDb.syscmddep_curs.Reset
 void                 _db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, lib_exec::FDb &parent);
 // cursor points to valid item
+// func:lib_exec.FDb.syscmddep_curs.ValidQ
 bool                 _db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs);
 // proceed to next item
+// func:lib_exec.FDb.syscmddep_curs.Next
 void                 _db_syscmddep_curs_Next(_db_syscmddep_curs &curs);
 // item access
+// func:lib_exec.FDb.syscmddep_curs.Access
 lib_exec::FSyscmddep& _db_syscmddep_curs_Access(_db_syscmddep_curs &curs);
 // cursor points to valid item
+// func:lib_exec.FDb.syscmd_curs.Reset
 void                 _db_syscmd_curs_Reset(_db_syscmd_curs &curs, lib_exec::FDb &parent);
 // cursor points to valid item
+// func:lib_exec.FDb.syscmd_curs.ValidQ
 bool                 _db_syscmd_curs_ValidQ(_db_syscmd_curs &curs);
 // proceed to next item
+// func:lib_exec.FDb.syscmd_curs.Next
 void                 _db_syscmd_curs_Next(_db_syscmd_curs &curs);
 // item access
+// func:lib_exec.FDb.syscmd_curs.Access
 lib_exec::FSyscmd&   _db_syscmd_curs_Access(_db_syscmd_curs &curs);
+// func:lib_exec.FDb.bh_syscmd_curs.Reserve
 void                 _db_bh_syscmd_curs_Reserve(_db_bh_syscmd_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:lib_exec.FDb.bh_syscmd_curs.Reset
 void                 _db_bh_syscmd_curs_Reset(_db_bh_syscmd_curs &curs, lib_exec::FDb &parent);
 // Advance cursor.
+// func:lib_exec.FDb.bh_syscmd_curs.Next
 void                 _db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs);
 // Access current element. If not more elements, return NULL
+// func:lib_exec.FDb.bh_syscmd_curs.Access
 lib_exec::FSyscmd&   _db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs);
 // Return true if Access() will return non-NULL.
+// func:lib_exec.FDb.bh_syscmd_curs.ValidQ
 bool                 _db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs);
 // cursor points to valid item
+// func:lib_exec.FDb.zd_started_curs.Reset
 void                 _db_zd_started_curs_Reset(_db_zd_started_curs &curs, lib_exec::FDb &parent);
 // cursor points to valid item
+// func:lib_exec.FDb.zd_started_curs.ValidQ
 bool                 _db_zd_started_curs_ValidQ(_db_zd_started_curs &curs);
 // proceed to next item
+// func:lib_exec.FDb.zd_started_curs.Next
 void                 _db_zd_started_curs_Next(_db_zd_started_curs &curs);
 // item access
+// func:lib_exec.FDb.zd_started_curs.Access
 lib_exec::FSyscmd&   _db_zd_started_curs_Access(_db_zd_started_curs &curs);
 // Set all fields to initial values.
+// func:lib_exec.FDb..Init
 void                 FDb_Init();
+// func:lib_exec.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_exec.FSyscmd
@@ -319,88 +437,127 @@ private:
 };
 
 // Copy fields out of row
+// func:lib_exec.FSyscmd.msghdr.CopyOut
 void                 syscmd_CopyOut(lib_exec::FSyscmd &row, dev::Syscmd &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:lib_exec.FSyscmd.msghdr.CopyIn
 void                 syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) __attribute__((nothrow));
 
+// func:lib_exec.FSyscmd.execkey.Get
+// this function is 'extrn' and implemented by user
 i64                  execkey_Get(lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow));
-void                 execkey_Set(lib_exec::FSyscmd& syscmd, i64 rhs) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_exec.FSyscmd.c_prior.EmptyQ
 bool                 c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_exec.FSyscmd.c_prior.Find
 lib_exec::FSyscmddep* c_prior_Find(lib_exec::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:lib_exec.FSyscmd.c_prior.Getary
 algo::aryptr<lib_exec::FSyscmddep*> c_prior_Getary(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:lib_exec.FSyscmd.c_prior.Insert
 void                 c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:lib_exec.FSyscmd.c_prior.InsertMaybe
 bool                 c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:lib_exec.FSyscmd.c_prior.N
 i32                  c_prior_N(const lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_exec.FSyscmd.c_prior.Remove
 void                 c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_exec.FSyscmd.c_prior.RemoveAll
 void                 c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:lib_exec.FSyscmd.c_prior.Reserve
 void                 c_prior_Reserve(lib_exec::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:lib_exec.FSyscmd.c_prior.qFind
 lib_exec::FSyscmddep& c_prior_qFind(lib_exec::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:lib_exec.FSyscmd.c_prior.InAryQ
 bool                 syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:lib_exec.FSyscmd.c_prior.qLast
 lib_exec::FSyscmddep& c_prior_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_exec.FSyscmd.c_next.EmptyQ
 bool                 c_next_EmptyQ(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_exec.FSyscmd.c_next.Find
 lib_exec::FSyscmddep* c_next_Find(lib_exec::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:lib_exec.FSyscmd.c_next.Getary
 algo::aryptr<lib_exec::FSyscmddep*> c_next_Getary(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:lib_exec.FSyscmd.c_next.Insert
 void                 c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:lib_exec.FSyscmd.c_next.InsertMaybe
 bool                 c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:lib_exec.FSyscmd.c_next.N
 i32                  c_next_N(const lib_exec::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_exec.FSyscmd.c_next.Remove
 void                 c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_exec.FSyscmd.c_next.RemoveAll
 void                 c_next_RemoveAll(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:lib_exec.FSyscmd.c_next.Reserve
 void                 c_next_Reserve(lib_exec::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:lib_exec.FSyscmd.c_next.qFind
 lib_exec::FSyscmddep& c_next_qFind(lib_exec::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:lib_exec.FSyscmd.c_next.InAryQ
 bool                 syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:lib_exec.FSyscmd.c_next.qLast
 lib_exec::FSyscmddep& c_next_qLast(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_exec.FSyscmd..Init
 void                 FSyscmd_Init(lib_exec::FSyscmd& syscmd);
+// func:lib_exec.FSyscmd.c_prior_curs.Reset
 void                 syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent);
 // cursor points to valid item
+// func:lib_exec.FSyscmd.c_prior_curs.ValidQ
 bool                 syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs);
 // proceed to next item
+// func:lib_exec.FSyscmd.c_prior_curs.Next
 void                 syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs);
 // item access
+// func:lib_exec.FSyscmd.c_prior_curs.Access
 lib_exec::FSyscmddep& syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs);
+// func:lib_exec.FSyscmd.c_next_curs.Reset
 void                 syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exec::FSyscmd &parent);
 // cursor points to valid item
+// func:lib_exec.FSyscmd.c_next_curs.ValidQ
 bool                 syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs);
 // proceed to next item
+// func:lib_exec.FSyscmd.c_next_curs.Next
 void                 syscmd_c_next_curs_Next(syscmd_c_next_curs &curs);
 // item access
+// func:lib_exec.FSyscmd.c_next_curs.Access
 lib_exec::FSyscmddep& syscmd_c_next_curs_Access(syscmd_c_next_curs &curs);
+// func:lib_exec.FSyscmd..Uninit
 void                 FSyscmd_Uninit(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
-// print string representation of lib_exec::FSyscmd to string LHS, no header -- cprint:lib_exec.FSyscmd.String
-void                 FSyscmd_Print(lib_exec::FSyscmd & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FSyscmd.String  printfmt:Tuple
+// func:lib_exec.FSyscmd..Print
+void                 FSyscmd_Print(lib_exec::FSyscmd& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_exec.FSyscmddep
 // create: lib_exec.FDb.syscmddep (Lary)
@@ -425,18 +582,25 @@ private:
 };
 
 // Copy fields out of row
+// func:lib_exec.FSyscmddep.msghdr.CopyOut
 void                 syscmddep_CopyOut(lib_exec::FSyscmddep &row, dev::Syscmddep &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:lib_exec.FSyscmddep.msghdr.CopyIn
 void                 syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep &in) __attribute__((nothrow));
 
+// func:lib_exec.FSyscmddep.syscmddep.Get
+// this function is 'extrn' and implemented by user
 algo::RspaceStr16    syscmddep_Get(lib_exec::FSyscmddep& syscmddep) __attribute__((__warn_unused_result__, nothrow));
-void                 syscmddep_Set(lib_exec::FSyscmddep& syscmddep, const algo::strptr& rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_exec.FSyscmddep..Init
 void                 FSyscmddep_Init(lib_exec::FSyscmddep& syscmddep);
+// func:lib_exec.FSyscmddep..Uninit
 void                 FSyscmddep_Uninit(lib_exec::FSyscmddep& syscmddep) __attribute__((nothrow));
-// print string representation of lib_exec::FSyscmddep to string LHS, no header -- cprint:lib_exec.FSyscmddep.String
-void                 FSyscmddep_Print(lib_exec::FSyscmddep & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FSyscmddep.String  printfmt:Tuple
+// func:lib_exec.FSyscmddep..Print
+void                 FSyscmddep_Print(lib_exec::FSyscmddep& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_exec.FieldId
 #pragma pack(push,1)
@@ -450,32 +614,43 @@ struct FieldId { // lib_exec.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_exec.FieldId.value.GetEnum
 lib_exec_FieldIdEnum value_GetEnum(const lib_exec::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_exec.FieldId.value.SetEnum
 void                 value_SetEnum(lib_exec::FieldId& parent, lib_exec_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_exec.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_exec::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_exec.FieldId.value.Print
 void                 value_Print(const lib_exec::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_exec.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_exec::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_exec.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_exec::FieldId& parent, algo::strptr rhs, lib_exec_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_exec.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_exec::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_exec::FieldId from an ascii string.
 // The format of the string is the format of the lib_exec::FieldId's only field
+// func:lib_exec.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_exec.FieldId..Init
 void                 FieldId_Init(lib_exec::FieldId& parent);
-// print string representation of lib_exec::FieldId to string LHS, no header -- cprint:lib_exec.FieldId.String
-void                 FieldId_Print(lib_exec::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_exec.FieldId.String  printfmt:Raw
+// func:lib_exec.FieldId..Print
+void                 FieldId_Print(lib_exec::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_exec { // gen:ns_curstext
 

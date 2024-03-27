@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: samp_regx (exe)
+// Target: samp_regx (exe) -- Test tool for regular expressions
 // Exceptions: yes
 // Header: include/samp_regx.h
 //

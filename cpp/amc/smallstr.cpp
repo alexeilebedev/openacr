@@ -70,6 +70,7 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
         strptr prefix =
             smallstr.strtype == dmmeta_Strtype_strtype_rightpad && smallstr.pad.value == "' '" ? "RspaceStr"
             : smallstr.strtype == dmmeta_Strtype_strtype_leftpad && smallstr.pad.value == "' '" ? "LspaceStr"
+            : smallstr.strtype == dmmeta_Strtype_strtype_leftpad && smallstr.pad.value == "'0'" ? "LnumStr"
             : smallstr.strtype == dmmeta_Strtype_strtype_leftpad && smallstr.pad.value == "0" ? "LnullStr"
             : smallstr.strtype == dmmeta_Strtype_strtype_rightpad && smallstr.pad.value == "0" ? "RnullStr"
             : "";
@@ -329,15 +330,19 @@ void amc::tfunc_Smallstr_Max() {
 // -----------------------------------------------------------------------------
 
 // Set value as strptr
+// For a padded string, the string value is allowed to use the pad character
+// inside the string, i.e. a space-padded field can have a space ("abc def").
+// Length of a padded string is determined by stripping the padded characters
+// from the appropriate end.
 void amc::tfunc_Smallstr_SetStrptr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
-    amc::FFunc& func = amc::CreateCurFunc();
-    Ins(&R, func.ret  , "void", false);
+    amc::FFunc& func = amc::CreateCurFunc(true);
+    AddRetval(func, "void", "", "");
+    AddProtoArg(func, "const algo::strptr&", "rhs");
     Ins(&R, func.comment, "Set string to the value provided by RHS.");
     Ins(&R, func.comment, "If RHS is too large, it is silently clipped.");
-    Ins(&R, func.proto, "$name_SetStrptr($Parent, const algo::strptr &rhs)", false);
     Ins(&R, func.body, "int len = i32_Min(rhs.n_elems, $max_length);");
     Ins(&R, func.body, "char *rhs_elems = rhs.elems;");
     Ins(&R, func.body, "int i = 0;");
@@ -369,7 +374,6 @@ void amc::tfunc_Smallstr_Set() {
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     amc::FFunc& func = amc::CreateCurFunc();
-    func.inl=true;
     func.member=true;
     Ins(&R, func.ret  , "void", false);
     Ins(&R, func.comment, "Copy value from RHS.");

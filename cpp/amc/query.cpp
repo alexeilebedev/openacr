@@ -60,18 +60,14 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
                 ch_RemoveAll(*ns.cpp);
                 ch_RemoveAll(*ns.hdr);
                 ch_RemoveAll(*ns.inl);
-                if (amc::_db.cmdline.proto) {
-                    if (!func.priv && !func.globns && !func.oper) {
-                        amc::_db.report.n_func++;
-                        tempstr proto;
-                        PrintFuncProto(func, NULL, proto);
-                        algo::InsertIndent(*ns.hdr, proto, 0);
-                    }
+                if (amc::_db.cmdline.proto || func.extrn) {
+                    amc::_db.report.n_func++;
+                    tempstr proto;
+                    PrintFuncProto(func, NULL, proto);
+                    algo::InsertIndent(*ns.hdr, proto, 0);
                 } else {
-                    if (!func.extrn && !func.globns) {
-                        amc::_db.report.n_func++;
-                        PrintFuncBody(ns, func);
-                    }
+                    amc::_db.report.n_func++;
+                    PrintFuncBody(ns, func);
                 }
                 if (ch_N(*ns.hdr)) {
                     out << *ns.hdr;
@@ -90,46 +86,35 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
 // -----------------------------------------------------------------------------
 
 void amc::Main_Querymode() {
+    tempstr value(algo::Pathcomp(amc::_db.cmdline.query, ":RR"));
+    if (value == "") {
+        value = "%";
+    } else if (FindStr(value, ".")==-1) {
+        value << ".%";
+    }
+    strptr key = Pathcomp(amc::_db.cmdline.query, ":RL");
+    if (key == "") {
+        key = "%";
+    }
     algo_lib::Regx regx_key;
-    Regx_ReadSql(regx_key, Query_GetKey(), true);
+    Regx_ReadSql(regx_key, key, true);
     algo_lib::Regx regx_value;
-    Regx_ReadSql(regx_value, Query_GetValue(), true);
+    Regx_ReadSql(regx_value, value, true);
     algo_lib::Replscope R;
     tempstr out;
 
     if (Regx_Match(regx_key, "ctype")) {
+        verblog("query ctype "<<regx_value.expr);
         Query_Ctype(regx_value,out);
     }
     if (Regx_Match(regx_key, "func")) {
+        verblog("query func "<<regx_value.expr);
         Query_Func(regx_value,out);
     }
     frep_(i,ch_N(out)) {
         amc::_db.report.n_cppline += ch_qFind(out, i) == '\n';
     }
     prlog(out);
-}
-
-// -----------------------------------------------------------------------------
-
-tempstr amc::Query_GetKey() {
-    strptr key = Pathcomp(amc::_db.cmdline.query, ":RL");
-    if (key == "") {
-        key = "%";
-    }
-    return tempstr(key);
-}
-
-// -----------------------------------------------------------------------------
-
-tempstr amc::Query_GetValue() {
-    return tempstr(Pathcomp(amc::_db.cmdline.query, ":RR"));
-}
-
-// -----------------------------------------------------------------------------
-
-// Parse query argument, return regex of namespaces
-tempstr amc::Query_GetNs() {
-    return tempstr(Pathcomp(amc::_db.cmdline.query, ":RR.LL"));
 }
 
 // -----------------------------------------------------------------------------

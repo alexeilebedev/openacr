@@ -34,12 +34,12 @@ namespace src_func { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/src/func/edit.cpp -- Implementation of -e
+    // cpp/src_func/edit.cpp -- Implementation of -e
     //
     void Main_EditFunc();
 
     // -------------------------------------------------------------------
-    // cpp/src/func/fileloc.cpp -- Location in file, for each function
+    // cpp/src_func/fileloc.cpp -- Location in file, for each function
     //
 
     // Remember current file location
@@ -53,7 +53,7 @@ namespace src_func { // update-hdr
     tempstr Location(src_func::FFunc &func, int lineoffset);
 
     // -------------------------------------------------------------------
-    // cpp/src/func/header.cpp -- Generate prototypes in header
+    // cpp/src_func/header.cpp -- Generate prototypes in header
     //
 
     // Go over all sources (includes & sources!)
@@ -61,7 +61,7 @@ namespace src_func { // update-hdr
     void Main_UpdateHeader();
 
     // -------------------------------------------------------------------
-    // cpp/src/func/iffy.cpp -- Check iffy function prototypes
+    // cpp/src_func/iffy.cpp -- Check iffy function prototypes
     //
 
     // Check if the function is iffy and set FUNC.IFFY flag if so.
@@ -69,7 +69,7 @@ namespace src_func { // update-hdr
     void ComputeIffy(src_func::FFunc &func);
 
     // -------------------------------------------------------------------
-    // cpp/src/func/list.cpp -- Print list of functions
+    // cpp/src_func/list.cpp -- Print list of functions
     //
 
     // Collect list of global function prototypes
@@ -78,7 +78,7 @@ namespace src_func { // update-hdr
     void Main_ListFunc();
 
     // -------------------------------------------------------------------
-    // cpp/src/func/main.cpp -- Main file
+    // cpp/src_func/main.cpp -- Main file
     //
 
     // Remove single-line C++ comment from file
@@ -113,14 +113,14 @@ namespace src_func { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/src/func/nextfile.cpp -- Find next file in target
+    // cpp/src_func/nextfile.cpp -- Find next file in target
     //
 
     // Find and print next/previous file
     void Main_Nextfile();
 
     // -------------------------------------------------------------------
-    // cpp/src/func/scan.cpp -- Scan sources to collect functions
+    // cpp/src_func/scan.cpp -- Scan sources to collect functions
     //
 
     // Read functions from all sources

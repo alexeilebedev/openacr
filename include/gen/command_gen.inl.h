@@ -452,6 +452,7 @@ inline void command::acr_dm_Init(command::acr_dm& parent) {
     parent.arg_max   	= 0; // (command.acr_dm.arg)
     parent.write_ours = bool(false);
     parent.msize = u8(7);
+    parent.rowid = bool(false);
 }
 inline command::acr_dm_proc::acr_dm_proc() {
     command::acr_dm_proc_Init(*this);
@@ -552,10 +553,6 @@ inline void command::acr_proc_Init(command::acr_proc& parent) {
 }
 inline command::amc::amc() {
     command::amc_Init(*this);
-}
-
-inline command::amc_dml::amc_dml() {
-    command::amc_dml_Init(*this);
 }
 
 inline command::amc_gc::amc_gc() {
@@ -661,6 +658,27 @@ inline command::ams_sendtest_proc::~ams_sendtest_proc() {
 // Set all fields to initial values.
 inline void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) {
     parent.path = algo::strptr("bin/ams_sendtest");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+inline command::apm::apm() {
+    command::apm_Init(*this);
+}
+
+inline command::apm_proc::apm_proc() {
+    command::apm_proc_Init(*this);
+}
+
+inline command::apm_proc::~apm_proc() {
+    command::apm_proc_Uninit(*this);
+}
+
+
+// --- command.apm_proc..Init
+// Set all fields to initial values.
+inline void command::apm_proc_Init(command::apm_proc& parent) {
+    parent.path = algo::strptr("bin/apm");
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);
@@ -1556,29 +1574,6 @@ inline void command::gcli_proc_Init(command::gcli_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::lib_ctype::lib_ctype() {
-    command::lib_ctype_Init(*this);
-}
-
-
-// --- command.lib_ctype..Init
-// Set all fields to initial values.
-inline void command::lib_ctype_Init(command::lib_ctype& parent) {
-    parent.in = algo::strptr("data");
-}
-inline command::lib_exec::lib_exec() {
-    command::lib_exec_Init(*this);
-}
-
-
-// --- command.lib_exec..Init
-// Set all fields to initial values.
-inline void command::lib_exec_Init(command::lib_exec& parent) {
-    parent.dry_run = bool(false);
-    parent.q = bool(true);
-    parent.maxjobs = i32(8);
-    parent.complooo = bool(false);
-}
 inline command::mdbg::mdbg() {
     command::mdbg_Init(*this);
 }
@@ -1823,6 +1818,9 @@ inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::ob::ob() {
+}
+
 inline command::orgfile::orgfile() {
     command::orgfile_Init(*this);
 }

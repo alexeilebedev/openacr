@@ -208,7 +208,6 @@ static amc::FFunc* GenCreateFrom(amc::FField* left, amc::FField* right, bool dir
         Set(R, "$Ret", Subst(R, dir ? "$NSright::$Typeright" : "$NSleft::$Typeleft"));
         func->ret = Subst(R, "$Ret");
         Set(R, "$FuncName", Subst(R, dir ? "$NSright_$Typeright_CreateFrom" : "$NSleft_$Typeleft_CreateFrom"));
-        func->funcname = Subst(R, "$NSleft::$FuncName");
         Ins(&R, func->proto, dir ? "$FuncName(const $NSleft::$Typeleft& lhs)"
             : "$FuncName(const $NSright::$Typeright& lhs)", false);
         Ins(&R, func->body,"$Ret result;");

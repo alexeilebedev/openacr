@@ -32,17 +32,22 @@
 //#pragma endinclude
 namespace lib_git { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_git.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:lib_git.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_git.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_git...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_git.trace..Print
-// print string representation of lib_git::trace to string LHS, no header -- cprint:lib_git.trace.String
-void lib_git::trace_Print(lib_git::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_git.trace.String  printfmt:Tuple
+void lib_git::trace_Print(lib_git::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_git.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -254,8 +259,9 @@ bool lib_git::FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_
 }
 
 // --- lib_git.FieldId..Print
-// print string representation of lib_git::FieldId to string LHS, no header -- cprint:lib_git.FieldId.String
-void lib_git::FieldId_Print(lib_git::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_git.FieldId.String  printfmt:Raw
+void lib_git::FieldId_Print(lib_git::FieldId& row, algo::cstring& str) {
     lib_git::value_Print(row, str);
 }
 

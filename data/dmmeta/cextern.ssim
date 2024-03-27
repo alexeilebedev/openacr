@@ -8,7 +8,6 @@ dmmeta.cextern  ctype:SQLINTEGER  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:SQLLEN  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:SQLUINTEGER  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:ShStream  initmemset:N  isstruct:N
-dmmeta.cextern  ctype:algo.DBBox  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.ImdbGetTraceFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImdbInsertStrptrMaybeFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImdbMainLoopFcn  initmemset:Y  isstruct:N
@@ -17,7 +16,6 @@ dmmeta.cextern  ctype:algo.ImrowNItemsFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImrowPrintFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImrowRowidFindFcn  initmemset:Y  isstruct:N
 dmmeta.cextern  ctype:algo.ImrowXrefXFcn  initmemset:Y  isstruct:N
-dmmeta.cextern  ctype:algo.PageBuf  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.PrlogFcn  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.TFNNtTestAlert  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:algo.memptr  initmemset:N  isstruct:N

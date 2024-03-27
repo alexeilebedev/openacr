@@ -23,4 +23,5 @@ dev.syslib  syslib:readline  comment:"Files needed to develop programs which use
 dev.syslib  syslib:rt  comment:"Object files for development using standard C libraries."
 dev.syslib  syslib:ssl  comment:"Files for development of applications which will use OpenSSL"
 dev.syslib  syslib:stdc++  comment:""
+dev.syslib  syslib:tinyxml2  comment:"XML toolkit"
 dev.syslib  syslib:uuid  comment:"Universally unique ID library"

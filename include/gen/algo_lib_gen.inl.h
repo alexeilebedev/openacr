@@ -1191,6 +1191,73 @@ inline u64 algo_lib::exec_args_rowid_Get(algo::cstring &elem) {
     return u64(id);
 }
 
+// --- algo_lib.FDb.dirstack.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::dirstack_EmptyQ() {
+    return _db.dirstack_n == 0;
+}
+
+// --- algo_lib.FDb.dirstack.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* algo_lib::dirstack_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.dirstack_n;
+    if (idx >= lim) return NULL;
+    return _db.dirstack_elems + idx;
+}
+
+// --- algo_lib.FDb.dirstack.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> algo_lib::dirstack_Getary() {
+    return algo::aryptr<algo::cstring>(_db.dirstack_elems, _db.dirstack_n);
+}
+
+// --- algo_lib.FDb.dirstack.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* algo_lib::dirstack_Last() {
+    return dirstack_Find(u64(_db.dirstack_n-1));
+}
+
+// --- algo_lib.FDb.dirstack.Max
+// Return max. number of items in the array
+inline i32 algo_lib::dirstack_Max() {
+    return _db.dirstack_max;
+}
+
+// --- algo_lib.FDb.dirstack.N
+// Return number of items in the array
+inline i32 algo_lib::dirstack_N() {
+    return _db.dirstack_n;
+}
+
+// --- algo_lib.FDb.dirstack.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::dirstack_Reserve(int n) {
+    u32 new_n = _db.dirstack_n + n;
+    if (UNLIKELY(new_n > _db.dirstack_max)) {
+        dirstack_AbsReserve(new_n);
+    }
+}
+
+// --- algo_lib.FDb.dirstack.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& algo_lib::dirstack_qFind(u64 t) {
+    return _db.dirstack_elems[t];
+}
+
+// --- algo_lib.FDb.dirstack.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& algo_lib::dirstack_qLast() {
+    return dirstack_qFind(u64(_db.dirstack_n-1));
+}
+
+// --- algo_lib.FDb.dirstack.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::dirstack_rowid_Get(algo::cstring &elem) {
+    u64 id = &elem - _db.dirstack_elems;
+    return u64(id);
+}
+
 // --- algo_lib.FDb.temp_strings_curs.Reset
 // cursor points to valid item
 inline void algo_lib::_db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent) {
@@ -1350,6 +1417,31 @@ inline bool algo_lib::_db_exec_args_curs_ValidQ(_db_exec_args_curs &curs) {
 // --- algo_lib.FDb.exec_args_curs.Access
 // item access
 inline algo::cstring& algo_lib::_db_exec_args_curs_Access(_db_exec_args_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.FDb.dirstack_curs.Next
+// proceed to next item
+inline void algo_lib::_db_dirstack_curs_Next(_db_dirstack_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.FDb.dirstack_curs.Reset
+inline void algo_lib::_db_dirstack_curs_Reset(_db_dirstack_curs &curs, algo_lib::FDb &parent) {
+    curs.elems = parent.dirstack_elems;
+    curs.n_elems = parent.dirstack_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.FDb.dirstack_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::_db_dirstack_curs_ValidQ(_db_dirstack_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.FDb.dirstack_curs.Access
+// item access
+inline algo::cstring& algo_lib::_db_dirstack_curs_Access(_db_dirstack_curs &curs) {
     return curs.elems[curs.index];
 }
 inline algo_lib::FDispsigcheck::FDispsigcheck() {
