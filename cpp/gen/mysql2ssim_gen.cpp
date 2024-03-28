@@ -66,17 +66,22 @@ const char *mysql2ssim_help =
 } // namespace mysql2ssim
 namespace mysql2ssim { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:mysql2ssim.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:mysql2ssim.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:mysql2ssim.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:mysql2ssim...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- mysql2ssim.trace..Print
-// print string representation of mysql2ssim::trace to string LHS, no header -- cprint:mysql2ssim.trace.String
-void mysql2ssim::trace_Print(mysql2ssim::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:mysql2ssim.trace.String  printfmt:Tuple
+void mysql2ssim::trace_Print(mysql2ssim::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "mysql2ssim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -813,8 +818,9 @@ bool mysql2ssim::FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strp
 }
 
 // --- mysql2ssim.FieldId..Print
-// print string representation of mysql2ssim::FieldId to string LHS, no header -- cprint:mysql2ssim.FieldId.String
-void mysql2ssim::FieldId_Print(mysql2ssim::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:mysql2ssim.FieldId.String  printfmt:Raw
+void mysql2ssim::FieldId_Print(mysql2ssim::FieldId& row, algo::cstring& str) {
     mysql2ssim::value_Print(row, str);
 }
 

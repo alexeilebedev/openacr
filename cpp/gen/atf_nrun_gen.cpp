@@ -60,23 +60,32 @@ const char *atf_nrun_help =
 } // namespace atf_nrun
 namespace atf_nrun { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_nrun.FDb._db.InitReflection
     static void          InitReflection();
     // Update cycles count from previous clock capture
+    // func:atf_nrun.FDb.ind_running.UpdateCycles
     static void          ind_running_UpdateCycles() __attribute__((nothrow));
+    // func:atf_nrun.FDb.ind_running.Call
     static void          ind_running_Call() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:atf_nrun.FDb.zd_todo.UpdateCycles
     static void          zd_todo_UpdateCycles() __attribute__((nothrow));
+    // func:atf_nrun.FDb.zd_todo.Call
     static void          zd_todo_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_nrun.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_nrun.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_nrun...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_nrun.trace..Print
-// print string representation of atf_nrun::trace to string LHS, no header -- cprint:atf_nrun.trace.String
-void atf_nrun::trace_Print(atf_nrun::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_nrun.trace.String  printfmt:Tuple
+void atf_nrun::trace_Print(atf_nrun::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_nrun.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -994,8 +1003,9 @@ bool atf_nrun::FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr i
 }
 
 // --- atf_nrun.FieldId..Print
-// print string representation of atf_nrun::FieldId to string LHS, no header -- cprint:atf_nrun.FieldId.String
-void atf_nrun::FieldId_Print(atf_nrun::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_nrun.FieldId.String  printfmt:Raw
+void atf_nrun::FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) {
     atf_nrun::value_Print(row, str);
 }
 

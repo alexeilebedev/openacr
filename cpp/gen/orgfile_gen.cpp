@@ -45,7 +45,7 @@ orgfile::FDb    orgfile::_db;     // dependency found via dev.targdep
 
 namespace orgfile {
 const char *orgfile_help =
-"orgfile: organize and deduplicate files by timestamp and by contents\n"
+"orgfile: Organize and deduplicate files by timestamp and by contents\n"
 "Usage: orgfile [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -65,18 +65,24 @@ const char *orgfile_help =
 } // namespace orgfile
 namespace orgfile { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:orgfile.FDb._db.InitReflection
     static void          InitReflection();
+    // func:orgfile.FDb.timefmt.InputMaybe
     static bool          timefmt_InputMaybe(dev::Timefmt &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:orgfile.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:orgfile.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:orgfile...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- orgfile.trace..Print
-// print string representation of orgfile::trace to string LHS, no header -- cprint:orgfile.trace.String
-void orgfile::trace_Print(orgfile::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:orgfile.trace.String  printfmt:Tuple
+void orgfile::trace_Print(orgfile::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "orgfile.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1169,8 +1175,9 @@ bool orgfile::FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_
 }
 
 // --- orgfile.FieldId..Print
-// print string representation of orgfile::FieldId to string LHS, no header -- cprint:orgfile.FieldId.String
-void orgfile::FieldId_Print(orgfile::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:orgfile.FieldId.String  printfmt:Raw
+void orgfile::FieldId_Print(orgfile::FieldId& row, algo::cstring& str) {
     orgfile::value_Print(row, str);
 }
 
@@ -1249,20 +1256,30 @@ bool orgfile::TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_
 }
 
 // --- orgfile.TableId..Print
-// print string representation of orgfile::TableId to string LHS, no header -- cprint:orgfile.TableId.String
-void orgfile::TableId_Print(orgfile::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:orgfile.TableId.String  printfmt:Raw
+void orgfile::TableId_Print(orgfile::TableId& row, algo::cstring& str) {
     orgfile::value_Print(row, str);
 }
 
 // --- orgfile.dedup..ReadFieldMaybe
-bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup &parent, algo::strptr field, algo::strptr strval) {
+bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     orgfile::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case orgfile_FieldId_original: retval = algo::cstring_ReadStrptrMaybe(parent.original, strval); break;
-        case orgfile_FieldId_duplicate: retval = algo::cstring_ReadStrptrMaybe(parent.duplicate, strval); break;
-        case orgfile_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
+        case orgfile_FieldId_original: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.original, strval);
+            break;
+        }
+        case orgfile_FieldId_duplicate: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.duplicate, strval);
+            break;
+        }
+        case orgfile_FieldId_comment: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1284,8 +1301,9 @@ bool orgfile::dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str)
 }
 
 // --- orgfile.dedup..Print
-// print string representation of orgfile::dedup to string LHS, no header -- cprint:orgfile.dedup.String
-void orgfile::dedup_Print(orgfile::dedup & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:orgfile.dedup.String  printfmt:Tuple
+void orgfile::dedup_Print(orgfile::dedup& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "orgfile.dedup";
 
@@ -1300,14 +1318,23 @@ void orgfile::dedup_Print(orgfile::dedup & row, algo::cstring &str) {
 }
 
 // --- orgfile.move..ReadFieldMaybe
-bool orgfile::move_ReadFieldMaybe(orgfile::move &parent, algo::strptr field, algo::strptr strval) {
+bool orgfile::move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     orgfile::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case orgfile_FieldId_pathname: retval = algo::cstring_ReadStrptrMaybe(parent.pathname, strval); break;
-        case orgfile_FieldId_tgtfile: retval = algo::cstring_ReadStrptrMaybe(parent.tgtfile, strval); break;
-        case orgfile_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
+        case orgfile_FieldId_pathname: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pathname, strval);
+            break;
+        }
+        case orgfile_FieldId_tgtfile: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.tgtfile, strval);
+            break;
+        }
+        case orgfile_FieldId_comment: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1329,8 +1356,9 @@ bool orgfile::move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str) {
 }
 
 // --- orgfile.move..Print
-// print string representation of orgfile::move to string LHS, no header -- cprint:orgfile.move.String
-void orgfile::move_Print(orgfile::move & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:orgfile.move.String  printfmt:Tuple
+void orgfile::move_Print(orgfile::move& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "orgfile.move";
 

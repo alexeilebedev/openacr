@@ -17,12 +17,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/srcfile.cpp -- Create, delete, rename source file
 //
 
 #include "include/acr_ed.h"
+#include "include/gen/dev_gen.h"
 
 // -----------------------------------------------------------------------------
 
@@ -53,7 +54,9 @@ void acr_ed::edaction_Create_Srcfile() {
          <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile));
 
     bool readme = Pathcomp(acr_ed::_db.cmdline.srcfile,"/LL") == "txt";
-    bool cpp_or_h = !readme;
+    bool cpp = GetFileExt(acr_ed::_db.cmdline.srcfile) == ".cpp";
+    bool h = GetFileExt(acr_ed::_db.cmdline.srcfile) == ".h";
+    bool cpp_or_h = cpp || h;
     bool need_target = cpp_or_h;
 
     if (need_target) {
@@ -123,12 +126,6 @@ void acr_ed::edaction_Rename_Srcfile() {
             acr_ed::_db.cmdline.target = target->target;
         }
     }
-
-    prlog("acr_ed.rename_srcfile"
-          <<Keyval("from",acr_ed::_db.cmdline.srcfile)
-          <<Keyval("to",acr_ed::_db.cmdline.rename)
-          <<Keyval("target",acr_ed::_db.cmdline.target));
-
     algo_lib::Replscope R;
     Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
     Set(R, "$to", acr_ed::_db.cmdline.rename);
@@ -138,7 +135,7 @@ void acr_ed::edaction_Rename_Srcfile() {
     acr_ed::FTarget *target=acr_ed::ind_target_Find(acr_ed::_db.cmdline.target);
     if (target) {
         Set(R, "$target", target->target);
-        Ins(&R, acr_ed::_db.script, "acr -targsrc:%/$srcfile -rename $target/$srcfile -rename");
+        Ins(&R, acr_ed::_db.script, "acr targsrc:%/$srcfile -rename $target/$srcfile -write");
     }
 
     vrfy(FileQ(acr_ed::_db.cmdline.srcfile),
@@ -150,8 +147,7 @@ void acr_ed::edaction_Rename_Srcfile() {
          , tempstr()<<"acr_ed.baddir"
          <<Keyval("dirname",GetDirName(acr_ed::_db.cmdline.rename)));
 
-    Ins(&R, acr_ed::_db.script, "acr gitfile:$srcfile -rename:$to -write -print:N");
-    Ins(&R, acr_ed::_db.script, "git mv $srcfile $to");
+    Ins(&R, acr_ed::_db.script, "acr gitfile:$srcfile -rename:$to -write -print:N -g");
     Ins(&R, acr_ed::_db.script, "bin/src_hdr -write");
 }
 
@@ -159,17 +155,16 @@ void acr_ed::edaction_Rename_Srcfile() {
 
 // Delete cpp,h, or readme file
 void acr_ed::edaction_Delete_Srcfile() {
-    prlog("acr_ed.delete_srcfile"
-          <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile));
-
-    algo_lib::Replscope R;
-    Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
     vrfy(FileQ(acr_ed::_db.cmdline.srcfile),
          tempstr()<<"acr_ed.nosrcfile"
          <<Keyval("srcfile",acr_ed::_db.cmdline.srcfile)
          <<Keyval("comment","source file not found"));
 
-    Ins(&R, acr_ed::_db.script, "acr gitfile:$srcfile -del -write");
-    Ins(&R, acr_ed::_db.script, "git rm -f $srcfile");
-    Ins(&R, acr_ed::_db.script, "bin/src_hdr -write");
+    command::acr acr;
+    acr.query << "dev.gitfile:"<<acr_ed::_db.cmdline.srcfile;
+    acr.del=true;
+    acr.write=true;
+    acr.g=true;
+    acr_ed::_db.script <<  acr_ToCmdline(acr) << eol;
+    acr_ed::_db.script << "bin/src_hdr -write" << eol;
 }

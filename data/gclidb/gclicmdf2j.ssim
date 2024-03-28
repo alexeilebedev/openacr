@@ -69,7 +69,7 @@ gclidb.gclicmdf2j  gclicmdf2j:repojob/gclidb.Mrjob.status@status  dup:N  comment
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.default_branch@default_branch  dup:N  comment:""
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.descr@description  dup:N  comment:""
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.grepo@full_name  dup:N  comment:""
-gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.grepo@name  dup:N  comment:""
+gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.grepo@path_with_namespace  dup:N  comment:""
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.keyid@full_name  dup:N  comment:""
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.keyid@id  dup:N  comment:""
 gclidb.gclicmdf2j  gclicmdf2j:token2repos/gclidb.Grepo.priv@visibility  dup:N  comment:""

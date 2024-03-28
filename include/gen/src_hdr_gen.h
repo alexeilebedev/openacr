@@ -24,8 +24,8 @@
 
 #pragma once
 #include "include/gen/algo_gen.h"
-#include "include/gen/command_gen.h"
 #include "include/gen/dev_gen.h"
+#include "include/gen/command_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
 // gen:ns_enums
@@ -42,21 +42,23 @@ enum { src_hdr_FieldIdEnum_N = 1 };
 // --- src_hdr_TableIdEnum
 
 enum src_hdr_TableIdEnum {                  // src_hdr.TableId.value
-     src_hdr_TableId_dev_License      = 0   // dev.License -> src_hdr.FLicense
-    ,src_hdr_TableId_dev_license      = 0   // dev.license -> src_hdr.FLicense
-    ,src_hdr_TableId_dmmeta_Ns        = 1   // dmmeta.Ns -> src_hdr.FNs
-    ,src_hdr_TableId_dmmeta_ns        = 1   // dmmeta.ns -> src_hdr.FNs
-    ,src_hdr_TableId_dmmeta_Nsx       = 2   // dmmeta.Nsx -> src_hdr.FNsx
-    ,src_hdr_TableId_dmmeta_nsx       = 2   // dmmeta.nsx -> src_hdr.FNsx
-    ,src_hdr_TableId_dev_Scriptfile   = 3   // dev.Scriptfile -> src_hdr.FScriptfile
-    ,src_hdr_TableId_dev_scriptfile   = 3   // dev.scriptfile -> src_hdr.FScriptfile
-    ,src_hdr_TableId_dev_Target       = 4   // dev.Target -> src_hdr.FTarget
-    ,src_hdr_TableId_dev_target       = 4   // dev.target -> src_hdr.FTarget
-    ,src_hdr_TableId_dev_Targsrc      = 5   // dev.Targsrc -> src_hdr.FTargsrc
-    ,src_hdr_TableId_dev_targsrc      = 5   // dev.targsrc -> src_hdr.FTargsrc
+     src_hdr_TableId_dev_Copyright    = 0   // dev.Copyright -> src_hdr.FCopyright
+    ,src_hdr_TableId_dev_copyright    = 0   // dev.copyright -> src_hdr.FCopyright
+    ,src_hdr_TableId_dev_License      = 1   // dev.License -> src_hdr.FLicense
+    ,src_hdr_TableId_dev_license      = 1   // dev.license -> src_hdr.FLicense
+    ,src_hdr_TableId_dmmeta_Ns        = 2   // dmmeta.Ns -> src_hdr.FNs
+    ,src_hdr_TableId_dmmeta_ns        = 2   // dmmeta.ns -> src_hdr.FNs
+    ,src_hdr_TableId_dmmeta_Nsx       = 3   // dmmeta.Nsx -> src_hdr.FNsx
+    ,src_hdr_TableId_dmmeta_nsx       = 3   // dmmeta.nsx -> src_hdr.FNsx
+    ,src_hdr_TableId_dev_Scriptfile   = 4   // dev.Scriptfile -> src_hdr.FScriptfile
+    ,src_hdr_TableId_dev_scriptfile   = 4   // dev.scriptfile -> src_hdr.FScriptfile
+    ,src_hdr_TableId_dev_Target       = 5   // dev.Target -> src_hdr.FTarget
+    ,src_hdr_TableId_dev_target       = 5   // dev.target -> src_hdr.FTarget
+    ,src_hdr_TableId_dev_Targsrc      = 6   // dev.Targsrc -> src_hdr.FTargsrc
+    ,src_hdr_TableId_dev_targsrc      = 6   // dev.targsrc -> src_hdr.FTargsrc
 };
 
-enum { src_hdr_TableIdEnum_N = 12 };
+enum { src_hdr_TableIdEnum_N = 14 };
 
 namespace src_hdr { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -74,8 +76,10 @@ namespace src_hdr { struct _db_nsx_curs; }
 namespace src_hdr { struct _db_license_curs; }
 namespace src_hdr { struct _db_target_curs; }
 namespace src_hdr { struct _db_scriptfile_curs; }
+namespace src_hdr { struct _db_copyright_curs; }
 namespace src_hdr { struct target_c_targsrc_curs; }
 namespace src_hdr { struct FCopyline; }
+namespace src_hdr { struct FCopyright; }
 namespace src_hdr { struct trace; }
 namespace src_hdr { struct FDb; }
 namespace src_hdr { struct FNsx; }
@@ -104,8 +108,43 @@ private:
 };
 
 // Set all fields to initial values.
+// func:src_hdr.FCopyline..Init
 void                 FCopyline_Init(src_hdr::FCopyline& fcopyline);
+// func:src_hdr.FCopyline..Uninit
 void                 FCopyline_Uninit(src_hdr::FCopyline& fcopyline) __attribute__((nothrow));
+
+// --- src_hdr.FCopyright
+// create: src_hdr.FDb.copyright (Lary)
+// global access: c_dflt_copyright (Ptr)
+// global access: ind_copyright (Thash)
+struct FCopyright { // src_hdr.FCopyright
+    algo::Smallstr50       copyright;            //
+    bool                   dflt;                 //   false
+    algo::Comment          comment;              //
+    src_hdr::FCopyright*   ind_copyright_next;   // hash next
+private:
+    friend src_hdr::FCopyright& copyright_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend src_hdr::FCopyright* copyright_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 copyright_RemoveAll() __attribute__((nothrow));
+    friend void                 copyright_RemoveLast() __attribute__((nothrow));
+    FCopyright();
+    ~FCopyright();
+    FCopyright(const FCopyright&){ /*disallow copy constructor */}
+    void operator =(const FCopyright&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+// func:src_hdr.FCopyright.base.CopyOut
+void                 copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:src_hdr.FCopyright.base.CopyIn
+void                 copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:src_hdr.FCopyright..Init
+void                 FCopyright_Init(src_hdr::FCopyright& copyright);
+// func:src_hdr.FCopyright..Uninit
+void                 FCopyright_Uninit(src_hdr::FCopyright& copyright) __attribute__((nothrow));
 
 // --- src_hdr.trace
 #pragma pack(push,1)
@@ -114,12 +153,14 @@ struct trace { // src_hdr.trace
 };
 #pragma pack(pop)
 
-// print string representation of src_hdr::trace to string LHS, no header -- cprint:src_hdr.trace.String
-void                 trace_Print(src_hdr::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:src_hdr.trace.String  printfmt:Tuple
+// func:src_hdr.trace..Print
+void                 trace_Print(src_hdr::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- src_hdr.FDb
 // create: src_hdr.FDb._db (Global)
-struct FDb { // src_hdr.FDb
+struct FDb { // src_hdr.FDb: In-memory database for src_hdr
     command::src_hdr        cmdline;                       //
     src_hdr::FTargsrc*      targsrc_lary[32];              // level array
     i32                     targsrc_n;                     // number of elements in array
@@ -147,6 +188,12 @@ struct FDb { // src_hdr.FDb
     src_hdr::FCopyline**    ind_fcopyline_buckets_elems;   // pointer to bucket array
     i32                     ind_fcopyline_buckets_n;       // number of elements in bucket array
     i32                     ind_fcopyline_n;               // number of elements in the hash table
+    src_hdr::FCopyright*    copyright_lary[32];            // level array
+    i32                     copyright_n;                   // number of elements in array
+    src_hdr::FCopyright*    c_dflt_copyright;              // optional pointer
+    src_hdr::FCopyright**   ind_copyright_buckets_elems;   // pointer to bucket array
+    i32                     ind_copyright_buckets_n;       // number of elements in bucket array
+    i32                     ind_copyright_n;               // number of elements in the hash table
     src_hdr::trace          trace;                         //
 };
 
@@ -154,18 +201,26 @@ struct FDb { // src_hdr.FDb
 // The following fields are updated:
 //     src_hdr.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:src_hdr.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:src_hdr.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:src_hdr.FDb._db.Step
 void                 Step();
 // Main function
+// func:src_hdr.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:src_hdr.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:src_hdr.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:src_hdr.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -173,315 +228,534 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:src_hdr.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:src_hdr.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:src_hdr.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:src_hdr.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.targsrc.Alloc
 src_hdr::FTargsrc&   targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.targsrc.AllocMaybe
 src_hdr::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.targsrc.InsertMaybe
 src_hdr::FTargsrc*   targsrc_InsertMaybe(const dev::Targsrc &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.targsrc.AllocMem
 void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.targsrc.EmptyQ
 bool                 targsrc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.targsrc.Find
 src_hdr::FTargsrc*   targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.targsrc.Last
 src_hdr::FTargsrc*   targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.targsrc.N
 i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.targsrc.qFind
 src_hdr::FTargsrc&   targsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.targsrc.XrefMaybe
 bool                 targsrc_XrefMaybe(src_hdr::FTargsrc &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.ns.Alloc
 src_hdr::FNs&        ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.ns.AllocMaybe
 src_hdr::FNs*        ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.ns.InsertMaybe
 src_hdr::FNs*        ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.ns.AllocMem
 void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.ns.EmptyQ
 bool                 ns_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.ns.Find
 src_hdr::FNs*        ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.ns.Last
 src_hdr::FNs*        ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.ns.N
 i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.ns.qFind
 src_hdr::FNs&        ns_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.ns.XrefMaybe
 bool                 ns_XrefMaybe(src_hdr::FNs &row);
 
 // Return true if hash is empty
+// func:src_hdr.FDb.ind_ns.EmptyQ
 bool                 ind_ns_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:src_hdr.FDb.ind_ns.Find
 src_hdr::FNs*        ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:src_hdr.FDb.ind_ns.FindX
 src_hdr::FNs&        ind_ns_FindX(const algo::strptr& key);
 // Return number of items in the hash
+// func:src_hdr.FDb.ind_ns.N
 i32                  ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_hdr.FDb.ind_ns.InsertMaybe
 bool                 ind_ns_InsertMaybe(src_hdr::FNs& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_hdr.FDb.ind_ns.Remove
 void                 ind_ns_Remove(src_hdr::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:src_hdr.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.nsx.Alloc
 src_hdr::FNsx&       nsx_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.nsx.AllocMaybe
 src_hdr::FNsx*       nsx_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.nsx.InsertMaybe
 src_hdr::FNsx*       nsx_InsertMaybe(const dmmeta::Nsx &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.nsx.AllocMem
 void*                nsx_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.nsx.EmptyQ
 bool                 nsx_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.nsx.Find
 src_hdr::FNsx*       nsx_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.nsx.Last
 src_hdr::FNsx*       nsx_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.nsx.N
 i32                  nsx_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.nsx.RemoveLast
 void                 nsx_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.nsx.qFind
 src_hdr::FNsx&       nsx_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.nsx.XrefMaybe
 bool                 nsx_XrefMaybe(src_hdr::FNsx &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.license.Alloc
 src_hdr::FLicense&   license_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.license.AllocMaybe
 src_hdr::FLicense*   license_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.license.InsertMaybe
 src_hdr::FLicense*   license_InsertMaybe(const dev::License &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.license.AllocMem
 void*                license_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.license.EmptyQ
 bool                 license_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.license.Find
 src_hdr::FLicense*   license_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.license.Last
 src_hdr::FLicense*   license_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.license.N
 i32                  license_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:src_hdr.FDb.license.RemoveAll
 void                 license_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.license.RemoveLast
 void                 license_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.license.qFind
 src_hdr::FLicense&   license_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.license.XrefMaybe
 bool                 license_XrefMaybe(src_hdr::FLicense &row);
 
 // Return true if hash is empty
+// func:src_hdr.FDb.ind_license.EmptyQ
 bool                 ind_license_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:src_hdr.FDb.ind_license.Find
 src_hdr::FLicense*   ind_license_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:src_hdr.FDb.ind_license.FindX
 src_hdr::FLicense&   ind_license_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_hdr.FDb.ind_license.GetOrCreate
 src_hdr::FLicense&   ind_license_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:src_hdr.FDb.ind_license.N
 i32                  ind_license_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_hdr.FDb.ind_license.InsertMaybe
 bool                 ind_license_InsertMaybe(src_hdr::FLicense& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_hdr.FDb.ind_license.Remove
 void                 ind_license_Remove(src_hdr::FLicense& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:src_hdr.FDb.ind_license.Reserve
 void                 ind_license_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.target.Alloc
 src_hdr::FTarget&    target_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.target.AllocMaybe
 src_hdr::FTarget*    target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.target.InsertMaybe
 src_hdr::FTarget*    target_InsertMaybe(const dev::Target &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.target.AllocMem
 void*                target_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.target.EmptyQ
 bool                 target_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.target.Find
 src_hdr::FTarget*    target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.target.Last
 src_hdr::FTarget*    target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.target.N
 i32                  target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:src_hdr.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.target.RemoveLast
 void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.target.qFind
 src_hdr::FTarget&    target_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.target.XrefMaybe
 bool                 target_XrefMaybe(src_hdr::FTarget &row);
 
 // Return true if hash is empty
+// func:src_hdr.FDb.ind_target.EmptyQ
 bool                 ind_target_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:src_hdr.FDb.ind_target.Find
 src_hdr::FTarget*    ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:src_hdr.FDb.ind_target.FindX
 src_hdr::FTarget&    ind_target_FindX(const algo::strptr& key);
 // Return number of items in the hash
+// func:src_hdr.FDb.ind_target.N
 i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_hdr.FDb.ind_target.InsertMaybe
 bool                 ind_target_InsertMaybe(src_hdr::FTarget& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_hdr.FDb.ind_target.Remove
 void                 ind_target_Remove(src_hdr::FTarget& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:src_hdr.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.scriptfile.Alloc
 src_hdr::FScriptfile& scriptfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.scriptfile.AllocMaybe
 src_hdr::FScriptfile* scriptfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.scriptfile.InsertMaybe
 src_hdr::FScriptfile* scriptfile_InsertMaybe(const dev::Scriptfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.scriptfile.AllocMem
 void*                scriptfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:src_hdr.FDb.scriptfile.EmptyQ
 bool                 scriptfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.scriptfile.Find
 src_hdr::FScriptfile* scriptfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.scriptfile.Last
 src_hdr::FScriptfile* scriptfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:src_hdr.FDb.scriptfile.N
 i32                  scriptfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:src_hdr.FDb.scriptfile.RemoveAll
 void                 scriptfile_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.scriptfile.RemoveLast
 void                 scriptfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.scriptfile.qFind
 src_hdr::FScriptfile& scriptfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.scriptfile.XrefMaybe
 bool                 scriptfile_XrefMaybe(src_hdr::FScriptfile &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:src_hdr.FDb.fcopyline.Alloc
 src_hdr::FCopyline&  fcopyline_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.fcopyline.AllocMaybe
 src_hdr::FCopyline*  fcopyline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:src_hdr.FDb.fcopyline.Delete
 void                 fcopyline_Delete(src_hdr::FCopyline &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:src_hdr.FDb.fcopyline.AllocMem
 void*                fcopyline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:src_hdr.FDb.fcopyline.FreeMem
 void                 fcopyline_FreeMem(src_hdr::FCopyline &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:src_hdr.FDb.fcopyline.Reserve
 u64                  fcopyline_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:src_hdr.FDb.fcopyline.ReserveMem
 u64                  fcopyline_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.fcopyline.XrefMaybe
 bool                 fcopyline_XrefMaybe(src_hdr::FCopyline &row);
 
 // Return true if hash is empty
+// func:src_hdr.FDb.ind_fcopyline.EmptyQ
 bool                 ind_fcopyline_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:src_hdr.FDb.ind_fcopyline.Find
 src_hdr::FCopyline*  ind_fcopyline_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:src_hdr.FDb.ind_fcopyline.FindX
 src_hdr::FCopyline&  ind_fcopyline_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:src_hdr.FDb.ind_fcopyline.GetOrCreate
 src_hdr::FCopyline&  ind_fcopyline_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:src_hdr.FDb.ind_fcopyline.N
 i32                  ind_fcopyline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_hdr.FDb.ind_fcopyline.InsertMaybe
 bool                 ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_hdr.FDb.ind_fcopyline.Remove
 void                 ind_fcopyline_Remove(src_hdr::FCopyline& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:src_hdr.FDb.ind_fcopyline.Reserve
 void                 ind_fcopyline_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:src_hdr.FDb.copyright.Alloc
+src_hdr::FCopyright& copyright_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:src_hdr.FDb.copyright.AllocMaybe
+src_hdr::FCopyright* copyright_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:src_hdr.FDb.copyright.InsertMaybe
+src_hdr::FCopyright* copyright_InsertMaybe(const dev::Copyright &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:src_hdr.FDb.copyright.AllocMem
+void*                copyright_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:src_hdr.FDb.copyright.EmptyQ
+bool                 copyright_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:src_hdr.FDb.copyright.Find
+src_hdr::FCopyright* copyright_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:src_hdr.FDb.copyright.Last
+src_hdr::FCopyright* copyright_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:src_hdr.FDb.copyright.N
+i32                  copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:src_hdr.FDb.copyright.RemoveAll
+void                 copyright_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:src_hdr.FDb.copyright.RemoveLast
+void                 copyright_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:src_hdr.FDb.copyright.qFind
+src_hdr::FCopyright& copyright_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:src_hdr.FDb.copyright.XrefMaybe
+bool                 copyright_XrefMaybe(src_hdr::FCopyright &row);
+
+// Insert row into pointer index. Return final membership status.
+// func:src_hdr.FDb.c_dflt_copyright.InsertMaybe
+bool                 c_dflt_copyright_InsertMaybe(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:src_hdr.FDb.c_dflt_copyright.Remove
+void                 c_dflt_copyright_Remove(src_hdr::FCopyright& row) __attribute__((nothrow));
+
+// Return true if hash is empty
+// func:src_hdr.FDb.ind_copyright.EmptyQ
+bool                 ind_copyright_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:src_hdr.FDb.ind_copyright.Find
+src_hdr::FCopyright* ind_copyright_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:src_hdr.FDb.ind_copyright.FindX
+src_hdr::FCopyright& ind_copyright_FindX(const algo::strptr& key);
+// Return number of items in the hash
+// func:src_hdr.FDb.ind_copyright.N
+i32                  ind_copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:src_hdr.FDb.ind_copyright.InsertMaybe
+bool                 ind_copyright_InsertMaybe(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:src_hdr.FDb.ind_copyright.Remove
+void                 ind_copyright_Remove(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:src_hdr.FDb.ind_copyright.Reserve
+void                 ind_copyright_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
+// func:src_hdr.FDb.targsrc_curs.Reset
 void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.targsrc_curs.ValidQ
 bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.targsrc_curs.Next
 void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
 // item access
+// func:src_hdr.FDb.targsrc_curs.Access
 src_hdr::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs);
 // cursor points to valid item
+// func:src_hdr.FDb.ns_curs.Reset
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.ns_curs.ValidQ
 bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.ns_curs.Next
 void                 _db_ns_curs_Next(_db_ns_curs &curs);
 // item access
+// func:src_hdr.FDb.ns_curs.Access
 src_hdr::FNs&        _db_ns_curs_Access(_db_ns_curs &curs);
 // cursor points to valid item
+// func:src_hdr.FDb.nsx_curs.Reset
 void                 _db_nsx_curs_Reset(_db_nsx_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.nsx_curs.ValidQ
 bool                 _db_nsx_curs_ValidQ(_db_nsx_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.nsx_curs.Next
 void                 _db_nsx_curs_Next(_db_nsx_curs &curs);
 // item access
+// func:src_hdr.FDb.nsx_curs.Access
 src_hdr::FNsx&       _db_nsx_curs_Access(_db_nsx_curs &curs);
 // cursor points to valid item
+// func:src_hdr.FDb.license_curs.Reset
 void                 _db_license_curs_Reset(_db_license_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.license_curs.ValidQ
 bool                 _db_license_curs_ValidQ(_db_license_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.license_curs.Next
 void                 _db_license_curs_Next(_db_license_curs &curs);
 // item access
+// func:src_hdr.FDb.license_curs.Access
 src_hdr::FLicense&   _db_license_curs_Access(_db_license_curs &curs);
 // cursor points to valid item
+// func:src_hdr.FDb.target_curs.Reset
 void                 _db_target_curs_Reset(_db_target_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.target_curs.ValidQ
 bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.target_curs.Next
 void                 _db_target_curs_Next(_db_target_curs &curs);
 // item access
+// func:src_hdr.FDb.target_curs.Access
 src_hdr::FTarget&    _db_target_curs_Access(_db_target_curs &curs);
 // cursor points to valid item
+// func:src_hdr.FDb.scriptfile_curs.Reset
 void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, src_hdr::FDb &parent);
 // cursor points to valid item
+// func:src_hdr.FDb.scriptfile_curs.ValidQ
 bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs);
 // proceed to next item
+// func:src_hdr.FDb.scriptfile_curs.Next
 void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs);
 // item access
+// func:src_hdr.FDb.scriptfile_curs.Access
 src_hdr::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs);
+// cursor points to valid item
+// func:src_hdr.FDb.copyright_curs.Reset
+void                 _db_copyright_curs_Reset(_db_copyright_curs &curs, src_hdr::FDb &parent);
+// cursor points to valid item
+// func:src_hdr.FDb.copyright_curs.ValidQ
+bool                 _db_copyright_curs_ValidQ(_db_copyright_curs &curs);
+// proceed to next item
+// func:src_hdr.FDb.copyright_curs.Next
+void                 _db_copyright_curs_Next(_db_copyright_curs &curs);
+// item access
+// func:src_hdr.FDb.copyright_curs.Access
+src_hdr::FCopyright& _db_copyright_curs_Access(_db_copyright_curs &curs);
 // Set all fields to initial values.
+// func:src_hdr.FDb..Init
 void                 FDb_Init();
+// func:src_hdr.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- src_hdr.FLicense
@@ -507,12 +781,16 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FLicense.base.CopyOut
 void                 license_CopyOut(src_hdr::FLicense &row, dev::License &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FLicense.base.CopyIn
 void                 license_CopyIn(src_hdr::FLicense &row, dev::License &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:src_hdr.FLicense..Init
 void                 FLicense_Init(src_hdr::FLicense& license);
+// func:src_hdr.FLicense..Uninit
 void                 FLicense_Uninit(src_hdr::FLicense& license) __attribute__((nothrow));
 
 // --- src_hdr.FNs
@@ -522,8 +800,8 @@ void                 FLicense_Uninit(src_hdr::FLicense& license) __attribute__((
 struct FNs { // src_hdr.FNs
     src_hdr::FNs*        ind_ns_next;   // hash next
     algo::Smallstr16     ns;            // Namespace name (primary key)
-    algo::Smallstr50     nstype;        //
-    algo::Smallstr50     license;       //
+    algo::Smallstr50     nstype;        // Namespace type
+    algo::Smallstr50     license;       // Associated license
     algo::Comment        comment;       //
     src_hdr::FNsx*       c_nsx;         // optional pointer
     src_hdr::FLicense*   p_license;     // reference to parent row
@@ -538,17 +816,23 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FNs.base.CopyOut
 void                 ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FNs.base.CopyIn
 void                 ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
+// func:src_hdr.FNs.c_nsx.InsertMaybe
 bool                 c_nsx_InsertMaybe(src_hdr::FNs& ns, src_hdr::FNsx& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:src_hdr.FNs.c_nsx.Remove
 void                 c_nsx_Remove(src_hdr::FNs& ns, src_hdr::FNsx& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:src_hdr.FNs..Init
 void                 FNs_Init(src_hdr::FNs& ns);
+// func:src_hdr.FNs..Uninit
 void                 FNs_Uninit(src_hdr::FNs& ns) __attribute__((nothrow));
 
 // --- src_hdr.FNsx
@@ -573,12 +857,16 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FNsx.base.CopyOut
 void                 nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FNsx.base.CopyIn
 void                 nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:src_hdr.FNsx..Init
 void                 FNsx_Init(src_hdr::FNsx& nsx);
+// func:src_hdr.FNsx..Uninit
 void                 FNsx_Uninit(src_hdr::FNsx& nsx) __attribute__((nothrow));
 
 // --- src_hdr.FScriptfile
@@ -600,11 +888,17 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FScriptfile.base.CopyOut
 void                 scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FScriptfile.base.CopyIn
 void                 scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) __attribute__((nothrow));
 
+// func:src_hdr.FScriptfile.name.Get
+algo::Smallstr50     name_Get(src_hdr::FScriptfile& scriptfile) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
+// func:src_hdr.FScriptfile..Init
 void                 FScriptfile_Init(src_hdr::FScriptfile& scriptfile);
 
 // --- src_hdr.FSrc
@@ -624,6 +918,7 @@ struct FSrc { // src_hdr.FSrc
 };
 
 // Set all fields to initial values.
+// func:src_hdr.FSrc..Init
 void                 FSrc_Init(src_hdr::FSrc& parent);
 
 // --- src_hdr.FTarget
@@ -632,8 +927,8 @@ void                 FSrc_Init(src_hdr::FSrc& parent);
 // access: src_hdr.FTargsrc.p_target (Upptr)
 struct FTarget { // src_hdr.FTarget
     src_hdr::FTarget*     ind_target_next;   // hash next
-    algo::Smallstr16      target;            //
-    algo::Smallstr50      compat;            //   "Linux-%.%-%"
+    algo::Smallstr16      target;            // Primary key - name of target
+    algo::Smallstr50      compat;            //   "Linux-%.%-%"  Compatibility (regx of builddir)
     src_hdr::FTargsrc**   c_targsrc_elems;   // array of pointers
     u32                   c_targsrc_n;       // array of pointers
     u32                   c_targsrc_max;     // capacity of allocated array
@@ -650,47 +945,67 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FTarget.base.CopyOut
 void                 target_CopyOut(src_hdr::FTarget &row, dev::Target &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FTarget.base.CopyIn
 void                 target_CopyIn(src_hdr::FTarget &row, dev::Target &in) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:src_hdr.FTarget.c_targsrc.EmptyQ
 bool                 c_targsrc_EmptyQ(src_hdr::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:src_hdr.FTarget.c_targsrc.Find
 src_hdr::FTargsrc*   c_targsrc_Find(src_hdr::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:src_hdr.FTarget.c_targsrc.Getary
 algo::aryptr<src_hdr::FTargsrc*> c_targsrc_Getary(src_hdr::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:src_hdr.FTarget.c_targsrc.Insert
 void                 c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:src_hdr.FTarget.c_targsrc.InsertMaybe
 bool                 c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:src_hdr.FTarget.c_targsrc.N
 i32                  c_targsrc_N(const src_hdr::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:src_hdr.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:src_hdr.FTarget.c_targsrc.RemoveAll
 void                 c_targsrc_RemoveAll(src_hdr::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:src_hdr.FTarget.c_targsrc.Reserve
 void                 c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:src_hdr.FTarget.c_targsrc.qFind
 src_hdr::FTargsrc&   c_targsrc_qFind(src_hdr::FTarget& target, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:src_hdr.FTarget.c_targsrc.InAryQ
 bool                 target_c_targsrc_InAryQ(src_hdr::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:src_hdr.FTarget.c_targsrc.qLast
 src_hdr::FTargsrc&   c_targsrc_qLast(src_hdr::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:src_hdr.FTarget..Init
 void                 FTarget_Init(src_hdr::FTarget& target);
+// func:src_hdr.FTarget.c_targsrc_curs.Reset
 void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent);
 // cursor points to valid item
+// func:src_hdr.FTarget.c_targsrc_curs.ValidQ
 bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs);
 // proceed to next item
+// func:src_hdr.FTarget.c_targsrc_curs.Next
 void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs);
 // item access
+// func:src_hdr.FTarget.c_targsrc_curs.Access
 src_hdr::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs);
+// func:src_hdr.FTarget..Uninit
 void                 FTarget_Uninit(src_hdr::FTarget& target) __attribute__((nothrow));
 
 // --- src_hdr.FTargsrc
@@ -714,18 +1029,25 @@ private:
 };
 
 // Copy fields out of row
+// func:src_hdr.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:src_hdr.FTargsrc.base.CopyIn
 void                 targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
+// func:src_hdr.FTargsrc.target.Get
 algo::Smallstr16     target_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:src_hdr.FTargsrc.src.Get
 algo::Smallstr200    src_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:src_hdr.FTargsrc.ext.Get
 algo::Smallstr10     ext_Get(src_hdr::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:src_hdr.FTargsrc..Init
 void                 FTargsrc_Init(src_hdr::FTargsrc& targsrc);
+// func:src_hdr.FTargsrc..Uninit
 void                 FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- src_hdr.FieldId
@@ -740,32 +1062,43 @@ struct FieldId { // src_hdr.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:src_hdr.FieldId.value.GetEnum
 src_hdr_FieldIdEnum  value_GetEnum(const src_hdr::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:src_hdr.FieldId.value.SetEnum
 void                 value_SetEnum(src_hdr::FieldId& parent, src_hdr_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:src_hdr.FieldId.value.ToCstr
 const char*          value_ToCstr(const src_hdr::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:src_hdr.FieldId.value.Print
 void                 value_Print(const src_hdr::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:src_hdr.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:src_hdr.FieldId.value.SetStrptr
 void                 value_SetStrptr(src_hdr::FieldId& parent, algo::strptr rhs, src_hdr_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:src_hdr.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of src_hdr::FieldId from an ascii string.
 // The format of the string is the format of the src_hdr::FieldId's only field
+// func:src_hdr.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:src_hdr.FieldId..Init
 void                 FieldId_Init(src_hdr::FieldId& parent);
-// print string representation of src_hdr::FieldId to string LHS, no header -- cprint:src_hdr.FieldId.String
-void                 FieldId_Print(src_hdr::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:src_hdr.FieldId.String  printfmt:Raw
+// func:src_hdr.FieldId..Print
+void                 FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- src_hdr.TableId
 struct TableId { // src_hdr.TableId: Index of table in this namespace
@@ -777,32 +1110,43 @@ struct TableId { // src_hdr.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:src_hdr.TableId.value.GetEnum
 src_hdr_TableIdEnum  value_GetEnum(const src_hdr::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:src_hdr.TableId.value.SetEnum
 void                 value_SetEnum(src_hdr::TableId& parent, src_hdr_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:src_hdr.TableId.value.ToCstr
 const char*          value_ToCstr(const src_hdr::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:src_hdr.TableId.value.Print
 void                 value_Print(const src_hdr::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:src_hdr.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:src_hdr.TableId.value.SetStrptr
 void                 value_SetStrptr(src_hdr::TableId& parent, algo::strptr rhs, src_hdr_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:src_hdr.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of src_hdr::TableId from an ascii string.
 // The format of the string is the format of the src_hdr::TableId's only field
+// func:src_hdr.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:src_hdr.TableId..Init
 void                 TableId_Init(src_hdr::TableId& parent);
-// print string representation of src_hdr::TableId to string LHS, no header -- cprint:src_hdr.TableId.String
-void                 TableId_Print(src_hdr::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:src_hdr.TableId.String  printfmt:Raw
+// func:src_hdr.TableId..Print
+void                 TableId_Print(src_hdr::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace src_hdr { // gen:ns_curstext
 
@@ -854,6 +1198,14 @@ struct _db_scriptfile_curs {// cursor
 };
 
 
+struct _db_copyright_curs {// cursor
+    typedef src_hdr::FCopyright ChildType;
+    src_hdr::FDb *parent;
+    i64 index;
+    _db_copyright_curs(){ parent=NULL; index=0; }
+};
+
+
 struct target_c_targsrc_curs {// fcurs:src_hdr.FTarget.c_targsrc/curs
     typedef src_hdr::FTargsrc ChildType;
     src_hdr::FTargsrc** elems;
@@ -865,8 +1217,10 @@ struct target_c_targsrc_curs {// fcurs:src_hdr.FTarget.c_targsrc/curs
 } // gen:ns_curstext
 namespace src_hdr { // gen:ns_func
 } // gen:ns_func
+// func:src_hdr...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:src_hdr...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

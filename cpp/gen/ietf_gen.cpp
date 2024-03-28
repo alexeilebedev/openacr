@@ -27,7 +27,9 @@
 #include "include/gen/ietf_gen.inl.h"
 //#pragma endinclude
 namespace ietf { // gen:ns_print_proto
+    // func:ietf.Ipv4Addr.addr.ReadStrptrMaybe
     static bool          addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:ietf...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -127,8 +129,9 @@ bool ietf::FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- ietf.FieldId..Print
-// print string representation of ietf::FieldId to string LHS, no header -- cprint:ietf.FieldId.String
-void ietf::FieldId_Print(ietf::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ietf.FieldId.String  printfmt:Raw
+void ietf::FieldId_Print(ietf::FieldId& row, algo::cstring& str) {
     ietf::value_Print(row, str);
 }
 

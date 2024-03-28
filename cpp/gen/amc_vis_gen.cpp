@@ -45,7 +45,7 @@ amc_vis::FDb    amc_vis::_db;     // dependency found via dev.targdep
 
 namespace amc_vis {
 const char *amc_vis_help =
-"amc_vis: amc: draw access path diagrams\n"
+"amc_vis: Draw access path diagrams\n"
 "Usage: amc_vis [[-ctype:]<regx>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    [ctype]     regx    \"%\"     Ctype regexp to compute access path diagram\n"
@@ -76,32 +76,48 @@ amc_vis::_db_bh_link_curs::~_db_bh_link_curs() {
 }
 
 namespace amc_vis { // gen:ns_print_proto
+    // func:amc_vis.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:amc_vis.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:amc_vis.FDb._db.InitReflection
     static void          InitReflection();
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:amc_vis.FDb.bh_node.Downheap
     static int           bh_node_Downheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:amc_vis.FDb.bh_node.Upheap
     static int           bh_node_Upheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
+    // func:amc_vis.FDb.bh_node.ElemLt
     static bool          bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) __attribute__((nothrow));
+    // func:amc_vis.FDb.bh_node_curs.Add
     static void          _db_bh_node_curs_Add(_db_bh_node_curs &curs, amc_vis::FNode& row);
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:amc_vis.FDb.bh_link.Downheap
     static int           bh_link_Downheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:amc_vis.FDb.bh_link.Upheap
     static int           bh_link_Upheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
+    // func:amc_vis.FDb.bh_link.ElemLt
     static bool          bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) __attribute__((nothrow));
+    // func:amc_vis.FDb.bh_link_curs.Add
     static void          _db_bh_link_curs_Add(_db_bh_link_curs &curs, amc_vis::Link& row);
+    // func:amc_vis.FDb.reftype.InputMaybe
     static bool          reftype_InputMaybe(dmmeta::Reftype &elem) __attribute__((nothrow));
+    // func:amc_vis.FDb.finput.InputMaybe
     static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:amc_vis.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:amc_vis.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:amc_vis...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -126,8 +142,8 @@ algo::Smallstr16 amc_vis::ns_Get(amc_vis::FCtype& ctype) {
 }
 
 // --- amc_vis.FCtype.name.Get
-algo::Smallstr50 amc_vis::name_Get(amc_vis::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 amc_vis::name_Get(amc_vis::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -206,8 +222,9 @@ void amc_vis::FCtype_Uninit(amc_vis::FCtype& ctype) {
 }
 
 // --- amc_vis.trace..Print
-// print string representation of amc_vis::trace to string LHS, no header -- cprint:amc_vis.trace.String
-void amc_vis::trace_Print(amc_vis::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.trace.String  printfmt:Tuple
+void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_vis.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -707,7 +724,7 @@ static void amc_vis::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'7eab961558532767facad7b92ecfb38930c122a0'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'533c01b711e8b6ff9e6268d40b3b5c11331f68b5'");
 }
 
 // --- amc_vis.FDb._db.StaticCheck
@@ -843,7 +860,7 @@ bool amc_vis::_db_XrefMaybe() {
 // --- amc_vis.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 amc_vis::FCtype* amc_vis::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     amc_vis::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     amc_vis::FCtype* ret=NULL;
     do {
@@ -886,7 +903,7 @@ bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (amc_vis::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc_vis::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             amc_vis::FCtype* ret = *prev;
@@ -912,7 +929,7 @@ bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc_vis::ind_ctype_Remove(amc_vis::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (amc_vis::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc_vis::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (amc_vis::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -949,7 +966,7 @@ void amc_vis::ind_ctype_Reserve(int n) {
             while (elem) {
                 amc_vis::FCtype &row        = *elem;
                 amc_vis::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2987,8 +3004,8 @@ void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) {
 }
 
 // --- amc_vis.FField.ctype.Get
-algo::Smallstr50 amc_vis::ctype_Get(amc_vis::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 amc_vis::ctype_Get(amc_vis::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -3062,8 +3079,9 @@ void amc_vis::FFinput_Uninit(amc_vis::FFinput& finput) {
 }
 
 // --- amc_vis.Nodekey..Print
-// print string representation of amc_vis::Nodekey to string LHS, no header -- cprint:amc_vis.Nodekey.String
-void amc_vis::Nodekey_Print(amc_vis::Nodekey row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.Nodekey.String  printfmt:Sep
+void amc_vis::Nodekey_Print(amc_vis::Nodekey row, algo::cstring& str) {
     u32_Print(row.n_ct_in, str);
     str << '.';
     i32_Print(row.idx, str);
@@ -3526,8 +3544,9 @@ bool amc_vis::FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_
 }
 
 // --- amc_vis.FieldId..Print
-// print string representation of amc_vis::FieldId to string LHS, no header -- cprint:amc_vis.FieldId.String
-void amc_vis::FieldId_Print(amc_vis::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.FieldId.String  printfmt:Raw
+void amc_vis::FieldId_Print(amc_vis::FieldId& row, algo::cstring& str) {
     amc_vis::value_Print(row, str);
 }
 
@@ -3570,8 +3589,9 @@ bool amc_vis::Linkkey_Eq(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
 }
 
 // --- amc_vis.Linkkey..Print
-// print string representation of amc_vis::Linkkey to string LHS, no header -- cprint:amc_vis.Linkkey.String
-void amc_vis::Linkkey_Print(amc_vis::Linkkey row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.Linkkey.String  printfmt:Tuple
+void amc_vis::Linkkey_Print(amc_vis::Linkkey row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_vis.Linkkey";
 
@@ -3761,8 +3781,9 @@ void amc_vis::Link_Uninit(amc_vis::Link& link) {
 }
 
 // --- amc_vis.Link..Print
-// print string representation of amc_vis::Link to string LHS, no header -- cprint:amc_vis.Link.String
-void amc_vis::Link_Print(amc_vis::Link & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.Link.String  printfmt:Tuple
+void amc_vis::Link_Print(amc_vis::Link& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_vis.Link";
 
@@ -3802,8 +3823,9 @@ void amc_vis::Linkdep_Uninit(amc_vis::Linkdep& linkdep) {
 }
 
 // --- amc_vis.Linkdep..Print
-// print string representation of amc_vis::Linkdep to string LHS, no header -- cprint:amc_vis.Linkdep.String
-void amc_vis::Linkdep_Print(amc_vis::Linkdep & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.Linkdep.String  printfmt:Tuple
+void amc_vis::Linkdep_Print(amc_vis::Linkdep& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_vis.Linkdep";
 
@@ -3931,8 +3953,9 @@ void amc_vis::Outrow_Uninit(amc_vis::Outrow& outrow) {
 }
 
 // --- amc_vis.Outrow..Print
-// print string representation of amc_vis::Outrow to string LHS, no header -- cprint:amc_vis.Outrow.String
-void amc_vis::Outrow_Print(amc_vis::Outrow & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.Outrow.String  printfmt:Tuple
+void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc_vis.Outrow";
 
@@ -4052,8 +4075,9 @@ bool amc_vis::TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_
 }
 
 // --- amc_vis.TableId..Print
-// print string representation of amc_vis::TableId to string LHS, no header -- cprint:amc_vis.TableId.String
-void amc_vis::TableId_Print(amc_vis::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc_vis.TableId.String  printfmt:Raw
+void amc_vis::TableId_Print(amc_vis::TableId& row, algo::cstring& str) {
     amc_vis::value_Print(row, str);
 }
 

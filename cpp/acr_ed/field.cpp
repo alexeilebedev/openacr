@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/field.cpp -- Create, delete, rename field
 //
@@ -34,8 +34,6 @@ static acr_ed::FCtype *GuessArg(strptr field) {
     acr_ed::FCtype *ret = NULL;
     tempstr name(dmmeta::Field_name_Get(field));
     tempstr ns(dmmeta::Field_ns_Get(field));
-    prlog(ns << ".FDb." << name);
-    prlog(ns << ".FDb." << Pathcomp(name,"_LR"));
     if (acr_ed::FField *f1 = acr_ed::ind_field_Find(tempstr() << ns << ".FDb." << name)) {
         ret = f1->p_arg;
     } else if (acr_ed::FField *f2 = acr_ed::ind_field_Find(tempstr() << ns << ".FDb." << Pathcomp(name,"_LR"))) {
@@ -68,9 +66,6 @@ static tempstr GuessXreffld(dmmeta::Field &field, acr_ed::FCtype &parent, acr_ed
         is_valid_ref |= child_field.reftype == dmmeta_Reftype_reftype_Upptr
             && child_field.arg == parent.ctype;
         if (is_valid_ref) {
-            prlog("acr_ed.guess_xref  "
-                  <<Keyval("field",child_field.field)
-                  <<Keyval("parentbase",parentbase->ctype));
             if (!match1) {
                 match1 = &child_field;
             } else if (!match2) {
@@ -202,8 +197,6 @@ static void PrintNewField(dmmeta::Field &field) {
     }
 }
 void acr_ed::edaction_Delete_Field() {
-    prlog("acr_ed.delete_field"
-          <<Keyval("field",acr_ed::_db.cmdline.field));
     command::acr acr;
     acr.query << "field:"<<acr_ed::_db.cmdline.field;
     acr.del=true;
@@ -214,8 +207,6 @@ void acr_ed::edaction_Delete_Field() {
 // -----------------------------------------------------------------------------
 
 void acr_ed::edaction_Rename_Field() {
-    prlog("acr_ed.rename_field"
-          <<Keyval("field",acr_ed::_db.cmdline.field));
     command::acr acr;
     // if called as
     // acr_ed -field a.B.c -rename d,
@@ -235,9 +226,6 @@ void acr_ed::edaction_Rename_Field() {
 // -----------------------------------------------------------------------------
 
 void acr_ed::edaction_Create_Field() {
-    prlog("acr_ed.create_field"
-          <<Keyval("field",acr_ed::_db.cmdline.field));
-
     // create this field
     dmmeta::Field field;
     field.field         = acr_ed::_db.cmdline.field;
@@ -262,8 +250,6 @@ void acr_ed::edaction_Create_Field() {
     // guess target type from field name
     if (!existing_field && acr_ed::_db.cmdline.arg == "") {
         if (acr_ed::FCtype *farg = GuessArg(acr_ed::_db.cmdline.field)) {
-            prlog("acr_ed.guess_arg"
-                  <<Keyval("arg",farg->ctype));
             acr_ed::_db.cmdline.arg = farg->ctype;
             acr_ed::_db.cmdline.xref = true;
         }
@@ -309,7 +295,6 @@ void acr_ed::edaction_Create_Field() {
     // must pick an xreffld. look in fields of child type until we find a field of type pkey parent.
     if (acr_ed::_db.cmdline.xref && !is_global && ch_N(acr_ed::_db.keyfld) == 0) {
         acr_ed::_db.keyfld = GuessXreffld(field, *parent, *child);
-        prlog("keyfield is "<<acr_ed::_db.keyfld<<", child is "<<child->ctype<<", is pkey?"<<IsPkey(*child,acr_ed::_db.keyfld));
         if (IsPkey(*child, acr_ed::_db.keyfld) && acr_ed::_db.could_be_ptr) {
             prlog("acr_ed.subset"
                   <<Keyval("field",field.field)
@@ -404,7 +389,7 @@ void acr_ed::edaction_Create_Field() {
     }
 
     if (existing_field == NULL) {
-        InsertFieldExtras(field.field, field.arg, field.reftype);
+        InsertFieldExtras(field.field, child->ctype, field.reftype);
     }
     if (_db.cmdline.indexed) {
         CreateHashIndex(field);
@@ -413,20 +398,26 @@ void acr_ed::edaction_Create_Field() {
 
 // -----------------------------------------------------------------------------
 
-static tempstr GuessSortfld(strptr arg) {
+// Guess what sort field to use for CTYPE
+// If SORTFLD was provided on the command line, choose that;
+// otherwise, choose pkey of CTYPE
+static tempstr GuessSortfld(algo::strptr ctype) {
     tempstr ret(acr_ed::_db.cmdline.sortfld);
     if (!ch_N(ret)) {
-        ret = acr_ed::PkeyField(arg)->field;
+        ret = acr_ed::PkeyField(ctype)->field;
     }
     return ret;
 }
 
 // -----------------------------------------------------------------------------
 
-static tempstr GuessHashfld(strptr arg) {
+// Guess what hash field to use for CTYPE
+// If HASHFLD was provided on the command line, choose that;
+// otherwise, choose pkey of CTYPE
+static tempstr GuessHashfld(algo::strptr ctype) {
     tempstr ret(acr_ed::_db.cmdline.hashfld);
     if (!ch_N(ret)) {
-        ret = acr_ed::PkeyField(arg)->field;
+        ret = acr_ed::PkeyField(ctype)->field;
     }
     return ret;
 }
@@ -441,7 +432,7 @@ static tempstr GuessHashfld(strptr arg) {
 // Bheap -> dmmeta.bheap
 // Thash -> dmmeta.thash
 // Inlary -> dmmeta.inlary
-void acr_ed::InsertFieldExtras(strptr field, strptr arg, strptr reftype) {
+void acr_ed::InsertFieldExtras(strptr field, algo::strptr arg, strptr reftype) {
     // the x-ref is a ptrary -- print defaults
     if (reftype == dmmeta_Reftype_reftype_Ptrary) {
         dmmeta::Ptrary ptrary;

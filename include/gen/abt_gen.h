@@ -182,12 +182,16 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FArch.msghdr.CopyOut
 void                 arch_CopyOut(abt::FArch &row, dev::Arch &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FArch.msghdr.CopyIn
 void                 arch_CopyIn(abt::FArch &row, dev::Arch &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FArch..Init
 void                 FArch_Init(abt::FArch& arch);
+// func:abt.FArch..Uninit
 void                 FArch_Uninit(abt::FArch& arch) __attribute__((nothrow));
 
 // --- abt.FCfg
@@ -209,12 +213,16 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FCfg.msghdr.CopyOut
 void                 cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FCfg.msghdr.CopyIn
 void                 cfg_CopyIn(abt::FCfg &row, dev::Cfg &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FCfg..Init
 void                 FCfg_Init(abt::FCfg& cfg);
+// func:abt.FCfg..Uninit
 void                 FCfg_Uninit(abt::FCfg& cfg) __attribute__((nothrow));
 
 // --- abt.FCompiler
@@ -244,12 +252,16 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FCompiler.msghdr.CopyOut
 void                 compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FCompiler.msghdr.CopyIn
 void                 compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FCompiler..Init
 void                 FCompiler_Init(abt::FCompiler& compiler);
+// func:abt.FCompiler..Uninit
 void                 FCompiler_Uninit(abt::FCompiler& compiler) __attribute__((nothrow));
 
 // --- abt.trace
@@ -259,12 +271,14 @@ struct trace { // abt.trace
 };
 #pragma pack(pop)
 
-// print string representation of abt::trace to string LHS, no header -- cprint:abt.trace.String
-void                 trace_Print(abt::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:abt.trace.String  printfmt:Tuple
+// func:abt.trace..Print
+void                 trace_Print(abt::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- abt.FDb
 // create: abt.FDb._db (Global)
-struct FDb { // abt.FDb
+struct FDb { // abt.FDb: In-memory database for abt
     lpool_Lpblock*      lpool_free[31];               // Lpool levels
     u32                 lpool_lock;                   // Lpool lock
     command::abt        cmdline;                      //
@@ -326,7 +340,7 @@ struct FDb { // abt.FDb
     abt::FTarget*       zs_sel_target_head;           // zero-terminated singly linked list
     i32                 zs_sel_target_n;              // zero-terminated singly linked list
     abt::FTarget*       zs_sel_target_tail;           // pointer to last element
-    report::abt         report;                       //
+    report::abt         report;                       // Final report
     abt::FTargsyslib*   targsyslib_lary[32];          // level array
     i32                 targsyslib_n;                 // number of elements in array
     abt::FSyslib*       syslib_lary[32];              // level array
@@ -365,248 +379,352 @@ struct FDb { // abt.FDb
 };
 
 // Free block of memory previously returned by Lpool.
+// func:abt.FDb.lpool.FreeMem
 void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is 16-byte aligned
+// func:abt.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// func:abt.FDb.lpool.ReserveBuffers
 bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
 // New memory is always allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL: old memory untouched
+// func:abt.FDb.lpool.ReallocMem
 void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.srcfile.Alloc
 abt::FSrcfile&       srcfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.srcfile.AllocMaybe
 abt::FSrcfile*       srcfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.srcfile.InsertMaybe
 abt::FSrcfile*       srcfile_InsertMaybe(const dev::Srcfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.srcfile.AllocMem
 void*                srcfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.srcfile.EmptyQ
 bool                 srcfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.srcfile.Find
 abt::FSrcfile*       srcfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.srcfile.Last
 abt::FSrcfile*       srcfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.srcfile.N
 i32                  srcfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:abt.FDb.srcfile.RemoveAll
 void                 srcfile_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.srcfile.RemoveLast
 void                 srcfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.srcfile.qFind
 abt::FSrcfile&       srcfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.srcfile.XrefMaybe
 bool                 srcfile_XrefMaybe(abt::FSrcfile &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.targdep.Alloc
 abt::FTargdep&       targdep_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.targdep.AllocMaybe
 abt::FTargdep*       targdep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.targdep.InsertMaybe
 abt::FTargdep*       targdep_InsertMaybe(const dev::Targdep &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.targdep.AllocMem
 void*                targdep_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.targdep.EmptyQ
 bool                 targdep_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.targdep.Find
 abt::FTargdep*       targdep_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.targdep.Last
 abt::FTargdep*       targdep_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.targdep.N
 i32                  targdep_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.targdep.RemoveLast
 void                 targdep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.targdep.qFind
 abt::FTargdep&       targdep_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.targdep.XrefMaybe
 bool                 targdep_XrefMaybe(abt::FTargdep &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.tool_opt.Alloc
 abt::FToolOpt&       tool_opt_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.tool_opt.AllocMaybe
 abt::FToolOpt*       tool_opt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.tool_opt.InsertMaybe
 abt::FToolOpt*       tool_opt_InsertMaybe(const dev::ToolOpt &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.tool_opt.AllocMem
 void*                tool_opt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.tool_opt.EmptyQ
 bool                 tool_opt_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.tool_opt.Find
 abt::FToolOpt*       tool_opt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.tool_opt.Last
 abt::FToolOpt*       tool_opt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.tool_opt.N
 i32                  tool_opt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.tool_opt.RemoveLast
 void                 tool_opt_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.tool_opt.qFind
 abt::FToolOpt&       tool_opt_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.tool_opt.XrefMaybe
 bool                 tool_opt_XrefMaybe(abt::FToolOpt &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_target.EmptyQ
 bool                 ind_target_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_target.Find
 abt::FTarget*        ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_target.GetOrCreate
 abt::FTarget&        ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_target.N
 i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_target.InsertMaybe
 bool                 ind_target_InsertMaybe(abt::FTarget& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_target.Remove
 void                 ind_target_Remove(abt::FTarget& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.target.Alloc
 abt::FTarget&        target_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.target.AllocMaybe
 abt::FTarget*        target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.target.InsertMaybe
 abt::FTarget*        target_InsertMaybe(const dev::Target &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.target.AllocMem
 void*                target_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.target.EmptyQ
 bool                 target_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.target.Find
 abt::FTarget*        target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.target.Last
 abt::FTarget*        target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.target.N
 i32                  target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.target.RemoveLast
 void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.target.qFind
 abt::FTarget&        target_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.target.XrefMaybe
 bool                 target_XrefMaybe(abt::FTarget &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_targsrc.EmptyQ
 bool                 ind_targsrc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_targsrc.Find
 abt::FTargsrc*       ind_targsrc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_targsrc.GetOrCreate
 abt::FTargsrc&       ind_targsrc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_targsrc.N
 i32                  ind_targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_targsrc.InsertMaybe
 bool                 ind_targsrc_InsertMaybe(abt::FTargsrc& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_targsrc.Remove
 void                 ind_targsrc_Remove(abt::FTargsrc& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_targsrc.Reserve
 void                 ind_targsrc_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.targsrc.Alloc
 abt::FTargsrc&       targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.targsrc.AllocMaybe
 abt::FTargsrc*       targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.targsrc.InsertMaybe
 abt::FTargsrc*       targsrc_InsertMaybe(const dev::Targsrc &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.targsrc.AllocMem
 void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.targsrc.EmptyQ
 bool                 targsrc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.targsrc.Find
 abt::FTargsrc*       targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.targsrc.Last
 abt::FTargsrc*       targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.targsrc.N
 i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.targsrc.qFind
 abt::FTargsrc&       targsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.targsrc.XrefMaybe
 bool                 targsrc_XrefMaybe(abt::FTargsrc &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.syscmddep.Alloc
 abt::FSyscmddep&     syscmddep_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.syscmddep.AllocMaybe
 abt::FSyscmddep*     syscmddep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.syscmddep.InsertMaybe
 abt::FSyscmddep*     syscmddep_InsertMaybe(const dev::Syscmddep &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.syscmddep.AllocMem
 void*                syscmddep_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.syscmddep.EmptyQ
 bool                 syscmddep_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.syscmddep.Find
 abt::FSyscmddep*     syscmddep_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.syscmddep.Last
 abt::FSyscmddep*     syscmddep_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.syscmddep.N
 i32                  syscmddep_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.syscmddep.RemoveLast
 void                 syscmddep_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.syscmddep.qFind
 abt::FSyscmddep&     syscmddep_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.syscmddep.XrefMaybe
 bool                 syscmddep_XrefMaybe(abt::FSyscmddep &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.syscmd.Alloc
 abt::FSyscmd&        syscmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.syscmd.AllocMaybe
 abt::FSyscmd*        syscmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.syscmd.InsertMaybe
 abt::FSyscmd*        syscmd_InsertMaybe(const dev::Syscmd &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.syscmd.AllocMem
 void*                syscmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.syscmd.EmptyQ
 bool                 syscmd_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.syscmd.Find
 abt::FSyscmd*        syscmd_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.syscmd.Last
 abt::FSyscmd*        syscmd_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.syscmd.N
 i32                  syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.syscmd.RemoveLast
 void                 syscmd_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.syscmd.qFind
 abt::FSyscmd&        syscmd_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.syscmd.XrefMaybe
 bool                 syscmd_XrefMaybe(abt::FSyscmd &row);
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
 //     abt.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:abt.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:abt.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:abt.FDb._db.Step
 void                 Step();
 // Main function
+// func:abt.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:abt.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:abt.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:abt.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -614,754 +732,1099 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:abt.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:abt.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:abt.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:abt.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
+// func:abt.FDb.ind_syscmd.EmptyQ
 bool                 ind_syscmd_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_syscmd.Find
 abt::FSyscmd*        ind_syscmd_Find(i64 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_syscmd.GetOrCreate
 abt::FSyscmd&        ind_syscmd_GetOrCreate(i64 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_syscmd.N
 i32                  ind_syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_syscmd.InsertMaybe
 bool                 ind_syscmd_InsertMaybe(abt::FSyscmd& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_syscmd.Remove
 void                 ind_syscmd_Remove(abt::FSyscmd& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_syscmd.Reserve
 void                 ind_syscmd_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
+// func:abt.FDb.ind_running.EmptyQ
 bool                 ind_running_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_running.Find
 abt::FSyscmd*        ind_running_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_running.GetOrCreate
 abt::FSyscmd&        ind_running_GetOrCreate(i32 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_running.N
 i32                  ind_running_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_running.InsertMaybe
 bool                 ind_running_InsertMaybe(abt::FSyscmd& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_running.Remove
 void                 ind_running_Remove(abt::FSyscmd& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_running.Reserve
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
+// func:abt.FDb.ind_srcfile.EmptyQ
 bool                 ind_srcfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_srcfile.Find
 abt::FSrcfile*       ind_srcfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_srcfile.GetOrCreate
 abt::FSrcfile&       ind_srcfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_srcfile.N
 i32                  ind_srcfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_srcfile.InsertMaybe
 bool                 ind_srcfile_InsertMaybe(abt::FSrcfile& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_srcfile.Remove
 void                 ind_srcfile_Remove(abt::FSrcfile& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_srcfile.Reserve
 void                 ind_srcfile_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.cfg.Alloc
 abt::FCfg&           cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.cfg.AllocMaybe
 abt::FCfg*           cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.cfg.InsertMaybe
 abt::FCfg*           cfg_InsertMaybe(const dev::Cfg &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.cfg.AllocMem
 void*                cfg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.cfg.EmptyQ
 bool                 cfg_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.cfg.Find
 abt::FCfg*           cfg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.cfg.Last
 abt::FCfg*           cfg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.cfg.N
 i32                  cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.cfg.RemoveLast
 void                 cfg_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.cfg.qFind
 abt::FCfg&           cfg_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.cfg.XrefMaybe
 bool                 cfg_XrefMaybe(abt::FCfg &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_cfg.EmptyQ
 bool                 ind_cfg_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_cfg.Find
 abt::FCfg*           ind_cfg_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_cfg.GetOrCreate
 abt::FCfg&           ind_cfg_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_cfg.N
 i32                  ind_cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_cfg.InsertMaybe
 bool                 ind_cfg_InsertMaybe(abt::FCfg& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_cfg.Remove
 void                 ind_cfg_Remove(abt::FCfg& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_cfg.Reserve
 void                 ind_cfg_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.uname.Alloc
 abt::FUname&         uname_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.uname.AllocMaybe
 abt::FUname*         uname_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.uname.InsertMaybe
 abt::FUname*         uname_InsertMaybe(const dev::Uname &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.uname.AllocMem
 void*                uname_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.uname.EmptyQ
 bool                 uname_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.uname.Find
 abt::FUname*         uname_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.uname.Last
 abt::FUname*         uname_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.uname.N
 i32                  uname_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.uname.RemoveLast
 void                 uname_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.uname.qFind
 abt::FUname&         uname_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.uname.XrefMaybe
 bool                 uname_XrefMaybe(abt::FUname &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_uname.EmptyQ
 bool                 ind_uname_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_uname.Find
 abt::FUname*         ind_uname_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_uname.GetOrCreate
 abt::FUname&         ind_uname_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_uname.N
 i32                  ind_uname_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_uname.InsertMaybe
 bool                 ind_uname_InsertMaybe(abt::FUname& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_uname.Remove
 void                 ind_uname_Remove(abt::FUname& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_uname.Reserve
 void                 ind_uname_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.compiler.Alloc
 abt::FCompiler&      compiler_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.compiler.AllocMaybe
 abt::FCompiler*      compiler_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.compiler.InsertMaybe
 abt::FCompiler*      compiler_InsertMaybe(const dev::Compiler &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.compiler.AllocMem
 void*                compiler_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.compiler.EmptyQ
 bool                 compiler_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.compiler.Find
 abt::FCompiler*      compiler_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.compiler.Last
 abt::FCompiler*      compiler_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.compiler.N
 i32                  compiler_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.compiler.RemoveLast
 void                 compiler_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.compiler.qFind
 abt::FCompiler&      compiler_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.compiler.XrefMaybe
 bool                 compiler_XrefMaybe(abt::FCompiler &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_compiler.EmptyQ
 bool                 ind_compiler_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_compiler.Find
 abt::FCompiler*      ind_compiler_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_compiler.GetOrCreate
 abt::FCompiler&      ind_compiler_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_compiler.N
 i32                  ind_compiler_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_compiler.InsertMaybe
 bool                 ind_compiler_InsertMaybe(abt::FCompiler& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_compiler.Remove
 void                 ind_compiler_Remove(abt::FCompiler& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_compiler.Reserve
 void                 ind_compiler_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.arch.Alloc
 abt::FArch&          arch_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.arch.AllocMaybe
 abt::FArch*          arch_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.arch.InsertMaybe
 abt::FArch*          arch_InsertMaybe(const dev::Arch &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.arch.AllocMem
 void*                arch_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.arch.EmptyQ
 bool                 arch_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.arch.Find
 abt::FArch*          arch_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.arch.Last
 abt::FArch*          arch_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.arch.N
 i32                  arch_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.arch.RemoveLast
 void                 arch_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.arch.qFind
 abt::FArch&          arch_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.arch.XrefMaybe
 bool                 arch_XrefMaybe(abt::FArch &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_arch.EmptyQ
 bool                 ind_arch_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_arch.Find
 abt::FArch*          ind_arch_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_arch.GetOrCreate
 abt::FArch&          ind_arch_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_arch.N
 i32                  ind_arch_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_arch.InsertMaybe
 bool                 ind_arch_InsertMaybe(abt::FArch& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_arch.Remove
 void                 ind_arch_Remove(abt::FArch& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_arch.Reserve
 void                 ind_arch_Reserve(int n) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
+// func:abt.FDb.bh_syscmd.Dealloc
 void                 bh_syscmd_Dealloc() __attribute__((nothrow));
 // Return true if index is empty
+// func:abt.FDb.bh_syscmd.EmptyQ
 bool                 bh_syscmd_EmptyQ() __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FDb.bh_syscmd.First
 abt::FSyscmd*        bh_syscmd_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
+// func:abt.FDb.bh_syscmd.InBheapQ
 bool                 bh_syscmd_InBheapQ(abt::FSyscmd& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:abt.FDb.bh_syscmd.Insert
 void                 bh_syscmd_Insert(abt::FSyscmd& row) __attribute__((nothrow));
 // Return number of items in the heap
+// func:abt.FDb.bh_syscmd.N
 i32                  bh_syscmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
+// func:abt.FDb.bh_syscmd.Reheap
 i32                  bh_syscmd_Reheap(abt::FSyscmd& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
+// func:abt.FDb.bh_syscmd.ReheapFirst
 i32                  bh_syscmd_ReheapFirst() __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:abt.FDb.bh_syscmd.Remove
 void                 bh_syscmd_Remove(abt::FSyscmd& row) __attribute__((nothrow));
 // Remove all elements from binary heap
+// func:abt.FDb.bh_syscmd.RemoveAll
 void                 bh_syscmd_RemoveAll() __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
+// func:abt.FDb.bh_syscmd.RemoveFirst
 abt::FSyscmd*        bh_syscmd_RemoveFirst() __attribute__((nothrow));
 // Reserve space in index for N more elements
+// func:abt.FDb.bh_syscmd.Reserve
 void                 bh_syscmd_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FDb.zs_srcfile_read.EmptyQ
 bool                 zs_srcfile_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FDb.zs_srcfile_read.First
 abt::FSrcfile*       zs_srcfile_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:abt.FDb.zs_srcfile_read.InLlistQ
 bool                 zs_srcfile_read_InLlistQ(abt::FSrcfile& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:abt.FDb.zs_srcfile_read.Insert
 void                 zs_srcfile_read_Insert(abt::FSrcfile& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:abt.FDb.zs_srcfile_read.Last
 abt::FSrcfile*       zs_srcfile_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:abt.FDb.zs_srcfile_read.Next
 abt::FSrcfile*       zs_srcfile_read_Next(abt::FSrcfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:abt.FDb.zs_srcfile_read.Remove
 void                 zs_srcfile_read_Remove(abt::FSrcfile& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FDb.zs_srcfile_read.RemoveAll
 void                 zs_srcfile_read_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:abt.FDb.zs_srcfile_read.RemoveFirst
 abt::FSrcfile*       zs_srcfile_read_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:abt.FDb.zs_srcfile_read.qLast
 abt::FSrcfile&       zs_srcfile_read_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:abt.FDb.zs_sel_target.EmptyQ
 bool                 zs_sel_target_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FDb.zs_sel_target.First
 abt::FTarget*        zs_sel_target_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:abt.FDb.zs_sel_target.InLlistQ
 bool                 zs_sel_target_InLlistQ(abt::FTarget& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:abt.FDb.zs_sel_target.Insert
 void                 zs_sel_target_Insert(abt::FTarget& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:abt.FDb.zs_sel_target.Last
 abt::FTarget*        zs_sel_target_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:abt.FDb.zs_sel_target.N
 i32                  zs_sel_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:abt.FDb.zs_sel_target.Next
 abt::FTarget*        zs_sel_target_Next(abt::FTarget &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:abt.FDb.zs_sel_target.Remove
 void                 zs_sel_target_Remove(abt::FTarget& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FDb.zs_sel_target.RemoveAll
 void                 zs_sel_target_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:abt.FDb.zs_sel_target.RemoveFirst
 abt::FTarget*        zs_sel_target_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:abt.FDb.zs_sel_target.qLast
 abt::FTarget&        zs_sel_target_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.targsyslib.Alloc
 abt::FTargsyslib&    targsyslib_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.targsyslib.AllocMaybe
 abt::FTargsyslib*    targsyslib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.targsyslib.InsertMaybe
 abt::FTargsyslib*    targsyslib_InsertMaybe(const dev::Targsyslib &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.targsyslib.AllocMem
 void*                targsyslib_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.targsyslib.EmptyQ
 bool                 targsyslib_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.targsyslib.Find
 abt::FTargsyslib*    targsyslib_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.targsyslib.Last
 abt::FTargsyslib*    targsyslib_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.targsyslib.N
 i32                  targsyslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.targsyslib.RemoveLast
 void                 targsyslib_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.targsyslib.qFind
 abt::FTargsyslib&    targsyslib_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.targsyslib.XrefMaybe
 bool                 targsyslib_XrefMaybe(abt::FTargsyslib &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.syslib.Alloc
 abt::FSyslib&        syslib_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.syslib.AllocMaybe
 abt::FSyslib*        syslib_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.syslib.InsertMaybe
 abt::FSyslib*        syslib_InsertMaybe(const dev::Syslib &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.syslib.AllocMem
 void*                syslib_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.syslib.EmptyQ
 bool                 syslib_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.syslib.Find
 abt::FSyslib*        syslib_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.syslib.Last
 abt::FSyslib*        syslib_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.syslib.N
 i32                  syslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.syslib.RemoveLast
 void                 syslib_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.syslib.qFind
 abt::FSyslib&        syslib_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.syslib.XrefMaybe
 bool                 syslib_XrefMaybe(abt::FSyslib &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_syslib.EmptyQ
 bool                 ind_syslib_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_syslib.Find
 abt::FSyslib*        ind_syslib_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_syslib.GetOrCreate
 abt::FSyslib&        ind_syslib_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_syslib.N
 i32                  ind_syslib_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_syslib.InsertMaybe
 bool                 ind_syslib_InsertMaybe(abt::FSyslib& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_syslib.Remove
 void                 ind_syslib_Remove(abt::FSyslib& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_syslib.Reserve
 void                 ind_syslib_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.include.Alloc
 abt::FInclude&       include_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.include.AllocMaybe
 abt::FInclude*       include_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.include.InsertMaybe
 abt::FInclude*       include_InsertMaybe(const dev::Include &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.include.AllocMem
 void*                include_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.include.EmptyQ
 bool                 include_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.include.Find
 abt::FInclude*       include_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.include.Last
 abt::FInclude*       include_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.include.N
 i32                  include_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.include.RemoveLast
 void                 include_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.include.qFind
 abt::FInclude&       include_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.include.XrefMaybe
 bool                 include_XrefMaybe(abt::FInclude &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_include.EmptyQ
 bool                 ind_include_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_include.Find
 abt::FInclude*       ind_include_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_include.GetOrCreate
 abt::FInclude&       ind_include_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_include.N
 i32                  ind_include_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_include.InsertMaybe
 bool                 ind_include_InsertMaybe(abt::FInclude& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_include.Remove
 void                 ind_include_Remove(abt::FInclude& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_include.Reserve
 void                 ind_include_Reserve(int n) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:abt.FDb.sysincl.Alloc
 algo::cstring&       sysincl_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:abt.FDb.sysincl.AllocAt
 algo::cstring&       sysincl_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:abt.FDb.sysincl.AllocN
 algo::aryptr<algo::cstring> sysincl_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.sysincl.EmptyQ
 bool                 sysincl_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.sysincl.Find
 algo::cstring*       sysincl_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:abt.FDb.sysincl.Getary
 algo::aryptr<algo::cstring> sysincl_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.sysincl.Last
 algo::cstring*       sysincl_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:abt.FDb.sysincl.Max
 i32                  sysincl_Max() __attribute__((nothrow));
 // Return number of items in the array
+// func:abt.FDb.sysincl.N
 i32                  sysincl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:abt.FDb.sysincl.Remove
 void                 sysincl_Remove(u32 i) __attribute__((nothrow));
+// func:abt.FDb.sysincl.RemoveAll
 void                 sysincl_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.sysincl.RemoveLast
 void                 sysincl_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:abt.FDb.sysincl.Reserve
 void                 sysincl_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:abt.FDb.sysincl.AbsReserve
 void                 sysincl_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.sysincl.qFind
 algo::cstring&       sysincl_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:abt.FDb.sysincl.qLast
 algo::cstring&       sysincl_qLast() __attribute__((nothrow));
 // Return row id of specified element
+// func:abt.FDb.sysincl.rowid_Get
 u64                  sysincl_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:abt.FDb.sysincl.AllocNVal
 algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FDb.zs_origsel_target.EmptyQ
 bool                 zs_origsel_target_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FDb.zs_origsel_target.First
 abt::FTarget*        zs_origsel_target_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:abt.FDb.zs_origsel_target.InLlistQ
 bool                 zs_origsel_target_InLlistQ(abt::FTarget& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:abt.FDb.zs_origsel_target.Insert
 void                 zs_origsel_target_Insert(abt::FTarget& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:abt.FDb.zs_origsel_target.Last
 abt::FTarget*        zs_origsel_target_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:abt.FDb.zs_origsel_target.Next
 abt::FTarget*        zs_origsel_target_Next(abt::FTarget &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:abt.FDb.zs_origsel_target.Remove
 void                 zs_origsel_target_Remove(abt::FTarget& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FDb.zs_origsel_target.RemoveAll
 void                 zs_origsel_target_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:abt.FDb.zs_origsel_target.RemoveFirst
 abt::FTarget*        zs_origsel_target_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:abt.FDb.zs_origsel_target.qLast
 abt::FTarget&        zs_origsel_target_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.ns.Alloc
 abt::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.ns.AllocMaybe
 abt::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.ns.InsertMaybe
 abt::FNs*            ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.ns.AllocMem
 void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.ns.EmptyQ
 bool                 ns_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.ns.Find
 abt::FNs*            ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.ns.Last
 abt::FNs*            ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.ns.N
 i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.ns.qFind
 abt::FNs&            ns_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.ns.XrefMaybe
 bool                 ns_XrefMaybe(abt::FNs &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_ns.EmptyQ
 bool                 ind_ns_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_ns.Find
 abt::FNs*            ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_ns.GetOrCreate
 abt::FNs&            ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_ns.N
 i32                  ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_ns.InsertMaybe
 bool                 ind_ns_InsertMaybe(abt::FNs& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_ns.Remove
 void                 ind_ns_Remove(abt::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:abt.FDb.filestat.Alloc
 abt::FFilestat&      filestat_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.filestat.AllocMaybe
 abt::FFilestat*      filestat_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.filestat.AllocMem
 void*                filestat_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:abt.FDb.filestat.EmptyQ
 bool                 filestat_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FDb.filestat.Find
 abt::FFilestat*      filestat_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.filestat.Last
 abt::FFilestat*      filestat_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:abt.FDb.filestat.N
 i32                  filestat_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:abt.FDb.filestat.RemoveAll
 void                 filestat_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.filestat.RemoveLast
 void                 filestat_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.filestat.qFind
 abt::FFilestat&      filestat_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.filestat.XrefMaybe
 bool                 filestat_XrefMaybe(abt::FFilestat &row);
 
 // Return true if hash is empty
+// func:abt.FDb.ind_filestat.EmptyQ
 bool                 ind_filestat_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_filestat.Find
 abt::FFilestat*      ind_filestat_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_filestat.GetOrCreate
 abt::FFilestat&      ind_filestat_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:abt.FDb.ind_filestat.N
 i32                  ind_filestat_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_filestat.InsertMaybe
 bool                 ind_filestat_InsertMaybe(abt::FFilestat& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_filestat.Remove
 void                 ind_filestat_Remove(abt::FFilestat& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_filestat.Reserve
 void                 ind_filestat_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FDb.zd_inclstack.EmptyQ
 bool                 zd_inclstack_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FDb.zd_inclstack.First
 abt::FSrcfile*       zd_inclstack_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:abt.FDb.zd_inclstack.InLlistQ
 bool                 zd_inclstack_InLlistQ(abt::FSrcfile& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:abt.FDb.zd_inclstack.Insert
 void                 zd_inclstack_Insert(abt::FSrcfile& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:abt.FDb.zd_inclstack.Last
 abt::FSrcfile*       zd_inclstack_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:abt.FDb.zd_inclstack.N
 i32                  zd_inclstack_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:abt.FDb.zd_inclstack.Next
 abt::FSrcfile*       zd_inclstack_Next(abt::FSrcfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:abt.FDb.zd_inclstack.Prev
 abt::FSrcfile*       zd_inclstack_Prev(abt::FSrcfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:abt.FDb.zd_inclstack.Remove
 void                 zd_inclstack_Remove(abt::FSrcfile& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FDb.zd_inclstack.RemoveAll
 void                 zd_inclstack_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:abt.FDb.zd_inclstack.RemoveFirst
 abt::FSrcfile*       zd_inclstack_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:abt.FDb.zd_inclstack.qLast
 abt::FSrcfile&       zd_inclstack_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // cursor points to valid item
+// func:abt.FDb.srcfile_curs.Reset
 void                 _db_srcfile_curs_Reset(_db_srcfile_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.srcfile_curs.ValidQ
 bool                 _db_srcfile_curs_ValidQ(_db_srcfile_curs &curs);
 // proceed to next item
+// func:abt.FDb.srcfile_curs.Next
 void                 _db_srcfile_curs_Next(_db_srcfile_curs &curs);
 // item access
+// func:abt.FDb.srcfile_curs.Access
 abt::FSrcfile&       _db_srcfile_curs_Access(_db_srcfile_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.targdep_curs.Reset
 void                 _db_targdep_curs_Reset(_db_targdep_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.targdep_curs.ValidQ
 bool                 _db_targdep_curs_ValidQ(_db_targdep_curs &curs);
 // proceed to next item
+// func:abt.FDb.targdep_curs.Next
 void                 _db_targdep_curs_Next(_db_targdep_curs &curs);
 // item access
+// func:abt.FDb.targdep_curs.Access
 abt::FTargdep&       _db_targdep_curs_Access(_db_targdep_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.tool_opt_curs.Reset
 void                 _db_tool_opt_curs_Reset(_db_tool_opt_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.tool_opt_curs.ValidQ
 bool                 _db_tool_opt_curs_ValidQ(_db_tool_opt_curs &curs);
 // proceed to next item
+// func:abt.FDb.tool_opt_curs.Next
 void                 _db_tool_opt_curs_Next(_db_tool_opt_curs &curs);
 // item access
+// func:abt.FDb.tool_opt_curs.Access
 abt::FToolOpt&       _db_tool_opt_curs_Access(_db_tool_opt_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.target_curs.Reset
 void                 _db_target_curs_Reset(_db_target_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.target_curs.ValidQ
 bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
 // proceed to next item
+// func:abt.FDb.target_curs.Next
 void                 _db_target_curs_Next(_db_target_curs &curs);
 // item access
+// func:abt.FDb.target_curs.Access
 abt::FTarget&        _db_target_curs_Access(_db_target_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.targsrc_curs.Reset
 void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.targsrc_curs.ValidQ
 bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
 // proceed to next item
+// func:abt.FDb.targsrc_curs.Next
 void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
 // item access
+// func:abt.FDb.targsrc_curs.Access
 abt::FTargsrc&       _db_targsrc_curs_Access(_db_targsrc_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.syscmddep_curs.Reset
 void                 _db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.syscmddep_curs.ValidQ
 bool                 _db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs);
 // proceed to next item
+// func:abt.FDb.syscmddep_curs.Next
 void                 _db_syscmddep_curs_Next(_db_syscmddep_curs &curs);
 // item access
+// func:abt.FDb.syscmddep_curs.Access
 abt::FSyscmddep&     _db_syscmddep_curs_Access(_db_syscmddep_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.syscmd_curs.Reset
 void                 _db_syscmd_curs_Reset(_db_syscmd_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.syscmd_curs.ValidQ
 bool                 _db_syscmd_curs_ValidQ(_db_syscmd_curs &curs);
 // proceed to next item
+// func:abt.FDb.syscmd_curs.Next
 void                 _db_syscmd_curs_Next(_db_syscmd_curs &curs);
 // item access
+// func:abt.FDb.syscmd_curs.Access
 abt::FSyscmd&        _db_syscmd_curs_Access(_db_syscmd_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.cfg_curs.Reset
 void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.cfg_curs.ValidQ
 bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs);
 // proceed to next item
+// func:abt.FDb.cfg_curs.Next
 void                 _db_cfg_curs_Next(_db_cfg_curs &curs);
 // item access
+// func:abt.FDb.cfg_curs.Access
 abt::FCfg&           _db_cfg_curs_Access(_db_cfg_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.uname_curs.Reset
 void                 _db_uname_curs_Reset(_db_uname_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.uname_curs.ValidQ
 bool                 _db_uname_curs_ValidQ(_db_uname_curs &curs);
 // proceed to next item
+// func:abt.FDb.uname_curs.Next
 void                 _db_uname_curs_Next(_db_uname_curs &curs);
 // item access
+// func:abt.FDb.uname_curs.Access
 abt::FUname&         _db_uname_curs_Access(_db_uname_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.compiler_curs.Reset
 void                 _db_compiler_curs_Reset(_db_compiler_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.compiler_curs.ValidQ
 bool                 _db_compiler_curs_ValidQ(_db_compiler_curs &curs);
 // proceed to next item
+// func:abt.FDb.compiler_curs.Next
 void                 _db_compiler_curs_Next(_db_compiler_curs &curs);
 // item access
+// func:abt.FDb.compiler_curs.Access
 abt::FCompiler&      _db_compiler_curs_Access(_db_compiler_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.arch_curs.Reset
 void                 _db_arch_curs_Reset(_db_arch_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.arch_curs.ValidQ
 bool                 _db_arch_curs_ValidQ(_db_arch_curs &curs);
 // proceed to next item
+// func:abt.FDb.arch_curs.Next
 void                 _db_arch_curs_Next(_db_arch_curs &curs);
 // item access
+// func:abt.FDb.arch_curs.Access
 abt::FArch&          _db_arch_curs_Access(_db_arch_curs &curs);
+// func:abt.FDb.bh_syscmd_curs.Reserve
 void                 _db_bh_syscmd_curs_Reserve(_db_bh_syscmd_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:abt.FDb.bh_syscmd_curs.Reset
 void                 _db_bh_syscmd_curs_Reset(_db_bh_syscmd_curs &curs, abt::FDb &parent);
 // Advance cursor.
+// func:abt.FDb.bh_syscmd_curs.Next
 void                 _db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs);
 // Access current element. If not more elements, return NULL
+// func:abt.FDb.bh_syscmd_curs.Access
 abt::FSyscmd&        _db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs);
 // Return true if Access() will return non-NULL.
+// func:abt.FDb.bh_syscmd_curs.ValidQ
 bool                 _db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.zs_srcfile_read_curs.Reset
 void                 _db_zs_srcfile_read_curs_Reset(_db_zs_srcfile_read_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.zs_srcfile_read_curs.ValidQ
 bool                 _db_zs_srcfile_read_curs_ValidQ(_db_zs_srcfile_read_curs &curs);
 // proceed to next item
+// func:abt.FDb.zs_srcfile_read_curs.Next
 void                 _db_zs_srcfile_read_curs_Next(_db_zs_srcfile_read_curs &curs);
 // item access
+// func:abt.FDb.zs_srcfile_read_curs.Access
 abt::FSrcfile&       _db_zs_srcfile_read_curs_Access(_db_zs_srcfile_read_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.zs_sel_target_curs.Reset
 void                 _db_zs_sel_target_curs_Reset(_db_zs_sel_target_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.zs_sel_target_curs.ValidQ
 bool                 _db_zs_sel_target_curs_ValidQ(_db_zs_sel_target_curs &curs);
 // proceed to next item
+// func:abt.FDb.zs_sel_target_curs.Next
 void                 _db_zs_sel_target_curs_Next(_db_zs_sel_target_curs &curs);
 // item access
+// func:abt.FDb.zs_sel_target_curs.Access
 abt::FTarget&        _db_zs_sel_target_curs_Access(_db_zs_sel_target_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.targsyslib_curs.Reset
 void                 _db_targsyslib_curs_Reset(_db_targsyslib_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.targsyslib_curs.ValidQ
 bool                 _db_targsyslib_curs_ValidQ(_db_targsyslib_curs &curs);
 // proceed to next item
+// func:abt.FDb.targsyslib_curs.Next
 void                 _db_targsyslib_curs_Next(_db_targsyslib_curs &curs);
 // item access
+// func:abt.FDb.targsyslib_curs.Access
 abt::FTargsyslib&    _db_targsyslib_curs_Access(_db_targsyslib_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.syslib_curs.Reset
 void                 _db_syslib_curs_Reset(_db_syslib_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.syslib_curs.ValidQ
 bool                 _db_syslib_curs_ValidQ(_db_syslib_curs &curs);
 // proceed to next item
+// func:abt.FDb.syslib_curs.Next
 void                 _db_syslib_curs_Next(_db_syslib_curs &curs);
 // item access
+// func:abt.FDb.syslib_curs.Access
 abt::FSyslib&        _db_syslib_curs_Access(_db_syslib_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.include_curs.Reset
 void                 _db_include_curs_Reset(_db_include_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.include_curs.ValidQ
 bool                 _db_include_curs_ValidQ(_db_include_curs &curs);
 // proceed to next item
+// func:abt.FDb.include_curs.Next
 void                 _db_include_curs_Next(_db_include_curs &curs);
 // item access
+// func:abt.FDb.include_curs.Access
 abt::FInclude&       _db_include_curs_Access(_db_include_curs &curs);
 // proceed to next item
+// func:abt.FDb.sysincl_curs.Next
 void                 _db_sysincl_curs_Next(_db_sysincl_curs &curs);
+// func:abt.FDb.sysincl_curs.Reset
 void                 _db_sysincl_curs_Reset(_db_sysincl_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.sysincl_curs.ValidQ
 bool                 _db_sysincl_curs_ValidQ(_db_sysincl_curs &curs);
 // item access
+// func:abt.FDb.sysincl_curs.Access
 algo::cstring&       _db_sysincl_curs_Access(_db_sysincl_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.zs_origsel_target_curs.Reset
 void                 _db_zs_origsel_target_curs_Reset(_db_zs_origsel_target_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.zs_origsel_target_curs.ValidQ
 bool                 _db_zs_origsel_target_curs_ValidQ(_db_zs_origsel_target_curs &curs);
 // proceed to next item
+// func:abt.FDb.zs_origsel_target_curs.Next
 void                 _db_zs_origsel_target_curs_Next(_db_zs_origsel_target_curs &curs);
 // item access
+// func:abt.FDb.zs_origsel_target_curs.Access
 abt::FTarget&        _db_zs_origsel_target_curs_Access(_db_zs_origsel_target_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.ns_curs.Reset
 void                 _db_ns_curs_Reset(_db_ns_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.ns_curs.ValidQ
 bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
 // proceed to next item
+// func:abt.FDb.ns_curs.Next
 void                 _db_ns_curs_Next(_db_ns_curs &curs);
 // item access
+// func:abt.FDb.ns_curs.Access
 abt::FNs&            _db_ns_curs_Access(_db_ns_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.filestat_curs.Reset
 void                 _db_filestat_curs_Reset(_db_filestat_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.filestat_curs.ValidQ
 bool                 _db_filestat_curs_ValidQ(_db_filestat_curs &curs);
 // proceed to next item
+// func:abt.FDb.filestat_curs.Next
 void                 _db_filestat_curs_Next(_db_filestat_curs &curs);
 // item access
+// func:abt.FDb.filestat_curs.Access
 abt::FFilestat&      _db_filestat_curs_Access(_db_filestat_curs &curs);
 // cursor points to valid item
+// func:abt.FDb.zd_inclstack_curs.Reset
 void                 _db_zd_inclstack_curs_Reset(_db_zd_inclstack_curs &curs, abt::FDb &parent);
 // cursor points to valid item
+// func:abt.FDb.zd_inclstack_curs.ValidQ
 bool                 _db_zd_inclstack_curs_ValidQ(_db_zd_inclstack_curs &curs);
 // proceed to next item
+// func:abt.FDb.zd_inclstack_curs.Next
 void                 _db_zd_inclstack_curs_Next(_db_zd_inclstack_curs &curs);
 // item access
+// func:abt.FDb.zd_inclstack_curs.Access
 abt::FSrcfile&       _db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &curs);
 // Set all fields to initial values.
+// func:abt.FDb..Init
 void                 FDb_Init();
+// func:abt.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- abt.FFilestat
@@ -1386,7 +1849,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:abt.FFilestat..Init
 void                 FFilestat_Init(abt::FFilestat& filestat);
+// func:abt.FFilestat..Uninit
 void                 FFilestat_Uninit(abt::FFilestat& filestat) __attribute__((nothrow));
 
 // --- abt.FInclude
@@ -1413,16 +1878,22 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FInclude.msghdr.CopyOut
 void                 include_CopyOut(abt::FInclude &row, dev::Include &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FInclude.msghdr.CopyIn
 void                 include_CopyIn(abt::FInclude &row, dev::Include &in) __attribute__((nothrow));
 
+// func:abt.FInclude.srcfile.Get
 algo::Smallstr200    srcfile_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FInclude.filename.Get
 algo::Smallstr200    filename_Get(abt::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:abt.FInclude..Init
 void                 FInclude_Init(abt::FInclude& include);
+// func:abt.FInclude..Uninit
 void                 FInclude_Uninit(abt::FInclude& include) __attribute__((nothrow));
 
 // --- abt.FNs
@@ -1432,8 +1903,8 @@ void                 FInclude_Uninit(abt::FInclude& include) __attribute__((noth
 struct FNs { // abt.FNs
     abt::FNs*          ind_ns_next;   // hash next
     algo::Smallstr16   ns;            // Namespace name (primary key)
-    algo::Smallstr50   nstype;        //
-    algo::Smallstr50   license;       //
+    algo::Smallstr50   nstype;        // Namespace type
+    algo::Smallstr50   license;       // Associated license
     algo::Comment      comment;       //
 private:
     friend abt::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -1446,12 +1917,16 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FNs.base.CopyOut
 void                 ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FNs.base.CopyIn
 void                 ns_CopyIn(abt::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FNs..Init
 void                 FNs_Init(abt::FNs& ns);
+// func:abt.FNs..Uninit
 void                 FNs_Uninit(abt::FNs& ns) __attribute__((nothrow));
 
 // --- abt.FSrcfile
@@ -1492,47 +1967,68 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FSrcfile.msghdr.CopyOut
 void                 srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FSrcfile.msghdr.CopyIn
 void                 srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) __attribute__((nothrow));
 
+// func:abt.FSrcfile.ext.Get
 algo::Smallstr10     ext_Get(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:abt.FSrcfile.zd_include.EmptyQ
 bool                 zd_include_EmptyQ(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:abt.FSrcfile.zd_include.First
 abt::FInclude*       zd_include_First(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:abt.FSrcfile.zd_include.InLlistQ
 bool                 zd_include_InLlistQ(abt::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:abt.FSrcfile.zd_include.Insert
 void                 zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:abt.FSrcfile.zd_include.Last
 abt::FInclude*       zd_include_Last(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:abt.FSrcfile.zd_include.N
 i32                  zd_include_N(const abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:abt.FSrcfile.zd_include.Next
 abt::FInclude*       zd_include_Next(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:abt.FSrcfile.zd_include.Prev
 abt::FInclude*       zd_include_Prev(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:abt.FSrcfile.zd_include.Remove
 void                 zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FSrcfile.zd_include.RemoveAll
 void                 zd_include_RemoveAll(abt::FSrcfile& srcfile) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:abt.FSrcfile.zd_include.RemoveFirst
 abt::FInclude*       zd_include_RemoveFirst(abt::FSrcfile& srcfile) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:abt.FSrcfile.zd_include.qLast
 abt::FInclude&       zd_include_qLast(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:abt.FSrcfile..Init
 void                 FSrcfile_Init(abt::FSrcfile& srcfile);
 // cursor points to valid item
+// func:abt.FSrcfile.zd_include_curs.Reset
 void                 srcfile_zd_include_curs_Reset(srcfile_zd_include_curs &curs, abt::FSrcfile &parent);
 // cursor points to valid item
+// func:abt.FSrcfile.zd_include_curs.ValidQ
 bool                 srcfile_zd_include_curs_ValidQ(srcfile_zd_include_curs &curs);
 // proceed to next item
+// func:abt.FSrcfile.zd_include_curs.Next
 void                 srcfile_zd_include_curs_Next(srcfile_zd_include_curs &curs);
 // item access
+// func:abt.FSrcfile.zd_include_curs.Access
 abt::FInclude&       srcfile_zd_include_curs_Access(srcfile_zd_include_curs &curs);
+// func:abt.FSrcfile..Uninit
 void                 FSrcfile_Uninit(abt::FSrcfile& srcfile) __attribute__((nothrow));
 
 // --- abt.FSyscmd
@@ -1583,85 +2079,122 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FSyscmd.msghdr.CopyOut
 void                 syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FSyscmd.msghdr.CopyIn
 void                 syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) __attribute__((nothrow));
 
+// func:abt.FSyscmd.execkey.Get
+// this function is 'extrn' and implemented by user
 i64                  execkey_Get(abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow));
-void                 execkey_Set(abt::FSyscmd& syscmd, i64 rhs) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FSyscmd.c_prior.EmptyQ
 bool                 c_prior_EmptyQ(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FSyscmd.c_prior.Find
 abt::FSyscmddep*     c_prior_Find(abt::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FSyscmd.c_prior.Getary
 algo::aryptr<abt::FSyscmddep*> c_prior_Getary(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FSyscmd.c_prior.Insert
 void                 c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:abt.FSyscmd.c_prior.InsertMaybe
 bool                 c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FSyscmd.c_prior.N
 i32                  c_prior_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FSyscmd.c_prior.Remove
 void                 c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FSyscmd.c_prior.RemoveAll
 void                 c_prior_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FSyscmd.c_prior.Reserve
 void                 c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FSyscmd.c_prior.qFind
 abt::FSyscmddep&     c_prior_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:abt.FSyscmd.c_prior.InAryQ
 bool                 syscmd_c_prior_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FSyscmd.c_prior.qLast
 abt::FSyscmddep&     c_prior_qLast(abt::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FSyscmd.c_next.EmptyQ
 bool                 c_next_EmptyQ(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FSyscmd.c_next.Find
 abt::FSyscmddep*     c_next_Find(abt::FSyscmd& syscmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FSyscmd.c_next.Getary
 algo::aryptr<abt::FSyscmddep*> c_next_Getary(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FSyscmd.c_next.Insert
 void                 c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:abt.FSyscmd.c_next.InsertMaybe
 bool                 c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FSyscmd.c_next.N
 i32                  c_next_N(const abt::FSyscmd& syscmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FSyscmd.c_next.Remove
 void                 c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FSyscmd.c_next.RemoveAll
 void                 c_next_RemoveAll(abt::FSyscmd& syscmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FSyscmd.c_next.Reserve
 void                 c_next_Reserve(abt::FSyscmd& syscmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FSyscmd.c_next.qFind
 abt::FSyscmddep&     c_next_qFind(abt::FSyscmd& syscmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:abt.FSyscmd.c_next.InAryQ
 bool                 syscmd_c_next_InAryQ(abt::FSyscmddep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FSyscmd.c_next.qLast
 abt::FSyscmddep&     c_next_qLast(abt::FSyscmd& syscmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FSyscmd..Init
 void                 FSyscmd_Init(abt::FSyscmd& syscmd);
+// func:abt.FSyscmd.c_prior_curs.Reset
 void                 syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, abt::FSyscmd &parent);
 // cursor points to valid item
+// func:abt.FSyscmd.c_prior_curs.ValidQ
 bool                 syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs);
 // proceed to next item
+// func:abt.FSyscmd.c_prior_curs.Next
 void                 syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs);
 // item access
+// func:abt.FSyscmd.c_prior_curs.Access
 abt::FSyscmddep&     syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs);
+// func:abt.FSyscmd.c_next_curs.Reset
 void                 syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, abt::FSyscmd &parent);
 // cursor points to valid item
+// func:abt.FSyscmd.c_next_curs.ValidQ
 bool                 syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs);
 // proceed to next item
+// func:abt.FSyscmd.c_next_curs.Next
 void                 syscmd_c_next_curs_Next(syscmd_c_next_curs &curs);
 // item access
+// func:abt.FSyscmd.c_next_curs.Access
 abt::FSyscmddep&     syscmd_c_next_curs_Access(syscmd_c_next_curs &curs);
+// func:abt.FSyscmd..Uninit
 void                 FSyscmd_Uninit(abt::FSyscmd& syscmd) __attribute__((nothrow));
 
 // --- abt.FSyscmddep
@@ -1686,15 +2219,20 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FSyscmddep.msghdr.CopyOut
 void                 syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FSyscmddep.msghdr.CopyIn
 void                 syscmddep_CopyIn(abt::FSyscmddep &row, dev::Syscmddep &in) __attribute__((nothrow));
 
+// func:abt.FSyscmddep.syscmddep.Get
+// this function is 'extrn' and implemented by user
 algo::RspaceStr16    syscmddep_Get(abt::FSyscmddep& syscmddep) __attribute__((__warn_unused_result__, nothrow));
-void                 syscmddep_Set(abt::FSyscmddep& syscmddep, const algo::strptr& rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FSyscmddep..Init
 void                 FSyscmddep_Init(abt::FSyscmddep& syscmddep);
+// func:abt.FSyscmddep..Uninit
 void                 FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) __attribute__((nothrow));
 
 // --- abt.FSyslib
@@ -1717,19 +2255,23 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FSyslib.msghdr.CopyOut
 void                 syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FSyslib.msghdr.CopyIn
 void                 syslib_CopyIn(abt::FSyslib &row, dev::Syslib &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FSyslib..Init
 void                 FSyslib_Init(abt::FSyslib& syslib);
+// func:abt.FSyslib..Uninit
 void                 FSyslib_Uninit(abt::FSyslib& syslib) __attribute__((nothrow));
 
 // --- abt.FTargdep
 // create: abt.FDb.targdep (Lary)
 // access: abt.FTarget.c_targdep (Ptrary)
 struct FTargdep { // abt.FTargdep
-    algo::Smallstr50   targdep;                   //
+    algo::Smallstr50   targdep;                   // Primary key - target.parent
     algo::Comment      comment;                   //
     abt::FTarget*      p_parent;                  // reference to parent row
     bool               target_c_targdep_in_ary;   //   false  membership flag
@@ -1744,16 +2286,22 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FTargdep.msghdr.CopyOut
 void                 targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FTargdep.msghdr.CopyIn
 void                 targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) __attribute__((nothrow));
 
+// func:abt.FTargdep.target.Get
 algo::Smallstr16     target_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FTargdep.parent.Get
 algo::Smallstr16     parent_Get(abt::FTargdep& targdep) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:abt.FTargdep..Init
 void                 FTargdep_Init(abt::FTargdep& targdep);
+// func:abt.FTargdep..Uninit
 void                 FTargdep_Uninit(abt::FTargdep& targdep) __attribute__((nothrow));
 
 // --- abt.FTarget
@@ -1769,8 +2317,8 @@ struct FTarget { // abt.FTarget
     abt::FTarget*        ind_target_next;          // hash next
     abt::FTarget*        zs_sel_target_next;       // zslist link; -1 means not-in-list
     abt::FTarget*        zs_origsel_target_next;   // zslist link; -1 means not-in-list
-    algo::Smallstr16     target;                   //
-    algo::Smallstr50     compat;                   //   "Linux-%.%-%"
+    algo::Smallstr16     target;                   // Primary key - name of target
+    algo::Smallstr50     compat;                   //   "Linux-%.%-%"  Compatibility (regx of builddir)
     algo::UnTime         cum_modtime;              // Cumulative modtime of all source files in this target
     algo::cstring        outfile;                  //
     bool                 ood;                      //   false
@@ -1811,219 +2359,316 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FTarget.msghdr.CopyOut
 void                 target_CopyOut(abt::FTarget &row, dev::Target &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FTarget.msghdr.CopyIn
 void                 target_CopyIn(abt::FTarget &row, dev::Target &in) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_targsrc.EmptyQ
 bool                 c_targsrc_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_targsrc.Find
 abt::FTargsrc*       c_targsrc_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_targsrc.Getary
 algo::aryptr<abt::FTargsrc*> c_targsrc_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_targsrc.Insert
 void                 c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_targsrc.InsertMaybe
 bool                 c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_targsrc.N
 i32                  c_targsrc_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_targsrc.RemoveAll
 void                 c_targsrc_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_targsrc.Reserve
 void                 c_targsrc_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_targsrc.qFind
 abt::FTargsrc&       c_targsrc_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:abt.FTarget.c_targsrc.InAryQ
 bool                 target_c_targsrc_InAryQ(abt::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_targsrc.qLast
 abt::FTargsrc&       c_targsrc_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_srcfile.EmptyQ
 bool                 c_srcfile_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_srcfile.Find
 abt::FSrcfile*       c_srcfile_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_srcfile.Getary
 algo::aryptr<abt::FSrcfile*> c_srcfile_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_srcfile.Insert
 void                 c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_srcfile.ScanInsertMaybe
 bool                 c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_srcfile.N
 i32                  c_srcfile_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_srcfile.Remove
 void                 c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_srcfile.RemoveAll
 void                 c_srcfile_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_srcfile.Reserve
 void                 c_srcfile_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_srcfile.qFind
 abt::FSrcfile&       c_srcfile_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_srcfile.qLast
 abt::FSrcfile&       c_srcfile_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_targdep.EmptyQ
 bool                 c_targdep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_targdep.Find
 abt::FTargdep*       c_targdep_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_targdep.Getary
 algo::aryptr<abt::FTargdep*> c_targdep_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_targdep.Insert
 void                 c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_targdep.InsertMaybe
 bool                 c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_targdep.N
 i32                  c_targdep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_targdep.Remove
 void                 c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_targdep.RemoveAll
 void                 c_targdep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_targdep.Reserve
 void                 c_targdep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_targdep.qFind
 abt::FTargdep&       c_targdep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:abt.FTarget.c_targdep.InAryQ
 bool                 target_c_targdep_InAryQ(abt::FTargdep& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_targdep.qLast
 abt::FTargdep&       c_targdep_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_targsyslib.EmptyQ
 bool                 c_targsyslib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_targsyslib.Find
 abt::FTargsyslib*    c_targsyslib_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_targsyslib.Getary
 algo::aryptr<abt::FTargsyslib*> c_targsyslib_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_targsyslib.Insert
 void                 c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_targsyslib.InsertMaybe
 bool                 c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_targsyslib.N
 i32                  c_targsyslib_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_targsyslib.Remove
 void                 c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_targsyslib.RemoveAll
 void                 c_targsyslib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_targsyslib.Reserve
 void                 c_targsyslib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_targsyslib.qFind
 abt::FTargsyslib&    c_targsyslib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:abt.FTarget.c_targsyslib.InAryQ
 bool                 target_c_targsyslib_InAryQ(abt::FTargsyslib& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_targsyslib.qLast
 abt::FTargsyslib&    c_targsyslib_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_alldep.EmptyQ
 bool                 c_alldep_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_alldep.Find
 abt::FTarget*        c_alldep_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_alldep.Getary
 algo::aryptr<abt::FTarget*> c_alldep_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_alldep.Insert
 void                 c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_alldep.ScanInsertMaybe
 bool                 c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_alldep.N
 i32                  c_alldep_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_alldep.Remove
 void                 c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_alldep.RemoveAll
 void                 c_alldep_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_alldep.Reserve
 void                 c_alldep_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_alldep.qFind
 abt::FTarget&        c_alldep_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_alldep.qLast
 abt::FTarget&        c_alldep_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:abt.FTarget.c_alllib.EmptyQ
 bool                 c_alllib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:abt.FTarget.c_alllib.Find
 abt::FSyslib*        c_alllib_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:abt.FTarget.c_alllib.Getary
 algo::aryptr<abt::FSyslib*> c_alllib_Getary(abt::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:abt.FTarget.c_alllib.Insert
 void                 c_alllib_Insert(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
+// func:abt.FTarget.c_alllib.ScanInsertMaybe
 bool                 c_alllib_ScanInsertMaybe(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:abt.FTarget.c_alllib.N
 i32                  c_alllib_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:abt.FTarget.c_alllib.Remove
 void                 c_alllib_Remove(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:abt.FTarget.c_alllib.RemoveAll
 void                 c_alllib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:abt.FTarget.c_alllib.Reserve
 void                 c_alllib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:abt.FTarget.c_alllib.qFind
 abt::FSyslib&        c_alllib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:abt.FTarget.c_alllib.qLast
 abt::FSyslib&        c_alllib_qLast(abt::FTarget& target) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FTarget..Init
 void                 FTarget_Init(abt::FTarget& target);
+// func:abt.FTarget.c_targsrc_curs.Reset
 void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_targsrc_curs.ValidQ
 bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_targsrc_curs.Next
 void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs);
 // item access
+// func:abt.FTarget.c_targsrc_curs.Access
 abt::FTargsrc&       target_c_targsrc_curs_Access(target_c_targsrc_curs &curs);
+// func:abt.FTarget.c_srcfile_curs.Reset
 void                 target_c_srcfile_curs_Reset(target_c_srcfile_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_srcfile_curs.ValidQ
 bool                 target_c_srcfile_curs_ValidQ(target_c_srcfile_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_srcfile_curs.Next
 void                 target_c_srcfile_curs_Next(target_c_srcfile_curs &curs);
 // item access
+// func:abt.FTarget.c_srcfile_curs.Access
 abt::FSrcfile&       target_c_srcfile_curs_Access(target_c_srcfile_curs &curs);
+// func:abt.FTarget.c_targdep_curs.Reset
 void                 target_c_targdep_curs_Reset(target_c_targdep_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_targdep_curs.ValidQ
 bool                 target_c_targdep_curs_ValidQ(target_c_targdep_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_targdep_curs.Next
 void                 target_c_targdep_curs_Next(target_c_targdep_curs &curs);
 // item access
+// func:abt.FTarget.c_targdep_curs.Access
 abt::FTargdep&       target_c_targdep_curs_Access(target_c_targdep_curs &curs);
+// func:abt.FTarget.c_targsyslib_curs.Reset
 void                 target_c_targsyslib_curs_Reset(target_c_targsyslib_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_targsyslib_curs.ValidQ
 bool                 target_c_targsyslib_curs_ValidQ(target_c_targsyslib_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_targsyslib_curs.Next
 void                 target_c_targsyslib_curs_Next(target_c_targsyslib_curs &curs);
 // item access
+// func:abt.FTarget.c_targsyslib_curs.Access
 abt::FTargsyslib&    target_c_targsyslib_curs_Access(target_c_targsyslib_curs &curs);
+// func:abt.FTarget.c_alldep_curs.Reset
 void                 target_c_alldep_curs_Reset(target_c_alldep_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_alldep_curs.ValidQ
 bool                 target_c_alldep_curs_ValidQ(target_c_alldep_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_alldep_curs.Next
 void                 target_c_alldep_curs_Next(target_c_alldep_curs &curs);
 // item access
+// func:abt.FTarget.c_alldep_curs.Access
 abt::FTarget&        target_c_alldep_curs_Access(target_c_alldep_curs &curs);
+// func:abt.FTarget.c_alllib_curs.Reset
 void                 target_c_alllib_curs_Reset(target_c_alllib_curs &curs, abt::FTarget &parent);
 // cursor points to valid item
+// func:abt.FTarget.c_alllib_curs.ValidQ
 bool                 target_c_alllib_curs_ValidQ(target_c_alllib_curs &curs);
 // proceed to next item
+// func:abt.FTarget.c_alllib_curs.Next
 void                 target_c_alllib_curs_Next(target_c_alllib_curs &curs);
 // item access
+// func:abt.FTarget.c_alllib_curs.Access
 abt::FSyslib&        target_c_alllib_curs_Access(target_c_alllib_curs &curs);
+// func:abt.FTarget..Uninit
 void                 FTarget_Uninit(abt::FTarget& target) __attribute__((nothrow));
 
 // --- abt.FTargsrc
@@ -2047,18 +2692,25 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FTargsrc.msghdr.CopyOut
 void                 targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FTargsrc.msghdr.CopyIn
 void                 targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
+// func:abt.FTargsrc.target.Get
 algo::Smallstr16     target_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FTargsrc.src.Get
 algo::Smallstr200    src_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FTargsrc.ext.Get
 algo::Smallstr10     ext_Get(abt::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:abt.FTargsrc..Init
 void                 FTargsrc_Init(abt::FTargsrc& targsrc);
+// func:abt.FTargsrc..Uninit
 void                 FTargsrc_Uninit(abt::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- abt.FTargsyslib
@@ -2066,7 +2718,6 @@ void                 FTargsrc_Uninit(abt::FTargsrc& targsrc) __attribute__((noth
 // access: abt.FTarget.c_targsyslib (Ptrary)
 struct FTargsyslib { // abt.FTargsyslib
     algo::Smallstr50   targsyslib;                   //
-    algo_lib::Regx     uname;                        // Sql Regx of dev::Uname
     algo::Comment      comment;                      //
     abt::FSyslib*      p_syslib;                     // reference to parent row
     bool               target_c_targsyslib_in_ary;   //   false  membership flag
@@ -2081,25 +2732,31 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FTargsyslib.msghdr.CopyOut
 void                 targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FTargsyslib.msghdr.CopyIn
 void                 targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) __attribute__((nothrow));
 
+// func:abt.FTargsyslib.target.Get
 algo::Smallstr16     target_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FTargsyslib.syslib.Get
 algo::Smallstr50     syslib_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
-// Print back to string
-void                 uname_Print(abt::FTargsyslib& targsyslib, algo::cstring &out) __attribute__((nothrow));
+// func:abt.FTargsyslib.uname.Get
+algo::Smallstr50     uname_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:abt.FTargsyslib..Init
 void                 FTargsyslib_Init(abt::FTargsyslib& targsyslib);
+// func:abt.FTargsyslib..Uninit
 void                 FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) __attribute__((nothrow));
 
 // --- abt.FToolOpt
 // create: abt.FDb.tool_opt (Lary)
 struct FToolOpt { // abt.FToolOpt
-    algo::Smallstr100   tool_opt;      //
+    algo::Smallstr100   tool_opt;      // Primary key - uname.compiler-cfg.arch/target-opt_type:opt
     algo::Comment       comment;       //
     algo_lib::Regx      regx_opt;      // Sql Regx
     algo_lib::Regx      regx_target;   // Sql Regx
@@ -2116,33 +2773,46 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FToolOpt.msghdr.CopyOut
 void                 tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FToolOpt.msghdr.CopyIn
 void                 tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) __attribute__((nothrow));
 
-algo::Smallstr50     opt_type_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
-
-algo::Smallstr100    opt_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
-
-algo::Smallstr50     target_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
-
+// func:abt.FToolOpt.uname.Get
 algo::Smallstr50     uname_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
-algo::Smallstr50     sortfld_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
-
+// func:abt.FToolOpt.compiler.Get
 algo::Smallstr50     compiler_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FToolOpt.cfg.Get
 algo::Smallstr50     cfg_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FToolOpt.arch.Get
 algo::Smallstr50     arch_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FToolOpt.target.Get
+algo::Smallstr50     target_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FToolOpt.opt_type.Get
+algo::Smallstr50     opt_type_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FToolOpt.opt.Get
+algo::Smallstr100    opt_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FToolOpt.sortfld.Get
+algo::Smallstr50     sortfld_Get(abt::FToolOpt& tool_opt) __attribute__((__warn_unused_result__, nothrow));
+
 // Print back to string
+// func:abt.FToolOpt.regx_opt.Print
 void                 regx_opt_Print(abt::FToolOpt& tool_opt, algo::cstring &out) __attribute__((nothrow));
 
 // Print back to string
+// func:abt.FToolOpt.regx_target.Print
 void                 regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FToolOpt..Init
 void                 FToolOpt_Init(abt::FToolOpt& tool_opt);
 
 // --- abt.FUname
@@ -2163,12 +2833,16 @@ private:
 };
 
 // Copy fields out of row
+// func:abt.FUname.msghdr.CopyOut
 void                 uname_CopyOut(abt::FUname &row, dev::Uname &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:abt.FUname.msghdr.CopyIn
 void                 uname_CopyIn(abt::FUname &row, dev::Uname &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:abt.FUname..Init
 void                 FUname_Init(abt::FUname& uname);
+// func:abt.FUname..Uninit
 void                 FUname_Uninit(abt::FUname& uname) __attribute__((nothrow));
 
 // --- abt.FieldId
@@ -2183,32 +2857,43 @@ struct FieldId { // abt.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:abt.FieldId.value.GetEnum
 abt_FieldIdEnum      value_GetEnum(const abt::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:abt.FieldId.value.SetEnum
 void                 value_SetEnum(abt::FieldId& parent, abt_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:abt.FieldId.value.ToCstr
 const char*          value_ToCstr(const abt::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:abt.FieldId.value.Print
 void                 value_Print(const abt::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:abt.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:abt.FieldId.value.SetStrptr
 void                 value_SetStrptr(abt::FieldId& parent, algo::strptr rhs, abt_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:abt.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of abt::FieldId from an ascii string.
 // The format of the string is the format of the abt::FieldId's only field
+// func:abt.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:abt.FieldId..Init
 void                 FieldId_Init(abt::FieldId& parent);
-// print string representation of abt::FieldId to string LHS, no header -- cprint:abt.FieldId.String
-void                 FieldId_Print(abt::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:abt.FieldId.String  printfmt:Raw
+// func:abt.FieldId..Print
+void                 FieldId_Print(abt::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- abt.TableId
 struct TableId { // abt.TableId: Index of table in this namespace
@@ -2220,32 +2905,43 @@ struct TableId { // abt.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:abt.TableId.value.GetEnum
 abt_TableIdEnum      value_GetEnum(const abt::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:abt.TableId.value.SetEnum
 void                 value_SetEnum(abt::TableId& parent, abt_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:abt.TableId.value.ToCstr
 const char*          value_ToCstr(const abt::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:abt.TableId.value.Print
 void                 value_Print(const abt::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:abt.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:abt.TableId.value.SetStrptr
 void                 value_SetStrptr(abt::TableId& parent, algo::strptr rhs, abt_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:abt.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(abt::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of abt::TableId from an ascii string.
 // The format of the string is the format of the abt::TableId's only field
+// func:abt.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:abt.TableId..Init
 void                 TableId_Init(abt::TableId& parent);
-// print string representation of abt::TableId to string LHS, no header -- cprint:abt.TableId.String
-void                 TableId_Print(abt::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:abt.TableId.String  printfmt:Raw
+// func:abt.TableId..Print
+void                 TableId_Print(abt::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace abt { // gen:ns_curstext
 
@@ -2517,8 +3213,10 @@ struct target_c_alllib_curs {// fcurs:abt.FTarget.c_alllib/curs
 } // gen:ns_curstext
 namespace abt { // gen:ns_func
 } // gen:ns_func
+// func:abt...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:abt...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

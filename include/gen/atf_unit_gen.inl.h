@@ -62,19 +62,19 @@ inline u32 atf_unit::Cstr_Hash(u32 prev, const atf_unit::Cstr & rhs) {
 }
 
 // --- atf_unit.Cstr..Lt
-inline bool atf_unit::Cstr_Lt(atf_unit::Cstr & lhs, atf_unit::Cstr & rhs) {
+inline bool atf_unit::Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
     return val_Lt(lhs,rhs);
 }
 
 // --- atf_unit.Cstr..Cmp
-inline i32 atf_unit::Cstr_Cmp(atf_unit::Cstr & lhs, atf_unit::Cstr & rhs) {
+inline i32 atf_unit::Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
     i32 retval = 0;
     retval = val_Cmp(lhs,rhs);
     return retval;
 }
 
 // --- atf_unit.Cstr..Eq
-inline bool atf_unit::Cstr_Eq(const atf_unit::Cstr & lhs,const atf_unit::Cstr & rhs) {
+inline bool atf_unit::Cstr_Eq(const atf_unit::Cstr& lhs, const atf_unit::Cstr& rhs) {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.val, rhs.val);
     return retval;
@@ -82,7 +82,7 @@ inline bool atf_unit::Cstr_Eq(const atf_unit::Cstr & lhs,const atf_unit::Cstr & 
 
 // --- atf_unit.Cstr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr & rhs) {
+inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) {
     bool ret = !Cstr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -721,12 +721,12 @@ inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA & rhs) {
 }
 
 // --- atf_unit.TypeA..Lt
-inline bool atf_unit::TypeA_Lt(atf_unit::TypeA & lhs, atf_unit::TypeA & rhs) {
+inline bool atf_unit::TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
     return i32_Lt(lhs.typea, rhs.typea);
 }
 
 // --- atf_unit.TypeA..Cmp
-inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA & lhs, atf_unit::TypeA & rhs) {
+inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     return retval;
@@ -739,7 +739,7 @@ inline void atf_unit::TypeA_Init(atf_unit::TypeA& parent) {
 }
 
 // --- atf_unit.TypeA..Eq
-inline bool atf_unit::TypeA_Eq(const atf_unit::TypeA & lhs,const atf_unit::TypeA & rhs) {
+inline bool atf_unit::TypeA_Eq(const atf_unit::TypeA& lhs, const atf_unit::TypeA& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -747,7 +747,7 @@ inline bool atf_unit::TypeA_Eq(const atf_unit::TypeA & lhs,const atf_unit::TypeA
 
 // --- atf_unit.TypeA..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA & rhs) {
+inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) {
     bool ret = !TypeA_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -791,12 +791,12 @@ inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB & rhs) {
 }
 
 // --- atf_unit.TypeB..Lt
-inline bool atf_unit::TypeB_Lt(atf_unit::TypeB & lhs, atf_unit::TypeB & rhs) {
+inline bool atf_unit::TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
     return TypeB_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_unit.TypeB..Cmp
-inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB & lhs, atf_unit::TypeB & rhs) {
+inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     if (retval != 0) {
@@ -814,7 +814,7 @@ inline void atf_unit::TypeB_Init(atf_unit::TypeB& parent) {
 }
 
 // --- atf_unit.TypeB..Eq
-inline bool atf_unit::TypeB_Eq(const atf_unit::TypeB & lhs,const atf_unit::TypeB & rhs) {
+inline bool atf_unit::TypeB_Eq(const atf_unit::TypeB& lhs, const atf_unit::TypeB& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -826,7 +826,7 @@ inline bool atf_unit::TypeB_Eq(const atf_unit::TypeB & lhs,const atf_unit::TypeB
 
 // --- atf_unit.TypeB..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB & rhs) {
+inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) {
     bool ret = !TypeB_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update

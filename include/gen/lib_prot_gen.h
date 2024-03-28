@@ -54,32 +54,43 @@ struct FieldId { // lib_prot.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_prot.FieldId.value.GetEnum
 lib_prot_FieldIdEnum value_GetEnum(const lib_prot::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_prot.FieldId.value.SetEnum
 void                 value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_prot.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_prot::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_prot.FieldId.value.Print
 void                 value_Print(const lib_prot::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_prot.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_prot.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_prot::FieldId& parent, algo::strptr rhs, lib_prot_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_prot.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_prot::FieldId from an ascii string.
 // The format of the string is the format of the lib_prot::FieldId's only field
+// func:lib_prot.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_prot.FieldId..Init
 void                 FieldId_Init(lib_prot::FieldId& parent);
-// print string representation of lib_prot::FieldId to string LHS, no header -- cprint:lib_prot.FieldId.String
-void                 FieldId_Print(lib_prot::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_prot.FieldId.String  printfmt:Raw
+// func:lib_prot.FieldId..Print
+void                 FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_prot { // gen:ns_func
 } // gen:ns_func

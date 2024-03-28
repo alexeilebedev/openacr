@@ -6,4 +6,3 @@ objlist,"Object files are added to dependents' link line"
 pch,"Precompiled header"
 protocol,"Protocol (not a target)"
 ssimdb,"Ssim database (not a target)"
-

@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -134,14 +134,13 @@ void acr::Main_Mysql() {
 // This produces a new query but doesn't run it
 void acr::ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
     if (bool_Update(ctype.mark_sel,true)) {
-        acr::FRec *ctype_rec=ind_rec_Find(ctype_ctype,ctype.ctype);
+        acr::FRec *ctype_rec=ind_ctype_rec_Find(ctype_ctype,ctype.ctype);
         if (ctype_rec && !zd_all_selrec_InLlistQ(*ctype_rec)) {
             acr::FQuery& next  = acr::query_Alloc();
             next.queryop = acr_Queryop_value_select;
             algo_lib::Regx_ReadLiteral(next.ssimfile, "dmmeta.ctype");
             Regx_ReadLiteral(next.query.value, ctype.ctype);
-            next.ndown = 100;
-            next.comment = "recursive ctype selection";
+            next.comment = "ctype";
             (void)acr::query_XrefMaybe(next);
         }
     }
@@ -150,7 +149,7 @@ void acr::ScheduleSelectCtype(acr::FCtype &ctype_ctype, acr::FCtype &ctype) {
 // -----------------------------------------------------------------------------
 
 // Select ctypes of selected records, deselect records themselves
-void acr::SelectMeta() {
+void acr::Main_SelectMeta() {
     // Find data record of 'ctype'
     acr::FCtype *ctype_ctype = acr::ind_ctype_Find("dmmeta.Ctype");
     vrfy(ctype_ctype, "acr.broken_metadata");
@@ -180,6 +179,116 @@ void acr::SelectMeta() {
             rec.metasel=false;
         }ind_end;
     }ind_end;
+    RunAllQueries();
+    while (Main_SelectDown(false)) {// recursive
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr::Main_SelectUp() {
+    // run through selected records, add new ones to the front
+    ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
+        if (rec.seldist >= 0 && rec.seldist < _db.cmdline.nup) {
+            ind_beg(acr::ctype_c_field_curs,  field, *rec.p_ctype) if (field.p_arg->c_ssimfile) {
+                LoadRecords(*field.p_arg);
+                // look up item in the parent record.
+                // if found -- add that record to the match set
+                tempstr val(EvalAttr(rec.tuple, field));
+                acr::FRec *parrec = acr::ind_ctype_rec_Find(*field.p_arg, val);
+                if (parrec && Rec_Select(*parrec)) {
+                    parrec->seldist = rec.seldist + 1;
+                }
+            }ind_end;
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Check if field FIELD of type CHILD is the pkey of CHILD
+// or the leftmost prefix of pkey of CHILD
+bool acr::LeftCheck(acr::FCtype &child, acr::FField &field) {
+    bool ret=true;
+    if (_db.cmdline.l) {
+        acr::FField *pkey =c_field_Find(child,0);
+        if (pkey) {
+            ret = pkey==&field
+                || (field.c_substr && field.c_substr->srcfield==pkey->field && algo::LeftPathcompQ(field.c_substr->expr.value));
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// extend selected front down
+// the search starts with all selected records, where we clear the visit flag
+// we then create a list C_CTYPE_FRONT of all potential ctypes that might reference these selected records,
+// we then scan records for these ctypes, and add new records to the selected list
+// The function returns the number of records added.
+// The function performs one iteration of the downward transitive closure. Looping until
+// SelectDown returns 0 finds all downward references.
+int acr::Main_SelectDown(bool unused) {
+    int nmatch=0;
+    c_ctype_front_RemoveAll();
+    ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
+        if (rec.seldist <= 0) {// go down only from "baseline" records
+            ind_beg(acr::ctype_c_child_curs, child, *rec.p_ctype) {
+                c_ctype_front_Insert(child);
+            }ind_end;
+        }
+        if (acr::_db.cmdline.x) {
+            ind_beg(acr::ctype_c_ssimreq_curs,ssimreq,*rec.p_ctype) {
+                if (Regx_Match(ssimreq.regx_value,EvalAttr(rec.tuple, *ssimreq.p_parent_field))) {
+                    algo_lib::Replscope R;
+                    R.eatcomma=false;
+                    acr::FCtype *child = ssimreq.p_child_ssimfile->p_ctype;
+                    LoadRecords(*child);
+                    if (acr::FRec *child_rec = ind_ctype_rec_Find(*child,GetChildKey(rec,ssimreq,rec.tuple,R))) {
+                        if (Rec_Select(*child_rec)) {
+                            child_rec->seldist = rec.seldist -1;
+                            nmatch++;
+                        }
+                    }
+                }
+            }ind_end;
+        }
+    }ind_end;
+    // walk child ssimfiles
+    // walk all records of each ssimfile
+    // add records which reference one of selected records
+    ind_beg(acr::_db_c_ctype_front_curs, child, _db) {
+        LoadRecords(child);
+        ind_beg(acr::ctype_zd_ctype_rec_curs, rec, child) {
+            ind_beg(acr::ctype_c_field_curs,  field, child) if (field.p_arg->c_ssimfile && LeftCheck(child,field)) {
+                tempstr val(EvalAttr(rec.tuple, field));
+                acr::FRec *parrec = acr::ind_ctype_rec_Find(*field.p_arg, val);
+                bool good = parrec;
+                good = good && parrec->seldist <= 0;
+                good = good && acr::zd_all_selrec_InLlistQ(*parrec);
+                if (unused) {
+                    // "unused" option -- instead of selecting child,
+                    // deselect parent. this effectively selects only those records
+                    // which have no one pointing to them.
+                    // cmdline.nup=0, cmdline.ndown=1, otherwise this algorithm doesn't
+                    // work.
+                    if (good) {
+                        zd_all_selrec_Remove(*parrec);
+                        zd_ctype_selrec_Remove(*parrec->p_ctype, *parrec);
+                    }
+                } else {
+                    good = good && Rec_Select(rec);
+                    if (good) {
+                        rec.seldist = parrec->seldist - 1;
+                        nmatch++;
+                        break; // already selected, no need to continue search
+                    }
+                }
+            }ind_end;
+        }ind_end;
+    }ind_end;
+    return nmatch;
 }
 
 // -----------------------------------------------------------------------------
@@ -221,6 +330,7 @@ void acr::Main_AcrEdit() {
     print.maxgroup = acr::_db.cmdline.maxgroup;
     print.cmt      = acr::_db.cmdline.cmt;
     print.loose    = acr::_db.cmdline.loose;
+    print.showstatus=true;// annotate records as del,insert,update
     PrintToFd(print, fd);
     strptr editor = getenv("EDITOR");
     vrfy(elems_N(editor), "EDITOR environment variable not set");
@@ -259,46 +369,63 @@ void acr::Main_AcrEdit() {
 
 // -----------------------------------------------------------------------------
 
+// Mark SSIMREQ child records for deletion
+void acr::DelChildRecords(acr::FRec &rec) {
+    ind_beg(acr::ctype_c_ssimreq_curs,ssimreq,*rec.p_ctype) {
+        if (Regx_Match(ssimreq.regx_value,EvalAttr(rec.tuple, *ssimreq.p_parent_field))) {
+            algo_lib::Replscope R;
+            R.eatcomma=false;
+            acr::FCtype *child = ssimreq.p_child_ssimfile->p_ctype;
+            LoadRecords(*child);
+            if (acr::FRec *child_rec = ind_ctype_rec_Find(*child,GetChildKey(rec,ssimreq,rec.tuple,R))) {
+                child_rec->del=true;
+                Rec_Select(*child_rec);
+            }
+        }
+    }ind_end;
+}
+
 // Start with selected records
 // Find all dependent records and delete them as well
 // In the end, de-select records that were both inserted and deleted
 void acr::CascadeDelete() {
-    int nmatch=0;
-    int totmatch=0;
-    acr::FRun run; // temp
-    do {
-        nmatch=0;
-        c_child_RemoveAll(run);
-        ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
-            if (rec.del) {
-                ind_beg(acr::ctype_c_field_curs,  field, *rec.p_ctype) {
-                    ind_beg(acr::ctype_c_child_curs, child, *field.p_ctype) {
-                        c_child_Insert(run, child);
-                    }ind_end;
+    for (acr::FRec *rec=zd_all_selrec_First(); rec; rec=zd_all_selrec_Next(*rec)) {
+        c_ctype_front_RemoveAll();
+        // scan all selected records since the last one
+        // collect a list of child tables to scan
+        for (; rec; rec=zd_all_selrec_Next(*rec)) {
+            if (rec->del) {
+                if (_db.cmdline.x) {
+                    DelChildRecords(*rec);
+                }
+                ind_beg(acr::ctype_c_child_curs, child, *rec->p_ctype) {
+                    c_ctype_front_Insert(child);
                 }ind_end;
             }
-        }ind_end;
-        ind_beg(acr::run_c_child_curs, child, run) {
+            if (rec==zd_all_selrec_Last()) {
+                break;
+            }
+        }
+        // scan child tables
+        // makr any references to a deleted record as deleted
+        ind_beg(acr::_db_c_ctype_front_curs, child, _db) {
             LoadRecords(child);
-            ind_beg(acr::ctype_zd_trec_curs, rec, child) {
-                ind_beg(acr::ctype_c_field_curs,  field, child) if (field.p_arg->c_ssimfile) {
-                    tempstr val(EvalAttr(rec.tuple, field));
-                    acr::FRec *parrec = acr::ind_rec_Find(*field.p_arg, val);
-                    if (!rec.del && parrec && parrec->del) {
-                        rec.del=true;
-                        Rec_Select(rec);
-                        nmatch++;
+            ind_beg(acr::ctype_zd_ctype_rec_curs, childrec, child) {
+                ind_beg(acr::ctype_c_field_curs, field, child) if (field.p_arg->c_ssimfile) {
+                    acr::FRec *parrec = acr::ind_ctype_rec_Find(*field.p_arg, EvalAttr(childrec.tuple, field));
+                    if (parrec && parrec->del) {
+                        Rec_Select(childrec);
+                        childrec.del=true;
                     }
                 }ind_end;
             }ind_end;
         }ind_end;
-        totmatch += nmatch;
-    } while (nmatch);
+    }
     // de-select records that were both inserted and deleted
     // since there is no point in showing them
-    ind_beg(acr::_db_zd_all_selrec_delcurs, rec, acr::_db) {
-        if (rec.isnew && rec.del) {
-            acr::Rec_Deselect(rec);
+    ind_beg(acr::_db_zd_all_selrec_delcurs, delrec, acr::_db) {
+        if (delrec.isnew && delrec.del) {
+            acr::Rec_Deselect(delrec);
         }
     }ind_end;
 }

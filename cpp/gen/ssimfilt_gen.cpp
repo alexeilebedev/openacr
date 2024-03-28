@@ -33,13 +33,18 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
+#include "include/gen/lib_ctype_gen.h"
+#include "include/gen/lib_ctype_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
-ssimfilt::FDb   ssimfilt::_db;    // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
+algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
+lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
+ssimfilt::FDb    ssimfilt::_db;     // dependency found via dev.targdep
 
 namespace ssimfilt {
 const char *ssimfilt_help =
@@ -50,11 +55,12 @@ const char *ssimfilt_help =
 "    [typetag]   regx    \"%\"     (filter) Match typetag. ^=first encountered typetag\n"
 "    [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)\n"
 "    -field...   string          (project) Select fields for output (regx)\n"
-"    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|table)\n"
+"    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|json|table)\n"
 "                                    ssim  Print selected/filtered tuples\n"
 "                                    csv  First tuple determines header. CSV quoting is used. Newlines are removed\n"
 "                                    field  Print selected fields, one per line\n"
 "                                    cmd  Emit command for each tuple (implied if -cmd is set)\n"
+"                                    json  Print JSON object for each tuple\n"
 "                                    table  ASCII table for each group of tuples\n"
 "    -t                          Alias for -format:table\n"
 "    -cmd        string  \"\"      Command to output\n"
@@ -69,17 +75,22 @@ const char *ssimfilt_help =
 } // namespace ssimfilt
 namespace ssimfilt { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:ssimfilt.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:ssimfilt.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:ssimfilt.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:ssimfilt...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- ssimfilt.trace..Print
-// print string representation of ssimfilt::trace to string LHS, no header -- cprint:ssimfilt.trace.String
-void ssimfilt::trace_Print(ssimfilt::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssimfilt.trace.String  printfmt:Tuple
+void ssimfilt::trace_Print(ssimfilt::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssimfilt.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -292,7 +303,18 @@ bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = ssimfilt::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -326,6 +348,7 @@ bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
             retval = retval && algo_lib::InsertStrptrMaybe(line);
+            retval = retval && lib_ctype::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -624,6 +647,7 @@ void ssimfilt::FDb_Init() {
         selfield_first    += 1ULL<<i;
     }
     _db.csv_locked = bool(false);
+    _db.n_json_out = i32(0);
 
     ssimfilt::InitReflection();
 }
@@ -712,8 +736,9 @@ bool ssimfilt::FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr i
 }
 
 // --- ssimfilt.FieldId..Print
-// print string representation of ssimfilt::FieldId to string LHS, no header -- cprint:ssimfilt.FieldId.String
-void ssimfilt::FieldId_Print(ssimfilt::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssimfilt.FieldId.String  printfmt:Raw
+void ssimfilt::FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) {
     ssimfilt::value_Print(row, str);
 }
 
@@ -738,6 +763,7 @@ int main(int argc, char **argv) {
     try {
         lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_ctype::FDb_Init();
         ssimfilt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -753,6 +779,7 @@ int main(int argc, char **argv) {
     }
     try {
         ssimfilt::FDb_Uninit();
+        lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {

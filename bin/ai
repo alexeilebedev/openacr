@@ -20,7 +20,7 @@ use strict;
 use warnings;
 sub Die {
     my ($file,$line) = (caller)[1,2];
-    print "error $_[0]. more info in txt/abt-troubleshoot.md\n";
+    print "error $_[0]. more info in txt/exe/abt/README.md\n";
     exit(1);
 }
 my $clean = scalar(grep(/^-clean$/,@ARGV)) || system("abt --version >/dev/null 2>/dev/null")!=0;

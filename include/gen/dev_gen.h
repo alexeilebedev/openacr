@@ -91,77 +91,77 @@ enum dev_FieldIdEnum {                 // dev.FieldId.value
     ,dev_FieldId_pchext         = 15
     ,dev_FieldId_objext         = 16
     ,dev_FieldId_rc             = 17
-    ,dev_FieldId_covfile        = 18
-    ,dev_FieldId_total          = 19
-    ,dev_FieldId_nonexe         = 20
-    ,dev_FieldId_exe            = 21
-    ,dev_FieldId_exer           = 22
-    ,dev_FieldId_hit            = 23
-    ,dev_FieldId_cov            = 24
-    ,dev_FieldId_covline        = 25
-    ,dev_FieldId_src            = 26
-    ,dev_FieldId_line           = 27
-    ,dev_FieldId_flag           = 28
-    ,dev_FieldId_text           = 29
-    ,dev_FieldId_covtarget      = 30
-    ,dev_FieldId_edaction       = 31
-    ,dev_FieldId_edacttype      = 32
-    ,dev_FieldId_name           = 33
-    ,dev_FieldId_needamc        = 34
-    ,dev_FieldId_gitfile        = 35
-    ,dev_FieldId_ext            = 36
-    ,dev_FieldId_gitinfo        = 37
-    ,dev_FieldId_author         = 38
-    ,dev_FieldId_compver        = 39
-    ,dev_FieldId_package        = 40
-    ,dev_FieldId_hilite         = 41
-    ,dev_FieldId_color          = 42
-    ,dev_FieldId_htmlentity     = 43
-    ,dev_FieldId_code           = 44
-    ,dev_FieldId_include        = 45
-    ,dev_FieldId_srcfile        = 46
-    ,dev_FieldId_filename       = 47
-    ,dev_FieldId_sys            = 48
-    ,dev_FieldId_license        = 49
-    ,dev_FieldId_nlongline      = 50
-    ,dev_FieldId_longestline    = 51
-    ,dev_FieldId_nbadws         = 52
-    ,dev_FieldId_maxws          = 53
-    ,dev_FieldId_nlongfunc      = 54
-    ,dev_FieldId_longestfunc    = 55
-    ,dev_FieldId_nmysteryfunc   = 56
-    ,dev_FieldId_badness        = 57
-    ,dev_FieldId_mdsection      = 58
-    ,dev_FieldId_match          = 59
-    ,dev_FieldId_perns          = 60
-    ,dev_FieldId_strict         = 61
-    ,dev_FieldId_opt_type       = 62
-    ,dev_FieldId_sep            = 63
-    ,dev_FieldId_inl            = 64
-    ,dev_FieldId_sandbox        = 65
-    ,dev_FieldId_filter         = 66
-    ,dev_FieldId_readme         = 67
-    ,dev_FieldId_ns             = 68
-    ,dev_FieldId_sbpath         = 69
-    ,dev_FieldId_ssimfs         = 70
-    ,dev_FieldId_ssimfile       = 71
-    ,dev_FieldId_file           = 72
-    ,dev_FieldId_rmfile         = 73
-    ,dev_FieldId_needfile       = 74
-    ,dev_FieldId_lscmd          = 75
-    ,dev_FieldId_excl           = 76
-    ,dev_FieldId_syscmd         = 77
-    ,dev_FieldId_execkey        = 78
-    ,dev_FieldId_command        = 79
-    ,dev_FieldId_pid            = 80
-    ,dev_FieldId_status         = 81
-    ,dev_FieldId_nprereq        = 82
-    ,dev_FieldId_fail_prereq    = 83
-    ,dev_FieldId_completed      = 84
-    ,dev_FieldId_maxtime        = 85
-    ,dev_FieldId_syscmddep      = 86
-    ,dev_FieldId_child          = 87
-    ,dev_FieldId_parent         = 88
+    ,dev_FieldId_copyright      = 18
+    ,dev_FieldId_dflt           = 19
+    ,dev_FieldId_covfile        = 20
+    ,dev_FieldId_total          = 21
+    ,dev_FieldId_nonexe         = 22
+    ,dev_FieldId_exe            = 23
+    ,dev_FieldId_exer           = 24
+    ,dev_FieldId_hit            = 25
+    ,dev_FieldId_cov            = 26
+    ,dev_FieldId_covline        = 27
+    ,dev_FieldId_src            = 28
+    ,dev_FieldId_line           = 29
+    ,dev_FieldId_flag           = 30
+    ,dev_FieldId_text           = 31
+    ,dev_FieldId_covtarget      = 32
+    ,dev_FieldId_edaction       = 33
+    ,dev_FieldId_edacttype      = 34
+    ,dev_FieldId_name           = 35
+    ,dev_FieldId_needamc        = 36
+    ,dev_FieldId_gitfile        = 37
+    ,dev_FieldId_ext            = 38
+    ,dev_FieldId_gitinfo        = 39
+    ,dev_FieldId_author         = 40
+    ,dev_FieldId_compver        = 41
+    ,dev_FieldId_package        = 42
+    ,dev_FieldId_hilite         = 43
+    ,dev_FieldId_color          = 44
+    ,dev_FieldId_htmlentity     = 45
+    ,dev_FieldId_code           = 46
+    ,dev_FieldId_include        = 47
+    ,dev_FieldId_srcfile        = 48
+    ,dev_FieldId_filename       = 49
+    ,dev_FieldId_sys            = 50
+    ,dev_FieldId_license        = 51
+    ,dev_FieldId_nlongline      = 52
+    ,dev_FieldId_longestline    = 53
+    ,dev_FieldId_nbadws         = 54
+    ,dev_FieldId_maxws          = 55
+    ,dev_FieldId_nlongfunc      = 56
+    ,dev_FieldId_longestfunc    = 57
+    ,dev_FieldId_nmysteryfunc   = 58
+    ,dev_FieldId_badness        = 59
+    ,dev_FieldId_mdsection      = 60
+    ,dev_FieldId_match          = 61
+    ,dev_FieldId_path           = 62
+    ,dev_FieldId_genlist        = 63
+    ,dev_FieldId_strict         = 64
+    ,dev_FieldId_opt_type       = 65
+    ,dev_FieldId_sep            = 66
+    ,dev_FieldId_baseref        = 67
+    ,dev_FieldId_origin         = 68
+    ,dev_FieldId_pkgdep         = 69
+    ,dev_FieldId_parent         = 70
+    ,dev_FieldId_soft           = 71
+    ,dev_FieldId_pkgkey         = 72
+    ,dev_FieldId_key            = 73
+    ,dev_FieldId_inl            = 74
+    ,dev_FieldId_sandbox        = 75
+    ,dev_FieldId_filter         = 76
+    ,dev_FieldId_sbpath         = 77
+    ,dev_FieldId_syscmd         = 78
+    ,dev_FieldId_execkey        = 79
+    ,dev_FieldId_command        = 80
+    ,dev_FieldId_pid            = 81
+    ,dev_FieldId_status         = 82
+    ,dev_FieldId_nprereq        = 83
+    ,dev_FieldId_fail_prereq    = 84
+    ,dev_FieldId_completed      = 85
+    ,dev_FieldId_maxtime        = 86
+    ,dev_FieldId_syscmddep      = 87
+    ,dev_FieldId_child          = 88
     ,dev_FieldId_syslib         = 89
     ,dev_FieldId_targdep        = 90
     ,dev_FieldId_target         = 91
@@ -183,12 +183,15 @@ enum { dev_FieldIdEnum_N = 104 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
-extern const char *  dev_Sandbox_sandbox_abt_md;     // abt_md      fconst:dev.Sandbox.sandbox/abt_md
-extern const char *  dev_Sandbox_sandbox_acr_ed;     // acr_ed      fconst:dev.Sandbox.sandbox/acr_ed
-extern const char *  dev_Sandbox_sandbox_amc;        // amc         fconst:dev.Sandbox.sandbox/amc
-extern const char *  dev_Sandbox_sandbox_amc_gc;     // amc_gc      fconst:dev.Sandbox.sandbox/amc_gc
-extern const char *  dev_Sandbox_sandbox_atf_ci;     // atf_ci      fconst:dev.Sandbox.sandbox/atf_ci
-extern const char *  dev_Sandbox_sandbox_atf_fuzz;   // atf_fuzz    fconst:dev.Sandbox.sandbox/atf_fuzz
+extern const char *  dev_Sandbox_sandbox_abt_md;       // abt_md        fconst:dev.Sandbox.sandbox/abt_md
+extern const char *  dev_Sandbox_sandbox_acr_ed;       // acr_ed        fconst:dev.Sandbox.sandbox/acr_ed
+extern const char *  dev_Sandbox_sandbox_amc;          // amc           fconst:dev.Sandbox.sandbox/amc
+extern const char *  dev_Sandbox_sandbox_amc_gc;       // amc_gc        fconst:dev.Sandbox.sandbox/amc_gc
+extern const char *  dev_Sandbox_sandbox_apm_base;     // apm-base      fconst:dev.Sandbox.sandbox/apm-base
+extern const char *  dev_Sandbox_sandbox_apm_theirs;   // apm-theirs    fconst:dev.Sandbox.sandbox/apm-theirs
+extern const char *  dev_Sandbox_sandbox_atf_ci;       // atf_ci        fconst:dev.Sandbox.sandbox/atf_ci
+extern const char *  dev_Sandbox_sandbox_atf_ci_apm;   // atf_ci-apm    fconst:dev.Sandbox.sandbox/atf_ci-apm
+extern const char *  dev_Sandbox_sandbox_atf_fuzz;     // atf_fuzz      fconst:dev.Sandbox.sandbox/atf_fuzz
 extern const char *  dev_Target_target_;               //                 fconst:dev.Target.target/
 extern const char *  dev_Target_target_abt;            // abt             fconst:dev.Target.target/abt
 extern const char *  dev_Target_target_abt_md;         // abt_md          fconst:dev.Target.target/abt_md
@@ -204,6 +207,7 @@ extern const char *  dev_Target_target_amc_gc;         // amc_gc          fconst
 extern const char *  dev_Target_target_amc_vis;        // amc_vis         fconst:dev.Target.target/amc_vis
 extern const char *  dev_Target_target_ams_cat;        // ams_cat         fconst:dev.Target.target/ams_cat
 extern const char *  dev_Target_target_ams_sendtest;   // ams_sendtest    fconst:dev.Target.target/ams_sendtest
+extern const char *  dev_Target_target_apm;            // apm             fconst:dev.Target.target/apm
 extern const char *  dev_Target_target_atf_amc;        // atf_amc         fconst:dev.Target.target/atf_amc
 extern const char *  dev_Target_target_atf_ci;         // atf_ci          fconst:dev.Target.target/atf_ci
 extern const char *  dev_Target_target_atf_cmdline;    // atf_cmdline     fconst:dev.Target.target/atf_cmdline
@@ -246,6 +250,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 BuilddirPkey;
     typedef algo::Smallstr50 CfgPkey;
     typedef algo::Smallstr50 CompilerPkey;
+    typedef algo::Smallstr50 CopyrightPkey;
     typedef algo::Smallstr200 CovlinePkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
@@ -257,11 +262,12 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 LicensePkey;
     typedef algo::Smallstr50 MdsectionPkey;
     typedef algo::Smallstr50 OptTypePkey;
-    typedef algo::Smallstr200 ReadmePkey;
+    typedef algo::Smallstr50 PackagePkey;
+    typedef algo::Smallstr100 PkgdepPkey;
+    typedef algo::Smallstr150 PkgkeyPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
     typedef algo::Smallstr200 SrcfilePkey;
-    typedef algo::Smallstr200 SsimfsPkey;
     typedef i64 SyscmdPkey;
     typedef algo::RspaceStr16 SyscmddepPkey;
     typedef algo::Smallstr50 SyslibPkey;
@@ -281,6 +287,7 @@ namespace dev { struct Badline; }
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
 namespace dev { struct Compiler; }
+namespace dev { struct Copyright; }
 namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
 namespace dev { struct Covtarget; }
@@ -298,13 +305,14 @@ namespace dev { struct Mdsection; }
 namespace dev { struct Msgfile; }
 namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
+namespace dev { struct Package; }
+namespace dev { struct Pkgdep; }
+namespace dev { struct Pkgkey; }
 namespace dev { struct Readme; }
-namespace dev { struct Readmens; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
 namespace dev { struct Scriptfile; }
 namespace dev { struct Srcfile; }
-namespace dev { struct Ssimfs; }
 namespace dev { struct Syscmd; }
 namespace dev { struct Syscmddep; }
 namespace dev { struct Syslib; }
@@ -320,7 +328,7 @@ namespace dev { struct Unstablefld; }
 namespace dev { // gen:ns_print_struct
 
 // --- dev.Arch
-struct Arch { // dev.Arch
+struct Arch { // dev.Arch: System architecture
     algo::Smallstr50   arch;      //
     algo::Comment      comment;   //
     explicit Arch(const algo::strptr&            in_arch
@@ -328,15 +336,19 @@ struct Arch { // dev.Arch
     Arch();
 };
 
-bool                 Arch_ReadFieldMaybe(dev::Arch &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Arch..ReadFieldMaybe
+bool                 Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Arch from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Arch..ReadStrptrMaybe
 bool                 Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str);
-// print string representation of dev::Arch to string LHS, no header -- cprint:dev.Arch.String
-void                 Arch_Print(dev::Arch & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Arch.String  printfmt:Tuple
+// func:dev.Arch..Print
+void                 Arch_Print(dev::Arch& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Badline
-struct Badline { // dev.Badline
+struct Badline { // dev.Badline: Regex of a dubious source code line
     algo::Smallstr50    badline;        //
     algo::Smallstr200   expr;           //
     algo::Smallstr50    targsrc_regx;   //
@@ -344,42 +356,59 @@ struct Badline { // dev.Badline
     Badline();
 };
 
-bool                 Badline_ReadFieldMaybe(dev::Badline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Badline..ReadFieldMaybe
+bool                 Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Badline from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Badline..ReadStrptrMaybe
 bool                 Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str);
-// print string representation of dev::Badline to string LHS, no header -- cprint:dev.Badline.String
-void                 Badline_Print(dev::Badline & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Badline.String  printfmt:Tuple
+// func:dev.Badline..Print
+void                 Badline_Print(dev::Badline& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Builddir
 struct Builddir { // dev.Builddir: Directory where object files/executables go. Determines compile/link options
-    algo::Smallstr50   builddir;   //
+    algo::Smallstr50   builddir;   // Primary key - uname.compiler.cfg-arch
     algo::Comment      comment;    //
     Builddir();
 };
 
+// func:dev.Builddir.uname.Get
 algo::Smallstr50     uname_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Builddir.uname.Get2
 algo::Smallstr50     Builddir_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Builddir.compiler.Get
 algo::Smallstr50     compiler_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Builddir.compiler.Get2
 algo::Smallstr50     Builddir_compiler_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Builddir.cfg.Get
 algo::Smallstr50     cfg_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Builddir.cfg.Get2
 algo::Smallstr50     Builddir_cfg_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Builddir.arch.Get
 algo::Smallstr50     arch_Get(dev::Builddir& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Builddir.arch.Get2
 algo::Smallstr50     Builddir_arch_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Builddir..Concat_uname_compiler_cfg_arch
 tempstr              Builddir_Concat_uname_compiler_cfg_arch( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch );
-bool                 Builddir_ReadFieldMaybe(dev::Builddir &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Builddir..ReadFieldMaybe
+bool                 Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Builddir from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Builddir..ReadStrptrMaybe
 bool                 Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str);
-// print string representation of dev::Builddir to string LHS, no header -- cprint:dev.Builddir.String
-void                 Builddir_Print(dev::Builddir & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Builddir.String  printfmt:Tuple
+// func:dev.Builddir..Print
+void                 Builddir_Print(dev::Builddir& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Cfg
-struct Cfg { // dev.Cfg
+struct Cfg { // dev.Cfg: Compiler configuration
     algo::Smallstr50   cfg;       //
     algo::Smallstr5    suffix;    //
     algo::Comment      comment;   //
@@ -389,15 +418,19 @@ struct Cfg { // dev.Cfg
     Cfg();
 };
 
-bool                 Cfg_ReadFieldMaybe(dev::Cfg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Cfg..ReadFieldMaybe
+bool                 Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Cfg from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Cfg..ReadStrptrMaybe
 bool                 Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str);
-// print string representation of dev::Cfg to string LHS, no header -- cprint:dev.Cfg.String
-void                 Cfg_Print(dev::Cfg & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Cfg.String  printfmt:Tuple
+// func:dev.Cfg..Print
+void                 Cfg_Print(dev::Cfg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Compiler
-struct Compiler { // dev.Compiler
+struct Compiler { // dev.Compiler: One of the known compilers
     algo::Smallstr50   compiler;   //
     algo::Smallstr50   ranlib;     //
     algo::Smallstr50   ar;         //
@@ -421,12 +454,38 @@ struct Compiler { // dev.Compiler
     Compiler();
 };
 
-bool                 Compiler_ReadFieldMaybe(dev::Compiler &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Compiler..ReadFieldMaybe
+bool                 Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Compiler from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Compiler..ReadStrptrMaybe
 bool                 Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str);
-// print string representation of dev::Compiler to string LHS, no header -- cprint:dev.Compiler.String
-void                 Compiler_Print(dev::Compiler & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Compiler.String  printfmt:Tuple
+// func:dev.Compiler..Print
+void                 Compiler_Print(dev::Compiler& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Copyright
+struct Copyright { // dev.Copyright: Copyrighting entity
+    algo::Smallstr50   copyright;   //
+    bool               dflt;        //   false
+    algo::Comment      comment;     //
+    Copyright();
+};
+
+// func:dev.Copyright..ReadFieldMaybe
+bool                 Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Copyright from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Copyright..ReadStrptrMaybe
+bool                 Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str);
+// Set all fields to initial values.
+// func:dev.Copyright..Init
+void                 Copyright_Init(dev::Copyright& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Copyright.String  printfmt:Tuple
+// func:dev.Copyright..Print
+void                 Copyright_Print(dev::Copyright& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Covfile
 struct Covfile { // dev.Covfile
@@ -440,14 +499,19 @@ struct Covfile { // dev.Covfile
     Covfile();
 };
 
-bool                 Covfile_ReadFieldMaybe(dev::Covfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Covfile..ReadFieldMaybe
+bool                 Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Covfile from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Covfile..ReadStrptrMaybe
 bool                 Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Covfile..Init
 void                 Covfile_Init(dev::Covfile& parent);
-// print string representation of dev::Covfile to string LHS, no header -- cprint:dev.Covfile.String
-void                 Covfile_Print(dev::Covfile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Covfile.String  printfmt:Tuple
+// func:dev.Covfile..Print
+void                 Covfile_Print(dev::Covfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Covline
 struct Covline { // dev.Covline
@@ -458,41 +522,58 @@ struct Covline { // dev.Covline
     Covline();
 };
 
+// func:dev.Covline.src.Get
 algo::Smallstr200    src_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Covline.src.Get2
 algo::Smallstr200    Covline_src_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Covline.line.Get
 u32                  line_Get(dev::Covline& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Covline.line.Get2
 u32                  Covline_line_Get(algo::strptr arg) __attribute__((nothrow));
 
 // Get value of field as enum type
+// func:dev.Covline.flag.GetEnum
 dev_Covline_flag_Enum flag_GetEnum(const dev::Covline& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:dev.Covline.flag.SetEnum
 void                 flag_SetEnum(dev::Covline& parent, dev_Covline_flag_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:dev.Covline.flag.ToCstr
 const char*          flag_ToCstr(const dev::Covline& parent) __attribute__((nothrow));
 // Convert flag to a string. First, attempt conversion to a known string.
 // If no string matches, print flag as a numeric value.
+// func:dev.Covline.flag.Print
 void                 flag_Print(const dev::Covline& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:dev.Covline.flag.SetStrptrMaybe
 bool                 flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:dev.Covline.flag.SetStrptr
 void                 flag_SetStrptr(dev::Covline& parent, algo::strptr rhs, dev_Covline_flag_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:dev.Covline.flag.ReadStrptrMaybe
 bool                 flag_ReadStrptrMaybe(dev::Covline& parent, algo::strptr rhs) __attribute__((nothrow));
 
+// func:dev.Covline..Concat_src_line
 tempstr              Covline_Concat_src_line( const algo::strptr& src ,u32 line );
-bool                 Covline_ReadFieldMaybe(dev::Covline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Covline..ReadFieldMaybe
+bool                 Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Covline from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Covline..ReadStrptrMaybe
 bool                 Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Covline..Init
 void                 Covline_Init(dev::Covline& parent);
-// print string representation of dev::Covline to string LHS, no header -- cprint:dev.Covline.String
-void                 Covline_Print(dev::Covline & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Covline.String  printfmt:Tuple
+// func:dev.Covline..Print
+void                 Covline_Print(dev::Covline& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Covtarget
 struct Covtarget { // dev.Covtarget
@@ -506,14 +587,19 @@ struct Covtarget { // dev.Covtarget
     Covtarget();
 };
 
-bool                 Covtarget_ReadFieldMaybe(dev::Covtarget &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Covtarget..ReadFieldMaybe
+bool                 Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Covtarget from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Covtarget..ReadStrptrMaybe
 bool                 Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Covtarget..Init
 void                 Covtarget_Init(dev::Covtarget& parent);
-// print string representation of dev::Covtarget to string LHS, no header -- cprint:dev.Covtarget.String
-void                 Covtarget_Print(dev::Covtarget & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Covtarget.String  printfmt:Tuple
+// func:dev.Covtarget..Print
+void                 Covtarget_Print(dev::Covtarget& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Edaction
 struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at a time)
@@ -523,21 +609,31 @@ struct Edaction { // dev.Edaction: acr_ed editing action (only one can exist at 
     Edaction();
 };
 
+// func:dev.Edaction.edacttype.Get
 algo::Smallstr50     edacttype_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Edaction.edacttype.Get2
 algo::Smallstr50     Edaction_edacttype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Edaction.name.Get
 algo::Smallstr50     name_Get(dev::Edaction& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Edaction.name.Get2
 algo::Smallstr50     Edaction_name_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Edaction..Concat_edacttype_name
 tempstr              Edaction_Concat_edacttype_name( const algo::strptr& edacttype ,const algo::strptr& name );
-bool                 Edaction_ReadFieldMaybe(dev::Edaction &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Edaction..ReadFieldMaybe
+bool                 Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Edaction from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Edaction..ReadStrptrMaybe
 bool                 Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Edaction..Init
 void                 Edaction_Init(dev::Edaction& parent);
-// print string representation of dev::Edaction to string LHS, no header -- cprint:dev.Edaction.String
-void                 Edaction_Print(dev::Edaction & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Edaction.String  printfmt:Tuple
+// func:dev.Edaction..Print
+void                 Edaction_Print(dev::Edaction& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Edacttype
 struct Edacttype { // dev.Edacttype: acr_ed editing action type
@@ -546,12 +642,16 @@ struct Edacttype { // dev.Edacttype: acr_ed editing action type
     Edacttype();
 };
 
-bool                 Edacttype_ReadFieldMaybe(dev::Edacttype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Edacttype..ReadFieldMaybe
+bool                 Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Edacttype from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Edacttype..ReadStrptrMaybe
 bool                 Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str);
-// print string representation of dev::Edacttype to string LHS, no header -- cprint:dev.Edacttype.String
-void                 Edacttype_Print(dev::Edacttype & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Edacttype.String  printfmt:Tuple
+// func:dev.Edacttype..Print
+void                 Edacttype_Print(dev::Edacttype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.FieldId
 #pragma pack(push,1)
@@ -565,49 +665,66 @@ struct FieldId { // dev.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:dev.FieldId.value.GetEnum
 dev_FieldIdEnum      value_GetEnum(const dev::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:dev.FieldId.value.SetEnum
 void                 value_SetEnum(dev::FieldId& parent, dev_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:dev.FieldId.value.ToCstr
 const char*          value_ToCstr(const dev::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:dev.FieldId.value.Print
 void                 value_Print(const dev::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:dev.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:dev.FieldId.value.SetStrptr
 void                 value_SetStrptr(dev::FieldId& parent, algo::strptr rhs, dev_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:dev.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of dev::FieldId from an ascii string.
 // The format of the string is the format of the dev::FieldId's only field
+// func:dev.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.FieldId..Init
 void                 FieldId_Init(dev::FieldId& parent);
-// print string representation of dev::FieldId to string LHS, no header -- cprint:dev.FieldId.String
-void                 FieldId_Print(dev::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.FieldId.String  printfmt:Raw
+// func:dev.FieldId..Print
+void                 FieldId_Print(dev::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Gitfile
-struct Gitfile { // dev.Gitfile
+struct Gitfile { // dev.Gitfile: File managed by git
     algo::Smallstr200   gitfile;   //
     explicit Gitfile(const algo::strptr&            in_gitfile);
     Gitfile();
 };
 
+// func:dev.Gitfile.ext.Get
 algo::Smallstr50     ext_Get(dev::Gitfile& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Gitfile.ext.Get2
 algo::Smallstr50     Gitfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
-bool                 Gitfile_ReadFieldMaybe(dev::Gitfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Gitfile..ReadFieldMaybe
+bool                 Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Gitfile from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Gitfile..ReadStrptrMaybe
 bool                 Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str);
-// print string representation of dev::Gitfile to string LHS, no header -- cprint:dev.Gitfile.String
-void                 Gitfile_Print(dev::Gitfile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Gitfile.String  printfmt:Tuple
+// func:dev.Gitfile..Print
+void                 Gitfile_Print(dev::Gitfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Gitinfo
 struct Gitinfo { // dev.Gitinfo
@@ -626,44 +743,57 @@ struct Gitinfo { // dev.Gitinfo
     Gitinfo();
 };
 
-bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Gitinfo..ReadFieldMaybe
+bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Gitinfo from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Gitinfo..ReadStrptrMaybe
 bool                 Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str);
-// print string representation of dev::Gitinfo to string LHS, no header -- cprint:dev.Gitinfo.String
-void                 Gitinfo_Print(dev::Gitinfo & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Gitinfo.String  printfmt:Tuple
+// func:dev.Gitinfo..Print
+void                 Gitinfo_Print(dev::Gitinfo& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Hilite
-struct Hilite { // dev.Hilite
+struct Hilite { // dev.Hilite: Mapping of perl regx->hilite pattern
     algo::Smallstr50   hilite;    //
     algo::Smallstr50   color;     //
     algo::Comment      comment;   //
     Hilite();
 };
 
-bool                 Hilite_ReadFieldMaybe(dev::Hilite &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Hilite..ReadFieldMaybe
+bool                 Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Hilite from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Hilite..ReadStrptrMaybe
 bool                 Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str);
-// print string representation of dev::Hilite to string LHS, no header -- cprint:dev.Hilite.String
-void                 Hilite_Print(dev::Hilite & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Hilite.String  printfmt:Tuple
+// func:dev.Hilite..Print
+void                 Hilite_Print(dev::Hilite& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Htmlentity
-struct Htmlentity { // dev.Htmlentity
+struct Htmlentity { // dev.Htmlentity: Known HTML entity strings & codes
     algo::Smallstr50   htmlentity;   //
     i32                code;         //   0
     algo::Comment      comment;      //
     Htmlentity();
 };
 
-bool                 Htmlentity_ReadFieldMaybe(dev::Htmlentity &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Htmlentity..ReadFieldMaybe
+bool                 Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Htmlentity from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Htmlentity..ReadStrptrMaybe
 bool                 Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Htmlentity..Init
 void                 Htmlentity_Init(dev::Htmlentity& parent);
-// print string representation of dev::Htmlentity to string LHS, no header -- cprint:dev.Htmlentity.String
-void                 Htmlentity_Print(dev::Htmlentity & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Htmlentity.String  printfmt:Tuple
+// func:dev.Htmlentity..Print
+void                 Htmlentity_Print(dev::Htmlentity& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Include
 struct Include { // dev.Include: A site where one file includes another
@@ -673,35 +803,49 @@ struct Include { // dev.Include: A site where one file includes another
     Include();
 };
 
+// func:dev.Include.srcfile.Get
 algo::Smallstr200    srcfile_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Include.srcfile.Get2
 algo::Smallstr200    Include_srcfile_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Include.filename.Get
 algo::Smallstr200    filename_Get(dev::Include& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Include.filename.Get2
 algo::Smallstr200    Include_filename_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Include..Concat_srcfile_filename
 tempstr              Include_Concat_srcfile_filename( const algo::strptr& srcfile ,const algo::strptr& filename );
-bool                 Include_ReadFieldMaybe(dev::Include &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Include..ReadFieldMaybe
+bool                 Include_ReadFieldMaybe(dev::Include& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Include from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Include..ReadStrptrMaybe
 bool                 Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Include..Init
 void                 Include_Init(dev::Include& parent);
-// print string representation of dev::Include to string LHS, no header -- cprint:dev.Include.String
-void                 Include_Print(dev::Include & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Include.String  printfmt:Tuple
+// func:dev.Include..Print
+void                 Include_Print(dev::Include& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.License
-struct License { // dev.License
+struct License { // dev.License: Source code license
     algo::Smallstr50   license;   //
     algo::Comment      comment;   //
     License();
 };
 
-bool                 License_ReadFieldMaybe(dev::License &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.License..ReadFieldMaybe
+bool                 License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::License from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.License..ReadStrptrMaybe
 bool                 License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str);
-// print string representation of dev::License to string LHS, no header -- cprint:dev.License.String
-void                 License_Print(dev::License & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.License.String  printfmt:Tuple
+// func:dev.License..Print
+void                 License_Print(dev::License& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Linelim
 struct Linelim { // dev.Linelim
@@ -717,66 +861,83 @@ struct Linelim { // dev.Linelim
     Linelim();
 };
 
-bool                 Linelim_ReadFieldMaybe(dev::Linelim &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Linelim..ReadFieldMaybe
+bool                 Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Linelim from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Linelim..ReadStrptrMaybe
 bool                 Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Linelim..Init
 void                 Linelim_Init(dev::Linelim& parent);
-// print string representation of dev::Linelim to string LHS, no header -- cprint:dev.Linelim.String
-void                 Linelim_Print(dev::Linelim & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Linelim.String  printfmt:Tuple
+// func:dev.Linelim..Print
+void                 Linelim_Print(dev::Linelim& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Mdsection
-struct Mdsection { // dev.Mdsection
+struct Mdsection { // dev.Mdsection: Template for updating a markdown file
     algo::Smallstr50    mdsection;   //
     algo::Smallstr200   match;       //
-    bool                perns;       //   false
+    algo::Smallstr100   path;        //
+    algo::Smallstr50    genlist;     //
     algo::Comment       comment;     //
     Mdsection();
 };
 
-bool                 Mdsection_ReadFieldMaybe(dev::Mdsection &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Mdsection..ReadFieldMaybe
+bool                 Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Mdsection from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Mdsection..ReadStrptrMaybe
 bool                 Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str);
-// Set all fields to initial values.
-void                 Mdsection_Init(dev::Mdsection& parent);
-// print string representation of dev::Mdsection to string LHS, no header -- cprint:dev.Mdsection.String
-void                 Mdsection_Print(dev::Mdsection & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Mdsection.String  printfmt:Tuple
+// func:dev.Mdsection..Print
+void                 Mdsection_Print(dev::Mdsection& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Msgfile
-struct Msgfile { // dev.Msgfile
+struct Msgfile { // dev.Msgfile: File in repo containing messages that should be normalized during CI
     algo::Smallstr200   gitfile;   // Name of file containing messages
     bool                strict;    //   false  Delete unrecognizable lines (except comments)
     algo::Comment       comment;   //
     Msgfile();
 };
 
-bool                 Msgfile_ReadFieldMaybe(dev::Msgfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Msgfile..ReadFieldMaybe
+bool                 Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Msgfile from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Msgfile..ReadStrptrMaybe
 bool                 Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Msgfile..Init
 void                 Msgfile_Init(dev::Msgfile& parent);
-// print string representation of dev::Msgfile to string LHS, no header -- cprint:dev.Msgfile.String
-void                 Msgfile_Print(dev::Msgfile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Msgfile.String  printfmt:Tuple
+// func:dev.Msgfile..Print
+void                 Msgfile_Print(dev::Msgfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Noindent
-struct Noindent { // dev.Noindent
+struct Noindent { // dev.Noindent: Indicates that a file should not be automatically indented
     algo::Smallstr200   gitfile;   //
     algo::Comment       comment;   //
     Noindent();
 };
 
-bool                 Noindent_ReadFieldMaybe(dev::Noindent &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Noindent..ReadFieldMaybe
+bool                 Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Noindent from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Noindent..ReadStrptrMaybe
 bool                 Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str);
-// print string representation of dev::Noindent to string LHS, no header -- cprint:dev.Noindent.String
-void                 Noindent_Print(dev::Noindent & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Noindent.String  printfmt:Tuple
+// func:dev.Noindent..Print
+void                 Noindent_Print(dev::Noindent& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.OptType
-struct OptType { // dev.OptType
+struct OptType { // dev.OptType: Type of option (used in tool_opt)
     algo::Smallstr50   opt_type;   //
     algo::RspaceStr4   sep;        //
     algo::Comment      comment;    //
@@ -786,15 +947,103 @@ struct OptType { // dev.OptType
     OptType();
 };
 
-bool                 OptType_ReadFieldMaybe(dev::OptType &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.OptType..ReadFieldMaybe
+bool                 OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::OptType from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.OptType..ReadStrptrMaybe
 bool                 OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str);
-// print string representation of dev::OptType to string LHS, no header -- cprint:dev.OptType.String
-void                 OptType_Print(dev::OptType & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.OptType.String  printfmt:Tuple
+// func:dev.OptType..Print
+void                 OptType_Print(dev::OptType& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Package
+struct Package { // dev.Package: OpenACR package
+    algo::Smallstr50    package;   // Package name
+    algo::Smallstr50    baseref;   // Base gitref of installed package
+    algo::Smallstr200   origin;    // Source URL for published package
+    algo::Comment       comment;   //
+    Package();
+};
+
+// func:dev.Package..ReadFieldMaybe
+bool                 Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Package from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Package..ReadStrptrMaybe
+bool                 Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str);
+// print string representation of ROW to string STR
+// cfmt:dev.Package.String  printfmt:Tuple
+// func:dev.Package..Print
+void                 Package_Print(dev::Package& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Pkgdep
+struct Pkgdep { // dev.Pkgdep: OpenACR Package dependency
+    algo::Smallstr100   pkgdep;    //
+    bool                soft;      //   false  Soft dependency: affects package ordering but not forced update
+    algo::Comment       comment;   //
+    Pkgdep();
+};
+
+// func:dev.Pkgdep.package.Get
+algo::Smallstr50     package_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgdep.package.Get2
+algo::Smallstr50     Pkgdep_package_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgdep.parent.Get
+algo::Smallstr50     parent_Get(dev::Pkgdep& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgdep.parent.Get2
+algo::Smallstr50     Pkgdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgdep..Concat_package_parent
+tempstr              Pkgdep_Concat_package_parent( const algo::strptr& package ,const algo::strptr& parent );
+// func:dev.Pkgdep..ReadFieldMaybe
+bool                 Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkgdep from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkgdep..ReadStrptrMaybe
+bool                 Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str);
+// Set all fields to initial values.
+// func:dev.Pkgdep..Init
+void                 Pkgdep_Init(dev::Pkgdep& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgdep.String  printfmt:Tuple
+// func:dev.Pkgdep..Print
+void                 Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Pkgkey
+struct Pkgkey { // dev.Pkgkey: Keys belonging to the OpenACR package
+    algo::Smallstr150   pkgkey;    //
+    algo::Comment       comment;   //
+    Pkgkey();
+};
+
+// func:dev.Pkgkey.package.Get
+algo::Smallstr50     package_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgkey.package.Get2
+algo::Smallstr50     Pkgkey_package_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgkey.key.Get
+algo::Smallstr150    key_Get(dev::Pkgkey& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Pkgkey.key.Get2
+algo::Smallstr150    Pkgkey_key_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Pkgkey..Concat_package_key
+tempstr              Pkgkey_Concat_package_key( const algo::strptr& package ,const algo::strptr& key );
+// func:dev.Pkgkey..ReadFieldMaybe
+bool                 Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Pkgkey from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Pkgkey..ReadStrptrMaybe
+bool                 Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str);
+// print string representation of ROW to string STR
+// cfmt:dev.Pkgkey.String  printfmt:Tuple
+// func:dev.Pkgkey..Print
+void                 Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Readme
-struct Readme { // dev.Readme
+struct Readme { // dev.Readme: File containing documentation
     algo::Smallstr200   gitfile;   //
     bool                inl;       //   false
     bool                sandbox;   //   false
@@ -808,72 +1057,79 @@ struct Readme { // dev.Readme
     Readme();
 };
 
-bool                 Readme_ReadFieldMaybe(dev::Readme &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Readme..ReadFieldMaybe
+bool                 Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Readme from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Readme..ReadStrptrMaybe
 bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Readme..Init
 void                 Readme_Init(dev::Readme& parent);
-// print string representation of dev::Readme to string LHS, no header -- cprint:dev.Readme.String
-void                 Readme_Print(dev::Readme & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- dev.Readmens
-struct Readmens { // dev.Readmens
-    algo::Smallstr200   readme;    //
-    algo::Smallstr16    ns;        //
-    algo::Comment       comment;   //
-    Readmens();
-};
-
-bool                 Readmens_ReadFieldMaybe(dev::Readmens &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Readmens from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Readmens_ReadStrptrMaybe(dev::Readmens &parent, algo::strptr in_str);
-// print string representation of dev::Readmens to string LHS, no header -- cprint:dev.Readmens.String
-void                 Readmens_Print(dev::Readmens & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Readme.String  printfmt:Tuple
+// func:dev.Readme..Print
+void                 Readme_Print(dev::Readme& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sandbox
-struct Sandbox { // dev.Sandbox
+struct Sandbox { // dev.Sandbox: Registered sandbox
     algo::Smallstr50   sandbox;   //
     algo::Comment      comment;   //
     Sandbox();
 };
 
-bool                 Sandbox_ReadFieldMaybe(dev::Sandbox &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Sandbox..ReadFieldMaybe
+bool                 Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Sandbox from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Sandbox..ReadStrptrMaybe
 bool                 Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str);
-// print string representation of dev::Sandbox to string LHS, no header -- cprint:dev.Sandbox.String
-void                 Sandbox_Print(dev::Sandbox & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Sandbox.String  printfmt:Tuple
+// func:dev.Sandbox..Print
+void                 Sandbox_Print(dev::Sandbox& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sbpath
-struct Sbpath { // dev.Sbpath
+struct Sbpath { // dev.Sbpath: Extra files to copy into the sandbox
     algo::Smallstr50   sbpath;    //
     algo::Comment      comment;   //
     Sbpath();
 };
 
-bool                 Sbpath_ReadFieldMaybe(dev::Sbpath &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Sbpath..ReadFieldMaybe
+bool                 Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Sbpath from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Sbpath..ReadStrptrMaybe
 bool                 Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str);
-// print string representation of dev::Sbpath to string LHS, no header -- cprint:dev.Sbpath.String
-void                 Sbpath_Print(dev::Sbpath & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Sbpath.String  printfmt:Tuple
+// func:dev.Sbpath..Print
+void                 Sbpath_Print(dev::Sbpath& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Scriptfile
-struct Scriptfile { // dev.Scriptfile
+struct Scriptfile { // dev.Scriptfile: Known script file
     algo::Smallstr200   gitfile;   //
     algo::Smallstr50    license;   //
     algo::Comment       comment;   //
     Scriptfile();
 };
 
-bool                 Scriptfile_ReadFieldMaybe(dev::Scriptfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Scriptfile.name.Get
+algo::Smallstr50     name_Get(dev::Scriptfile& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Scriptfile.name.Get2
+algo::Smallstr50     Scriptfile_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Scriptfile..ReadFieldMaybe
+bool                 Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Scriptfile from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Scriptfile..ReadStrptrMaybe
 bool                 Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_str);
-// print string representation of dev::Scriptfile to string LHS, no header -- cprint:dev.Scriptfile.String
-void                 Scriptfile_Print(dev::Scriptfile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Scriptfile.String  printfmt:Tuple
+// func:dev.Scriptfile..Print
+void                 Scriptfile_Print(dev::Scriptfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Srcfile
 struct Srcfile { // dev.Srcfile: Source file or header (key is pathname)
@@ -881,52 +1137,21 @@ struct Srcfile { // dev.Srcfile: Source file or header (key is pathname)
     Srcfile();
 };
 
+// func:dev.Srcfile.ext.Get
 algo::Smallstr10     ext_Get(dev::Srcfile& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Srcfile.ext.Get2
 algo::Smallstr10     Srcfile_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
-bool                 Srcfile_ReadFieldMaybe(dev::Srcfile &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Srcfile..ReadFieldMaybe
+bool                 Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Srcfile from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Srcfile..ReadStrptrMaybe
 bool                 Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str);
-// print string representation of dev::Srcfile to string LHS, no header -- cprint:dev.Srcfile.String
-void                 Srcfile_Print(dev::Srcfile & row, algo::cstring &str) __attribute__((nothrow));
-
-// --- dev.Ssimfs
-struct Ssimfs { // dev.Ssimfs
-    algo::Smallstr200   ssimfs;     //
-    bool                rmfile;     //   false  Remove extra files from directory
-    bool                needfile;   //   false  File must exist
-    algo::cstring       lscmd;      // Command that produces keys that should be in the table
-    algo_lib::Regx      excl;       // Sql Regx
-    algo::Comment       comment;    //
-    Ssimfs();
-private:
-    // reftype Regx of dev.Ssimfs.excl prohibits copy
-    Ssimfs(const Ssimfs&){ /*disallow copy constructor */}
-    void operator =(const Ssimfs&){ /*disallow direct assignment */}
-};
-
-algo::Smallstr50     ssimfile_Get(dev::Ssimfs& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     Ssimfs_ssimfile_Get(algo::strptr arg) __attribute__((nothrow));
-
-algo::Smallstr150    file_Get(dev::Ssimfs& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr150    Ssimfs_file_Get(algo::strptr arg) __attribute__((nothrow));
-
-// Print back to string
-void                 excl_Print(dev::Ssimfs& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-bool                 excl_ReadStrptrMaybe(dev::Ssimfs& parent, algo::strptr in) __attribute__((nothrow));
-
-tempstr              Ssimfs_Concat_ssimfile_file( const algo::strptr& ssimfile ,const algo::strptr& file );
-bool                 Ssimfs_ReadFieldMaybe(dev::Ssimfs &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Ssimfs from an ascii string.
-// The format of the string is an ssim Tuple
-bool                 Ssimfs_ReadStrptrMaybe(dev::Ssimfs &parent, algo::strptr in_str);
-// Set all fields to initial values.
-void                 Ssimfs_Init(dev::Ssimfs& parent);
-// print string representation of dev::Ssimfs to string LHS, no header -- cprint:dev.Ssimfs.String
-void                 Ssimfs_Print(dev::Ssimfs & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Srcfile.String  printfmt:Tuple
+// func:dev.Srcfile..Print
+void                 Srcfile_Print(dev::Srcfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Syscmd
 struct Syscmd { // dev.Syscmd: System command to execute
@@ -949,17 +1174,23 @@ struct Syscmd { // dev.Syscmd: System command to execute
     Syscmd();
 };
 
+// func:dev.Syscmd.execkey.Get
+// this function is 'extrn' and implemented by user
 i64                  execkey_Get(dev::Syscmd& parent) __attribute__((__warn_unused_result__, nothrow));
-void                 execkey_Set(dev::Syscmd& parent, i64 rhs) __attribute__((nothrow));
 
-bool                 Syscmd_ReadFieldMaybe(dev::Syscmd &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Syscmd..ReadFieldMaybe
+bool                 Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Syscmd from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Syscmd..ReadStrptrMaybe
 bool                 Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Syscmd..Init
 void                 Syscmd_Init(dev::Syscmd& parent);
-// print string representation of dev::Syscmd to string LHS, no header -- cprint:dev.Syscmd.String
-void                 Syscmd_Print(dev::Syscmd & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Syscmd.String  printfmt:Tuple
+// func:dev.Syscmd..Print
+void                 Syscmd_Print(dev::Syscmd& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Syscmddep
 struct Syscmddep { // dev.Syscmddep: Dependency between two commands
@@ -970,72 +1201,96 @@ struct Syscmddep { // dev.Syscmddep: Dependency between two commands
     Syscmddep();
 };
 
+// func:dev.Syscmddep.syscmddep.Get
+// this function is 'extrn' and implemented by user
 algo::RspaceStr16    syscmddep_Get(dev::Syscmddep& parent) __attribute__((__warn_unused_result__, nothrow));
-void                 syscmddep_Set(dev::Syscmddep& parent, const algo::strptr& rhs) __attribute__((nothrow));
 
-bool                 Syscmddep_ReadFieldMaybe(dev::Syscmddep &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Syscmddep..ReadFieldMaybe
+bool                 Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Syscmddep from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Syscmddep..ReadStrptrMaybe
 bool                 Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Syscmddep..Init
 void                 Syscmddep_Init(dev::Syscmddep& parent);
-// print string representation of dev::Syscmddep to string LHS, no header -- cprint:dev.Syscmddep.String
-void                 Syscmddep_Print(dev::Syscmddep & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Syscmddep.String  printfmt:Tuple
+// func:dev.Syscmddep..Print
+void                 Syscmddep_Print(dev::Syscmddep& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Syslib
-struct Syslib { // dev.Syslib
+struct Syslib { // dev.Syslib: Registered system library
     algo::Smallstr50   syslib;    //
     algo::Comment      comment;   //
     Syslib();
 };
 
-bool                 Syslib_ReadFieldMaybe(dev::Syslib &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Syslib..ReadFieldMaybe
+bool                 Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Syslib from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Syslib..ReadStrptrMaybe
 bool                 Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str);
-// print string representation of dev::Syslib to string LHS, no header -- cprint:dev.Syslib.String
-void                 Syslib_Print(dev::Syslib & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Syslib.String  printfmt:Tuple
+// func:dev.Syslib..Print
+void                 Syslib_Print(dev::Syslib& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Targdep
 struct Targdep { // dev.Targdep: Dependency between targets
-    algo::Smallstr50   targdep;   //
+    algo::Smallstr50   targdep;   // Primary key - target.parent
     algo::Comment      comment;   //
     explicit Targdep(const algo::strptr&            in_targdep
         ,const algo::Comment&           in_comment);
     Targdep();
 };
 
+// func:dev.Targdep.target.Get
 algo::Smallstr16     target_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targdep.target.Get2
 algo::Smallstr16     Targdep_target_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targdep.parent.Get
 algo::Smallstr16     parent_Get(dev::Targdep& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targdep.parent.Get2
 algo::Smallstr16     Targdep_parent_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targdep..Concat_target_parent
 tempstr              Targdep_Concat_target_parent( const algo::strptr& target ,const algo::strptr& parent );
-bool                 Targdep_ReadFieldMaybe(dev::Targdep &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Targdep..ReadFieldMaybe
+bool                 Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Targdep from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Targdep..ReadStrptrMaybe
 bool                 Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str);
-// print string representation of dev::Targdep to string LHS, no header -- cprint:dev.Targdep.String
-void                 Targdep_Print(dev::Targdep & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Targdep.String  printfmt:Tuple
+// func:dev.Targdep..Print
+void                 Targdep_Print(dev::Targdep& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Target
 struct Target { // dev.Target: Build target
-    algo::Smallstr16   target;   //
-    algo::Smallstr50   compat;   //   "Linux-%.%-%"
+    algo::Smallstr16   target;   // Primary key - name of target
+    algo::Smallstr50   compat;   //   "Linux-%.%-%"  Compatibility (regx of builddir)
     explicit Target(const algo::strptr&            in_target
         ,const algo::strptr&            in_compat);
     Target();
 };
 
-bool                 Target_ReadFieldMaybe(dev::Target &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Target..ReadFieldMaybe
+bool                 Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Target from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Target..ReadStrptrMaybe
 bool                 Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Target..Init
 void                 Target_Init(dev::Target& parent);
-// print string representation of dev::Target to string LHS, no header -- cprint:dev.Target.String
-void                 Target_Print(dev::Target & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Target.String  printfmt:Tuple
+// func:dev.Target..Print
+void                 Target_Print(dev::Target& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Targsrc
 struct Targsrc { // dev.Targsrc: List of sources for target
@@ -1046,57 +1301,71 @@ struct Targsrc { // dev.Targsrc: List of sources for target
     Targsrc();
 };
 
+// func:dev.Targsrc.target.Get
 algo::Smallstr16     target_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsrc.target.Get2
 algo::Smallstr16     Targsrc_target_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targsrc.src.Get
 algo::Smallstr200    src_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsrc.src.Get2
 algo::Smallstr200    Targsrc_src_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targsrc.ext.Get
 algo::Smallstr10     ext_Get(dev::Targsrc& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsrc.ext.Get2
 algo::Smallstr10     Targsrc_ext_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targsrc..Concat_target_src
 tempstr              Targsrc_Concat_target_src( const algo::strptr& target ,const algo::strptr& src );
-bool                 Targsrc_ReadFieldMaybe(dev::Targsrc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Targsrc..ReadFieldMaybe
+bool                 Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Targsrc from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Targsrc..ReadStrptrMaybe
 bool                 Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str);
-// print string representation of dev::Targsrc to string LHS, no header -- cprint:dev.Targsrc.String
-void                 Targsrc_Print(dev::Targsrc & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Targsrc.String  printfmt:Tuple
+// func:dev.Targsrc..Print
+void                 Targsrc_Print(dev::Targsrc& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Targsyslib
-struct Targsyslib { // dev.Targsyslib
+struct Targsyslib { // dev.Targsyslib: Use of system library by target
     algo::Smallstr50   targsyslib;   //
-    algo_lib::Regx     uname;        // Sql Regx of dev::Uname
     algo::Comment      comment;      //
     Targsyslib();
-private:
-    // reftype Regx of dev.Targsyslib.uname prohibits copy
-    Targsyslib(const Targsyslib&){ /*disallow copy constructor */}
-    void operator =(const Targsyslib&){ /*disallow direct assignment */}
 };
 
+// func:dev.Targsyslib.target.Get
 algo::Smallstr16     target_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsyslib.target.Get2
 algo::Smallstr16     Targsyslib_target_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targsyslib.syslib.Get
 algo::Smallstr50     syslib_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsyslib.syslib.Get2
 algo::Smallstr50     Targsyslib_syslib_Get(algo::strptr arg) __attribute__((nothrow));
 
-// Print back to string
-void                 uname_Print(dev::Targsyslib& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-bool                 uname_ReadStrptrMaybe(dev::Targsyslib& parent, algo::strptr in) __attribute__((nothrow));
+// func:dev.Targsyslib.uname.Get
+algo::Smallstr50     uname_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsyslib.uname.Get2
+algo::Smallstr50     Targsyslib_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
-tempstr              Targsyslib_Concat_target_syslib( const algo::strptr& target ,const algo::strptr& syslib );
-bool                 Targsyslib_ReadFieldMaybe(dev::Targsyslib &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Targsyslib..Concat_uname_target_syslib
+tempstr              Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,const algo::strptr& target ,const algo::strptr& syslib );
+// func:dev.Targsyslib..ReadFieldMaybe
+bool                 Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Targsyslib from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Targsyslib..ReadStrptrMaybe
 bool                 Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str);
-// print string representation of dev::Targsyslib to string LHS, no header -- cprint:dev.Targsyslib.String
-void                 Targsyslib_Print(dev::Targsyslib & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Targsyslib.String  printfmt:Tuple
+// func:dev.Targsyslib..Print
+void                 Targsyslib_Print(dev::Targsyslib& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Tgtcov
-struct Tgtcov { // dev.Tgtcov
+struct Tgtcov { // dev.Tgtcov: Captured line coverate information by target
     algo::Smallstr16   target;    // Target
     algo::U32Dec2      cov_min;   // Minimal coverage limit
     algo::U32Dec2      maxerr;    // Tolerable error
@@ -1104,12 +1373,16 @@ struct Tgtcov { // dev.Tgtcov
     Tgtcov();
 };
 
-bool                 Tgtcov_ReadFieldMaybe(dev::Tgtcov &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Tgtcov..ReadFieldMaybe
+bool                 Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Tgtcov from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Tgtcov..ReadStrptrMaybe
 bool                 Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str);
-// print string representation of dev::Tgtcov to string LHS, no header -- cprint:dev.Tgtcov.String
-void                 Tgtcov_Print(dev::Tgtcov & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Tgtcov.String  printfmt:Tuple
+// func:dev.Tgtcov..Print
+void                 Tgtcov_Print(dev::Tgtcov& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Timefmt
 struct Timefmt { // dev.Timefmt: Time formats supported by orgfile
@@ -1119,59 +1392,84 @@ struct Timefmt { // dev.Timefmt: Time formats supported by orgfile
     Timefmt();
 };
 
-bool                 Timefmt_ReadFieldMaybe(dev::Timefmt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Timefmt..ReadFieldMaybe
+bool                 Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Timefmt from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Timefmt..ReadStrptrMaybe
 bool                 Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:dev.Timefmt..Init
 void                 Timefmt_Init(dev::Timefmt& parent);
-// print string representation of dev::Timefmt to string LHS, no header -- cprint:dev.Timefmt.String
-void                 Timefmt_Print(dev::Timefmt & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Timefmt.String  printfmt:Tuple
+// func:dev.Timefmt..Print
+void                 Timefmt_Print(dev::Timefmt& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.ToolOpt
-struct ToolOpt { // dev.ToolOpt
-    algo::Smallstr100   tool_opt;   //
+struct ToolOpt { // dev.ToolOpt: Compiler/linker options to use
+    algo::Smallstr100   tool_opt;   // Primary key - uname.compiler-cfg.arch/target-opt_type:opt
     algo::Comment       comment;    //
     explicit ToolOpt(const algo::strptr&            in_tool_opt
         ,const algo::Comment&           in_comment);
     ToolOpt();
 };
 
-algo::Smallstr50     opt_type_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     ToolOpt_opt_type_Get(algo::strptr arg) __attribute__((nothrow));
-
-algo::Smallstr100    opt_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr100    ToolOpt_opt_Get(algo::strptr arg) __attribute__((nothrow));
-
-algo::Smallstr50     target_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     ToolOpt_target_Get(algo::strptr arg) __attribute__((nothrow));
-
+// func:dev.ToolOpt.uname.Get
 algo::Smallstr50     uname_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.uname.Get2
 algo::Smallstr50     ToolOpt_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
-algo::Smallstr50     sortfld_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
-algo::Smallstr50     ToolOpt_sortfld_Get(algo::strptr arg) __attribute__((nothrow));
-
+// func:dev.ToolOpt.compiler.Get
 algo::Smallstr50     compiler_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.compiler.Get2
 algo::Smallstr50     ToolOpt_compiler_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.ToolOpt.cfg.Get
 algo::Smallstr50     cfg_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.cfg.Get2
 algo::Smallstr50     ToolOpt_cfg_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.ToolOpt.arch.Get
 algo::Smallstr50     arch_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.arch.Get2
 algo::Smallstr50     ToolOpt_arch_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.ToolOpt.target.Get
+algo::Smallstr50     target_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.target.Get2
+algo::Smallstr50     ToolOpt_target_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.ToolOpt.opt_type.Get
+algo::Smallstr50     opt_type_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.opt_type.Get2
+algo::Smallstr50     ToolOpt_opt_type_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.ToolOpt.opt.Get
+algo::Smallstr100    opt_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.opt.Get2
+algo::Smallstr100    ToolOpt_opt_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.ToolOpt.sortfld.Get
+algo::Smallstr50     sortfld_Get(dev::ToolOpt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.ToolOpt.sortfld.Get2
+algo::Smallstr50     ToolOpt_sortfld_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.ToolOpt..Concat_uname_compiler_cfg_arch_target_opt_type_opt
 tempstr              ToolOpt_Concat_uname_compiler_cfg_arch_target_opt_type_opt( const algo::strptr& uname ,const algo::strptr& compiler ,const algo::strptr& cfg ,const algo::strptr& arch ,const algo::strptr& target ,const algo::strptr& opt_type ,const algo::strptr& opt );
-bool                 ToolOpt_ReadFieldMaybe(dev::ToolOpt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.ToolOpt..ReadFieldMaybe
+bool                 ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::ToolOpt from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.ToolOpt..ReadStrptrMaybe
 bool                 ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str);
-// print string representation of dev::ToolOpt to string LHS, no header -- cprint:dev.ToolOpt.String
-void                 ToolOpt_Print(dev::ToolOpt & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.ToolOpt.String  printfmt:Tuple
+// func:dev.ToolOpt..Print
+void                 ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Uname
-// access: dev.Targsyslib.uname (Regx)
-struct Uname { // dev.Uname
+struct Uname { // dev.Uname: List of known unames
     algo::Smallstr50   uname;     //
     algo::Comment      comment;   //
     explicit Uname(const algo::strptr&            in_uname
@@ -1179,32 +1477,41 @@ struct Uname { // dev.Uname
     Uname();
 };
 
-bool                 Uname_ReadFieldMaybe(dev::Uname &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Uname..ReadFieldMaybe
+bool                 Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Uname from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Uname..ReadStrptrMaybe
 bool                 Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str);
-// print string representation of dev::Uname to string LHS, no header -- cprint:dev.Uname.String
-void                 Uname_Print(dev::Uname & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Uname.String  printfmt:Tuple
+// func:dev.Uname..Print
+void                 Uname_Print(dev::Uname& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Unstablefld
-struct Unstablefld { // dev.Unstablefld
+struct Unstablefld { // dev.Unstablefld: Fields that should be stripped from component test output because they contain timestamps etc.
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
     Unstablefld();
 };
 
-bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:dev.Unstablefld..ReadFieldMaybe
+bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Unstablefld from an ascii string.
 // The format of the string is an ssim Tuple
+// func:dev.Unstablefld..ReadStrptrMaybe
 bool                 Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str);
-// print string representation of dev::Unstablefld to string LHS, no header -- cprint:dev.Unstablefld.String
-void                 Unstablefld_Print(dev::Unstablefld & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Unstablefld.String  printfmt:Tuple
+// func:dev.Unstablefld..Print
+void                 Unstablefld_Print(dev::Unstablefld& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace dev { // gen:ns_func
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Badline &row);// cfmt:dev.Badline.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Copyright &row);// cfmt:dev.Copyright.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covfile &row);// cfmt:dev.Covfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covline &row);// cfmt:dev.Covline.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Covtarget &row);// cfmt:dev.Covtarget.String
@@ -1220,13 +1527,14 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdsection &row);// cfmt:dev.Mdsection.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmens &row);// cfmt:dev.Readmens.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Scriptfile &row);// cfmt:dev.Scriptfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Srcfile &row);// cfmt:dev.Srcfile.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Ssimfs &row);// cfmt:dev.Ssimfs.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmd &row);// cfmt:dev.Syscmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syscmddep &row);// cfmt:dev.Syscmddep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Syslib &row);// cfmt:dev.Syslib.String

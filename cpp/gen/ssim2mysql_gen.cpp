@@ -72,34 +72,52 @@ const char *ssim2mysql_help =
 
 } // namespace ssim2mysql
 namespace ssim2mysql { // gen:ns_print_proto
+    // func:ssim2mysql.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:ssim2mysql.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:ssim2mysql.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:ssim2mysql.FDb.sqltype.InputMaybe
     static bool          sqltype_InputMaybe(dmmeta::Sqltype &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:ssim2mysql.FDb._db.InitReflection
     static void          InitReflection();
+    // func:ssim2mysql.FDb.substr.InputMaybe
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:ssim2mysql.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
     // First element of index changed.
+    // func:ssim2mysql.FDb.zs_cmd.FirstChanged
     static void          zs_cmd_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:ssim2mysql.FDb.zs_cmd.UpdateCycles
     static void          zs_cmd_UpdateCycles() __attribute__((nothrow));
+    // func:ssim2mysql.FDb.zs_cmd.Call
     static void          zs_cmd_Call() __attribute__((nothrow));
     // First element of index changed.
+    // func:ssim2mysql.FDb.cd_input_line.FirstChanged
     static void          cd_input_line_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:ssim2mysql.FDb.cd_input_line.UpdateCycles
     static void          cd_input_line_UpdateCycles() __attribute__((nothrow));
+    // func:ssim2mysql.FDb.cd_input_line.Call
     static void          cd_input_line_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:ssim2mysql.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:ssim2mysql.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Internal function to scan for a message
     //
+    // func:ssim2mysql.FInput.in_buf.Scanmsg
     static void          in_buf_Scanmsg(ssim2mysql::FInput& input) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
+    // func:ssim2mysql.FInput.in_buf.Shift
     static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
+    // func:ssim2mysql...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -110,8 +128,9 @@ void ssim2mysql::FCmd_Uninit(ssim2mysql::FCmd& cmd) {
 }
 
 // --- ssim2mysql.FCmd..Print
-// print string representation of ssim2mysql::FCmd to string LHS, no header -- cprint:ssim2mysql.FCmd.String
-void ssim2mysql::FCmd_Print(ssim2mysql::FCmd & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FCmd.String  printfmt:Raw
+void ssim2mysql::FCmd_Print(ssim2mysql::FCmd& row, algo::cstring& str) {
     algo::cstring_Print(row.cmd, str);
 }
 
@@ -143,8 +162,9 @@ void ssim2mysql::FColumn_Uninit(ssim2mysql::FColumn& column) {
 }
 
 // --- ssim2mysql.FColumn..Print
-// print string representation of ssim2mysql::FColumn to string LHS, no header -- cprint:ssim2mysql.FColumn.String
-void ssim2mysql::FColumn_Print(ssim2mysql::FColumn & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FColumn.String  printfmt:Tuple
+void ssim2mysql::FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FColumn";
 
@@ -185,8 +205,8 @@ algo::Smallstr16 ssim2mysql::ns_Get(ssim2mysql::FCtype& ctype) {
 }
 
 // --- ssim2mysql.FCtype.name.Get
-algo::Smallstr50 ssim2mysql::name_Get(ssim2mysql::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 ssim2mysql::name_Get(ssim2mysql::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -264,12 +284,13 @@ void ssim2mysql::FCtype_Uninit(ssim2mysql::FCtype& ctype) {
 }
 
 // --- ssim2mysql.FCtype..Print
-// print string representation of ssim2mysql::FCtype to string LHS, no header -- cprint:ssim2mysql.FCtype.String
-void ssim2mysql::FCtype_Print(ssim2mysql::FCtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FCtype.String  printfmt:Tuple
+void ssim2mysql::FCtype_Print(ssim2mysql::FCtype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FCtype";
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -283,8 +304,9 @@ void ssim2mysql::FCtype_Print(ssim2mysql::FCtype & row, algo::cstring &str) {
 }
 
 // --- ssim2mysql.trace..Print
-// print string representation of ssim2mysql::trace to string LHS, no header -- cprint:ssim2mysql.trace.String
-void ssim2mysql::trace_Print(ssim2mysql::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.trace.String  printfmt:Tuple
+void ssim2mysql::trace_Print(ssim2mysql::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.trace";
 
@@ -1208,7 +1230,7 @@ static void ssim2mysql::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'ff89fc6345e9c2cbce6bd0306e95536701f81ffe'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'d41a6705fe7e51637203614b4b01fcef04566513'");
 }
 
 // --- ssim2mysql.FDb._db.StaticCheck
@@ -1482,7 +1504,7 @@ void ssim2mysql::ind_ns_Reserve(int n) {
 // --- ssim2mysql.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FCtype* ssim2mysql::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     ssim2mysql::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     ssim2mysql::FCtype* ret=NULL;
     do {
@@ -1525,7 +1547,7 @@ bool ssim2mysql::ind_ctype_InsertMaybe(ssim2mysql::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (ssim2mysql::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         ssim2mysql::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             ssim2mysql::FCtype* ret = *prev;
@@ -1551,7 +1573,7 @@ bool ssim2mysql::ind_ctype_InsertMaybe(ssim2mysql::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssim2mysql::ind_ctype_Remove(ssim2mysql::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (ssim2mysql::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         ssim2mysql::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (ssim2mysql::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1588,7 +1610,7 @@ void ssim2mysql::ind_ctype_Reserve(int n) {
             while (elem) {
                 ssim2mysql::FCtype &row        = *elem;
                 ssim2mysql::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2674,8 +2696,8 @@ void ssim2mysql::field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) {
 }
 
 // --- ssim2mysql.FField.ctype.Get
-algo::Smallstr50 ssim2mysql::ctype_Get(ssim2mysql::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 ssim2mysql::ctype_Get(ssim2mysql::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -2715,15 +2737,16 @@ void ssim2mysql::FField_Uninit(ssim2mysql::FField& field) {
 }
 
 // --- ssim2mysql.FField..Print
-// print string representation of ssim2mysql::FField to string LHS, no header -- cprint:ssim2mysql.FField.String
-void ssim2mysql::FField_Print(ssim2mysql::FField & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FField.String  printfmt:Tuple
+void ssim2mysql::FField_Print(ssim2mysql::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FField";
 
     algo::Smallstr100_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
-    algo::Smallstr50_Print(row.arg, temp);
+    algo::Smallstr100_Print(row.arg, temp);
     PrintAttrSpaceReset(str,"arg", temp);
 
     algo::Smallstr50_Print(row.reftype, temp);
@@ -2953,8 +2976,9 @@ void ssim2mysql::FInput_Uninit(ssim2mysql::FInput& input) {
 }
 
 // --- ssim2mysql.FInput..Print
-// print string representation of ssim2mysql::FInput to string LHS, no header -- cprint:ssim2mysql.FInput.String
-void ssim2mysql::FInput_Print(ssim2mysql::FInput & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FInput.String  printfmt:Tuple
+void ssim2mysql::FInput_Print(ssim2mysql::FInput& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FInput";
 
@@ -3057,8 +3081,9 @@ void ssim2mysql::FNs_Uninit(ssim2mysql::FNs& ns) {
 }
 
 // --- ssim2mysql.FNs..Print
-// print string representation of ssim2mysql::FNs to string LHS, no header -- cprint:ssim2mysql.FNs.String
-void ssim2mysql::FNs_Print(ssim2mysql::FNs & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FNs.String  printfmt:Tuple
+void ssim2mysql::FNs_Print(ssim2mysql::FNs& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FNs";
 
@@ -3101,12 +3126,13 @@ void ssim2mysql::FSqltype_Uninit(ssim2mysql::FSqltype& sqltype) {
 }
 
 // --- ssim2mysql.FSqltype..Print
-// print string representation of ssim2mysql::FSqltype to string LHS, no header -- cprint:ssim2mysql.FSqltype.String
-void ssim2mysql::FSqltype_Print(ssim2mysql::FSqltype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FSqltype.String  printfmt:Tuple
+void ssim2mysql::FSqltype_Print(ssim2mysql::FSqltype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FSqltype";
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     algo::Smallstr100_Print(row.expr, temp);
@@ -3246,15 +3272,16 @@ void ssim2mysql::FSsimfile_Uninit(ssim2mysql::FSsimfile& ssimfile) {
 }
 
 // --- ssim2mysql.FSsimfile..Print
-// print string representation of ssim2mysql::FSsimfile to string LHS, no header -- cprint:ssim2mysql.FSsimfile.String
-void ssim2mysql::FSsimfile_Print(ssim2mysql::FSsimfile & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FSsimfile.String  printfmt:Tuple
+void ssim2mysql::FSsimfile_Print(ssim2mysql::FSsimfile& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FSsimfile";
 
     algo::Smallstr50_Print(row.ssimfile, temp);
     PrintAttrSpaceReset(str,"ssimfile", temp);
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     bool_Print(row.select, temp);
@@ -3293,8 +3320,9 @@ void ssim2mysql::FSubstr_Uninit(ssim2mysql::FSubstr& substr) {
 }
 
 // --- ssim2mysql.FSubstr..Print
-// print string representation of ssim2mysql::FSubstr to string LHS, no header -- cprint:ssim2mysql.FSubstr.String
-void ssim2mysql::FSubstr_Print(ssim2mysql::FSubstr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FSubstr.String  printfmt:Tuple
+void ssim2mysql::FSubstr_Print(ssim2mysql::FSubstr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FSubstr";
 
@@ -3378,8 +3406,9 @@ bool ssim2mysql::FieldId_ReadStrptrMaybe(ssim2mysql::FieldId &parent, algo::strp
 }
 
 // --- ssim2mysql.FieldId..Print
-// print string representation of ssim2mysql::FieldId to string LHS, no header -- cprint:ssim2mysql.FieldId.String
-void ssim2mysql::FieldId_Print(ssim2mysql::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FieldId.String  printfmt:Raw
+void ssim2mysql::FieldId_Print(ssim2mysql::FieldId& row, algo::cstring& str) {
     ssim2mysql::value_Print(row, str);
 }
 
@@ -3523,8 +3552,9 @@ bool ssim2mysql::TableId_ReadStrptrMaybe(ssim2mysql::TableId &parent, algo::strp
 }
 
 // --- ssim2mysql.TableId..Print
-// print string representation of ssim2mysql::TableId to string LHS, no header -- cprint:ssim2mysql.TableId.String
-void ssim2mysql::TableId_Print(ssim2mysql::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.TableId.String  printfmt:Raw
+void ssim2mysql::TableId_Print(ssim2mysql::TableId& row, algo::cstring& str) {
     ssim2mysql::value_Print(row, str);
 }
 

@@ -1109,19 +1109,19 @@ inline u32 atf_amc::Cstr_Hash(u32 prev, const atf_amc::Cstr & rhs) {
 }
 
 // --- atf_amc.Cstr..Lt
-inline bool atf_amc::Cstr_Lt(atf_amc::Cstr & lhs, atf_amc::Cstr & rhs) {
+inline bool atf_amc::Cstr_Lt(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
     return val_Lt(lhs,rhs);
 }
 
 // --- atf_amc.Cstr..Cmp
-inline i32 atf_amc::Cstr_Cmp(atf_amc::Cstr & lhs, atf_amc::Cstr & rhs) {
+inline i32 atf_amc::Cstr_Cmp(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
     i32 retval = 0;
     retval = val_Cmp(lhs,rhs);
     return retval;
 }
 
 // --- atf_amc.Cstr..Eq
-inline bool atf_amc::Cstr_Eq(const atf_amc::Cstr & lhs,const atf_amc::Cstr & rhs) {
+inline bool atf_amc::Cstr_Eq(const atf_amc::Cstr& lhs, const atf_amc::Cstr& rhs) {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.val, rhs.val);
     return retval;
@@ -1129,7 +1129,7 @@ inline bool atf_amc::Cstr_Eq(const atf_amc::Cstr & lhs,const atf_amc::Cstr & rhs
 
 // --- atf_amc.Cstr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr & rhs) {
+inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) {
     bool ret = !Cstr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1184,12 +1184,12 @@ inline u32 atf_amc::Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr & rhs) {
 }
 
 // --- atf_amc.Ctype1Attr..Lt
-inline bool atf_amc::Ctype1Attr_Lt(atf_amc::Ctype1Attr & lhs, atf_amc::Ctype1Attr & rhs) {
+inline bool atf_amc::Ctype1Attr_Lt(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) {
     return u32_Lt(lhs.attr1, rhs.attr1);
 }
 
 // --- atf_amc.Ctype1Attr..Cmp
-inline i32 atf_amc::Ctype1Attr_Cmp(atf_amc::Ctype1Attr & lhs, atf_amc::Ctype1Attr & rhs) {
+inline i32 atf_amc::Ctype1Attr_Cmp(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) {
     i32 retval = 0;
     retval = u32_Cmp(lhs.attr1, rhs.attr1);
     return retval;
@@ -1202,7 +1202,7 @@ inline void atf_amc::Ctype1Attr_Init(atf_amc::Ctype1Attr& parent) {
 }
 
 // --- atf_amc.Ctype1Attr..Eq
-inline bool atf_amc::Ctype1Attr_Eq(const atf_amc::Ctype1Attr & lhs,const atf_amc::Ctype1Attr & rhs) {
+inline bool atf_amc::Ctype1Attr_Eq(const atf_amc::Ctype1Attr& lhs, const atf_amc::Ctype1Attr& rhs) {
     bool retval = true;
     retval = u32_Eq(lhs.attr1, rhs.attr1);
     return retval;
@@ -1210,7 +1210,7 @@ inline bool atf_amc::Ctype1Attr_Eq(const atf_amc::Ctype1Attr & lhs,const atf_amc
 
 // --- atf_amc.Ctype1Attr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr & rhs) {
+inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr& rhs) {
     bool ret = !Ctype1Attr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1260,12 +1260,12 @@ inline u32 atf_amc::Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr & rhs) {
 }
 
 // --- atf_amc.Ctype2Attr..Lt
-inline bool atf_amc::Ctype2Attr_Lt(atf_amc::Ctype2Attr & lhs, atf_amc::Ctype2Attr & rhs) {
+inline bool atf_amc::Ctype2Attr_Lt(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) {
     return Ctype2Attr_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.Ctype2Attr..Cmp
-inline i32 atf_amc::Ctype2Attr_Cmp(atf_amc::Ctype2Attr & lhs, atf_amc::Ctype2Attr & rhs) {
+inline i32 atf_amc::Ctype2Attr_Cmp(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) {
     i32 retval = 0;
     retval = u32_Cmp(lhs.attr1, rhs.attr1);
     if (retval != 0) {
@@ -1283,7 +1283,7 @@ inline void atf_amc::Ctype2Attr_Init(atf_amc::Ctype2Attr& parent) {
 }
 
 // --- atf_amc.Ctype2Attr..Eq
-inline bool atf_amc::Ctype2Attr_Eq(const atf_amc::Ctype2Attr & lhs,const atf_amc::Ctype2Attr & rhs) {
+inline bool atf_amc::Ctype2Attr_Eq(const atf_amc::Ctype2Attr& lhs, const atf_amc::Ctype2Attr& rhs) {
     bool retval = true;
     retval = u32_Eq(lhs.attr1, rhs.attr1);
     if (!retval) {
@@ -1295,7 +1295,7 @@ inline bool atf_amc::Ctype2Attr_Eq(const atf_amc::Ctype2Attr & lhs,const atf_amc
 
 // --- atf_amc.Ctype2Attr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr & rhs) {
+inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr& rhs) {
     bool ret = !Ctype2Attr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1587,14 +1587,17 @@ inline bool atf_amc::strval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.strval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::strval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.strval.Set
-inline void atf_amc::strval_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) {
-    parent.strval = rhs;
-    pmask_qSetBit(parent, 0); // mark presence in pmask
+// --- atf_amc.DispFilter.strval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::strval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.strval_regx.PresentQ
@@ -1604,8 +1607,17 @@ inline bool atf_amc::strval_regx_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.strval_regx.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::strval_regx_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 1); // mark presence in pmask
+}
+
+// --- atf_amc.DispFilter.strval_regx.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::strval_regx_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.strval2.PresentQ
@@ -1615,14 +1627,17 @@ inline bool atf_amc::strval2_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.strval2.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::strval2_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.strval2.Set
-inline void atf_amc::strval2_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) {
-    parent.strval2 = rhs;
-    pmask_qSetBit(parent, 2); // mark presence in pmask
+// --- atf_amc.DispFilter.strval2.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::strval2_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.strval2_regx.PresentQ
@@ -1632,8 +1647,17 @@ inline bool atf_amc::strval2_regx_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.strval2_regx.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::strval2_regx_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 3); // mark presence in pmask
+}
+
+// --- atf_amc.DispFilter.strval2_regx.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::strval2_regx_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 3;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.start_dateval.PresentQ
@@ -1643,14 +1667,17 @@ inline bool atf_amc::start_dateval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.start_dateval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::start_dateval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.start_dateval.Set
-inline void atf_amc::start_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
-    parent.start_dateval = rhs;
-    pmask_qSetBit(parent, 4); // mark presence in pmask
+// --- atf_amc.DispFilter.start_dateval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::start_dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 4;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.end_dateval.PresentQ
@@ -1660,14 +1687,17 @@ inline bool atf_amc::end_dateval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.end_dateval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::end_dateval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.end_dateval.Set
-inline void atf_amc::end_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
-    parent.end_dateval = rhs;
-    pmask_qSetBit(parent, 5); // mark presence in pmask
+// --- atf_amc.DispFilter.end_dateval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::end_dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 5;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.dateval.PresentQ
@@ -1677,14 +1707,17 @@ inline bool atf_amc::dateval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.dateval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::dateval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.dateval.Set
-inline void atf_amc::dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
-    parent.dateval = rhs;
-    pmask_qSetBit(parent, 6); // mark presence in pmask
+// --- atf_amc.DispFilter.dateval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 6;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.start_intval.PresentQ
@@ -1694,14 +1727,17 @@ inline bool atf_amc::start_intval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.start_intval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::start_intval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.start_intval.Set
-inline void atf_amc::start_intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
-    parent.start_intval = rhs;
-    pmask_qSetBit(parent, 7); // mark presence in pmask
+// --- atf_amc.DispFilter.start_intval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::start_intval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 7;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.end_intval.PresentQ
@@ -1711,14 +1747,17 @@ inline bool atf_amc::end_intval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.end_intval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::end_intval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.end_intval.Set
-inline void atf_amc::end_intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
-    parent.end_intval = rhs;
-    pmask_qSetBit(parent, 8); // mark presence in pmask
+// --- atf_amc.DispFilter.end_intval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::end_intval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 8;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.intval.PresentQ
@@ -1728,14 +1767,17 @@ inline bool atf_amc::intval_PresentQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.intval.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::intval_SetPresent(atf_amc::DispFilter& parent) {
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.intval.Set
-inline void atf_amc::intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
-    parent.intval = rhs;
-    pmask_qSetBit(parent, 9); // mark presence in pmask
+// --- atf_amc.DispFilter.intval.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::intval_Present_GetBit(atf_amc::DispFilter& parent) {
+    int retval = 9;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.DispFilter.pmask_bitcurs.ValidQ
@@ -4229,12 +4271,12 @@ inline u32 atf_amc::TypeG_Hash(u32 prev, const atf_amc::TypeG & rhs) {
 }
 
 // --- atf_amc.TypeG..Lt
-inline bool atf_amc::TypeG_Lt(atf_amc::TypeG & lhs, atf_amc::TypeG & rhs) {
+inline bool atf_amc::TypeG_Lt(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
     return i32_Lt(lhs.typeg, rhs.typeg);
 }
 
 // --- atf_amc.TypeG..Cmp
-inline i32 atf_amc::TypeG_Cmp(atf_amc::TypeG & lhs, atf_amc::TypeG & rhs) {
+inline i32 atf_amc::TypeG_Cmp(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typeg, rhs.typeg);
     return retval;
@@ -4247,7 +4289,7 @@ inline void atf_amc::TypeG_Init(atf_amc::TypeG& typeg) {
 }
 
 // --- atf_amc.TypeG..Eq
-inline bool atf_amc::TypeG_Eq(const atf_amc::TypeG & lhs,const atf_amc::TypeG & rhs) {
+inline bool atf_amc::TypeG_Eq(const atf_amc::TypeG& lhs, const atf_amc::TypeG& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typeg, rhs.typeg);
     return retval;
@@ -4255,7 +4297,7 @@ inline bool atf_amc::TypeG_Eq(const atf_amc::TypeG & lhs,const atf_amc::TypeG & 
 
 // --- atf_amc.TypeG..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG & rhs) {
+inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) {
     bool ret = !TypeG_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -4281,13 +4323,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::FOptG& optg) {
 
 // --- atf_amc.FOptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::FOptG& row) {
-    return i32(const_cast<atf_amc::FOptG&>(row).length);
+inline i32 atf_amc::FOptG_GetMsgLength(const atf_amc::FOptG& parent) {
+    return i32(const_cast<atf_amc::FOptG&>(parent).length);
 }
 
 // --- atf_amc.FOptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::FOptG& row) {
+inline algo::memptr atf_amc::FOptG_GetMsgMemptr(const atf_amc::FOptG& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::FOptG&>(row).length));
 }
 
@@ -4965,12 +5007,12 @@ inline u32 atf_amc::TypeA_Hash(u32 prev, const atf_amc::TypeA & rhs) {
 }
 
 // --- atf_amc.TypeA..Lt
-inline bool atf_amc::TypeA_Lt(atf_amc::TypeA & lhs, atf_amc::TypeA & rhs) {
+inline bool atf_amc::TypeA_Lt(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
     return i32_Lt(lhs.typea, rhs.typea);
 }
 
 // --- atf_amc.TypeA..Cmp
-inline i32 atf_amc::TypeA_Cmp(atf_amc::TypeA & lhs, atf_amc::TypeA & rhs) {
+inline i32 atf_amc::TypeA_Cmp(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     return retval;
@@ -4983,7 +5025,7 @@ inline void atf_amc::TypeA_Init(atf_amc::TypeA& tary) {
 }
 
 // --- atf_amc.TypeA..Eq
-inline bool atf_amc::TypeA_Eq(const atf_amc::TypeA & lhs,const atf_amc::TypeA & rhs) {
+inline bool atf_amc::TypeA_Eq(const atf_amc::TypeA& lhs, const atf_amc::TypeA& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -4991,7 +5033,7 @@ inline bool atf_amc::TypeA_Eq(const atf_amc::TypeA & lhs,const atf_amc::TypeA & 
 
 // --- atf_amc.TypeA..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA & rhs) {
+inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) {
     bool ret = !TypeA_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -5619,13 +5661,13 @@ inline void atf_amc::type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_En
 
 // --- atf_amc.MsgHdrLT..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHdrLT& row) {
-    return i32(const_cast<atf_amc::MsgHdrLT&>(row).len + 2);
+inline i32 atf_amc::MsgHdrLT_GetMsgLength(const atf_amc::MsgHdrLT& parent) {
+    return i32(const_cast<atf_amc::MsgHdrLT&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgHdrLT..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHdrLT& row) {
+inline algo::memptr atf_amc::MsgHdrLT_GetMsgMemptr(const atf_amc::MsgHdrLT& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgHdrLT&>(row).len + 2));
 }
 
@@ -5906,18 +5948,18 @@ inline u32 atf_amc::MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader & rhs) {
 
 // --- atf_amc.MsgHeader..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHeader& row) {
-    return i32(const_cast<atf_amc::MsgHeader&>(row).length);
+inline i32 atf_amc::MsgHeader_GetMsgLength(const atf_amc::MsgHeader& parent) {
+    return i32(const_cast<atf_amc::MsgHeader&>(parent).length);
 }
 
 // --- atf_amc.MsgHeader..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHeader& row) {
+inline algo::memptr atf_amc::MsgHeader_GetMsgMemptr(const atf_amc::MsgHeader& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgHeader&>(row).length));
 }
 
 // --- atf_amc.MsgHeader..Cmp
-inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader & lhs, atf_amc::MsgHeader & rhs) {
+inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) {
     i32 retval = 0;
     retval = atf_amc::MsgType_Cmp(lhs.type, rhs.type);
     if (retval != 0) {
@@ -5928,7 +5970,7 @@ inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader & lhs, atf_amc::MsgHeader &
 }
 
 // --- atf_amc.MsgHeader..Eq
-inline bool atf_amc::MsgHeader_Eq(const atf_amc::MsgHeader & lhs,const atf_amc::MsgHeader & rhs) {
+inline bool atf_amc::MsgHeader_Eq(const atf_amc::MsgHeader& lhs, const atf_amc::MsgHeader& rhs) {
     bool retval = true;
     retval = atf_amc::MsgType_Eq(lhs.type, rhs.type);
     if (!retval) {
@@ -6023,13 +6065,13 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTA& parent) {
 
 // --- atf_amc.MsgLTA..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTA& row) {
-    return i32(const_cast<atf_amc::MsgLTA&>(row).len + 2);
+inline i32 atf_amc::MsgLTA_GetMsgLength(const atf_amc::MsgLTA& parent) {
+    return i32(const_cast<atf_amc::MsgLTA&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTA..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTA& row) {
+inline algo::memptr atf_amc::MsgLTA_GetMsgMemptr(const atf_amc::MsgLTA& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTA&>(row).len + 2));
 }
 
@@ -6068,13 +6110,13 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTB& parent) {
 
 // --- atf_amc.MsgLTB..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTB& row) {
-    return i32(const_cast<atf_amc::MsgLTB&>(row).len + 2);
+inline i32 atf_amc::MsgLTB_GetMsgLength(const atf_amc::MsgLTB& parent) {
+    return i32(const_cast<atf_amc::MsgLTB&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTB..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTB& row) {
+inline algo::memptr atf_amc::MsgLTB_GetMsgMemptr(const atf_amc::MsgLTB& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTB&>(row).len + 2));
 }
 
@@ -6123,13 +6165,13 @@ inline atf_amc::MsgHdrLT* atf_amc::o_Get(atf_amc::MsgLTO& parent) {
 
 // --- atf_amc.MsgLTO..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTO& row) {
-    return i32(const_cast<atf_amc::MsgLTO&>(row).len + 2);
+inline i32 atf_amc::MsgLTO_GetMsgLength(const atf_amc::MsgLTO& parent) {
+    return i32(const_cast<atf_amc::MsgLTO&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTO..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTO& row) {
+inline algo::memptr atf_amc::MsgLTO_GetMsgMemptr(const atf_amc::MsgLTO& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTO&>(row).len + 2));
 }
 
@@ -6200,13 +6242,13 @@ inline atf_amc::MsgHdrLT& atf_amc::MsgLTV_v_curs_Access(MsgLTV_v_curs &curs) {
 
 // --- atf_amc.MsgLTV..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTV& row) {
-    return i32(const_cast<atf_amc::MsgLTV&>(row).len + 2);
+inline i32 atf_amc::MsgLTV_GetMsgLength(const atf_amc::MsgLTV& parent) {
+    return i32(const_cast<atf_amc::MsgLTV&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTV..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTV& row) {
+inline algo::memptr atf_amc::MsgLTV_GetMsgMemptr(const atf_amc::MsgLTV& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTV&>(row).len + 2));
 }
 
@@ -6378,13 +6420,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptAlloc& optalloc) {
 
 // --- atf_amc.OptAlloc..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptAlloc& row) {
-    return i32(const_cast<atf_amc::OptAlloc&>(row).length);
+inline i32 atf_amc::OptAlloc_GetMsgLength(const atf_amc::OptAlloc& parent) {
+    return i32(const_cast<atf_amc::OptAlloc&>(parent).length);
 }
 
 // --- atf_amc.OptAlloc..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptAlloc& row) {
+inline algo::memptr atf_amc::OptAlloc_GetMsgMemptr(const atf_amc::OptAlloc& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptAlloc&>(row).length));
 }
 
@@ -6469,13 +6511,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptG& optg) {
 
 // --- atf_amc.OptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptG& row) {
-    return i32(const_cast<atf_amc::OptG&>(row).length);
+inline i32 atf_amc::OptG_GetMsgLength(const atf_amc::OptG& parent) {
+    return i32(const_cast<atf_amc::OptG&>(parent).length);
 }
 
 // --- atf_amc.OptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptG& row) {
+inline algo::memptr atf_amc::OptG_GetMsgMemptr(const atf_amc::OptG& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptG&>(row).length));
 }
 
@@ -6564,13 +6606,13 @@ inline atf_amc::OptG* atf_amc::optg_Get(atf_amc::OptOptG& parent) {
 
 // --- atf_amc.OptOptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptOptG& row) {
-    return i32(const_cast<atf_amc::OptOptG&>(row).length);
+inline i32 atf_amc::OptOptG_GetMsgLength(const atf_amc::OptOptG& parent) {
+    return i32(const_cast<atf_amc::OptOptG&>(parent).length);
 }
 
 // --- atf_amc.OptOptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptOptG& row) {
+inline algo::memptr atf_amc::OptOptG_GetMsgMemptr(const atf_amc::OptOptG& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptOptG&>(row).length));
 }
 
@@ -6635,6 +6677,902 @@ inline void atf_amc::OptOptG_curs_Init(atf_amc::OptOptG_curs& parent) {
     parent.bytes = NULL;
     parent.limit = i32(0);
     parent.msglen = i32(0);
+}
+inline atf_amc::PmaskMultiple::PmaskMultiple() {
+    atf_amc::PmaskMultiple_Init(*this);
+}
+
+
+// --- atf_amc.PmaskMultiple.present.N
+// Return constant 1
+inline int atf_amc::present_N(atf_amc::PmaskMultiple& parent) {
+    (void)parent;
+    return 1;
+}
+
+// --- atf_amc.PmaskMultiple.present.qFind
+// Access value
+inline u32& atf_amc::present_qFind(atf_amc::PmaskMultiple& parent, int) {
+    return parent.present;
+}
+
+// --- atf_amc.PmaskMultiple.present.NBits
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+inline int atf_amc::present_Nbits(atf_amc::PmaskMultiple& parent) {
+    return present_N(parent) * 32;
+}
+
+// --- atf_amc.PmaskMultiple.present.qGetBit
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+inline bool atf_amc::present_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = present_qFind(parent, elem_idx); // fetch element
+    return bool((elem >> shift) & 1); // extract bit
+}
+
+// --- atf_amc.PmaskMultiple.present.GetBit
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+inline bool atf_amc::present_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    bool ret = false;
+    u64 lim = present_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = present_qFind(parent, elem_idx); // fetch element
+        ret = (elem >> shift) & 1;                 // extract bit
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.present.BitsEmptyQ
+// Check if all the bits in the bitset are equal to zero
+inline bool atf_amc::present_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+    bool retval = true;
+    u64 n = present_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        if (present_qFind(parent,i) != 0) {
+            retval = false;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.present.Sum1s
+inline u64 atf_amc::present_Sum1s(atf_amc::PmaskMultiple& parent) {
+    u64 sum = 0;
+    u64 n = present_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        sum += algo::u32_Count1s(present_qFind(parent, i));
+    }
+    return sum;
+}
+
+// --- atf_amc.PmaskMultiple.present.qClearBit
+// Clear bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::present_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = present_qFind(parent, elem_idx); // fetch
+    elem = elem & ~(u32(1) << shift); // clear bit
+}
+
+// --- atf_amc.PmaskMultiple.present.ClearBit
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+inline void atf_amc::present_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = present_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = present_qFind(parent, elem_idx); // fetch
+        elem = elem & ~(u32(1) << shift); // clear bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.present.qSetBit
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::present_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = present_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(1) << shift); // set bit
+}
+
+// --- atf_amc.PmaskMultiple.present.SetBit
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+inline void atf_amc::present_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = present_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = present_qFind(parent, elem_idx); // fetch
+        elem = elem | (u32(1) << shift); // set bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.present.qSetBitVal
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::present_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = present_qFind(parent, elem_idx); // fetch
+    elem = (elem & ~(u32(1) << shift)) | (u32(val) << shift); // insert new value
+}
+
+// --- atf_amc.PmaskMultiple.present.qOrBitVal
+// Or bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::present_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = present_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(val) << shift); // Or in val into elem
+}
+
+// --- atf_amc.PmaskMultiple.present.ClearBitsAll
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+inline void atf_amc::present_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+    u64 n = present_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        present_qFind(parent, i) = 0;
+    }
+}
+
+// --- atf_amc.PmaskMultiple.present.ClearBits
+// Zero in PARENT any bits that are set in RHS.
+inline void atf_amc::present_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(present_N(parent), present_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        present_qFind(parent, i) &= ~present_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.present.OrBits
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+inline void atf_amc::present_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(present_N(parent), present_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        present_qFind(parent, i) |= present_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.present.Sup
+// Return smallest number N such that indexes of all 1 bits are below N
+inline i32 atf_amc::present_Sup(atf_amc::PmaskMultiple& parent) {
+    u64 lim = present_N(parent);
+    i32 ret = 0;
+    for (int i = lim-1; i >= 0; i--) {
+        u32 &val = present_qFind(parent, i);
+        if (val) {
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
+            ret = i * 32 + bitidx;
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.N
+// Return constant 1
+inline int atf_amc::assigned_N(atf_amc::PmaskMultiple& parent) {
+    (void)parent;
+    return 1;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qFind
+// Access value
+inline u32& atf_amc::assigned_qFind(atf_amc::PmaskMultiple& parent, int) {
+    return parent.assigned;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.NBits
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+inline int atf_amc::assigned_Nbits(atf_amc::PmaskMultiple& parent) {
+    return assigned_N(parent) * 32;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qGetBit
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+inline bool atf_amc::assigned_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = assigned_qFind(parent, elem_idx); // fetch element
+    return bool((elem >> shift) & 1); // extract bit
+}
+
+// --- atf_amc.PmaskMultiple.assigned.GetBit
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+inline bool atf_amc::assigned_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    bool ret = false;
+    u64 lim = assigned_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = assigned_qFind(parent, elem_idx); // fetch element
+        ret = (elem >> shift) & 1;                 // extract bit
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.BitsEmptyQ
+// Check if all the bits in the bitset are equal to zero
+inline bool atf_amc::assigned_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+    bool retval = true;
+    u64 n = assigned_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        if (assigned_qFind(parent,i) != 0) {
+            retval = false;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.Sum1s
+inline u64 atf_amc::assigned_Sum1s(atf_amc::PmaskMultiple& parent) {
+    u64 sum = 0;
+    u64 n = assigned_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        sum += algo::u32_Count1s(assigned_qFind(parent, i));
+    }
+    return sum;
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qClearBit
+// Clear bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::assigned_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+    elem = elem & ~(u32(1) << shift); // clear bit
+}
+
+// --- atf_amc.PmaskMultiple.assigned.ClearBit
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+inline void atf_amc::assigned_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = assigned_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+        elem = elem & ~(u32(1) << shift); // clear bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qSetBit
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::assigned_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(1) << shift); // set bit
+}
+
+// --- atf_amc.PmaskMultiple.assigned.SetBit
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+inline void atf_amc::assigned_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = assigned_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+        elem = elem | (u32(1) << shift); // set bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qSetBitVal
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::assigned_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+    elem = (elem & ~(u32(1) << shift)) | (u32(val) << shift); // insert new value
+}
+
+// --- atf_amc.PmaskMultiple.assigned.qOrBitVal
+// Or bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::assigned_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = assigned_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(val) << shift); // Or in val into elem
+}
+
+// --- atf_amc.PmaskMultiple.assigned.ClearBitsAll
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+inline void atf_amc::assigned_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+    u64 n = assigned_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        assigned_qFind(parent, i) = 0;
+    }
+}
+
+// --- atf_amc.PmaskMultiple.assigned.ClearBits
+// Zero in PARENT any bits that are set in RHS.
+inline void atf_amc::assigned_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(assigned_N(parent), assigned_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        assigned_qFind(parent, i) &= ~assigned_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.assigned.OrBits
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+inline void atf_amc::assigned_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(assigned_N(parent), assigned_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        assigned_qFind(parent, i) |= assigned_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.assigned.Sup
+// Return smallest number N such that indexes of all 1 bits are below N
+inline i32 atf_amc::assigned_Sup(atf_amc::PmaskMultiple& parent) {
+    u64 lim = assigned_N(parent);
+    i32 ret = 0;
+    for (int i = lim-1; i >= 0; i--) {
+        u32 &val = assigned_qFind(parent, i);
+        if (val) {
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
+            ret = i * 32 + bitidx;
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.N
+// Return constant 1
+inline int atf_amc::nullable_N(atf_amc::PmaskMultiple& parent) {
+    (void)parent;
+    return 1;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qFind
+// Access value
+inline u32& atf_amc::nullable_qFind(atf_amc::PmaskMultiple& parent, int) {
+    return parent.nullable;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.NBits
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+inline int atf_amc::nullable_Nbits(atf_amc::PmaskMultiple& parent) {
+    return nullable_N(parent) * 32;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qGetBit
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+inline bool atf_amc::nullable_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = nullable_qFind(parent, elem_idx); // fetch element
+    return bool((elem >> shift) & 1); // extract bit
+}
+
+// --- atf_amc.PmaskMultiple.nullable.GetBit
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+inline bool atf_amc::nullable_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    bool ret = false;
+    u64 lim = nullable_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = nullable_qFind(parent, elem_idx); // fetch element
+        ret = (elem >> shift) & 1;                 // extract bit
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.BitsEmptyQ
+// Check if all the bits in the bitset are equal to zero
+inline bool atf_amc::nullable_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+    bool retval = true;
+    u64 n = nullable_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        if (nullable_qFind(parent,i) != 0) {
+            retval = false;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.Sum1s
+inline u64 atf_amc::nullable_Sum1s(atf_amc::PmaskMultiple& parent) {
+    u64 sum = 0;
+    u64 n = nullable_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        sum += algo::u32_Count1s(nullable_qFind(parent, i));
+    }
+    return sum;
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qClearBit
+// Clear bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::nullable_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+    elem = elem & ~(u32(1) << shift); // clear bit
+}
+
+// --- atf_amc.PmaskMultiple.nullable.ClearBit
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+inline void atf_amc::nullable_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = nullable_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+        elem = elem & ~(u32(1) << shift); // clear bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qSetBit
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::nullable_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(1) << shift); // set bit
+}
+
+// --- atf_amc.PmaskMultiple.nullable.SetBit
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+inline void atf_amc::nullable_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u64 lim = nullable_N(parent);
+    if (elem_idx < lim) {
+        u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+        elem = elem | (u32(1) << shift); // set bit
+    }
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qSetBitVal
+// Set bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::nullable_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+    elem = (elem & ~(u32(1) << shift)) | (u32(val) << shift); // insert new value
+}
+
+// --- atf_amc.PmaskMultiple.nullable.qOrBitVal
+// Or bit # BIT_IDX in bit set. No bounds checking
+inline void atf_amc::nullable_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+    u64 elem_idx = bit_idx >> 5;
+    u64 shift = bit_idx & 31;
+    u32 &elem = nullable_qFind(parent, elem_idx); // fetch
+    elem = elem | (u32(val) << shift); // Or in val into elem
+}
+
+// --- atf_amc.PmaskMultiple.nullable.ClearBitsAll
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+inline void atf_amc::nullable_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+    u64 n = nullable_N(parent);
+    for (u64 i = 0; i < n; i++) {
+        nullable_qFind(parent, i) = 0;
+    }
+}
+
+// --- atf_amc.PmaskMultiple.nullable.ClearBits
+// Zero in PARENT any bits that are set in RHS.
+inline void atf_amc::nullable_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(nullable_N(parent), nullable_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        nullable_qFind(parent, i) &= ~nullable_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.nullable.OrBits
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+inline void atf_amc::nullable_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+    u64 n = u64_Min(nullable_N(parent), nullable_N(rhs));
+    for (u64 i = 0; i < n; i++) {
+        nullable_qFind(parent, i) |= nullable_qFind(rhs, i);
+    }
+}
+
+// --- atf_amc.PmaskMultiple.nullable.Sup
+// Return smallest number N such that indexes of all 1 bits are below N
+inline i32 atf_amc::nullable_Sup(atf_amc::PmaskMultiple& parent) {
+    u64 lim = nullable_N(parent);
+    i32 ret = 0;
+    for (int i = lim-1; i >= 0; i--) {
+        u32 &val = nullable_qFind(parent, i);
+        if (val) {
+            u32 bitidx = algo::u64_BitScanReverse(val) + 1;
+            ret = i * 32 + bitidx;
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.PmaskMultiple.value1.NullableQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value1_NullableQ(atf_amc::PmaskMultiple& parent) {
+    return nullable_qGetBit(parent, 0);
+}
+
+// --- atf_amc.PmaskMultiple.value1.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value1_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 0);
+}
+
+// --- atf_amc.PmaskMultiple.value1.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value1_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 0);
+}
+
+// --- atf_amc.PmaskMultiple.value1.SetNullable
+// Set presence bit for this field in the pmask
+inline void atf_amc::value1_SetNullable(atf_amc::PmaskMultiple& parent) {
+    nullable_qSetBit(parent, 0); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value1.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value1_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 0); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value1.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value1_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 0); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value1.Nullable_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value1_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value1.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value1_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value1.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value1_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value2.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value2_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 1);
+}
+
+// --- atf_amc.PmaskMultiple.value2.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value2_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 1);
+}
+
+// --- atf_amc.PmaskMultiple.value2.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value2_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 1); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value2.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value2_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 1); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value2.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value2_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value2.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value3.NullableQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value3_NullableQ(atf_amc::PmaskMultiple& parent) {
+    return nullable_qGetBit(parent, 1);
+}
+
+// --- atf_amc.PmaskMultiple.value3.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value3_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 2);
+}
+
+// --- atf_amc.PmaskMultiple.value3.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value3_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 2);
+}
+
+// --- atf_amc.PmaskMultiple.value3.SetNullable
+// Set presence bit for this field in the pmask
+inline void atf_amc::value3_SetNullable(atf_amc::PmaskMultiple& parent) {
+    nullable_qSetBit(parent, 1); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value3.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value3_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 2); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value3.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value3_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 2); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value3.Nullable_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value3_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value3.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value3_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value3.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value4.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value4_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 3);
+}
+
+// --- atf_amc.PmaskMultiple.value4.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value4_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 3);
+}
+
+// --- atf_amc.PmaskMultiple.value4.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value4_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 3); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value4.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value4_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 3); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value4.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value4_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 3;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value4.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 3;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value5.NullableQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value5_NullableQ(atf_amc::PmaskMultiple& parent) {
+    return nullable_qGetBit(parent, 2);
+}
+
+// --- atf_amc.PmaskMultiple.value5.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value5_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 4);
+}
+
+// --- atf_amc.PmaskMultiple.value5.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value5_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 4);
+}
+
+// --- atf_amc.PmaskMultiple.value5.SetNullable
+// Set presence bit for this field in the pmask
+inline void atf_amc::value5_SetNullable(atf_amc::PmaskMultiple& parent) {
+    nullable_qSetBit(parent, 2); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value5.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value5_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 4); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value5.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value5_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 4); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value5.Nullable_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value5_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value5.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value5_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 4;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value5.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 4;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value6.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value6_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 5);
+}
+
+// --- atf_amc.PmaskMultiple.value6.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value6_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 5);
+}
+
+// --- atf_amc.PmaskMultiple.value6.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value6_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 5); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value6.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value6_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 5); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value6.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value6_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 5;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value6.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 5;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value7.AssignedQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value7_AssignedQ(atf_amc::PmaskMultiple& parent) {
+    return assigned_qGetBit(parent, 6);
+}
+
+// --- atf_amc.PmaskMultiple.value7.PresentQ
+// Return true if the field is marked in the presence mask
+inline bool atf_amc::value7_PresentQ(atf_amc::PmaskMultiple& parent) {
+    return present_qGetBit(parent, 6);
+}
+
+// --- atf_amc.PmaskMultiple.value7.SetAssigned
+// Set presence bit for this field in the pmask
+inline void atf_amc::value7_SetAssigned(atf_amc::PmaskMultiple& parent) {
+    assigned_qSetBit(parent, 6); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value7.SetPresent
+// Set presence bit for this field in the pmask
+inline void atf_amc::value7_SetPresent(atf_amc::PmaskMultiple& parent) {
+    present_qSetBit(parent, 6); // mark presence in pmask
+}
+
+// --- atf_amc.PmaskMultiple.value7.Assigned_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value7_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 6;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.value7.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+    int retval = 6;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.PmaskMultiple.present_bitcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) {
+    return curs.bit < curs.n_elems*32;
+}
+
+// --- atf_amc.PmaskMultiple.present_bitcurs.Access
+// item access
+inline int& atf_amc::PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs) {
+    return curs.bit;
+}
+
+// --- atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) {
+    return curs.bit < curs.n_elems*32;
+}
+
+// --- atf_amc.PmaskMultiple.assigned_bitcurs.Access
+// item access
+inline int& atf_amc::PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) {
+    return curs.bit;
+}
+
+// --- atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs) {
+    return curs.bit < curs.n_elems*32;
+}
+
+// --- atf_amc.PmaskMultiple.nullable_bitcurs.Access
+// item access
+inline int& atf_amc::PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) {
+    return curs.bit;
 }
 inline atf_amc::PmaskU128::PmaskU128() {
     atf_amc::PmaskU128_Init(*this);
@@ -6804,14 +7742,17 @@ inline bool atf_amc::value_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value = rhs;
-    pmask_qSetBit(parent, 0); // mark presence in pmask
+// --- atf_amc.PmaskU128.value.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value2.PresentQ
@@ -6821,14 +7762,17 @@ inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value2.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value2_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value2.Set
-inline void atf_amc::value2_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value2 = rhs;
-    pmask_qSetBit(parent, 1); // mark presence in pmask
+// --- atf_amc.PmaskU128.value2.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value3.PresentQ
@@ -6838,14 +7782,17 @@ inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value3.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value3_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value3.Set
-inline void atf_amc::value3_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value3 = rhs;
-    pmask_qSetBit(parent, 2); // mark presence in pmask
+// --- atf_amc.PmaskU128.value3.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value21.PresentQ
@@ -6855,14 +7802,17 @@ inline bool atf_amc::value21_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value21.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value21_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value21.Set
-inline void atf_amc::value21_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value21 = rhs;
-    pmask_qSetBit(parent, 3); // mark presence in pmask
+// --- atf_amc.PmaskU128.value21.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value21_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 3;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value22.PresentQ
@@ -6872,14 +7822,17 @@ inline bool atf_amc::value22_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value22.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value22_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value22.Set
-inline void atf_amc::value22_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value22 = rhs;
-    pmask_qSetBit(parent, 4); // mark presence in pmask
+// --- atf_amc.PmaskU128.value22.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value22_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 4;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value23.PresentQ
@@ -6889,14 +7842,17 @@ inline bool atf_amc::value23_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value23.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value23_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value23.Set
-inline void atf_amc::value23_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value23 = rhs;
-    pmask_qSetBit(parent, 5); // mark presence in pmask
+// --- atf_amc.PmaskU128.value23.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value23_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 5;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value24.PresentQ
@@ -6906,14 +7862,17 @@ inline bool atf_amc::value24_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value24.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value24_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value24.Set
-inline void atf_amc::value24_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value24 = rhs;
-    pmask_qSetBit(parent, 6); // mark presence in pmask
+// --- atf_amc.PmaskU128.value24.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value24_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 6;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value25.PresentQ
@@ -6923,14 +7882,17 @@ inline bool atf_amc::value25_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value25.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value25_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value25.Set
-inline void atf_amc::value25_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value25 = rhs;
-    pmask_qSetBit(parent, 7); // mark presence in pmask
+// --- atf_amc.PmaskU128.value25.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value25_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 7;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value26.PresentQ
@@ -6940,14 +7902,17 @@ inline bool atf_amc::value26_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value26.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value26_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value26.Set
-inline void atf_amc::value26_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value26 = rhs;
-    pmask_qSetBit(parent, 8); // mark presence in pmask
+// --- atf_amc.PmaskU128.value26.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value26_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 8;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value20.PresentQ
@@ -6957,14 +7922,17 @@ inline bool atf_amc::value20_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value20.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value20_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value20.Set
-inline void atf_amc::value20_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value20 = rhs;
-    pmask_qSetBit(parent, 9); // mark presence in pmask
+// --- atf_amc.PmaskU128.value20.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value20_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 9;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value28.PresentQ
@@ -6974,14 +7942,17 @@ inline bool atf_amc::value28_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value28.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value28_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 10); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value28.Set
-inline void atf_amc::value28_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value28 = rhs;
-    pmask_qSetBit(parent, 10); // mark presence in pmask
+// --- atf_amc.PmaskU128.value28.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value28_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 10;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value29.PresentQ
@@ -6991,14 +7962,17 @@ inline bool atf_amc::value29_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value29.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value29_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 11); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value29.Set
-inline void atf_amc::value29_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value29 = rhs;
-    pmask_qSetBit(parent, 11); // mark presence in pmask
+// --- atf_amc.PmaskU128.value29.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value29_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 11;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value30.PresentQ
@@ -7008,14 +7982,17 @@ inline bool atf_amc::value30_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value30.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value30_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 12); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value30.Set
-inline void atf_amc::value30_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value30 = rhs;
-    pmask_qSetBit(parent, 12); // mark presence in pmask
+// --- atf_amc.PmaskU128.value30.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value30_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 12;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value31.PresentQ
@@ -7025,14 +8002,17 @@ inline bool atf_amc::value31_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value31.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value31_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 13); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value31.Set
-inline void atf_amc::value31_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value31 = rhs;
-    pmask_qSetBit(parent, 13); // mark presence in pmask
+// --- atf_amc.PmaskU128.value31.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value31_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 13;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value32.PresentQ
@@ -7042,14 +8022,17 @@ inline bool atf_amc::value32_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value32.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value32_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 14); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value32.Set
-inline void atf_amc::value32_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value32 = rhs;
-    pmask_qSetBit(parent, 14); // mark presence in pmask
+// --- atf_amc.PmaskU128.value32.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value32_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 14;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value27.PresentQ
@@ -7059,14 +8042,17 @@ inline bool atf_amc::value27_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value27.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value27_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 15); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value27.Set
-inline void atf_amc::value27_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value27 = rhs;
-    pmask_qSetBit(parent, 15); // mark presence in pmask
+// --- atf_amc.PmaskU128.value27.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value27_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 15;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value19.PresentQ
@@ -7076,14 +8062,17 @@ inline bool atf_amc::value19_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value19.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value19_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 16); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value19.Set
-inline void atf_amc::value19_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value19 = rhs;
-    pmask_qSetBit(parent, 16); // mark presence in pmask
+// --- atf_amc.PmaskU128.value19.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value19_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 16;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value18.PresentQ
@@ -7093,14 +8082,17 @@ inline bool atf_amc::value18_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value18.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value18_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 17); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value18.Set
-inline void atf_amc::value18_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value18 = rhs;
-    pmask_qSetBit(parent, 17); // mark presence in pmask
+// --- atf_amc.PmaskU128.value18.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value18_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 17;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value4.PresentQ
@@ -7110,14 +8102,17 @@ inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value4.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value4_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 18); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value4.Set
-inline void atf_amc::value4_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value4 = rhs;
-    pmask_qSetBit(parent, 18); // mark presence in pmask
+// --- atf_amc.PmaskU128.value4.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 18;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value5.PresentQ
@@ -7127,14 +8122,17 @@ inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value5.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value5_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 19); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value5.Set
-inline void atf_amc::value5_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value5 = rhs;
-    pmask_qSetBit(parent, 19); // mark presence in pmask
+// --- atf_amc.PmaskU128.value5.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 19;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value6.PresentQ
@@ -7144,14 +8142,17 @@ inline bool atf_amc::value6_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value6.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value6_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 20); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value6.Set
-inline void atf_amc::value6_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value6 = rhs;
-    pmask_qSetBit(parent, 20); // mark presence in pmask
+// --- atf_amc.PmaskU128.value6.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 20;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value7.PresentQ
@@ -7161,14 +8162,17 @@ inline bool atf_amc::value7_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value7.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value7_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 21); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value7.Set
-inline void atf_amc::value7_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value7 = rhs;
-    pmask_qSetBit(parent, 21); // mark presence in pmask
+// --- atf_amc.PmaskU128.value7.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 21;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value8.PresentQ
@@ -7178,14 +8182,17 @@ inline bool atf_amc::value8_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value8.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value8_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 22); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value8.Set
-inline void atf_amc::value8_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value8 = rhs;
-    pmask_qSetBit(parent, 22); // mark presence in pmask
+// --- atf_amc.PmaskU128.value8.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value8_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 22;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value9.PresentQ
@@ -7195,14 +8202,17 @@ inline bool atf_amc::value9_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value9.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value9_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 23); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value9.Set
-inline void atf_amc::value9_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value9 = rhs;
-    pmask_qSetBit(parent, 23); // mark presence in pmask
+// --- atf_amc.PmaskU128.value9.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value9_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 23;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value69.PresentQ
@@ -7212,14 +8222,17 @@ inline bool atf_amc::value69_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value69.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value69_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 24); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value69.Set
-inline void atf_amc::value69_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value69 = rhs;
-    pmask_qSetBit(parent, 24); // mark presence in pmask
+// --- atf_amc.PmaskU128.value69.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value69_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 24;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value11.PresentQ
@@ -7229,14 +8242,17 @@ inline bool atf_amc::value11_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value11.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value11_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 25); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value11.Set
-inline void atf_amc::value11_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value11 = rhs;
-    pmask_qSetBit(parent, 25); // mark presence in pmask
+// --- atf_amc.PmaskU128.value11.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value11_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 25;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value12.PresentQ
@@ -7246,14 +8262,17 @@ inline bool atf_amc::value12_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value12.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value12_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 26); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value12.Set
-inline void atf_amc::value12_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value12 = rhs;
-    pmask_qSetBit(parent, 26); // mark presence in pmask
+// --- atf_amc.PmaskU128.value12.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value12_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 26;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value13.PresentQ
@@ -7263,14 +8282,17 @@ inline bool atf_amc::value13_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value13.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value13_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 27); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value13.Set
-inline void atf_amc::value13_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value13 = rhs;
-    pmask_qSetBit(parent, 27); // mark presence in pmask
+// --- atf_amc.PmaskU128.value13.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value13_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 27;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value14.PresentQ
@@ -7280,14 +8302,17 @@ inline bool atf_amc::value14_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value14.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value14_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 28); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value14.Set
-inline void atf_amc::value14_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value14 = rhs;
-    pmask_qSetBit(parent, 28); // mark presence in pmask
+// --- atf_amc.PmaskU128.value14.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value14_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 28;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value15.PresentQ
@@ -7297,14 +8322,17 @@ inline bool atf_amc::value15_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value15.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value15_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 29); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value15.Set
-inline void atf_amc::value15_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value15 = rhs;
-    pmask_qSetBit(parent, 29); // mark presence in pmask
+// --- atf_amc.PmaskU128.value15.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value15_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 29;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value16.PresentQ
@@ -7314,14 +8342,17 @@ inline bool atf_amc::value16_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value16.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value16_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 30); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value16.Set
-inline void atf_amc::value16_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value16 = rhs;
-    pmask_qSetBit(parent, 30); // mark presence in pmask
+// --- atf_amc.PmaskU128.value16.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value16_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 30;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value33.PresentQ
@@ -7331,14 +8362,17 @@ inline bool atf_amc::value33_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value33.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value33_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 31); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value33.Set
-inline void atf_amc::value33_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value33 = rhs;
-    pmask_qSetBit(parent, 31); // mark presence in pmask
+// --- atf_amc.PmaskU128.value33.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value33_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 31;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value10.PresentQ
@@ -7348,14 +8382,17 @@ inline bool atf_amc::value10_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value10.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value10_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 32); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value10.Set
-inline void atf_amc::value10_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value10 = rhs;
-    pmask_qSetBit(parent, 32); // mark presence in pmask
+// --- atf_amc.PmaskU128.value10.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value10_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 32;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value17.PresentQ
@@ -7365,14 +8402,17 @@ inline bool atf_amc::value17_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value17.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value17_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 33); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value17.Set
-inline void atf_amc::value17_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value17 = rhs;
-    pmask_qSetBit(parent, 33); // mark presence in pmask
+// --- atf_amc.PmaskU128.value17.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value17_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 33;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value35.PresentQ
@@ -7382,14 +8422,17 @@ inline bool atf_amc::value35_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value35.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value35_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 34); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value35.Set
-inline void atf_amc::value35_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value35 = rhs;
-    pmask_qSetBit(parent, 34); // mark presence in pmask
+// --- atf_amc.PmaskU128.value35.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value35_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 34;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value55.PresentQ
@@ -7399,14 +8442,17 @@ inline bool atf_amc::value55_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value55.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value55_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 35); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value55.Set
-inline void atf_amc::value55_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value55 = rhs;
-    pmask_qSetBit(parent, 35); // mark presence in pmask
+// --- atf_amc.PmaskU128.value55.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value55_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 35;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value56.PresentQ
@@ -7416,14 +8462,17 @@ inline bool atf_amc::value56_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value56.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value56_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 36); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value56.Set
-inline void atf_amc::value56_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value56 = rhs;
-    pmask_qSetBit(parent, 36); // mark presence in pmask
+// --- atf_amc.PmaskU128.value56.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value56_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 36;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value57.PresentQ
@@ -7433,14 +8482,17 @@ inline bool atf_amc::value57_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value57.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value57_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 37); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value57.Set
-inline void atf_amc::value57_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value57 = rhs;
-    pmask_qSetBit(parent, 37); // mark presence in pmask
+// --- atf_amc.PmaskU128.value57.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value57_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 37;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value58.PresentQ
@@ -7450,14 +8502,17 @@ inline bool atf_amc::value58_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value58.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value58_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 38); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value58.Set
-inline void atf_amc::value58_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value58 = rhs;
-    pmask_qSetBit(parent, 38); // mark presence in pmask
+// --- atf_amc.PmaskU128.value58.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value58_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 38;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value59.PresentQ
@@ -7467,14 +8522,17 @@ inline bool atf_amc::value59_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value59.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value59_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 39); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value59.Set
-inline void atf_amc::value59_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value59 = rhs;
-    pmask_qSetBit(parent, 39); // mark presence in pmask
+// --- atf_amc.PmaskU128.value59.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value59_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 39;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value60.PresentQ
@@ -7484,14 +8542,17 @@ inline bool atf_amc::value60_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value60.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value60_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 40); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value60.Set
-inline void atf_amc::value60_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value60 = rhs;
-    pmask_qSetBit(parent, 40); // mark presence in pmask
+// --- atf_amc.PmaskU128.value60.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value60_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 40;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value54.PresentQ
@@ -7501,14 +8562,17 @@ inline bool atf_amc::value54_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value54.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value54_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 41); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value54.Set
-inline void atf_amc::value54_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value54 = rhs;
-    pmask_qSetBit(parent, 41); // mark presence in pmask
+// --- atf_amc.PmaskU128.value54.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value54_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 41;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value62.PresentQ
@@ -7518,14 +8582,17 @@ inline bool atf_amc::value62_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value62.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value62_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 42); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value62.Set
-inline void atf_amc::value62_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value62 = rhs;
-    pmask_qSetBit(parent, 42); // mark presence in pmask
+// --- atf_amc.PmaskU128.value62.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value62_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 42;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value63.PresentQ
@@ -7535,14 +8602,17 @@ inline bool atf_amc::value63_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value63.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value63_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 43); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value63.Set
-inline void atf_amc::value63_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value63 = rhs;
-    pmask_qSetBit(parent, 43); // mark presence in pmask
+// --- atf_amc.PmaskU128.value63.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value63_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 43;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value64.PresentQ
@@ -7552,14 +8622,17 @@ inline bool atf_amc::value64_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value64.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value64_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 44); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value64.Set
-inline void atf_amc::value64_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value64 = rhs;
-    pmask_qSetBit(parent, 44); // mark presence in pmask
+// --- atf_amc.PmaskU128.value64.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value64_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 44;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value65.PresentQ
@@ -7569,14 +8642,17 @@ inline bool atf_amc::value65_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value65.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value65_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 45); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value65.Set
-inline void atf_amc::value65_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value65 = rhs;
-    pmask_qSetBit(parent, 45); // mark presence in pmask
+// --- atf_amc.PmaskU128.value65.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value65_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 45;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value66.PresentQ
@@ -7586,14 +8662,17 @@ inline bool atf_amc::value66_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value66.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value66_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 46); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value66.Set
-inline void atf_amc::value66_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value66 = rhs;
-    pmask_qSetBit(parent, 46); // mark presence in pmask
+// --- atf_amc.PmaskU128.value66.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value66_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 46;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value67.PresentQ
@@ -7603,14 +8682,17 @@ inline bool atf_amc::value67_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value67.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value67_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 47); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value67.Set
-inline void atf_amc::value67_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value67 = rhs;
-    pmask_qSetBit(parent, 47); // mark presence in pmask
+// --- atf_amc.PmaskU128.value67.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value67_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 47;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value68.PresentQ
@@ -7620,14 +8702,17 @@ inline bool atf_amc::value68_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value68.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value68_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 48); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value68.Set
-inline void atf_amc::value68_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value68 = rhs;
-    pmask_qSetBit(parent, 48); // mark presence in pmask
+// --- atf_amc.PmaskU128.value68.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value68_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 48;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value61.PresentQ
@@ -7637,14 +8722,17 @@ inline bool atf_amc::value61_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value61.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value61_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 49); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value61.Set
-inline void atf_amc::value61_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value61 = rhs;
-    pmask_qSetBit(parent, 49); // mark presence in pmask
+// --- atf_amc.PmaskU128.value61.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value61_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 49;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value34.PresentQ
@@ -7654,14 +8742,17 @@ inline bool atf_amc::value34_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value34.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value34_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 50); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value34.Set
-inline void atf_amc::value34_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value34 = rhs;
-    pmask_qSetBit(parent, 50); // mark presence in pmask
+// --- atf_amc.PmaskU128.value34.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value34_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 50;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value52.PresentQ
@@ -7671,14 +8762,17 @@ inline bool atf_amc::value52_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value52.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value52_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 51); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value52.Set
-inline void atf_amc::value52_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value52 = rhs;
-    pmask_qSetBit(parent, 51); // mark presence in pmask
+// --- atf_amc.PmaskU128.value52.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value52_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 51;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value36.PresentQ
@@ -7688,14 +8782,17 @@ inline bool atf_amc::value36_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value36.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value36_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 52); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value36.Set
-inline void atf_amc::value36_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value36 = rhs;
-    pmask_qSetBit(parent, 52); // mark presence in pmask
+// --- atf_amc.PmaskU128.value36.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value36_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 52;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value37.PresentQ
@@ -7705,14 +8802,17 @@ inline bool atf_amc::value37_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value37.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value37_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 53); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value37.Set
-inline void atf_amc::value37_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value37 = rhs;
-    pmask_qSetBit(parent, 53); // mark presence in pmask
+// --- atf_amc.PmaskU128.value37.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value37_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 53;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value38.PresentQ
@@ -7722,14 +8822,17 @@ inline bool atf_amc::value38_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value38.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value38_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 54); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value38.Set
-inline void atf_amc::value38_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value38 = rhs;
-    pmask_qSetBit(parent, 54); // mark presence in pmask
+// --- atf_amc.PmaskU128.value38.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value38_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 54;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value39.PresentQ
@@ -7739,14 +8842,17 @@ inline bool atf_amc::value39_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value39.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value39_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 55); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value39.Set
-inline void atf_amc::value39_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value39 = rhs;
-    pmask_qSetBit(parent, 55); // mark presence in pmask
+// --- atf_amc.PmaskU128.value39.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value39_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 55;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value40.PresentQ
@@ -7756,14 +8862,17 @@ inline bool atf_amc::value40_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value40.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value40_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 56); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value40.Set
-inline void atf_amc::value40_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value40 = rhs;
-    pmask_qSetBit(parent, 56); // mark presence in pmask
+// --- atf_amc.PmaskU128.value40.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value40_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 56;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value41.PresentQ
@@ -7773,14 +8882,17 @@ inline bool atf_amc::value41_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value41.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value41_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 57); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value41.Set
-inline void atf_amc::value41_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value41 = rhs;
-    pmask_qSetBit(parent, 57); // mark presence in pmask
+// --- atf_amc.PmaskU128.value41.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value41_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 57;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value42.PresentQ
@@ -7790,14 +8902,17 @@ inline bool atf_amc::value42_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value42.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value42_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 58); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value42.Set
-inline void atf_amc::value42_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value42 = rhs;
-    pmask_qSetBit(parent, 58); // mark presence in pmask
+// --- atf_amc.PmaskU128.value42.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value42_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 58;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value53.PresentQ
@@ -7807,14 +8922,17 @@ inline bool atf_amc::value53_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value53.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value53_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 59); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value53.Set
-inline void atf_amc::value53_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value53 = rhs;
-    pmask_qSetBit(parent, 59); // mark presence in pmask
+// --- atf_amc.PmaskU128.value53.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value53_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 59;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value44.PresentQ
@@ -7824,14 +8942,17 @@ inline bool atf_amc::value44_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value44.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value44_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 60); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value44.Set
-inline void atf_amc::value44_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value44 = rhs;
-    pmask_qSetBit(parent, 60); // mark presence in pmask
+// --- atf_amc.PmaskU128.value44.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value44_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 60;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value45.PresentQ
@@ -7841,14 +8962,17 @@ inline bool atf_amc::value45_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value45.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value45_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 61); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value45.Set
-inline void atf_amc::value45_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value45 = rhs;
-    pmask_qSetBit(parent, 61); // mark presence in pmask
+// --- atf_amc.PmaskU128.value45.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value45_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 61;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value46.PresentQ
@@ -7858,14 +8982,17 @@ inline bool atf_amc::value46_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value46.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value46_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 62); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value46.Set
-inline void atf_amc::value46_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value46 = rhs;
-    pmask_qSetBit(parent, 62); // mark presence in pmask
+// --- atf_amc.PmaskU128.value46.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value46_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 62;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value47.PresentQ
@@ -7875,14 +9002,17 @@ inline bool atf_amc::value47_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value47.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value47_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 63); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value47.Set
-inline void atf_amc::value47_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value47 = rhs;
-    pmask_qSetBit(parent, 63); // mark presence in pmask
+// --- atf_amc.PmaskU128.value47.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value47_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 63;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value48.PresentQ
@@ -7892,14 +9022,17 @@ inline bool atf_amc::value48_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value48.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value48_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 64); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value48.Set
-inline void atf_amc::value48_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value48 = rhs;
-    pmask_qSetBit(parent, 64); // mark presence in pmask
+// --- atf_amc.PmaskU128.value48.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value48_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 64;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value49.PresentQ
@@ -7909,14 +9042,17 @@ inline bool atf_amc::value49_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value49.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value49_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 65); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value49.Set
-inline void atf_amc::value49_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value49 = rhs;
-    pmask_qSetBit(parent, 65); // mark presence in pmask
+// --- atf_amc.PmaskU128.value49.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value49_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 65;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value50.PresentQ
@@ -7926,14 +9062,17 @@ inline bool atf_amc::value50_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value50.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value50_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 66); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value50.Set
-inline void atf_amc::value50_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value50 = rhs;
-    pmask_qSetBit(parent, 66); // mark presence in pmask
+// --- atf_amc.PmaskU128.value50.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value50_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 66;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value51.PresentQ
@@ -7943,14 +9082,17 @@ inline bool atf_amc::value51_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value51.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value51_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 67); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value51.Set
-inline void atf_amc::value51_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value51 = rhs;
-    pmask_qSetBit(parent, 67); // mark presence in pmask
+// --- atf_amc.PmaskU128.value51.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value51_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 67;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value43.PresentQ
@@ -7960,14 +9102,17 @@ inline bool atf_amc::value43_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value43.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value43_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 68); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value43.Set
-inline void atf_amc::value43_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value43 = rhs;
-    pmask_qSetBit(parent, 68); // mark presence in pmask
+// --- atf_amc.PmaskU128.value43.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value43_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 68;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value70.PresentQ
@@ -7977,14 +9122,17 @@ inline bool atf_amc::value70_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value70.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value70_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 69); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value70.Set
-inline void atf_amc::value70_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value70 = rhs;
-    pmask_qSetBit(parent, 69); // mark presence in pmask
+// --- atf_amc.PmaskU128.value70.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value70_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 69;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU128.value71.PresentQ
@@ -7994,14 +9142,17 @@ inline bool atf_amc::value71_PresentQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.value71.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value71_SetPresent(atf_amc::PmaskU128& parent) {
     pmask_qSetBit(parent, 70); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU128.value71.Set
-inline void atf_amc::value71_Set(atf_amc::PmaskU128& parent, u32 rhs) {
-    parent.value71 = rhs;
-    pmask_qSetBit(parent, 70); // mark presence in pmask
+// --- atf_amc.PmaskU128.value71.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value71_Present_GetBit(atf_amc::PmaskU128& parent) {
+    int retval = 70;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 inline atf_amc::PmaskU32::PmaskU32() {
     atf_amc::PmaskU32_Init(*this);
@@ -8187,14 +9338,17 @@ inline bool atf_amc::value_PresentQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.value.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value_SetPresent(atf_amc::PmaskU32& parent) {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU32& parent, u32 rhs) {
-    parent.value = rhs;
-    pmask_qSetBit(parent, 0); // mark presence in pmask
+// --- atf_amc.PmaskU32.value.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU32& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU32.value2.PresentQ
@@ -8204,14 +9358,17 @@ inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.value2.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value2_SetPresent(atf_amc::PmaskU32& parent) {
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.value2.Set
-inline void atf_amc::value2_Set(atf_amc::PmaskU32& parent, u32 rhs) {
-    parent.value2 = rhs;
-    pmask_qSetBit(parent, 1); // mark presence in pmask
+// --- atf_amc.PmaskU32.value2.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU32& parent) {
+    int retval = 1;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU32.value3.PresentQ
@@ -8221,14 +9378,17 @@ inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.value3.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value3_SetPresent(atf_amc::PmaskU32& parent) {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.value3.Set
-inline void atf_amc::value3_Set(atf_amc::PmaskU32& parent, u32 rhs) {
-    parent.value3 = rhs;
-    pmask_qSetBit(parent, 2); // mark presence in pmask
+// --- atf_amc.PmaskU32.value3.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU32& parent) {
+    int retval = 2;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU32.value4.PresentQ
@@ -8238,14 +9398,17 @@ inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.value4.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value4_SetPresent(atf_amc::PmaskU32& parent) {
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.value4.Set
-inline void atf_amc::value4_Set(atf_amc::PmaskU32& parent, u32 rhs) {
-    parent.value4 = rhs;
-    pmask_qSetBit(parent, 3); // mark presence in pmask
+// --- atf_amc.PmaskU32.value4.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU32& parent) {
+    int retval = 3;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU32.value5.PresentQ
@@ -8255,14 +9418,17 @@ inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.value5.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value5_SetPresent(atf_amc::PmaskU32& parent) {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.value5.Set
-inline void atf_amc::value5_Set(atf_amc::PmaskU32& parent, u32 rhs) {
-    parent.value5 = rhs;
-    pmask_qSetBit(parent, 4); // mark presence in pmask
+// --- atf_amc.PmaskU32.value5.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU32& parent) {
+    int retval = 4;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU32.pmask_bitcurs.ValidQ
@@ -8299,14 +9465,17 @@ inline bool atf_amc::value_PresentQ(atf_amc::PmaskU555& parent) {
 }
 
 // --- atf_amc.PmaskU555.value.SetPresent
+// Set presence bit for this field in the pmask
 inline void atf_amc::value_SetPresent(atf_amc::PmaskU555& parent) {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU555.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU555& parent, u32 rhs) {
-    parent.value = rhs;
-    pmask_qSetBit(parent, 0); // mark presence in pmask
+// --- atf_amc.PmaskU555.value.Present_GetBit
+// Return field's bit number in the pmask
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU555& parent) {
+    int retval = 0;
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_amc.PmaskU555.pmask.NBits
@@ -8689,12 +9858,12 @@ inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
 }
 
 // --- atf_amc.RnullStr6_U32..Lt
-inline bool atf_amc::RnullStr6_U32_Lt(atf_amc::RnullStr6_U32 & lhs, atf_amc::RnullStr6_U32 & rhs) {
+inline bool atf_amc::RnullStr6_U32_Lt(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..Cmp
-inline i32 atf_amc::RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32 & lhs, atf_amc::RnullStr6_U32 & rhs) {
+inline i32 atf_amc::RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8707,15 +9876,17 @@ inline void atf_amc::RnullStr6_U32_Init(atf_amc::RnullStr6_U32& parent) {
 }
 
 // --- atf_amc.RnullStr6_U32..Eq
-inline bool atf_amc::RnullStr6_U32_Eq(const atf_amc::RnullStr6_U32 & lhs,const atf_amc::RnullStr6_U32 & rhs) {
+inline bool atf_amc::RnullStr6_U32_Eq(const atf_amc::RnullStr6_U32& lhs, const atf_amc::RnullStr6_U32& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
+    &&*(u16*)(lhs.ch+4) == *(u16*)(rhs.ch+4);
     return retval;
 }
 
 // --- atf_amc.RnullStr6_U32..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32 & rhs) {
+inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32& rhs) {
     bool ret = !RnullStr6_U32_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8724,7 +9895,7 @@ inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::
 }
 
 // --- atf_amc.RnullStr6_U32..EqStrptr
-inline bool atf_amc::RnullStr6_U32_EqStrptr(atf_amc::RnullStr6_U32 & lhs, const algo::strptr &rhs) {
+inline bool atf_amc::RnullStr6_U32_EqStrptr(const atf_amc::RnullStr6_U32& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -8839,12 +10010,12 @@ inline  atf_amc::RpasU32Str6::RpasU32Str6(const algo::strptr &rhs) {
 }
 
 // --- atf_amc.RpasU32Str6..Lt
-inline bool atf_amc::RpasU32Str6_Lt(atf_amc::RpasU32Str6 & lhs, atf_amc::RpasU32Str6 & rhs) {
+inline bool atf_amc::RpasU32Str6_Lt(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..Cmp
-inline i32 atf_amc::RpasU32Str6_Cmp(atf_amc::RpasU32Str6 & lhs, atf_amc::RpasU32Str6 & rhs) {
+inline i32 atf_amc::RpasU32Str6_Cmp(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8857,7 +10028,7 @@ inline void atf_amc::RpasU32Str6_Init(atf_amc::RpasU32Str6& parent) {
 }
 
 // --- atf_amc.RpasU32Str6..Eq
-inline bool atf_amc::RpasU32Str6_Eq(const atf_amc::RpasU32Str6 & lhs,const atf_amc::RpasU32Str6 & rhs) {
+inline bool atf_amc::RpasU32Str6_Eq(const atf_amc::RpasU32Str6& lhs, const atf_amc::RpasU32Str6& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8865,7 +10036,7 @@ inline bool atf_amc::RpasU32Str6_Eq(const atf_amc::RpasU32Str6 & lhs,const atf_a
 
 // --- atf_amc.RpasU32Str6..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6 & rhs) {
+inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6& rhs) {
     bool ret = !RpasU32Str6_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8874,7 +10045,7 @@ inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::Rpas
 }
 
 // --- atf_amc.RpasU32Str6..EqStrptr
-inline bool atf_amc::RpasU32Str6_EqStrptr(atf_amc::RpasU32Str6 & lhs, const algo::strptr &rhs) {
+inline bool atf_amc::RpasU32Str6_EqStrptr(const atf_amc::RpasU32Str6& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 inline atf_amc::Sep1::Sep1(u32                            in_val1
@@ -8923,12 +10094,12 @@ inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1 & rhs) {
 }
 
 // --- atf_amc.Sep1..Lt
-inline bool atf_amc::Sep1_Lt(atf_amc::Sep1 & lhs, atf_amc::Sep1 & rhs) {
+inline bool atf_amc::Sep1_Lt(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
     return Sep1_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.Sep1..Cmp
-inline i32 atf_amc::Sep1_Cmp(atf_amc::Sep1 & lhs, atf_amc::Sep1 & rhs) {
+inline i32 atf_amc::Sep1_Cmp(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
     i32 retval = 0;
     retval = u32_Cmp(lhs.val1, rhs.val1);
     if (retval != 0) {
@@ -8951,7 +10122,7 @@ inline void atf_amc::Sep1_Init(atf_amc::Sep1& parent) {
 }
 
 // --- atf_amc.Sep1..Eq
-inline bool atf_amc::Sep1_Eq(const atf_amc::Sep1 & lhs,const atf_amc::Sep1 & rhs) {
+inline bool atf_amc::Sep1_Eq(const atf_amc::Sep1& lhs, const atf_amc::Sep1& rhs) {
     bool retval = true;
     retval = u32_Eq(lhs.val1, rhs.val1);
     if (!retval) {
@@ -8967,7 +10138,7 @@ inline bool atf_amc::Sep1_Eq(const atf_amc::Sep1 & lhs,const atf_amc::Sep1 & rhs
 
 // --- atf_amc.Sep1..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1 & rhs) {
+inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) {
     bool ret = !Sep1_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9013,13 +10184,13 @@ inline atf_amc::MsgHeader* atf_amc::payload_Get(atf_amc::Seqmsg& parent) {
 
 // --- atf_amc.Seqmsg..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::Seqmsg& row) {
-    return i32(const_cast<atf_amc::Seqmsg&>(row).length);
+inline i32 atf_amc::Seqmsg_GetMsgLength(const atf_amc::Seqmsg& parent) {
+    return i32(const_cast<atf_amc::Seqmsg&>(parent).length);
 }
 
 // --- atf_amc.Seqmsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Seqmsg& row) {
+inline algo::memptr atf_amc::Seqmsg_GetMsgMemptr(const atf_amc::Seqmsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Seqmsg&>(row).length));
 }
 
@@ -9084,12 +10255,12 @@ inline bool atf_amc::vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) 
 }
 
 // --- atf_amc.SortedStr..Lt
-inline bool atf_amc::SortedStr_Lt(atf_amc::SortedStr & lhs, atf_amc::SortedStr & rhs) {
+inline bool atf_amc::SortedStr_Lt(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) {
     return SortedStr_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.SortedStr..Cmp
-inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr & lhs, atf_amc::SortedStr & rhs) {
+inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) {
     i32 retval = 0;
     retval = novs_Cmp(lhs,rhs);
     if (retval != 0) {
@@ -9100,7 +10271,7 @@ inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr & lhs, atf_amc::SortedStr &
 }
 
 // --- atf_amc.SortedStr..Eq
-inline bool atf_amc::SortedStr_Eq(const atf_amc::SortedStr & lhs,const atf_amc::SortedStr & rhs) {
+inline bool atf_amc::SortedStr_Eq(const atf_amc::SortedStr& lhs, const atf_amc::SortedStr& rhs) {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.novs, rhs.novs);
     if (!retval) {
@@ -9112,7 +10283,7 @@ inline bool atf_amc::SortedStr_Eq(const atf_amc::SortedStr & lhs,const atf_amc::
 
 // --- atf_amc.SortedStr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr & rhs) {
+inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr& rhs) {
     bool ret = !SortedStr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9477,13 +10648,13 @@ inline char& atf_amc::Text_text_curs_Access(Text_text_curs &curs) {
 
 // --- atf_amc.Text..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::Text& row) {
-    return i32(const_cast<atf_amc::Text&>(row).length);
+inline i32 atf_amc::Text_GetMsgLength(const atf_amc::Text& parent) {
+    return i32(const_cast<atf_amc::Text&>(parent).length);
 }
 
 // --- atf_amc.Text..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Text& row) {
+inline algo::memptr atf_amc::Text_GetMsgMemptr(const atf_amc::Text& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Text&>(row).length));
 }
 
@@ -9530,12 +10701,12 @@ inline u32 atf_amc::TypeB_Hash(u32 prev, const atf_amc::TypeB & rhs) {
 }
 
 // --- atf_amc.TypeB..Lt
-inline bool atf_amc::TypeB_Lt(atf_amc::TypeB & lhs, atf_amc::TypeB & rhs) {
+inline bool atf_amc::TypeB_Lt(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
     return TypeB_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.TypeB..Cmp
-inline i32 atf_amc::TypeB_Cmp(atf_amc::TypeB & lhs, atf_amc::TypeB & rhs) {
+inline i32 atf_amc::TypeB_Cmp(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     if (retval != 0) {
@@ -9553,7 +10724,7 @@ inline void atf_amc::TypeB_Init(atf_amc::TypeB& parent) {
 }
 
 // --- atf_amc.TypeB..Eq
-inline bool atf_amc::TypeB_Eq(const atf_amc::TypeB & lhs,const atf_amc::TypeB & rhs) {
+inline bool atf_amc::TypeB_Eq(const atf_amc::TypeB& lhs, const atf_amc::TypeB& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -9565,7 +10736,7 @@ inline bool atf_amc::TypeB_Eq(const atf_amc::TypeB & lhs,const atf_amc::TypeB & 
 
 // --- atf_amc.TypeB..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB & rhs) {
+inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) {
     bool ret = !TypeB_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9715,12 +10886,12 @@ inline u32 atf_amc::TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64 & rhs) {
 }
 
 // --- atf_amc.TypeBE64..Lt
-inline bool atf_amc::TypeBE64_Lt(atf_amc::TypeBE64 & lhs, atf_amc::TypeBE64 & rhs) {
+inline bool atf_amc::TypeBE64_Lt(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) {
     return u64_Lt(value_Get(lhs), value_Get(rhs));
 }
 
 // --- atf_amc.TypeBE64..Cmp
-inline i32 atf_amc::TypeBE64_Cmp(atf_amc::TypeBE64 & lhs, atf_amc::TypeBE64 & rhs) {
+inline i32 atf_amc::TypeBE64_Cmp(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) {
     i32 retval = 0;
     retval = u64_Cmp(value_Get(lhs), value_Get(rhs));
     return retval;
@@ -9733,7 +10904,7 @@ inline void atf_amc::TypeBE64_Init(atf_amc::TypeBE64& parent) {
 }
 
 // --- atf_amc.TypeBE64..Eq
-inline bool atf_amc::TypeBE64_Eq(const atf_amc::TypeBE64 & lhs,const atf_amc::TypeBE64 & rhs) {
+inline bool atf_amc::TypeBE64_Eq(const atf_amc::TypeBE64& lhs, const atf_amc::TypeBE64& rhs) {
     bool retval = true;
     retval = u64_Eq(value_Get(lhs), value_Get(rhs));
     return retval;
@@ -9741,7 +10912,7 @@ inline bool atf_amc::TypeBE64_Eq(const atf_amc::TypeBE64 & lhs,const atf_amc::Ty
 
 // --- atf_amc.TypeBE64..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64 & rhs) {
+inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& rhs) {
     bool ret = !TypeBE64_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10001,12 +11172,12 @@ inline u32 atf_amc::TypeC_Hash(u32 prev, const atf_amc::TypeC & rhs) {
 }
 
 // --- atf_amc.TypeC..Lt
-inline bool atf_amc::TypeC_Lt(atf_amc::TypeC & lhs, atf_amc::TypeC & rhs) {
+inline bool atf_amc::TypeC_Lt(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
     return i32_Lt(lhs.typec, rhs.typec);
 }
 
 // --- atf_amc.TypeC..Cmp
-inline i32 atf_amc::TypeC_Cmp(atf_amc::TypeC & lhs, atf_amc::TypeC & rhs) {
+inline i32 atf_amc::TypeC_Cmp(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typec, rhs.typec);
     return retval;
@@ -10019,7 +11190,7 @@ inline void atf_amc::TypeC_Init(atf_amc::TypeC& parent) {
 }
 
 // --- atf_amc.TypeC..Eq
-inline bool atf_amc::TypeC_Eq(const atf_amc::TypeC & lhs,const atf_amc::TypeC & rhs) {
+inline bool atf_amc::TypeC_Eq(const atf_amc::TypeC& lhs, const atf_amc::TypeC& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typec, rhs.typec);
     return retval;
@@ -10027,7 +11198,7 @@ inline bool atf_amc::TypeC_Eq(const atf_amc::TypeC & lhs,const atf_amc::TypeC & 
 
 // --- atf_amc.TypeC..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC & rhs) {
+inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) {
     bool ret = !TypeC_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10070,12 +11241,12 @@ inline u32 atf_amc::TypeH_Hash(u32 prev, const atf_amc::TypeH & rhs) {
 }
 
 // --- atf_amc.TypeH..Lt
-inline bool atf_amc::TypeH_Lt(atf_amc::TypeH & lhs, atf_amc::TypeH & rhs) {
+inline bool atf_amc::TypeH_Lt(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
     return i32_Lt(lhs.typeh, rhs.typeh);
 }
 
 // --- atf_amc.TypeH..Cmp
-inline i32 atf_amc::TypeH_Cmp(atf_amc::TypeH & lhs, atf_amc::TypeH & rhs) {
+inline i32 atf_amc::TypeH_Cmp(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typeh, rhs.typeh);
     return retval;
@@ -10088,7 +11259,7 @@ inline void atf_amc::TypeH_Init(atf_amc::TypeH& typeh) {
 }
 
 // --- atf_amc.TypeH..Eq
-inline bool atf_amc::TypeH_Eq(const atf_amc::TypeH & lhs,const atf_amc::TypeH & rhs) {
+inline bool atf_amc::TypeH_Eq(const atf_amc::TypeH& lhs, const atf_amc::TypeH& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typeh, rhs.typeh);
     return retval;
@@ -10096,7 +11267,7 @@ inline bool atf_amc::TypeH_Eq(const atf_amc::TypeH & lhs,const atf_amc::TypeH & 
 
 // --- atf_amc.TypeH..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH & rhs) {
+inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) {
     bool ret = !TypeH_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10129,6 +11300,16 @@ inline u32 atf_amc::TypeT_Hash(u32 prev, const atf_amc::TypeT & rhs) {
 // Set all fields to initial values.
 inline void atf_amc::TypeT_Init(atf_amc::TypeT& parent) {
     parent.types = i32(0);
+    parent.j = i32(0);
+}
+inline atf_amc::TypeTVal::TypeTVal() {
+    atf_amc::TypeTVal_Init(*this);
+}
+
+
+// --- atf_amc.TypeTVal..Init
+// Set all fields to initial values.
+inline void atf_amc::TypeTVal_Init(atf_amc::TypeTVal& parent) {
     parent.j = i32(0);
 }
 inline atf_amc::Typefconst::Typefconst(u32                            in_value)
@@ -10207,13 +11388,13 @@ inline i32& atf_amc::varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs) {
 
 // --- atf_amc.VarlenAlloc..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenAlloc& row) {
-    return i32(const_cast<atf_amc::VarlenAlloc&>(row).length);
+inline i32 atf_amc::VarlenAlloc_GetMsgLength(const atf_amc::VarlenAlloc& parent) {
+    return i32(const_cast<atf_amc::VarlenAlloc&>(parent).length);
 }
 
 // --- atf_amc.VarlenAlloc..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenAlloc& row) {
+inline algo::memptr atf_amc::VarlenAlloc_GetMsgMemptr(const atf_amc::VarlenAlloc& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenAlloc&>(row).length));
 }
 
@@ -10323,13 +11504,13 @@ inline u32& atf_amc::varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs 
 
 // --- atf_amc.VarlenExtern..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenExtern& row) {
-    return i32(length_Get(const_cast<atf_amc::VarlenExtern&>(row)));
+inline i32 atf_amc::VarlenExtern_GetMsgLength(const atf_amc::VarlenExtern& parent) {
+    return i32(length_Get(const_cast<atf_amc::VarlenExtern&>(parent)));
 }
 
 // --- atf_amc.VarlenExtern..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenExtern& row) {
+inline algo::memptr atf_amc::VarlenExtern_GetMsgMemptr(const atf_amc::VarlenExtern& row) {
     return algo::memptr((u8*)&row, i32(length_Get(const_cast<atf_amc::VarlenExtern&>(row))));
 }
 
@@ -10439,13 +11620,13 @@ inline atf_amc::TypeH& atf_amc::VarlenH_typeh_curs_Access(VarlenH_typeh_curs &cu
 
 // --- atf_amc.VarlenH..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenH& row) {
-    return i32(const_cast<atf_amc::VarlenH&>(row).length);
+inline i32 atf_amc::VarlenH_GetMsgLength(const atf_amc::VarlenH& parent) {
+    return i32(const_cast<atf_amc::VarlenH&>(parent).length);
 }
 
 // --- atf_amc.VarlenH..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenH& row) {
+inline algo::memptr atf_amc::VarlenH_GetMsgMemptr(const atf_amc::VarlenH& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenH&>(row).length));
 }
 
@@ -10555,13 +11736,13 @@ inline u32& atf_amc::k_i_curs_Access(k_i_curs &curs) {
 
 // --- atf_amc.VarlenK..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenK& row) {
-    return i32(const_cast<atf_amc::VarlenK&>(row).length);
+inline i32 atf_amc::VarlenK_GetMsgLength(const atf_amc::VarlenK& parent) {
+    return i32(const_cast<atf_amc::VarlenK&>(parent).length);
 }
 
 // --- atf_amc.VarlenK..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
+inline algo::memptr atf_amc::VarlenK_GetMsgMemptr(const atf_amc::VarlenK& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenK&>(row).length));
 }
 
@@ -10688,13 +11869,13 @@ inline atf_amc::VarlenK& atf_amc::VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs
 
 // --- atf_amc.VarlenMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenMsg& row) {
-    return i32(const_cast<atf_amc::VarlenMsg&>(row).length);
+inline i32 atf_amc::VarlenMsg_GetMsgLength(const atf_amc::VarlenMsg& parent) {
+    return i32(const_cast<atf_amc::VarlenMsg&>(parent).length);
 }
 
 // --- atf_amc.VarlenMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenMsg& row) {
+inline algo::memptr atf_amc::VarlenMsg_GetMsgMemptr(const atf_amc::VarlenMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenMsg&>(row).length));
 }
 
@@ -10797,6 +11978,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::OptG 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::OptOptG &row) {// cfmt:atf_amc.OptOptG.String
     atf_amc::OptOptG_Print(const_cast<atf_amc::OptOptG&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::PmaskMultiple &row) {// cfmt:atf_amc.PmaskMultiple.String
+    atf_amc::PmaskMultiple_Print(const_cast<atf_amc::PmaskMultiple&>(row), str);
     return str;
 }
 

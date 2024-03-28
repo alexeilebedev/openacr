@@ -27,6 +27,7 @@
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 namespace lib_prot { // gen:ns_print_proto
+    // func:lib_prot...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -100,8 +101,9 @@ bool lib_prot::FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr i
 }
 
 // --- lib_prot.FieldId..Print
-// print string representation of lib_prot::FieldId to string LHS, no header -- cprint:lib_prot.FieldId.String
-void lib_prot::FieldId_Print(lib_prot::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_prot.FieldId.String  printfmt:Raw
+void lib_prot::FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) {
     lib_prot::value_Print(row, str);
 }
 

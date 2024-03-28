@@ -141,11 +141,16 @@ void gcache::Clean() {
         algo::UnTime log_thresh = _db.report.starttime - algo::UnDiffHMS(2*24,0,0);
         algo::UnTime file_thresh = _db.cmdline.clean ? algo::UnTime() :_db.report.starttime - algo::UnDiffHMS(7*24,0,0);
         cstring gctime_file = DirFileJoin(_db.dir,"gc.time");
-        if (_db.cmdline.clean || _db.cmdline.gc || algo::ModTime(gctime_file) < gc_thresh) {
+        bool requested = _db.cmdline.clean || _db.cmdline.gc;
+        if (requested || algo::ModTime(gctime_file) < gc_thresh) {
             (void)close(OpenWrite(gctime_file).value);// update gc.time modification time
             CleanLog(log_thresh);
             RemoveOldFilesRecurse(_db.dir,file_thresh,log_thresh);
             _db.cleanreport.new_cachesize_mb /= 1024*1024;
+        }
+        // don't print cleanreport if the garbage collection
+        // was triggered in the middle of a build (i.e. not requested by a command-line flag)
+        if (requested) {
             prlog(_db.cleanreport);
         }
     }

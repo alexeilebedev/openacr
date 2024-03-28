@@ -281,6 +281,29 @@ namespace algo { // update-hdr
     u32 CRC32Step(u32 old, const u8 *data, size_t len);
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/decimal.cpp
+    //
+
+    // Normalize decimal, so mantissa does not contain tail 0
+    void Decimal_Normalize(algo::Decimal &parent);
+
+    // Try parse Decimal [+-][0-9]*[.][0-9]*
+    // Stop after first non-conforming char, error if no digit has been met.
+    bool TryParseDecimal(algo::StringIter &iter, algo::Decimal &result);
+
+    // Print Decimal
+    void Decimal_Print(algo::Decimal parent, algo::cstring &str);
+
+    // Read Decimal from string
+    bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str);
+
+    // Convert Decimal to double
+    double Decimal_GetDouble(algo::Decimal parent);
+
+    // Convert double to Decimal
+    void Decimal_SetDouble(algo::Decimal &parent, double value);
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/file.cpp -- File functions
     //
 
@@ -612,8 +635,14 @@ namespace algo { // update-hdr
     void u64_PrintHex(u64 value, algo::cstring &out, int atleast, bool prefix);
 
     // print character as c++ character, surrounded by single quotes
-    // and properly escaped.
+    // and properly escaped according to c++ rules
     void char_PrintCppSingleQuote(int c, algo::cstring &out);
+
+    // Print contents of memptr as a double-quoted C++ string
+    // Bytes with codes 32-126, escept " (ASCII 34) and \ (ascii 92) are printed as-is.
+    // All other characters are printed as \xHH where H is a hex digit.
+    // NOTE: Compare with strptr_PrintCppQuoted, which \-escapes
+    // more characters and uses octal sequences for non-printable characters.
     void memptr_Print(memptr ary, algo::cstring &out);
 
     // print 64 bytes per line
@@ -981,10 +1010,8 @@ namespace algo { // update-hdr
     // Default implementation of prlog handler
     //
     // Notes on WriteFile use:
-    // some tools set fd 0 to nonblocking mode,
-    // which in case of a terminal makes output non-blocking too (bug in gnome terminal?)
-    // in any case it causes EAGAIN during fast writes, so we use WriteFile to
-    // write all bytes out.
+    // some tools set fd 1 to nonblocking mode, which causes EAGAIN during fast writes,
+    // so we must use WriteFile (which contains a loop) to write all the bytes out.
     void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
 
     // -------------------------------------------------------------------
@@ -1009,6 +1036,11 @@ namespace algo { // update-hdr
     // s = "abcd"; expr = ".LL"; result = "abcd"
     // s = "abcd"; expr = ".LR"; result = ""
     strptr Pathcomp(strptr s, strptr expr);
+
+    // Check if the Pathcomp expression PATHCOMP
+    // refers to the leftmost part of the key
+    // (The third character of each Pathcomp step must be 'L')
+    bool LeftPathcompQ(algo::strptr pathcomp);
 
     // Append NUL character to the end of the string and return a
     // pointer to the C string.
@@ -1092,6 +1124,12 @@ namespace algo { // update-hdr
     // asdfasdf      yy
     tempstr Tabulated(strptr in, strptr sep, strptr fmt, int colspace);
     tempstr Tabulated(strptr in, strptr sep);
+
+    // Given a string of up to 4 characters encoded in u32 STR
+    // (LSB = first char, etc.)
+    // Decode character into RESULT, returning number of characters read.
+    // The character is C++-escaped: \a, \b, \f, \n, \r, \t, \v, \', \", \\, \? are supported
+    // as well as octal (\OOO) and hex (\xHH) sequences.
     int UnescapeC(u32 str, int len, u8 &result);
     int Replace(cstring &str, const strptr& from, const strptr& to, bool case_sensitive = true, bool preserve_case = true);
 
@@ -1205,10 +1243,6 @@ namespace algo { // update-hdr
     // use ToWindows path where appropriate.
     void MaybeDirSep(cstring &str);
     i32 strptr_Cmp(algo::strptr a, algo::strptr b);
-    bool strptr_Lt(algo::strptr a, algo::strptr b);
-
-    // Compare two strings for equality, case-sensitively
-    bool strptr_Eq(algo::strptr a, algo::strptr b);
     void Attr_curs_Reset(Attr_curs &curs, strptr line);
     void Attr_curs_Next(Attr_curs &curs);
 
@@ -1515,6 +1549,15 @@ namespace algo { // update-hdr
     inline algo::cstring &operator<<(algo::cstring &out, const memptr &t);
     inline algo::cstring &operator<<(algo::cstring &out, const strptr &t);
     inline algo::cstring &operator<<(algo::cstring &out, void (*t)(algo::cstring &));
+
+    // Compare two strings for equality, case-sensitively
+    inline bool strptr_Eq(algo::strptr a, algo::strptr b);
+
+    // Test if string A is lexicographically less than string B.
+    inline bool strptr_Lt(algo::strptr a, algo::strptr b);
+
+    // reverse bit order in a byte
+    inline u8 u8_ReverseBits(u8 b);
 }
 
 // -----------------------------------------------------------------------------
@@ -1723,12 +1766,12 @@ namespace algo_lib { // update-hdr
     // Return computed name for sandbox SANDBOX
     tempstr SandboxDir(algo::strptr sandbox);
 
-    // Enter sandbox and remember previous directory
-    void SandboxEnter(algo::strptr sandbox);
+    // Enter sandbox directory remember previous directory
+    void PushDir(algo::strptr dir);
 
     // Change to the directory that was current before sandbox mode
-    // Must be balanced with SandboxEnter
-    void SandboxExit();
+    // Must be balanced with PushDir
+    void PopDir();
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
@@ -1849,21 +1892,16 @@ namespace algo_lib { // update-hdr
     // SUBST      If set, $-expand the VALUE parameter
     void Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst = true);
 
-    // Append TEXT to OUT, performing $-substitution
-    // There are no separators between $-parameters and rest
-    // of the text. The earliest possible match is replaced.
-    //
-    // EOL      append end-of-line (default)
-    // SCOPE    if not NULL, replace any $-string in TEXT with corresponding value.
-    // it is an error if any $-string does not expand.
+    // Append TEXT to OUT, performing $-substitution using variables from SCOPE (must be non-NULL)
+    // if EOL is set, then new line is appended at the end.
     void Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol = true);
 
     // Enable comma-eating (default true)
-    void SetEatComma(algo_lib::Replscope &scope, bool enable);
+    void eatcomma_Set(algo_lib::Replscope &scope, bool enable);
 
     // Enable strict mode (default true -- any failed substitution kills process)
     // If strict mode is off, failed substitution acts as if there was no substitution
-    void SetStrictMode(algo_lib::Replscope &scope, bool enable);
+    void fatal_Set(algo_lib::Replscope &scope, bool enable);
 
     // Perform $-substitutions in TEXT and return new value.
     tempstr Subst(algo_lib::Replscope &scope, strptr text);

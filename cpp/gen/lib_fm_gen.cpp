@@ -49,13 +49,19 @@ namespace lib_fm { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace lib_fm { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_fm.FDb._db.InitReflection
     static void          InitReflection();
+    // func:lib_fm.FDb.alm_code.InputMaybe
     static bool          alm_code_InputMaybe(fmdb::AlmCode &elem) __attribute__((nothrow));
+    // func:lib_fm.FDb.alm_objtype.InputMaybe
     static bool          alm_objtype_InputMaybe(fmdb::AlmObjtype &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:lib_fm.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_fm.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_fm...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -181,8 +187,9 @@ void lib_fm::FAlmObjtype_Uninit(lib_fm::FAlmObjtype& alm_objtype) {
 }
 
 // --- lib_fm.trace..Print
-// print string representation of lib_fm::trace to string LHS, no header -- cprint:lib_fm.trace.String
-void lib_fm::trace_Print(lib_fm::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_fm.trace.String  printfmt:Tuple
+void lib_fm::trace_Print(lib_fm::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_fm.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1201,8 +1208,9 @@ bool lib_fm::FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_st
 }
 
 // --- lib_fm.FieldId..Print
-// print string representation of lib_fm::FieldId to string LHS, no header -- cprint:lib_fm.FieldId.String
-void lib_fm::FieldId_Print(lib_fm::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_fm.FieldId.String  printfmt:Raw
+void lib_fm::FieldId_Print(lib_fm::FieldId& row, algo::cstring& str) {
     lib_fm::value_Print(row, str);
 }
 
@@ -1305,8 +1313,9 @@ bool lib_fm::TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_st
 }
 
 // --- lib_fm.TableId..Print
-// print string representation of lib_fm::TableId to string LHS, no header -- cprint:lib_fm.TableId.String
-void lib_fm::TableId_Print(lib_fm::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_fm.TableId.String  printfmt:Raw
+void lib_fm::TableId_Print(lib_fm::TableId& row, algo::cstring& str) {
     lib_fm::value_Print(row, str);
 }
 

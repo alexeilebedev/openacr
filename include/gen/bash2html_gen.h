@@ -54,12 +54,14 @@ struct trace { // bash2html.trace
 };
 #pragma pack(pop)
 
-// print string representation of bash2html::trace to string LHS, no header -- cprint:bash2html.trace.String
-void                 trace_Print(bash2html::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:bash2html.trace.String  printfmt:Tuple
+// func:bash2html.trace..Print
+void                 trace_Print(bash2html::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- bash2html.FDb
 // create: bash2html.FDb._db (Global)
-struct FDb { // bash2html.FDb
+struct FDb { // bash2html.FDb: In-memory database for bash2html
     command::bash2html   cmdline;   //
     bash2html::trace     trace;     //
 };
@@ -68,18 +70,26 @@ struct FDb { // bash2html.FDb
 // The following fields are updated:
 //     bash2html.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:bash2html.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:bash2html.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:bash2html.FDb._db.Step
 void                 Step();
 // Main function
+// func:bash2html.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:bash2html.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:bash2html.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:bash2html.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -87,19 +97,26 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:bash2html.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:bash2html.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:bash2html.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:bash2html.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:bash2html.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Set all fields to initial values.
+// func:bash2html.FDb..Init
 void                 FDb_Init();
+// func:bash2html.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- bash2html.FieldId
@@ -114,37 +131,50 @@ struct FieldId { // bash2html.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:bash2html.FieldId.value.GetEnum
 bash2html_FieldIdEnum value_GetEnum(const bash2html::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:bash2html.FieldId.value.SetEnum
 void                 value_SetEnum(bash2html::FieldId& parent, bash2html_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:bash2html.FieldId.value.ToCstr
 const char*          value_ToCstr(const bash2html::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:bash2html.FieldId.value.Print
 void                 value_Print(const bash2html::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:bash2html.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:bash2html.FieldId.value.SetStrptr
 void                 value_SetStrptr(bash2html::FieldId& parent, algo::strptr rhs, bash2html_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:bash2html.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of bash2html::FieldId from an ascii string.
 // The format of the string is the format of the bash2html::FieldId's only field
+// func:bash2html.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:bash2html.FieldId..Init
 void                 FieldId_Init(bash2html::FieldId& parent);
-// print string representation of bash2html::FieldId to string LHS, no header -- cprint:bash2html.FieldId.String
-void                 FieldId_Print(bash2html::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:bash2html.FieldId.String  printfmt:Raw
+// func:bash2html.FieldId..Print
+void                 FieldId_Print(bash2html::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace bash2html { // gen:ns_func
 } // gen:ns_func
+// func:bash2html...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:bash2html...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

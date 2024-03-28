@@ -54,25 +54,31 @@ struct trace { // lib_mysql.trace
 };
 #pragma pack(pop)
 
-// print string representation of lib_mysql::trace to string LHS, no header -- cprint:lib_mysql.trace.String
-void                 trace_Print(lib_mysql::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_mysql.trace.String  printfmt:Tuple
+// func:lib_mysql.trace..Print
+void                 trace_Print(lib_mysql::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_mysql.FDb
 // create: lib_mysql.FDb._db (Global)
-struct FDb { // lib_mysql.FDb
+struct FDb { // lib_mysql.FDb: In-memory database for lib_mysql
     MYSQL*             mysql;   // optional pointer
     lib_mysql::trace   trace;   //
 };
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_mysql.FDb.res.XrefMaybe
 bool                 res_XrefMaybe(lib_mysql::Res &row);
 
+// func:lib_mysql.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:lib_mysql.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:lib_mysql.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -80,23 +86,32 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:lib_mysql.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:lib_mysql.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:lib_mysql.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:lib_mysql.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_mysql.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field mysql of lib_mysql::FDb
+// func:lib_mysql.FDb.mysql.Cleanup
+// this function is 'extrn' and implemented by user
 void                 mysql_Cleanup() __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_mysql.FDb..Init
 void                 FDb_Init();
+// func:lib_mysql.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_mysql.FieldId
@@ -111,32 +126,43 @@ struct FieldId { // lib_mysql.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_mysql.FieldId.value.GetEnum
 lib_mysql_FieldIdEnum value_GetEnum(const lib_mysql::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_mysql.FieldId.value.SetEnum
 void                 value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_mysql.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_mysql::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_mysql.FieldId.value.Print
 void                 value_Print(const lib_mysql::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_mysql.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_mysql.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_mysql::FieldId& parent, algo::strptr rhs, lib_mysql_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_mysql.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_mysql::FieldId from an ascii string.
 // The format of the string is the format of the lib_mysql::FieldId's only field
+// func:lib_mysql.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_mysql.FieldId..Init
 void                 FieldId_Init(lib_mysql::FieldId& parent);
-// print string representation of lib_mysql::FieldId to string LHS, no header -- cprint:lib_mysql.FieldId.String
-void                 FieldId_Print(lib_mysql::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_mysql.FieldId.String  printfmt:Raw
+// func:lib_mysql.FieldId..Print
+void                 FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_mysql.Res
 // create: lib_mysql.FDb.res (Cppstack)
@@ -152,10 +178,14 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field res of lib_mysql::Res
+// func:lib_mysql.Res.res.Cleanup
+// this function is 'extrn' and implemented by user
 void                 res_Cleanup(lib_mysql::Res& res) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_mysql.Res..Init
 void                 Res_Init(lib_mysql::Res& res);
+// func:lib_mysql.Res..Uninit
 void                 Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_mysql { // gen:ns_func

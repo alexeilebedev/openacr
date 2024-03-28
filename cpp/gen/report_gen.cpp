@@ -29,6 +29,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace report { // gen:ns_print_proto
+    // func:report...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -365,8 +366,9 @@ bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_st
 }
 
 // --- report.FieldId..Print
-// print string representation of report::FieldId to string LHS, no header -- cprint:report.FieldId.String
-void report::FieldId_Print(report::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.FieldId.String  printfmt:Raw
+void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
     report::value_Print(row, str);
 }
 
@@ -376,18 +378,39 @@ void report::StaticCheck() {
 }
 
 // --- report.abt..ReadFieldMaybe
-bool report::abt_ReadFieldMaybe(report::abt &parent, algo::strptr field, algo::strptr strval) {
+bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_n_target: retval = u16_ReadStrptrMaybe(parent.n_target, strval); break;
-        case report_FieldId_time: retval = algo::UnDiff_ReadStrptrMaybe(parent.time, strval); break;
-        case report_FieldId_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval); break;
-        case report_FieldId_pch_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval); break;
-        case report_FieldId_n_warn: retval = u32_ReadStrptrMaybe(parent.n_warn, strval); break;
-        case report_FieldId_n_err: retval = u32_ReadStrptrMaybe(parent.n_err, strval); break;
-        case report_FieldId_n_install: retval = u16_ReadStrptrMaybe(parent.n_install, strval); break;
+        case report_FieldId_n_target: {
+            retval = u16_ReadStrptrMaybe(parent.n_target, strval);
+            break;
+        }
+        case report_FieldId_time: {
+            retval = algo::UnDiff_ReadStrptrMaybe(parent.time, strval);
+            break;
+        }
+        case report_FieldId_hitrate: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval);
+            break;
+        }
+        case report_FieldId_pch_hitrate: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval);
+            break;
+        }
+        case report_FieldId_n_warn: {
+            retval = u32_ReadStrptrMaybe(parent.n_warn, strval);
+            break;
+        }
+        case report_FieldId_n_err: {
+            retval = u32_ReadStrptrMaybe(parent.n_err, strval);
+            break;
+        }
+        case report_FieldId_n_install: {
+            retval = u16_ReadStrptrMaybe(parent.n_install, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -409,8 +432,9 @@ bool report::abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) {
 }
 
 // --- report.abt..Print
-// print string representation of report::abt to string LHS, no header -- cprint:report.abt.String
-void report::abt_Print(report::abt & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.abt.String  printfmt:Tuple
+void report::abt_Print(report::abt& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.abt";
 
@@ -437,17 +461,35 @@ void report::abt_Print(report::abt & row, algo::cstring &str) {
 }
 
 // --- report.acr..ReadFieldMaybe
-bool report::acr_ReadFieldMaybe(report::acr &parent, algo::strptr field, algo::strptr strval) {
+bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_n_select: retval = u32_ReadStrptrMaybe(parent.n_select, strval); break;
-        case report_FieldId_n_insert: retval = u32_ReadStrptrMaybe(parent.n_insert, strval); break;
-        case report_FieldId_n_delete: retval = u32_ReadStrptrMaybe(parent.n_delete, strval); break;
-        case report_FieldId_n_ignore: retval = u32_ReadStrptrMaybe(parent.n_ignore, strval); break;
-        case report_FieldId_n_update: retval = u32_ReadStrptrMaybe(parent.n_update, strval); break;
-        case report_FieldId_n_file_mod: retval = u32_ReadStrptrMaybe(parent.n_file_mod, strval); break;
+        case report_FieldId_n_select: {
+            retval = u32_ReadStrptrMaybe(parent.n_select, strval);
+            break;
+        }
+        case report_FieldId_n_insert: {
+            retval = u32_ReadStrptrMaybe(parent.n_insert, strval);
+            break;
+        }
+        case report_FieldId_n_delete: {
+            retval = u32_ReadStrptrMaybe(parent.n_delete, strval);
+            break;
+        }
+        case report_FieldId_n_ignore: {
+            retval = u32_ReadStrptrMaybe(parent.n_ignore, strval);
+            break;
+        }
+        case report_FieldId_n_update: {
+            retval = u32_ReadStrptrMaybe(parent.n_update, strval);
+            break;
+        }
+        case report_FieldId_n_file_mod: {
+            retval = u32_ReadStrptrMaybe(parent.n_file_mod, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -469,8 +511,9 @@ bool report::acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) {
 }
 
 // --- report.acr..Print
-// print string representation of report::acr to string LHS, no header -- cprint:report.acr.String
-void report::acr_Print(report::acr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.acr.String  printfmt:Tuple
+void report::acr_Print(report::acr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.acr";
 
@@ -494,13 +537,19 @@ void report::acr_Print(report::acr & row, algo::cstring &str) {
 }
 
 // --- report.acr_check..ReadFieldMaybe
-bool report::acr_check_ReadFieldMaybe(report::acr_check &parent, algo::strptr field, algo::strptr strval) {
+bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_records: retval = u32_ReadStrptrMaybe(parent.records, strval); break;
-        case report_FieldId_errors: retval = u32_ReadStrptrMaybe(parent.errors, strval); break;
+        case report_FieldId_records: {
+            retval = u32_ReadStrptrMaybe(parent.records, strval);
+            break;
+        }
+        case report_FieldId_errors: {
+            retval = u32_ReadStrptrMaybe(parent.errors, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -522,8 +571,9 @@ bool report::acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr i
 }
 
 // --- report.acr_check..Print
-// print string representation of report::acr_check to string LHS, no header -- cprint:report.acr_check.String
-void report::acr_check_Print(report::acr_check & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.acr_check.String  printfmt:Tuple
+void report::acr_check_Print(report::acr_check& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.acr_check";
 
@@ -535,17 +585,35 @@ void report::acr_check_Print(report::acr_check & row, algo::cstring &str) {
 }
 
 // --- report.amc..ReadFieldMaybe
-bool report::amc_ReadFieldMaybe(report::amc &parent, algo::strptr field, algo::strptr strval) {
+bool report::amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_n_cppfile: retval = u32_ReadStrptrMaybe(parent.n_cppfile, strval); break;
-        case report_FieldId_n_cppline: retval = u32_ReadStrptrMaybe(parent.n_cppline, strval); break;
-        case report_FieldId_n_ctype: retval = u32_ReadStrptrMaybe(parent.n_ctype, strval); break;
-        case report_FieldId_n_func: retval = u32_ReadStrptrMaybe(parent.n_func, strval); break;
-        case report_FieldId_n_xref: retval = u32_ReadStrptrMaybe(parent.n_xref, strval); break;
-        case report_FieldId_n_filemod: retval = u32_ReadStrptrMaybe(parent.n_filemod, strval); break;
+        case report_FieldId_n_cppfile: {
+            retval = u32_ReadStrptrMaybe(parent.n_cppfile, strval);
+            break;
+        }
+        case report_FieldId_n_cppline: {
+            retval = u32_ReadStrptrMaybe(parent.n_cppline, strval);
+            break;
+        }
+        case report_FieldId_n_ctype: {
+            retval = u32_ReadStrptrMaybe(parent.n_ctype, strval);
+            break;
+        }
+        case report_FieldId_n_func: {
+            retval = u32_ReadStrptrMaybe(parent.n_func, strval);
+            break;
+        }
+        case report_FieldId_n_xref: {
+            retval = u32_ReadStrptrMaybe(parent.n_xref, strval);
+            break;
+        }
+        case report_FieldId_n_filemod: {
+            retval = u32_ReadStrptrMaybe(parent.n_filemod, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -567,8 +635,9 @@ bool report::amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) {
 }
 
 // --- report.amc..Print
-// print string representation of report::amc to string LHS, no header -- cprint:report.amc.String
-void report::amc_Print(report::amc & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.amc.String  printfmt:Tuple
+void report::amc_Print(report::amc& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.amc";
 
@@ -592,20 +661,47 @@ void report::amc_Print(report::amc & row, algo::cstring &str) {
 }
 
 // --- report.atf_comp..ReadFieldMaybe
-bool report::atf_comp_ReadFieldMaybe(report::atf_comp &parent, algo::strptr field, algo::strptr strval) {
+bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_ntest: retval = i32_ReadStrptrMaybe(parent.ntest, strval); break;
-        case report_FieldId_nselect: retval = i32_ReadStrptrMaybe(parent.nselect, strval); break;
-        case report_FieldId_npass: retval = i32_ReadStrptrMaybe(parent.npass, strval); break;
-        case report_FieldId_nskip: retval = i32_ReadStrptrMaybe(parent.nskip, strval); break;
-        case report_FieldId_nrun: retval = i32_ReadStrptrMaybe(parent.nrun, strval); break;
-        case report_FieldId_nwrite: retval = i32_ReadStrptrMaybe(parent.nwrite, strval); break;
-        case report_FieldId_nerr: retval = i32_ReadStrptrMaybe(parent.nerr, strval); break;
-        case report_FieldId_ninsert: retval = i32_ReadStrptrMaybe(parent.ninsert, strval); break;
-        case report_FieldId_success: retval = bool_ReadStrptrMaybe(parent.success, strval); break;
+        case report_FieldId_ntest: {
+            retval = i32_ReadStrptrMaybe(parent.ntest, strval);
+            break;
+        }
+        case report_FieldId_nselect: {
+            retval = i32_ReadStrptrMaybe(parent.nselect, strval);
+            break;
+        }
+        case report_FieldId_npass: {
+            retval = i32_ReadStrptrMaybe(parent.npass, strval);
+            break;
+        }
+        case report_FieldId_nskip: {
+            retval = i32_ReadStrptrMaybe(parent.nskip, strval);
+            break;
+        }
+        case report_FieldId_nrun: {
+            retval = i32_ReadStrptrMaybe(parent.nrun, strval);
+            break;
+        }
+        case report_FieldId_nwrite: {
+            retval = i32_ReadStrptrMaybe(parent.nwrite, strval);
+            break;
+        }
+        case report_FieldId_nerr: {
+            retval = i32_ReadStrptrMaybe(parent.nerr, strval);
+            break;
+        }
+        case report_FieldId_ninsert: {
+            retval = i32_ReadStrptrMaybe(parent.ninsert, strval);
+            break;
+        }
+        case report_FieldId_success: {
+            retval = bool_ReadStrptrMaybe(parent.success, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -627,8 +723,9 @@ bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_
 }
 
 // --- report.atf_comp..Print
-// print string representation of report::atf_comp to string LHS, no header -- cprint:report.atf_comp.String
-void report::atf_comp_Print(report::atf_comp & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.atf_comp.String  printfmt:Tuple
+void report::atf_comp_Print(report::atf_comp& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.atf_comp";
 
@@ -661,15 +758,27 @@ void report::atf_comp_Print(report::atf_comp & row, algo::cstring &str) {
 }
 
 // --- report.atf_unit..ReadFieldMaybe
-bool report::atf_unit_ReadFieldMaybe(report::atf_unit &parent, algo::strptr field, algo::strptr strval) {
+bool report::atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_n_test_total: retval = u32_ReadStrptrMaybe(parent.n_test_total, strval); break;
-        case report_FieldId_success: retval = bool_ReadStrptrMaybe(parent.success, strval); break;
-        case report_FieldId_n_test_run: retval = u64_ReadStrptrMaybe(parent.n_test_run, strval); break;
-        case report_FieldId_n_err: retval = u64_ReadStrptrMaybe(parent.n_err, strval); break;
+        case report_FieldId_n_test_total: {
+            retval = u32_ReadStrptrMaybe(parent.n_test_total, strval);
+            break;
+        }
+        case report_FieldId_success: {
+            retval = bool_ReadStrptrMaybe(parent.success, strval);
+            break;
+        }
+        case report_FieldId_n_test_run: {
+            retval = u64_ReadStrptrMaybe(parent.n_test_run, strval);
+            break;
+        }
+        case report_FieldId_n_err: {
+            retval = u64_ReadStrptrMaybe(parent.n_err, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -691,8 +800,9 @@ bool report::atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_
 }
 
 // --- report.atf_unit..Print
-// print string representation of report::atf_unit to string LHS, no header -- cprint:report.atf_unit.String
-void report::atf_unit_Print(report::atf_unit & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.atf_unit.String  printfmt:Tuple
+void report::atf_unit_Print(report::atf_unit& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.atf_unit";
 
@@ -710,21 +820,51 @@ void report::atf_unit_Print(report::atf_unit & row, algo::cstring &str) {
 }
 
 // --- report.gcache..ReadFieldMaybe
-bool report::gcache_ReadFieldMaybe(report::gcache &parent, algo::strptr field, algo::strptr strval) {
+bool report::gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_starttime: retval = algo::UnTime_ReadStrptrMaybe(parent.starttime, strval); break;
-        case report_FieldId_elapsed_sec: retval = double_ReadStrptrMaybe(parent.elapsed_sec, strval); break;
-        case report_FieldId_preproc_size: retval = i32_ReadStrptrMaybe(parent.preproc_size, strval); break;
-        case report_FieldId_hit: retval = bool_ReadStrptrMaybe(parent.hit, strval); break;
-        case report_FieldId_cached_file: retval = algo::cstring_ReadStrptrMaybe(parent.cached_file, strval); break;
-        case report_FieldId_copy_file_range: retval = bool_ReadStrptrMaybe(parent.copy_file_range, strval); break;
-        case report_FieldId_pch_hit: retval = bool_ReadStrptrMaybe(parent.pch_hit, strval); break;
-        case report_FieldId_pch_file: retval = algo::cstring_ReadStrptrMaybe(parent.pch_file, strval); break;
-        case report_FieldId_source: retval = algo::cstring_ReadStrptrMaybe(parent.source, strval); break;
-        case report_FieldId_pch_source: retval = algo::cstring_ReadStrptrMaybe(parent.pch_source, strval); break;
+        case report_FieldId_starttime: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.starttime, strval);
+            break;
+        }
+        case report_FieldId_elapsed_sec: {
+            retval = double_ReadStrptrMaybe(parent.elapsed_sec, strval);
+            break;
+        }
+        case report_FieldId_preproc_size: {
+            retval = i32_ReadStrptrMaybe(parent.preproc_size, strval);
+            break;
+        }
+        case report_FieldId_hit: {
+            retval = bool_ReadStrptrMaybe(parent.hit, strval);
+            break;
+        }
+        case report_FieldId_cached_file: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.cached_file, strval);
+            break;
+        }
+        case report_FieldId_copy_file_range: {
+            retval = bool_ReadStrptrMaybe(parent.copy_file_range, strval);
+            break;
+        }
+        case report_FieldId_pch_hit: {
+            retval = bool_ReadStrptrMaybe(parent.pch_hit, strval);
+            break;
+        }
+        case report_FieldId_pch_file: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pch_file, strval);
+            break;
+        }
+        case report_FieldId_source: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.source, strval);
+            break;
+        }
+        case report_FieldId_pch_source: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pch_source, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -756,8 +896,9 @@ void report::gcache_Init(report::gcache& parent) {
 }
 
 // --- report.gcache..Print
-// print string representation of report::gcache to string LHS, no header -- cprint:report.gcache.String
-void report::gcache_Print(report::gcache & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.gcache.String  printfmt:Tuple
+void report::gcache_Print(report::gcache& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.gcache";
 
@@ -793,13 +934,19 @@ void report::gcache_Print(report::gcache & row, algo::cstring &str) {
 }
 
 // --- report.gcache_hitrate..ReadFieldMaybe
-bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate &parent, algo::strptr field, algo::strptr strval) {
+bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval); break;
-        case report_FieldId_pch_hitrate: retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval); break;
+        case report_FieldId_hitrate: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval);
+            break;
+        }
+        case report_FieldId_pch_hitrate: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -821,8 +968,9 @@ bool report::gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo
 }
 
 // --- report.gcache_hitrate..Print
-// print string representation of report::gcache_hitrate to string LHS, no header -- cprint:report.gcache_hitrate.String
-void report::gcache_hitrate_Print(report::gcache_hitrate & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.gcache_hitrate.String  printfmt:Tuple
+void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.gcache_hitrate";
 
@@ -834,19 +982,43 @@ void report::gcache_hitrate_Print(report::gcache_hitrate & row, algo::cstring &s
 }
 
 // --- report.src_func..ReadFieldMaybe
-bool report::src_func_ReadFieldMaybe(report::src_func &parent, algo::strptr field, algo::strptr strval) {
+bool report::src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case report_FieldId_n_func: retval = u32_ReadStrptrMaybe(parent.n_func, strval); break;
-        case report_FieldId_n_line: retval = u32_ReadStrptrMaybe(parent.n_line, strval); break;
-        case report_FieldId_n_static: retval = u32_ReadStrptrMaybe(parent.n_static, strval); break;
-        case report_FieldId_n_inline: retval = u32_ReadStrptrMaybe(parent.n_inline, strval); break;
-        case report_FieldId_n_mysteryfunc: retval = u32_ReadStrptrMaybe(parent.n_mysteryfunc, strval); break;
-        case report_FieldId_n_filemod: retval = u32_ReadStrptrMaybe(parent.n_filemod, strval); break;
-        case report_FieldId_n_baddecl: retval = u32_ReadStrptrMaybe(parent.n_baddecl, strval); break;
-        case report_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case report_FieldId_n_func: {
+            retval = u32_ReadStrptrMaybe(parent.n_func, strval);
+            break;
+        }
+        case report_FieldId_n_line: {
+            retval = u32_ReadStrptrMaybe(parent.n_line, strval);
+            break;
+        }
+        case report_FieldId_n_static: {
+            retval = u32_ReadStrptrMaybe(parent.n_static, strval);
+            break;
+        }
+        case report_FieldId_n_inline: {
+            retval = u32_ReadStrptrMaybe(parent.n_inline, strval);
+            break;
+        }
+        case report_FieldId_n_mysteryfunc: {
+            retval = u32_ReadStrptrMaybe(parent.n_mysteryfunc, strval);
+            break;
+        }
+        case report_FieldId_n_filemod: {
+            retval = u32_ReadStrptrMaybe(parent.n_filemod, strval);
+            break;
+        }
+        case report_FieldId_n_baddecl: {
+            retval = u32_ReadStrptrMaybe(parent.n_baddecl, strval);
+            break;
+        }
+        case report_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -868,8 +1040,9 @@ bool report::src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_
 }
 
 // --- report.src_func..Print
-// print string representation of report::src_func to string LHS, no header -- cprint:report.src_func.String
-void report::src_func_Print(report::src_func & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:report.src_func.String  printfmt:Tuple
+void report::src_func_Print(report::src_func& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.src_func";
 

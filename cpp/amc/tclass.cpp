@@ -118,7 +118,7 @@ static void GenTclass_Field(amc::FField &field) {
 
     GenTclass(amc_tclass_Field);
 
-    if (field.p_ctype->c_pmaskfld) {
+    if (c_pmaskfld_N(*field.p_ctype)) {
         GenTclass(amc_tclass_Pmask);
     }
     if (field.c_fdec) {

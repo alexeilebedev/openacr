@@ -13,6 +13,7 @@ dev.target  target:amc_gc  compat:%-%g%.%-%
 dev.target  target:amc_vis  compat:%-%g%.%-%
 dev.target  target:ams_cat  compat:Linux-%.%-%
 dev.target  target:ams_sendtest  compat:"(Linux-%g%|CYGWIN_NT-cl).%-%"
+dev.target  target:apm  compat:Linux-%.%-%
 dev.target  target:atf_amc  compat:%-%g%.%-%
 dev.target  target:atf_ci  compat:%-%.%-%
 dev.target  target:atf_cmdline  compat:Linux-%.%-%

@@ -35,10 +35,12 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
@@ -85,29 +87,49 @@ namespace atf_ci { // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_gsymbol
     const char* dev_scriptfile_bin_find_non_copyrighted("bin/find-non-copyrighted");
     const char* dev_scriptfile_bin_fix_gen_conflicts("bin/fix-gen-conflicts");
+    const char* dev_scriptfile_bin_msloc_pl("bin/msloc.pl");
     const char* dev_scriptfile_bin_update_gitfile("bin/update-gitfile");
     const char* dev_scriptfile_bin_update_hdr("bin/update-hdr");
     const char* dev_scriptfile_bin_update_scriptfile("bin/update-scriptfile");
 } // gen:ns_gsymbol
+namespace atf_ci { // gen:ns_gsymbol
+    const dmmeta::SsimfilePkey dmmeta_ssimfile_atfdb_cipackage("atfdb.cipackage");
+} // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_ci.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_ci.FDb.citest.LoadStatic
     static void          citest_LoadStatic() __attribute__((nothrow));
+    // func:atf_ci.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.scriptfile.InputMaybe
     static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.readme.InputMaybe
     static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.builddir.InputMaybe
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.cfg.InputMaybe
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.gitfile.InputMaybe
     static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.noindent.InputMaybe
     static bool          noindent_InputMaybe(dev::Noindent &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.msgfile.InputMaybe
     static bool          msgfile_InputMaybe(dev::Msgfile &elem) __attribute__((nothrow));
-    static bool          ssimfs_InputMaybe(dev::Ssimfs &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.cipackage.InputMaybe
+    static bool          cipackage_InputMaybe(atfdb::Cipackage &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_ci.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_ci.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_ci...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -171,6 +193,24 @@ void atf_ci::cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) {
     row.comment = in.comment;
 }
 
+// --- atf_ci.FCipackage.base.CopyOut
+// Copy fields out of row
+void atf_ci::cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) {
+    out.package = row.package;
+    out.remove = row.remove;
+    out.build = row.build;
+    out.comment = row.comment;
+}
+
+// --- atf_ci.FCipackage.base.CopyIn
+// Copy fields in to row
+void atf_ci::cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) {
+    row.package = in.package;
+    row.remove = in.remove;
+    row.build = in.build;
+    row.comment = in.comment;
+}
+
 // --- atf_ci.FCitest.base.CopyOut
 // Copy fields out of row
 void atf_ci::citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) {
@@ -196,8 +236,9 @@ void atf_ci::FCitest_Uninit(atf_ci::FCitest& citest) {
 }
 
 // --- atf_ci.trace..Print
-// print string representation of atf_ci::trace to string LHS, no header -- cprint:atf_ci.trace.String
-void atf_ci::trace_Print(atf_ci::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_ci.trace.String  printfmt:Tuple
+void atf_ci::trace_Print(atf_ci::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_ci.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -385,7 +426,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'8d718e3f83a783296825e055a0cf7126fcd14a19'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'b1001d7ce322b244ea159ae81c887a34d693dd65'");
 }
 
 // --- atf_ci.FDb._db.StaticCheck
@@ -462,10 +503,10 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && msgfile_InputMaybe(elem);
             break;
         }
-        case atf_ci_TableId_dev_Ssimfs: { // finput:atf_ci.FDb.ssimfs
-            dev::Ssimfs elem;
-            retval = dev::Ssimfs_ReadStrptrMaybe(elem, str);
-            retval = retval && ssimfs_InputMaybe(elem);
+        case atf_ci_TableId_atfdb_Cipackage: { // finput:atf_ci.FDb.cipackage
+            atfdb::Cipackage elem;
+            retval = atfdb::Cipackage_ReadStrptrMaybe(elem, str);
+            retval = retval && cipackage_InputMaybe(elem);
             break;
         }
         default:
@@ -500,13 +541,14 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
-        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.ssimfs"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.noindent"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.msgfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"atfdb.cipackage"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -667,10 +709,9 @@ static void atf_ci::citest_LoadStatic() {
         void (*step)();
     } data[] = {
         { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
-        ,{ "atfdb.citest  citest:atf_amc  cijob:normalize  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
+        ,{ "atfdb.citest  citest:atf_amc  cijob:comp  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
         ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  comment:\"Update gitfile tables by scanning filesystem\"", atf_ci::citest_gitfile }
         ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
-        ,{ "atfdb.citest  citest:ssimfs  cijob:normalize  sandbox:N  comment:\"Check ssimfs rules\"", atf_ci::citest_ssimfs }
         ,{ "atfdb.citest  citest:src_lim  cijob:normalize  sandbox:N  comment:\"Source code police\"", atf_ci::citest_src_lim }
         ,{ "atfdb.citest  citest:amc  cijob:normalize  sandbox:N  comment:\"Run amc\"", atf_ci::citest_amc }
         ,{ "atfdb.citest  citest:bootstrap  cijob:normalize  sandbox:N  comment:\"Re-generate bootstrap files\"", atf_ci::citest_bootstrap }
@@ -684,12 +725,11 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
         ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
         ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
-        ,{ "atfdb.citest  citest:comptest  cijob:normalize  sandbox:N  comment:\"Rewrite/normalize component tests\"", atf_ci::citest_comptest }
+        ,{ "atfdb.citest  citest:comptest  cijob:comp  sandbox:N  comment:\"Rewrite/normalize component tests\"", atf_ci::citest_comptest }
         ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
         ,{ "atfdb.citest  citest:bintests  cijob:comp  sandbox:N  comment:\"Run bin/test-* scripts\"", atf_ci::citest_bintests }
         ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
         ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
-        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
         ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
         ,{ "atfdb.citest  citest:atf_unit  cijob:comp  sandbox:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
         ,{ "atfdb.citest  citest:atf_comp  cijob:comp  sandbox:N  comment:\"Run component tests\"", atf_ci::citest_atf_comp }
@@ -698,6 +738,10 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
         ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
         ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
+        ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
+        ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
+        ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
+        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
         ,{NULL, NULL}
     };
     (void)data;
@@ -2502,104 +2546,6 @@ void atf_ci::ind_citest_Reserve(int n) {
     }
 }
 
-// --- atf_ci.FDb.ssimfs.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-atf_ci::FSsimfs& atf_ci::ssimfs_Alloc() {
-    atf_ci::FSsimfs* row = ssimfs_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.ssimfs  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- atf_ci.FDb.ssimfs.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FSsimfs* atf_ci::ssimfs_AllocMaybe() {
-    atf_ci::FSsimfs *row = (atf_ci::FSsimfs*)ssimfs_AllocMem();
-    if (row) {
-        new (row) atf_ci::FSsimfs; // call constructor
-    }
-    return row;
-}
-
-// --- atf_ci.FDb.ssimfs.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FSsimfs* atf_ci::ssimfs_InsertMaybe(const dev::Ssimfs &value) {
-    atf_ci::FSsimfs *row = &ssimfs_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    ssimfs_CopyIn(*row,const_cast<dev::Ssimfs&>(value));
-    bool ok = ssimfs_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        ssimfs_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- atf_ci.FDb.ssimfs.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::ssimfs_AllocMem() {
-    u64 new_nelems     = _db.ssimfs_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    atf_ci::FSsimfs*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.ssimfs_lary[bsr];
-        if (!lev) {
-            lev=(atf_ci::FSsimfs*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FSsimfs) * (u64(1)<<bsr));
-            _db.ssimfs_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.ssimfs_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- atf_ci.FDb.ssimfs.RemoveAll
-// Remove all elements from Lary
-void atf_ci::ssimfs_RemoveAll() {
-    for (u64 n = _db.ssimfs_n; n>0; ) {
-        n--;
-        ssimfs_qFind(u64(n)).~FSsimfs(); // destroy last element
-        _db.ssimfs_n = i32(n);
-    }
-}
-
-// --- atf_ci.FDb.ssimfs.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void atf_ci::ssimfs_RemoveLast() {
-    u64 n = _db.ssimfs_n;
-    if (n > 0) {
-        n -= 1;
-        ssimfs_qFind(u64(n)).~FSsimfs();
-        _db.ssimfs_n = i32(n);
-    }
-}
-
-// --- atf_ci.FDb.ssimfs.InputMaybe
-static bool atf_ci::ssimfs_InputMaybe(dev::Ssimfs &elem) {
-    bool retval = true;
-    retval = ssimfs_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- atf_ci.FDb.ssimfs.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_ci::ssimfs_XrefMaybe(atf_ci::FSsimfs &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
-}
-
 // --- atf_ci.FDb.file.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2808,6 +2754,104 @@ void atf_ci::ind_file_Reserve(int n) {
     }
 }
 
+// --- atf_ci.FDb.cipackage.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_ci::FCipackage& atf_ci::cipackage_Alloc() {
+    atf_ci::FCipackage* row = cipackage_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.cipackage  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_ci.FDb.cipackage.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_ci::FCipackage* atf_ci::cipackage_AllocMaybe() {
+    atf_ci::FCipackage *row = (atf_ci::FCipackage*)cipackage_AllocMem();
+    if (row) {
+        new (row) atf_ci::FCipackage; // call constructor
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.cipackage.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_ci::FCipackage* atf_ci::cipackage_InsertMaybe(const atfdb::Cipackage &value) {
+    atf_ci::FCipackage *row = &cipackage_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    cipackage_CopyIn(*row,const_cast<atfdb::Cipackage&>(value));
+    bool ok = cipackage_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        cipackage_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_ci.FDb.cipackage.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_ci::cipackage_AllocMem() {
+    u64 new_nelems     = _db.cipackage_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_ci::FCipackage*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.cipackage_lary[bsr];
+        if (!lev) {
+            lev=(atf_ci::FCipackage*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FCipackage) * (u64(1)<<bsr));
+            _db.cipackage_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.cipackage_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_ci.FDb.cipackage.RemoveAll
+// Remove all elements from Lary
+void atf_ci::cipackage_RemoveAll() {
+    for (u64 n = _db.cipackage_n; n>0; ) {
+        n--;
+        cipackage_qFind(u64(n)).~FCipackage(); // destroy last element
+        _db.cipackage_n = i32(n);
+    }
+}
+
+// --- atf_ci.FDb.cipackage.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_ci::cipackage_RemoveLast() {
+    u64 n = _db.cipackage_n;
+    if (n > 0) {
+        n -= 1;
+        cipackage_qFind(u64(n)).~FCipackage();
+        _db.cipackage_n = i32(n);
+    }
+}
+
+// --- atf_ci.FDb.cipackage.InputMaybe
+static bool atf_ci::cipackage_InputMaybe(atfdb::Cipackage &elem) {
+    bool retval = true;
+    retval = cipackage_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_ci.FDb.cipackage.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_ci::cipackage_XrefMaybe(atf_ci::FCipackage &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_ci.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_ci::trace_RowidFind(int t) {
@@ -2993,17 +3037,6 @@ void atf_ci::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_ci.FDb.ind_citest)
     }
     memset(_db.ind_citest_buckets_elems, 0, sizeof(atf_ci::FCitest*)*_db.ind_citest_buckets_n); // (atf_ci.FDb.ind_citest)
-    // initialize LAry ssimfs (atf_ci.FDb.ssimfs)
-    _db.ssimfs_n = 0;
-    memset(_db.ssimfs_lary, 0, sizeof(_db.ssimfs_lary)); // zero out all level pointers
-    atf_ci::FSsimfs* ssimfs_first = (atf_ci::FSsimfs*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FSsimfs) * (u64(1)<<4));
-    if (!ssimfs_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.ssimfs_lary[i]  = ssimfs_first;
-        ssimfs_first    += 1ULL<<i;
-    }
     // initialize LAry file (atf_ci.FDb.file)
     _db.file_n = 0;
     memset(_db.file_lary, 0, sizeof(_db.file_lary)); // zero out all level pointers
@@ -3024,6 +3057,17 @@ void atf_ci::FDb_Init() {
     }
     memset(_db.ind_file_buckets_elems, 0, sizeof(atf_ci::File*)*_db.ind_file_buckets_n); // (atf_ci.FDb.ind_file)
     _db.sandbox_need_init = bool(false);
+    // initialize LAry cipackage (atf_ci.FDb.cipackage)
+    _db.cipackage_n = 0;
+    memset(_db.cipackage_lary, 0, sizeof(_db.cipackage_lary)); // zero out all level pointers
+    atf_ci::FCipackage* cipackage_first = (atf_ci::FCipackage*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FCipackage) * (u64(1)<<4));
+    if (!cipackage_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.cipackage_lary[i]  = cipackage_first;
+        cipackage_first    += 1ULL<<i;
+    }
 
     atf_ci::InitReflection();
     citest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_ci.FDb.citest  load atf_ci.FCitest records
@@ -3033,13 +3077,13 @@ void atf_ci::FDb_Init() {
 void atf_ci::FDb_Uninit() {
     atf_ci::FDb &row = _db; (void)row;
 
+    // atf_ci.FDb.cipackage.Uninit (Lary)  //
+    // skip destruction in global scope
+
     // atf_ci.FDb.ind_file.Uninit (Thash)  //
     // skip destruction of ind_file in global scope
 
     // atf_ci.FDb.file.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // atf_ci.FDb.ssimfs.Uninit (Lary)  //
     // skip destruction in global scope
 
     // atf_ci.FDb.ind_citest.Uninit (Thash)  //
@@ -3217,6 +3261,12 @@ void atf_ci::scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) {
     row.comment = in.comment;
 }
 
+// --- atf_ci.FScriptfile.name.Get
+algo::Smallstr50 atf_ci::name_Get(atf_ci::FScriptfile& scriptfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
+    return ret;
+}
+
 // --- atf_ci.FScriptfile..Uninit
 void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) {
     atf_ci::FScriptfile &row = scriptfile; (void)row;
@@ -3263,46 +3313,6 @@ algo::Smallstr50 atf_ci::name_Get(atf_ci::FSsimfile& ssimfile) {
 void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) {
     atf_ci::FSsimfile &row = ssimfile; (void)row;
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
-}
-
-// --- atf_ci.FSsimfs.base.CopyOut
-// Copy fields out of row
-void atf_ci::ssimfs_CopyOut(atf_ci::FSsimfs &row, dev::Ssimfs &out) {
-    out.ssimfs = row.ssimfs;
-    out.rmfile = row.rmfile;
-    out.needfile = row.needfile;
-    out.lscmd = row.lscmd;
-    (void)Regx_ReadSql(out.excl, row.excl.expr, true);
-    out.comment = row.comment;
-}
-
-// --- atf_ci.FSsimfs.base.CopyIn
-// Copy fields in to row
-void atf_ci::ssimfs_CopyIn(atf_ci::FSsimfs &row, dev::Ssimfs &in) {
-    row.ssimfs = in.ssimfs;
-    row.rmfile = in.rmfile;
-    row.needfile = in.needfile;
-    row.lscmd = in.lscmd;
-    (void)Regx_ReadSql(row.excl, in.excl.expr, true);
-    row.comment = in.comment;
-}
-
-// --- atf_ci.FSsimfs.ssimfile.Get
-algo::Smallstr50 atf_ci::ssimfile_Get(atf_ci::FSsimfs& ssimfs) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfs.ssimfs, ":LL"));
-    return ret;
-}
-
-// --- atf_ci.FSsimfs.file.Get
-algo::Smallstr150 atf_ci::file_Get(atf_ci::FSsimfs& ssimfs) {
-    algo::Smallstr150 ret(algo::Pathcomp(ssimfs.ssimfs, ":LR"));
-    return ret;
-}
-
-// --- atf_ci.FSsimfs.excl.Print
-// Print back to string
-void atf_ci::excl_Print(atf_ci::FSsimfs& ssimfs, algo::cstring &out) {
-    Regx_Print(ssimfs.excl, out);
 }
 
 // --- atf_ci.FTargsrc.base.CopyOut
@@ -3416,8 +3426,9 @@ bool atf_ci::FieldId_ReadStrptrMaybe(atf_ci::FieldId &parent, algo::strptr in_st
 }
 
 // --- atf_ci.FieldId..Print
-// print string representation of atf_ci::FieldId to string LHS, no header -- cprint:atf_ci.FieldId.String
-void atf_ci::FieldId_Print(atf_ci::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_ci.FieldId.String  printfmt:Raw
+void atf_ci::FieldId_Print(atf_ci::FieldId& row, algo::cstring& str) {
     atf_ci::value_Print(row, str);
 }
 
@@ -3435,6 +3446,7 @@ const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case atf_ci_TableId_dev_Builddir   : ret = "dev.Builddir";  break;
         case atf_ci_TableId_dev_Cfg        : ret = "dev.Cfg";  break;
+        case atf_ci_TableId_atfdb_Cipackage: ret = "atfdb.Cipackage";  break;
         case atf_ci_TableId_dev_Gitfile    : ret = "dev.Gitfile";  break;
         case atf_ci_TableId_dev_Msgfile    : ret = "dev.Msgfile";  break;
         case atf_ci_TableId_dev_Noindent   : ret = "dev.Noindent";  break;
@@ -3442,7 +3454,6 @@ const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
         case atf_ci_TableId_dev_Readme     : ret = "dev.Readme";  break;
         case atf_ci_TableId_dev_Scriptfile : ret = "dev.Scriptfile";  break;
         case atf_ci_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
-        case atf_ci_TableId_dev_Ssimfs     : ret = "dev.Ssimfs";  break;
         case atf_ci_TableId_dev_Targsrc    : ret = "dev.Targsrc";  break;
     }
     return ret;
@@ -3497,16 +3508,8 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Readme); ret = true; break; }
                     break;
                 }
-                case LE_STR8('d','e','v','.','S','s','i','m'): {
-                    if (memcmp(rhs.elems+8,"fs",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Ssimfs); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('d','e','v','.','r','e','a','d'): {
                     if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_readme); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','e','v','.','s','s','i','m'): {
-                    if (memcmp(rhs.elems+8,"fs",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_ssimfs); ret = true; break; }
                     break;
                 }
             }
@@ -3577,6 +3580,14 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','d','b','.','C','i'): {
+                    if (memcmp(rhs.elems+8,"package",7)==0) { value_SetEnum(parent,atf_ci_TableId_atfdb_Cipackage); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','t','f','d','b','.','c','i'): {
+                    if (memcmp(rhs.elems+8,"package",7)==0) { value_SetEnum(parent,atf_ci_TableId_atfdb_cipackage); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,atf_ci_TableId_dmmeta_Ssimfile); ret = true; break; }
                     break;
@@ -3620,8 +3631,9 @@ bool atf_ci::TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strptr in_st
 }
 
 // --- atf_ci.TableId..Print
-// print string representation of atf_ci::TableId to string LHS, no header -- cprint:atf_ci.TableId.String
-void atf_ci::TableId_Print(atf_ci::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_ci.TableId.String  printfmt:Raw
+void atf_ci::TableId_Print(atf_ci::TableId& row, algo::cstring& str) {
     atf_ci::value_Print(row, str);
 }
 

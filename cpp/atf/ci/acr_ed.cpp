@@ -97,6 +97,48 @@ void atf_ci::citest_acr_ed_target() {
         abt.cmd.target.expr = "acr_test";
         abt_ExecX(abt);
     }
+    // create 2 new ssimfiles
+    {
+        command::acr_ed_proc acr_ed;
+        acr_ed.cmd.create=true;
+        acr_ed.cmd.ssimfile="dev.test1";
+        acr_ed.cmd.write=true;
+        acr_ed_ExecX(acr_ed);
+
+        acr_ed.cmd.ssimfile="dev.test2";
+        acr_ed.cmd.subset="dev.Test1";
+        acr_ed_ExecX(acr_ed);
+    }
+    // create finputs
+    {
+        command::acr_ed_proc acr_ed;
+        acr_ed.cmd.create=true;
+        acr_ed.cmd.finput=true;
+        acr_ed.cmd.target="acr_test";
+        acr_ed.cmd.ssimfile="dev.test1";
+        acr_ed.cmd.indexed=true;
+        acr_ed.cmd.write=true;
+        acr_ed_ExecX(acr_ed);
+
+        acr_ed.cmd.ssimfile="dev.test2";
+        acr_ed.cmd.indexed=false;
+        acr_ed_ExecX(acr_ed);
+    }
+    // create xrefs
+    {
+        command::acr_ed_proc acr_ed;
+        acr_ed.cmd.create=true;
+        acr_ed.cmd.field="acr_test.FTest1.c_test2";
+        acr_ed.cmd.write=true;
+        acr_ed_ExecX(acr_ed);
+
+        acr_ed.cmd.field="acr_test.FTest2.p_test1";
+        acr_ed_ExecX(acr_ed);
+
+        command::amc_vis_proc amc_vis;
+        amc_vis.cmd.ctype.expr="acr_test.%";
+        amc_vis_ExecX(amc_vis);
+    }
     // rename this target and check that everything compiles
     {
         command::acr_ed_proc acr_ed;

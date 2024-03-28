@@ -66,17 +66,26 @@ const char *src_lim_help =
 
 } // namespace src_lim
 namespace src_lim { // gen:ns_print_proto
+    // func:src_lim.FDb.include.InputMaybe
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
+    // func:src_lim.FDb.linelim.InputMaybe
     static bool          linelim_InputMaybe(dev::Linelim &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:src_lim.FDb._db.InitReflection
     static void          InitReflection();
+    // func:src_lim.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:src_lim.FDb.gitfile.InputMaybe
     static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    // func:src_lim.FDb.badline.InputMaybe
     static bool          badline_InputMaybe(dev::Badline &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:src_lim.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:src_lim.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:src_lim...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -99,8 +108,9 @@ void src_lim::badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) {
 }
 
 // --- src_lim.trace..Print
-// print string representation of src_lim::trace to string LHS, no header -- cprint:src_lim.trace.String
-void src_lim::trace_Print(src_lim::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_lim.trace.String  printfmt:Tuple
+void src_lim::trace_Print(src_lim::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "src_lim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1414,8 +1424,9 @@ bool src_lim::FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_
 }
 
 // --- src_lim.FieldId..Print
-// print string representation of src_lim::FieldId to string LHS, no header -- cprint:src_lim.FieldId.String
-void src_lim::FieldId_Print(src_lim::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_lim.FieldId.String  printfmt:Raw
+void src_lim::FieldId_Print(src_lim::FieldId& row, algo::cstring& str) {
     src_lim::value_Print(row, str);
 }
 
@@ -1530,8 +1541,9 @@ bool src_lim::TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_
 }
 
 // --- src_lim.TableId..Print
-// print string representation of src_lim::TableId to string LHS, no header -- cprint:src_lim.TableId.String
-void src_lim::TableId_Print(src_lim::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_lim.TableId.String  printfmt:Raw
+void src_lim::TableId_Print(src_lim::TableId& row, algo::cstring& str) {
     src_lim::value_Print(row, str);
 }
 

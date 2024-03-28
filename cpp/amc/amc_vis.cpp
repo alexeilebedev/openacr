@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: amc_vis (exe) -- amc: draw access path diagrams
+// Target: amc_vis (exe) -- Draw access path diagrams
 // Exceptions: yes
 // Source: cpp/amc/amc_vis.cpp
 //

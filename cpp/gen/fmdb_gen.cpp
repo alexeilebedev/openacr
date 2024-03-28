@@ -31,6 +31,7 @@
 #include "include/gen/fm_gen.inl.h"
 //#pragma endinclude
 namespace fmdb { // gen:ns_print_proto
+    // func:fmdb...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -105,28 +106,79 @@ tempstr fmdb::Alarm_Concat_objtype_objinst( const algo::strptr& objtype ,const a
 }
 
 // --- fmdb.Alarm..ReadFieldMaybe
-bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm &parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case fmdb_FieldId_alarm: retval = algo::Smallstr200_ReadStrptrMaybe(parent.alarm, strval); break;
-        case fmdb_FieldId_code: retval = false; break;
-        case fmdb_FieldId_object: retval = false; break;
-        case fmdb_FieldId_objtype: retval = false; break;
-        case fmdb_FieldId_objinst: retval = false; break;
-        case fmdb_FieldId_objprefix: retval = false; break;
-        case fmdb_FieldId_flag: retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval); break;
-        case fmdb_FieldId_severity: retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval); break;
-        case fmdb_FieldId_n_occurred: retval = i32_ReadStrptrMaybe(parent.n_occurred, strval); break;
-        case fmdb_FieldId_first_time: retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval); break;
-        case fmdb_FieldId_last_time: retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval); break;
-        case fmdb_FieldId_clear_time: retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval); break;
-        case fmdb_FieldId_update_time: retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval); break;
-        case fmdb_FieldId_objtype_summary: retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval); break;
-        case fmdb_FieldId_summary: retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval); break;
-        case fmdb_FieldId_description: retval = fm::Description_ReadStrptrMaybe(parent.description, strval); break;
-        case fmdb_FieldId_source: retval = fm::Source_ReadStrptrMaybe(parent.source, strval); break;
+        case fmdb_FieldId_alarm: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.alarm, strval);
+            break;
+        }
+        case fmdb_FieldId_code: {
+            retval = false;
+            break;
+        }
+        case fmdb_FieldId_object: {
+            retval = false;
+            break;
+        }
+        case fmdb_FieldId_objtype: {
+            retval = false;
+            break;
+        }
+        case fmdb_FieldId_objinst: {
+            retval = false;
+            break;
+        }
+        case fmdb_FieldId_objprefix: {
+            retval = false;
+            break;
+        }
+        case fmdb_FieldId_flag: {
+            retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval);
+            break;
+        }
+        case fmdb_FieldId_severity: {
+            retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
+            break;
+        }
+        case fmdb_FieldId_n_occurred: {
+            retval = i32_ReadStrptrMaybe(parent.n_occurred, strval);
+            break;
+        }
+        case fmdb_FieldId_first_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval);
+            break;
+        }
+        case fmdb_FieldId_last_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval);
+            break;
+        }
+        case fmdb_FieldId_clear_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval);
+            break;
+        }
+        case fmdb_FieldId_update_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval);
+            break;
+        }
+        case fmdb_FieldId_objtype_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval);
+            break;
+        }
+        case fmdb_FieldId_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
+            break;
+        }
+        case fmdb_FieldId_description: {
+            retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
+            break;
+        }
+        case fmdb_FieldId_source: {
+            retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -154,8 +206,9 @@ void fmdb::Alarm_Init(fmdb::Alarm& parent) {
 }
 
 // --- fmdb.Alarm..Print
-// print string representation of fmdb::Alarm to string LHS, no header -- cprint:fmdb.Alarm.String
-void fmdb::Alarm_Print(fmdb::Alarm & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fmdb.Alarm.String  printfmt:Tuple
+void fmdb::Alarm_Print(fmdb::Alarm& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "fmdb.alarm";
 
@@ -197,15 +250,27 @@ void fmdb::Alarm_Print(fmdb::Alarm & row, algo::cstring &str) {
 }
 
 // --- fmdb.AlmCode..ReadFieldMaybe
-bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode &parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case fmdb_FieldId_alm_code: retval = fm::Code_ReadStrptrMaybe(parent.alm_code, strval); break;
-        case fmdb_FieldId_severity: retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval); break;
-        case fmdb_FieldId_source: retval = fm::Source_ReadStrptrMaybe(parent.source, strval); break;
-        case fmdb_FieldId_summary: retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval); break;
+        case fmdb_FieldId_alm_code: {
+            retval = fm::Code_ReadStrptrMaybe(parent.alm_code, strval);
+            break;
+        }
+        case fmdb_FieldId_severity: {
+            retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
+            break;
+        }
+        case fmdb_FieldId_source: {
+            retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
+            break;
+        }
+        case fmdb_FieldId_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -227,8 +292,9 @@ bool fmdb::AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str) {
 }
 
 // --- fmdb.AlmCode..Print
-// print string representation of fmdb::AlmCode to string LHS, no header -- cprint:fmdb.AlmCode.String
-void fmdb::AlmCode_Print(fmdb::AlmCode & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmCode.String  printfmt:Tuple
+void fmdb::AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "fmdb.alm_code";
 
@@ -246,13 +312,19 @@ void fmdb::AlmCode_Print(fmdb::AlmCode & row, algo::cstring &str) {
 }
 
 // --- fmdb.AlmObjtype..ReadFieldMaybe
-bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype &parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case fmdb_FieldId_alm_objtype: retval = fm::Objtype_ReadStrptrMaybe(parent.alm_objtype, strval); break;
-        case fmdb_FieldId_summary: retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval); break;
+        case fmdb_FieldId_alm_objtype: {
+            retval = fm::Objtype_ReadStrptrMaybe(parent.alm_objtype, strval);
+            break;
+        }
+        case fmdb_FieldId_summary: {
+            retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -274,8 +346,9 @@ bool fmdb::AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_
 }
 
 // --- fmdb.AlmObjtype..Print
-// print string representation of fmdb::AlmObjtype to string LHS, no header -- cprint:fmdb.AlmObjtype.String
-void fmdb::AlmObjtype_Print(fmdb::AlmObjtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmObjtype.String  printfmt:Tuple
+void fmdb::AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "fmdb.alm_objtype";
 
@@ -287,13 +360,19 @@ void fmdb::AlmObjtype_Print(fmdb::AlmObjtype & row, algo::cstring &str) {
 }
 
 // --- fmdb.AlmSource..ReadFieldMaybe
-bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource &parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case fmdb_FieldId_alm_source: retval = fm::Source_ReadStrptrMaybe(parent.alm_source, strval); break;
-        case fmdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case fmdb_FieldId_alm_source: {
+            retval = fm::Source_ReadStrptrMaybe(parent.alm_source, strval);
+            break;
+        }
+        case fmdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -315,8 +394,9 @@ bool fmdb::AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_st
 }
 
 // --- fmdb.AlmSource..Print
-// print string representation of fmdb::AlmSource to string LHS, no header -- cprint:fmdb.AlmSource.String
-void fmdb::AlmSource_Print(fmdb::AlmSource & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmSource.String  printfmt:Tuple
+void fmdb::AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "fmdb.alm_source";
 
@@ -531,8 +611,9 @@ bool fmdb::FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- fmdb.FieldId..Print
-// print string representation of fmdb::FieldId to string LHS, no header -- cprint:fmdb.FieldId.String
-void fmdb::FieldId_Print(fmdb::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:fmdb.FieldId.String  printfmt:Raw
+void fmdb::FieldId_Print(fmdb::FieldId& row, algo::cstring& str) {
     fmdb::value_Print(row, str);
 }
 

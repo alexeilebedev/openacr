@@ -9,17 +9,22 @@ atfdb.targs  comptest:acr.DelRecord  args:"-in:- target:samp -del"
 atfdb.targs  comptest:acr.DeleteReinsert  args:-insert
 atfdb.targs  comptest:acr.Fields  args:"-in:- ns -field:nstype -field:comment"
 atfdb.targs  comptest:acr.FieldsComma  args:"-in:- ns -field:nstype,comment"
+atfdb.targs  comptest:acr.GitTrigger1  args:"gitfile:cpp/acr/git.cpp -del -g"
 atfdb.targs  comptest:acr.Insert  args:"-insert ns:ns%"
 atfdb.targs  comptest:acr.InsertDelete  args:-insert
 atfdb.targs  comptest:acr.Merge  args:"-merge ns:acr"
-atfdb.targs  comptest:acr.Meta1  args:"anonfld -meta"
+atfdb.targs  comptest:acr.Meta1  args:"anonfld -meta -report:N"
 atfdb.targs  comptest:acr.Meta2  args:"ftuple -meta"
 atfdb.targs  comptest:acr.Meta3  args:"ftuple -meta -cmt"
 atfdb.targs  comptest:acr.NullTrunc  args:"ns -report:N"
 atfdb.targs  comptest:acr.QueryCtype  args:dmmeta.ctype:dmmeta.Ctype
+atfdb.targs  comptest:acr.RenameCollision  args:"uname:Linux -rename SunOS"
+atfdb.targs  comptest:acr.RenameCollisionMultiple  args:"uname:% -rename Blah"
 atfdb.targs  comptest:acr.RenameRecord  args:"-in:- target:samp -rename:xyz"
 atfdb.targs  comptest:acr.Replace  args:"-replace ns:ns%"
 atfdb.targs  comptest:acr.Select  args:"-in:- ns:nsi%"
+atfdb.targs  comptest:acr.SelectStdin  args:-sel
+atfdb.targs  comptest:acr.SelectTree  args:"-in:- ctype:command.acr -t"
 atfdb.targs  comptest:acr.TooManyArgs  args:"x y"
 atfdb.targs  comptest:acr.Trunc  args:"-insert -trunc -report:N"
 atfdb.targs  comptest:acr.UpdateBad  args:"-update ns:ns%"
@@ -125,6 +130,14 @@ atfdb.targs  comptest:acr_compl.OptSig  args:'-line:"atf_cmdline -sig"'
 atfdb.targs  comptest:acr_compl.OptSigList  args:'-line:"atf_cmdline -sig -type:63"'
 atfdb.targs  comptest:acr_compl.OptV  args:'-line:"atf_cmdline -v"'
 atfdb.targs  comptest:acr_compl.OptVList  args:'-line:"atf_cmdline -v" -type:63'
+atfdb.targs  comptest:acr_compl.R01a  args:'-line:"atf_cmdline <"  -type:63'
+atfdb.targs  comptest:acr_compl.R01b  args:'-line:"atf_cmdline < "  -type:63'
+atfdb.targs  comptest:acr_compl.R01c  args:'-line:"atf_cmdline <abc"  -type:63'
+atfdb.targs  comptest:acr_compl.R01d  args:'-line:"atf_cmdline <abc "  -type:63'
+atfdb.targs  comptest:acr_compl.R02a  args:'-line:"atf_cmdline 2"  -type:63'
+atfdb.targs  comptest:acr_compl.R02b  args:'-line:"atf_cmdline 2>"  -type:63'
+atfdb.targs  comptest:acr_compl.R02c  args:'-line:"atf_cmdline 2>/dev/null"  -type:63'
+atfdb.targs  comptest:acr_compl.R02d  args:'-line:"atf_cmdline 2>/dev/null "  -type:63'
 atfdb.targs  comptest:acr_compl.StrColon  args:'-line:"atf_cmdline -str:"'
 atfdb.targs  comptest:acr_compl.StrColonList  args:'-line:"atf_cmdline -str:" -type:63'
 atfdb.targs  comptest:acr_compl.StrSpace  args:'-line:"atf_cmdline -str "'
@@ -143,6 +156,7 @@ atfdb.targs  comptest:acr_dm.Conflict  args:"test/acr_dm/file1.ssim test/acr_dm/
 atfdb.targs  comptest:acr_dm.Merge  args:"test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file3.ssim"
 atfdb.targs  comptest:acr_dm.RenameTuple  args:"test/acr_dm/renametuple1.ssim test/acr_dm/renametuple2.ssim test/acr_dm/renametuple3.ssim"
 atfdb.targs  comptest:acr_ed.CreateCtype  args:"-create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
+atfdb.targs  comptest:acr_ed.CreateSrcfileTarget  args:"-create -srcfile:cpp/acr_ed/blah.cpp -target:algo_lib"
 atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.test -subset algo.Smallstr10"
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
@@ -162,7 +176,9 @@ atfdb.targs  comptest:mdbg.Smoke  args:"-dry_run mdbg mdbg"
 atfdb.targs  comptest:mdbg.SmokeBreak  args:"-dry_run -tui mdbg mdbg -b a,b,c,d,e"
 atfdb.targs  comptest:mdbg.SmokeBreak2  args:"-dry_run -tui mdbg mdbg -b a -b b -b c"
 atfdb.targs  comptest:ssimfilt.Csv  args:-format:csv
+atfdb.targs  comptest:ssimfilt.CsvField  args:"-format:csv -field:comment"
 atfdb.targs  comptest:ssimfilt.FirstTag  args:^
+atfdb.targs  comptest:ssimfilt.JsonRecursive  args:"-format json"
 atfdb.targs  comptest:ssimfilt.MatchField  args:"% ns:b%"
 atfdb.targs  comptest:ssimfilt.MatchTag  args:dmmeta.%
 atfdb.targs  comptest:ssimfilt.SelectField  args:"-field:nstype -format:field"

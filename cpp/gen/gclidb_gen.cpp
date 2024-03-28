@@ -114,6 +114,10 @@ const char *gclidb_Grepogitport_grepogitport_default             = "default";
 const char *gclidb_Grepogitport_grepogitport_github_com          = "github.com";
 const char *gclidb_Grepogitport_grepogitport_gitlab_vovaco_com   = "gitlab.vovaco.com";
 
+// compile-time string constants for gclidb.Grepossh.grepossh
+const char *gclidb_Grepossh_grepossh_glpat          = "glpat";
+const char *gclidb_Grepossh_grepossh_vparizhs_ghp   = "vparizhs/ghp";
+
 // compile-time string constants for gclidb.Gstate.gstate
 const char *gclidb_Gstate_gstate_state_all          = "state_all";
 const char *gclidb_Gstate_gstate_state_close        = "state_close";
@@ -198,6 +202,7 @@ const char *gclidb_Label_label_question           = "question";
 const char *gclidb_Label_label_wontfix   = "wontfix";
 
 namespace gclidb { // gen:ns_print_proto
+    // func:gclidb...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -754,19 +759,26 @@ bool gclidb::FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_st
 }
 
 // --- gclidb.FieldId..Print
-// print string representation of gclidb::FieldId to string LHS, no header -- cprint:gclidb.FieldId.String
-void gclidb::FieldId_Print(gclidb::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.FieldId.String  printfmt:Raw
+void gclidb::FieldId_Print(gclidb::FieldId& row, algo::cstring& str) {
     gclidb::value_Print(row, str);
 }
 
 // --- gclidb.Gact..ReadFieldMaybe
-bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gact: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gact, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gact: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gact, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -788,8 +800,9 @@ bool gclidb::Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Gact..Print
-// print string representation of gclidb::Gact to string LHS, no header -- cprint:gclidb.Gact.String
-void gclidb::Gact_Print(gclidb::Gact & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gact.String  printfmt:Tuple
+void gclidb::Gact_Print(gclidb::Gact& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gact";
 
@@ -801,13 +814,19 @@ void gclidb::Gact_Print(gclidb::Gact & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gatv..ReadFieldMaybe
-bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gatv: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gatv, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gatv: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gatv, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -829,8 +848,9 @@ bool gclidb::Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Gatv..Print
-// print string representation of gclidb::Gatv to string LHS, no header -- cprint:gclidb.Gatv.String
-void gclidb::Gatv_Print(gclidb::Gatv & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gatv.String  printfmt:Tuple
+void gclidb::Gatv_Print(gclidb::Gatv& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gatv";
 
@@ -842,14 +862,23 @@ void gclidb::Gatv_Print(gclidb::Gatv & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gclicmd..ReadFieldMaybe
-bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclicmd: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmd, strval); break;
-        case gclidb_FieldId_gclicmdf2j: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gclicmd: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmd, strval);
+            break;
+        }
+        case gclidb_FieldId_gclicmdf2j: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -871,8 +900,9 @@ bool gclidb::Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gclicmd..Print
-// print string representation of gclidb::Gclicmd to string LHS, no header -- cprint:gclidb.Gclicmd.String
-void gclidb::Gclicmd_Print(gclidb::Gclicmd & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmd.String  printfmt:Tuple
+void gclidb::Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclicmd";
 
@@ -940,18 +970,39 @@ tempstr gclidb::Gclicmdf2j_Concat_gclicmd_field_jkey( const algo::strptr& gclicm
 }
 
 // --- gclidb.Gclicmdf2j..ReadFieldMaybe
-bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclicmdf2j: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval); break;
-        case gclidb_FieldId_gclicmdf: retval = false; break;
-        case gclidb_FieldId_gclicmd: retval = false; break;
-        case gclidb_FieldId_field: retval = false; break;
-        case gclidb_FieldId_jkey: retval = false; break;
-        case gclidb_FieldId_dup: retval = bool_ReadStrptrMaybe(parent.dup, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gclicmdf2j: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval);
+            break;
+        }
+        case gclidb_FieldId_gclicmdf: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_gclicmd: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_field: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_jkey: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_dup: {
+            retval = bool_ReadStrptrMaybe(parent.dup, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -973,8 +1024,9 @@ bool gclidb::Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr
 }
 
 // --- gclidb.Gclicmdf2j..Print
-// print string representation of gclidb::Gclicmdf2j to string LHS, no header -- cprint:gclidb.Gclicmdf2j.String
-void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmdf2j.String  printfmt:Tuple
+void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclicmdf2j";
 
@@ -1018,17 +1070,35 @@ tempstr gclidb::Gclicmdt_Concat_gclicmd_gtype( const algo::strptr& gclicmd ,cons
 }
 
 // --- gclidb.Gclicmdt..ReadFieldMaybe
-bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclicmdt: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdt, strval); break;
-        case gclidb_FieldId_gmethod: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval); break;
-        case gclidb_FieldId_gclicmd: retval = false; break;
-        case gclidb_FieldId_gtype: retval = false; break;
-        case gclidb_FieldId_uri: retval = algo::Comment_ReadStrptrMaybe(parent.uri, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gclicmdt: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdt, strval);
+            break;
+        }
+        case gclidb_FieldId_gmethod: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval);
+            break;
+        }
+        case gclidb_FieldId_gclicmd: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_gtype: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_uri: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.uri, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1050,8 +1120,9 @@ bool gclidb::Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_
 }
 
 // --- gclidb.Gclicmdt..Print
-// print string representation of gclidb::Gclicmdt to string LHS, no header -- cprint:gclidb.Gclicmdt.String
-void gclidb::Gclicmdt_Print(gclidb::Gclicmdt & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmdt.String  printfmt:Tuple
+void gclidb::Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclicmdt";
 
@@ -1069,14 +1140,23 @@ void gclidb::Gclicmdt_Print(gclidb::Gclicmdt & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gclienv..ReadFieldMaybe
-bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclienv: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienv, strval); break;
-        case gclidb_FieldId_addon: retval = algo::cstring_ReadStrptrMaybe(parent.addon, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gclienv: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienv, strval);
+            break;
+        }
+        case gclidb_FieldId_addon: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.addon, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1098,8 +1178,9 @@ bool gclidb::Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gclienv..Print
-// print string representation of gclidb::Gclienv to string LHS, no header -- cprint:gclidb.Gclienv.String
-void gclidb::Gclienv_Print(gclidb::Gclienv & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclienv.String  printfmt:Tuple
+void gclidb::Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclienv";
 
@@ -1143,17 +1224,35 @@ tempstr gclidb::Gclienvsub_Concat_gclienv_sub( const algo::strptr& gclienv ,cons
 }
 
 // --- gclidb.Gclienvsub..ReadFieldMaybe
-bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclienvsub: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienvsub, strval); break;
-        case gclidb_FieldId_gclienv: retval = false; break;
-        case gclidb_FieldId_sub: retval = false; break;
-        case gclidb_FieldId_fwd: retval = bool_ReadStrptrMaybe(parent.fwd, strval); break;
-        case gclidb_FieldId_rev: retval = bool_ReadStrptrMaybe(parent.rev, strval); break;
-        case gclidb_FieldId_uval: retval = algo::cstring_ReadStrptrMaybe(parent.uval, strval); break;
+        case gclidb_FieldId_gclienvsub: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienvsub, strval);
+            break;
+        }
+        case gclidb_FieldId_gclienv: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_sub: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_fwd: {
+            retval = bool_ReadStrptrMaybe(parent.fwd, strval);
+            break;
+        }
+        case gclidb_FieldId_rev: {
+            retval = bool_ReadStrptrMaybe(parent.rev, strval);
+            break;
+        }
+        case gclidb_FieldId_uval: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.uval, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1175,8 +1274,9 @@ bool gclidb::Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr
 }
 
 // --- gclidb.Gclienvsub..Print
-// print string representation of gclidb::Gclienvsub to string LHS, no header -- cprint:gclidb.Gclienvsub.String
-void gclidb::Gclienvsub_Print(gclidb::Gclienvsub & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
+void gclidb::Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclienvsub";
 
@@ -1194,13 +1294,19 @@ void gclidb::Gclienvsub_Print(gclidb::Gclienvsub & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gclisub..ReadFieldMaybe
-bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gclisub: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclisub, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gclisub: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclisub, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1222,8 +1328,9 @@ bool gclidb::Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gclisub..Print
-// print string representation of gclidb::Gclisub to string LHS, no header -- cprint:gclidb.Gclisub.String
-void gclidb::Gclisub_Print(gclidb::Gclisub & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclisub.String  printfmt:Tuple
+void gclidb::Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gclisub";
 
@@ -1235,13 +1342,19 @@ void gclidb::Gclisub_Print(gclidb::Gclisub & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gfld..ReadFieldMaybe
-bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gfld: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gfld, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gfld: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gfld, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1263,8 +1376,9 @@ bool gclidb::Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Gfld..Print
-// print string representation of gclidb::Gfld to string LHS, no header -- cprint:gclidb.Gfld.String
-void gclidb::Gfld_Print(gclidb::Gfld & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gfld.String  printfmt:Tuple
+void gclidb::Gfld_Print(gclidb::Gfld& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gfld";
 
@@ -1317,14 +1431,23 @@ tempstr gclidb::Githost_Concat_git_host_gitrepo( const algo::strptr& git ,const 
 }
 
 // --- gclidb.Gmethod..ReadFieldMaybe
-bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gmethod: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval); break;
-        case gclidb_FieldId_val: retval = u32_ReadStrptrMaybe(parent.val, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gmethod: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval);
+            break;
+        }
+        case gclidb_FieldId_val: {
+            retval = u32_ReadStrptrMaybe(parent.val, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1346,8 +1469,9 @@ bool gclidb::Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gmethod..Print
-// print string representation of gclidb::Gmethod to string LHS, no header -- cprint:gclidb.Gmethod.String
-void gclidb::Gmethod_Print(gclidb::Gmethod & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gmethod.String  printfmt:Tuple
+void gclidb::Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gmethod";
 
@@ -1391,23 +1515,59 @@ tempstr gclidb::Grepo_Concat_host_fname( const algo::strptr& host ,const algo::s
 }
 
 // --- gclidb.Grepo..ReadFieldMaybe
-bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_grepo: retval = algo::Smallstr250_ReadStrptrMaybe(parent.grepo, strval); break;
-        case gclidb_FieldId_host: retval = false; break;
-        case gclidb_FieldId_fname: retval = false; break;
-        case gclidb_FieldId_name: retval = algo::cstring_ReadStrptrMaybe(parent.name, strval); break;
-        case gclidb_FieldId_token: retval = algo::cstring_ReadStrptrMaybe(parent.token, strval); break;
-        case gclidb_FieldId_default_branch: retval = algo::cstring_ReadStrptrMaybe(parent.default_branch, strval); break;
-        case gclidb_FieldId_keyid: retval = algo::cstring_ReadStrptrMaybe(parent.keyid, strval); break;
-        case gclidb_FieldId_ssh_repo: retval = algo::cstring_ReadStrptrMaybe(parent.ssh_repo, strval); break;
-        case gclidb_FieldId_web_url: retval = algo::cstring_ReadStrptrMaybe(parent.web_url, strval); break;
-        case gclidb_FieldId_descr: retval = algo::cstring_ReadStrptrMaybe(parent.descr, strval); break;
-        case gclidb_FieldId_active: retval = bool_ReadStrptrMaybe(parent.active, strval); break;
-        case gclidb_FieldId_priv: retval = algo::cstring_ReadStrptrMaybe(parent.priv, strval); break;
+        case gclidb_FieldId_grepo: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.grepo, strval);
+            break;
+        }
+        case gclidb_FieldId_host: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_fname: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+            break;
+        }
+        case gclidb_FieldId_token: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.token, strval);
+            break;
+        }
+        case gclidb_FieldId_default_branch: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.default_branch, strval);
+            break;
+        }
+        case gclidb_FieldId_keyid: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.keyid, strval);
+            break;
+        }
+        case gclidb_FieldId_ssh_repo: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.ssh_repo, strval);
+            break;
+        }
+        case gclidb_FieldId_web_url: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.web_url, strval);
+            break;
+        }
+        case gclidb_FieldId_descr: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.descr, strval);
+            break;
+        }
+        case gclidb_FieldId_active: {
+            retval = bool_ReadStrptrMaybe(parent.active, strval);
+            break;
+        }
+        case gclidb_FieldId_priv: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.priv, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1436,8 +1596,9 @@ void gclidb::Grepo_Init(gclidb::Grepo& parent) {
 }
 
 // --- gclidb.Grepo..Print
-// print string representation of gclidb::Grepo to string LHS, no header -- cprint:gclidb.Grepo.String
-void gclidb::Grepo_Print(gclidb::Grepo & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepo.String  printfmt:Tuple
+void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.grepo";
 
@@ -1473,14 +1634,23 @@ void gclidb::Grepo_Print(gclidb::Grepo & row, algo::cstring &str) {
 }
 
 // --- gclidb.Grepogitport..ReadFieldMaybe
-bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_grepogitport: retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepogitport, strval); break;
-        case gclidb_FieldId_port: retval = algo::cstring_ReadStrptrMaybe(parent.port, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_grepogitport: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepogitport, strval);
+            break;
+        }
+        case gclidb_FieldId_port: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.port, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1502,8 +1672,9 @@ bool gclidb::Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::st
 }
 
 // --- gclidb.Grepogitport..Print
-// print string representation of gclidb::Grepogitport to string LHS, no header -- cprint:gclidb.Grepogitport.String
-void gclidb::Grepogitport_Print(gclidb::Grepogitport & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepogitport.String  printfmt:Tuple
+void gclidb::Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.grepogitport";
 
@@ -1530,15 +1701,27 @@ algo::cstring gclidb::Grepossh_name_Get(algo::strptr arg) {
 }
 
 // --- gclidb.Grepossh..ReadFieldMaybe
-bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_grepossh: retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepossh, strval); break;
-        case gclidb_FieldId_sshid: retval = algo::Smallstr200_ReadStrptrMaybe(parent.sshid, strval); break;
-        case gclidb_FieldId_name: retval = false; break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_grepossh: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepossh, strval);
+            break;
+        }
+        case gclidb_FieldId_sshid: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.sshid, strval);
+            break;
+        }
+        case gclidb_FieldId_name: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1560,8 +1743,9 @@ bool gclidb::Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_
 }
 
 // --- gclidb.Grepossh..Print
-// print string representation of gclidb::Grepossh to string LHS, no header -- cprint:gclidb.Grepossh.String
-void gclidb::Grepossh_Print(gclidb::Grepossh & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepossh.String  printfmt:Tuple
+void gclidb::Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.grepossh";
 
@@ -1605,15 +1789,27 @@ tempstr gclidb::Gstate_Concat_st_state( const algo::strptr& st ,const algo::strp
 }
 
 // --- gclidb.Gstate..ReadFieldMaybe
-bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gstate: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstate, strval); break;
-        case gclidb_FieldId_st: retval = false; break;
-        case gclidb_FieldId_state: retval = false; break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gstate: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstate, strval);
+            break;
+        }
+        case gclidb_FieldId_st: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_state: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1635,8 +1831,9 @@ bool gclidb::Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str)
 }
 
 // --- gclidb.Gstate..Print
-// print string representation of gclidb::Gstate to string LHS, no header -- cprint:gclidb.Gstate.String
-void gclidb::Gstate_Print(gclidb::Gstate & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gstate.String  printfmt:Tuple
+void gclidb::Gstate_Print(gclidb::Gstate& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gstate";
 
@@ -1677,15 +1874,27 @@ tempstr gclidb::Gstatet_Concat_gstate_gtype( const algo::strptr& gstate ,const a
 }
 
 // --- gclidb.Gstatet..ReadFieldMaybe
-bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gstatet: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstatet, strval); break;
-        case gclidb_FieldId_gtype: retval = false; break;
-        case gclidb_FieldId_gstate: retval = false; break;
-        case gclidb_FieldId_state: retval = algo::cstring_ReadStrptrMaybe(parent.state, strval); break;
+        case gclidb_FieldId_gstatet: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstatet, strval);
+            break;
+        }
+        case gclidb_FieldId_gtype: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_gstate: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_state: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1707,8 +1916,9 @@ bool gclidb::Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gstatet..Print
-// print string representation of gclidb::Gstatet to string LHS, no header -- cprint:gclidb.Gstatet.String
-void gclidb::Gstatet_Print(gclidb::Gstatet & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gstatet.String  printfmt:Tuple
+void gclidb::Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gstatet";
 
@@ -1720,13 +1930,19 @@ void gclidb::Gstatet_Print(gclidb::Gstatet & row, algo::cstring &str) {
 }
 
 // --- gclidb.Gtbl..ReadFieldMaybe
-bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtbl: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtbl, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gtbl: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtbl, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1748,8 +1964,9 @@ bool gclidb::Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Gtbl..Print
-// print string representation of gclidb::Gtbl to string LHS, no header -- cprint:gclidb.Gtbl.String
-void gclidb::Gtbl_Print(gclidb::Gtbl & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtbl.String  printfmt:Tuple
+void gclidb::Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtbl";
 
@@ -1790,17 +2007,35 @@ tempstr gclidb::Gtblact_Concat_gtbl_gact( const algo::strptr& gtbl ,const algo::
 }
 
 // --- gclidb.Gtblact..ReadFieldMaybe
-bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtblact: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblact, strval); break;
-        case gclidb_FieldId_gtbl: retval = false; break;
-        case gclidb_FieldId_gact: retval = false; break;
-        case gclidb_FieldId_t: retval = bool_ReadStrptrMaybe(parent.t, strval); break;
-        case gclidb_FieldId_e: retval = bool_ReadStrptrMaybe(parent.e, strval); break;
-        case gclidb_FieldId_auth: retval = bool_ReadStrptrMaybe(parent.auth, strval); break;
+        case gclidb_FieldId_gtblact: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblact, strval);
+            break;
+        }
+        case gclidb_FieldId_gtbl: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_gact: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_t: {
+            retval = bool_ReadStrptrMaybe(parent.t, strval);
+            break;
+        }
+        case gclidb_FieldId_e: {
+            retval = bool_ReadStrptrMaybe(parent.e, strval);
+            break;
+        }
+        case gclidb_FieldId_auth: {
+            retval = bool_ReadStrptrMaybe(parent.auth, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1822,8 +2057,9 @@ bool gclidb::Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_st
 }
 
 // --- gclidb.Gtblact..Print
-// print string representation of gclidb::Gtblact to string LHS, no header -- cprint:gclidb.Gtblact.String
-void gclidb::Gtblact_Print(gclidb::Gtblact & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblact.String  printfmt:Tuple
+void gclidb::Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtblact";
 
@@ -1870,19 +2106,43 @@ tempstr gclidb::Gtblactfld_Concat_gtblact_field( const algo::strptr& gtblact ,co
 }
 
 // --- gclidb.Gtblactfld..ReadFieldMaybe
-bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtblactfld: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblactfld, strval); break;
-        case gclidb_FieldId_gtblact: retval = false; break;
-        case gclidb_FieldId_field: retval = false; break;
-        case gclidb_FieldId_dflt: retval = algo::cstring_ReadStrptrMaybe(parent.dflt, strval); break;
-        case gclidb_FieldId_field_name_dflt: retval = bool_ReadStrptrMaybe(parent.field_name_dflt, strval); break;
-        case gclidb_FieldId_optional: retval = bool_ReadStrptrMaybe(parent.optional, strval); break;
-        case gclidb_FieldId_regx: retval = bool_ReadStrptrMaybe(parent.regx, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gtblactfld: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblactfld, strval);
+            break;
+        }
+        case gclidb_FieldId_gtblact: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_field: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_dflt: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.dflt, strval);
+            break;
+        }
+        case gclidb_FieldId_field_name_dflt: {
+            retval = bool_ReadStrptrMaybe(parent.field_name_dflt, strval);
+            break;
+        }
+        case gclidb_FieldId_optional: {
+            retval = bool_ReadStrptrMaybe(parent.optional, strval);
+            break;
+        }
+        case gclidb_FieldId_regx: {
+            retval = bool_ReadStrptrMaybe(parent.regx, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1904,8 +2164,9 @@ bool gclidb::Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr
 }
 
 // --- gclidb.Gtblactfld..Print
-// print string representation of gclidb::Gtblactfld to string LHS, no header -- cprint:gclidb.Gtblactfld.String
-void gclidb::Gtblactfld_Print(gclidb::Gtblactfld & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblactfld.String  printfmt:Tuple
+void gclidb::Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtblactfld";
 
@@ -1965,18 +2226,39 @@ algo::cstring gclidb::Gtblacttst_t_Get(algo::strptr arg) {
 }
 
 // --- gclidb.Gtblacttst..ReadFieldMaybe
-bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtblacttst: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttst, strval); break;
-        case gclidb_FieldId_gtblact: retval = false; break;
-        case gclidb_FieldId_gclienv: retval = false; break;
-        case gclidb_FieldId_working: retval = bool_ReadStrptrMaybe(parent.working, strval); break;
-        case gclidb_FieldId_t: retval = false; break;
-        case gclidb_FieldId_cmd: retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gtblacttst: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttst, strval);
+            break;
+        }
+        case gclidb_FieldId_gtblact: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_gclienv: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_working: {
+            retval = bool_ReadStrptrMaybe(parent.working, strval);
+            break;
+        }
+        case gclidb_FieldId_t: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_cmd: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1998,8 +2280,9 @@ bool gclidb::Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr
 }
 
 // --- gclidb.Gtblacttst..Print
-// print string representation of gclidb::Gtblacttst to string LHS, no header -- cprint:gclidb.Gtblacttst.String
-void gclidb::Gtblacttst_Print(gclidb::Gtblacttst & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
+void gclidb::Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtblacttst";
 
@@ -2046,15 +2329,27 @@ tempstr gclidb::Gtblacttstout_Concat_gtblacttst_out( const algo::strptr& gtblact
 }
 
 // --- gclidb.Gtblacttstout..ReadFieldMaybe
-bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtblacttstout: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttstout, strval); break;
-        case gclidb_FieldId_gtblacttst: retval = false; break;
-        case gclidb_FieldId_out: retval = false; break;
-        case gclidb_FieldId_text: retval = algo::cstring_ReadStrptrMaybe(parent.text, strval); break;
+        case gclidb_FieldId_gtblacttstout: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttstout, strval);
+            break;
+        }
+        case gclidb_FieldId_gtblacttst: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_out: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_text: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.text, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2076,8 +2371,9 @@ bool gclidb::Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::
 }
 
 // --- gclidb.Gtblacttstout..Print
-// print string representation of gclidb::Gtblacttstout to string LHS, no header -- cprint:gclidb.Gtblacttstout.String
-void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
+void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtblacttstout";
 
@@ -2089,14 +2385,23 @@ void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout & row, algo::cstring &str
 }
 
 // --- gclidb.Gtype..ReadFieldMaybe
-bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtype, strval); break;
-        case gclidb_FieldId_default_url: retval = algo::cstring_ReadStrptrMaybe(parent.default_url, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtype, strval);
+            break;
+        }
+        case gclidb_FieldId_default_url: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.default_url, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2118,8 +2423,9 @@ bool gclidb::Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Gtype..Print
-// print string representation of gclidb::Gtype to string LHS, no header -- cprint:gclidb.Gtype.String
-void gclidb::Gtype_Print(gclidb::Gtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtype.String  printfmt:Tuple
+void gclidb::Gtype_Print(gclidb::Gtype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtype";
 
@@ -2163,15 +2469,27 @@ tempstr gclidb::Gtypeh_Concat_gtype_name( const algo::strptr& gtype ,const algo:
 }
 
 // --- gclidb.Gtypeh..ReadFieldMaybe
-bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtypeh: retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtypeh, strval); break;
-        case gclidb_FieldId_gtype: retval = false; break;
-        case gclidb_FieldId_name: retval = false; break;
-        case gclidb_FieldId_header: retval = algo::cstring_ReadStrptrMaybe(parent.header, strval); break;
+        case gclidb_FieldId_gtypeh: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtypeh, strval);
+            break;
+        }
+        case gclidb_FieldId_gtype: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_name: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_header: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.header, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2193,8 +2511,9 @@ bool gclidb::Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str)
 }
 
 // --- gclidb.Gtypeh..Print
-// print string representation of gclidb::Gtypeh to string LHS, no header -- cprint:gclidb.Gtypeh.String
-void gclidb::Gtypeh_Print(gclidb::Gtypeh & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtypeh.String  printfmt:Tuple
+void gclidb::Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtypeh";
 
@@ -2235,15 +2554,27 @@ tempstr gclidb::Gtypeprefix_Concat_gtype_prefix( const algo::strptr& gtype ,cons
 }
 
 // --- gclidb.Gtypeprefix..ReadFieldMaybe
-bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_gtypeprefix: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtypeprefix, strval); break;
-        case gclidb_FieldId_gtype: retval = false; break;
-        case gclidb_FieldId_prefix: retval = false; break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_gtypeprefix: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtypeprefix, strval);
+            break;
+        }
+        case gclidb_FieldId_gtype: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_prefix: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2265,8 +2596,9 @@ bool gclidb::Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strp
 }
 
 // --- gclidb.Gtypeprefix..Print
-// print string representation of gclidb::Gtypeprefix to string LHS, no header -- cprint:gclidb.Gtypeprefix.String
-void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtypeprefix.String  printfmt:Tuple
+void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.gtypeprefix";
 
@@ -2307,24 +2639,63 @@ tempstr gclidb::Issue_Concat_project_iid( const algo::strptr& project ,const alg
 }
 
 // --- gclidb.Issue..ReadFieldMaybe
-bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_issue: retval = algo::Smallstr50_ReadStrptrMaybe(parent.issue, strval); break;
-        case gclidb_FieldId_project: retval = false; break;
-        case gclidb_FieldId_iid: retval = false; break;
-        case gclidb_FieldId_assignee: retval = algo::Smallstr50_ReadStrptrMaybe(parent.assignee, strval); break;
-        case gclidb_FieldId_labels: retval = algo::cstring_ReadStrptrMaybe(parent.labels, strval); break;
-        case gclidb_FieldId_milestone_iid: retval = algo::cstring_ReadStrptrMaybe(parent.milestone_iid, strval); break;
-        case gclidb_FieldId_milestone_num: retval = algo::cstring_ReadStrptrMaybe(parent.milestone_num, strval); break;
-        case gclidb_FieldId_milestone: retval = algo::cstring_ReadStrptrMaybe(parent.milestone, strval); break;
-        case gclidb_FieldId_title: retval = algo::cstring_ReadStrptrMaybe(parent.title, strval); break;
-        case gclidb_FieldId_author: retval = algo::cstring_ReadStrptrMaybe(parent.author, strval); break;
-        case gclidb_FieldId_state: retval = algo::cstring_ReadStrptrMaybe(parent.state, strval); break;
-        case gclidb_FieldId_mr: retval = algo::cstring_ReadStrptrMaybe(parent.mr, strval); break;
-        case gclidb_FieldId_description: retval = algo::cstring_ReadStrptrMaybe(parent.description, strval); break;
+        case gclidb_FieldId_issue: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.issue, strval);
+            break;
+        }
+        case gclidb_FieldId_project: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_iid: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_assignee: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.assignee, strval);
+            break;
+        }
+        case gclidb_FieldId_labels: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.labels, strval);
+            break;
+        }
+        case gclidb_FieldId_milestone_iid: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.milestone_iid, strval);
+            break;
+        }
+        case gclidb_FieldId_milestone_num: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.milestone_num, strval);
+            break;
+        }
+        case gclidb_FieldId_milestone: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.milestone, strval);
+            break;
+        }
+        case gclidb_FieldId_title: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
+            break;
+        }
+        case gclidb_FieldId_author: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
+            break;
+        }
+        case gclidb_FieldId_state: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
+            break;
+        }
+        case gclidb_FieldId_mr: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.mr, strval);
+            break;
+        }
+        case gclidb_FieldId_description: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2346,8 +2717,9 @@ bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Issue..Print
-// print string representation of gclidb::Issue to string LHS, no header -- cprint:gclidb.Issue.String
-void gclidb::Issue_Print(gclidb::Issue & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issue.String  printfmt:Tuple
+void gclidb::Issue_Print(gclidb::Issue& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.issue";
 
@@ -2415,17 +2787,35 @@ tempstr gclidb::Issuenote_Concat_issue_nid( const algo::strptr& issue ,const alg
 }
 
 // --- gclidb.Issuenote..ReadFieldMaybe
-bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_issuenote: retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuenote, strval); break;
-        case gclidb_FieldId_issue: retval = false; break;
-        case gclidb_FieldId_nid: retval = false; break;
-        case gclidb_FieldId_note: retval = algo::cstring_ReadStrptrMaybe(parent.note, strval); break;
-        case gclidb_FieldId_system: retval = algo::cstring_ReadStrptrMaybe(parent.system, strval); break;
-        case gclidb_FieldId_author: retval = algo::cstring_ReadStrptrMaybe(parent.author, strval); break;
+        case gclidb_FieldId_issuenote: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuenote, strval);
+            break;
+        }
+        case gclidb_FieldId_issue: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_nid: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_note: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.note, strval);
+            break;
+        }
+        case gclidb_FieldId_system: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.system, strval);
+            break;
+        }
+        case gclidb_FieldId_author: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2447,8 +2837,9 @@ bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr i
 }
 
 // --- gclidb.Issuenote..Print
-// print string representation of gclidb::Issuenote to string LHS, no header -- cprint:gclidb.Issuenote.String
-void gclidb::Issuenote_Print(gclidb::Issuenote & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issuenote.String  printfmt:Tuple
+void gclidb::Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.issuenote";
 
@@ -2495,16 +2886,31 @@ tempstr gclidb::Issuepipeline_Concat_issue_id( const algo::strptr& issue ,const 
 }
 
 // --- gclidb.Issuepipeline..ReadFieldMaybe
-bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_issuepipeline: retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuepipeline, strval); break;
-        case gclidb_FieldId_issue: retval = false; break;
-        case gclidb_FieldId_id: retval = false; break;
-        case gclidb_FieldId_id_in: retval = algo::cstring_ReadStrptrMaybe(parent.id_in, strval); break;
-        case gclidb_FieldId_status: retval = algo::cstring_ReadStrptrMaybe(parent.status, strval); break;
+        case gclidb_FieldId_issuepipeline: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuepipeline, strval);
+            break;
+        }
+        case gclidb_FieldId_issue: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_id: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_id_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.id_in, strval);
+            break;
+        }
+        case gclidb_FieldId_status: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.status, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2526,8 +2932,9 @@ bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::
 }
 
 // --- gclidb.Issuepipeline..Print
-// print string representation of gclidb::Issuepipeline to string LHS, no header -- cprint:gclidb.Issuepipeline.String
-void gclidb::Issuepipeline_Print(gclidb::Issuepipeline & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issuepipeline.String  printfmt:Tuple
+void gclidb::Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.issuepipeline";
 
@@ -2542,13 +2949,19 @@ void gclidb::Issuepipeline_Print(gclidb::Issuepipeline & row, algo::cstring &str
 }
 
 // --- gclidb.Label..ReadFieldMaybe
-bool gclidb::Label_ReadFieldMaybe(gclidb::Label &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_label: retval = algo::Smallstr50_ReadStrptrMaybe(parent.label, strval); break;
-        case gclidb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case gclidb_FieldId_label: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.label, strval);
+            break;
+        }
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2570,8 +2983,9 @@ bool gclidb::Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Label..Print
-// print string representation of gclidb::Label to string LHS, no header -- cprint:gclidb.Label.String
-void gclidb::Label_Print(gclidb::Label & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Label.String  printfmt:Tuple
+void gclidb::Label_Print(gclidb::Label& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.label";
 
@@ -2612,16 +3026,31 @@ tempstr gclidb::Milestone_Concat_project_iid( const algo::strptr& project ,const
 }
 
 // --- gclidb.Milestone..ReadFieldMaybe
-bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_milestone: retval = algo::Smallstr200_ReadStrptrMaybe(parent.milestone, strval); break;
-        case gclidb_FieldId_project: retval = false; break;
-        case gclidb_FieldId_iid: retval = false; break;
-        case gclidb_FieldId_description: retval = algo::cstring_ReadStrptrMaybe(parent.description, strval); break;
-        case gclidb_FieldId_title: retval = algo::cstring_ReadStrptrMaybe(parent.title, strval); break;
+        case gclidb_FieldId_milestone: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.milestone, strval);
+            break;
+        }
+        case gclidb_FieldId_project: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_iid: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_description: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
+            break;
+        }
+        case gclidb_FieldId_title: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2643,8 +3072,9 @@ bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr i
 }
 
 // --- gclidb.Milestone..Print
-// print string representation of gclidb::Milestone to string LHS, no header -- cprint:gclidb.Milestone.String
-void gclidb::Milestone_Print(gclidb::Milestone & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Milestone.String  printfmt:Tuple
+void gclidb::Milestone_Print(gclidb::Milestone& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.milestone";
 
@@ -2688,25 +3118,67 @@ tempstr gclidb::Mr_Concat_proj_iid( const algo::strptr& proj ,const algo::strptr
 }
 
 // --- gclidb.Mr..ReadFieldMaybe
-bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_mr: retval = algo::Smallstr150_ReadStrptrMaybe(parent.mr, strval); break;
-        case gclidb_FieldId_proj: retval = false; break;
-        case gclidb_FieldId_iid: retval = false; break;
-        case gclidb_FieldId_state: retval = algo::cstring_ReadStrptrMaybe(parent.state, strval); break;
-        case gclidb_FieldId_title: retval = algo::cstring_ReadStrptrMaybe(parent.title, strval); break;
-        case gclidb_FieldId_description: retval = algo::cstring_ReadStrptrMaybe(parent.description, strval); break;
-        case gclidb_FieldId_source_branch: retval = algo::cstring_ReadStrptrMaybe(parent.source_branch, strval); break;
-        case gclidb_FieldId_source_repo: retval = algo::cstring_ReadStrptrMaybe(parent.source_repo, strval); break;
-        case gclidb_FieldId_reviewer: retval = algo::cstring_ReadStrptrMaybe(parent.reviewer, strval); break;
-        case gclidb_FieldId_author: retval = algo::cstring_ReadStrptrMaybe(parent.author, strval); break;
-        case gclidb_FieldId_pipeline_status: retval = algo::Smallstr20_ReadStrptrMaybe(parent.pipeline_status, strval); break;
-        case gclidb_FieldId_pipeline_id: retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval); break;
-        case gclidb_FieldId_draft: retval = algo::cstring_ReadStrptrMaybe(parent.draft, strval); break;
-        case gclidb_FieldId_node_id: retval = algo::cstring_ReadStrptrMaybe(parent.node_id, strval); break;
+        case gclidb_FieldId_mr: {
+            retval = algo::Smallstr150_ReadStrptrMaybe(parent.mr, strval);
+            break;
+        }
+        case gclidb_FieldId_proj: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_iid: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_state: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
+            break;
+        }
+        case gclidb_FieldId_title: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
+            break;
+        }
+        case gclidb_FieldId_description: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
+            break;
+        }
+        case gclidb_FieldId_source_branch: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.source_branch, strval);
+            break;
+        }
+        case gclidb_FieldId_source_repo: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.source_repo, strval);
+            break;
+        }
+        case gclidb_FieldId_reviewer: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.reviewer, strval);
+            break;
+        }
+        case gclidb_FieldId_author: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
+            break;
+        }
+        case gclidb_FieldId_pipeline_status: {
+            retval = algo::Smallstr20_ReadStrptrMaybe(parent.pipeline_status, strval);
+            break;
+        }
+        case gclidb_FieldId_pipeline_id: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval);
+            break;
+        }
+        case gclidb_FieldId_draft: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.draft, strval);
+            break;
+        }
+        case gclidb_FieldId_node_id: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.node_id, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2728,8 +3200,9 @@ bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Mr..Print
-// print string representation of gclidb::Mr to string LHS, no header -- cprint:gclidb.Mr.String
-void gclidb::Mr_Print(gclidb::Mr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mr.String  printfmt:Tuple
+void gclidb::Mr_Print(gclidb::Mr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.mr";
 
@@ -2800,20 +3273,47 @@ tempstr gclidb::Mrjob_Concat_mr_job( const algo::strptr& mr ,const algo::strptr&
 }
 
 // --- gclidb.Mrjob..ReadFieldMaybe
-bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_mrjob: retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrjob, strval); break;
-        case gclidb_FieldId_mr: retval = false; break;
-        case gclidb_FieldId_job: retval = false; break;
-        case gclidb_FieldId_ref: retval = algo::Smallstr150_ReadStrptrMaybe(parent.ref, strval); break;
-        case gclidb_FieldId_id: retval = algo::cstring_ReadStrptrMaybe(parent.id, strval); break;
-        case gclidb_FieldId_name: retval = algo::cstring_ReadStrptrMaybe(parent.name, strval); break;
-        case gclidb_FieldId_pipeline_id: retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval); break;
-        case gclidb_FieldId_status: retval = algo::cstring_ReadStrptrMaybe(parent.status, strval); break;
-        case gclidb_FieldId_runner: retval = algo::cstring_ReadStrptrMaybe(parent.runner, strval); break;
+        case gclidb_FieldId_mrjob: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrjob, strval);
+            break;
+        }
+        case gclidb_FieldId_mr: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_job: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_ref: {
+            retval = algo::Smallstr150_ReadStrptrMaybe(parent.ref, strval);
+            break;
+        }
+        case gclidb_FieldId_id: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.id, strval);
+            break;
+        }
+        case gclidb_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+            break;
+        }
+        case gclidb_FieldId_pipeline_id: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval);
+            break;
+        }
+        case gclidb_FieldId_status: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.status, strval);
+            break;
+        }
+        case gclidb_FieldId_runner: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.runner, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2835,8 +3335,9 @@ bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.Mrjob..Print
-// print string representation of gclidb::Mrjob to string LHS, no header -- cprint:gclidb.Mrjob.String
-void gclidb::Mrjob_Print(gclidb::Mrjob & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mrjob.String  printfmt:Tuple
+void gclidb::Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.mrjob";
 
@@ -2892,17 +3393,35 @@ tempstr gclidb::Mrnote_Concat_mr_nid( const algo::strptr& mr ,const algo::strptr
 }
 
 // --- gclidb.Mrnote..ReadFieldMaybe
-bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_system: retval = algo::cstring_ReadStrptrMaybe(parent.system, strval); break;
-        case gclidb_FieldId_mrnote: retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrnote, strval); break;
-        case gclidb_FieldId_nid: retval = false; break;
-        case gclidb_FieldId_note: retval = algo::cstring_ReadStrptrMaybe(parent.note, strval); break;
-        case gclidb_FieldId_author: retval = algo::cstring_ReadStrptrMaybe(parent.author, strval); break;
-        case gclidb_FieldId_mr: retval = false; break;
+        case gclidb_FieldId_system: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.system, strval);
+            break;
+        }
+        case gclidb_FieldId_mrnote: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrnote, strval);
+            break;
+        }
+        case gclidb_FieldId_nid: {
+            retval = false;
+            break;
+        }
+        case gclidb_FieldId_note: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.note, strval);
+            break;
+        }
+        case gclidb_FieldId_author: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
+            break;
+        }
+        case gclidb_FieldId_mr: {
+            retval = false;
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2924,8 +3443,9 @@ bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str)
 }
 
 // --- gclidb.Mrnote..Print
-// print string representation of gclidb::Mrnote to string LHS, no header -- cprint:gclidb.Mrnote.String
-void gclidb::Mrnote_Print(gclidb::Mrnote & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mrnote.String  printfmt:Tuple
+void gclidb::Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.mrnote";
 
@@ -2943,14 +3463,23 @@ void gclidb::Mrnote_Print(gclidb::Mrnote & row, algo::cstring &str) {
 }
 
 // --- gclidb.User..ReadFieldMaybe
-bool gclidb::User_ReadFieldMaybe(gclidb::User &parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gclidb_FieldId_user: retval = algo::Smallstr50_ReadStrptrMaybe(parent.user, strval); break;
-        case gclidb_FieldId_id: retval = u32_ReadStrptrMaybe(parent.id, strval); break;
-        case gclidb_FieldId_name: retval = algo::cstring_ReadStrptrMaybe(parent.name, strval); break;
+        case gclidb_FieldId_user: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.user, strval);
+            break;
+        }
+        case gclidb_FieldId_id: {
+            retval = u32_ReadStrptrMaybe(parent.id, strval);
+            break;
+        }
+        case gclidb_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2972,8 +3501,9 @@ bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) {
 }
 
 // --- gclidb.User..Print
-// print string representation of gclidb::User to string LHS, no header -- cprint:gclidb.User.String
-void gclidb::User_Print(gclidb::User & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gclidb.User.String  printfmt:Tuple
+void gclidb::User_Print(gclidb::User& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gclidb.user";
 

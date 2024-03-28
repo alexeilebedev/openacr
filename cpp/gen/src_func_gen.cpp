@@ -89,27 +89,42 @@ src_func::_db_bh_func_curs::~_db_bh_func_curs() {
 
 namespace src_func { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:src_func.FDb._db.InitReflection
     static void          InitReflection();
+    // func:src_func.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:src_func.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:src_func.FDb.bh_func.Downheap
     static int           bh_func_Downheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:src_func.FDb.bh_func.Upheap
     static int           bh_func_Upheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
+    // func:src_func.FDb.bh_func.ElemLt
     static bool          bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) __attribute__((nothrow));
+    // func:src_func.FDb.bh_func_curs.Add
     static void          _db_bh_func_curs_Add(_db_bh_func_curs &curs, src_func::FFunc& row);
+    // func:src_func.FDb.dispatch.InputMaybe
     static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
+    // func:src_func.FDb.fstep.InputMaybe
     static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
+    // func:src_func.FDb.gstatic.InputMaybe
     static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
+    // func:src_func.FDb.ctypelen.InputMaybe
     static bool          ctypelen_InputMaybe(dmmeta::Ctypelen &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:src_func.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:src_func.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
+    // func:src_func.FFunc.sortkey.Nextchar
     static u64           sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // func:src_func...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -138,8 +153,9 @@ void src_func::FCtypelen_Uninit(src_func::FCtypelen& ctypelen) {
 }
 
 // --- src_func.trace..Print
-// print string representation of src_func::trace to string LHS, no header -- cprint:src_func.trace.String
-void src_func::trace_Print(src_func::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_func.trace.String  printfmt:Tuple
+void src_func::trace_Print(src_func::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "src_func.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1785,7 +1801,7 @@ bool src_func::ctypelen_XrefMaybe(src_func::FCtypelen &row) {
 // --- src_func.FDb.ind_ctypelen.Find
 // Find row by key. Return NULL if not found.
 src_func::FCtypelen* src_func::ind_ctypelen_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctypelen_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctypelen_buckets_n - 1);
     src_func::FCtypelen* *e = &_db.ind_ctypelen_buckets_elems[index];
     src_func::FCtypelen* ret=NULL;
     do {
@@ -1828,7 +1844,7 @@ bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
     ind_ctypelen_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctypelen_next == (src_func::FCtypelen*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
         src_func::FCtypelen* *prev = &_db.ind_ctypelen_buckets_elems[index];
         do {
             src_func::FCtypelen* ret = *prev;
@@ -1854,7 +1870,7 @@ bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_func::ind_ctypelen_Remove(src_func::FCtypelen& row) {
     if (LIKELY(row.ind_ctypelen_next != (src_func::FCtypelen*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
         src_func::FCtypelen* *prev = &_db.ind_ctypelen_buckets_elems[index]; // addr of pointer to current element
         while (src_func::FCtypelen *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1891,7 +1907,7 @@ void src_func::ind_ctypelen_Reserve(int n) {
             while (elem) {
                 src_func::FCtypelen &row        = *elem;
                 src_func::FCtypelen* next       = row.ind_ctypelen_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctypelen_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2652,8 +2668,9 @@ bool src_func::FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr i
 }
 
 // --- src_func.FieldId..Print
-// print string representation of src_func::FieldId to string LHS, no header -- cprint:src_func.FieldId.String
-void src_func::FieldId_Print(src_func::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_func.FieldId.String  printfmt:Raw
+void src_func::FieldId_Print(src_func::FieldId& row, algo::cstring& str) {
     src_func::value_Print(row, str);
 }
 
@@ -2797,8 +2814,9 @@ bool src_func::TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr i
 }
 
 // --- src_func.TableId..Print
-// print string representation of src_func::TableId to string LHS, no header -- cprint:src_func.TableId.String
-void src_func::TableId_Print(src_func::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_func.TableId.String  printfmt:Raw
+void src_func::TableId_Print(src_func::TableId& row, algo::cstring& str) {
     src_func::value_Print(row, str);
 }
 

@@ -1,0 +1,8 @@
+comment
+Executable
+Library
+"Skip building"
+"Object files are added to dependents' link line"
+"Precompiled header"
+"Protocol (not a target)"
+"Ssim database (not a target)"

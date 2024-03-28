@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: amc_gc (exe) -- Empirically eliminate unused records
+// Target: amc_gc (exe) -- Garbage collector for in-memory databases
 // Exceptions: NO
 // Source: cpp/amc/amc_gc.cpp
 //
@@ -107,12 +107,12 @@ static int DeleteRec(strptr line, strptr pkey) {
 // -----------------------------------------------------------------------------
 
 static int SandboxDeleteRec(strptr line, strptr pkey) {
-    algo_lib::SandboxEnter(dev_Sandbox_sandbox_amc_gc);
+    algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_amc_gc));
     command::amc_proc amc;
     command::abt_proc abt;
 
     // redirect all to the build log
-    amc.fstdout     << ">>"<<DirFileJoin(algo_lib::_db.sandbox_orig_dir, amc_gc::_db.buildlog);
+    amc.fstdout     << ">>"<<DirFileJoin(algo_lib::dirstack_qLast(), amc_gc::_db.buildlog);
     amc.fstderr     = amc.fstdout;
     abt.fstdout     = amc.fstdout;
     abt.fstderr     = amc.fstdout;
@@ -128,7 +128,7 @@ static int SandboxDeleteRec(strptr line, strptr pkey) {
     if (rc == 0) {
         rc = abt_Exec(abt);
     }
-    algo_lib::SandboxExit();
+    algo_lib::PopDir();
     return rc;
 }
 

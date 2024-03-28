@@ -94,102 +94,106 @@ enum atf_amc_FieldIdEnum {                  // atf_amc.FieldId.value
     ,atf_amc_FieldId_v               = 20
     ,atf_amc_FieldId_typeg           = 21
     ,atf_amc_FieldId_optg            = 22
-    ,atf_amc_FieldId_pmask           = 23
-    ,atf_amc_FieldId_value2          = 24
-    ,atf_amc_FieldId_value3          = 25
-    ,atf_amc_FieldId_value21         = 26
-    ,atf_amc_FieldId_value22         = 27
-    ,atf_amc_FieldId_value23         = 28
-    ,atf_amc_FieldId_value24         = 29
-    ,atf_amc_FieldId_value25         = 30
-    ,atf_amc_FieldId_value26         = 31
-    ,atf_amc_FieldId_value20         = 32
-    ,atf_amc_FieldId_value28         = 33
-    ,atf_amc_FieldId_value29         = 34
-    ,atf_amc_FieldId_value30         = 35
-    ,atf_amc_FieldId_value31         = 36
-    ,atf_amc_FieldId_value32         = 37
-    ,atf_amc_FieldId_value27         = 38
-    ,atf_amc_FieldId_value19         = 39
-    ,atf_amc_FieldId_value18         = 40
-    ,atf_amc_FieldId_value4          = 41
-    ,atf_amc_FieldId_value5          = 42
-    ,atf_amc_FieldId_value6          = 43
-    ,atf_amc_FieldId_value7          = 44
-    ,atf_amc_FieldId_value8          = 45
-    ,atf_amc_FieldId_value9          = 46
-    ,atf_amc_FieldId_value69         = 47
-    ,atf_amc_FieldId_value11         = 48
-    ,atf_amc_FieldId_value12         = 49
-    ,atf_amc_FieldId_value13         = 50
-    ,atf_amc_FieldId_value14         = 51
-    ,atf_amc_FieldId_value15         = 52
-    ,atf_amc_FieldId_value16         = 53
-    ,atf_amc_FieldId_value33         = 54
-    ,atf_amc_FieldId_value10         = 55
-    ,atf_amc_FieldId_value17         = 56
-    ,atf_amc_FieldId_value35         = 57
-    ,atf_amc_FieldId_value55         = 58
-    ,atf_amc_FieldId_value56         = 59
-    ,atf_amc_FieldId_value57         = 60
-    ,atf_amc_FieldId_value58         = 61
-    ,atf_amc_FieldId_value59         = 62
-    ,atf_amc_FieldId_value60         = 63
-    ,atf_amc_FieldId_value54         = 64
-    ,atf_amc_FieldId_value62         = 65
-    ,atf_amc_FieldId_value63         = 66
-    ,atf_amc_FieldId_value64         = 67
-    ,atf_amc_FieldId_value65         = 68
-    ,atf_amc_FieldId_value66         = 69
-    ,atf_amc_FieldId_value67         = 70
-    ,atf_amc_FieldId_value68         = 71
-    ,atf_amc_FieldId_value61         = 72
-    ,atf_amc_FieldId_value34         = 73
-    ,atf_amc_FieldId_value52         = 74
-    ,atf_amc_FieldId_value36         = 75
-    ,atf_amc_FieldId_value37         = 76
-    ,atf_amc_FieldId_value38         = 77
-    ,atf_amc_FieldId_value39         = 78
-    ,atf_amc_FieldId_value40         = 79
-    ,atf_amc_FieldId_value41         = 80
-    ,atf_amc_FieldId_value42         = 81
-    ,atf_amc_FieldId_value53         = 82
-    ,atf_amc_FieldId_value44         = 83
-    ,atf_amc_FieldId_value45         = 84
-    ,atf_amc_FieldId_value46         = 85
-    ,atf_amc_FieldId_value47         = 86
-    ,atf_amc_FieldId_value48         = 87
-    ,atf_amc_FieldId_value49         = 88
-    ,atf_amc_FieldId_value50         = 89
-    ,atf_amc_FieldId_value51         = 90
-    ,atf_amc_FieldId_value43         = 91
-    ,atf_amc_FieldId_value70         = 92
-    ,atf_amc_FieldId_value71         = 93
-    ,atf_amc_FieldId_ch              = 94
-    ,atf_amc_FieldId_val1            = 95
-    ,atf_amc_FieldId_val2            = 96
-    ,atf_amc_FieldId_val3            = 97
-    ,atf_amc_FieldId_msghdr          = 98
-    ,atf_amc_FieldId_payload         = 99
-    ,atf_amc_FieldId_val             = 100
-    ,atf_amc_FieldId_text            = 101
-    ,atf_amc_FieldId_typea           = 102
-    ,atf_amc_FieldId_j               = 103
-    ,atf_amc_FieldId_typec           = 104
-    ,atf_amc_FieldId_typeh           = 105
-    ,atf_amc_FieldId_types           = 106
-    ,atf_amc_FieldId_comment         = 107
-    ,atf_amc_FieldId_i               = 108
-    ,atf_amc_FieldId_k               = 109
-    ,atf_amc_FieldId_strval_regx     = 110
-    ,atf_amc_FieldId_strval2_regx    = 111
-    ,atf_amc_FieldId_start_dateval   = 112
-    ,atf_amc_FieldId_end_dateval     = 113
-    ,atf_amc_FieldId_start_intval    = 114
-    ,atf_amc_FieldId_end_intval      = 115
+    ,atf_amc_FieldId_present         = 23
+    ,atf_amc_FieldId_assigned        = 24
+    ,atf_amc_FieldId_nullable        = 25
+    ,atf_amc_FieldId_value1          = 26
+    ,atf_amc_FieldId_value2          = 27
+    ,atf_amc_FieldId_value3          = 28
+    ,atf_amc_FieldId_value4          = 29
+    ,atf_amc_FieldId_value5          = 30
+    ,atf_amc_FieldId_value6          = 31
+    ,atf_amc_FieldId_value7          = 32
+    ,atf_amc_FieldId_pmask           = 33
+    ,atf_amc_FieldId_value21         = 34
+    ,atf_amc_FieldId_value22         = 35
+    ,atf_amc_FieldId_value23         = 36
+    ,atf_amc_FieldId_value24         = 37
+    ,atf_amc_FieldId_value25         = 38
+    ,atf_amc_FieldId_value26         = 39
+    ,atf_amc_FieldId_value20         = 40
+    ,atf_amc_FieldId_value28         = 41
+    ,atf_amc_FieldId_value29         = 42
+    ,atf_amc_FieldId_value30         = 43
+    ,atf_amc_FieldId_value31         = 44
+    ,atf_amc_FieldId_value32         = 45
+    ,atf_amc_FieldId_value27         = 46
+    ,atf_amc_FieldId_value19         = 47
+    ,atf_amc_FieldId_value18         = 48
+    ,atf_amc_FieldId_value8          = 49
+    ,atf_amc_FieldId_value9          = 50
+    ,atf_amc_FieldId_value69         = 51
+    ,atf_amc_FieldId_value11         = 52
+    ,atf_amc_FieldId_value12         = 53
+    ,atf_amc_FieldId_value13         = 54
+    ,atf_amc_FieldId_value14         = 55
+    ,atf_amc_FieldId_value15         = 56
+    ,atf_amc_FieldId_value16         = 57
+    ,atf_amc_FieldId_value33         = 58
+    ,atf_amc_FieldId_value10         = 59
+    ,atf_amc_FieldId_value17         = 60
+    ,atf_amc_FieldId_value35         = 61
+    ,atf_amc_FieldId_value55         = 62
+    ,atf_amc_FieldId_value56         = 63
+    ,atf_amc_FieldId_value57         = 64
+    ,atf_amc_FieldId_value58         = 65
+    ,atf_amc_FieldId_value59         = 66
+    ,atf_amc_FieldId_value60         = 67
+    ,atf_amc_FieldId_value54         = 68
+    ,atf_amc_FieldId_value62         = 69
+    ,atf_amc_FieldId_value63         = 70
+    ,atf_amc_FieldId_value64         = 71
+    ,atf_amc_FieldId_value65         = 72
+    ,atf_amc_FieldId_value66         = 73
+    ,atf_amc_FieldId_value67         = 74
+    ,atf_amc_FieldId_value68         = 75
+    ,atf_amc_FieldId_value61         = 76
+    ,atf_amc_FieldId_value34         = 77
+    ,atf_amc_FieldId_value52         = 78
+    ,atf_amc_FieldId_value36         = 79
+    ,atf_amc_FieldId_value37         = 80
+    ,atf_amc_FieldId_value38         = 81
+    ,atf_amc_FieldId_value39         = 82
+    ,atf_amc_FieldId_value40         = 83
+    ,atf_amc_FieldId_value41         = 84
+    ,atf_amc_FieldId_value42         = 85
+    ,atf_amc_FieldId_value53         = 86
+    ,atf_amc_FieldId_value44         = 87
+    ,atf_amc_FieldId_value45         = 88
+    ,atf_amc_FieldId_value46         = 89
+    ,atf_amc_FieldId_value47         = 90
+    ,atf_amc_FieldId_value48         = 91
+    ,atf_amc_FieldId_value49         = 92
+    ,atf_amc_FieldId_value50         = 93
+    ,atf_amc_FieldId_value51         = 94
+    ,atf_amc_FieldId_value43         = 95
+    ,atf_amc_FieldId_value70         = 96
+    ,atf_amc_FieldId_value71         = 97
+    ,atf_amc_FieldId_ch              = 98
+    ,atf_amc_FieldId_val1            = 99
+    ,atf_amc_FieldId_val2            = 100
+    ,atf_amc_FieldId_val3            = 101
+    ,atf_amc_FieldId_msghdr          = 102
+    ,atf_amc_FieldId_payload         = 103
+    ,atf_amc_FieldId_val             = 104
+    ,atf_amc_FieldId_text            = 105
+    ,atf_amc_FieldId_typea           = 106
+    ,atf_amc_FieldId_j               = 107
+    ,atf_amc_FieldId_typec           = 108
+    ,atf_amc_FieldId_typeh           = 109
+    ,atf_amc_FieldId_types           = 110
+    ,atf_amc_FieldId_comment         = 111
+    ,atf_amc_FieldId_i               = 112
+    ,atf_amc_FieldId_k               = 113
+    ,atf_amc_FieldId_strval_regx     = 114
+    ,atf_amc_FieldId_strval2_regx    = 115
+    ,atf_amc_FieldId_start_dateval   = 116
+    ,atf_amc_FieldId_end_dateval     = 117
+    ,atf_amc_FieldId_start_intval    = 118
+    ,atf_amc_FieldId_end_intval      = 119
 };
 
-enum { atf_amc_FieldIdEnum_N = 116 };
+enum { atf_amc_FieldIdEnum_N = 120 };
 
 
 // --- atf_amc_MsgHdrLT_type_Enum
@@ -386,6 +390,9 @@ namespace atf_amc { struct InlaryPrint_fixary_curs; }
 namespace atf_amc { struct InlaryPrint_inlary_curs; }
 namespace atf_amc { struct Lary32_lary_curs; }
 namespace atf_amc { struct MsgLTV_v_curs; }
+namespace atf_amc { struct PmaskMultiple_present_bitcurs; }
+namespace atf_amc { struct PmaskMultiple_assigned_bitcurs; }
+namespace atf_amc { struct PmaskMultiple_nullable_bitcurs; }
 namespace atf_amc { struct PmaskU128_pmask_bitcurs; }
 namespace atf_amc { struct PmaskU32_pmask_bitcurs; }
 namespace atf_amc { struct PmaskU555_pmask_bitcurs; }
@@ -446,6 +453,7 @@ namespace atf_amc { struct OptAlloc; }
 namespace atf_amc { struct OptAlloc_curs; }
 namespace atf_amc { struct OptG_curs; }
 namespace atf_amc { struct OptOptG_curs; }
+namespace atf_amc { struct PmaskMultiple; }
 namespace atf_amc { struct PmaskU128; }
 namespace atf_amc { struct PmaskU32; }
 namespace atf_amc { struct PmaskU555; }
@@ -466,6 +474,7 @@ namespace atf_amc { struct TypeBE32en; }
 namespace atf_amc { struct TypeBE64; }
 namespace atf_amc { struct TypeBE64dflt; }
 namespace atf_amc { struct TypeBE64sf; }
+namespace atf_amc { struct TypeTVal; }
 namespace atf_amc { struct Typefconst; }
 namespace atf_amc { struct VarlenAlloc; }
 namespace atf_amc { struct VarlenAlloc_curs; }
@@ -518,14 +527,20 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field field1 of atf_amc::AmcCleanup2
+// func:atf_amc.AmcCleanup2.field1.Cleanup
+// this function is 'extrn' and implemented by user
 void                 field1_Cleanup(atf_amc::AmcCleanup2& parent) __attribute__((nothrow));
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field field2 of atf_amc::AmcCleanup2
+// func:atf_amc.AmcCleanup2.field2.Cleanup
+// this function is 'extrn' and implemented by user
 void                 field2_Cleanup(atf_amc::AmcCleanup2& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.AmcCleanup2..Init
 void                 AmcCleanup2_Init(atf_amc::AmcCleanup2& parent);
+// func:atf_amc.AmcCleanup2..Uninit
 void                 AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) __attribute__((nothrow));
 
 // --- atf_amc.AmcSubstr1
@@ -534,8 +549,10 @@ struct AmcSubstr1 { // atf_amc.AmcSubstr1
     AmcSubstr1();
 };
 
+// func:atf_amc.AmcSubstr1.boolval.Get
 bool                 boolval_Get(atf_amc::AmcSubstr1& parent) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_amc.AmcSubstr1.intval.Get
 i32                  intval_Get(atf_amc::AmcSubstr1& parent) __attribute__((__warn_unused_result__, nothrow));
 
 
@@ -547,26 +564,35 @@ struct BitfldType1 { // atf_amc.BitfldType1: Test type for testing reading/print
 
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
+// func:atf_amc.BitfldType1.bit1.Get
 u64                  bit1_Get(const atf_amc::BitfldType1& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
+// func:atf_amc.BitfldType1.bit1.Set
 void                 bit1_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    10 bits starting at bit 5.
+// func:atf_amc.BitfldType1.bits5.Get
 u64                  bits5_Get(const atf_amc::BitfldType1& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    10 bits starting at bit 5.
+// func:atf_amc.BitfldType1.bits5.Set
 void                 bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
 
-bool                 BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.BitfldType1..ReadFieldMaybe
+bool                 BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::BitfldType1 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.BitfldType1..ReadStrptrMaybe
 bool                 BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.BitfldType1..Init
 void                 BitfldType1_Init(atf_amc::BitfldType1& parent);
-// print string representation of atf_amc::BitfldType1 to string LHS, no header -- cprint:atf_amc.BitfldType1.String
-void                 BitfldType1_Print(atf_amc::BitfldType1 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BitfldType1.String  printfmt:Tuple
+// func:atf_amc.BitfldType1..Print
+void                 BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.BitfldType2
 struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/printing bitfields to tuple
@@ -577,25 +603,34 @@ struct BitfldType2 { // atf_amc.BitfldType2: Test type 2 for testing reading/pri
 
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
+// func:atf_amc.BitfldType2.bit0.Get
 bool                 bit0_Get(const atf_amc::BitfldType2& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
+// func:atf_amc.BitfldType2.bit0.Set
 void                 bit0_Set(atf_amc::BitfldType2& parent, bool rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
+// func:atf_amc.BitfldType2.bit1.Get
 bool                 bit1_Get(const atf_amc::BitfldType2& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
+// func:atf_amc.BitfldType2.bit1.Set
 void                 bit1_Set(atf_amc::BitfldType2& parent, bool rhs) __attribute__((nothrow));
 
-bool                 BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.BitfldType2..ReadFieldMaybe
+bool                 BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::BitfldType2 from an ascii string.
+// func:atf_amc.BitfldType2..ReadStrptrMaybe
 bool                 BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.BitfldType2..Init
 void                 BitfldType2_Init(atf_amc::BitfldType2& parent);
-// print string representation of atf_amc::BitfldType2 to string LHS, no header -- cprint:atf_amc.BitfldType2.String
-void                 BitfldType2_Print(atf_amc::BitfldType2 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BitfldType2.String  printfmt:Bitset
+// func:atf_amc.BitfldType2..Print
+void                 BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.BitfldU128
 struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
@@ -605,19 +640,24 @@ struct BitfldU128 { // atf_amc.BitfldU128: Test of bitfield functionality
 
 // Retrieve bitfield from value of field value
 //    64 bits starting at bit 1.
+// func:atf_amc.BitfldU128.bits1_65.Get
 u64                  bits1_65_Get(const atf_amc::BitfldU128& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    64 bits starting at bit 1.
+// func:atf_amc.BitfldU128.bits1_65.Set
 void                 bits1_65_Set(atf_amc::BitfldU128& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    63 bits starting at bit 65.
+// func:atf_amc.BitfldU128.bits65_128.Get
 u64                  bits65_128_Get(const atf_amc::BitfldU128& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    63 bits starting at bit 65.
+// func:atf_amc.BitfldU128.bits65_128.Set
 void                 bits65_128_Set(atf_amc::BitfldU128& parent, u64 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.BitfldU128..Init
 void                 BitfldU128_Init(atf_amc::BitfldU128& parent);
 
 // --- atf_amc.BitfldU16
@@ -628,19 +668,24 @@ struct BitfldU16 { // atf_amc.BitfldU16: Test of bitfield functionality
 
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 0.
+// func:atf_amc.BitfldU16.bits0_4.Get
 u8                   bits0_4_Get(const atf_amc::BitfldU16& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 0.
+// func:atf_amc.BitfldU16.bits0_4.Set
 void                 bits0_4_Set(atf_amc::BitfldU16& parent, u8 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 8.
+// func:atf_amc.BitfldU16.bits8_12.Get
 u8                   bits8_12_Get(const atf_amc::BitfldU16& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 8.
+// func:atf_amc.BitfldU16.bits8_12.Set
 void                 bits8_12_Set(atf_amc::BitfldU16& parent, u8 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.BitfldU16..Init
 void                 BitfldU16_Init(atf_amc::BitfldU16& parent);
 
 // --- atf_amc.Bitset
@@ -654,190 +699,279 @@ struct Bitset { // atf_amc.Bitset: Test bitset
 
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.Bitset.fld1.NBits
 int                  fld1_Nbits(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld1.qGetBit
 bool                 fld1_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.Bitset.fld1.GetBit
 bool                 fld1_GetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.Bitset.fld1.BitsEmptyQ
 bool                 fld1_BitsEmptyQ(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.Bitset.fld1.Sum1s
 u64                  fld1_Sum1s(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld1.qClearBit
 void                 fld1_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.Bitset.fld1.ClearBit
 void                 fld1_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld1.qSetBit
 void                 fld1_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.Bitset.fld1.SetBit
 void                 fld1_SetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld1.qSetBitVal
 void                 fld1_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld1.qOrBitVal
 void                 fld1_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.Bitset.fld1.ClearBitsAll
 void                 fld1_ClearBitsAll(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.Bitset.fld1.ClearBits
 void                 fld1_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.Bitset.fld1.OrBits
 void                 fld1_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.Bitset.fld1.Sup
 i32                  fld1_Sup(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set all elements of fixed array to value RHS
+// func:atf_amc.Bitset.fld1.Fill
 void                 fld1_Fill(atf_amc::Bitset& parent, const u16 &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.Bitset.fld1.Find
 u16*                 fld1_Find(atf_amc::Bitset& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array fld1 as aryptr.
+// func:atf_amc.Bitset.fld1.Getary
 algo::aryptr<u16>    fld1_Getary(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Return max number of items in the array
+// func:atf_amc.Bitset.fld1.Max
 i32                  fld1_Max(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.Bitset.fld1.N
 i32                  fld1_N(const atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.Bitset.fld1.Setary
 void                 fld1_Setary(atf_amc::Bitset& parent, const algo::aryptr<u16> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.Bitset.fld1.qFind
 u16&                 fld1_qFind(atf_amc::Bitset& parent, u64 t) __attribute__((nothrow));
 
 // Return constant 1
+// func:atf_amc.Bitset.fld8.N
 int                  fld8_N(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Access value
+// func:atf_amc.Bitset.fld8.qFind
 u8&                  fld8_qFind(atf_amc::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.Bitset.fld8.NBits
 int                  fld8_Nbits(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld8.qGetBit
 bool                 fld8_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.Bitset.fld8.GetBit
 bool                 fld8_GetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.Bitset.fld8.BitsEmptyQ
 bool                 fld8_BitsEmptyQ(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.Bitset.fld8.Sum1s
 u64                  fld8_Sum1s(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld8.qClearBit
 void                 fld8_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.Bitset.fld8.ClearBit
 void                 fld8_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld8.qSetBit
 void                 fld8_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.Bitset.fld8.SetBit
 void                 fld8_SetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld8.qSetBitVal
 void                 fld8_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld8.qOrBitVal
 void                 fld8_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.Bitset.fld8.ClearBitsAll
 void                 fld8_ClearBitsAll(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.Bitset.fld8.ClearBits
 void                 fld8_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.Bitset.fld8.OrBits
 void                 fld8_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.Bitset.fld8.Sup
 i32                  fld8_Sup(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return constant 1
+// func:atf_amc.Bitset.fld64.N
 int                  fld64_N(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Access value
+// func:atf_amc.Bitset.fld64.qFind
 u64&                 fld64_qFind(atf_amc::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.Bitset.fld64.NBits
 int                  fld64_Nbits(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld64.qGetBit
 bool                 fld64_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.Bitset.fld64.GetBit
 bool                 fld64_GetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.Bitset.fld64.BitsEmptyQ
 bool                 fld64_BitsEmptyQ(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.Bitset.fld64.Sum1s
 u64                  fld64_Sum1s(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld64.qClearBit
 void                 fld64_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.Bitset.fld64.ClearBit
 void                 fld64_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld64.qSetBit
 void                 fld64_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.Bitset.fld64.SetBit
 void                 fld64_SetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld64.qSetBitVal
 void                 fld64_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld64.qOrBitVal
 void                 fld64_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.Bitset.fld64.ClearBitsAll
 void                 fld64_ClearBitsAll(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.Bitset.fld64.ClearBits
 void                 fld64_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.Bitset.fld64.OrBits
 void                 fld64_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.Bitset.fld64.Sup
 i32                  fld64_Sup(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return constant 1
+// func:atf_amc.Bitset.fld128.N
 int                  fld128_N(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Access value
+// func:atf_amc.Bitset.fld128.qFind
 u128&                fld128_qFind(atf_amc::Bitset& parent, int) __attribute__((__warn_unused_result__, nothrow));
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.Bitset.fld128.NBits
 int                  fld128_Nbits(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld128.qGetBit
 bool                 fld128_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.Bitset.fld128.GetBit
 bool                 fld128_GetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.Bitset.fld128.BitsEmptyQ
 bool                 fld128_BitsEmptyQ(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.Bitset.fld128.Sum1s
 u64                  fld128_Sum1s(atf_amc::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld128.qClearBit
 void                 fld128_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.Bitset.fld128.ClearBit
 void                 fld128_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld128.qSetBit
 void                 fld128_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.Bitset.fld128.SetBit
 void                 fld128_SetBit(atf_amc::Bitset& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld128.qSetBitVal
 void                 fld128_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.Bitset.fld128.qOrBitVal
 void                 fld128_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.Bitset.fld128.ClearBitsAll
 void                 fld128_ClearBitsAll(atf_amc::Bitset& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.Bitset.fld128.ClearBits
 void                 fld128_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.Bitset.fld128.OrBits
 void                 fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.Bitset.fld1_bitcurs.Next
 void                 Bitset_fld1_bitcurs_Next(Bitset_fld1_bitcurs &curs);
+// func:atf_amc.Bitset.fld1_bitcurs.Reset
 void                 Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent);
 // cursor points to valid item
+// func:atf_amc.Bitset.fld1_bitcurs.ValidQ
 bool                 Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs);
 // item access
+// func:atf_amc.Bitset.fld1_bitcurs.Access
 int&                 Bitset_fld1_bitcurs_Access(Bitset_fld1_bitcurs &curs);
 // cursor points to valid item
+// func:atf_amc.Bitset.fld1_curs.Reset
 void                 Bitset_fld1_curs_Reset(Bitset_fld1_curs &curs, atf_amc::Bitset &parent);
 // cursor points to valid item
+// func:atf_amc.Bitset.fld1_curs.ValidQ
 bool                 Bitset_fld1_curs_ValidQ(Bitset_fld1_curs &curs);
 // proceed to next item
+// func:atf_amc.Bitset.fld1_curs.Next
 void                 Bitset_fld1_curs_Next(Bitset_fld1_curs &curs);
 // item access
+// func:atf_amc.Bitset.fld1_curs.Access
 u16&                 Bitset_fld1_curs_Access(Bitset_fld1_curs &curs);
 // proceed to next item
+// func:atf_amc.Bitset.fld8_bitcurs.Next
 void                 Bitset_fld8_bitcurs_Next(Bitset_fld8_bitcurs &curs);
+// func:atf_amc.Bitset.fld8_bitcurs.Reset
 void                 Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent);
 // cursor points to valid item
+// func:atf_amc.Bitset.fld8_bitcurs.ValidQ
 bool                 Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs);
 // item access
+// func:atf_amc.Bitset.fld8_bitcurs.Access
 int&                 Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs);
 // proceed to next item
+// func:atf_amc.Bitset.fld64_bitcurs.Next
 void                 Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs);
+// func:atf_amc.Bitset.fld64_bitcurs.Reset
 void                 Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent);
 // cursor points to valid item
+// func:atf_amc.Bitset.fld64_bitcurs.ValidQ
 bool                 Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs);
 // item access
+// func:atf_amc.Bitset.fld64_bitcurs.Access
 int&                 Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs);
 // Set all fields to initial values.
+// func:atf_amc.Bitset..Init
 void                 Bitset_Init(atf_amc::Bitset& parent);
 
 // --- atf_amc.Bytebuf
@@ -863,29 +997,38 @@ private:
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 //
+// func:atf_amc.Bytebuf.in.GetMsg
 algo::aryptr<char>   in_GetMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:atf_amc.Bytebuf.in.Max
 i32                  in_Max(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.Bytebuf.in.N
 i32                  in_N(atf_amc::Bytebuf& bytebuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.Bytebuf.in.RemoveAll
 void                 in_RemoveAll(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
+// func:atf_amc.Bytebuf.in.SkipBytes
 void                 in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.Bytebuf.in.WriteAll
 bool                 in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.Bytebuf..Init
 void                 Bytebuf_Init(atf_amc::Bytebuf& bytebuf);
-// print string representation of atf_amc::Bytebuf to string LHS, no header -- cprint:atf_amc.Bytebuf.String
-void                 Bytebuf_Print(atf_amc::Bytebuf & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Bytebuf.String  printfmt:Raw
+// func:atf_amc.Bytebuf..Print
+void                 Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.BytebufDyn
 // create: atf_amc.FDb.bytebuf_dyn (Cppstack)
@@ -911,35 +1054,46 @@ private:
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 //
+// func:atf_amc.BytebufDyn.in.GetMsg
 algo::aryptr<char>   in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
 // Set buffer size.
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
+// func:atf_amc.BytebufDyn.in.Realloc
 void                 in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:atf_amc.BytebufDyn.in.Max
 i32                  in_Max(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.BytebufDyn.in.N
 i32                  in_N(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((__warn_unused_result__, nothrow, pure));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.BytebufDyn.in.RemoveAll
 void                 in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
+// func:atf_amc.BytebufDyn.in.SkipBytes
 void                 in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.BytebufDyn.in.WriteAll
 bool                 in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.BytebufDyn..Init
 void                 BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn);
+// func:atf_amc.BytebufDyn..Uninit
 void                 BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
-// print string representation of atf_amc::BytebufDyn to string LHS, no header -- cprint:atf_amc.BytebufDyn.String
-void                 BytebufDyn_Print(atf_amc::BytebufDyn & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BytebufDyn.String  printfmt:Raw
+// func:atf_amc.BytebufDyn..Print
+void                 BytebufDyn_Print(atf_amc::BytebufDyn& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Cstr
 // create: atf_amc.FPerfSortString.orig (Tary)
@@ -958,18 +1112,26 @@ struct Cstr { // atf_amc.Cstr
 };
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.Cstr.val.Lt
 bool                 val_Lt(atf_amc::Cstr& orig, atf_amc::Cstr &rhs) __attribute__((nothrow));
 // Compare two fields.
+// func:atf_amc.Cstr.val.Cmp
 i32                  val_Cmp(atf_amc::Cstr& orig, atf_amc::Cstr &rhs) __attribute__((nothrow));
 
+// func:atf_amc.Cstr..Hash
 u32                  Cstr_Hash(u32 prev, const atf_amc::Cstr & rhs) __attribute__((nothrow));
-bool                 Cstr_Lt(atf_amc::Cstr & lhs, atf_amc::Cstr & rhs) __attribute__((nothrow));
-i32                  Cstr_Cmp(atf_amc::Cstr & lhs, atf_amc::Cstr & rhs) __attribute__((nothrow));
-bool                 Cstr_Eq(const atf_amc::Cstr & lhs,const atf_amc::Cstr & rhs) __attribute__((nothrow));
+// func:atf_amc.Cstr..Lt
+bool                 Cstr_Lt(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) __attribute__((nothrow));
+// func:atf_amc.Cstr..Cmp
+i32                  Cstr_Cmp(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) __attribute__((nothrow));
+// func:atf_amc.Cstr..Eq
+bool                 Cstr_Eq(const atf_amc::Cstr& lhs, const atf_amc::Cstr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr & rhs) __attribute__((nothrow));
+// func:atf_amc.Cstr..Update
+bool                 Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) __attribute__((nothrow));
 // Create JSON representation of atf_amc::Cstr under PARENT node -- cprint:atf_amc.Cstr.Json
-lib_json::FNode *    Cstr_FmtJson(atf_amc::Cstr & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_amc.Cstr..FmtJson
+lib_json::FNode *    Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_amc.Cstring
 // access: atf_amc.FCstring.msghdr (Base)
@@ -993,19 +1155,28 @@ struct Ctype1Attr { // atf_amc.Ctype1Attr
     Ctype1Attr();
 };
 
+// func:atf_amc.Ctype1Attr..Hash
 u32                  Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype1Attr from an ascii string.
 // The format of the string is the format of the atf_amc::Ctype1Attr's only field
+// func:atf_amc.Ctype1Attr..ReadStrptrMaybe
 bool                 Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strptr in_str);
-bool                 Ctype1Attr_Lt(atf_amc::Ctype1Attr & lhs, atf_amc::Ctype1Attr & rhs) __attribute__((nothrow));
-i32                  Ctype1Attr_Cmp(atf_amc::Ctype1Attr & lhs, atf_amc::Ctype1Attr & rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype1Attr..Lt
+bool                 Ctype1Attr_Lt(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype1Attr..Cmp
+i32                  Ctype1Attr_Cmp(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Ctype1Attr..Init
 void                 Ctype1Attr_Init(atf_amc::Ctype1Attr& parent);
-bool                 Ctype1Attr_Eq(const atf_amc::Ctype1Attr & lhs,const atf_amc::Ctype1Attr & rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype1Attr..Eq
+bool                 Ctype1Attr_Eq(const atf_amc::Ctype1Attr& lhs, const atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::Ctype1Attr to string LHS, no header -- cprint:atf_amc.Ctype1Attr.String
-void                 Ctype1Attr_Print(atf_amc::Ctype1Attr & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.Ctype1Attr..Update
+bool                 Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype1Attr.String  printfmt:Raw
+// func:atf_amc.Ctype1Attr..Print
+void                 Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Ctype2Attr
 struct Ctype2Attr { // atf_amc.Ctype2Attr
@@ -1022,22 +1193,33 @@ struct Ctype2Attr { // atf_amc.Ctype2Attr
     Ctype2Attr();
 };
 
+// func:atf_amc.Ctype2Attr..Hash
 u32                  Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
-bool                 Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Ctype2Attr..ReadFieldMaybe
+bool                 Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype2Attr from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.Ctype2Attr..ReadStrptrMaybe
 bool                 Ctype2Attr_ReadStrptrMaybe(atf_amc::Ctype2Attr &parent, algo::strptr in_str);
 // Read fields of atf_amc::Ctype2Attr from attributes of ascii tuple TUPLE
+// func:atf_amc.Ctype2Attr..ReadTupleMaybe
 bool                 Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple &tuple) __attribute__((nothrow));
-bool                 Ctype2Attr_Lt(atf_amc::Ctype2Attr & lhs, atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
-i32                  Ctype2Attr_Cmp(atf_amc::Ctype2Attr & lhs, atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype2Attr..Lt
+bool                 Ctype2Attr_Lt(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype2Attr..Cmp
+i32                  Ctype2Attr_Cmp(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Ctype2Attr..Init
 void                 Ctype2Attr_Init(atf_amc::Ctype2Attr& parent);
-bool                 Ctype2Attr_Eq(const atf_amc::Ctype2Attr & lhs,const atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
+// func:atf_amc.Ctype2Attr..Eq
+bool                 Ctype2Attr_Eq(const atf_amc::Ctype2Attr& lhs, const atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::Ctype2Attr to string LHS, no header -- cprint:atf_amc.Ctype2Attr.String
-void                 Ctype2Attr_Print(atf_amc::Ctype2Attr & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.Ctype2Attr..Update
+bool                 Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype2Attr.String  printfmt:Tuple
+// func:atf_amc.Ctype2Attr..Print
+void                 Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Ctype2AttrAnon
 struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
@@ -1048,14 +1230,20 @@ struct Ctype2AttrAnon { // atf_amc.Ctype2AttrAnon
     Ctype2AttrAnon();
 };
 
-bool                 Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Ctype2AttrAnon..ReadFieldMaybe
+bool                 Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Ctype2AttrAnon from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.Ctype2AttrAnon..ReadStrptrMaybe
 bool                 Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.Ctype2AttrAnon..Init
 void                 Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent);
-// print string representation of atf_amc::Ctype2AttrAnon to string LHS, no header -- cprint:atf_amc.Ctype2AttrAnon.String
-void                 Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Ctype2AttrAnon.String  printfmt:Tuple
+// func:atf_amc.Ctype2AttrAnon..Print
+void                 Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) __attribute__((nothrow));
+// func:atf_amc.Ctype2AttrAnon..GetAnon
 algo::strptr         Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) __attribute__((nothrow));
 
 // --- atf_amc.DelType1
@@ -1071,12 +1259,16 @@ private:
 
 // Get or Create
 // Access value, creating it if necessary. Process dies if not successful.
+// func:atf_amc.DelType1.u32val.Access
 u32&                 u32val_Access(atf_amc::DelType1& parent) __attribute__((nothrow));
 // Delete value.
+// func:atf_amc.DelType1.u32val.Delete
 void                 u32val_Delete(atf_amc::DelType1& parent) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.DelType1..Init
 void                 DelType1_Init(atf_amc::DelType1& parent);
+// func:atf_amc.DelType1..Uninit
 void                 DelType1_Uninit(atf_amc::DelType1& parent) __attribute__((nothrow));
 
 // --- atf_amc.DispCase
@@ -1091,29 +1283,38 @@ struct DispCase { // atf_amc.DispCase: Enum for dispatch atf_amc.Disp
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.DispCase.value.GetEnum
 atf_amc_DispCaseEnum value_GetEnum(const atf_amc::DispCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.DispCase.value.SetEnum
 void                 value_SetEnum(atf_amc::DispCase& parent, atf_amc_DispCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.DispCase.value.ToCstr
 const char*          value_ToCstr(const atf_amc::DispCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.DispCase.value.Print
 void                 value_Print(const atf_amc::DispCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.DispCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.DispCase.value.SetStrptr
 void                 value_SetStrptr(atf_amc::DispCase& parent, algo::strptr rhs, atf_amc_DispCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.DispCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::DispCase from an ascii string.
 // The format of the string is the format of the atf_amc::DispCase's only field
+// func:atf_amc.DispCase..ReadStrptrMaybe
 bool                 DispCase_ReadStrptrMaybe(atf_amc::DispCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.DispCase..Init
 void                 DispCase_Init(atf_amc::DispCase& parent);
 
 // --- atf_amc.DispFilter
@@ -1139,121 +1340,209 @@ private:
 
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.DispFilter.pmask.NBits
 int                  pmask_Nbits(atf_amc::DispFilter& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.DispFilter.pmask.qGetBit
 bool                 pmask_qGetBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.DispFilter.pmask.GetBit
 bool                 pmask_GetBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.DispFilter.pmask.BitsEmptyQ
 bool                 pmask_BitsEmptyQ(atf_amc::DispFilter& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.DispFilter.pmask.Sum1s
 u64                  pmask_Sum1s(atf_amc::DispFilter& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.DispFilter.pmask.qClearBit
 void                 pmask_qClearBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.DispFilter.pmask.ClearBit
 void                 pmask_ClearBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.DispFilter.pmask.qSetBit
 void                 pmask_qSetBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.DispFilter.pmask.SetBit
 void                 pmask_SetBit(atf_amc::DispFilter& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.DispFilter.pmask.qSetBitVal
 void                 pmask_qSetBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.DispFilter.pmask.qOrBitVal
 void                 pmask_qOrBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.DispFilter.pmask.ClearBitsAll
 void                 pmask_ClearBitsAll(atf_amc::DispFilter& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.DispFilter.pmask.ClearBits
 void                 pmask_ClearBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.DispFilter.pmask.OrBits
 void                 pmask_OrBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.DispFilter.pmask.Sup
 i32                  pmask_Sup(atf_amc::DispFilter& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set all elements of fixed array to value RHS
+// func:atf_amc.DispFilter.pmask.Fill
 void                 pmask_Fill(atf_amc::DispFilter& parent, const u64 &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.DispFilter.pmask.Find
 u64*                 pmask_Find(atf_amc::DispFilter& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array pmask as aryptr.
+// func:atf_amc.DispFilter.pmask.Getary
 algo::aryptr<u64>    pmask_Getary(atf_amc::DispFilter& parent) __attribute__((nothrow));
 // Return max number of items in the array
+// func:atf_amc.DispFilter.pmask.Max
 i32                  pmask_Max(atf_amc::DispFilter& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.DispFilter.pmask.N
 i32                  pmask_N(const atf_amc::DispFilter& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.DispFilter.pmask.Setary
 void                 pmask_Setary(atf_amc::DispFilter& parent, const algo::aryptr<u64> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.DispFilter.pmask.qFind
 u64&                 pmask_qFind(atf_amc::DispFilter& parent, u64 t) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.strval.PresentQ
 bool                 strval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.strval.SetPresent
 void                 strval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 strval_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.strval.Present_GetBit
+int                  strval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.strval_regx.PresentQ
 bool                 strval_regx_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.strval_regx.SetPresent
 void                 strval_regx_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.strval_regx.Present_GetBit
+int                  strval_regx_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.strval2.PresentQ
 bool                 strval2_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.strval2.SetPresent
 void                 strval2_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 strval2_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.strval2.Present_GetBit
+int                  strval2_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.strval2_regx.PresentQ
 bool                 strval2_regx_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.strval2_regx.SetPresent
 void                 strval2_regx_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.strval2_regx.Present_GetBit
+int                  strval2_regx_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.start_dateval.PresentQ
 bool                 start_dateval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.start_dateval.SetPresent
 void                 start_dateval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 start_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.start_dateval.Present_GetBit
+int                  start_dateval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.end_dateval.PresentQ
 bool                 end_dateval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.end_dateval.SetPresent
 void                 end_dateval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 end_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.end_dateval.Present_GetBit
+int                  end_dateval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.dateval.PresentQ
 bool                 dateval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.dateval.SetPresent
 void                 dateval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.dateval.Present_GetBit
+int                  dateval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.start_intval.PresentQ
 bool                 start_intval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.start_intval.SetPresent
 void                 start_intval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 start_intval_Set(atf_amc::DispFilter& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.start_intval.Present_GetBit
+int                  start_intval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.end_intval.PresentQ
 bool                 end_intval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.end_intval.SetPresent
 void                 end_intval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 end_intval_Set(atf_amc::DispFilter& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.end_intval.Present_GetBit
+int                  end_intval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.DispFilter.intval.PresentQ
 bool                 intval_PresentQ(atf_amc::DispFilter& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.DispFilter.intval.SetPresent
 void                 intval_SetPresent(atf_amc::DispFilter& parent) __attribute__((nothrow));
-void                 intval_Set(atf_amc::DispFilter& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.DispFilter.intval.Present_GetBit
+int                  intval_Present_GetBit(atf_amc::DispFilter& parent) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.DispFilter.pmask_bitcurs.Next
 void                 DispFilter_pmask_bitcurs_Next(DispFilter_pmask_bitcurs &curs);
+// func:atf_amc.DispFilter.pmask_bitcurs.Reset
 void                 DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent);
 // cursor points to valid item
+// func:atf_amc.DispFilter.pmask_bitcurs.ValidQ
 bool                 DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs);
 // item access
+// func:atf_amc.DispFilter.pmask_bitcurs.Access
 int&                 DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs);
 // cursor points to valid item
+// func:atf_amc.DispFilter.pmask_curs.Reset
 void                 DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent);
 // cursor points to valid item
+// func:atf_amc.DispFilter.pmask_curs.ValidQ
 bool                 DispFilter_pmask_curs_ValidQ(DispFilter_pmask_curs &curs);
 // proceed to next item
+// func:atf_amc.DispFilter.pmask_curs.Next
 void                 DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs);
 // item access
+// func:atf_amc.DispFilter.pmask_curs.Access
 u64&                 DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs);
-bool                 DispFilter_ReadFieldMaybe(atf_amc::DispFilter &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.DispFilter..ReadFieldMaybe
+bool                 DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispFilter from attributes of ascii tuple TUPLE
+// func:atf_amc.DispFilter..ReadTupleMaybe
 bool                 DispFilter_ReadTupleMaybe(atf_amc::DispFilter &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.DispFilter..Init
 void                 DispFilter_Init(atf_amc::DispFilter& parent);
+// func:atf_amc.DispFilter..MatchDispType1
 bool                 DispFilter_MatchDispType1(atf_amc::DispFilter &parent, atf_amc::DispType1 &msg);
+// func:atf_amc.DispFilter..MatchDispType2
 bool                 DispFilter_MatchDispType2(atf_amc::DispFilter &parent, atf_amc::DispType2 &msg);
+// func:atf_amc.DispFilter..MatchDispType3
 bool                 DispFilter_MatchDispType3(atf_amc::DispFilter &parent, atf_amc::DispType3 &msg);
 
 // --- atf_amc.DispType1
@@ -1264,12 +1553,16 @@ struct DispType1 { // atf_amc.DispType1: Dispfilter test 1
     DispType1();
 };
 
-bool                 DispType1_ReadFieldMaybe(atf_amc::DispType1 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.DispType1..ReadFieldMaybe
+bool                 DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispType1 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.DispType1..ReadStrptrMaybe
 bool                 DispType1_ReadStrptrMaybe(atf_amc::DispType1 &parent, algo::strptr in_str);
-// print string representation of atf_amc::DispType1 to string LHS, no header -- cprint:atf_amc.DispType1.String
-void                 DispType1_Print(atf_amc::DispType1 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType1.String  printfmt:Tuple
+// func:atf_amc.DispType1..Print
+void                 DispType1_Print(atf_amc::DispType1& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.DispType2
 struct DispType2 { // atf_amc.DispType2: Dispfilter test 2
@@ -1279,11 +1572,15 @@ struct DispType2 { // atf_amc.DispType2: Dispfilter test 2
 
 // Read fields of atf_amc::DispType2 from an ascii string.
 // The format of the string is the format of the atf_amc::DispType2's only field
+// func:atf_amc.DispType2..ReadStrptrMaybe
 bool                 DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.DispType2..Init
 void                 DispType2_Init(atf_amc::DispType2& parent);
-// print string representation of atf_amc::DispType2 to string LHS, no header -- cprint:atf_amc.DispType2.String
-void                 DispType2_Print(atf_amc::DispType2 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType2.String  printfmt:Raw
+// func:atf_amc.DispType2..Print
+void                 DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.DispType3
 struct DispType3 { // atf_amc.DispType3: Dispfilter test 3
@@ -1292,14 +1589,19 @@ struct DispType3 { // atf_amc.DispType3: Dispfilter test 3
     DispType3();
 };
 
-bool                 DispType3_ReadFieldMaybe(atf_amc::DispType3 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.DispType3..ReadFieldMaybe
+bool                 DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispType3 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.DispType3..ReadStrptrMaybe
 bool                 DispType3_ReadStrptrMaybe(atf_amc::DispType3 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.DispType3..Init
 void                 DispType3_Init(atf_amc::DispType3& parent);
-// print string representation of atf_amc::DispType3 to string LHS, no header -- cprint:atf_amc.DispType3.String
-void                 DispType3_Print(atf_amc::DispType3 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.DispType3.String  printfmt:Tuple
+// func:atf_amc.DispType3..Print
+void                 DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FAmctest
 // create: atf_amc.FDb.amctest (Lary)
@@ -1321,17 +1623,23 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FAmctest.msghdr.CopyOut
 void                 amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FAmctest.msghdr.CopyIn
 void                 amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) __attribute__((nothrow));
 
 // Invoke function by pointer
+// func:atf_amc.FAmctest.step.Call
 void                 step_Call(atf_amc::FAmctest& amctest) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FAmctest..Init
 void                 FAmctest_Init(atf_amc::FAmctest& amctest);
-// print string representation of atf_amc::FAmctest to string LHS, no header -- cprint:atf_amc.FAmctest.String
-void                 FAmctest_Print(atf_amc::FAmctest & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FAmctest.String  printfmt:Tuple
+// func:atf_amc.FAmctest..Print
+void                 FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FAvl
 // create: atf_amc.FDb.avl (Lary)
@@ -1354,7 +1662,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:atf_amc.FAvl..Init
 void                 FAvl_Init(atf_amc::FAvl& avl);
+// func:atf_amc.FAvl..Uninit
 void                 FAvl_Uninit(atf_amc::FAvl& avl) __attribute__((nothrow));
 
 // --- atf_amc.FCascdel
@@ -1407,221 +1717,322 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field key of atf_amc::FCascdel
+// func:atf_amc.FCascdel.key.Cleanup
+// this function is 'extrn' and implemented by user
 void                 key_Cleanup(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 
 // Get value of field as enum type
+// func:atf_amc.FCascdel.type.GetEnum
 atf_amc_FCascdel_type_Enum type_GetEnum(const atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.FCascdel.type.SetEnum
 void                 type_SetEnum(atf_amc::FCascdel& cascdel, atf_amc_FCascdel_type_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.FCascdel.type.ToCstr
 const char*          type_ToCstr(const atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
+// func:atf_amc.FCascdel.type.Print
 void                 type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.FCascdel.type.SetStrptrMaybe
 bool                 type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.FCascdel.type.SetStrptr
 void                 type_SetStrptr(atf_amc::FCascdel& cascdel, algo::strptr rhs, atf_amc_FCascdel_type_Enum dflt) __attribute__((nothrow));
 
 // Delete referred-to items.
 // Deleted pointed-to item.
+// func:atf_amc.FCascdel.child_ptr.Cascdel
 void                 child_ptr_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
+// func:atf_amc.FCascdel.child_ptr.InsertMaybe
 bool                 child_ptr_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FCascdel.child_ptr.Remove
 void                 child_ptr_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 
 // Delete all elements pointed to by the index.
+// func:atf_amc.FCascdel.c_child_ptrary.Cascdel
 void                 c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FCascdel.c_child_ptrary.EmptyQ
 bool                 c_child_ptrary_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FCascdel.c_child_ptrary.Find
 atf_amc::FCascdel*   c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:atf_amc.FCascdel.c_child_ptrary.Getary
 algo::aryptr<atf_amc::FCascdel*> c_child_ptrary_Getary(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:atf_amc.FCascdel.c_child_ptrary.Insert
 void                 c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:atf_amc.FCascdel.c_child_ptrary.InsertMaybe
 bool                 c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:atf_amc.FCascdel.c_child_ptrary.N
 i32                  c_child_ptrary_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:atf_amc.FCascdel.c_child_ptrary.Remove
 void                 c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FCascdel.c_child_ptrary.RemoveAll
 void                 c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:atf_amc.FCascdel.c_child_ptrary.Reserve
 void                 c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:atf_amc.FCascdel.c_child_ptrary.qFind
 atf_amc::FCascdel&   c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:atf_amc.FCascdel.c_child_ptrary.InAryQ
 bool                 cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:atf_amc.FCascdel.c_child_ptrary.qLast
 atf_amc::FCascdel&   c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 
 // Delete all rows reachable through the hash index
+// func:atf_amc.FCascdel.ind_child_thash.Cascdel
 void                 ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return true if hash is empty
+// func:atf_amc.FCascdel.ind_child_thash.EmptyQ
 bool                 ind_child_thash_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_amc.FCascdel.ind_child_thash.Find
 atf_amc::FCascdel*   ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
+// func:atf_amc.FCascdel.ind_child_thash.N
 i32                  ind_child_thash_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FCascdel.ind_child_thash.InsertMaybe
 bool                 ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FCascdel.ind_child_thash.Remove
 void                 ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FCascdel.ind_child_thash.Reserve
 void                 ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) __attribute__((nothrow));
 
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
+// func:atf_amc.FCascdel.bh_child_bheap.Cascdel
 void                 bh_child_bheap_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Remove all elements from heap and free memory used by the array.
+// func:atf_amc.FCascdel.bh_child_bheap.Dealloc
 void                 bh_child_bheap_Dealloc(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FCascdel.bh_child_bheap.EmptyQ
 bool                 bh_child_bheap_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FCascdel.bh_child_bheap.First
 atf_amc::FCascdel*   bh_child_bheap_First(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
+// func:atf_amc.FCascdel.bh_child_bheap.InBheapQ
 bool                 bh_child_bheap_InBheapQ(atf_amc::FCascdel& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:atf_amc.FCascdel.bh_child_bheap.Insert
 void                 bh_child_bheap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Return number of items in the heap
+// func:atf_amc.FCascdel.bh_child_bheap.N
 i32                  bh_child_bheap_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
+// func:atf_amc.FCascdel.bh_child_bheap.Reheap
 i32                  bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
+// func:atf_amc.FCascdel.bh_child_bheap.ReheapFirst
 i32                  bh_child_bheap_ReheapFirst(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FCascdel.bh_child_bheap.Remove
 void                 bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Remove all elements from binary heap
+// func:atf_amc.FCascdel.bh_child_bheap.RemoveAll
 void                 bh_child_bheap_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
+// func:atf_amc.FCascdel.bh_child_bheap.RemoveFirst
 atf_amc::FCascdel*   bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Reserve space in index for N more elements
+// func:atf_amc.FCascdel.bh_child_bheap.Reserve
 void                 bh_child_bheap_Reserve(atf_amc::FCascdel& cascdel, int n) __attribute__((nothrow));
 // Set row key to new value.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
+// func:atf_amc.FCascdel.bh_child_bheap.Set
 void                 key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) __attribute__((nothrow));
 // Set row key to new value. If row not in heap, the key is set to new value
 // Otherwise, the key is changed only if the new key is better than the old.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
+// func:atf_amc.FCascdel.bh_child_bheap.SetIfBetter
 void                 key_SetIfBetter(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) __attribute__((nothrow));
 
 // Delete all elements in the linked list.
+// func:atf_amc.FCascdel.zd_childlist.Cascdel
 void                 zd_childlist_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FCascdel.zd_childlist.EmptyQ
 bool                 zd_childlist_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FCascdel.zd_childlist.First
 atf_amc::FCascdel*   zd_childlist_First(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FCascdel.zd_childlist.InLlistQ
 bool                 zd_childlist_InLlistQ(atf_amc::FCascdel& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FCascdel.zd_childlist.Insert
 void                 zd_childlist_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FCascdel.zd_childlist.Last
 atf_amc::FCascdel*   zd_childlist_Last(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FCascdel.zd_childlist.N
 i32                  zd_childlist_N(const atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FCascdel.zd_childlist.Next
 atf_amc::FCascdel*   zd_childlist_Next(atf_amc::FCascdel &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FCascdel.zd_childlist.Prev
 atf_amc::FCascdel*   zd_childlist_Prev(atf_amc::FCascdel &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FCascdel.zd_childlist.Remove
 void                 zd_childlist_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FCascdel.zd_childlist.RemoveAll
 void                 zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FCascdel.zd_childlist.RemoveFirst
 atf_amc::FCascdel*   zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FCascdel.zd_childlist.qLast
 atf_amc::FCascdel&   zd_childlist_qLast(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow));
 
 // Delete all elements in the tree.
+// func:atf_amc.FCascdel.tr_child_atree.Cascdel
 void                 tr_child_atree_Cascdel(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FCascdel.tr_child_atree.EmptyQ
 bool                 tr_child_atree_EmptyQ(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FCascdel.tr_child_atree.FirstImpl
 atf_amc::FCascdel*   tr_child_atree_FirstImpl(atf_amc::FCascdel* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the first(smallest) element in the tree
+// func:atf_amc.FCascdel.tr_child_atree.First
 atf_amc::FCascdel*   tr_child_atree_First(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow));
 // Return true if row is in the tree, false otherwise
+// func:atf_amc.FCascdel.tr_child_atree.InTreeQ
 bool                 tr_child_atree_InTreeQ(atf_amc::FCascdel& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_amc.FCascdel.tr_child_atree.InsertImpl
 void                 tr_child_atree_InsertImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* parent, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_amc.FCascdel.tr_child_atree.Insert
 void                 tr_child_atree_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FCascdel.tr_child_atree.Remove
 void                 tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FCascdel.tr_child_atree.RemoveAll
 void                 tr_child_atree_RemoveAll(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FCascdel.tr_child_atree.RemoveFirst
 void                 tr_child_atree_RemoveFirst(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
+// func:atf_amc.FCascdel.tr_child_atree.Balance
 i32                  tr_child_atree_Balance(atf_amc::FCascdel& row) __attribute__((nothrow));
 // Recalculate depth and keep rebalancing if needed
+// func:atf_amc.FCascdel.tr_child_atree.Propagate
 atf_amc::FCascdel*   tr_child_atree_Propagate(atf_amc::FCascdel& pnode) __attribute__((nothrow));
 // Rebalances the node if needed.
+// func:atf_amc.FCascdel.tr_child_atree.Rebalance
 void                 tr_child_atree_Rebalance(atf_amc::FCascdel& node) __attribute__((nothrow));
+// func:atf_amc.FCascdel.tr_child_atree.Next
 atf_amc::FCascdel*   tr_child_atree_Next(atf_amc::FCascdel& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FCascdel.tr_child_atree.Prev
 atf_amc::FCascdel*   tr_child_atree_Prev(atf_amc::FCascdel& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FCascdel.tr_child_atree.LastImpl
 atf_amc::FCascdel*   tr_child_atree_LastImpl(atf_amc::FCascdel* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the last(largest) element in tree
+// func:atf_amc.FCascdel.tr_child_atree.Last
 atf_amc::FCascdel*   tr_child_atree_Last(atf_amc::FCascdel& cascdel) __attribute__((__warn_unused_result__, nothrow));
 // Empty the index. (rows may be deleted if cascdel)
+// func:atf_amc.FCascdel.tr_child_atree.RemoveAllImpl
 void                 tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* root, bool del) __attribute__((nothrow));
 // Reinsert a row with modified key(Reheap semantics)
+// func:atf_amc.FCascdel.tr_child_atree.Reinsert
 void                 tr_child_atree_Reinsert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& node) __attribute__((nothrow));
 // Find the first element that is greater or equal to a sortfld value
+// func:atf_amc.FCascdel.tr_child_atree.FirstGe
 atf_amc::FCascdel*   tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u32& val) __attribute__((nothrow));
 // Find the last element that is smaller or equal to a sortfld value
+// func:atf_amc.FCascdel.tr_child_atree.LastLt
 atf_amc::FCascdel*   tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) __attribute__((nothrow));
 
+// func:atf_amc.FCascdel.c_child_ptrary_curs.Reset
 void                 cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent);
 // cursor points to valid item
+// func:atf_amc.FCascdel.c_child_ptrary_curs.ValidQ
 bool                 cascdel_c_child_ptrary_curs_ValidQ(cascdel_c_child_ptrary_curs &curs);
 // proceed to next item
+// func:atf_amc.FCascdel.c_child_ptrary_curs.Next
 void                 cascdel_c_child_ptrary_curs_Next(cascdel_c_child_ptrary_curs &curs);
 // item access
+// func:atf_amc.FCascdel.c_child_ptrary_curs.Access
 atf_amc::FCascdel&   cascdel_c_child_ptrary_curs_Access(cascdel_c_child_ptrary_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.FCascdel..Init
 void                 FCascdel_Init(atf_amc::FCascdel& cascdel);
+// func:atf_amc.FCascdel.bh_child_bheap_curs.Reserve
 void                 cascdel_bh_child_bheap_curs_Reserve(cascdel_bh_child_bheap_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:atf_amc.FCascdel.bh_child_bheap_curs.Reset
 void                 cascdel_bh_child_bheap_curs_Reset(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel &parent);
 // Advance cursor.
+// func:atf_amc.FCascdel.bh_child_bheap_curs.Next
 void                 cascdel_bh_child_bheap_curs_Next(cascdel_bh_child_bheap_curs &curs);
 // Access current element. If not more elements, return NULL
+// func:atf_amc.FCascdel.bh_child_bheap_curs.Access
 atf_amc::FCascdel&   cascdel_bh_child_bheap_curs_Access(cascdel_bh_child_bheap_curs &curs);
 // Return true if Access() will return non-NULL.
+// func:atf_amc.FCascdel.bh_child_bheap_curs.ValidQ
 bool                 cascdel_bh_child_bheap_curs_ValidQ(cascdel_bh_child_bheap_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FCascdel.zd_childlist_curs.Reset
 void                 cascdel_zd_childlist_curs_Reset(cascdel_zd_childlist_curs &curs, atf_amc::FCascdel &parent);
 // cursor points to valid item
+// func:atf_amc.FCascdel.zd_childlist_curs.ValidQ
 bool                 cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs &curs);
 // proceed to next item
+// func:atf_amc.FCascdel.zd_childlist_curs.Next
 void                 cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs);
 // item access
+// func:atf_amc.FCascdel.zd_childlist_curs.Access
 atf_amc::FCascdel&   cascdel_zd_childlist_curs_Access(cascdel_zd_childlist_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FCascdel.tr_child_atree_curs.Reset
 void                 cascdel_tr_child_atree_curs_Reset(cascdel_tr_child_atree_curs &curs, atf_amc::FCascdel& parent);
 // cursor points to valid item
+// func:atf_amc.FCascdel.tr_child_atree_curs.ValidQ
 bool                 cascdel_tr_child_atree_curs_ValidQ(cascdel_tr_child_atree_curs &curs);
 // proceed to next item
+// func:atf_amc.FCascdel.tr_child_atree_curs.Next
 void                 cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_curs &curs);
 // item access
+// func:atf_amc.FCascdel.tr_child_atree_curs.Access
 atf_amc::FCascdel&   cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs);
+// func:atf_amc.FCascdel..Uninit
 void                 FCascdel_Uninit(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
-// print string representation of atf_amc::FCascdel to string LHS, no header -- cprint:atf_amc.FCascdel.String
-void                 FCascdel_Print(atf_amc::FCascdel & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FCascdel.String  printfmt:Tuple
+// func:atf_amc.FCascdel..Print
+void                 FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FCstring
 // create: atf_amc.FDb.cstring (Lary)
@@ -1641,12 +2052,16 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FCstring.msghdr.CopyOut
 void                 cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FCstring.msghdr.CopyIn
 void                 cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FCstring..Init
 void                 FCstring_Init(atf_amc::FCstring& cstring);
+// func:atf_amc.FCstring..Uninit
 void                 FCstring_Uninit(atf_amc::FCstring& cstring) __attribute__((nothrow));
 
 // --- atf_amc.FListtype
@@ -1668,14 +2083,18 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FListtype.base.CopyOut
 void                 listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FListtype.base.CopyIn
 void                 listtype_CopyIn(atf_amc::FListtype &row, dmmeta::Listtype &in) __attribute__((nothrow));
 
 // Invoke function by pointer
+// func:atf_amc.FListtype.step.Call
 void                 step_Call(atf_amc::FListtype& listtype, atf_amc::FListtype& arg) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FListtype..Init
 void                 FListtype_Init(atf_amc::FListtype& listtype);
 
 // --- atf_amc.trace
@@ -1698,13 +2117,16 @@ struct trace { // atf_amc.trace
 #pragma pack(pop)
 
 // Set all fields to initial values.
+// func:atf_amc.trace..Init
 void                 trace_Init(atf_amc::trace& parent);
-// print string representation of atf_amc::trace to string LHS, no header -- cprint:atf_amc.trace.String
-void                 trace_Print(atf_amc::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.trace.String  printfmt:Tuple
+// func:atf_amc.trace..Print
+void                 trace_Print(atf_amc::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FDb
 // create: atf_amc.FDb._db (Global)
-struct FDb { // atf_amc.FDb
+struct FDb { // atf_amc.FDb: In-memory database for atf_amc
     command::atf_amc         cmdline;                                          //
     atf_amc::FTypeC**        bh_typec_elems;                                   // binary heap by typec
     i32                      bh_typec_n;                                       // number of elements in the heap
@@ -1812,500 +2234,735 @@ struct FDb { // atf_amc.FDb
 };
 
 // Remove all elements from heap and free memory used by the array.
+// func:atf_amc.FDb.bh_typec.Dealloc
 void                 bh_typec_Dealloc() __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.bh_typec.EmptyQ
 bool                 bh_typec_EmptyQ() __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.bh_typec.First
 atf_amc::FTypeC*     bh_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
+// func:atf_amc.FDb.bh_typec.InBheapQ
 bool                 bh_typec_InBheapQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:atf_amc.FDb.bh_typec.Insert
 void                 bh_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Return number of items in the heap
+// func:atf_amc.FDb.bh_typec.N
 i32                  bh_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // If first item of the is changed, update fstep:atf_amc.FDb.bh_typec
+// func:atf_amc.FDb.bh_typec.Reheap
 i32                  bh_typec_Reheap(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // Update fstep:atf_amc.FDb.bh_typec
+// func:atf_amc.FDb.bh_typec.ReheapFirst
 i32                  bh_typec_ReheapFirst() __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.bh_typec.Remove
 void                 bh_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Remove all elements from binary heap
+// func:atf_amc.FDb.bh_typec.RemoveAll
 void                 bh_typec_RemoveAll() __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
+// func:atf_amc.FDb.bh_typec.RemoveFirst
 atf_amc::FTypeC*     bh_typec_RemoveFirst() __attribute__((nothrow));
 // Reserve space in index for N more elements
+// func:atf_amc.FDb.bh_typec.Reserve
 void                 bh_typec_Reserve(int n) __attribute__((nothrow));
 // First element of index changed.
 // Forward-declaration for user-provided function.
+// func:atf_amc.FDb.bh_typec.FirstChanged
+// this function is 'extrn' and implemented by user
 void                 bh_typec_FirstChanged() __attribute__((nothrow));
 // Update cycles count from previous clock capture
+// func:atf_amc.FDb.bh_typec.UpdateCycles
 void                 bh_typec_UpdateCycles() __attribute__((nothrow));
+// func:atf_amc.FDb.bh_typec.Step
+// this function is 'extrn' and implemented by user
 void                 bh_typec_Step() __attribute__((nothrow));
+// func:atf_amc.FDb.bh_typec.Call
 void                 bh_typec_Call() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zdl_h_typec.EmptyQ
 bool                 zdl_h_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zdl_h_typec.First
 atf_amc::FTypeC*     zdl_h_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zdl_h_typec.InLlistQ
 bool                 zdl_h_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zdl_h_typec.Insert
 void                 zdl_h_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zdl_h_typec.Last
 atf_amc::FTypeC*     zdl_h_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zdl_h_typec.N
 i32                  zdl_h_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zdl_h_typec.Next
 atf_amc::FTypeC*     zdl_h_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.zdl_h_typec.Prev
 atf_amc::FTypeC*     zdl_h_typec_Prev(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zdl_h_typec.Remove
 void                 zdl_h_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zdl_h_typec.RemoveAll
 void                 zdl_h_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zdl_h_typec.RemoveFirst
 atf_amc::FTypeC*     zdl_h_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zdl_h_typec.qLast
 atf_amc::FTypeC&     zdl_h_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zd_t_typec.EmptyQ
 bool                 zd_t_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zd_t_typec.First
 atf_amc::FTypeC*     zd_t_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zd_t_typec.InLlistQ
 bool                 zd_t_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zd_t_typec.Insert
 void                 zd_t_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zd_t_typec.Last
 atf_amc::FTypeC*     zd_t_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zd_t_typec.N
 i32                  zd_t_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zd_t_typec.Next
 atf_amc::FTypeC*     zd_t_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.zd_t_typec.Prev
 atf_amc::FTypeC*     zd_t_typec_Prev(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zd_t_typec.Remove
 void                 zd_t_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zd_t_typec.RemoveAll
 void                 zd_t_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zd_t_typec.RemoveFirst
 atf_amc::FTypeC*     zd_t_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zd_t_typec.qLast
 atf_amc::FTypeC&     zd_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zd_typed.EmptyQ
 bool                 zd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zd_typed.First
 atf_amc::FTypeD*     zd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zd_typed.InLlistQ
 bool                 zd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zd_typed.Insert
 void                 zd_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zd_typed.Last
 atf_amc::FTypeD*     zd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zd_typed.N
 i32                  zd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zd_typed.Next
 atf_amc::FTypeD*     zd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.zd_typed.Prev
 atf_amc::FTypeD*     zd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zd_typed.Remove
 void                 zd_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zd_typed.RemoveAll
 void                 zd_typed_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zd_typed.RemoveFirst
 atf_amc::FTypeD*     zd_typed_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zd_typed.qLast
 atf_amc::FTypeD&     zd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zs_t_typed.EmptyQ
 bool                 zs_t_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zs_t_typed.First
 atf_amc::FTypeD*     zs_t_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zs_t_typed.InLlistQ
 bool                 zs_t_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zs_t_typed.Insert
 void                 zs_t_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zs_t_typed.Last
 atf_amc::FTypeD*     zs_t_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zs_t_typed.N
 i32                  zs_t_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zs_t_typed.Next
 atf_amc::FTypeD*     zs_t_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:atf_amc.FDb.zs_t_typed.Remove
 void                 zs_t_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zs_t_typed.RemoveAll
 void                 zs_t_typed_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zs_t_typed.RemoveFirst
 atf_amc::FTypeD*     zs_t_typed_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zs_t_typed.qLast
 atf_amc::FTypeD&     zs_t_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.cd_typed.EmptyQ
 bool                 cd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_typed.First
 atf_amc::FTypeD*     cd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_typed.InLlistQ
 bool                 cd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_typed.Insert
 void                 cd_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_typed.Last
 atf_amc::FTypeD*     cd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.cd_typed.N
 i32                  cd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.cd_typed.Next
 atf_amc::FTypeD*     cd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_typed.Prev
 atf_amc::FTypeD*     cd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_typed.Remove
 void                 cd_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_typed.RemoveAll
 void                 cd_typed_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cd_typed.RemoveFirst
 atf_amc::FTypeD*     cd_typed_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_typed.RotateFirst
 atf_amc::FTypeD*     cd_typed_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_typed.qLast
 atf_amc::FTypeD&     cd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zsl_h_typec.EmptyQ
 bool                 zsl_h_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zsl_h_typec.First
 atf_amc::FTypeC*     zsl_h_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zsl_h_typec.InLlistQ
 bool                 zsl_h_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zsl_h_typec.Insert
 void                 zsl_h_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zsl_h_typec.Last
 atf_amc::FTypeC*     zsl_h_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zsl_h_typec.N
 i32                  zsl_h_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zsl_h_typec.Next
 atf_amc::FTypeC*     zsl_h_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:atf_amc.FDb.zsl_h_typec.Remove
 void                 zsl_h_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zsl_h_typec.RemoveAll
 void                 zsl_h_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_amc.FDb.zsl_h_typec.RemoveFirst
 atf_amc::FTypeC*     zsl_h_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zsl_h_typec.qLast
 atf_amc::FTypeC&     zsl_h_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
 // Forward-declaration for user-provided function.
+// func:atf_amc.FDb.zsl_h_typec.FirstChanged
+// this function is 'extrn' and implemented by user
 void                 zsl_h_typec_FirstChanged() __attribute__((nothrow));
 // Update cycles count from previous clock capture
+// func:atf_amc.FDb.zsl_h_typec.UpdateCycles
 void                 zsl_h_typec_UpdateCycles() __attribute__((nothrow));
+// func:atf_amc.FDb.zsl_h_typec.Step
+// this function is 'extrn' and implemented by user
 void                 zsl_h_typec_Step() __attribute__((nothrow));
+// func:atf_amc.FDb.zsl_h_typec.Call
 void                 zsl_h_typec_Call() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zs_t_typec.EmptyQ
 bool                 zs_t_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zs_t_typec.First
 atf_amc::FTypeC*     zs_t_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zs_t_typec.InLlistQ
 bool                 zs_t_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zs_t_typec.Insert
 void                 zs_t_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.zs_t_typec.Last
 atf_amc::FTypeC*     zs_t_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zs_t_typec.N
 i32                  zs_t_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zs_t_typec.Next
 atf_amc::FTypeC*     zs_t_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:atf_amc.FDb.zs_t_typec.Remove
 void                 zs_t_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zs_t_typec.RemoveAll
 void                 zs_t_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_amc.FDb.zs_t_typec.RemoveFirst
 atf_amc::FTypeC*     zs_t_typec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.zs_t_typec.qLast
 atf_amc::FTypeC&     zs_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
 // Forward-declaration for user-provided function.
+// func:atf_amc.FDb.zs_t_typec.FirstChanged
+// this function is 'extrn' and implemented by user
 void                 zs_t_typec_FirstChanged() __attribute__((nothrow));
 // Update cycles count from previous clock capture
+// func:atf_amc.FDb.zs_t_typec.UpdateCycles
 void                 zs_t_typec_UpdateCycles() __attribute__((nothrow));
+// func:atf_amc.FDb.zs_t_typec.Step
+// this function is 'extrn' and implemented by user
 void                 zs_t_typec_Step() __attribute__((nothrow));
+// func:atf_amc.FDb.zs_t_typec.Call
 void                 zs_t_typec_Call() __attribute__((nothrow));
 
 // If index is empty, return NULL
 // Otherwise return first key in index.
 // NOTE: this function must be called from the reading thread.
 // NOTE: if called from the writing thread, it might result in loss of data.
+// func:atf_amc.FDb.zs_mt_typec.DestructiveFirst
 atf_amc::FTypeC*     zs_mt_typec_DestructiveFirst() __attribute__((nothrow));
 // Return true if row is in index, false otherwise. Row must be non-NULL.
+// func:atf_amc.FDb.zs_mt_typec.InLlistQ
 bool                 zs_mt_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, the behavior is undefined.
+// func:atf_amc.FDb.zs_mt_typec.Insert
 void                 zs_mt_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If element is not in index, do nothing.
 // Otherwise, throw exception: ZSListMT elements cannot
 // be removed from the list except via RemoveFIrst.
+// func:atf_amc.FDb.zs_mt_typec.Remove
 void                 zs_mt_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
+// func:atf_amc.FDb.zs_mt_typec.RemoveFirst
 atf_amc::FTypeC*     zs_mt_typec_RemoveFirst() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.zdl_hnt_typec.EmptyQ
 bool                 zdl_hnt_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.zdl_hnt_typec.First
 atf_amc::FTypeC*     zdl_hnt_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.zdl_hnt_typec.InLlistQ
 bool                 zdl_hnt_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.zdl_hnt_typec.Insert
 void                 zdl_hnt_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Return number of items in the linked list
+// func:atf_amc.FDb.zdl_hnt_typec.N
 i32                  zdl_hnt_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.zdl_hnt_typec.Next
 atf_amc::FTypeC*     zdl_hnt_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.zdl_hnt_typec.Prev
 atf_amc::FTypeC*     zdl_hnt_typec_Prev(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.zdl_hnt_typec.Remove
 void                 zdl_hnt_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.zdl_hnt_typec.RemoveAll
 void                 zdl_hnt_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.zdl_hnt_typec.RemoveFirst
 atf_amc::FTypeC*     zdl_hnt_typec_RemoveFirst() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.cdl_h_typec.EmptyQ
 bool                 cdl_h_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cdl_h_typec.First
 atf_amc::FTypeC*     cdl_h_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cdl_h_typec.InLlistQ
 bool                 cdl_h_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cdl_h_typec.Insert
 void                 cdl_h_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cdl_h_typec.Last
 atf_amc::FTypeC*     cdl_h_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.cdl_h_typec.N
 i32                  cdl_h_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.cdl_h_typec.Next
 atf_amc::FTypeC*     cdl_h_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.cdl_h_typec.Prev
 atf_amc::FTypeC*     cdl_h_typec_Prev(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cdl_h_typec.Remove
 void                 cdl_h_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cdl_h_typec.RemoveAll
 void                 cdl_h_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cdl_h_typec.RemoveFirst
 atf_amc::FTypeC*     cdl_h_typec_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cdl_h_typec.RotateFirst
 atf_amc::FTypeC*     cdl_h_typec_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cdl_h_typec.qLast
 atf_amc::FTypeC&     cdl_h_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.cd_t_typec.EmptyQ
 bool                 cd_t_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_t_typec.First
 atf_amc::FTypeC*     cd_t_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_t_typec.InLlistQ
 bool                 cd_t_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_t_typec.Insert
 void                 cd_t_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_t_typec.Last
 atf_amc::FTypeC*     cd_t_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.cd_t_typec.N
 i32                  cd_t_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.cd_t_typec.Next
 atf_amc::FTypeC*     cd_t_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_t_typec.Prev
 atf_amc::FTypeC*     cd_t_typec_Prev(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_t_typec.Remove
 void                 cd_t_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_t_typec.RemoveAll
 void                 cd_t_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.cd_t_typec.RemoveFirst
 atf_amc::FTypeC*     cd_t_typec_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_t_typec.RotateFirst
 atf_amc::FTypeC*     cd_t_typec_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_t_typec.qLast
 atf_amc::FTypeC&     cd_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.csl_h_typec.EmptyQ
 bool                 csl_h_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.csl_h_typec.First
 atf_amc::FTypeC*     csl_h_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.csl_h_typec.InLlistQ
 bool                 csl_h_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.csl_h_typec.Insert
 void                 csl_h_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.csl_h_typec.Last
 atf_amc::FTypeC*     csl_h_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.csl_h_typec.N
 i32                  csl_h_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.csl_h_typec.Next
 atf_amc::FTypeC*     csl_h_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:atf_amc.FDb.csl_h_typec.Remove
 void                 csl_h_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.csl_h_typec.RemoveAll
 void                 csl_h_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_amc.FDb.csl_h_typec.RemoveFirst
 atf_amc::FTypeC*     csl_h_typec_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.csl_h_typec.RotateFirst
 atf_amc::FTypeC*     csl_h_typec_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.csl_h_typec.qLast
 atf_amc::FTypeC&     csl_h_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
 // Forward-declaration for user-provided function.
+// func:atf_amc.FDb.csl_h_typec.FirstChanged
+// this function is 'extrn' and implemented by user
 void                 csl_h_typec_FirstChanged() __attribute__((nothrow));
 // Update cycles count from previous clock capture
+// func:atf_amc.FDb.csl_h_typec.UpdateCycles
 void                 csl_h_typec_UpdateCycles() __attribute__((nothrow));
+// func:atf_amc.FDb.csl_h_typec.Step
+// this function is 'extrn' and implemented by user
 void                 csl_h_typec_Step() __attribute__((nothrow));
+// func:atf_amc.FDb.csl_h_typec.Call
 void                 csl_h_typec_Call() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FDb.cs_t_typec.EmptyQ
 bool                 cs_t_typec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cs_t_typec.First
 atf_amc::FTypeC*     cs_t_typec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cs_t_typec.InLlistQ
 bool                 cs_t_typec_InLlistQ(atf_amc::FTypeC& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cs_t_typec.Insert
 void                 cs_t_typec_Insert(atf_amc::FTypeC& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cs_t_typec.Last
 atf_amc::FTypeC*     cs_t_typec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FDb.cs_t_typec.N
 i32                  cs_t_typec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.cs_t_typec.Next
 atf_amc::FTypeC*     cs_t_typec_Next(atf_amc::FTypeC &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
+// func:atf_amc.FDb.cs_t_typec.Remove
 void                 cs_t_typec_Remove(atf_amc::FTypeC& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cs_t_typec.RemoveAll
 void                 cs_t_typec_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_amc.FDb.cs_t_typec.RemoveFirst
 atf_amc::FTypeC*     cs_t_typec_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cs_t_typec.RotateFirst
 atf_amc::FTypeC*     cs_t_typec_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cs_t_typec.qLast
 atf_amc::FTypeC&     cs_t_typec_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
 // Forward-declaration for user-provided function.
+// func:atf_amc.FDb.cs_t_typec.FirstChanged
+// this function is 'extrn' and implemented by user
 void                 cs_t_typec_FirstChanged() __attribute__((nothrow));
 // Update cycles count from previous clock capture
+// func:atf_amc.FDb.cs_t_typec.UpdateCycles
 void                 cs_t_typec_UpdateCycles() __attribute__((nothrow));
+// func:atf_amc.FDb.cs_t_typec.Step
+// this function is 'extrn' and implemented by user
 void                 cs_t_typec_Step() __attribute__((nothrow));
+// func:atf_amc.FDb.cs_t_typec.Call
 void                 cs_t_typec_Call() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.typea.Alloc
 atf_amc::FTypeA&     typea_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.typea.AllocMaybe
 atf_amc::FTypeA*     typea_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.typea.InsertMaybe
 atf_amc::FTypeA*     typea_InsertMaybe(const atf_amc::TypeA &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.typea.AllocMem
 void*                typea_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.typea.EmptyQ
 bool                 typea_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.typea.Find
 atf_amc::FTypeA*     typea_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.typea.Last
 atf_amc::FTypeA*     typea_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.typea.N
 i32                  typea_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.typea.RemoveAll
 void                 typea_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.typea.RemoveLast
 void                 typea_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.typea.qFind
 atf_amc::FTypeA&     typea_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.typea.XrefMaybe
 bool                 typea_XrefMaybe(atf_amc::FTypeA &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.types.Alloc
 atf_amc::FTypeS&     types_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.types.AllocMaybe
 atf_amc::FTypeS*     types_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.types.InsertMaybe
 atf_amc::FTypeS*     types_InsertMaybe(const atf_amc::TypeS &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.types.AllocMem
 void*                types_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.types.EmptyQ
 bool                 types_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.types.Find
 atf_amc::FTypeS*     types_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.types.Last
 atf_amc::FTypeS*     types_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.types.N
 i32                  types_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.types.RemoveAll
 void                 types_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.types.RemoveLast
 void                 types_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.types.qFind
 atf_amc::FTypeS&     types_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.types.XrefMaybe
 bool                 types_XrefMaybe(atf_amc::FTypeS &row);
 
 // Return true if hash is empty
+// func:atf_amc.FDb.ind_types.EmptyQ
 bool                 ind_types_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_types.Find
 atf_amc::FTypeS*     ind_types_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_types.GetOrCreate
 atf_amc::FTypeS&     ind_types_GetOrCreate(i32 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_amc.FDb.ind_types.N
 i32                  ind_types_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_types.InsertMaybe
 bool                 ind_types_InsertMaybe(atf_amc::FTypeS& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_types.Remove
 void                 ind_types_Remove(atf_amc::FTypeS& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_types.Reserve
 void                 ind_types_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
+// func:atf_amc.FDb.ind_typea.EmptyQ
 bool                 ind_typea_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_typea.Find
 atf_amc::FTypeA*     ind_typea_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_typea.GetOrCreate
 atf_amc::FTypeA&     ind_typea_GetOrCreate(i32 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_amc.FDb.ind_typea.N
 i32                  ind_typea_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_typea.InsertMaybe
 bool                 ind_typea_InsertMaybe(atf_amc::FTypeA& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_typea.Remove
 void                 ind_typea_Remove(atf_amc::FTypeA& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_typea.Reserve
 void                 ind_typea_Reserve(int n) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
 //     atf_amc.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:atf_amc.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:atf_amc.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:atf_amc.FDb._db.Step
 void                 Step();
 // Main function
+// func:atf_amc.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:atf_amc.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:atf_amc.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:atf_amc.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -2313,758 +2970,1094 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:atf_amc.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:atf_amc.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:atf_amc.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:atf_amc.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.typet.Alloc
 atf_amc::FTypeT&     typet_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.typet.AllocMaybe
 atf_amc::FTypeT*     typet_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.typet.InsertMaybe
 atf_amc::FTypeT*     typet_InsertMaybe(const atf_amc::TypeT &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.typet.AllocMem
 void*                typet_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.typet.EmptyQ
 bool                 typet_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.typet.Find
 atf_amc::FTypeT*     typet_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.typet.Last
 atf_amc::FTypeT*     typet_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.typet.N
 i32                  typet_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.typet.RemoveAll
 void                 typet_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.typet.RemoveLast
 void                 typet_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.typet.qFind
 atf_amc::FTypeT&     typet_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.typet.XrefMaybe
 bool                 typet_XrefMaybe(atf_amc::FTypeT &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.cstring.Alloc
 atf_amc::FCstring&   cstring_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.cstring.AllocMaybe
 atf_amc::FCstring*   cstring_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.cstring.InsertMaybe
 atf_amc::FCstring*   cstring_InsertMaybe(const atf_amc::Cstring &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.cstring.AllocMem
 void*                cstring_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.cstring.EmptyQ
 bool                 cstring_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.cstring.Find
 atf_amc::FCstring*   cstring_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.cstring.Last
 atf_amc::FCstring*   cstring_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.cstring.N
 i32                  cstring_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.cstring.RemoveAll
 void                 cstring_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.cstring.RemoveLast
 void                 cstring_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.cstring.qFind
 atf_amc::FCstring&   cstring_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.cstring.XrefMaybe
 bool                 cstring_XrefMaybe(atf_amc::FCstring &row);
 
 // Return true if hash is empty
+// func:atf_amc.FDb.ind_cstring.EmptyQ
 bool                 ind_cstring_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_cstring.Find
 atf_amc::FCstring*   ind_cstring_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_cstring.GetOrCreate
 atf_amc::FCstring&   ind_cstring_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_amc.FDb.ind_cstring.N
 i32                  ind_cstring_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_cstring.InsertMaybe
 bool                 ind_cstring_InsertMaybe(atf_amc::FCstring& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_cstring.Remove
 void                 ind_cstring_Remove(atf_amc::FCstring& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_cstring.Reserve
 void                 ind_cstring_Reserve(int n) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.msgbuf.XrefMaybe
 bool                 msgbuf_XrefMaybe(atf_amc::Msgbuf &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.bytebuf.XrefMaybe
 bool                 bytebuf_XrefMaybe(atf_amc::Bytebuf &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.linebuf.XrefMaybe
 bool                 linebuf_XrefMaybe(atf_amc::Linebuf &row);
 
 // Return true if index is empty
+// func:atf_amc.FDb.cd_in_msg.EmptyQ
 bool                 cd_in_msg_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FDb.cd_in_msg.First
 atf_amc::Msgbuf*     cd_in_msg_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FDb.cd_in_msg.InLlistQ
 bool                 cd_in_msg_InLlistQ(atf_amc::Msgbuf& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FDb.cd_in_msg.Insert
 void                 cd_in_msg_Insert(atf_amc::Msgbuf& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FDb.cd_in_msg.Last
 atf_amc::Msgbuf*     cd_in_msg_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FDb.cd_in_msg.Next
 atf_amc::Msgbuf*     cd_in_msg_Next(atf_amc::Msgbuf &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FDb.cd_in_msg.Prev
 atf_amc::Msgbuf*     cd_in_msg_Prev(atf_amc::Msgbuf &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.cd_in_msg.Remove
 void                 cd_in_msg_Remove(atf_amc::Msgbuf& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.cd_in_msg.RemoveAll
 void                 cd_in_msg_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_amc.FDb.cd_in_msg.RemoveFirst
 atf_amc::Msgbuf*     cd_in_msg_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:atf_amc.FDb.cd_in_msg.RotateFirst
 atf_amc::Msgbuf*     cd_in_msg_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FDb.cd_in_msg.qLast
 atf_amc::Msgbuf&     cd_in_msg_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.cd_in_msg.Step
+// this function is 'extrn' and implemented by user
 void                 cd_in_msg_Step() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.typeb.Alloc
 atf_amc::FTypeB&     typeb_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.typeb.AllocMaybe
 atf_amc::FTypeB*     typeb_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.typeb.InsertMaybe
 atf_amc::FTypeB*     typeb_InsertMaybe(const atf_amc::TypeB &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.typeb.Delete
 void                 typeb_Delete(atf_amc::FTypeB &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_amc.FDb.typeb.AllocMem
 void*                typeb_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.typeb.FreeMem
 void                 typeb_FreeMem(atf_amc::FTypeB &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_amc.FDb.typeb.Reserve
 u64                  typeb_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_amc.FDb.typeb.ReserveMem
 u64                  typeb_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.typeb.XrefMaybe
 bool                 typeb_XrefMaybe(atf_amc::FTypeB &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.pooledbe64.Alloc
 atf_amc::PooledBE64& pooledbe64_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.pooledbe64.AllocMaybe
 atf_amc::PooledBE64* pooledbe64_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.pooledbe64.Delete
 void                 pooledbe64_Delete(atf_amc::PooledBE64 &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_amc.FDb.pooledbe64.AllocMem
 void*                pooledbe64_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.pooledbe64.FreeMem
 void                 pooledbe64_FreeMem(atf_amc::PooledBE64 &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_amc.FDb.pooledbe64.Reserve
 u64                  pooledbe64_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_amc.FDb.pooledbe64.ReserveMem
 u64                  pooledbe64_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.pooledbe64.XrefMaybe
 bool                 pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row);
 
 // Free block of memory previously returned by Lpool.
+// func:atf_amc.FDb.varlen_extern.FreeMem
 void                 varlen_extern_FreeMem(void *mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is 16-byte aligned
+// func:atf_amc.FDb.varlen_extern.AllocMem
 void*                varlen_extern_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// func:atf_amc.FDb.varlen_extern.ReserveBuffers
 bool                 varlen_extern_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
 // New memory is always allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL: old memory untouched
+// func:atf_amc.FDb.varlen_extern.ReallocMem
 void*                varlen_extern_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
 // Allocate memory for a new row with N_VARFLD var-len elements
 // If out of memory, process is killed.
+// func:atf_amc.FDb.varlen_extern.Alloc
 atf_amc::VarlenExtern& varlen_extern_Alloc(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlen_extern.AllocMaybe
 atf_amc::VarlenExtern* varlen_extern_AllocMaybe(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.varlen_extern.AllocExtra
 atf_amc::VarlenExtern& varlen_extern_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlen_extern.AllocExtraMaybe
 atf_amc::VarlenExtern* varlen_extern_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate element & copy memory from input parameter. If out of memory, return NULL.
 // Allocate memory for a new row; Copy var-len portion from varlen.
 // This is a convenience function that uses varlen_extern_Alloc
+// func:atf_amc.FDb.varlen_extern.AllocVarlenMaybe
 atf_amc::VarlenExtern* varlen_extern_AllocVarlenMaybe(algo::aryptr<u32> varlen) __attribute__((__warn_unused_result__, nothrow));
 // Allocate element & copy memory from input parameter. If out of memory, terminate process.
+// func:atf_amc.FDb.varlen_extern.AllocVarlen
 atf_amc::VarlenExtern& varlen_extern_AllocVarlen(algo::aryptr<u32> varlen) __attribute__((__warn_unused_result__));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.varlen_extern.Delete
 void                 varlen_extern_Delete(atf_amc::VarlenExtern &row) __attribute__((nothrow));
 // Return number of items in the pool
+// func:atf_amc.FDb.varlen_extern.N
 i64                  varlen_extern_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.varlen_extern.XrefMaybe
 bool                 varlen_extern_XrefMaybe(atf_amc::VarlenExtern &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.amctest.Alloc
 atf_amc::FAmctest&   amctest_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.amctest.AllocMaybe
 atf_amc::FAmctest*   amctest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.amctest.InsertMaybe
 atf_amc::FAmctest*   amctest_InsertMaybe(const atfdb::Amctest &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.amctest.AllocMem
 void*                amctest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.amctest.EmptyQ
 bool                 amctest_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.amctest.Find
 atf_amc::FAmctest*   amctest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.amctest.Last
 atf_amc::FAmctest*   amctest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.amctest.N
 i32                  amctest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.amctest.RemoveAll
 void                 amctest_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.amctest.RemoveLast
 void                 amctest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.amctest.qFind
 atf_amc::FAmctest&   amctest_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.amctest.XrefMaybe
 bool                 amctest_XrefMaybe(atf_amc::FAmctest &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.cascdel.Alloc
 atf_amc::FCascdel&   cascdel_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.cascdel.AllocMaybe
 atf_amc::FCascdel*   cascdel_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.cascdel.Delete
 void                 cascdel_Delete(atf_amc::FCascdel &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_amc.FDb.cascdel.AllocMem
 void*                cascdel_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.cascdel.FreeMem
 void                 cascdel_FreeMem(atf_amc::FCascdel &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_amc.FDb.cascdel.Reserve
 u64                  cascdel_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_amc.FDb.cascdel.ReserveMem
 u64                  cascdel_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.cascdel.XrefMaybe
 bool                 cascdel_XrefMaybe(atf_amc::FCascdel &row);
 
 // Free block of memory previously returned by Lpool.
+// func:atf_amc.FDb.optalloc.FreeMem
 void                 optalloc_FreeMem(void *mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is 16-byte aligned
+// func:atf_amc.FDb.optalloc.AllocMem
 void*                optalloc_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// func:atf_amc.FDb.optalloc.ReserveBuffers
 bool                 optalloc_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
 // New memory is always allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL: old memory untouched
+// func:atf_amc.FDb.optalloc.ReallocMem
 void*                optalloc_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// func:atf_amc.FDb.optalloc.AllocExtra
 atf_amc::OptAlloc&   optalloc_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.optalloc.AllocExtraMaybe
 atf_amc::OptAlloc*   optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.optalloc.Delete
 void                 optalloc_Delete(atf_amc::OptAlloc &row) __attribute__((nothrow));
 // Return number of items in the pool
+// func:atf_amc.FDb.optalloc.N
 i64                  optalloc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.optalloc.XrefMaybe
 bool                 optalloc_XrefMaybe(atf_amc::OptAlloc &row);
 
 // Free block of memory previously returned by Lpool.
+// func:atf_amc.FDb.varlenalloc.FreeMem
 void                 varlenalloc_FreeMem(void *mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is 16-byte aligned
+// func:atf_amc.FDb.varlenalloc.AllocMem
 void*                varlenalloc_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// func:atf_amc.FDb.varlenalloc.ReserveBuffers
 bool                 varlenalloc_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
 // New memory is always allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL: old memory untouched
+// func:atf_amc.FDb.varlenalloc.ReallocMem
 void*                varlenalloc_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
 // Allocate memory for a new row with N_VARFLD var-len elements
 // If out of memory, process is killed.
+// func:atf_amc.FDb.varlenalloc.Alloc
 atf_amc::VarlenAlloc& varlenalloc_Alloc(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlenalloc.AllocMaybe
 atf_amc::VarlenAlloc* varlenalloc_AllocMaybe(i32 n_varfld) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.varlenalloc.AllocExtra
 atf_amc::VarlenAlloc& varlenalloc_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.varlenalloc.AllocExtraMaybe
 atf_amc::VarlenAlloc* varlenalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate element & copy memory from input parameter. If out of memory, return NULL.
 // Allocate memory for a new row; Copy var-len portion from elem.
 // This is a convenience function that uses varlenalloc_Alloc
+// func:atf_amc.FDb.varlenalloc.AllocVarlenMaybe
 atf_amc::VarlenAlloc* varlenalloc_AllocVarlenMaybe(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__, nothrow));
 // Allocate element & copy memory from input parameter. If out of memory, terminate process.
+// func:atf_amc.FDb.varlenalloc.AllocVarlen
 atf_amc::VarlenAlloc& varlenalloc_AllocVarlen(algo::aryptr<i32> elem) __attribute__((__warn_unused_result__));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.varlenalloc.Delete
 void                 varlenalloc_Delete(atf_amc::VarlenAlloc &row) __attribute__((nothrow));
 // Return number of items in the pool
+// func:atf_amc.FDb.varlenalloc.N
 i64                  varlenalloc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.varlenalloc.XrefMaybe
 bool                 varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row);
 
 // Free block of memory previously returned by Lpool.
+// func:atf_amc.FDb.optg.FreeMem
 void                 optg_FreeMem(void *mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is 16-byte aligned
+// func:atf_amc.FDb.optg.AllocMem
 void*                optg_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// func:atf_amc.FDb.optg.ReserveBuffers
 bool                 optg_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
 // New memory is always allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL: old memory untouched
+// func:atf_amc.FDb.optg.ReallocMem
 void*                optg_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// func:atf_amc.FDb.optg.AllocExtra
 atf_amc::FOptG&      optg_AllocExtra(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.optg.AllocExtraMaybe
 atf_amc::FOptG*      optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.optg.InsertMaybe
 atf_amc::FOptG*      optg_InsertMaybe(const atf_amc::OptG &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.optg.Delete
 void                 optg_Delete(atf_amc::FOptG &row) __attribute__((nothrow));
 // Return number of items in the pool
+// func:atf_amc.FDb.optg.N
 i64                  optg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.optg.XrefMaybe
 bool                 optg_XrefMaybe(atf_amc::FOptG &row);
 
 // Return true if index is empty
+// func:atf_amc.FDb.c_typek.EmptyQ
 bool                 c_typek_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.c_typek.Find
 atf_amc::FTypeK*     c_typek_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:atf_amc.FDb.c_typek.Getary
 algo::aryptr<atf_amc::FTypeK*> c_typek_Getary() __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:atf_amc.FDb.c_typek.Insert
 void                 c_typek_Insert(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
+// func:atf_amc.FDb.c_typek.InsertMaybe
 bool                 c_typek_InsertMaybe(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:atf_amc.FDb.c_typek.N
 i32                  c_typek_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:atf_amc.FDb.c_typek.Remove
 void                 c_typek_Remove(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.c_typek.RemoveAll
 void                 c_typek_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:atf_amc.FDb.c_typek.Reserve
 void                 c_typek_Reserve(u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:atf_amc.FDb.c_typek.qFind
 atf_amc::FTypeK&     c_typek_qFind(u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
+// func:atf_amc.FDb.c_typek.InAryQ
 bool                 c_typek_InAryQ(atf_amc::FTypeK& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:atf_amc.FDb.c_typek.qLast
 atf_amc::FTypeK&     c_typek_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.avl.Alloc
 atf_amc::FAvl&       avl_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.avl.AllocMaybe
 atf_amc::FAvl*       avl_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.avl.AllocMem
 void*                avl_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.avl.EmptyQ
 bool                 avl_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.avl.Find
 atf_amc::FAvl*       avl_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.avl.Last
 atf_amc::FAvl*       avl_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.avl.N
 i32                  avl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.avl.RemoveAll
 void                 avl_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.avl.RemoveLast
 void                 avl_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.avl.qFind
 atf_amc::FAvl&       avl_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.avl.XrefMaybe
 bool                 avl_XrefMaybe(atf_amc::FAvl &row);
 
 // Return true if index is empty
+// func:atf_amc.FDb.tr_avl.EmptyQ
 bool                 tr_avl_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.tr_avl.FirstImpl
 atf_amc::FAvl*       tr_avl_FirstImpl(atf_amc::FAvl* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the first(smallest) element in the tree
+// func:atf_amc.FDb.tr_avl.First
 atf_amc::FAvl*       tr_avl_First() __attribute__((__warn_unused_result__, nothrow));
 // Return true if row is in the tree, false otherwise
+// func:atf_amc.FDb.tr_avl.InTreeQ
 bool                 tr_avl_InTreeQ(atf_amc::FAvl& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_amc.FDb.tr_avl.InsertImpl
 void                 tr_avl_InsertImpl(atf_amc::FAvl* parent, atf_amc::FAvl& row) __attribute__((nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_amc.FDb.tr_avl.Insert
 void                 tr_avl_Insert(atf_amc::FAvl& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FDb.tr_avl.Remove
 void                 tr_avl_Remove(atf_amc::FAvl& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FDb.tr_avl.RemoveAll
 void                 tr_avl_RemoveAll() __attribute__((nothrow));
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FDb.tr_avl.RemoveFirst
 void                 tr_avl_RemoveFirst() __attribute__((nothrow));
+// func:atf_amc.FDb.tr_avl.Balance
 i32                  tr_avl_Balance(atf_amc::FAvl& row) __attribute__((nothrow));
 // Recalculate depth and keep rebalancing if needed
+// func:atf_amc.FDb.tr_avl.Propagate
 atf_amc::FAvl*       tr_avl_Propagate(atf_amc::FAvl& pnode) __attribute__((nothrow));
 // Rebalances the node if needed.
+// func:atf_amc.FDb.tr_avl.Rebalance
 void                 tr_avl_Rebalance(atf_amc::FAvl& node) __attribute__((nothrow));
+// func:atf_amc.FDb.tr_avl.Next
 atf_amc::FAvl*       tr_avl_Next(atf_amc::FAvl& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.tr_avl.Prev
 atf_amc::FAvl*       tr_avl_Prev(atf_amc::FAvl& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.FDb.tr_avl.LastImpl
 atf_amc::FAvl*       tr_avl_LastImpl(atf_amc::FAvl* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the last(largest) element in tree
+// func:atf_amc.FDb.tr_avl.Last
 atf_amc::FAvl*       tr_avl_Last() __attribute__((__warn_unused_result__, nothrow));
 // Empty the index. (rows may be deleted if cascdel)
+// func:atf_amc.FDb.tr_avl.RemoveAllImpl
 void                 tr_avl_RemoveAllImpl(atf_amc::FAvl* root, bool del) __attribute__((nothrow));
 // Reinsert a row with modified key(Reheap semantics)
+// func:atf_amc.FDb.tr_avl.Reinsert
 void                 tr_avl_Reinsert(atf_amc::FAvl& node) __attribute__((nothrow));
 // Find the first element that is greater or equal to a sortfld value
+// func:atf_amc.FDb.tr_avl.FirstGe
 atf_amc::FAvl*       tr_avl_FirstGe(const i32& val) __attribute__((nothrow));
 // Find the last element that is smaller or equal to a sortfld value
+// func:atf_amc.FDb.tr_avl.LastLt
 atf_amc::FAvl*       tr_avl_LastLt(const i32& val) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.listtype.Alloc
 atf_amc::FListtype&  listtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.listtype.AllocMaybe
 atf_amc::FListtype*  listtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.listtype.InsertMaybe
 atf_amc::FListtype*  listtype_InsertMaybe(const dmmeta::Listtype &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.listtype.AllocMem
 void*                listtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.listtype.EmptyQ
 bool                 listtype_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.listtype.Find
 atf_amc::FListtype*  listtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.FDb.listtype.Getary
 algo::aryptr<atf_amc::FListtype> listtype_Getary() __attribute__((nothrow));
 // Return constant 10 -- max. number of items in the pool
+// func:atf_amc.FDb.listtype.Max
 i32                  listtype_Max() __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FDb.listtype.N
 i32                  listtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Destroy all elements of Inlary
+// func:atf_amc.FDb.listtype.RemoveAll
 void                 listtype_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.listtype.RemoveLast
 void                 listtype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.FDb.listtype.qFind
 atf_amc::FListtype&  listtype_qFind(u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
+// func:atf_amc.FDb.listtype.rowid_Get
 u64                  listtype_rowid_Get(atf_amc::FListtype &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.listtype.XrefMaybe
 bool                 listtype_XrefMaybe(atf_amc::FListtype &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.typed.Alloc
 atf_amc::FTypeD&     typed_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.typed.AllocMaybe
 atf_amc::FTypeD*     typed_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FDb.typed.InsertMaybe
 atf_amc::FTypeD*     typed_InsertMaybe(const atf_amc::TypeC &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_amc.FDb.typed.Delete
 void                 typed_Delete(atf_amc::FTypeD &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_amc.FDb.typed.AllocMem
 void*                typed_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_amc.FDb.typed.FreeMem
 void                 typed_FreeMem(atf_amc::FTypeD &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_amc.FDb.typed.Reserve
 u64                  typed_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_amc.FDb.typed.ReserveMem
 u64                  typed_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.typed.XrefMaybe
 bool                 typed_XrefMaybe(atf_amc::FTypeD &row);
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.bytebuf_dyn.XrefMaybe
 bool                 bytebuf_dyn_XrefMaybe(atf_amc::BytebufDyn &row);
 
 // Return true if hash is empty
+// func:atf_amc.FDb.ind_thash_elem.EmptyQ
 bool                 ind_thash_elem_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_amc.FDb.ind_thash_elem.Find
 atf_amc::FThashElem* ind_thash_elem_Find(u64 key) __attribute__((__warn_unused_result__, nothrow));
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_amc.FDb.ind_thash_elem.GetOrCreate
 atf_amc::FThashElem& ind_thash_elem_GetOrCreate(u64 key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_amc.FDb.ind_thash_elem.N
 i32                  ind_thash_elem_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_amc.FDb.ind_thash_elem.InsertMaybe
 bool                 ind_thash_elem_InsertMaybe(atf_amc::FThashElem& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_amc.FDb.ind_thash_elem.Remove
 void                 ind_thash_elem_Remove(atf_amc::FThashElem& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_amc.FDb.ind_thash_elem.Reserve
 void                 ind_thash_elem_Reserve(int n) __attribute__((nothrow));
+// func:atf_amc.FDb.ind_thash_elem.FindRemove
 atf_amc::FThashElem* ind_thash_elem_FindRemove(u64 key) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FDb.thash_elem.Alloc
 atf_amc::FThashElem& thash_elem_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FDb.thash_elem.AllocMaybe
 atf_amc::FThashElem* thash_elem_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FDb.thash_elem.AllocMem
 void*                thash_elem_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FDb.thash_elem.EmptyQ
 bool                 thash_elem_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FDb.thash_elem.Find
 atf_amc::FThashElem* thash_elem_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FDb.thash_elem.Last
 atf_amc::FThashElem* thash_elem_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.FDb.thash_elem.N
 i32                  thash_elem_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.FDb.thash_elem.RemoveAll
 void                 thash_elem_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FDb.thash_elem.RemoveLast
 void                 thash_elem_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FDb.thash_elem.qFind
 atf_amc::FThashElem& thash_elem_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FDb.thash_elem.XrefMaybe
 bool                 thash_elem_XrefMaybe(atf_amc::FThashElem &row);
 
+// func:atf_amc.FDb.bh_typec_curs.Reserve
 void                 _db_bh_typec_curs_Reserve(_db_bh_typec_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:atf_amc.FDb.bh_typec_curs.Reset
 void                 _db_bh_typec_curs_Reset(_db_bh_typec_curs &curs, atf_amc::FDb &parent);
 // Advance cursor.
+// func:atf_amc.FDb.bh_typec_curs.Next
 void                 _db_bh_typec_curs_Next(_db_bh_typec_curs &curs);
 // Access current element. If not more elements, return NULL
+// func:atf_amc.FDb.bh_typec_curs.Access
 atf_amc::FTypeC&     _db_bh_typec_curs_Access(_db_bh_typec_curs &curs);
 // Return true if Access() will return non-NULL.
+// func:atf_amc.FDb.bh_typec_curs.ValidQ
 bool                 _db_bh_typec_curs_ValidQ(_db_bh_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zdl_h_typec_curs.Reset
 void                 _db_zdl_h_typec_curs_Reset(_db_zdl_h_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zdl_h_typec_curs.ValidQ
 bool                 _db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zdl_h_typec_curs.Next
 void                 _db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.zdl_h_typec_curs.Access
 atf_amc::FTypeC&     _db_zdl_h_typec_curs_Access(_db_zdl_h_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_t_typec_curs.Reset
 void                 _db_zd_t_typec_curs_Reset(_db_zd_t_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_t_typec_curs.ValidQ
 bool                 _db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zd_t_typec_curs.Next
 void                 _db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.zd_t_typec_curs.Access
 atf_amc::FTypeC&     _db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_typed_curs.Reset
 void                 _db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_typed_curs.ValidQ
 bool                 _db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zd_typed_curs.Next
 void                 _db_zd_typed_curs_Next(_db_zd_typed_curs &curs);
 // item access
+// func:atf_amc.FDb.zd_typed_curs.Access
 atf_amc::FTypeD&     _db_zd_typed_curs_Access(_db_zd_typed_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_typed_delcurs.Reset
 void                 _db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zd_typed_delcurs.ValidQ
 bool                 _db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zd_typed_delcurs.Next
 void                 _db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs);
 // item access
+// func:atf_amc.FDb.zd_typed_delcurs.Access
 atf_amc::FTypeD&     _db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typed_curs.Reset
 void                 _db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typed_curs.ValidQ
 bool                 _db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zs_t_typed_curs.Next
 void                 _db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs);
 // item access
+// func:atf_amc.FDb.zs_t_typed_curs.Access
 atf_amc::FTypeD&     _db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typed_delcurs.Reset
 void                 _db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typed_delcurs.ValidQ
 bool                 _db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zs_t_typed_delcurs.Next
 void                 _db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs);
 // item access
+// func:atf_amc.FDb.zs_t_typed_delcurs.Access
 atf_amc::FTypeD&     _db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_typed_curs.Reset
 void                 _db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_typed_curs.ValidQ
 bool                 _db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cd_typed_curs.Next
 void                 _db_cd_typed_curs_Next(_db_cd_typed_curs &curs);
 // item access
+// func:atf_amc.FDb.cd_typed_curs.Access
 atf_amc::FTypeD&     _db_cd_typed_curs_Access(_db_cd_typed_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_typed_delcurs.Reset
 void                 _db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_typed_delcurs.ValidQ
 bool                 _db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cd_typed_delcurs.Next
 void                 _db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs);
 // item access
+// func:atf_amc.FDb.cd_typed_delcurs.Access
 atf_amc::FTypeD&     _db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zsl_h_typec_curs.Reset
 void                 _db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zsl_h_typec_curs.ValidQ
 bool                 _db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zsl_h_typec_curs.Next
 void                 _db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.zsl_h_typec_curs.Access
 atf_amc::FTypeC&     _db_zsl_h_typec_curs_Access(_db_zsl_h_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typec_curs.Reset
 void                 _db_zs_t_typec_curs_Reset(_db_zs_t_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zs_t_typec_curs.ValidQ
 bool                 _db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zs_t_typec_curs.Next
 void                 _db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.zs_t_typec_curs.Access
 atf_amc::FTypeC&     _db_zs_t_typec_curs_Access(_db_zs_t_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.zdl_hnt_typec_curs.Reset
 void                 _db_zdl_hnt_typec_curs_Reset(_db_zdl_hnt_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.zdl_hnt_typec_curs.ValidQ
 bool                 _db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.zdl_hnt_typec_curs.Next
 void                 _db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.zdl_hnt_typec_curs.Access
 atf_amc::FTypeC&     _db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cdl_h_typec_curs.Reset
 void                 _db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cdl_h_typec_curs.ValidQ
 bool                 _db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cdl_h_typec_curs.Next
 void                 _db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.cdl_h_typec_curs.Access
 atf_amc::FTypeC&     _db_cdl_h_typec_curs_Access(_db_cdl_h_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_t_typec_curs.Reset
 void                 _db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_t_typec_curs.ValidQ
 bool                 _db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cd_t_typec_curs.Next
 void                 _db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.cd_t_typec_curs.Access
 atf_amc::FTypeC&     _db_cd_t_typec_curs_Access(_db_cd_t_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.csl_h_typec_curs.Reset
 void                 _db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.csl_h_typec_curs.ValidQ
 bool                 _db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.csl_h_typec_curs.Next
 void                 _db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.csl_h_typec_curs.Access
 atf_amc::FTypeC&     _db_csl_h_typec_curs_Access(_db_csl_h_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cs_t_typec_curs.Reset
 void                 _db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cs_t_typec_curs.ValidQ
 bool                 _db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cs_t_typec_curs.Next
 void                 _db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs);
 // item access
+// func:atf_amc.FDb.cs_t_typec_curs.Access
 atf_amc::FTypeC&     _db_cs_t_typec_curs_Access(_db_cs_t_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.typea_curs.Reset
 void                 _db_typea_curs_Reset(_db_typea_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.typea_curs.ValidQ
 bool                 _db_typea_curs_ValidQ(_db_typea_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.typea_curs.Next
 void                 _db_typea_curs_Next(_db_typea_curs &curs);
 // item access
+// func:atf_amc.FDb.typea_curs.Access
 atf_amc::FTypeA&     _db_typea_curs_Access(_db_typea_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.types_curs.Reset
 void                 _db_types_curs_Reset(_db_types_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.types_curs.ValidQ
 bool                 _db_types_curs_ValidQ(_db_types_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.types_curs.Next
 void                 _db_types_curs_Next(_db_types_curs &curs);
 // item access
+// func:atf_amc.FDb.types_curs.Access
 atf_amc::FTypeS&     _db_types_curs_Access(_db_types_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.typet_curs.Reset
 void                 _db_typet_curs_Reset(_db_typet_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.typet_curs.ValidQ
 bool                 _db_typet_curs_ValidQ(_db_typet_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.typet_curs.Next
 void                 _db_typet_curs_Next(_db_typet_curs &curs);
 // item access
+// func:atf_amc.FDb.typet_curs.Access
 atf_amc::FTypeT&     _db_typet_curs_Access(_db_typet_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cstring_curs.Reset
 void                 _db_cstring_curs_Reset(_db_cstring_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cstring_curs.ValidQ
 bool                 _db_cstring_curs_ValidQ(_db_cstring_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cstring_curs.Next
 void                 _db_cstring_curs_Next(_db_cstring_curs &curs);
 // item access
+// func:atf_amc.FDb.cstring_curs.Access
 atf_amc::FCstring&   _db_cstring_curs_Access(_db_cstring_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_in_msg_curs.Reset
 void                 _db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.cd_in_msg_curs.ValidQ
 bool                 _db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.cd_in_msg_curs.Next
 void                 _db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs);
 // item access
+// func:atf_amc.FDb.cd_in_msg_curs.Access
 atf_amc::Msgbuf&     _db_cd_in_msg_curs_Access(_db_cd_in_msg_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.amctest_curs.Reset
 void                 _db_amctest_curs_Reset(_db_amctest_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.amctest_curs.ValidQ
 bool                 _db_amctest_curs_ValidQ(_db_amctest_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.amctest_curs.Next
 void                 _db_amctest_curs_Next(_db_amctest_curs &curs);
 // item access
+// func:atf_amc.FDb.amctest_curs.Access
 atf_amc::FAmctest&   _db_amctest_curs_Access(_db_amctest_curs &curs);
+// func:atf_amc.FDb.c_typek_curs.Reset
 void                 _db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.c_typek_curs.ValidQ
 bool                 _db_c_typek_curs_ValidQ(_db_c_typek_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.c_typek_curs.Next
 void                 _db_c_typek_curs_Next(_db_c_typek_curs &curs);
 // item access
+// func:atf_amc.FDb.c_typek_curs.Access
 atf_amc::FTypeK&     _db_c_typek_curs_Access(_db_c_typek_curs &curs);
+// func:atf_amc.FDb.c_typek_oncecurs.Reset
 void                 _db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.c_typek_oncecurs.ValidQ
 bool                 _db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs);
 // proceed to next item
+// func:atf_amc.FDb.c_typek_oncecurs.Next
 void                 _db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs);
 // item access
+// func:atf_amc.FDb.c_typek_oncecurs.Access
 atf_amc::FTypeK&     _db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.avl_curs.Reset
 void                 _db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.avl_curs.ValidQ
 bool                 _db_avl_curs_ValidQ(_db_avl_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.avl_curs.Next
 void                 _db_avl_curs_Next(_db_avl_curs &curs);
 // item access
+// func:atf_amc.FDb.avl_curs.Access
 atf_amc::FAvl&       _db_avl_curs_Access(_db_avl_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.tr_avl_curs.Reset
 void                 _db_tr_avl_curs_Reset(_db_tr_avl_curs &curs, atf_amc::FDb& );
 // cursor points to valid item
+// func:atf_amc.FDb.tr_avl_curs.ValidQ
 bool                 _db_tr_avl_curs_ValidQ(_db_tr_avl_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.tr_avl_curs.Next
 void                 _db_tr_avl_curs_Next(_db_tr_avl_curs &curs);
 // item access
+// func:atf_amc.FDb.tr_avl_curs.Access
 atf_amc::FAvl&       _db_tr_avl_curs_Access(_db_tr_avl_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.listtype_curs.Reset
 void                 _db_listtype_curs_Reset(_db_listtype_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.listtype_curs.ValidQ
 bool                 _db_listtype_curs_ValidQ(_db_listtype_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.listtype_curs.Next
 void                 _db_listtype_curs_Next(_db_listtype_curs &curs);
 // item access
+// func:atf_amc.FDb.listtype_curs.Access
 atf_amc::FListtype&  _db_listtype_curs_Access(_db_listtype_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FDb.thash_elem_curs.Reset
 void                 _db_thash_elem_curs_Reset(_db_thash_elem_curs &curs, atf_amc::FDb &parent);
 // cursor points to valid item
+// func:atf_amc.FDb.thash_elem_curs.ValidQ
 bool                 _db_thash_elem_curs_ValidQ(_db_thash_elem_curs &curs);
 // proceed to next item
+// func:atf_amc.FDb.thash_elem_curs.Next
 void                 _db_thash_elem_curs_Next(_db_thash_elem_curs &curs);
 // item access
+// func:atf_amc.FDb.thash_elem_curs.Access
 atf_amc::FThashElem& _db_thash_elem_curs_Access(_db_thash_elem_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.FDb..Init
 void                 FDb_Init();
+// func:atf_amc.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_amc.TypeG
@@ -3084,19 +4077,28 @@ struct TypeG { // atf_amc.TypeG
 };
 #pragma pack(pop)
 
+// func:atf_amc.TypeG..Hash
 u32                  TypeG_Hash(u32 prev, const atf_amc::TypeG & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeG from an ascii string.
 // The format of the string is the format of the atf_amc::TypeG's only field
+// func:atf_amc.TypeG..ReadStrptrMaybe
 bool                 TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str);
-bool                 TypeG_Lt(atf_amc::TypeG & lhs, atf_amc::TypeG & rhs) __attribute__((nothrow));
-i32                  TypeG_Cmp(atf_amc::TypeG & lhs, atf_amc::TypeG & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeG..Lt
+bool                 TypeG_Lt(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeG..Cmp
+i32                  TypeG_Cmp(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeG..Init
 void                 TypeG_Init(atf_amc::TypeG& typeg);
-bool                 TypeG_Eq(const atf_amc::TypeG & lhs,const atf_amc::TypeG & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeG..Eq
+bool                 TypeG_Eq(const atf_amc::TypeG& lhs, const atf_amc::TypeG& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeG to string LHS, no header -- cprint:atf_amc.TypeG.String
-void                 TypeG_Print(atf_amc::TypeG & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeG..Update
+bool                 TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeG.String  printfmt:Raw
+// func:atf_amc.TypeG..Print
+void                 TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FOptG
 // create: atf_amc.FDb.optg (Lpool)
@@ -3111,22 +4113,29 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FOptG.optg.CopyOut
 void                 optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FOptG.optg.CopyIn
 void                 optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) __attribute__((nothrow));
 
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.FOptG.typeg.Get
 atf_amc::TypeG*      typeg_Get(atf_amc::FOptG& optg) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.FOptG.typeg.Getary
 algo::aryptr<u8>     typeg_Getary(atf_amc::FOptG& optg) __attribute__((nothrow));
 
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::FOptG& row) __attribute__((nothrow));
+// func:atf_amc.FOptG..GetMsgLength
+i32                  FOptG_GetMsgLength(const atf_amc::FOptG& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::FOptG& row) __attribute__((nothrow));
+// func:atf_amc.FOptG..GetMsgMemptr
+algo::memptr         FOptG_GetMsgMemptr(const atf_amc::FOptG& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.FOptG..Init
 void                 FOptG_Init(atf_amc::FOptG& optg);
 
 // --- atf_amc.FPerfSortString
@@ -3148,118 +4157,173 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_amc.FPerfSortString.orig.Alloc
 atf_amc::Cstr&       orig_Alloc(atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_amc.FPerfSortString.orig.AllocAt
 atf_amc::Cstr&       orig_AllocAt(atf_amc::FPerfSortString& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FPerfSortString.orig.AllocN
 algo::aryptr<atf_amc::Cstr> orig_AllocN(atf_amc::FPerfSortString& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FPerfSortString.orig.EmptyQ
 bool                 orig_EmptyQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FPerfSortString.orig.Find
 atf_amc::Cstr*       orig_Find(atf_amc::FPerfSortString& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.FPerfSortString.orig.Getary
 algo::aryptr<atf_amc::Cstr> orig_Getary(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FPerfSortString.orig.Last
 atf_amc::Cstr*       orig_Last(atf_amc::FPerfSortString& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_amc.FPerfSortString.orig.Max
 i32                  orig_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FPerfSortString.orig.N
 i32                  orig_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_amc.FPerfSortString.orig.Remove
 void                 orig_Remove(atf_amc::FPerfSortString& parent, u32 i) __attribute__((nothrow));
+// func:atf_amc.FPerfSortString.orig.RemoveAll
 void                 orig_RemoveAll(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FPerfSortString.orig.RemoveLast
 void                 orig_RemoveLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_amc.FPerfSortString.orig.Reserve
 void                 orig_Reserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_amc.FPerfSortString.orig.AbsReserve
 void                 orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_amc.FPerfSortString.orig.Setary
 void                 orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FPerfSortString.orig.qFind
 atf_amc::Cstr&       orig_qFind(atf_amc::FPerfSortString& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_amc.FPerfSortString.orig.qLast
 atf_amc::Cstr&       orig_qLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_amc.FPerfSortString.orig.rowid_Get
 u64                  orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FPerfSortString.orig.AllocNVal
 algo::aryptr<atf_amc::Cstr> orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FPerfSortString.orig.XrefMaybe
 bool                 orig_XrefMaybe(atf_amc::Cstr &row);
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_amc.FPerfSortString.sorted1.Addary
 algo::aryptr<atf_amc::Cstr> sorted1_Addary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_amc.FPerfSortString.sorted1.Alloc
 atf_amc::Cstr&       sorted1_Alloc(atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_amc.FPerfSortString.sorted1.AllocAt
 atf_amc::Cstr&       sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FPerfSortString.sorted1.AllocN
 algo::aryptr<atf_amc::Cstr> sorted1_AllocN(atf_amc::FPerfSortString& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FPerfSortString.sorted1.EmptyQ
 bool                 sorted1_EmptyQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FPerfSortString.sorted1.Find
 atf_amc::Cstr*       sorted1_Find(atf_amc::FPerfSortString& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.FPerfSortString.sorted1.Getary
 algo::aryptr<atf_amc::Cstr> sorted1_Getary(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FPerfSortString.sorted1.Last
 atf_amc::Cstr*       sorted1_Last(atf_amc::FPerfSortString& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_amc.FPerfSortString.sorted1.Max
 i32                  sorted1_Max(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FPerfSortString.sorted1.N
 i32                  sorted1_N(const atf_amc::FPerfSortString& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_amc.FPerfSortString.sorted1.Remove
 void                 sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) __attribute__((nothrow));
+// func:atf_amc.FPerfSortString.sorted1.RemoveAll
 void                 sorted1_RemoveAll(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FPerfSortString.sorted1.RemoveLast
 void                 sorted1_RemoveLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_amc.FPerfSortString.sorted1.Reserve
 void                 sorted1_Reserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_amc.FPerfSortString.sorted1.AbsReserve
 void                 sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_amc.FPerfSortString.sorted1.Setary
 void                 sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) __attribute__((nothrow));
 // Copy specified array into sorted1, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:atf_amc.FPerfSortString.sorted1.Setary2
 void                 sorted1_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<atf_amc::Cstr> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FPerfSortString.sorted1.qFind
 atf_amc::Cstr&       sorted1_qFind(atf_amc::FPerfSortString& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_amc.FPerfSortString.sorted1.qLast
 atf_amc::Cstr&       sorted1_qLast(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_amc.FPerfSortString.sorted1.rowid_Get
 u64                  sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FPerfSortString.sorted1.AllocNVal
 algo::aryptr<atf_amc::Cstr> sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) __attribute__((nothrow));
 // Verify whether array is sorted
+// func:atf_amc.FPerfSortString.sorted1.SortedQ
 bool                 sorted1_SortedQ(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_amc.FPerfSortString.sorted1.InsertionSort
 void                 sorted1_InsertionSort(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_amc.FPerfSortString.sorted1.HeapSort
 void                 sorted1_HeapSort(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_amc.FPerfSortString.sorted1.QuickSort
 void                 sorted1_QuickSort(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.FPerfSortString.orig_curs.Next
 void                 FPerfSortString_orig_curs_Next(FPerfSortString_orig_curs &curs);
+// func:atf_amc.FPerfSortString.orig_curs.Reset
 void                 FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &curs, atf_amc::FPerfSortString &parent);
 // cursor points to valid item
+// func:atf_amc.FPerfSortString.orig_curs.ValidQ
 bool                 FPerfSortString_orig_curs_ValidQ(FPerfSortString_orig_curs &curs);
 // item access
+// func:atf_amc.FPerfSortString.orig_curs.Access
 atf_amc::Cstr&       FPerfSortString_orig_curs_Access(FPerfSortString_orig_curs &curs);
 // proceed to next item
+// func:atf_amc.FPerfSortString.sorted1_curs.Next
 void                 FPerfSortString_sorted1_curs_Next(FPerfSortString_sorted1_curs &curs);
+// func:atf_amc.FPerfSortString.sorted1_curs.Reset
 void                 FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_curs &curs, atf_amc::FPerfSortString &parent);
 // cursor points to valid item
+// func:atf_amc.FPerfSortString.sorted1_curs.ValidQ
 bool                 FPerfSortString_sorted1_curs_ValidQ(FPerfSortString_sorted1_curs &curs);
 // item access
+// func:atf_amc.FPerfSortString.sorted1_curs.Access
 atf_amc::Cstr&       FPerfSortString_sorted1_curs_Access(FPerfSortString_sorted1_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.FPerfSortString..Init
 void                 FPerfSortString_Init(atf_amc::FPerfSortString& parent);
+// func:atf_amc.FPerfSortString..Uninit
 void                 FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) __attribute__((nothrow));
 
 // --- atf_amc.FThashElem
@@ -3280,7 +4344,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:atf_amc.FThashElem..Init
 void                 FThashElem_Init(atf_amc::FThashElem& thash_elem);
+// func:atf_amc.FThashElem..Uninit
 void                 FThashElem_Uninit(atf_amc::FThashElem& thash_elem) __attribute__((nothrow));
 
 // --- atf_amc.FTypeC
@@ -3322,15 +4388,21 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeC.msghdr.CopyOut
 void                 typec_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeC.msghdr.CopyIn
 void                 typec_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeC..Init
 void                 FTypeC_Init(atf_amc::FTypeC& typec);
+// func:atf_amc.FTypeC..Uninit
 void                 FTypeC_Uninit(atf_amc::FTypeC& typec) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeC to string LHS, no header -- cprint:atf_amc.FTypeC.String
-void                 FTypeC_Print(atf_amc::FTypeC & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeC.String  printfmt:Raw
+// func:atf_amc.FTypeC..Print
+void                 FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeA
 // create: atf_amc.FDb.typea (Lary)
@@ -3360,132 +4432,191 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeA.msghdr.CopyOut
 void                 typea_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeA.msghdr.CopyIn
 void                 typea_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.FTypeA.typec.Alloc
 atf_amc::FTypeC&     typec_Alloc(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.FTypeA.typec.AllocMaybe
 atf_amc::FTypeC*     typec_AllocMaybe(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_amc.FTypeA.typec.InsertMaybe
 atf_amc::FTypeC*     typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.FTypeA.typec.AllocMem
 void*                typec_AllocMem(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FTypeA.typec.EmptyQ
 bool                 typec_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FTypeA.typec.Find
 atf_amc::FTypeC*     typec_Find(atf_amc::FTypeA& typea, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.FTypeA.typec.Getary
 algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return constant 10 -- max. number of items in the pool
+// func:atf_amc.FTypeA.typec.Max
 i32                  typec_Max(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FTypeA.typec.N
 i32                  typec_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Destroy all elements of Inlary
+// func:atf_amc.FTypeA.typec.RemoveAll
 void                 typec_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FTypeA.typec.RemoveLast
 void                 typec_RemoveLast(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.FTypeA.typec.qFind
 atf_amc::FTypeC&     typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
+// func:atf_amc.FTypeA.typec.rowid_Get
 u64                  typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FTypeA.typec.XrefMaybe
 bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
 
 // Delete all elements in the linked list.
+// func:atf_amc.FTypeA.zdl_typeb.Cascdel
 void                 zdl_typeb_Cascdel(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FTypeA.zdl_typeb.EmptyQ
 bool                 zdl_typeb_EmptyQ(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FTypeA.zdl_typeb.First
 atf_amc::FTypeB*     zdl_typeb_First(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FTypeA.zdl_typeb.InLlistQ
 bool                 zdl_typeb_InLlistQ(atf_amc::FTypeB& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FTypeA.zdl_typeb.Insert
 void                 zdl_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FTypeA.zdl_typeb.Last
 atf_amc::FTypeB*     zdl_typeb_Last(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FTypeA.zdl_typeb.N
 i32                  zdl_typeb_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FTypeA.zdl_typeb.Next
 atf_amc::FTypeB*     zdl_typeb_Next(atf_amc::FTypeB &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FTypeA.zdl_typeb.Prev
 atf_amc::FTypeB*     zdl_typeb_Prev(atf_amc::FTypeB &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FTypeA.zdl_typeb.Remove
 void                 zdl_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FTypeA.zdl_typeb.RemoveAll
 void                 zdl_typeb_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FTypeA.zdl_typeb.RemoveFirst
 atf_amc::FTypeB*     zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FTypeA.zdl_typeb.qLast
 atf_amc::FTypeB&     zdl_typeb_qLast(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
 
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
+// func:atf_amc.FTypeA.bh_typeb.Cascdel
 void                 bh_typeb_Cascdel(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Remove all elements from heap and free memory used by the array.
+// func:atf_amc.FTypeA.bh_typeb.Dealloc
 void                 bh_typeb_Dealloc(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_amc.FTypeA.bh_typeb.EmptyQ
 bool                 bh_typeb_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FTypeA.bh_typeb.First
 atf_amc::FTypeB*     bh_typeb_First(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
+// func:atf_amc.FTypeA.bh_typeb.InBheapQ
 bool                 bh_typeb_InBheapQ(atf_amc::FTypeB& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:atf_amc.FTypeA.bh_typeb.Insert
 void                 bh_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) __attribute__((nothrow));
 // Return number of items in the heap
+// func:atf_amc.FTypeA.bh_typeb.N
 i32                  bh_typeb_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
+// func:atf_amc.FTypeA.bh_typeb.Reheap
 i32                  bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) __attribute__((nothrow));
 // Key of first element in the heap changed. Move it.
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
+// func:atf_amc.FTypeA.bh_typeb.ReheapFirst
 i32                  bh_typeb_ReheapFirst(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FTypeA.bh_typeb.Remove
 void                 bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) __attribute__((nothrow));
 // Remove all elements from binary heap
+// func:atf_amc.FTypeA.bh_typeb.RemoveAll
 void                 bh_typeb_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
+// func:atf_amc.FTypeA.bh_typeb.RemoveFirst
 atf_amc::FTypeB*     bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Reserve space in index for N more elements
+// func:atf_amc.FTypeA.bh_typeb.Reserve
 void                 bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeA..Init
 void                 FTypeA_Init(atf_amc::FTypeA& typea);
 // cursor points to valid item
+// func:atf_amc.FTypeA.typec_curs.Reset
 void                 typea_typec_curs_Reset(typea_typec_curs &curs, atf_amc::FTypeA &parent);
 // cursor points to valid item
+// func:atf_amc.FTypeA.typec_curs.ValidQ
 bool                 typea_typec_curs_ValidQ(typea_typec_curs &curs);
 // proceed to next item
+// func:atf_amc.FTypeA.typec_curs.Next
 void                 typea_typec_curs_Next(typea_typec_curs &curs);
 // item access
+// func:atf_amc.FTypeA.typec_curs.Access
 atf_amc::FTypeC&     typea_typec_curs_Access(typea_typec_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FTypeA.zdl_typeb_curs.Reset
 void                 typea_zdl_typeb_curs_Reset(typea_zdl_typeb_curs &curs, atf_amc::FTypeA &parent);
 // cursor points to valid item
+// func:atf_amc.FTypeA.zdl_typeb_curs.ValidQ
 bool                 typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs);
 // proceed to next item
+// func:atf_amc.FTypeA.zdl_typeb_curs.Next
 void                 typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs);
 // item access
+// func:atf_amc.FTypeA.zdl_typeb_curs.Access
 atf_amc::FTypeB&     typea_zdl_typeb_curs_Access(typea_zdl_typeb_curs &curs);
+// func:atf_amc.FTypeA.bh_typeb_curs.Reserve
 void                 typea_bh_typeb_curs_Reserve(typea_bh_typeb_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:atf_amc.FTypeA.bh_typeb_curs.Reset
 void                 typea_bh_typeb_curs_Reset(typea_bh_typeb_curs &curs, atf_amc::FTypeA &parent);
 // Advance cursor.
+// func:atf_amc.FTypeA.bh_typeb_curs.Next
 void                 typea_bh_typeb_curs_Next(typea_bh_typeb_curs &curs);
 // Access current element. If not more elements, return NULL
+// func:atf_amc.FTypeA.bh_typeb_curs.Access
 atf_amc::FTypeB&     typea_bh_typeb_curs_Access(typea_bh_typeb_curs &curs);
 // Return true if Access() will return non-NULL.
+// func:atf_amc.FTypeA.bh_typeb_curs.ValidQ
 bool                 typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs);
+// func:atf_amc.FTypeA..Uninit
 void                 FTypeA_Uninit(atf_amc::FTypeA& typea) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeA to string LHS, no header -- cprint:atf_amc.FTypeA.String
-void                 FTypeA_Print(atf_amc::FTypeA & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeA.String  printfmt:Tuple
+// func:atf_amc.FTypeA..Print
+void                 FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeB
 // create: atf_amc.FDb.typeb (Tpool)
@@ -3509,15 +4640,21 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeB.msghdr.CopyOut
 void                 typeb_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeB.msghdr.CopyIn
 void                 typeb_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeB..Init
 void                 FTypeB_Init(atf_amc::FTypeB& typeb);
+// func:atf_amc.FTypeB..Uninit
 void                 FTypeB_Uninit(atf_amc::FTypeB& typeb) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeB to string LHS, no header -- cprint:atf_amc.FTypeB.String
-void                 FTypeB_Print(atf_amc::FTypeB & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeB.String  printfmt:Tuple
+// func:atf_amc.FTypeB..Print
+void                 FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeD
 // create: atf_amc.FDb.typed (Tpool)
@@ -3543,15 +4680,21 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeD.msghdr.CopyOut
 void                 typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeD.msghdr.CopyIn
 void                 typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeD..Init
 void                 FTypeD_Init(atf_amc::FTypeD& typed);
+// func:atf_amc.FTypeD..Uninit
 void                 FTypeD_Uninit(atf_amc::FTypeD& typed) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeD to string LHS, no header -- cprint:atf_amc.FTypeD.String
-void                 FTypeD_Print(atf_amc::FTypeD & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeD.String  printfmt:Raw
+// func:atf_amc.FTypeD..Print
+void                 FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeK
 // global access: c_typek (Ptrary)
@@ -3562,6 +4705,7 @@ struct FTypeK { // atf_amc.FTypeK
 };
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeK..Init
 void                 FTypeK_Init(atf_amc::FTypeK& parent);
 
 // --- atf_amc.FTypeS
@@ -3586,48 +4730,70 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeS.msghdr.CopyOut
 void                 types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeS.msghdr.CopyIn
 void                 types_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_amc.FTypeS.zdl_typet.EmptyQ
 bool                 zdl_typet_EmptyQ(atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_amc.FTypeS.zdl_typet.First
 atf_amc::FTypeT*     zdl_typet_First(atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_amc.FTypeS.zdl_typet.InLlistQ
 bool                 zdl_typet_InLlistQ(atf_amc::FTypeT& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_amc.FTypeS.zdl_typet.Insert
 void                 zdl_typet_Insert(atf_amc::FTypeS& types, atf_amc::FTypeT& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_amc.FTypeS.zdl_typet.Last
 atf_amc::FTypeT*     zdl_typet_Last(atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_amc.FTypeS.zdl_typet.N
 i32                  zdl_typet_N(const atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_amc.FTypeS.zdl_typet.Next
 atf_amc::FTypeT*     zdl_typet_Next(atf_amc::FTypeT &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_amc.FTypeS.zdl_typet.Prev
 atf_amc::FTypeT*     zdl_typet_Prev(atf_amc::FTypeT &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_amc.FTypeS.zdl_typet.Remove
 void                 zdl_typet_Remove(atf_amc::FTypeS& types, atf_amc::FTypeT& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FTypeS.zdl_typet.RemoveAll
 void                 zdl_typet_RemoveAll(atf_amc::FTypeS& types) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_amc.FTypeS.zdl_typet.RemoveFirst
 atf_amc::FTypeT*     zdl_typet_RemoveFirst(atf_amc::FTypeS& types) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_amc.FTypeS.zdl_typet.qLast
 atf_amc::FTypeT&     zdl_typet_qLast(atf_amc::FTypeS& types) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeS..Init
 void                 FTypeS_Init(atf_amc::FTypeS& types);
 // cursor points to valid item
+// func:atf_amc.FTypeS.zdl_typet_curs.Reset
 void                 types_zdl_typet_curs_Reset(types_zdl_typet_curs &curs, atf_amc::FTypeS &parent);
 // cursor points to valid item
+// func:atf_amc.FTypeS.zdl_typet_curs.ValidQ
 bool                 types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs);
 // proceed to next item
+// func:atf_amc.FTypeS.zdl_typet_curs.Next
 void                 types_zdl_typet_curs_Next(types_zdl_typet_curs &curs);
 // item access
+// func:atf_amc.FTypeS.zdl_typet_curs.Access
 atf_amc::FTypeT&     types_zdl_typet_curs_Access(types_zdl_typet_curs &curs);
+// func:atf_amc.FTypeS..Uninit
 void                 FTypeS_Uninit(atf_amc::FTypeS& types) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeS to string LHS, no header -- cprint:atf_amc.FTypeS.String
-void                 FTypeS_Print(atf_amc::FTypeS & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeS.String  printfmt:Tuple
+// func:atf_amc.FTypeS..Print
+void                 FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.FTypeT
 // create: atf_amc.FDb.typet (Lary)
@@ -3649,15 +4815,21 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_amc.FTypeT.msghdr.CopyOut
 void                 typet_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_amc.FTypeT.msghdr.CopyIn
 void                 typet_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.FTypeT..Init
 void                 FTypeT_Init(atf_amc::FTypeT& typet);
+// func:atf_amc.FTypeT..Uninit
 void                 FTypeT_Uninit(atf_amc::FTypeT& typet) __attribute__((nothrow));
-// print string representation of atf_amc::FTypeT to string LHS, no header -- cprint:atf_amc.FTypeT.String
-void                 FTypeT_Print(atf_amc::FTypeT & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FTypeT.String  printfmt:Tuple
+// func:atf_amc.FTypeT..Print
+void                 FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeA
 // create: atf_amc.FUnitSort.tary (Tary)
@@ -3675,21 +4847,31 @@ struct TypeA { // atf_amc.TypeA
     TypeA();
 };
 
+// func:atf_amc.TypeA..Hash
 u32                  TypeA_Hash(u32 prev, const atf_amc::TypeA & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeA from an ascii string.
 // The format of the string is the format of the atf_amc::TypeA's only field
+// func:atf_amc.TypeA..ReadStrptrMaybe
 bool                 TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str);
-bool                 TypeA_Lt(atf_amc::TypeA & lhs, atf_amc::TypeA & rhs) __attribute__((nothrow));
-i32                  TypeA_Cmp(atf_amc::TypeA & lhs, atf_amc::TypeA & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeA..Lt
+bool                 TypeA_Lt(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeA..Cmp
+i32                  TypeA_Cmp(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeA..Init
 void                 TypeA_Init(atf_amc::TypeA& tary);
-bool                 TypeA_Eq(const atf_amc::TypeA & lhs,const atf_amc::TypeA & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeA..Eq
+bool                 TypeA_Eq(const atf_amc::TypeA& lhs, const atf_amc::TypeA& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeA to string LHS, no header -- cprint:atf_amc.TypeA.String
-void                 TypeA_Print(atf_amc::TypeA & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeA..Update
+bool                 TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeA.String  printfmt:Raw
+// func:atf_amc.TypeA..Print
+void                 TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_amc::TypeA under PARENT node -- cprint:atf_amc.TypeA.Json
-lib_json::FNode *    TypeA_FmtJson(atf_amc::TypeA & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_amc.TypeA..FmtJson
+lib_json::FNode *    TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_amc.FUnitSort
 struct FUnitSort { // atf_amc.FUnitSort
@@ -3711,137 +4893,201 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_amc.FUnitSort.tary.Alloc
 atf_amc::TypeA&      tary_Alloc(atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_amc.FUnitSort.tary.AllocAt
 atf_amc::TypeA&      tary_AllocAt(atf_amc::FUnitSort& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FUnitSort.tary.AllocN
 algo::aryptr<atf_amc::TypeA> tary_AllocN(atf_amc::FUnitSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.FUnitSort.tary.EmptyQ
 bool                 tary_EmptyQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FUnitSort.tary.Find
 atf_amc::TypeA*      tary_Find(atf_amc::FUnitSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.FUnitSort.tary.Getary
 algo::aryptr<atf_amc::TypeA> tary_Getary(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.FUnitSort.tary.Last
 atf_amc::TypeA*      tary_Last(atf_amc::FUnitSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_amc.FUnitSort.tary.Max
 i32                  tary_Max(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FUnitSort.tary.N
 i32                  tary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_amc.FUnitSort.tary.Remove
 void                 tary_Remove(atf_amc::FUnitSort& parent, u32 i) __attribute__((nothrow));
+// func:atf_amc.FUnitSort.tary.RemoveAll
 void                 tary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.FUnitSort.tary.RemoveLast
 void                 tary_RemoveLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_amc.FUnitSort.tary.Reserve
 void                 tary_Reserve(atf_amc::FUnitSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_amc.FUnitSort.tary.AbsReserve
 void                 tary_AbsReserve(atf_amc::FUnitSort& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_amc.FUnitSort.tary.Setary
 void                 tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.FUnitSort.tary.qFind
 atf_amc::TypeA&      tary_qFind(atf_amc::FUnitSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_amc.FUnitSort.tary.qLast
 atf_amc::TypeA&      tary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_amc.FUnitSort.tary.rowid_Get
 u64                  tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.FUnitSort.tary.AllocNVal
 algo::aryptr<atf_amc::TypeA> tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) __attribute__((nothrow));
 // Verify whether array is sorted
+// func:atf_amc.FUnitSort.tary.SortedQ
 bool                 tary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_amc.FUnitSort.tary.InsertionSort
 void                 tary_InsertionSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_amc.FUnitSort.tary.HeapSort
 void                 tary_HeapSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_amc.FUnitSort.tary.QuickSort
 void                 tary_QuickSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.FUnitSort.tary.XrefMaybe
 bool                 tary_XrefMaybe(atf_amc::TypeA &row);
 
 // Return true if index is empty
+// func:atf_amc.FUnitSort.c_ptrary.EmptyQ
 bool                 c_ptrary_EmptyQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FUnitSort.c_ptrary.Find
 atf_amc::TypeA*      c_ptrary_Find(atf_amc::FUnitSort& parent, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
+// func:atf_amc.FUnitSort.c_ptrary.Getary
 algo::aryptr<atf_amc::TypeA*> c_ptrary_Getary(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
+// func:atf_amc.FUnitSort.c_ptrary.Insert
 void                 c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
+// func:atf_amc.FUnitSort.c_ptrary.ScanInsertMaybe
 bool                 c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
 // Return number of items in the pointer array
+// func:atf_amc.FUnitSort.c_ptrary.N
 i32                  c_ptrary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:atf_amc.FUnitSort.c_ptrary.Remove
 void                 c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_amc.FUnitSort.c_ptrary.RemoveAll
 void                 c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Reserve space in index for N more elements;
+// func:atf_amc.FUnitSort.c_ptrary.Reserve
 void                 c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
+// func:atf_amc.FUnitSort.c_ptrary.qFind
 atf_amc::TypeA&      c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
+// func:atf_amc.FUnitSort.c_ptrary.qLast
 atf_amc::TypeA&      c_ptrary_qLast(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Verify whether array is sorted
+// func:atf_amc.FUnitSort.c_ptrary.SortedQ
 bool                 c_ptrary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_amc.FUnitSort.c_ptrary.InsertionSort
 void                 c_ptrary_InsertionSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_amc.FUnitSort.c_ptrary.HeapSort
 void                 c_ptrary_HeapSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_amc.FUnitSort.c_ptrary.QuickSort
 void                 c_ptrary_QuickSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 
 // Set all elements of fixed array to value RHS
+// func:atf_amc.FUnitSort.fixary.Fill
 void                 fixary_Fill(atf_amc::FUnitSort& parent, const atf_amc::TypeA &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.FUnitSort.fixary.Find
 atf_amc::TypeA*      fixary_Find(atf_amc::FUnitSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array fixary as aryptr.
+// func:atf_amc.FUnitSort.fixary.Getary
 algo::aryptr<atf_amc::TypeA> fixary_Getary(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return max number of items in the array
+// func:atf_amc.FUnitSort.fixary.Max
 i32                  fixary_Max(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.FUnitSort.fixary.N
 i32                  fixary_N(const atf_amc::FUnitSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.FUnitSort.fixary.Setary
 void                 fixary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.FUnitSort.fixary.qFind
 atf_amc::TypeA&      fixary_qFind(atf_amc::FUnitSort& parent, u64 t) __attribute__((nothrow));
 // Verify whether array is sorted
+// func:atf_amc.FUnitSort.fixary.SortedQ
 bool                 fixary_SortedQ(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_amc.FUnitSort.fixary.InsertionSort
 void                 fixary_InsertionSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_amc.FUnitSort.fixary.HeapSort
 void                 fixary_HeapSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_amc.FUnitSort.fixary.QuickSort
 void                 fixary_QuickSort(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.FUnitSort.tary_curs.Next
 void                 FUnitSort_tary_curs_Next(FUnitSort_tary_curs &curs);
+// func:atf_amc.FUnitSort.tary_curs.Reset
 void                 FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_amc::FUnitSort &parent);
 // cursor points to valid item
+// func:atf_amc.FUnitSort.tary_curs.ValidQ
 bool                 FUnitSort_tary_curs_ValidQ(FUnitSort_tary_curs &curs);
 // item access
+// func:atf_amc.FUnitSort.tary_curs.Access
 atf_amc::TypeA&      FUnitSort_tary_curs_Access(FUnitSort_tary_curs &curs);
+// func:atf_amc.FUnitSort.c_ptrary_curs.Reset
 void                 FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs, atf_amc::FUnitSort &parent);
 // cursor points to valid item
+// func:atf_amc.FUnitSort.c_ptrary_curs.ValidQ
 bool                 FUnitSort_c_ptrary_curs_ValidQ(FUnitSort_c_ptrary_curs &curs);
 // proceed to next item
+// func:atf_amc.FUnitSort.c_ptrary_curs.Next
 void                 FUnitSort_c_ptrary_curs_Next(FUnitSort_c_ptrary_curs &curs);
 // item access
+// func:atf_amc.FUnitSort.c_ptrary_curs.Access
 atf_amc::TypeA&      FUnitSort_c_ptrary_curs_Access(FUnitSort_c_ptrary_curs &curs);
 // cursor points to valid item
+// func:atf_amc.FUnitSort.fixary_curs.Reset
 void                 FUnitSort_fixary_curs_Reset(FUnitSort_fixary_curs &curs, atf_amc::FUnitSort &parent);
 // cursor points to valid item
+// func:atf_amc.FUnitSort.fixary_curs.ValidQ
 bool                 FUnitSort_fixary_curs_ValidQ(FUnitSort_fixary_curs &curs);
 // proceed to next item
+// func:atf_amc.FUnitSort.fixary_curs.Next
 void                 FUnitSort_fixary_curs_Next(FUnitSort_fixary_curs &curs);
 // item access
+// func:atf_amc.FUnitSort.fixary_curs.Access
 atf_amc::TypeA&      FUnitSort_fixary_curs_Access(FUnitSort_fixary_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.FUnitSort..Init
 void                 FUnitSort_Init(atf_amc::FUnitSort& parent);
+// func:atf_amc.FUnitSort..Uninit
 void                 FUnitSort_Uninit(atf_amc::FUnitSort& parent) __attribute__((nothrow));
 
 // --- atf_amc.FieldId
@@ -3856,32 +5102,43 @@ struct FieldId { // atf_amc.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.FieldId.value.GetEnum
 atf_amc_FieldIdEnum  value_GetEnum(const atf_amc::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.FieldId.value.SetEnum
 void                 value_SetEnum(atf_amc::FieldId& parent, atf_amc_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf_amc::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.FieldId.value.Print
 void                 value_Print(const atf_amc::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf_amc::FieldId& parent, algo::strptr rhs, atf_amc_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::FieldId from an ascii string.
 // The format of the string is the format of the atf_amc::FieldId's only field
+// func:atf_amc.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.FieldId..Init
 void                 FieldId_Init(atf_amc::FieldId& parent);
-// print string representation of atf_amc::FieldId to string LHS, no header -- cprint:atf_amc.FieldId.String
-void                 FieldId_Print(atf_amc::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FieldId.String  printfmt:Raw
+// func:atf_amc.FieldId..Print
+void                 FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Hooktype
 // access: atf_amc.Hooktype.callback (Hook)
@@ -3897,15 +5154,20 @@ private:
 };
 
 // Invoke function by pointer
+// func:atf_amc.Hooktype.callback.Call
 void                 callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
+// func:atf_amc.Hooktype.callback.Set0
 void                 callback_Set0(atf_amc::Hooktype& parent, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
+// func:atf_amc.Hooktype.callback.Set1
 template<class T> void callback_Set1(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
+// func:atf_amc.Hooktype.callback.Set2
 template<class T> void callback_Set2(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&, atf_amc::Hooktype& arg) ) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.Hooktype..Init
 void                 Hooktype_Init(atf_amc::Hooktype& parent);
 
 // --- atf_amc.InlaryPrint
@@ -3919,81 +5181,118 @@ struct InlaryPrint { // atf_amc.InlaryPrint
 };
 
 // Set all elements of fixed array to value RHS
+// func:atf_amc.InlaryPrint.fixary.Fill
 void                 fixary_Fill(atf_amc::InlaryPrint& parent, const u32 &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.InlaryPrint.fixary.Find
 u32*                 fixary_Find(atf_amc::InlaryPrint& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array fixary as aryptr.
+// func:atf_amc.InlaryPrint.fixary.Getary
 algo::aryptr<u32>    fixary_Getary(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Return max number of items in the array
+// func:atf_amc.InlaryPrint.fixary.Max
 i32                  fixary_Max(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.InlaryPrint.fixary.N
 i32                  fixary_N(const atf_amc::InlaryPrint& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.InlaryPrint.fixary.Setary
 void                 fixary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.InlaryPrint.fixary.qFind
 u32&                 fixary_qFind(atf_amc::InlaryPrint& parent, u64 t) __attribute__((nothrow));
 // Convert fixary to a string. Parent's separator is used.
+// func:atf_amc.InlaryPrint.fixary.Print
 void                 fixary_Print(atf_amc::InlaryPrint& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
+// func:atf_amc.InlaryPrint.fixary.ReadStrptrMaybe
 bool                 fixary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.InlaryPrint.inlary.Alloc
 u32&                 inlary_Alloc(atf_amc::InlaryPrint& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.InlaryPrint.inlary.AllocMaybe
 u32*                 inlary_AllocMaybe(atf_amc::InlaryPrint& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.InlaryPrint.inlary.AllocMem
 void*                inlary_AllocMem(atf_amc::InlaryPrint& parent) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.InlaryPrint.inlary.EmptyQ
 bool                 inlary_EmptyQ(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.InlaryPrint.inlary.Find
 u32*                 inlary_Find(atf_amc::InlaryPrint& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.InlaryPrint.inlary.Getary
 algo::aryptr<u32>    inlary_Getary(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Return constant 10 -- max. number of items in the pool
+// func:atf_amc.InlaryPrint.inlary.Max
 i32                  inlary_Max(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.InlaryPrint.inlary.N
 i32                  inlary_N(const atf_amc::InlaryPrint& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Destroy all elements of Inlary
+// func:atf_amc.InlaryPrint.inlary.RemoveAll
 void                 inlary_RemoveAll(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.InlaryPrint.inlary.RemoveLast
 void                 inlary_RemoveLast(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.InlaryPrint.inlary.qFind
 u32&                 inlary_qFind(atf_amc::InlaryPrint& parent, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
+// func:atf_amc.InlaryPrint.inlary.rowid_Get
 u64                  inlary_rowid_Get(atf_amc::InlaryPrint& parent, u32 &row) __attribute__((nothrow));
 // Convert inlary to a string. Parent's separator is used.
+// func:atf_amc.InlaryPrint.inlary.Print
 void                 inlary_Print(atf_amc::InlaryPrint& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
+// func:atf_amc.InlaryPrint.inlary.ReadStrptrMaybe
 bool                 inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // cursor points to valid item
+// func:atf_amc.InlaryPrint.fixary_curs.Reset
 void                 InlaryPrint_fixary_curs_Reset(InlaryPrint_fixary_curs &curs, atf_amc::InlaryPrint &parent);
 // cursor points to valid item
+// func:atf_amc.InlaryPrint.fixary_curs.ValidQ
 bool                 InlaryPrint_fixary_curs_ValidQ(InlaryPrint_fixary_curs &curs);
 // proceed to next item
+// func:atf_amc.InlaryPrint.fixary_curs.Next
 void                 InlaryPrint_fixary_curs_Next(InlaryPrint_fixary_curs &curs);
 // item access
+// func:atf_amc.InlaryPrint.fixary_curs.Access
 u32&                 InlaryPrint_fixary_curs_Access(InlaryPrint_fixary_curs &curs);
 // cursor points to valid item
+// func:atf_amc.InlaryPrint.inlary_curs.Reset
 void                 InlaryPrint_inlary_curs_Reset(InlaryPrint_inlary_curs &curs, atf_amc::InlaryPrint &parent);
 // cursor points to valid item
+// func:atf_amc.InlaryPrint.inlary_curs.ValidQ
 bool                 InlaryPrint_inlary_curs_ValidQ(InlaryPrint_inlary_curs &curs);
 // proceed to next item
+// func:atf_amc.InlaryPrint.inlary_curs.Next
 void                 InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs);
 // item access
+// func:atf_amc.InlaryPrint.inlary_curs.Access
 u32&                 InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs);
-bool                 InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.InlaryPrint..ReadFieldMaybe
+bool                 InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::InlaryPrint from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.InlaryPrint..ReadStrptrMaybe
 bool                 InlaryPrint_ReadStrptrMaybe(atf_amc::InlaryPrint &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.InlaryPrint..Init
 void                 InlaryPrint_Init(atf_amc::InlaryPrint& parent);
+// func:atf_amc.InlaryPrint..Uninit
 void                 InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) __attribute__((nothrow));
-// print string representation of atf_amc::InlaryPrint to string LHS, no header -- cprint:atf_amc.InlaryPrint.String
-void                 InlaryPrint_Print(atf_amc::InlaryPrint & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.InlaryPrint.String  printfmt:Tuple
+// func:atf_amc.InlaryPrint..Print
+void                 InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Lary32
 struct Lary32 { // atf_amc.Lary32
@@ -4009,36 +5308,52 @@ private:
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_amc.Lary32.lary.Alloc
 u32&                 lary_Alloc(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_amc.Lary32.lary.AllocMaybe
 u32*                 lary_AllocMaybe(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_amc.Lary32.lary.AllocMem
 void*                lary_AllocMem(atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.Lary32.lary.EmptyQ
 bool                 lary_EmptyQ(atf_amc::Lary32& parent) __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.Lary32.lary.Find
 u32*                 lary_Find(atf_amc::Lary32& parent, u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.Lary32.lary.Last
 u32*                 lary_Last(atf_amc::Lary32& parent) __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_amc.Lary32.lary.N
 i32                  lary_N(const atf_amc::Lary32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_amc.Lary32.lary.RemoveAll
 void                 lary_RemoveAll(atf_amc::Lary32& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.Lary32.lary.RemoveLast
 void                 lary_RemoveLast(atf_amc::Lary32& parent) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.Lary32.lary.qFind
 u32&                 lary_qFind(atf_amc::Lary32& parent, u64 t) __attribute__((nothrow, pure));
 
 // cursor points to valid item
+// func:atf_amc.Lary32.lary_curs.Reset
 void                 Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent);
 // cursor points to valid item
+// func:atf_amc.Lary32.lary_curs.ValidQ
 bool                 Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs);
 // proceed to next item
+// func:atf_amc.Lary32.lary_curs.Next
 void                 Lary32_lary_curs_Next(Lary32_lary_curs &curs);
 // item access
+// func:atf_amc.Lary32.lary_curs.Access
 u32&                 Lary32_lary_curs_Access(Lary32_lary_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.Lary32..Init
 void                 Lary32_Init(atf_amc::Lary32& parent);
+// func:atf_amc.Lary32..Uninit
 void                 Lary32_Uninit(atf_amc::Lary32& parent) __attribute__((nothrow));
 
 // --- atf_amc.Linebuf
@@ -4071,32 +5386,42 @@ private:
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 //
+// func:atf_amc.Linebuf.in.GetMsg
 algo::aryptr<char>   in_GetMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:atf_amc.Linebuf.in.Max
 i32                  in_Max(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.Linebuf.in.N
 i32                  in_N(atf_amc::Linebuf& linebuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.Linebuf.in.RemoveAll
 void                 in_RemoveAll(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
+// func:atf_amc.Linebuf.in.SkipBytes
 void                 in_SkipBytes(atf_amc::Linebuf& linebuf, int n) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
+// func:atf_amc.Linebuf.in.SkipMsg
 void                 in_SkipMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.Linebuf.in.WriteAll
 bool                 in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.Linebuf..Init
 void                 Linebuf_Init(atf_amc::Linebuf& linebuf);
-// print string representation of atf_amc::Linebuf to string LHS, no header -- cprint:atf_amc.Linebuf.String
-void                 Linebuf_Print(atf_amc::Linebuf & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Linebuf.String  printfmt:Raw
+// func:atf_amc.Linebuf..Print
+void                 Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHdrLT
 // create: atf_amc.MsgLTO.o (Opt)
@@ -4119,37 +5444,51 @@ struct MsgHdrLT { // atf_amc.MsgHdrLT: length-type header
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.MsgHdrLT.type.GetEnum
 atf_amc_MsgHdrLT_type_Enum type_GetEnum(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.MsgHdrLT.type.SetEnum
 void                 type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLT.type.ToCstr
 const char*          type_ToCstr(const atf_amc::MsgHdrLT& o) __attribute__((nothrow));
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
+// func:atf_amc.MsgHdrLT.type.Print
 void                 type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.MsgHdrLT.type.SetStrptrMaybe
 bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLT.type.SetStrptr
 void                 type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.MsgHdrLT.type.ReadStrptrMaybe
 bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) __attribute__((nothrow));
 
-bool                 MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT..ReadFieldMaybe
+bool                 MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::MsgHdrLT from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgHdrLT..ReadStrptrMaybe
 bool                 MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT..GetMsgLength
+i32                  MsgHdrLT_GetMsgLength(const atf_amc::MsgHdrLT& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT..GetMsgMemptr
+algo::memptr         MsgHdrLT_GetMsgMemptr(const atf_amc::MsgHdrLT& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgHdrLT..Init
 void                 MsgHdrLT_Init(atf_amc::MsgHdrLT& o);
-// print string representation of atf_amc::MsgHdrLT to string LHS, no header -- cprint:atf_amc.MsgHdrLT.String
-void                 MsgHdrLT_Print(atf_amc::MsgHdrLT & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
+// func:atf_amc.MsgHdrLT..Print
+void                 MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHdrLTMsgsCase
 #pragma pack(push,1)
@@ -4163,29 +5502,38 @@ struct MsgHdrLTMsgsCase { // atf_amc.MsgHdrLTMsgsCase: Enum for dispatch atf_amc
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.MsgHdrLTMsgsCase.value.GetEnum
 atf_amc_MsgHdrLTMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetEnum
 void                 value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTMsgsCase.value.ToCstr
 const char*          value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.MsgHdrLTMsgsCase.value.Print
 void                 value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
 void                 value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
 // The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
+// func:atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
 bool                 MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.MsgHdrLTMsgsCase..Init
 void                 MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
 
 // --- atf_amc.MsgHdrLT_curs
@@ -4200,11 +5548,16 @@ struct MsgHdrLT_curs { // atf_amc.MsgHdrLT_curs: Cursor for scanning messages in
 };
 #pragma pack(pop)
 
+// func:atf_amc.MsgHdrLT_curs..ValidQ
 bool                 MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Reset
 void                 MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Access
 atf_amc::MsgHdrLT*&  MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLT_curs..Next
 void                 MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgHdrLT_curs..Init
 void                 MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent);
 
 // --- atf_amc.MsgType
@@ -4226,39 +5579,56 @@ struct MsgType { // atf_amc.MsgType
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.MsgType.value.GetEnum
 atf_amc_MsgTypeEnum  value_GetEnum(const atf_amc::MsgType& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.MsgType.value.SetEnum
 void                 value_SetEnum(atf_amc::MsgType& parent, atf_amc_MsgTypeEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgType.value.ToCstr
 const char*          value_ToCstr(const atf_amc::MsgType& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.MsgType.value.Print
 void                 value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.MsgType.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgType.value.SetStrptr
 void                 value_SetStrptr(atf_amc::MsgType& parent, algo::strptr rhs, atf_amc_MsgTypeEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.MsgType.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) __attribute__((nothrow));
 
+// func:atf_amc.MsgType..Hash
 u32                  MsgType_Hash(u32 prev, atf_amc::MsgType rhs) __attribute__((nothrow));
 // Read fields of atf_amc::MsgType from an ascii string.
 // The format of the string is the format of the atf_amc::MsgType's only field
+// func:atf_amc.MsgType..ReadStrptrMaybe
 bool                 MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_str);
+// func:atf_amc.MsgType..Lt
 bool                 MsgType_Lt(atf_amc::MsgType lhs, atf_amc::MsgType rhs) __attribute__((nothrow));
+// func:atf_amc.MsgType..Cmp
 i32                  MsgType_Cmp(atf_amc::MsgType lhs, atf_amc::MsgType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgType..Init
 void                 MsgType_Init(atf_amc::MsgType& parent);
+// func:atf_amc.MsgType..Eq
 bool                 MsgType_Eq(atf_amc::MsgType lhs, atf_amc::MsgType rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:atf_amc.MsgType..Update
 bool                 MsgType_Update(atf_amc::MsgType &lhs, atf_amc::MsgType rhs) __attribute__((nothrow));
-// print string representation of atf_amc::MsgType to string LHS, no header -- cprint:atf_amc.MsgType.String
-void                 MsgType_Print(atf_amc::MsgType row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgType.String  printfmt:Raw
+// func:atf_amc.MsgType..Print
+void                 MsgType_Print(atf_amc::MsgType row, algo::cstring& str) __attribute__((nothrow));
 // define enum comparison operator to avoid ambiguity
+// func:atf_amc.MsgType..EqEnum
 bool                 MsgType_EqEnum(atf_amc::MsgType lhs, atf_amc_MsgTypeEnum rhs) __attribute__((nothrow));
 
 // --- atf_amc.MsgLength
@@ -4271,19 +5641,28 @@ struct MsgLength { // atf_amc.MsgLength
 };
 #pragma pack(pop)
 
+// func:atf_amc.MsgLength..Hash
 u32                  MsgLength_Hash(u32 prev, atf_amc::MsgLength rhs) __attribute__((nothrow));
 // Read fields of atf_amc::MsgLength from an ascii string.
 // The format of the string is the format of the atf_amc::MsgLength's only field
+// func:atf_amc.MsgLength..ReadStrptrMaybe
 bool                 MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr in_str);
+// func:atf_amc.MsgLength..Lt
 bool                 MsgLength_Lt(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) __attribute__((nothrow));
+// func:atf_amc.MsgLength..Cmp
 i32                  MsgLength_Cmp(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgLength..Init
 void                 MsgLength_Init(atf_amc::MsgLength& parent);
+// func:atf_amc.MsgLength..Eq
 bool                 MsgLength_Eq(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:atf_amc.MsgLength..Update
 bool                 MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLength rhs) __attribute__((nothrow));
-// print string representation of atf_amc::MsgLength to string LHS, no header -- cprint:atf_amc.MsgLength.String
-void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLength.String  printfmt:Raw
+// func:atf_amc.MsgLength..Print
+void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHeader
 // create: atf_amc.Msgbuf.in (Fbuf)
@@ -4304,19 +5683,28 @@ struct MsgHeader { // atf_amc.MsgHeader
 };
 #pragma pack(pop)
 
+// func:atf_amc.MsgHeader..Hash
 u32                  MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader & rhs) __attribute__((nothrow));
-bool                 MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgHeader..ReadFieldMaybe
+bool                 MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::MsgHeader from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgHeader..ReadStrptrMaybe
 bool                 MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgHeader& row) __attribute__((nothrow));
+// func:atf_amc.MsgHeader..GetMsgLength
+i32                  MsgHeader_GetMsgLength(const atf_amc::MsgHeader& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgHeader& row) __attribute__((nothrow));
-i32                  MsgHeader_Cmp(atf_amc::MsgHeader & lhs, atf_amc::MsgHeader & rhs) __attribute__((nothrow));
-bool                 MsgHeader_Eq(const atf_amc::MsgHeader & lhs,const atf_amc::MsgHeader & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::MsgHeader to string LHS, no header -- cprint:atf_amc.MsgHeader.String
-void                 MsgHeader_Print(atf_amc::MsgHeader & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.MsgHeader..GetMsgMemptr
+algo::memptr         MsgHeader_GetMsgMemptr(const atf_amc::MsgHeader& row) __attribute__((nothrow));
+// func:atf_amc.MsgHeader..Cmp
+i32                  MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) __attribute__((nothrow));
+// func:atf_amc.MsgHeader..Eq
+bool                 MsgHeader_Eq(const atf_amc::MsgHeader& lhs, const atf_amc::MsgHeader& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
+// func:atf_amc.MsgHeader..Print
+void                 MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHeader_curs
 #pragma pack(push,1)
@@ -4330,11 +5718,16 @@ struct MsgHeader_curs { // atf_amc.MsgHeader_curs: Cursor for scanning messages 
 };
 #pragma pack(pop)
 
+// func:atf_amc.MsgHeader_curs..ValidQ
 bool                 MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHeader_curs..Reset
 void                 MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.MsgHeader_curs..Access
 atf_amc::MsgHeader*& MsgHeader_curs_Access(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHeader_curs..Next
 void                 MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgHeader_curs..Init
 void                 MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent);
 
 // --- atf_amc.MsgLTA
@@ -4349,26 +5742,36 @@ struct MsgLTA { // atf_amc.MsgLTA
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.MsgLTA.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTA by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of MsgLTA.
 // If not successful, quietly return NULL.
+// func:atf_amc.MsgLTA.base.Castdown
 atf_amc::MsgLTA*     MsgLTA_Castdown(atf_amc::MsgHdrLT &hdr);
+// func:atf_amc.MsgLTA.base.Castbase
 atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTA& parent);
 
-bool                 MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgLTA..ReadFieldMaybe
+bool                 MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::MsgLTA from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTA..ReadStrptrMaybe
 bool                 MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgLTA& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTA..GetMsgLength
+i32                  MsgLTA_GetMsgLength(const atf_amc::MsgLTA& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgLTA& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTA..GetMsgMemptr
+algo::memptr         MsgLTA_GetMsgMemptr(const atf_amc::MsgLTA& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgLTA..Init
 void                 MsgLTA_Init(atf_amc::MsgLTA& parent);
-// print string representation of atf_amc::MsgLTA to string LHS, no header -- cprint:atf_amc.MsgLTA.String
-void                 MsgLTA_Print(atf_amc::MsgLTA & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTA.String  printfmt:Tuple
+// func:atf_amc.MsgLTA..Print
+void                 MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgLTB
 #pragma pack(push,1)
@@ -4382,26 +5785,36 @@ struct MsgLTB { // atf_amc.MsgLTB
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.MsgLTB.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTB by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of MsgLTB.
 // If not successful, quietly return NULL.
+// func:atf_amc.MsgLTB.base.Castdown
 atf_amc::MsgLTB*     MsgLTB_Castdown(atf_amc::MsgHdrLT &hdr);
+// func:atf_amc.MsgLTB.base.Castbase
 atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTB& parent);
 
-bool                 MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgLTB..ReadFieldMaybe
+bool                 MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::MsgLTB from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTB..ReadStrptrMaybe
 bool                 MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgLTB& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTB..GetMsgLength
+i32                  MsgLTB_GetMsgLength(const atf_amc::MsgLTB& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgLTB& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTB..GetMsgMemptr
+algo::memptr         MsgLTB_GetMsgMemptr(const atf_amc::MsgLTB& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgLTB..Init
 void                 MsgLTB_Init(atf_amc::MsgLTB& parent);
-// print string representation of atf_amc::MsgLTB to string LHS, no header -- cprint:atf_amc.MsgLTB.String
-void                 MsgLTB_Print(atf_amc::MsgLTB & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTB.String  printfmt:Tuple
+// func:atf_amc.MsgLTB..Print
+void                 MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgLTO
 #pragma pack(push,1)
@@ -4414,12 +5827,15 @@ struct MsgLTO { // atf_amc.MsgLTO
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.MsgLTO.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTO by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of MsgLTO.
 // If not successful, quietly return NULL.
+// func:atf_amc.MsgLTO.base.Castdown
 atf_amc::MsgLTO*     MsgLTO_Castdown(atf_amc::MsgHdrLT &hdr);
+// func:atf_amc.MsgLTO.base.Castbase
 atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTO& parent);
 
 // Return pointer to optional last element (NULL if none)
@@ -4428,29 +5844,41 @@ atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTO& parent);
 // Since the last element is itself variable-length, two more checks are applied:
 // If o's length field value is too short, return NULL.
 // If o's length field value extends past parent's allowed length, return NULL.
+// func:atf_amc.MsgLTO.o.Get
 atf_amc::MsgHdrLT*   o_Get(atf_amc::MsgLTO& parent) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.MsgLTO.o.Getary
 algo::aryptr<u8>     o_Getary(atf_amc::MsgLTO& parent) __attribute__((nothrow));
+// func:atf_amc.MsgLTO.o.Print
 void                 o_Print(atf_amc::MsgLTO& parent, cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.MsgLTO.o.ReadStrptrMaybe
 bool                 o_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.MsgLTO.o.XrefMaybe
 bool                 o_XrefMaybe(atf_amc::MsgHdrLT &row);
 
-bool                 MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgLTO..ReadFieldMaybe
+bool                 MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::MsgLTO from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTO..ReadStrptrMaybe
 bool                 MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgLTO& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTO..GetMsgLength
+i32                  MsgLTO_GetMsgLength(const atf_amc::MsgLTO& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgLTO& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTO..GetMsgMemptr
+algo::memptr         MsgLTO_GetMsgMemptr(const atf_amc::MsgLTO& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgLTO..Init
 void                 MsgLTO_Init(atf_amc::MsgLTO& parent);
-// print string representation of atf_amc::MsgLTO to string LHS, no header -- cprint:atf_amc.MsgLTO.String
-void                 MsgLTO_Print(atf_amc::MsgLTO & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTO.String  printfmt:Tuple
+// func:atf_amc.MsgLTO..Print
+void                 MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgLTV
 #pragma pack(push,1)
@@ -4463,42 +5891,60 @@ struct MsgLTV { // atf_amc.MsgLTV
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.MsgLTV.base.CopyOut
 void                 parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTV by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of MsgLTV.
 // If not successful, quietly return NULL.
+// func:atf_amc.MsgLTV.base.Castdown
 atf_amc::MsgLTV*     MsgLTV_Castdown(atf_amc::MsgHdrLT &hdr);
+// func:atf_amc.MsgLTV.base.Castbase
 atf_amc::MsgHdrLT&   Castbase(atf_amc::MsgLTV& parent);
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.MsgLTV.v.Getary
 algo::aryptr<u8>     v_Getary(atf_amc::MsgLTV& parent) __attribute__((nothrow));
+// func:atf_amc.MsgLTV.v.Addr
 u8*                  v_Addr(atf_amc::MsgLTV& parent);
 // Return number of elements in varlen field
+// func:atf_amc.MsgLTV.v.N
 u32                  v_N(const atf_amc::MsgLTV& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
+// func:atf_amc.MsgLTV.v.ReadStrptrMaybe
 bool                 v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// func:atf_amc.MsgLTV.v_curs.Reset
 void                 MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent);
 // cursor points to valid item
+// func:atf_amc.MsgLTV.v_curs.ValidQ
 bool                 MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs);
 // proceed to next item
+// func:atf_amc.MsgLTV.v_curs.Next
 void                 MsgLTV_v_curs_Next(MsgLTV_v_curs &curs);
 // item access
+// func:atf_amc.MsgLTV.v_curs.Access
 atf_amc::MsgHdrLT&   MsgLTV_v_curs_Access(MsgLTV_v_curs &curs);
-bool                 MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.MsgLTV..ReadFieldMaybe
+bool                 MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::MsgLTV from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTV..ReadStrptrMaybe
 bool                 MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::MsgLTV& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTV..GetMsgLength
+i32                  MsgLTV_GetMsgLength(const atf_amc::MsgLTV& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::MsgLTV& row) __attribute__((nothrow));
+// func:atf_amc.MsgLTV..GetMsgMemptr
+algo::memptr         MsgLTV_GetMsgMemptr(const atf_amc::MsgLTV& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.MsgLTV..Init
 void                 MsgLTV_Init(atf_amc::MsgLTV& parent);
-// print string representation of atf_amc::MsgLTV to string LHS, no header -- cprint:atf_amc.MsgLTV.String
-void                 MsgLTV_Print(atf_amc::MsgLTV & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTV.String  printfmt:Tuple
+// func:atf_amc.MsgLTV..Print
+void                 MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Msgbuf
 // create: atf_amc.FDb.msgbuf (Cppstack)
@@ -4543,8 +5989,10 @@ private:
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
+// func:atf_amc.Msgbuf.in.BeginRead
 void                 in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
+// func:atf_amc.Msgbuf.in.EndRead
 void                 in_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
@@ -4552,47 +6000,61 @@ void                 in_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow)
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 //
+// func:atf_amc.Msgbuf.in.GetMsg
 atf_amc::MsgHeader*  in_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in.Max
 i32                  in_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in.N
 i32                  in_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
+// func:atf_amc.Msgbuf.in.Refill
 bool                 in_Refill(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.Msgbuf.in.RemoveAll
 void                 in_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
+// func:atf_amc.Msgbuf.in.SkipMsg
 void                 in_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.Msgbuf.in.WriteAll
 bool                 in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.Msgbuf.in.XrefMaybe
 bool                 in_XrefMaybe(atf_amc::MsgHeader &row);
 
 // Return max. number of bytes in the buffer.
+// func:atf_amc.Msgbuf.out_extra.Max
 i32                  out_extra_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.Msgbuf.out_extra.N
 i32                  out_extra_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.Msgbuf.out_extra.RemoveAll
 void                 out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
+// func:atf_amc.Msgbuf.out_extra.SkipBytes
 void                 out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.Msgbuf.out_extra.WriteAll
 bool                 out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write message to buffer. If the entire message is written, return true, otherwise false.
+// func:atf_amc.Msgbuf.out_extra.WriteMsg
 bool                 out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) __attribute__((nothrow));
 
 // Detect incoming message in buffer and return it
@@ -4601,29 +6063,39 @@ bool                 out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdr
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field len field
 //
+// func:atf_amc.Msgbuf.in_extra.GetMsg
 atf_amc::MsgHdrLT*   in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in_extra.Max
 i32                  in_extra_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in_extra.N
 i32                  in_extra_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:atf_amc.Msgbuf.in_extra.RemoveAll
 void                 in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
+// func:atf_amc.Msgbuf.in_extra.SkipMsg
 void                 in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:atf_amc.Msgbuf.in_extra.WriteAll
 bool                 in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.Msgbuf..Init
 void                 Msgbuf_Init(atf_amc::Msgbuf& msgbuf);
+// func:atf_amc.Msgbuf..Uninit
 void                 Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
-// print string representation of atf_amc::Msgbuf to string LHS, no header -- cprint:atf_amc.Msgbuf.String
-void                 Msgbuf_Print(atf_amc::Msgbuf & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Msgbuf.String  printfmt:Raw
+// func:atf_amc.Msgbuf..Print
+void                 Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgsCase
 #pragma pack(push,1)
@@ -4637,29 +6109,38 @@ struct MsgsCase { // atf_amc.MsgsCase: Enum for dispatch atf_amc.Msgs
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.MsgsCase.value.GetEnum
 atf_amc_MsgsCaseEnum value_GetEnum(const atf_amc::MsgsCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.MsgsCase.value.SetEnum
 void                 value_SetEnum(atf_amc::MsgsCase& parent, atf_amc_MsgsCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgsCase.value.ToCstr
 const char*          value_ToCstr(const atf_amc::MsgsCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.MsgsCase.value.Print
 void                 value_Print(const atf_amc::MsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.MsgsCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgsCase.value.SetStrptr
 void                 value_SetStrptr(atf_amc::MsgsCase& parent, algo::strptr rhs, atf_amc_MsgsCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.MsgsCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::MsgsCase from an ascii string.
 // The format of the string is the format of the atf_amc::MsgsCase's only field
+// func:atf_amc.MsgsCase..ReadStrptrMaybe
 bool                 MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.MsgsCase..Init
 void                 MsgsCase_Init(atf_amc::MsgsCase& parent);
 
 // --- atf_amc.NetBitfld1
@@ -4668,37 +6149,46 @@ struct NetBitfld1 { // atf_amc.NetBitfld1
     NetBitfld1();
 };
 
+// func:atf_amc.NetBitfld1.value.Get
 u16                  value_Get(const atf_amc::NetBitfld1& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.NetBitfld1.value.Set
 void                 value_Set(atf_amc::NetBitfld1& parent, u16 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 0.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetBitfld1.bits0_4.Get
 u8                   bits0_4_Get(const atf_amc::NetBitfld1& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 0.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetBitfld1.bits0_4.Set
 void                 bits0_4_Set(atf_amc::NetBitfld1& parent, u8 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 8.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetBitfld1.bits8_12.Get
 u8                   bits8_12_Get(const atf_amc::NetBitfld1& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 8.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.NetBitfld1.bits8_12.Set
 void                 bits8_12_Set(atf_amc::NetBitfld1& parent, u8 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.NetBitfld1..Init
 void                 NetBitfld1_Init(atf_amc::NetBitfld1& parent);
-// print string representation of atf_amc::NetBitfld1 to string LHS, no header -- cprint:atf_amc.NetBitfld1.String
-void                 NetBitfld1_Print(atf_amc::NetBitfld1 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetBitfld1.String  printfmt:Raw
+// func:atf_amc.NetBitfld1..Print
+void                 NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.OptAlloc
 // create: atf_amc.FDb.optalloc (Lpool)
@@ -4718,29 +6208,41 @@ private:
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.OptAlloc.typeg.Get
 atf_amc::TypeG*      typeg_Get(atf_amc::OptAlloc& optalloc) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.OptAlloc.typeg.Getary
 algo::aryptr<u8>     typeg_Getary(atf_amc::OptAlloc& optalloc) __attribute__((nothrow));
+// func:atf_amc.OptAlloc.typeg.Print
 void                 typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.OptAlloc.typeg.ReadStrptrMaybe
 bool                 typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.OptAlloc.typeg.XrefMaybe
 bool                 typeg_XrefMaybe(atf_amc::TypeG &row);
 
-bool                 OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.OptAlloc..ReadFieldMaybe
+bool                 OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptAlloc from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.OptAlloc..ReadStrptrMaybe
 bool                 OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::OptAlloc& row) __attribute__((nothrow));
+// func:atf_amc.OptAlloc..GetMsgLength
+i32                  OptAlloc_GetMsgLength(const atf_amc::OptAlloc& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::OptAlloc& row) __attribute__((nothrow));
+// func:atf_amc.OptAlloc..GetMsgMemptr
+algo::memptr         OptAlloc_GetMsgMemptr(const atf_amc::OptAlloc& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptAlloc..Init
 void                 OptAlloc_Init(atf_amc::OptAlloc& optalloc);
-// print string representation of atf_amc::OptAlloc to string LHS, no header -- cprint:atf_amc.OptAlloc.String
-void                 OptAlloc_Print(atf_amc::OptAlloc & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptAlloc.String  printfmt:Tuple
+// func:atf_amc.OptAlloc..Print
+void                 OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.OptAlloc_curs
 #pragma pack(push,1)
@@ -4754,11 +6256,16 @@ struct OptAlloc_curs { // atf_amc.OptAlloc_curs: Cursor for scanning messages in
 };
 #pragma pack(pop)
 
+// func:atf_amc.OptAlloc_curs..ValidQ
 bool                 OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptAlloc_curs..Reset
 void                 OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.OptAlloc_curs..Access
 atf_amc::OptAlloc*&  OptAlloc_curs_Access(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptAlloc_curs..Next
 void                 OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptAlloc_curs..Init
 void                 OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent);
 
 // --- atf_amc.OptG
@@ -4776,26 +6283,37 @@ struct OptG { // atf_amc.OptG: An optional instance of atf_unit.A
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
+// func:atf_amc.OptG.typeg.Get
 atf_amc::TypeG*      typeg_Get(atf_amc::OptG& optg) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.OptG.typeg.Getary
 algo::aryptr<u8>     typeg_Getary(atf_amc::OptG& optg) __attribute__((nothrow));
+// func:atf_amc.OptG.typeg.Print
 void                 typeg_Print(atf_amc::OptG& optg, cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.OptG.typeg.ReadStrptrMaybe
 bool                 typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) __attribute__((nothrow));
 
-bool                 OptG_ReadFieldMaybe(atf_amc::OptG &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.OptG..ReadFieldMaybe
+bool                 OptG_ReadFieldMaybe(atf_amc::OptG& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptG from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.OptG..ReadStrptrMaybe
 bool                 OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::OptG& row) __attribute__((nothrow));
+// func:atf_amc.OptG..GetMsgLength
+i32                  OptG_GetMsgLength(const atf_amc::OptG& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::OptG& row) __attribute__((nothrow));
+// func:atf_amc.OptG..GetMsgMemptr
+algo::memptr         OptG_GetMsgMemptr(const atf_amc::OptG& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptG..Init
 void                 OptG_Init(atf_amc::OptG& optg);
-// print string representation of atf_amc::OptG to string LHS, no header -- cprint:atf_amc.OptG.String
-void                 OptG_Print(atf_amc::OptG & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptG.String  printfmt:Tuple
+// func:atf_amc.OptG..Print
+void                 OptG_Print(atf_amc::OptG& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.OptG_curs
 #pragma pack(push,1)
@@ -4809,11 +6327,16 @@ struct OptG_curs { // atf_amc.OptG_curs: Cursor for scanning messages in a mempt
 };
 #pragma pack(pop)
 
+// func:atf_amc.OptG_curs..ValidQ
 bool                 OptG_curs_ValidQ(atf_amc::OptG_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptG_curs..Reset
 void                 OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.OptG_curs..Access
 atf_amc::OptG*&      OptG_curs_Access(atf_amc::OptG_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptG_curs..Next
 void                 OptG_curs_Next(atf_amc::OptG_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptG_curs..Init
 void                 OptG_curs_Init(atf_amc::OptG_curs& parent);
 
 // --- atf_amc.OptOptG
@@ -4832,29 +6355,41 @@ struct OptOptG { // atf_amc.OptOptG: An optional instance of atf_unit.Optg (recu
 // Since the last element is itself variable-length, two more checks are applied:
 // If optg's length field value is too short, return NULL.
 // If optg's length field value extends past parent's allowed length, return NULL.
+// func:atf_amc.OptOptG.optg.Get
 atf_amc::OptG*       optg_Get(atf_amc::OptOptG& parent) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.OptOptG.optg.Getary
 algo::aryptr<u8>     optg_Getary(atf_amc::OptOptG& parent) __attribute__((nothrow));
+// func:atf_amc.OptOptG.optg.Print
 void                 optg_Print(atf_amc::OptOptG& parent, cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.OptOptG.optg.ReadStrptrMaybe
 bool                 optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.OptOptG.optg.XrefMaybe
 bool                 optg_XrefMaybe(atf_amc::OptG &row);
 
-bool                 OptOptG_ReadFieldMaybe(atf_amc::OptOptG &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.OptOptG..ReadFieldMaybe
+bool                 OptOptG_ReadFieldMaybe(atf_amc::OptOptG& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptOptG from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.OptOptG..ReadStrptrMaybe
 bool                 OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::OptOptG& row) __attribute__((nothrow));
+// func:atf_amc.OptOptG..GetMsgLength
+i32                  OptOptG_GetMsgLength(const atf_amc::OptOptG& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::OptOptG& row) __attribute__((nothrow));
+// func:atf_amc.OptOptG..GetMsgMemptr
+algo::memptr         OptOptG_GetMsgMemptr(const atf_amc::OptOptG& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptOptG..Init
 void                 OptOptG_Init(atf_amc::OptOptG& parent);
-// print string representation of atf_amc::OptOptG to string LHS, no header -- cprint:atf_amc.OptOptG.String
-void                 OptOptG_Print(atf_amc::OptOptG & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptOptG.String  printfmt:Tuple
+// func:atf_amc.OptOptG..Print
+void                 OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.OptOptG_curs
 #pragma pack(push,1)
@@ -4868,12 +6403,403 @@ struct OptOptG_curs { // atf_amc.OptOptG_curs: Cursor for scanning messages in a
 };
 #pragma pack(pop)
 
+// func:atf_amc.OptOptG_curs..ValidQ
 bool                 OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptOptG_curs..Reset
 void                 OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.OptOptG_curs..Access
 atf_amc::OptOptG*&   OptOptG_curs_Access(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
+// func:atf_amc.OptOptG_curs..Next
 void                 OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.OptOptG_curs..Init
 void                 OptOptG_curs_Init(atf_amc::OptOptG_curs& parent);
+
+// --- atf_amc.PmaskMultiple
+#pragma pack(push,1)
+struct PmaskMultiple { // atf_amc.PmaskMultiple: Ctype with 3 pmasks. One has an explicit set of fields
+    u32   present;    //   0
+    u32   assigned;   //   0
+    u32   nullable;   //   0
+    u32   value1;     //   0
+    u32   value2;     //   0
+    u32   value3;     //   0
+    u32   value4;     //   0
+    u32   value5;     //   0
+    u32   value6;     //   0
+    u32   value7;     //   0
+    PmaskMultiple();
+};
+#pragma pack(pop)
+
+// Return constant 1
+// func:atf_amc.PmaskMultiple.present.N
+int                  present_N(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+// func:atf_amc.PmaskMultiple.present.qFind
+u32&                 present_qFind(atf_amc::PmaskMultiple& parent, int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+// func:atf_amc.PmaskMultiple.present.NBits
+int                  present_Nbits(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.present.qGetBit
+bool                 present_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskMultiple.present.GetBit
+bool                 present_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskMultiple.present.BitsEmptyQ
+bool                 present_BitsEmptyQ(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskMultiple.present.Sum1s
+u64                  present_Sum1s(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.present.qClearBit
+void                 present_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskMultiple.present.ClearBit
+void                 present_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.present.qSetBit
+void                 present_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskMultiple.present.SetBit
+void                 present_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.present.qSetBitVal
+void                 present_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.present.qOrBitVal
+void                 present_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+// func:atf_amc.PmaskMultiple.present.ClearBitsAll
+void                 present_ClearBitsAll(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskMultiple.present.ClearBits
+void                 present_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskMultiple.present.OrBits
+void                 present_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskMultiple.present.Sup
+i32                  present_Sup(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Return constant 1
+// func:atf_amc.PmaskMultiple.assigned.N
+int                  assigned_N(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+// func:atf_amc.PmaskMultiple.assigned.qFind
+u32&                 assigned_qFind(atf_amc::PmaskMultiple& parent, int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+// func:atf_amc.PmaskMultiple.assigned.NBits
+int                  assigned_Nbits(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.assigned.qGetBit
+bool                 assigned_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskMultiple.assigned.GetBit
+bool                 assigned_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskMultiple.assigned.BitsEmptyQ
+bool                 assigned_BitsEmptyQ(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskMultiple.assigned.Sum1s
+u64                  assigned_Sum1s(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.assigned.qClearBit
+void                 assigned_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskMultiple.assigned.ClearBit
+void                 assigned_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.assigned.qSetBit
+void                 assigned_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskMultiple.assigned.SetBit
+void                 assigned_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.assigned.qSetBitVal
+void                 assigned_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.assigned.qOrBitVal
+void                 assigned_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+// func:atf_amc.PmaskMultiple.assigned.ClearBitsAll
+void                 assigned_ClearBitsAll(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskMultiple.assigned.ClearBits
+void                 assigned_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskMultiple.assigned.OrBits
+void                 assigned_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskMultiple.assigned.Sup
+i32                  assigned_Sup(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Return constant 1
+// func:atf_amc.PmaskMultiple.nullable.N
+int                  nullable_N(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Access value
+// func:atf_amc.PmaskMultiple.nullable.qFind
+u32&                 nullable_qFind(atf_amc::PmaskMultiple& parent, int) __attribute__((__warn_unused_result__, nothrow));
+// Get max # of bits in the bitset
+// Return max. number of bits supported by array
+// func:atf_amc.PmaskMultiple.nullable.NBits
+int                  nullable_Nbits(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.nullable.qGetBit
+bool                 nullable_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskMultiple.nullable.GetBit
+bool                 nullable_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
+// Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskMultiple.nullable.BitsEmptyQ
+bool                 nullable_BitsEmptyQ(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskMultiple.nullable.Sum1s
+u64                  nullable_Sum1s(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+// Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.nullable.qClearBit
+void                 nullable_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskMultiple.nullable.ClearBit
+void                 nullable_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.nullable.qSetBit
+void                 nullable_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskMultiple.nullable.SetBit
+void                 nullable_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) __attribute__((nothrow));
+// Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.nullable.qSetBitVal
+void                 nullable_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskMultiple.nullable.qOrBitVal
+void                 nullable_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) __attribute__((nothrow));
+// Set all bits of array to zero.
+// Note: this does not change what NBits will return.
+// func:atf_amc.PmaskMultiple.nullable.ClearBitsAll
+void                 nullable_ClearBitsAll(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskMultiple.nullable.ClearBits
+void                 nullable_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Set PARENT to union of two bitsets.
+// (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskMultiple.nullable.OrBits
+void                 nullable_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) __attribute__((nothrow));
+// Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskMultiple.nullable.Sup
+i32                  nullable_Sup(atf_amc::PmaskMultiple& parent) __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value1.NullableQ
+bool                 value1_NullableQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value1.AssignedQ
+bool                 value1_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value1.PresentQ
+bool                 value1_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value1.SetNullable
+void                 value1_SetNullable(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value1.SetAssigned
+void                 value1_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value1.SetPresent
+void                 value1_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value1.Nullable_GetBit
+int                  value1_Nullable_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value1.Assigned_GetBit
+int                  value1_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value1.Present_GetBit
+int                  value1_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value2.AssignedQ
+bool                 value2_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value2.PresentQ
+bool                 value2_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value2.SetAssigned
+void                 value2_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value2.SetPresent
+void                 value2_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value2.Assigned_GetBit
+int                  value2_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value2.Present_GetBit
+int                  value2_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value3.NullableQ
+bool                 value3_NullableQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value3.AssignedQ
+bool                 value3_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value3.PresentQ
+bool                 value3_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value3.SetNullable
+void                 value3_SetNullable(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value3.SetAssigned
+void                 value3_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value3.SetPresent
+void                 value3_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value3.Nullable_GetBit
+int                  value3_Nullable_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value3.Assigned_GetBit
+int                  value3_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value3.Present_GetBit
+int                  value3_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value4.AssignedQ
+bool                 value4_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value4.PresentQ
+bool                 value4_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value4.SetAssigned
+void                 value4_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value4.SetPresent
+void                 value4_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value4.Assigned_GetBit
+int                  value4_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value4.Present_GetBit
+int                  value4_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value5.NullableQ
+bool                 value5_NullableQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value5.AssignedQ
+bool                 value5_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value5.PresentQ
+bool                 value5_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value5.SetNullable
+void                 value5_SetNullable(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value5.SetAssigned
+void                 value5_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value5.SetPresent
+void                 value5_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value5.Nullable_GetBit
+int                  value5_Nullable_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value5.Assigned_GetBit
+int                  value5_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value5.Present_GetBit
+int                  value5_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value6.AssignedQ
+bool                 value6_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value6.PresentQ
+bool                 value6_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value6.SetAssigned
+void                 value6_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value6.SetPresent
+void                 value6_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value6.Assigned_GetBit
+int                  value6_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value6.Present_GetBit
+int                  value6_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value7.AssignedQ
+bool                 value7_AssignedQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskMultiple.value7.PresentQ
+bool                 value7_PresentQ(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value7.SetAssigned
+void                 value7_SetAssigned(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskMultiple.value7.SetPresent
+void                 value7_SetPresent(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value7.Assigned_GetBit
+int                  value7_Assigned_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskMultiple.value7.Present_GetBit
+int                  value7_Present_GetBit(atf_amc::PmaskMultiple& parent) __attribute__((nothrow));
+
+// proceed to next item
+// func:atf_amc.PmaskMultiple.present_bitcurs.Next
+void                 PmaskMultiple_present_bitcurs_Next(PmaskMultiple_present_bitcurs &curs);
+// func:atf_amc.PmaskMultiple.present_bitcurs.Reset
+void                 PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+// cursor points to valid item
+// func:atf_amc.PmaskMultiple.present_bitcurs.ValidQ
+bool                 PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs);
+// item access
+// func:atf_amc.PmaskMultiple.present_bitcurs.Access
+int&                 PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs);
+// proceed to next item
+// func:atf_amc.PmaskMultiple.assigned_bitcurs.Next
+void                 PmaskMultiple_assigned_bitcurs_Next(PmaskMultiple_assigned_bitcurs &curs);
+// func:atf_amc.PmaskMultiple.assigned_bitcurs.Reset
+void                 PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+// cursor points to valid item
+// func:atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
+bool                 PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs);
+// item access
+// func:atf_amc.PmaskMultiple.assigned_bitcurs.Access
+int&                 PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs);
+// proceed to next item
+// func:atf_amc.PmaskMultiple.nullable_bitcurs.Next
+void                 PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs &curs);
+// func:atf_amc.PmaskMultiple.nullable_bitcurs.Reset
+void                 PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+// cursor points to valid item
+// func:atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
+bool                 PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs);
+// item access
+// func:atf_amc.PmaskMultiple.nullable_bitcurs.Access
+int&                 PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs);
+// func:atf_amc.PmaskMultiple..ReadFieldMaybe
+bool                 PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::PmaskMultiple from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.PmaskMultiple..ReadStrptrMaybe
+bool                 PmaskMultiple_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str);
+// Set all fields to initial values.
+// func:atf_amc.PmaskMultiple..Init
+void                 PmaskMultiple_Init(atf_amc::PmaskMultiple& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskMultiple.String  printfmt:Tuple
+// func:atf_amc.PmaskMultiple..Print
+void                 PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.PmaskU128
 #pragma pack(push,1)
@@ -4955,403 +6881,779 @@ struct PmaskU128 { // atf_amc.PmaskU128: A field controlled by a bitmask.
 #pragma pack(pop)
 
 // Return constant 1
+// func:atf_amc.PmaskU128.pmask.N
 int                  pmask_N(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Access value
+// func:atf_amc.PmaskU128.pmask.qFind
 u128&                pmask_qFind(atf_amc::PmaskU128& parent, int) __attribute__((__warn_unused_result__, nothrow));
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.PmaskU128.pmask.NBits
 int                  pmask_Nbits(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU128.pmask.qGetBit
 bool                 pmask_qGetBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskU128.pmask.GetBit
 bool                 pmask_GetBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskU128.pmask.BitsEmptyQ
 bool                 pmask_BitsEmptyQ(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskU128.pmask.Sum1s
 u64                  pmask_Sum1s(atf_amc::PmaskU128& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU128.pmask.qClearBit
 void                 pmask_qClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskU128.pmask.ClearBit
 void                 pmask_ClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU128.pmask.qSetBit
 void                 pmask_qSetBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskU128.pmask.SetBit
 void                 pmask_SetBit(atf_amc::PmaskU128& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU128.pmask.qSetBitVal
 void                 pmask_qSetBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU128.pmask.qOrBitVal
 void                 pmask_qOrBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.PmaskU128.pmask.ClearBitsAll
 void                 pmask_ClearBitsAll(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskU128.pmask.ClearBits
 void                 pmask_ClearBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskU128.pmask.OrBits
 void                 pmask_OrBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value.PresentQ
 bool                 value_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value.SetPresent
 void                 value_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value.Present_GetBit
+int                  value_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value2.PresentQ
 bool                 value2_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value2.SetPresent
 void                 value2_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value2_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value2.Present_GetBit
+int                  value2_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value3.PresentQ
 bool                 value3_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value3.SetPresent
 void                 value3_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value3_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value3.Present_GetBit
+int                  value3_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value21.PresentQ
 bool                 value21_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value21.SetPresent
 void                 value21_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value21_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value21.Present_GetBit
+int                  value21_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value22.PresentQ
 bool                 value22_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value22.SetPresent
 void                 value22_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value22_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value22.Present_GetBit
+int                  value22_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value23.PresentQ
 bool                 value23_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value23.SetPresent
 void                 value23_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value23_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value23.Present_GetBit
+int                  value23_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value24.PresentQ
 bool                 value24_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value24.SetPresent
 void                 value24_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value24_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value24.Present_GetBit
+int                  value24_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value25.PresentQ
 bool                 value25_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value25.SetPresent
 void                 value25_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value25_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value25.Present_GetBit
+int                  value25_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value26.PresentQ
 bool                 value26_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value26.SetPresent
 void                 value26_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value26_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value26.Present_GetBit
+int                  value26_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value20.PresentQ
 bool                 value20_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value20.SetPresent
 void                 value20_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value20_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value20.Present_GetBit
+int                  value20_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value28.PresentQ
 bool                 value28_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value28.SetPresent
 void                 value28_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value28_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value28.Present_GetBit
+int                  value28_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value29.PresentQ
 bool                 value29_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value29.SetPresent
 void                 value29_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value29_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value29.Present_GetBit
+int                  value29_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value30.PresentQ
 bool                 value30_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value30.SetPresent
 void                 value30_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value30_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value30.Present_GetBit
+int                  value30_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value31.PresentQ
 bool                 value31_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value31.SetPresent
 void                 value31_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value31_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value31.Present_GetBit
+int                  value31_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value32.PresentQ
 bool                 value32_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value32.SetPresent
 void                 value32_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value32_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value32.Present_GetBit
+int                  value32_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value27.PresentQ
 bool                 value27_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value27.SetPresent
 void                 value27_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value27_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value27.Present_GetBit
+int                  value27_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value19.PresentQ
 bool                 value19_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value19.SetPresent
 void                 value19_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value19_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value19.Present_GetBit
+int                  value19_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value18.PresentQ
 bool                 value18_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value18.SetPresent
 void                 value18_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value18_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value18.Present_GetBit
+int                  value18_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value4.PresentQ
 bool                 value4_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value4.SetPresent
 void                 value4_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value4_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value4.Present_GetBit
+int                  value4_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value5.PresentQ
 bool                 value5_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value5.SetPresent
 void                 value5_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value5_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value5.Present_GetBit
+int                  value5_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value6.PresentQ
 bool                 value6_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value6.SetPresent
 void                 value6_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value6_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value6.Present_GetBit
+int                  value6_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value7.PresentQ
 bool                 value7_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value7.SetPresent
 void                 value7_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value7_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value7.Present_GetBit
+int                  value7_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value8.PresentQ
 bool                 value8_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value8.SetPresent
 void                 value8_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value8_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value8.Present_GetBit
+int                  value8_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value9.PresentQ
 bool                 value9_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value9.SetPresent
 void                 value9_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value9_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value9.Present_GetBit
+int                  value9_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value69.PresentQ
 bool                 value69_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value69.SetPresent
 void                 value69_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value69_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value69.Present_GetBit
+int                  value69_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value11.PresentQ
 bool                 value11_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value11.SetPresent
 void                 value11_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value11_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value11.Present_GetBit
+int                  value11_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value12.PresentQ
 bool                 value12_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value12.SetPresent
 void                 value12_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value12_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value12.Present_GetBit
+int                  value12_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value13.PresentQ
 bool                 value13_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value13.SetPresent
 void                 value13_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value13_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value13.Present_GetBit
+int                  value13_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value14.PresentQ
 bool                 value14_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value14.SetPresent
 void                 value14_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value14_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value14.Present_GetBit
+int                  value14_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value15.PresentQ
 bool                 value15_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value15.SetPresent
 void                 value15_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value15_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value15.Present_GetBit
+int                  value15_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value16.PresentQ
 bool                 value16_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value16.SetPresent
 void                 value16_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value16_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value16.Present_GetBit
+int                  value16_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value33.PresentQ
 bool                 value33_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value33.SetPresent
 void                 value33_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value33_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value33.Present_GetBit
+int                  value33_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value10.PresentQ
 bool                 value10_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value10.SetPresent
 void                 value10_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value10_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value10.Present_GetBit
+int                  value10_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value17.PresentQ
 bool                 value17_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value17.SetPresent
 void                 value17_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value17_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value17.Present_GetBit
+int                  value17_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value35.PresentQ
 bool                 value35_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value35.SetPresent
 void                 value35_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value35_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value35.Present_GetBit
+int                  value35_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value55.PresentQ
 bool                 value55_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value55.SetPresent
 void                 value55_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value55_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value55.Present_GetBit
+int                  value55_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value56.PresentQ
 bool                 value56_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value56.SetPresent
 void                 value56_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value56_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value56.Present_GetBit
+int                  value56_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value57.PresentQ
 bool                 value57_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value57.SetPresent
 void                 value57_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value57_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value57.Present_GetBit
+int                  value57_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value58.PresentQ
 bool                 value58_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value58.SetPresent
 void                 value58_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value58_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value58.Present_GetBit
+int                  value58_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value59.PresentQ
 bool                 value59_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value59.SetPresent
 void                 value59_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value59_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value59.Present_GetBit
+int                  value59_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value60.PresentQ
 bool                 value60_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value60.SetPresent
 void                 value60_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value60_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value60.Present_GetBit
+int                  value60_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value54.PresentQ
 bool                 value54_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value54.SetPresent
 void                 value54_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value54_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value54.Present_GetBit
+int                  value54_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value62.PresentQ
 bool                 value62_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value62.SetPresent
 void                 value62_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value62_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value62.Present_GetBit
+int                  value62_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value63.PresentQ
 bool                 value63_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value63.SetPresent
 void                 value63_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value63_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value63.Present_GetBit
+int                  value63_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value64.PresentQ
 bool                 value64_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value64.SetPresent
 void                 value64_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value64_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value64.Present_GetBit
+int                  value64_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value65.PresentQ
 bool                 value65_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value65.SetPresent
 void                 value65_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value65_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value65.Present_GetBit
+int                  value65_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value66.PresentQ
 bool                 value66_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value66.SetPresent
 void                 value66_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value66_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value66.Present_GetBit
+int                  value66_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value67.PresentQ
 bool                 value67_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value67.SetPresent
 void                 value67_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value67_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value67.Present_GetBit
+int                  value67_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value68.PresentQ
 bool                 value68_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value68.SetPresent
 void                 value68_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value68_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value68.Present_GetBit
+int                  value68_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value61.PresentQ
 bool                 value61_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value61.SetPresent
 void                 value61_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value61_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value61.Present_GetBit
+int                  value61_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value34.PresentQ
 bool                 value34_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value34.SetPresent
 void                 value34_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value34_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value34.Present_GetBit
+int                  value34_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value52.PresentQ
 bool                 value52_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value52.SetPresent
 void                 value52_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value52_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value52.Present_GetBit
+int                  value52_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value36.PresentQ
 bool                 value36_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value36.SetPresent
 void                 value36_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value36_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value36.Present_GetBit
+int                  value36_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value37.PresentQ
 bool                 value37_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value37.SetPresent
 void                 value37_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value37_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value37.Present_GetBit
+int                  value37_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value38.PresentQ
 bool                 value38_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value38.SetPresent
 void                 value38_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value38_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value38.Present_GetBit
+int                  value38_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value39.PresentQ
 bool                 value39_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value39.SetPresent
 void                 value39_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value39_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value39.Present_GetBit
+int                  value39_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value40.PresentQ
 bool                 value40_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value40.SetPresent
 void                 value40_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value40_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value40.Present_GetBit
+int                  value40_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value41.PresentQ
 bool                 value41_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value41.SetPresent
 void                 value41_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value41_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value41.Present_GetBit
+int                  value41_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value42.PresentQ
 bool                 value42_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value42.SetPresent
 void                 value42_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value42_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value42.Present_GetBit
+int                  value42_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value53.PresentQ
 bool                 value53_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value53.SetPresent
 void                 value53_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value53_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value53.Present_GetBit
+int                  value53_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value44.PresentQ
 bool                 value44_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value44.SetPresent
 void                 value44_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value44_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value44.Present_GetBit
+int                  value44_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value45.PresentQ
 bool                 value45_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value45.SetPresent
 void                 value45_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value45_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value45.Present_GetBit
+int                  value45_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value46.PresentQ
 bool                 value46_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value46.SetPresent
 void                 value46_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value46_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value46.Present_GetBit
+int                  value46_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value47.PresentQ
 bool                 value47_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value47.SetPresent
 void                 value47_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value47_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value47.Present_GetBit
+int                  value47_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value48.PresentQ
 bool                 value48_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value48.SetPresent
 void                 value48_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value48_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value48.Present_GetBit
+int                  value48_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value49.PresentQ
 bool                 value49_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value49.SetPresent
 void                 value49_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value49_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value49.Present_GetBit
+int                  value49_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value50.PresentQ
 bool                 value50_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value50.SetPresent
 void                 value50_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value50_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value50.Present_GetBit
+int                  value50_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value51.PresentQ
 bool                 value51_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value51.SetPresent
 void                 value51_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value51_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value51.Present_GetBit
+int                  value51_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value43.PresentQ
 bool                 value43_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value43.SetPresent
 void                 value43_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value43_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value43.Present_GetBit
+int                  value43_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value70.PresentQ
 bool                 value70_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value70.SetPresent
 void                 value70_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value70_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value70.Present_GetBit
+int                  value70_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU128.value71.PresentQ
 bool                 value71_PresentQ(atf_amc::PmaskU128& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU128.value71.SetPresent
 void                 value71_SetPresent(atf_amc::PmaskU128& parent) __attribute__((nothrow));
-void                 value71_Set(atf_amc::PmaskU128& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU128.value71.Present_GetBit
+int                  value71_Present_GetBit(atf_amc::PmaskU128& parent) __attribute__((nothrow));
 
-bool                 PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.PmaskU128..ReadFieldMaybe
+bool                 PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::PmaskU128 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.PmaskU128..ReadStrptrMaybe
 bool                 PmaskU128_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.PmaskU128..Init
 void                 PmaskU128_Init(atf_amc::PmaskU128& parent);
-// print string representation of atf_amc::PmaskU128 to string LHS, no header -- cprint:atf_amc.PmaskU128.String
-void                 PmaskU128_Print(atf_amc::PmaskU128 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskU128.String  printfmt:Tuple
+// func:atf_amc.PmaskU128..Print
+void                 PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.PmaskU32
 #pragma pack(push,1)
@@ -5367,82 +7669,133 @@ struct PmaskU32 { // atf_amc.PmaskU32: A field controlled by a bitmask.
 #pragma pack(pop)
 
 // Return constant 1
+// func:atf_amc.PmaskU32.pmask.N
 int                  pmask_N(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Access value
+// func:atf_amc.PmaskU32.pmask.qFind
 u32&                 pmask_qFind(atf_amc::PmaskU32& parent, int) __attribute__((__warn_unused_result__, nothrow));
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.PmaskU32.pmask.NBits
 int                  pmask_Nbits(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU32.pmask.qGetBit
 bool                 pmask_qGetBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskU32.pmask.GetBit
 bool                 pmask_GetBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskU32.pmask.BitsEmptyQ
 bool                 pmask_BitsEmptyQ(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskU32.pmask.Sum1s
 u64                  pmask_Sum1s(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU32.pmask.qClearBit
 void                 pmask_qClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskU32.pmask.ClearBit
 void                 pmask_ClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU32.pmask.qSetBit
 void                 pmask_qSetBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskU32.pmask.SetBit
 void                 pmask_SetBit(atf_amc::PmaskU32& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU32.pmask.qSetBitVal
 void                 pmask_qSetBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU32.pmask.qOrBitVal
 void                 pmask_qOrBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.PmaskU32.pmask.ClearBitsAll
 void                 pmask_ClearBitsAll(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskU32.pmask.ClearBits
 void                 pmask_ClearBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskU32.pmask.OrBits
 void                 pmask_OrBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskU32.pmask.Sup
 i32                  pmask_Sup(atf_amc::PmaskU32& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU32.value.PresentQ
 bool                 value_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU32.value.SetPresent
 void                 value_SetPresent(atf_amc::PmaskU32& parent) __attribute__((nothrow));
-void                 value_Set(atf_amc::PmaskU32& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU32.value.Present_GetBit
+int                  value_Present_GetBit(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU32.value2.PresentQ
 bool                 value2_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU32.value2.SetPresent
 void                 value2_SetPresent(atf_amc::PmaskU32& parent) __attribute__((nothrow));
-void                 value2_Set(atf_amc::PmaskU32& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU32.value2.Present_GetBit
+int                  value2_Present_GetBit(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU32.value3.PresentQ
 bool                 value3_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU32.value3.SetPresent
 void                 value3_SetPresent(atf_amc::PmaskU32& parent) __attribute__((nothrow));
-void                 value3_Set(atf_amc::PmaskU32& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU32.value3.Present_GetBit
+int                  value3_Present_GetBit(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU32.value4.PresentQ
 bool                 value4_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU32.value4.SetPresent
 void                 value4_SetPresent(atf_amc::PmaskU32& parent) __attribute__((nothrow));
-void                 value4_Set(atf_amc::PmaskU32& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU32.value4.Present_GetBit
+int                  value4_Present_GetBit(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU32.value5.PresentQ
 bool                 value5_PresentQ(atf_amc::PmaskU32& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU32.value5.SetPresent
 void                 value5_SetPresent(atf_amc::PmaskU32& parent) __attribute__((nothrow));
-void                 value5_Set(atf_amc::PmaskU32& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU32.value5.Present_GetBit
+int                  value5_Present_GetBit(atf_amc::PmaskU32& parent) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.PmaskU32.pmask_bitcurs.Next
 void                 PmaskU32_pmask_bitcurs_Next(PmaskU32_pmask_bitcurs &curs);
+// func:atf_amc.PmaskU32.pmask_bitcurs.Reset
 void                 PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent);
 // cursor points to valid item
+// func:atf_amc.PmaskU32.pmask_bitcurs.ValidQ
 bool                 PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs);
 // item access
+// func:atf_amc.PmaskU32.pmask_bitcurs.Access
 int&                 PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs);
-bool                 PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.PmaskU32..ReadFieldMaybe
+bool                 PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::PmaskU32 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.PmaskU32..ReadStrptrMaybe
 bool                 PmaskU32_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.PmaskU32..Init
 void                 PmaskU32_Init(atf_amc::PmaskU32& parent);
-// print string representation of atf_amc::PmaskU32 to string LHS, no header -- cprint:atf_amc.PmaskU32.String
-void                 PmaskU32_Print(atf_amc::PmaskU32 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PmaskU32.String  printfmt:Tuple
+// func:atf_amc.PmaskU32..Print
+void                 PmaskU32_Print(atf_amc::PmaskU32& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.PmaskU555
 #pragma pack(push,1)
@@ -5454,73 +7807,109 @@ struct PmaskU555 { // atf_amc.PmaskU555: Check pmask with 555 bits
 #pragma pack(pop)
 
 // Return true if the field is marked in the presence mask
+// func:atf_amc.PmaskU555.value.PresentQ
 bool                 value_PresentQ(atf_amc::PmaskU555& parent) __attribute__((nothrow));
+// Set presence bit for this field in the pmask
+// func:atf_amc.PmaskU555.value.SetPresent
 void                 value_SetPresent(atf_amc::PmaskU555& parent) __attribute__((nothrow));
-void                 value_Set(atf_amc::PmaskU555& parent, u32 rhs) __attribute__((nothrow));
+// Return field's bit number in the pmask
+// func:atf_amc.PmaskU555.value.Present_GetBit
+int                  value_Present_GetBit(atf_amc::PmaskU555& parent) __attribute__((nothrow));
 
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
+// func:atf_amc.PmaskU555.pmask.NBits
 int                  pmask_Nbits(atf_amc::PmaskU555& parent) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU555.pmask.qGetBit
 bool                 pmask_qGetBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
+// func:atf_amc.PmaskU555.pmask.GetBit
 bool                 pmask_GetBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((__warn_unused_result__, nothrow));
 // Check if all the bits in the bitset are equal to zero
+// func:atf_amc.PmaskU555.pmask.BitsEmptyQ
 bool                 pmask_BitsEmptyQ(atf_amc::PmaskU555& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PmaskU555.pmask.Sum1s
 u64                  pmask_Sum1s(atf_amc::PmaskU555& parent) __attribute__((__warn_unused_result__, nothrow));
 // Clear bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU555.pmask.qClearBit
 void                 pmask_qClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((nothrow));
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
+// func:atf_amc.PmaskU555.pmask.ClearBit
 void                 pmask_ClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU555.pmask.qSetBit
 void                 pmask_qSetBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
+// func:atf_amc.PmaskU555.pmask.SetBit
 void                 pmask_SetBit(atf_amc::PmaskU555& parent, u32 bit_idx) __attribute__((nothrow));
 // Set bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU555.pmask.qSetBitVal
 void                 pmask_qSetBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Or bit # BIT_IDX in bit set. No bounds checking
+// func:atf_amc.PmaskU555.pmask.qOrBitVal
 void                 pmask_qOrBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) __attribute__((nothrow));
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
+// func:atf_amc.PmaskU555.pmask.ClearBitsAll
 void                 pmask_ClearBitsAll(atf_amc::PmaskU555& parent) __attribute__((nothrow));
 // Zero in PARENT any bits that are set in RHS.
+// func:atf_amc.PmaskU555.pmask.ClearBits
 void                 pmask_ClearBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) __attribute__((nothrow));
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
+// func:atf_amc.PmaskU555.pmask.OrBits
 void                 pmask_OrBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) __attribute__((nothrow));
 // Return smallest number N such that indexes of all 1 bits are below N
+// func:atf_amc.PmaskU555.pmask.Sup
 i32                  pmask_Sup(atf_amc::PmaskU555& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set all elements of fixed array to value RHS
+// func:atf_amc.PmaskU555.pmask.Fill
 void                 pmask_Fill(atf_amc::PmaskU555& parent, const u64 &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.PmaskU555.pmask.Find
 u64*                 pmask_Find(atf_amc::PmaskU555& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array pmask as aryptr.
+// func:atf_amc.PmaskU555.pmask.Getary
 algo::aryptr<u64>    pmask_Getary(atf_amc::PmaskU555& parent) __attribute__((nothrow));
 // Return max number of items in the array
+// func:atf_amc.PmaskU555.pmask.Max
 i32                  pmask_Max(atf_amc::PmaskU555& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.PmaskU555.pmask.N
 i32                  pmask_N(const atf_amc::PmaskU555& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:atf_amc.PmaskU555.pmask.Setary
 void                 pmask_Setary(atf_amc::PmaskU555& parent, const algo::aryptr<u64> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
+// func:atf_amc.PmaskU555.pmask.qFind
 u64&                 pmask_qFind(atf_amc::PmaskU555& parent, u64 t) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.PmaskU555.pmask_bitcurs.Next
 void                 PmaskU555_pmask_bitcurs_Next(PmaskU555_pmask_bitcurs &curs);
+// func:atf_amc.PmaskU555.pmask_bitcurs.Reset
 void                 PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent);
 // cursor points to valid item
+// func:atf_amc.PmaskU555.pmask_bitcurs.ValidQ
 bool                 PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs);
 // item access
+// func:atf_amc.PmaskU555.pmask_bitcurs.Access
 int&                 PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs);
 // cursor points to valid item
+// func:atf_amc.PmaskU555.pmask_curs.Reset
 void                 PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent);
 // cursor points to valid item
+// func:atf_amc.PmaskU555.pmask_curs.ValidQ
 bool                 PmaskU555_pmask_curs_ValidQ(PmaskU555_pmask_curs &curs);
 // proceed to next item
+// func:atf_amc.PmaskU555.pmask_curs.Next
 void                 PmaskU555_pmask_curs_Next(PmaskU555_pmask_curs &curs);
 // item access
+// func:atf_amc.PmaskU555.pmask_curs.Access
 u64&                 PmaskU555_pmask_curs_Access(PmaskU555_pmask_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.PmaskU555..Init
 void                 PmaskU555_Init(atf_amc::PmaskU555& parent);
 
 // --- atf_amc.PooledBE64
@@ -5535,36 +7924,50 @@ private:
     PooledBE64();
 };
 
+// func:atf_amc.PooledBE64.value.Get
 u64                  value_Get(const atf_amc::PooledBE64& pooledbe64) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.PooledBE64.value.Set
 void                 value_Set(atf_amc::PooledBE64& pooledbe64, u64 rhs) __attribute__((nothrow));
 // Get value of field as enum type
+// func:atf_amc.PooledBE64.value.GetEnum
 atf_amc_PooledBE64_value_Enum value_GetEnum(const atf_amc::PooledBE64& pooledbe64) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.PooledBE64.value.SetEnum
 void                 value_SetEnum(atf_amc::PooledBE64& pooledbe64, atf_amc_PooledBE64_value_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.PooledBE64.value.ToCstr
 const char*          value_ToCstr(const atf_amc::PooledBE64& pooledbe64) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.PooledBE64.value.Print
 void                 value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.PooledBE64.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.PooledBE64.value.SetStrptr
 void                 value_SetStrptr(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs, atf_amc_PooledBE64_value_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.PooledBE64.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.PooledBE64..Init
 void                 PooledBE64_Init(atf_amc::PooledBE64& pooledbe64);
-bool                 PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.PooledBE64..ReadFieldMaybe
+bool                 PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::PooledBE64 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.PooledBE64..ReadStrptrMaybe
 bool                 PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strptr in_str);
-// print string representation of atf_amc::PooledBE64 to string LHS, no header -- cprint:atf_amc.PooledBE64.String
-void                 PooledBE64_Print(atf_amc::PooledBE64 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.PooledBE64.String  printfmt:Tuple
+// func:atf_amc.PooledBE64..Print
+void                 PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.RnullStr6_U32
 struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, right pad with NUL
@@ -5578,60 +7981,86 @@ struct RnullStr6_U32 { // atf_amc.RnullStr6_U32: number stored as ascii digits, 
     bool operator <=(const atf_amc::RnullStr6_U32 &rhs) const;
     bool operator >=(const atf_amc::RnullStr6_U32 &rhs) const;
     // Copy from strptr (operator=)
+    // func:atf_amc.RnullStr6_U32.ch.AssignStrptr
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
     // Copy value from RHS.
+    // func:atf_amc.RnullStr6_U32.ch.Set
     void                 operator =(const atf_amc::RnullStr6_U32& parent) __attribute__((nothrow));
+    // func:atf_amc.RnullStr6_U32.ch.Ctor
     RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) __attribute__((nothrow));
+    // func:atf_amc.RnullStr6_U32.ch.CtorStrptr
     RnullStr6_U32(const algo::strptr &rhs) __attribute__((nothrow));
     RnullStr6_U32();
 };
 
 // Access string as array of chars
+// func:atf_amc.RnullStr6_U32.ch.Getary
 algo::aryptr<char>   ch_Getary(const atf_amc::RnullStr6_U32& parent) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32.ch.HashStrptr
 u32                  RnullStr6_U32_Hash(u32 prev, const algo::strptr &str);
+// func:atf_amc.RnullStr6_U32.ch.Init
 void                 ch_Init(atf_amc::RnullStr6_U32 &parent) __attribute__((nothrow));
 // always return constant 6
+// func:atf_amc.RnullStr6_U32.ch.Max
 int                  ch_Max(atf_amc::RnullStr6_U32& parent) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32.ch.N
 int                  ch_N(const atf_amc::RnullStr6_U32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.RnullStr6_U32.ch.Print
 void                 ch_Print(atf_amc::RnullStr6_U32& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.RnullStr6_U32.ch.ReadStrptrMaybe
 bool                 ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rhs) __attribute__((nothrow));
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr& rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
+// func:atf_amc.RnullStr6_U32.ch.Getnum
 u32                  ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
+// func:atf_amc.RnullStr6_U32.ch.GetnumDflt
 u32                  ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
+// func:atf_amc.RnullStr6_U32.ch.Geti64
 i64                  ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) __attribute__((nothrow));
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
+// func:atf_amc.RnullStr6_U32.ch.SetnumMaybe
 bool                 ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) __attribute__((nothrow));
 
+// func:atf_amc.RnullStr6_U32..Hash
 u32                  RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32 & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::RnullStr6_U32 from an ascii string.
 // The format of the string is the format of the atf_amc::RnullStr6_U32's only field
+// func:atf_amc.RnullStr6_U32..ReadStrptrMaybe
 bool                 RnullStr6_U32_ReadStrptrMaybe(atf_amc::RnullStr6_U32 &parent, algo::strptr in_str);
-bool                 RnullStr6_U32_Lt(atf_amc::RnullStr6_U32 & lhs, atf_amc::RnullStr6_U32 & rhs) __attribute__((nothrow));
-i32                  RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32 & lhs, atf_amc::RnullStr6_U32 & rhs) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32..Lt
+bool                 RnullStr6_U32_Lt(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32..Cmp
+i32                  RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.RnullStr6_U32..Init
 void                 RnullStr6_U32_Init(atf_amc::RnullStr6_U32& parent);
-bool                 RnullStr6_U32_Eq(const atf_amc::RnullStr6_U32 & lhs,const atf_amc::RnullStr6_U32 & rhs) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32..Eq
+bool                 RnullStr6_U32_Eq(const atf_amc::RnullStr6_U32& lhs, const atf_amc::RnullStr6_U32& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32 & rhs) __attribute__((nothrow));
-bool                 RnullStr6_U32_EqStrptr(atf_amc::RnullStr6_U32 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
-// print string representation of atf_amc::RnullStr6_U32 to string LHS, no header -- cprint:atf_amc.RnullStr6_U32.String
-void                 RnullStr6_U32_Print(atf_amc::RnullStr6_U32 & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32..Update
+bool                 RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32& rhs) __attribute__((nothrow));
+// func:atf_amc.RnullStr6_U32..EqStrptr
+bool                 RnullStr6_U32_EqStrptr(const atf_amc::RnullStr6_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.RnullStr6_U32.String  printfmt:Raw
+// func:atf_amc.RnullStr6_U32..Print
+void                 RnullStr6_U32_Print(atf_amc::RnullStr6_U32& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.RpasU32Str6
 struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, right pad with NUL
@@ -5647,67 +8076,95 @@ struct RpasU32Str6 { // atf_amc.RpasU32Str6: number stored as ascii digits, righ
     bool operator <=(const atf_amc::RpasU32Str6 &rhs) const;
     bool operator >=(const atf_amc::RpasU32Str6 &rhs) const;
     // Copy from strptr (operator=)
+    // func:atf_amc.RpasU32Str6.ch.AssignStrptr
     void                 operator =(const algo::strptr &str) __attribute__((nothrow));
     // Copy from same type
     // Copy value from RHS.
+    // func:atf_amc.RpasU32Str6.ch.Set
     void                 operator =(const atf_amc::RpasU32Str6& parent) __attribute__((nothrow));
+    // func:atf_amc.RpasU32Str6.ch.Ctor
     RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) __attribute__((nothrow));
+    // func:atf_amc.RpasU32Str6.ch.CtorStrptr
     RpasU32Str6(const algo::strptr &rhs) __attribute__((nothrow));
     RpasU32Str6();
 };
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
+// func:atf_amc.RpasU32Str6.ch.Add
 void                 ch_Add(atf_amc::RpasU32Str6& parent, char c) __attribute__((nothrow));
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
+// func:atf_amc.RpasU32Str6.ch.AddStrptr
 void                 ch_AddStrptr(atf_amc::RpasU32Str6& parent, algo::strptr str) __attribute__((nothrow));
 // Access string as array of chars
+// func:atf_amc.RpasU32Str6.ch.Getary
 algo::aryptr<char>   ch_Getary(const atf_amc::RpasU32Str6& parent) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6.ch.HashStrptr
 u32                  RpasU32Str6_Hash(u32 prev, const algo::strptr &str);
+// func:atf_amc.RpasU32Str6.ch.Init
 void                 ch_Init(atf_amc::RpasU32Str6 &parent) __attribute__((nothrow));
 // always return constant 6
+// func:atf_amc.RpasU32Str6.ch.Max
 int                  ch_Max(atf_amc::RpasU32Str6& parent) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6.ch.N
 int                  ch_N(const atf_amc::RpasU32Str6& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.RpasU32Str6.ch.Print
 void                 ch_Print(atf_amc::RpasU32Str6& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.RpasU32Str6.ch.ReadStrptrMaybe
 bool                 ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs) __attribute__((nothrow));
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void                 ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr &rhs) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6.ch.SetStrptr
+void                 ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr& rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
+// func:atf_amc.RpasU32Str6.ch.Getnum
 u32                  ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
+// func:atf_amc.RpasU32Str6.ch.GetnumDflt
 u32                  ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
+// func:atf_amc.RpasU32Str6.ch.Geti64
 i64                  ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) __attribute__((nothrow));
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
+// func:atf_amc.RpasU32Str6.ch.SetnumMaybe
 bool                 ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) __attribute__((nothrow));
 
+// func:atf_amc.RpasU32Str6..Hash
 u32                  RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6 & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::RpasU32Str6 from an ascii string.
 // The format of the string is the format of the atf_amc::RpasU32Str6's only field
+// func:atf_amc.RpasU32Str6..ReadStrptrMaybe
 bool                 RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::strptr in_str);
-bool                 RpasU32Str6_Lt(atf_amc::RpasU32Str6 & lhs, atf_amc::RpasU32Str6 & rhs) __attribute__((nothrow));
-i32                  RpasU32Str6_Cmp(atf_amc::RpasU32Str6 & lhs, atf_amc::RpasU32Str6 & rhs) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6..Lt
+bool                 RpasU32Str6_Lt(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6..Cmp
+i32                  RpasU32Str6_Cmp(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.RpasU32Str6..Init
 void                 RpasU32Str6_Init(atf_amc::RpasU32Str6& parent);
-bool                 RpasU32Str6_Eq(const atf_amc::RpasU32Str6 & lhs,const atf_amc::RpasU32Str6 & rhs) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6..Eq
+bool                 RpasU32Str6_Eq(const atf_amc::RpasU32Str6& lhs, const atf_amc::RpasU32Str6& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6 & rhs) __attribute__((nothrow));
-bool                 RpasU32Str6_EqStrptr(atf_amc::RpasU32Str6 & lhs, const algo::strptr &rhs) __attribute__((nothrow));
-// print string representation of atf_amc::RpasU32Str6 to string LHS, no header -- cprint:atf_amc.RpasU32Str6.String
-void                 RpasU32Str6_Print(atf_amc::RpasU32Str6 & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6..Update
+bool                 RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6& rhs) __attribute__((nothrow));
+// func:atf_amc.RpasU32Str6..EqStrptr
+bool                 RpasU32Str6_EqStrptr(const atf_amc::RpasU32Str6& lhs, const algo::strptr& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.RpasU32Str6.String  printfmt:Raw
+// func:atf_amc.RpasU32Str6..Print
+void                 RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Sep1
 struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
@@ -5726,20 +8183,30 @@ struct Sep1 { // atf_amc.Sep1: Check printing/reading of types with separators
     Sep1();
 };
 
+// func:atf_amc.Sep1..Hash
 u32                  Sep1_Hash(u32 prev, const atf_amc::Sep1 & rhs) __attribute__((nothrow));
-bool                 Sep1_ReadFieldMaybe(atf_amc::Sep1 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Sep1..ReadFieldMaybe
+bool                 Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Sep1 from an ascii string.
 // The format of the string is a string with separated values
+// func:atf_amc.Sep1..ReadStrptrMaybe
 bool                 Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str);
-bool                 Sep1_Lt(atf_amc::Sep1 & lhs, atf_amc::Sep1 & rhs) __attribute__((nothrow));
-i32                  Sep1_Cmp(atf_amc::Sep1 & lhs, atf_amc::Sep1 & rhs) __attribute__((nothrow));
+// func:atf_amc.Sep1..Lt
+bool                 Sep1_Lt(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+// func:atf_amc.Sep1..Cmp
+i32                  Sep1_Cmp(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Sep1..Init
 void                 Sep1_Init(atf_amc::Sep1& parent);
-bool                 Sep1_Eq(const atf_amc::Sep1 & lhs,const atf_amc::Sep1 & rhs) __attribute__((nothrow));
+// func:atf_amc.Sep1..Eq
+bool                 Sep1_Eq(const atf_amc::Sep1& lhs, const atf_amc::Sep1& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1 & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::Sep1 to string LHS, no header -- cprint:atf_amc.Sep1.String
-void                 Sep1_Print(atf_amc::Sep1 & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.Sep1..Update
+bool                 Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Sep1.String  printfmt:Sep
+// func:atf_amc.Sep1..Print
+void                 Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Seqmsg
 #pragma pack(push,1)
@@ -5752,12 +8219,15 @@ struct Seqmsg { // atf_amc.Seqmsg: Sequenced message for stream
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.Seqmsg.msghdr.CopyOut
 void                 parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHeader is an instance of Seqmsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Seqmsg.
 // If not successful, quietly return NULL.
+// func:atf_amc.Seqmsg.msghdr.Castdown
 atf_amc::Seqmsg*     Seqmsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.Seqmsg.msghdr.Castbase
 atf_amc::MsgHeader&  Castbase(atf_amc::Seqmsg& parent);
 
 // Return pointer to optional last element (NULL if none)
@@ -5766,26 +8236,37 @@ atf_amc::MsgHeader&  Castbase(atf_amc::Seqmsg& parent);
 // Since the last element is itself variable-length, two more checks are applied:
 // If payload's length field value is too short, return NULL.
 // If payload's length field value extends past parent's allowed length, return NULL.
+// func:atf_amc.Seqmsg.payload.Get
 atf_amc::MsgHeader*  payload_Get(atf_amc::Seqmsg& parent) __attribute__((__warn_unused_result__, nothrow));
 // Access optional portion as an array of bytes
+// func:atf_amc.Seqmsg.payload.Getary
 algo::aryptr<u8>     payload_Getary(atf_amc::Seqmsg& parent) __attribute__((nothrow));
+// func:atf_amc.Seqmsg.payload.Print
 void                 payload_Print(atf_amc::Seqmsg& parent, cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.Seqmsg.payload.ReadStrptrMaybe
 bool                 payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) __attribute__((nothrow));
 
-bool                 Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Seqmsg..ReadFieldMaybe
+bool                 Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Seqmsg from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.Seqmsg..ReadStrptrMaybe
 bool                 Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::Seqmsg& row) __attribute__((nothrow));
+// func:atf_amc.Seqmsg..GetMsgLength
+i32                  Seqmsg_GetMsgLength(const atf_amc::Seqmsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::Seqmsg& row) __attribute__((nothrow));
+// func:atf_amc.Seqmsg..GetMsgMemptr
+algo::memptr         Seqmsg_GetMsgMemptr(const atf_amc::Seqmsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Seqmsg..Init
 void                 Seqmsg_Init(atf_amc::Seqmsg& parent);
-// print string representation of atf_amc::Seqmsg to string LHS, no header -- cprint:atf_amc.Seqmsg.String
-void                 Seqmsg_Print(atf_amc::Seqmsg & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Seqmsg.String  printfmt:Tuple
+// func:atf_amc.Seqmsg..Print
+void                 Seqmsg_Print(atf_amc::Seqmsg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.SortedStr
 struct SortedStr { // atf_amc.SortedStr
@@ -5803,22 +8284,30 @@ struct SortedStr { // atf_amc.SortedStr
 };
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.SortedStr.novs.Lt
 bool                 novs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 // Compare two fields.
+// func:atf_amc.SortedStr.novs.Cmp
 i32                  novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_amc.SortedStr.vs.Lt
 bool                 vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
 // Comparison is case-insensitive.
+// func:atf_amc.SortedStr.vs.Cmp
 i32                  vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) __attribute__((nothrow));
 
-bool                 SortedStr_Lt(atf_amc::SortedStr & lhs, atf_amc::SortedStr & rhs) __attribute__((nothrow));
-i32                  SortedStr_Cmp(atf_amc::SortedStr & lhs, atf_amc::SortedStr & rhs) __attribute__((nothrow));
-bool                 SortedStr_Eq(const atf_amc::SortedStr & lhs,const atf_amc::SortedStr & rhs) __attribute__((nothrow));
+// func:atf_amc.SortedStr..Lt
+bool                 SortedStr_Lt(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) __attribute__((nothrow));
+// func:atf_amc.SortedStr..Cmp
+i32                  SortedStr_Cmp(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) __attribute__((nothrow));
+// func:atf_amc.SortedStr..Eq
+bool                 SortedStr_Eq(const atf_amc::SortedStr& lhs, const atf_amc::SortedStr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr & rhs) __attribute__((nothrow));
+// func:atf_amc.SortedStr..Update
+bool                 SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr& rhs) __attribute__((nothrow));
 
 // --- atf_amc.SsimfilesCase
 #pragma pack(push,1)
@@ -5832,29 +8321,38 @@ struct SsimfilesCase { // atf_amc.SsimfilesCase: Enum for dispatch atf_amc.Ssimf
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_amc.SsimfilesCase.value.GetEnum
 atf_amc_SsimfilesCaseEnum value_GetEnum(const atf_amc::SsimfilesCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.SsimfilesCase.value.SetEnum
 void                 value_SetEnum(atf_amc::SsimfilesCase& parent, atf_amc_SsimfilesCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.SsimfilesCase.value.ToCstr
 const char*          value_ToCstr(const atf_amc::SsimfilesCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.SsimfilesCase.value.Print
 void                 value_Print(const atf_amc::SsimfilesCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.SsimfilesCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.SsimfilesCase.value.SetStrptr
 void                 value_SetStrptr(atf_amc::SsimfilesCase& parent, algo::strptr rhs, atf_amc_SsimfilesCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.SsimfilesCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::SsimfilesCase from an ascii string.
 // The format of the string is the format of the atf_amc::SsimfilesCase's only field
+// func:atf_amc.SsimfilesCase..ReadStrptrMaybe
 bool                 SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.SsimfilesCase..Init
 void                 SsimfilesCase_Init(atf_amc::SsimfilesCase& parent);
 
 // --- atf_amc.TableId
@@ -5867,32 +8365,43 @@ struct TableId { // atf_amc.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:atf_amc.TableId.value.GetEnum
 atf_amc_TableIdEnum  value_GetEnum(const atf_amc::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.TableId.value.SetEnum
 void                 value_SetEnum(atf_amc::TableId& parent, atf_amc_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.TableId.value.ToCstr
 const char*          value_ToCstr(const atf_amc::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.TableId.value.Print
 void                 value_Print(const atf_amc::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.TableId.value.SetStrptr
 void                 value_SetStrptr(atf_amc::TableId& parent, algo::strptr rhs, atf_amc_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_amc::TableId from an ascii string.
 // The format of the string is the format of the atf_amc::TableId's only field
+// func:atf_amc.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.TableId..Init
 void                 TableId_Init(atf_amc::TableId& parent);
-// print string representation of atf_amc::TableId to string LHS, no header -- cprint:atf_amc.TableId.String
-void                 TableId_Print(atf_amc::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TableId.String  printfmt:Raw
+// func:atf_amc.TableId..Print
+void                 TableId_Print(atf_amc::TableId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TaryU32
 struct TaryU32 { // atf_amc.TaryU32
@@ -5909,53 +8418,78 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_amc.TaryU32.tary_u32.Alloc
 u32&                 tary_u32_Alloc(atf_amc::TaryU32& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_amc.TaryU32.tary_u32.AllocAt
 u32&                 tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.TaryU32.tary_u32.AllocN
 algo::aryptr<u32>    tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.TaryU32.tary_u32.EmptyQ
 bool                 tary_u32_EmptyQ(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.TaryU32.tary_u32.Find
 u32*                 tary_u32_Find(atf_amc::TaryU32& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.TaryU32.tary_u32.Getary
 algo::aryptr<u32>    tary_u32_Getary(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.TaryU32.tary_u32.Last
 u32*                 tary_u32_Last(atf_amc::TaryU32& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_amc.TaryU32.tary_u32.Max
 i32                  tary_u32_Max(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.TaryU32.tary_u32.N
 i32                  tary_u32_N(const atf_amc::TaryU32& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_amc.TaryU32.tary_u32.Remove
 void                 tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) __attribute__((nothrow));
+// func:atf_amc.TaryU32.tary_u32.RemoveAll
 void                 tary_u32_RemoveAll(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.TaryU32.tary_u32.RemoveLast
 void                 tary_u32_RemoveLast(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_amc.TaryU32.tary_u32.Reserve
 void                 tary_u32_Reserve(atf_amc::TaryU32& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_amc.TaryU32.tary_u32.AbsReserve
 void                 tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_amc.TaryU32.tary_u32.Setary
 void                 tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.TaryU32.tary_u32.qFind
 u32&                 tary_u32_qFind(atf_amc::TaryU32& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_amc.TaryU32.tary_u32.qLast
 u32&                 tary_u32_qLast(atf_amc::TaryU32& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_amc.TaryU32.tary_u32.rowid_Get
 u64                  tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.TaryU32.tary_u32.AllocNVal
 algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.TaryU32.tary_u32_curs.Next
 void                 TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs);
+// func:atf_amc.TaryU32.tary_u32_curs.Reset
 void                 TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, atf_amc::TaryU32 &parent);
 // cursor points to valid item
+// func:atf_amc.TaryU32.tary_u32_curs.ValidQ
 bool                 TaryU32_tary_u32_curs_ValidQ(TaryU32_tary_u32_curs &curs);
 // item access
+// func:atf_amc.TaryU32.tary_u32_curs.Access
 u32&                 TaryU32_tary_u32_curs_Access(TaryU32_tary_u32_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.TaryU32..Init
 void                 TaryU32_Init(atf_amc::TaryU32& parent);
+// func:atf_amc.TaryU32..Uninit
 void                 TaryU32_Uninit(atf_amc::TaryU32& parent) __attribute__((nothrow));
 
 // --- atf_amc.TaryU8
@@ -5973,53 +8507,78 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_amc.TaryU8.ary.Alloc
 u8&                  ary_Alloc(atf_amc::TaryU8& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_amc.TaryU8.ary.AllocAt
 u8&                  ary_AllocAt(atf_amc::TaryU8& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.TaryU8.ary.AllocN
 algo::aryptr<u8>     ary_AllocN(atf_amc::TaryU8& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_amc.TaryU8.ary.EmptyQ
 bool                 ary_EmptyQ(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_amc.TaryU8.ary.Find
 u8*                  ary_Find(atf_amc::TaryU8& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_amc.TaryU8.ary.Getary
 algo::aryptr<u8>     ary_Getary(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_amc.TaryU8.ary.Last
 u8*                  ary_Last(atf_amc::TaryU8& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_amc.TaryU8.ary.Max
 i32                  ary_Max(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_amc.TaryU8.ary.N
 i32                  ary_N(const atf_amc::TaryU8& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_amc.TaryU8.ary.Remove
 void                 ary_Remove(atf_amc::TaryU8& parent, u32 i) __attribute__((nothrow));
+// func:atf_amc.TaryU8.ary.RemoveAll
 void                 ary_RemoveAll(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_amc.TaryU8.ary.RemoveLast
 void                 ary_RemoveLast(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_amc.TaryU8.ary.Reserve
 void                 ary_Reserve(atf_amc::TaryU8& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_amc.TaryU8.ary.AbsReserve
 void                 ary_AbsReserve(atf_amc::TaryU8& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_amc.TaryU8.ary.Setary
 void                 ary_Setary(atf_amc::TaryU8& parent, atf_amc::TaryU8 &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_amc.TaryU8.ary.qFind
 u8&                  ary_qFind(atf_amc::TaryU8& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_amc.TaryU8.ary.qLast
 u8&                  ary_qLast(atf_amc::TaryU8& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_amc.TaryU8.ary.rowid_Get
 u64                  ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_amc.TaryU8.ary.AllocNVal
 algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_amc.TaryU8.ary_curs.Next
 void                 TaryU8_ary_curs_Next(TaryU8_ary_curs &curs);
+// func:atf_amc.TaryU8.ary_curs.Reset
 void                 TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU8 &parent);
 // cursor points to valid item
+// func:atf_amc.TaryU8.ary_curs.ValidQ
 bool                 TaryU8_ary_curs_ValidQ(TaryU8_ary_curs &curs);
 // item access
+// func:atf_amc.TaryU8.ary_curs.Access
 u8&                  TaryU8_ary_curs_Access(TaryU8_ary_curs &curs);
 // Set all fields to initial values.
+// func:atf_amc.TaryU8..Init
 void                 TaryU8_Init(atf_amc::TaryU8& parent);
+// func:atf_amc.TaryU8..Uninit
 void                 TaryU8_Uninit(atf_amc::TaryU8& parent) __attribute__((nothrow));
 
 // --- atf_amc.TestRegx1
@@ -6033,17 +8592,23 @@ private:
 };
 
 // Print back to string
+// func:atf_amc.TestRegx1.val.Print
 void                 val_Print(atf_amc::TestRegx1& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
+// func:atf_amc.TestRegx1.val.ReadStrptrMaybe
 bool                 val_ReadStrptrMaybe(atf_amc::TestRegx1& parent, algo::strptr in) __attribute__((nothrow));
 
-bool                 TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TestRegx1..ReadFieldMaybe
+bool                 TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TestRegx1 from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.TestRegx1..ReadStrptrMaybe
 bool                 TestRegx1_ReadStrptrMaybe(atf_amc::TestRegx1 &parent, algo::strptr in_str);
-// print string representation of atf_amc::TestRegx1 to string LHS, no header -- cprint:atf_amc.TestRegx1.String
-void                 TestRegx1_Print(atf_amc::TestRegx1 & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TestRegx1.String  printfmt:Tuple
+// func:atf_amc.TestRegx1..Print
+void                 TestRegx1_Print(atf_amc::TestRegx1& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TestType
 struct TestType { // atf_amc.TestType
@@ -6051,9 +8616,12 @@ struct TestType { // atf_amc.TestType
 };
 
 // Read fields of atf_amc::TestType from an ascii string.
+// func:atf_amc.TestType..ReadStrptrMaybe
 bool                 TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr in_str);
-// print string representation of atf_amc::TestType to string LHS, no header -- cprint:atf_amc.TestType.String
-void                 TestType_Print(atf_amc::TestType & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TestType.String  printfmt:Raw
+// func:atf_amc.TestType..Print
+void                 TestType_Print(atf_amc::TestType& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Text
 #pragma pack(push,1)
@@ -6066,42 +8634,60 @@ struct Text { // atf_amc.Text
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.Text.msghdr.CopyOut
 void                 parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHeader is an instance of Text by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of Text.
 // If not successful, quietly return NULL.
+// func:atf_amc.Text.msghdr.Castdown
 atf_amc::Text*       Text_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.Text.msghdr.Castbase
 atf_amc::MsgHeader&  Castbase(atf_amc::Text& parent);
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.Text.text.Getary
 algo::aryptr<char>   text_Getary(atf_amc::Text& parent) __attribute__((nothrow));
+// func:atf_amc.Text.text.Addr
 char*                text_Addr(atf_amc::Text& parent);
 // Return number of elements in varlen field
+// func:atf_amc.Text.text.N
 u32                  text_N(const atf_amc::Text& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
+// func:atf_amc.Text.text.ReadStrptrMaybe
 bool                 text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// func:atf_amc.Text.text_curs.Reset
 void                 Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent);
 // cursor points to valid item
+// func:atf_amc.Text.text_curs.ValidQ
 bool                 Text_text_curs_ValidQ(Text_text_curs &curs);
 // proceed to next item
+// func:atf_amc.Text.text_curs.Next
 void                 Text_text_curs_Next(Text_text_curs &curs);
 // item access
+// func:atf_amc.Text.text_curs.Access
 char&                Text_text_curs_Access(Text_text_curs &curs);
-bool                 Text_ReadFieldMaybe(atf_amc::Text &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Text..ReadFieldMaybe
+bool                 Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Text from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.Text..ReadStrptrMaybe
 bool                 Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::Text& row) __attribute__((nothrow));
+// func:atf_amc.Text..GetMsgLength
+i32                  Text_GetMsgLength(const atf_amc::Text& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::Text& row) __attribute__((nothrow));
+// func:atf_amc.Text..GetMsgMemptr
+algo::memptr         Text_GetMsgMemptr(const atf_amc::Text& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Text..Init
 void                 Text_Init(atf_amc::Text& parent);
-// print string representation of atf_amc::Text to string LHS, no header -- cprint:atf_amc.Text.String
-void                 Text_Print(atf_amc::Text & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Text.String  printfmt:Tuple
+// func:atf_amc.Text..Print
+void                 Text_Print(atf_amc::Text& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeB
 // access: atf_amc.FTypeB.msghdr (Base)
@@ -6117,22 +8703,33 @@ struct TypeB { // atf_amc.TypeB
     TypeB();
 };
 
+// func:atf_amc.TypeB..Hash
 u32                  TypeB_Hash(u32 prev, const atf_amc::TypeB & rhs) __attribute__((nothrow));
-bool                 TypeB_ReadFieldMaybe(atf_amc::TypeB &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TypeB..ReadFieldMaybe
+bool                 TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeB from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.TypeB..ReadStrptrMaybe
 bool                 TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str);
-bool                 TypeB_Lt(atf_amc::TypeB & lhs, atf_amc::TypeB & rhs) __attribute__((nothrow));
-i32                  TypeB_Cmp(atf_amc::TypeB & lhs, atf_amc::TypeB & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeB..Lt
+bool                 TypeB_Lt(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeB..Cmp
+i32                  TypeB_Cmp(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeB..Init
 void                 TypeB_Init(atf_amc::TypeB& parent);
-bool                 TypeB_Eq(const atf_amc::TypeB & lhs,const atf_amc::TypeB & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeB..Eq
+bool                 TypeB_Eq(const atf_amc::TypeB& lhs, const atf_amc::TypeB& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeB to string LHS, no header -- cprint:atf_amc.TypeB.String
-void                 TypeB_Print(atf_amc::TypeB & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeB..Update
+bool                 TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeB.String  printfmt:Tuple
+// func:atf_amc.TypeB..Print
+void                 TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_amc::TypeB under PARENT node -- cprint:atf_amc.TypeB.Json
-lib_json::FNode *    TypeB_FmtJson(atf_amc::TypeB & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_amc.TypeB..FmtJson
+lib_json::FNode *    TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE16
 struct TypeBE16 { // atf_amc.TypeBE16
@@ -6140,10 +8737,13 @@ struct TypeBE16 { // atf_amc.TypeBE16
     TypeBE16();
 };
 
+// func:atf_amc.TypeBE16.value.Get
 u16                  value_Get(const atf_amc::TypeBE16& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE16.value.Set
 void                 value_Set(atf_amc::TypeBE16& parent, u16 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.TypeBE16..Init
 void                 TypeBE16_Init(atf_amc::TypeBE16& parent);
 
 // --- atf_amc.TypeBE32
@@ -6152,10 +8752,13 @@ struct TypeBE32 { // atf_amc.TypeBE32
     TypeBE32();
 };
 
+// func:atf_amc.TypeBE32.value.Get
 u32                  value_Get(const atf_amc::TypeBE32& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE32.value.Set
 void                 value_Set(atf_amc::TypeBE32& parent, u32 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.TypeBE32..Init
 void                 TypeBE32_Init(atf_amc::TypeBE32& parent);
 
 // --- atf_amc.TypeBE32en
@@ -6167,39 +8770,55 @@ struct TypeBE32en { // atf_amc.TypeBE32en
     TypeBE32en();
 };
 
+// func:atf_amc.TypeBE32en.value.Get
 u32                  value_Get(const atf_amc::TypeBE32en& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE32en.value.Set
 void                 value_Set(atf_amc::TypeBE32en& parent, u32 rhs) __attribute__((nothrow));
 // Get value of field as enum type
+// func:atf_amc.TypeBE32en.value.GetEnum
 atf_amc_TypeBE32en_value_Enum value_GetEnum(const atf_amc::TypeBE32en& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.TypeBE32en.value.SetEnum
 void                 value_SetEnum(atf_amc::TypeBE32en& parent, atf_amc_TypeBE32en_value_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.TypeBE32en.value.ToCstr
 const char*          value_ToCstr(const atf_amc::TypeBE32en& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.TypeBE32en.value.Print
 void                 value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.TypeBE32en.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.TypeBE32en.value.SetStrptr
 void                 value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr rhs, atf_amc_TypeBE32en_value_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.TypeBE32en.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) __attribute__((nothrow));
 
+// func:atf_amc.TypeBE32en..Hash
 u32                  TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en & rhs) __attribute__((nothrow));
-bool                 TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TypeBE32en..ReadFieldMaybe
+bool                 TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeBE32en from an ascii string.
 // The format of the string is the format of the atf_amc::TypeBE32en's only field
+// func:atf_amc.TypeBE32en..ReadStrptrMaybe
 bool                 TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strptr in_str);
 // Read fields of atf_amc::TypeBE32en from attributes of ascii tuple TUPLE
+// func:atf_amc.TypeBE32en..ReadTupleMaybe
 bool                 TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeBE32en..Init
 void                 TypeBE32en_Init(atf_amc::TypeBE32en& parent);
-// print string representation of atf_amc::TypeBE32en to string LHS, no header -- cprint:atf_amc.TypeBE32en.String
-void                 TypeBE32en_Print(atf_amc::TypeBE32en & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeBE32en.String  printfmt:Raw
+// func:atf_amc.TypeBE32en..Print
+void                 TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE64
 struct TypeBE64 { // atf_amc.TypeBE64
@@ -6215,25 +8834,38 @@ struct TypeBE64 { // atf_amc.TypeBE64
     TypeBE64();
 };
 
+// func:atf_amc.TypeBE64.value.Get
 u64                  value_Get(const atf_amc::TypeBE64& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE64.value.Set
 void                 value_Set(atf_amc::TypeBE64& parent, u64 rhs) __attribute__((nothrow));
 
+// func:atf_amc.TypeBE64..Hash
 u32                  TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64 & rhs) __attribute__((nothrow));
-bool                 TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64 &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TypeBE64..ReadFieldMaybe
+bool                 TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeBE64 from an ascii string.
 // The format of the string is the format of the atf_amc::TypeBE64's only field
+// func:atf_amc.TypeBE64..ReadStrptrMaybe
 bool                 TypeBE64_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str);
 // Read fields of atf_amc::TypeBE64 from attributes of ascii tuple TUPLE
+// func:atf_amc.TypeBE64..ReadTupleMaybe
 bool                 TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tuple) __attribute__((nothrow));
-bool                 TypeBE64_Lt(atf_amc::TypeBE64 & lhs, atf_amc::TypeBE64 & rhs) __attribute__((nothrow));
-i32                  TypeBE64_Cmp(atf_amc::TypeBE64 & lhs, atf_amc::TypeBE64 & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeBE64..Lt
+bool                 TypeBE64_Lt(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeBE64..Cmp
+i32                  TypeBE64_Cmp(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeBE64..Init
 void                 TypeBE64_Init(atf_amc::TypeBE64& parent);
-bool                 TypeBE64_Eq(const atf_amc::TypeBE64 & lhs,const atf_amc::TypeBE64 & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeBE64..Eq
+bool                 TypeBE64_Eq(const atf_amc::TypeBE64& lhs, const atf_amc::TypeBE64& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64 & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeBE64 to string LHS, no header -- cprint:atf_amc.TypeBE64.String
-void                 TypeBE64_Print(atf_amc::TypeBE64 & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeBE64..Update
+bool                 TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeBE64.String  printfmt:Raw
+// func:atf_amc.TypeBE64..Print
+void                 TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeBE64dflt
 struct TypeBE64dflt { // atf_amc.TypeBE64dflt
@@ -6243,10 +8875,13 @@ struct TypeBE64dflt { // atf_amc.TypeBE64dflt
     TypeBE64dflt();
 };
 
+// func:atf_amc.TypeBE64dflt.value.Get
 u64                  value_Get(const atf_amc::TypeBE64dflt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE64dflt.value.Set
 void                 value_Set(atf_amc::TypeBE64dflt& parent, u64 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.TypeBE64dflt..Init
 void                 TypeBE64dflt_Init(atf_amc::TypeBE64dflt& parent);
 
 // --- atf_amc.TypeBE64sf
@@ -6255,106 +8890,125 @@ struct TypeBE64sf { // atf_amc.TypeBE64sf
     TypeBE64sf();
 };
 
+// func:atf_amc.TypeBE64sf.value.Get
 u64                  value_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.TypeBE64sf.value.Set
 void                 value_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 63.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bit63.Get
 u64                  bit63_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 63.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bit63.Set
 void                 bit63_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    2 bits starting at bit 61.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits62_61.Get
 u64                  bits62_61_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    2 bits starting at bit 61.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits62_61.Set
 void                 bits62_61_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    3 bits starting at bit 58.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits60_58.Get
 u64                  bits60_58_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    3 bits starting at bit 58.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits60_58.Set
 void                 bits60_58_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    5 bits starting at bit 53.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits57_53.Get
 u64                  bits57_53_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    5 bits starting at bit 53.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits57_53.Set
 void                 bits57_53_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    8 bits starting at bit 45.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits52_45.Get
 u64                  bits52_45_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    8 bits starting at bit 45.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits52_45.Set
 void                 bits52_45_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    13 bits starting at bit 32.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits44_32.Get
 u64                  bits44_32_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    13 bits starting at bit 32.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits44_32.Set
 void                 bits44_32_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    21 bits starting at bit 11.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits31_11.Get
 u64                  bits31_11_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    21 bits starting at bit 11.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits31_11.Set
 void                 bits31_11_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Retrieve bitfield from value of field value
 //    11 bits starting at bit 0.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits10_0.Get
 u64                  bits10_0_Get(const atf_amc::TypeBE64sf& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    11 bits starting at bit 0.
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
+// func:atf_amc.TypeBE64sf.bits10_0.Set
 void                 bits10_0_Set(atf_amc::TypeBE64sf& parent, u64 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_amc.TypeBE64sf..Init
 void                 TypeBE64sf_Init(atf_amc::TypeBE64sf& parent);
 
 // --- atf_amc.TypeC
@@ -6371,19 +9025,28 @@ struct TypeC { // atf_amc.TypeC
     TypeC();
 };
 
+// func:atf_amc.TypeC..Hash
 u32                  TypeC_Hash(u32 prev, const atf_amc::TypeC & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeC from an ascii string.
 // The format of the string is the format of the atf_amc::TypeC's only field
+// func:atf_amc.TypeC..ReadStrptrMaybe
 bool                 TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str);
-bool                 TypeC_Lt(atf_amc::TypeC & lhs, atf_amc::TypeC & rhs) __attribute__((nothrow));
-i32                  TypeC_Cmp(atf_amc::TypeC & lhs, atf_amc::TypeC & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeC..Lt
+bool                 TypeC_Lt(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeC..Cmp
+i32                  TypeC_Cmp(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeC..Init
 void                 TypeC_Init(atf_amc::TypeC& parent);
-bool                 TypeC_Eq(const atf_amc::TypeC & lhs,const atf_amc::TypeC & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeC..Eq
+bool                 TypeC_Eq(const atf_amc::TypeC& lhs, const atf_amc::TypeC& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeC to string LHS, no header -- cprint:atf_amc.TypeC.String
-void                 TypeC_Print(atf_amc::TypeC & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeC..Update
+bool                 TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeC.String  printfmt:Raw
+// func:atf_amc.TypeC..Print
+void                 TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeH
 // create: atf_amc.VarlenH.typeh (Varlen)
@@ -6398,19 +9061,28 @@ struct TypeH { // atf_amc.TypeH
     TypeH();
 };
 
+// func:atf_amc.TypeH..Hash
 u32                  TypeH_Hash(u32 prev, const atf_amc::TypeH & rhs) __attribute__((nothrow));
 // Read fields of atf_amc::TypeH from an ascii string.
 // The format of the string is the format of the atf_amc::TypeH's only field
+// func:atf_amc.TypeH..ReadStrptrMaybe
 bool                 TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str);
-bool                 TypeH_Lt(atf_amc::TypeH & lhs, atf_amc::TypeH & rhs) __attribute__((nothrow));
-i32                  TypeH_Cmp(atf_amc::TypeH & lhs, atf_amc::TypeH & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeH..Lt
+bool                 TypeH_Lt(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+// func:atf_amc.TypeH..Cmp
+i32                  TypeH_Cmp(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.TypeH..Init
 void                 TypeH_Init(atf_amc::TypeH& typeh);
-bool                 TypeH_Eq(const atf_amc::TypeH & lhs,const atf_amc::TypeH & rhs) __attribute__((nothrow));
+// func:atf_amc.TypeH..Eq
+bool                 TypeH_Eq(const atf_amc::TypeH& lhs, const atf_amc::TypeH& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH & rhs) __attribute__((nothrow));
-// print string representation of atf_amc::TypeH to string LHS, no header -- cprint:atf_amc.TypeH.String
-void                 TypeH_Print(atf_amc::TypeH & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_amc.TypeH..Update
+bool                 TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeH.String  printfmt:Raw
+// func:atf_amc.TypeH..Print
+void                 TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeS
 // access: atf_amc.FTypeS.msghdr (Base)
@@ -6420,14 +9092,19 @@ struct TypeS { // atf_amc.TypeS
     TypeS();
 };
 
-bool                 TypeS_ReadFieldMaybe(atf_amc::TypeS &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TypeS..ReadFieldMaybe
+bool                 TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeS from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.TypeS..ReadStrptrMaybe
 bool                 TypeS_ReadStrptrMaybe(atf_amc::TypeS &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.TypeS..Init
 void                 TypeS_Init(atf_amc::TypeS& parent);
-// print string representation of atf_amc::TypeS to string LHS, no header -- cprint:atf_amc.TypeS.String
-void                 TypeS_Print(atf_amc::TypeS & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeS.String  printfmt:Tuple
+// func:atf_amc.TypeS..Print
+void                 TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.TypeT
 // access: atf_amc.FTypeT.msghdr (Base)
@@ -6437,15 +9114,42 @@ struct TypeT { // atf_amc.TypeT: Refers to TypeA
     TypeT();
 };
 
+// func:atf_amc.TypeT..Hash
 u32                  TypeT_Hash(u32 prev, const atf_amc::TypeT & rhs) __attribute__((nothrow));
-bool                 TypeT_ReadFieldMaybe(atf_amc::TypeT &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.TypeT..ReadFieldMaybe
+bool                 TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::TypeT from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.TypeT..ReadStrptrMaybe
 bool                 TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_amc.TypeT..Init
 void                 TypeT_Init(atf_amc::TypeT& parent);
-// print string representation of atf_amc::TypeT to string LHS, no header -- cprint:atf_amc.TypeT.String
-void                 TypeT_Print(atf_amc::TypeT & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeT.String  printfmt:Tuple
+// func:atf_amc.TypeT..Print
+void                 TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.TypeTVal
+struct TypeTVal { // atf_amc.TypeTVal: Refers to TypeA by value
+    atf_amc::TypeS   types;   //
+    i32              j;       //   0
+    TypeTVal();
+};
+
+// func:atf_amc.TypeTVal..ReadFieldMaybe
+bool                 TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::TypeTVal from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.TypeTVal..ReadStrptrMaybe
+bool                 TypeTVal_ReadStrptrMaybe(atf_amc::TypeTVal &parent, algo::strptr in_str);
+// Set all fields to initial values.
+// func:atf_amc.TypeTVal..Init
+void                 TypeTVal_Init(atf_amc::TypeTVal& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeTVal.String  printfmt:Tuple
+// func:atf_amc.TypeTVal..Print
+void                 TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.Typefconst
 struct Typefconst { // atf_amc.Typefconst
@@ -6457,35 +9161,48 @@ struct Typefconst { // atf_amc.Typefconst
 };
 
 // Get value of field as enum type
+// func:atf_amc.Typefconst.value.GetEnum
 atf_amc_Typefconst_value_Enum value_GetEnum(const atf_amc::Typefconst& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_amc.Typefconst.value.SetEnum
 void                 value_SetEnum(atf_amc::Typefconst& parent, atf_amc_Typefconst_value_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.Typefconst.value.ToCstr
 const char*          value_ToCstr(const atf_amc::Typefconst& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_amc.Typefconst.value.Print
 void                 value_Print(const atf_amc::Typefconst& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_amc.Typefconst.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_amc.Typefconst.value.SetStrptr
 void                 value_SetStrptr(atf_amc::Typefconst& parent, algo::strptr rhs, atf_amc_Typefconst_value_Enum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_amc.Typefconst.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) __attribute__((nothrow));
 
-bool                 Typefconst_ReadFieldMaybe(atf_amc::Typefconst &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.Typefconst..ReadFieldMaybe
+bool                 Typefconst_ReadFieldMaybe(atf_amc::Typefconst& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::Typefconst from an ascii string.
 // The format of the string is the format of the atf_amc::Typefconst's only field
+// func:atf_amc.Typefconst..ReadStrptrMaybe
 bool                 Typefconst_ReadStrptrMaybe(atf_amc::Typefconst &parent, algo::strptr in_str);
 // Read fields of atf_amc::Typefconst from attributes of ascii tuple TUPLE
+// func:atf_amc.Typefconst..ReadTupleMaybe
 bool                 Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.Typefconst..Init
 void                 Typefconst_Init(atf_amc::Typefconst& parent);
-// print string representation of atf_amc::Typefconst to string LHS, no header -- cprint:atf_amc.Typefconst.String
-void                 Typefconst_Print(atf_amc::Typefconst & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.Typefconst.String  printfmt:Raw
+// func:atf_amc.Typefconst..Print
+void                 Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.VarlenAlloc
 // create: atf_amc.FDb.varlenalloc (Lpool)
@@ -6507,23 +9224,33 @@ private:
 #pragma pack(pop)
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenAlloc.elem.Getary
 algo::aryptr<i32>    elem_Getary(atf_amc::VarlenAlloc& varlenalloc) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc.elem.Addr
 i32*                 elem_Addr(atf_amc::VarlenAlloc& varlenalloc);
 // Return number of elements in varlen field
+// func:atf_amc.VarlenAlloc.elem.N
 u32                  elem_N(const atf_amc::VarlenAlloc& varlenalloc) __attribute__((__warn_unused_result__, nothrow, pure));
 
+// func:atf_amc.VarlenAlloc.elem_curs.Reset
 void                 varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent);
 // cursor points to valid item
+// func:atf_amc.VarlenAlloc.elem_curs.ValidQ
 bool                 varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs);
 // proceed to next item
+// func:atf_amc.VarlenAlloc.elem_curs.Next
 void                 varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs);
 // item access
+// func:atf_amc.VarlenAlloc.elem_curs.Access
 i32&                 varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::VarlenAlloc& row) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc..GetMsgLength
+i32                  VarlenAlloc_GetMsgLength(const atf_amc::VarlenAlloc& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::VarlenAlloc& row) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc..GetMsgMemptr
+algo::memptr         VarlenAlloc_GetMsgMemptr(const atf_amc::VarlenAlloc& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenAlloc..Init
 void                 VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc);
 
 // --- atf_amc.VarlenAlloc_curs
@@ -6538,11 +9265,16 @@ struct VarlenAlloc_curs { // atf_amc.VarlenAlloc_curs: Cursor for scanning messa
 };
 #pragma pack(pop)
 
+// func:atf_amc.VarlenAlloc_curs..ValidQ
 bool                 VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc_curs..Reset
 void                 VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc_curs..Access
 atf_amc::VarlenAlloc*& VarlenAlloc_curs_Access(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenAlloc_curs..Next
 void                 VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenAlloc_curs..Init
 void                 VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent);
 
 // --- atf_amc.VarlenExtern
@@ -6564,27 +9296,41 @@ private:
 };
 #pragma pack(pop)
 
+// func:atf_amc.VarlenExtern.length.Get
+// this function is 'extrn' and implemented by user
 u32                  length_Get(atf_amc::VarlenExtern& varlen_extern) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_amc.VarlenExtern.length.Set
+// this function is 'extrn' and implemented by user
 void                 length_Set(atf_amc::VarlenExtern& varlen_extern, u32 rhs) __attribute__((nothrow));
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenExtern.varlen.Getary
 algo::aryptr<u32>    varlen_Getary(atf_amc::VarlenExtern& varlen_extern) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern.varlen.Addr
 u32*                 varlen_Addr(atf_amc::VarlenExtern& varlen_extern);
 // Return number of elements in varlen field
+// func:atf_amc.VarlenExtern.varlen.N
 u32                  varlen_N(const atf_amc::VarlenExtern& varlen_extern) __attribute__((__warn_unused_result__, nothrow, pure));
 
+// func:atf_amc.VarlenExtern.varlen_curs.Reset
 void                 varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent);
 // cursor points to valid item
+// func:atf_amc.VarlenExtern.varlen_curs.ValidQ
 bool                 varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs);
 // proceed to next item
+// func:atf_amc.VarlenExtern.varlen_curs.Next
 void                 varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs);
 // item access
+// func:atf_amc.VarlenExtern.varlen_curs.Access
 u32&                 varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::VarlenExtern& row) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern..GetMsgLength
+i32                  VarlenExtern_GetMsgLength(const atf_amc::VarlenExtern& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::VarlenExtern& row) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern..GetMsgMemptr
+algo::memptr         VarlenExtern_GetMsgMemptr(const atf_amc::VarlenExtern& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenExtern..Init
 void                 VarlenExtern_Init(atf_amc::VarlenExtern& varlen_extern);
 
 // --- atf_amc.VarlenExtern_curs
@@ -6599,11 +9345,16 @@ struct VarlenExtern_curs { // atf_amc.VarlenExtern_curs: Cursor for scanning mes
 };
 #pragma pack(pop)
 
+// func:atf_amc.VarlenExtern_curs..ValidQ
 bool                 VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern_curs..Reset
 void                 VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern_curs..Access
 atf_amc::VarlenExtern*& VarlenExtern_curs_Access(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenExtern_curs..Next
 void                 VarlenExtern_curs_Next(atf_amc::VarlenExtern_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenExtern_curs..Init
 void                 VarlenExtern_curs_Init(atf_amc::VarlenExtern_curs& parent);
 
 // --- atf_amc.VarlenH
@@ -6615,34 +9366,49 @@ struct VarlenH { // atf_amc.VarlenH
 };
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenH.typeh.Getary
 algo::aryptr<atf_amc::TypeH> typeh_Getary(atf_amc::VarlenH& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenH.typeh.Addr
 atf_amc::TypeH*      typeh_Addr(atf_amc::VarlenH& parent);
 // Return number of elements in varlen field
+// func:atf_amc.VarlenH.typeh.N
 u32                  typeh_N(const atf_amc::VarlenH& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Verify whether array is sorted
+// func:atf_amc.VarlenH.typeh.SortedQ
 bool                 typeh_SortedQ(atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_amc.VarlenH.typeh.InsertionSort
 void                 typeh_InsertionSort(atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_amc.VarlenH.typeh.HeapSort
 void                 typeh_HeapSort(atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_amc.VarlenH.typeh.QuickSort
 void                 typeh_QuickSort(atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.VarlenH.typeh.XrefMaybe
 bool                 typeh_XrefMaybe(atf_amc::TypeH &row);
 
+// func:atf_amc.VarlenH.typeh_curs.Reset
 void                 VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent);
 // cursor points to valid item
+// func:atf_amc.VarlenH.typeh_curs.ValidQ
 bool                 VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs);
 // proceed to next item
+// func:atf_amc.VarlenH.typeh_curs.Next
 void                 VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs);
 // item access
+// func:atf_amc.VarlenH.typeh_curs.Access
 atf_amc::TypeH&      VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::VarlenH& row) __attribute__((nothrow));
+// func:atf_amc.VarlenH..GetMsgLength
+i32                  VarlenH_GetMsgLength(const atf_amc::VarlenH& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::VarlenH& row) __attribute__((nothrow));
+// func:atf_amc.VarlenH..GetMsgMemptr
+algo::memptr         VarlenH_GetMsgMemptr(const atf_amc::VarlenH& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenH..Init
 void                 VarlenH_Init(atf_amc::VarlenH& parent);
 
 // --- atf_amc.VarlenH_curs
@@ -6657,11 +9423,16 @@ struct VarlenH_curs { // atf_amc.VarlenH_curs: Cursor for scanning messages in a
 };
 #pragma pack(pop)
 
+// func:atf_amc.VarlenH_curs..ValidQ
 bool                 VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenH_curs..Reset
 void                 VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenH_curs..Access
 atf_amc::VarlenH*&   VarlenH_curs_Access(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenH_curs..Next
 void                 VarlenH_curs_Next(atf_amc::VarlenH_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenH_curs..Init
 void                 VarlenH_curs_Init(atf_amc::VarlenH_curs& parent);
 
 // --- atf_amc.VarlenK
@@ -6676,33 +9447,48 @@ struct VarlenK { // atf_amc.VarlenK: An optional instance of atf_unit.A
 #pragma pack(pop)
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenK.i.Getary
 algo::aryptr<u32>    i_Getary(atf_amc::VarlenK& k) __attribute__((nothrow));
+// func:atf_amc.VarlenK.i.Addr
 u32*                 i_Addr(atf_amc::VarlenK& k);
 // Return number of elements in varlen field
+// func:atf_amc.VarlenK.i.N
 u32                  i_N(const atf_amc::VarlenK& k) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
+// func:atf_amc.VarlenK.i.ReadStrptrMaybe
 bool                 i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) __attribute__((nothrow));
 
+// func:atf_amc.VarlenK.i_curs.Reset
 void                 k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent);
 // cursor points to valid item
+// func:atf_amc.VarlenK.i_curs.ValidQ
 bool                 k_i_curs_ValidQ(k_i_curs &curs);
 // proceed to next item
+// func:atf_amc.VarlenK.i_curs.Next
 void                 k_i_curs_Next(k_i_curs &curs);
 // item access
+// func:atf_amc.VarlenK.i_curs.Access
 u32&                 k_i_curs_Access(k_i_curs &curs);
-bool                 VarlenK_ReadFieldMaybe(atf_amc::VarlenK &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.VarlenK..ReadFieldMaybe
+bool                 VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenK from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.VarlenK..ReadStrptrMaybe
 bool                 VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::VarlenK& row) __attribute__((nothrow));
+// func:atf_amc.VarlenK..GetMsgLength
+i32                  VarlenK_GetMsgLength(const atf_amc::VarlenK& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::VarlenK& row) __attribute__((nothrow));
+// func:atf_amc.VarlenK..GetMsgMemptr
+algo::memptr         VarlenK_GetMsgMemptr(const atf_amc::VarlenK& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenK..Init
 void                 VarlenK_Init(atf_amc::VarlenK& k);
-// print string representation of atf_amc::VarlenK to string LHS, no header -- cprint:atf_amc.VarlenK.String
-void                 VarlenK_Print(atf_amc::VarlenK & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenK.String  printfmt:Tuple
+// func:atf_amc.VarlenK..Print
+void                 VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.VarlenK_curs
 #pragma pack(push,1)
@@ -6716,11 +9502,16 @@ struct VarlenK_curs { // atf_amc.VarlenK_curs: Cursor for scanning messages in a
 };
 #pragma pack(pop)
 
+// func:atf_amc.VarlenK_curs..ValidQ
 bool                 VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenK_curs..Reset
 void                 VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.VarlenK_curs..Access
 atf_amc::VarlenK*&   VarlenK_curs_Access(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
+// func:atf_amc.VarlenK_curs..Next
 void                 VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenK_curs..Init
 void                 VarlenK_curs_Init(atf_amc::VarlenK_curs& parent);
 
 // --- atf_amc.VarlenMsg
@@ -6734,45 +9525,64 @@ struct VarlenMsg { // atf_amc.VarlenMsg
 #pragma pack(pop)
 
 // Copy fields out of row
+// func:atf_amc.VarlenMsg.base.CopyOut
 void                 parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) __attribute__((nothrow));
 // Check if atf_amc::MsgHeader is an instance of VarlenMsg by checking the type field
 // If it is, return the pointer of target type.
 // Additionally, check if the length field permits valid instance of VarlenMsg.
 // If not successful, quietly return NULL.
+// func:atf_amc.VarlenMsg.base.Castdown
 atf_amc::VarlenMsg*  VarlenMsg_Castdown(atf_amc::MsgHeader &hdr);
+// func:atf_amc.VarlenMsg.base.Castbase
 atf_amc::MsgHeader&  Castbase(atf_amc::VarlenMsg& parent);
 
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
+// func:atf_amc.VarlenMsg.k.Getary
 algo::aryptr<u8>     k_Getary(atf_amc::VarlenMsg& parent) __attribute__((nothrow));
+// func:atf_amc.VarlenMsg.k.Addr
 u8*                  k_Addr(atf_amc::VarlenMsg& parent);
 // Return number of elements in varlen field
+// func:atf_amc.VarlenMsg.k.N
 u32                  k_N(const atf_amc::VarlenMsg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Convert string to field. Return success value
+// func:atf_amc.VarlenMsg.k.ReadStrptrMaybe
 bool                 k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_amc.VarlenMsg.k.XrefMaybe
 bool                 k_XrefMaybe(atf_amc::VarlenK &row);
 
+// func:atf_amc.VarlenMsg.k_curs.Reset
 void                 VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent);
 // cursor points to valid item
+// func:atf_amc.VarlenMsg.k_curs.ValidQ
 bool                 VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs);
 // proceed to next item
+// func:atf_amc.VarlenMsg.k_curs.Next
 void                 VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs);
 // item access
+// func:atf_amc.VarlenMsg.k_curs.Access
 atf_amc::VarlenK&    VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs);
-bool                 VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_amc.VarlenMsg..ReadFieldMaybe
+bool                 VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenMsg from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_amc.VarlenMsg..ReadStrptrMaybe
 bool                 VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr in_str);
 // Message length (uses length field)
-i32                  GetMsgLength(const atf_amc::VarlenMsg& row) __attribute__((nothrow));
+// func:atf_amc.VarlenMsg..GetMsgLength
+i32                  VarlenMsg_GetMsgLength(const atf_amc::VarlenMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
-algo::memptr         GetMsgMemptr(const atf_amc::VarlenMsg& row) __attribute__((nothrow));
+// func:atf_amc.VarlenMsg..GetMsgMemptr
+algo::memptr         VarlenMsg_GetMsgMemptr(const atf_amc::VarlenMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_amc.VarlenMsg..Init
 void                 VarlenMsg_Init(atf_amc::VarlenMsg& parent);
-// print string representation of atf_amc::VarlenMsg to string LHS, no header -- cprint:atf_amc.VarlenMsg.String
-void                 VarlenMsg_Print(atf_amc::VarlenMsg & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenMsg.String  printfmt:Tuple
+// func:atf_amc.VarlenMsg..Print
+void                 VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_amc { // gen:ns_curstext
 
@@ -7249,6 +10059,33 @@ struct MsgLTV_v_curs {// cursor
 };
 
 
+struct PmaskMultiple_present_bitcurs {// cursor
+    typedef int& ChildType;
+    u32* elems;
+    int n_elems;
+    int bit;
+    PmaskMultiple_present_bitcurs() : elems(0), n_elems(0), bit(0) {}
+};
+
+
+struct PmaskMultiple_assigned_bitcurs {// cursor
+    typedef int& ChildType;
+    u32* elems;
+    int n_elems;
+    int bit;
+    PmaskMultiple_assigned_bitcurs() : elems(0), n_elems(0), bit(0) {}
+};
+
+
+struct PmaskMultiple_nullable_bitcurs {// cursor
+    typedef int& ChildType;
+    u32* elems;
+    int n_elems;
+    int bit;
+    PmaskMultiple_nullable_bitcurs() : elems(0), n_elems(0), bit(0) {}
+};
+
+
 struct PmaskU32_pmask_bitcurs {// cursor
     typedef int& ChildType;
     u32* elems;
@@ -7349,524 +10186,1010 @@ struct VarlenMsg_k_curs {// cursor
 } // gen:ns_curstext
 namespace atf_amc { // gen:ns_func
 // Test string conversion
+// func:atf_amc...ForAllStrings
 void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_AmcSort
+// this function is 'extrn' and implemented by user
 void                 amctest_AmcSort();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BhFirstChanged1
+// this function is 'extrn' and implemented by user
 void                 amctest_BhFirstChanged1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BhFirstChanged2
+// this function is 'extrn' and implemented by user
 void                 amctest_BhFirstChanged2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BhFirstChanged3
+// this function is 'extrn' and implemented by user
 void                 amctest_BhFirstChanged3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BheapCursor
+// this function is 'extrn' and implemented by user
 void                 amctest_BheapCursor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BheapInsert100
+// this function is 'extrn' and implemented by user
 void                 amctest_BheapInsert100();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BigEndian
+// this function is 'extrn' and implemented by user
 void                 amctest_BigEndian();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BigendFconst
+// this function is 'extrn' and implemented by user
 void                 amctest_BigendFconst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitfldBitset
+// this function is 'extrn' and implemented by user
 void                 amctest_BitfldBitset();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitfldNet
+// this function is 'extrn' and implemented by user
 void                 amctest_BitfldNet();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitfldTuple
+// this function is 'extrn' and implemented by user
 void                 amctest_BitfldTuple();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetBitcurs
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetBitcurs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetInlary16
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetInlary16();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetTary64
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetTary64();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetVal128
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetVal128();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetVal64
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetVal64();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_BitsetVal8
+// this function is 'extrn' and implemented by user
 void                 amctest_BitsetVal8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelAtree
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelAtree();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelBheap
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelBheap();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelBheapChain
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelBheapChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtr
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelPtr();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtrary
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelPtrary();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelPtraryChain
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelPtraryChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelThash
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelThash();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelThashChain
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelThashChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelZdlist
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelZdlist();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelZdlistChain
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelZdlistChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelZslist
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelZslist();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CascdelZslistChain
+// this function is 'extrn' and implemented by user
 void                 amctest_CascdelZslistChain();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CastDown
+// this function is 'extrn' and implemented by user
 void                 amctest_CastDown();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CastDownFail
+// this function is 'extrn' and implemented by user
 void                 amctest_CastDownFail();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CastDownTooShort
+// this function is 'extrn' and implemented by user
 void                 amctest_CastDownTooShort();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CastUp
+// this function is 'extrn' and implemented by user
 void                 amctest_CastUp();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistFlush100
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistFlush100();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistFlushEmpty
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistFlushEmpty();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsert1
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsert1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsert2
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsert2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsert3
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsert3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsertHead1
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsertHead1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsertHead2
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsertHead2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsertHead3
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsertHead3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistInsertMaybe
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistInsertMaybe();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistItemDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistItemDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CdlistRotateFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_CdlistRotateFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CleanupOrder
+// this function is 'extrn' and implemented by user
 void                 amctest_CleanupOrder();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CopyOut1
+// this function is 'extrn' and implemented by user
 void                 amctest_CopyOut1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CopyOut2
+// this function is 'extrn' and implemented by user
 void                 amctest_CopyOut2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CopyOut3
+// this function is 'extrn' and implemented by user
 void                 amctest_CopyOut3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistFirstChangedFlush
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistFirstChangedFlush();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistFirstChangedInsert
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistFirstChangedInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistFirstChangedRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistFirstChangedRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistFirstChangedRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistFirstChangedRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistHeadFirstChangedInsert
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistHeadFirstChangedInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsert1
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsert1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsert2
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsert2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsert3
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsert3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsertHead1
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsertHead1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsertHead2
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsertHead2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistInsertHead3
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistInsertHead3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_CslistRotateFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_CslistRotateFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Delptr
+// this function is 'extrn' and implemented by user
 void                 amctest_Delptr();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispRead1
+// this function is 'extrn' and implemented by user
 void                 amctest_DispRead1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispRead2
+// this function is 'extrn' and implemented by user
 void                 amctest_DispRead2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispRead3
+// this function is 'extrn' and implemented by user
 void                 amctest_DispRead3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispRead4
+// this function is 'extrn' and implemented by user
 void                 amctest_DispRead4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_DispReadSsimfile
+// this function is 'extrn' and implemented by user
 void                 amctest_DispReadSsimfile();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ExecSh
+// this function is 'extrn' and implemented by user
 void                 amctest_ExecSh();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ExecVerbose
+// this function is 'extrn' and implemented by user
 void                 amctest_ExecVerbose();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Exec_Status
+// this function is 'extrn' and implemented by user
 void                 amctest_Exec_Status();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Fcmp
+// this function is 'extrn' and implemented by user
 void                 amctest_Fcmp();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Fconst
+// this function is 'extrn' and implemented by user
 void                 amctest_Fconst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Gsymbol
+// this function is 'extrn' and implemented by user
 void                 amctest_Gsymbol();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Hook1
+// this function is 'extrn' and implemented by user
 void                 amctest_Hook1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Hook2
+// this function is 'extrn' and implemented by user
 void                 amctest_Hook2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ImdXref
+// this function is 'extrn' and implemented by user
 void                 amctest_ImdXref();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Inlary_ReadPrint
+// this function is 'extrn' and implemented by user
 void                 amctest_Inlary_ReadPrint();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_LaryFind
+// this function is 'extrn' and implemented by user
 void                 amctest_LaryFind();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_LineIter
+// this function is 'extrn' and implemented by user
 void                 amctest_LineIter();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Lpool
+// this function is 'extrn' and implemented by user
 void                 amctest_Lpool();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Minmax
+// this function is 'extrn' and implemented by user
 void                 amctest_Minmax();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_MsgCurs
+// this function is 'extrn' and implemented by user
 void                 amctest_MsgCurs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_MsgCurs2
+// this function is 'extrn' and implemented by user
 void                 amctest_MsgCurs2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_MsgCurs3
+// this function is 'extrn' and implemented by user
 void                 amctest_MsgCurs3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_MsgCurs4
+// this function is 'extrn' and implemented by user
 void                 amctest_MsgCurs4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_MsgLength
+// this function is 'extrn' and implemented by user
 void                 amctest_MsgLength();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Numstr
+// this function is 'extrn' and implemented by user
 void                 amctest_Numstr();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_NumstrCorruption
+// this function is 'extrn' and implemented by user
 void                 amctest_NumstrCorruption();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptAlloc
+// this function is 'extrn' and implemented by user
 void                 amctest_OptAlloc();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptG
+// this function is 'extrn' and implemented by user
 void                 amctest_OptG();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptG2
+// this function is 'extrn' and implemented by user
 void                 amctest_OptG2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptG8
+// this function is 'extrn' and implemented by user
 void                 amctest_OptG8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptG9
+// this function is 'extrn' and implemented by user
 void                 amctest_OptG9();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG3
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG4
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG5
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG6
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG6();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG7
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG7();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG8
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_OptOptG9
+// this function is 'extrn' and implemented by user
 void                 amctest_OptOptG9();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PerfSortString
+// this function is 'extrn' and implemented by user
 void                 amctest_PerfSortString();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PerfThashRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_PerfThashRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PmaskMultiple
+// this function is 'extrn' and implemented by user
+void                 amctest_PmaskMultiple();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PrintBase36
+// this function is 'extrn' and implemented by user
 void                 amctest_PrintBase36();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PrintRawGconst
+// this function is 'extrn' and implemented by user
 void                 amctest_PrintRawGconst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryCursor
+// this function is 'extrn' and implemented by user
 void                 amctest_PtraryCursor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_PtraryInsert
+// this function is 'extrn' and implemented by user
 void                 amctest_PtraryInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadProc
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadProc();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple1
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple2
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple2a
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple2a();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple3
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple4
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ReadTuple5
+// this function is 'extrn' and implemented by user
 void                 amctest_ReadTuple5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Scratch
+// this function is 'extrn' and implemented by user
 void                 amctest_Scratch();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SetGetnumBase10
+// this function is 'extrn' and implemented by user
 void                 amctest_SetGetnumBase10();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_SubstrDfltval
+// this function is 'extrn' and implemented by user
 void                 amctest_SubstrDfltval();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryInit
+// this function is 'extrn' and implemented by user
 void                 amctest_TaryInit();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryInit2
+// this function is 'extrn' and implemented by user
 void                 amctest_TaryInit2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryInit3
+// this function is 'extrn' and implemented by user
 void                 amctest_TaryInit3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryInit4
+// this function is 'extrn' and implemented by user
 void                 amctest_TaryInit4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TaryReserve
+// this function is 'extrn' and implemented by user
 void                 amctest_TaryReserve();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestBitfld
+// this function is 'extrn' and implemented by user
 void                 amctest_TestBitfld();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestBitfld2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestBitfld2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestCstring1
+// this function is 'extrn' and implemented by user
 void                 amctest_TestCstring1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestCstring2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestCstring2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestDispFilter
+// this function is 'extrn' and implemented by user
 void                 amctest_TestDispFilter();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestDispFilter2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestDispFilter2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestDispFilter3
+// this function is 'extrn' and implemented by user
 void                 amctest_TestDispFilter3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestDispFilter4
+// this function is 'extrn' and implemented by user
 void                 amctest_TestDispFilter4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestInsertX2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestInsertX2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestInsertX3
+// this function is 'extrn' and implemented by user
 void                 amctest_TestInsertX3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask1
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask3
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask4
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask5
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask6
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask6();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask7
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask7();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestPmask8
+// this function is 'extrn' and implemented by user
 void                 amctest_TestPmask8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestRegx1
+// this function is 'extrn' and implemented by user
 void                 amctest_TestRegx1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestSep1
+// this function is 'extrn' and implemented by user
 void                 amctest_TestSep1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestSep2
+// this function is 'extrn' and implemented by user
 void                 amctest_TestSep2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_TestString
+// this function is 'extrn' and implemented by user
 void                 amctest_TestString();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashEmpty
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashEmpty();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashFindRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashFindRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashGetOrCreate
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashGetOrCreate();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashInsertMaybe
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashInsertMaybe();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ThashXref
+// this function is 'extrn' and implemented by user
 void                 amctest_ThashXref();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Typetag
+// this function is 'extrn' and implemented by user
 void                 amctest_Typetag();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenAlloc
+// this function is 'extrn' and implemented by user
 void                 amctest_VarlenAlloc();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenExternLength
+// this function is 'extrn' and implemented by user
 void                 amctest_VarlenExternLength();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenMsgs
+// this function is 'extrn' and implemented by user
 void                 amctest_VarlenMsgs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_VarlenMsgsPnew
+// this function is 'extrn' and implemented by user
 void                 amctest_VarlenMsgsPnew();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistDelCurs
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistDelCurs();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistFlush100
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistFlush100();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistFlushEmpty
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistFlushEmpty();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsert1
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsert1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsert2
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsert2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsert3
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsert3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHead1
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHead1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHead2
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHead2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHead3
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHead3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHeadNoTail1
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHeadNoTail1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHeadNoTail2
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHeadNoTail2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertHeadNoTail3
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertHeadNoTail3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistInsertMaybe
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistInsertMaybe();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistItemDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistItemDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZdlistRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_ZdlistRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistFirstChangedFlush
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistFirstChangedFlush();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistFirstChangedInsert
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistFirstChangedInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistFirstChangedRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistFirstChangedRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistFirstChangedRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistFirstChangedRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistHeadFirstChangedInsert
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistHeadFirstChangedInsert();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsert1
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsert1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsert2
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsert2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsert3
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsert3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsertHead1
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsertHead1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsertHead2
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsertHead2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistInsertHead3
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistInsertHead3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistRemove
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistRemove();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistRemoveFirst
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistRemoveFirst();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Zslistmt1
+// this function is 'extrn' and implemented by user
 void                 amctest_Zslistmt1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Zslistmt2
+// this function is 'extrn' and implemented by user
 void                 amctest_Zslistmt2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_Zslistmt3
+// this function is 'extrn' and implemented by user
 void                 amctest_Zslistmt3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistmtDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistmtDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_ZslistmtItemDfltCtor
+// this function is 'extrn' and implemented by user
 void                 amctest_ZslistmtItemDfltCtor();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_atree_RangeSearch
+// this function is 'extrn' and implemented by user
 void                 amctest_atree_RangeSearch();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_atree_test1
+// this function is 'extrn' and implemented by user
 void                 amctest_atree_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_atree_test2
+// this function is 'extrn' and implemented by user
 void                 amctest_atree_test2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_bytebuf_dyn_test1
+// this function is 'extrn' and implemented by user
 void                 amctest_bytebuf_dyn_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_bytebuf_test1
+// this function is 'extrn' and implemented by user
 void                 amctest_bytebuf_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_bytebuf_test2
+// this function is 'extrn' and implemented by user
 void                 amctest_bytebuf_test2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_fstep_Inline
+// this function is 'extrn' and implemented by user
 void                 amctest_fstep_Inline();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_fstep_InlineOnce
+// this function is 'extrn' and implemented by user
 void                 amctest_fstep_InlineOnce();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_fstep_InlineRecur
+// this function is 'extrn' and implemented by user
 void                 amctest_fstep_InlineRecur();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_fstep_TimeHookRecur
+// this function is 'extrn' and implemented by user
 void                 amctest_fstep_TimeHookRecur();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_linebuf_test1
+// this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_linebuf_test2
+// this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_linebuf_test3
+// this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_linebuf_test4
+// this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_linebuf_test5
+// this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_extra_test
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_extra_test();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test0
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test0();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test1
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test10
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test10();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test1_1
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test1_1();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test1_2
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test1_2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test2
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test2();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test3
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test3();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test4
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test4();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test5
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test5();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test6
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test6();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test7
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test7();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test8
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test8();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_test9
+// this function is 'extrn' and implemented by user
 void                 amctest_msgbuf_test9();
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_cd
+// this function is 'extrn' and implemented by user
 void                 listtype_cd(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_cdl
+// this function is 'extrn' and implemented by user
 void                 listtype_cdl(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_cs
+// this function is 'extrn' and implemented by user
 void                 listtype_cs(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_csl
+// this function is 'extrn' and implemented by user
 void                 listtype_csl(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_zd
+// this function is 'extrn' and implemented by user
 void                 listtype_zd(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_zdl
+// this function is 'extrn' and implemented by user
 void                 listtype_zdl(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_zs
+// this function is 'extrn' and implemented by user
 void                 listtype_zs(atf_amc::FListtype&);
 // User-implemented function from gstatic:atf_amc.FDb.listtype
+// func:atf_amc...listtype_zsl
+// this function is 'extrn' and implemented by user
 void                 listtype_zsl(atf_amc::FListtype&);
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
+// func:atf_amc.MsgHdrLTMsgs..Print
 bool                 MsgHdrLTMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLT &msg, u32 msg_len);
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
+// func:atf_amc.MsgHeaderMsgs..Print
 bool                 MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u32 msg_len);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.Msgs..ReadStrptr
 atf_amc::MsgsCase    Msgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.Msgs..ReadStrptrMaybe
 bool                 Msgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.Ssimfiles..ReadStrptr
 atf_amc::SsimfilesCase Ssimfiles_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.Ssimfiles..ReadStrptrMaybe
 bool                 Ssimfiles_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHdrLTMsgs..ReadStrptr
 atf_amc::MsgHdrLTMsgsCase MsgHdrLTMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHdrLTMsgs..ReadStrptrMaybe
 bool                 MsgHdrLTMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHeaderMsgs..ReadStrptr
 atf_amc::MsgType     MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHeaderMsgs..ReadStrptrMaybe
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Construct a new atf_amc::MsgLTO in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...MsgLTO_FmtByteAry
 atf_amc::MsgLTO *    MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdrLT* o);
 // Construct a new atf_amc::MsgLTV in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...MsgLTV_FmtByteAry
 atf_amc::MsgLTV *    MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v);
 // Construct a new atf_amc::OptG in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...OptG_FmtByteAry
 atf_amc::OptG *      OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typeg, int opt_len);
 // Construct a new atf_amc::OptG in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
 // After constructing, advance BUF appropriate number of bytes forward
+// func:atf_amc...OptG_FmtMemptr
 atf_amc::OptG *      OptG_FmtMemptr(algo::memptr &buf, atf_amc::TypeG* typeg, int opt_len);
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...OptOptG_FmtByteAry
 atf_amc::OptOptG *   OptOptG_FmtByteAry(algo::ByteAry &buf, atf_amc::OptG* optg);
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
 // After constructing, advance BUF appropriate number of bytes forward
+// func:atf_amc...OptOptG_FmtMemptr
 atf_amc::OptOptG *   OptOptG_FmtMemptr(algo::memptr &buf, atf_amc::OptG* optg);
 // Construct a new atf_amc::Text in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...Text_FmtByteAry
 atf_amc::Text *      Text_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > text);
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:atf_amc...VarlenK_FmtByteAry
 atf_amc::VarlenK *   VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > i);
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
 // After constructing, advance BUF appropriate number of bytes forward
+// func:atf_amc...VarlenK_FmtMemptr
 atf_amc::VarlenK *   VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i);
 } // gen:ns_func
+// func:atf_amc...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:atf_amc...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
@@ -7890,6 +11213,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTV &row
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptAlloc &row);// cfmt:atf_amc.OptAlloc.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptG &row);// cfmt:atf_amc.OptG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptOptG &row);// cfmt:atf_amc.OptOptG.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::PmaskMultiple &row);// cfmt:atf_amc.PmaskMultiple.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::PooledBE64 &row);// cfmt:atf_amc.PooledBE64.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Sep1 &row);// cfmt:atf_amc.Sep1.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::Seqmsg &row);// cfmt:atf_amc.Seqmsg.String

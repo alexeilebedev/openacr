@@ -1,1 +1,2 @@
 unknownMacro
+nullPointer:cpp/wcli/main.cpp

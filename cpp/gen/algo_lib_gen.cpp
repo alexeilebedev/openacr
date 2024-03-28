@@ -38,56 +38,83 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 }
 
 namespace algo_lib { // gen:ns_print_proto
+    // func:algo_lib.Cmdline.verbose.ReadStrptrMaybe
     static bool          verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.Cmdline.debug.ReadStrptrMaybe
     static bool          debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:algo_lib.FDb._db.InitReflection
     static void          InitReflection();
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:algo_lib.FDb.bh_timehook.Downheap
     static int           bh_timehook_Downheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:algo_lib.FDb.bh_timehook.Upheap
     static int           bh_timehook_Upheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
+    // func:algo_lib.FDb.bh_timehook.ElemLt
     static bool          bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
+    // func:algo_lib.FDb.bh_timehook_curs.Add
     static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
+    // func:algo_lib.FDb.logcat.LoadStatic
     static void          logcat_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:algo_lib.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:algo_lib.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
+    // func:algo_lib.FTxtrow.sortkey.Nextchar
     static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:algo_lib.FTxttbl.c_txtrow.Swap
     static void          c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:algo_lib.FTxttbl.c_txtrow.Rotleft
     static void          c_txtrow_Rotleft(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b, algo_lib::FTxtrow* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:algo_lib.FTxttbl.c_txtrow.Lt
     static bool          c_txtrow_Lt(algo_lib::FTxtrow &elem_a, algo_lib::FTxtrow &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:algo_lib.FTxttbl.c_txtrow.IntInsertionSort
     static void          c_txtrow_IntInsertionSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:algo_lib.FTxttbl.c_txtrow.IntHeapSort
     static void          c_txtrow_IntHeapSort(algo_lib::FTxtrow* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:algo_lib.FTxttbl.c_txtrow.IntQuickSort
     static void          c_txtrow_IntQuickSort(algo_lib::FTxtrow* *elems, int n, int depth) __attribute__((nothrow));
+    // func:algo_lib.Regx.front.ReadStrptrMaybe
     static bool          front_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.Regx.next_front.ReadStrptrMaybe
     static bool          next_front_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.Regx.start.ReadStrptrMaybe
     static bool          start_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:algo_lib.RegxState.ch_class.Swap
     static void          ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:algo_lib.RegxState.ch_class.Rotleft
     static void          ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:algo_lib.RegxState.ch_class.Lt
     static bool          ch_class_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:algo_lib.RegxState.ch_class.IntInsertionSort
     static void          ch_class_IntInsertionSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:algo_lib.RegxState.ch_class.IntHeapSort
     static void          ch_class_IntHeapSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:algo_lib.RegxState.ch_class.IntQuickSort
     static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
+    // func:algo_lib...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -331,20 +358,47 @@ bool algo_lib::h_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str)
 }
 
 // --- algo_lib.Cmdline..ReadFieldMaybe
-bool algo_lib::Cmdline_ReadFieldMaybe(algo_lib::Cmdline &parent, algo::strptr field, algo::strptr strval) {
+bool algo_lib::Cmdline_ReadFieldMaybe(algo_lib::Cmdline& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     algo_lib::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case algo_lib_FieldId_verbose: retval = verbose_ReadStrptrMaybe(parent, strval); break;
-        case algo_lib_FieldId_debug: retval = debug_ReadStrptrMaybe(parent, strval); break;
-        case algo_lib_FieldId_help: retval = bool_ReadStrptrMaybe(parent.help, strval); break;
-        case algo_lib_FieldId_version: retval = bool_ReadStrptrMaybe(parent.version, strval); break;
-        case algo_lib_FieldId_signature: retval = bool_ReadStrptrMaybe(parent.signature, strval); break;
-        case algo_lib_FieldId_v: retval = v_ReadStrptrMaybe(parent, strval); break;
-        case algo_lib_FieldId_d: retval = d_ReadStrptrMaybe(parent, strval); break;
-        case algo_lib_FieldId_sig: retval = sig_ReadStrptrMaybe(parent, strval); break;
-        case algo_lib_FieldId_h: retval = h_ReadStrptrMaybe(parent, strval); break;
+        case algo_lib_FieldId_verbose: {
+            retval = verbose_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_lib_FieldId_debug: {
+            retval = debug_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_lib_FieldId_help: {
+            retval = bool_ReadStrptrMaybe(parent.help, strval);
+            break;
+        }
+        case algo_lib_FieldId_version: {
+            retval = bool_ReadStrptrMaybe(parent.version, strval);
+            break;
+        }
+        case algo_lib_FieldId_signature: {
+            retval = bool_ReadStrptrMaybe(parent.signature, strval);
+            break;
+        }
+        case algo_lib_FieldId_v: {
+            retval = v_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_lib_FieldId_d: {
+            retval = d_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_lib_FieldId_sig: {
+            retval = sig_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_lib_FieldId_h: {
+            retval = h_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -553,10 +607,14 @@ void algo_lib::CsvParse_Uninit(algo_lib::CsvParse& csvparse) {
 }
 
 // --- algo_lib.CsvParse..Print
-// print string representation of algo_lib::CsvParse to string LHS, no header -- cprint:algo_lib.CsvParse.String
-void algo_lib::CsvParse_Print(algo_lib::CsvParse & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.CsvParse.String  printfmt:Tuple
+void algo_lib::CsvParse_Print(algo_lib::CsvParse& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.CsvParse";
+
+    algo::strptr_Print(row.input, temp);
+    PrintAttrSpaceReset(str,"input", temp);
 
     char_Print(row.sep, temp);
     PrintAttrSpaceReset(str,"sep", temp);
@@ -578,8 +636,9 @@ void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
 }
 
 // --- algo_lib.FFildes..Print
-// print string representation of algo_lib::FFildes to string LHS, no header -- cprint:algo_lib.FFildes.String
-void algo_lib::FFildes_Print(algo_lib::FFildes & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.FFildes.String  printfmt:Raw
+void algo_lib::FFildes_Print(algo_lib::FFildes& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -665,8 +724,9 @@ void algo_lib::trace_Init(algo_lib::trace& parent) {
 }
 
 // --- algo_lib.trace..Print
-// print string representation of algo_lib::trace to string LHS, no header -- cprint:algo_lib.trace.String
-void algo_lib::trace_Print(algo_lib::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.trace.String  printfmt:Tuple
+void algo_lib::trace_Print(algo_lib::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.trace";
 
@@ -2631,6 +2691,111 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNVal(int n_elems, const alg
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- algo_lib.FDb.dirstack.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& algo_lib::dirstack_Alloc() {
+    dirstack_Reserve(1);
+    int n  = _db.dirstack_n;
+    int at = n;
+    algo::cstring *elems = _db.dirstack_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    _db.dirstack_n = n+1;
+    return elems[at];
+}
+
+// --- algo_lib.FDb.dirstack.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& algo_lib::dirstack_AllocAt(int at) {
+    dirstack_Reserve(1);
+    int n  = _db.dirstack_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.FDb.dirstack  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.dirstack_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    _db.dirstack_n = n+1;
+    return elems[at];
+}
+
+// --- algo_lib.FDb.dirstack.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocN(int n_elems) {
+    dirstack_Reserve(n_elems);
+    int old_n  = _db.dirstack_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.dirstack_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.dirstack_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.FDb.dirstack.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo_lib::dirstack_Remove(u32 i) {
+    u32 lim = _db.dirstack_n;
+    algo::cstring *elems = _db.dirstack_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        _db.dirstack_n = lim - 1;
+    }
+}
+
+// --- algo_lib.FDb.dirstack.RemoveAll
+void algo_lib::dirstack_RemoveAll() {
+    u32 n = _db.dirstack_n;
+    while (n > 0) {
+        n -= 1;
+        _db.dirstack_elems[n].~cstring();
+        _db.dirstack_n = n;
+    }
+}
+
+// --- algo_lib.FDb.dirstack.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo_lib::dirstack_RemoveLast() {
+    u64 n = _db.dirstack_n;
+    if (n > 0) {
+        n -= 1;
+        dirstack_qFind(u64(n)).~cstring();
+        _db.dirstack_n = n;
+    }
+}
+
+// --- algo_lib.FDb.dirstack.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo_lib::dirstack_AbsReserve(int n) {
+    u32 old_max  = _db.dirstack_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(_db.dirstack_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.FDb.dirstack  comment:'out of memory'");
+        }
+        _db.dirstack_elems = (algo::cstring*)new_mem;
+        _db.dirstack_max = new_max;
+    }
+}
+
+// --- algo_lib.FDb.dirstack.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNVal(int n_elems, const algo::cstring& val) {
+    dirstack_Reserve(n_elems);
+    int old_n  = _db.dirstack_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.dirstack_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.dirstack_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr algo_lib::trace_RowidFind(int t) {
@@ -2853,6 +3018,9 @@ void algo_lib::FDb_Init() {
     _db.exec_args_elems 	= 0; // (algo_lib.FDb.exec_args)
     _db.exec_args_n     	= 0; // (algo_lib.FDb.exec_args)
     _db.exec_args_max   	= 0; // (algo_lib.FDb.exec_args)
+    _db.dirstack_elems 	= 0; // (algo_lib.FDb.dirstack)
+    _db.dirstack_n     	= 0; // (algo_lib.FDb.dirstack)
+    _db.dirstack_max   	= 0; // (algo_lib.FDb.dirstack)
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
@@ -2863,6 +3031,12 @@ void algo_lib::FDb_Init() {
 // --- algo_lib.FDb..Uninit
 void algo_lib::FDb_Uninit() {
     algo_lib::FDb &row = _db; (void)row;
+
+    // algo_lib.FDb.dirstack.Uninit (Tary)  //Directory stack for PushDir/PopDir
+    // remove all elements from algo_lib.FDb.dirstack
+    dirstack_RemoveAll();
+    // free memory for Tary algo_lib.FDb.dirstack
+    algo_lib::lpool_FreeMem(_db.dirstack_elems, sizeof(algo::cstring)*_db.dirstack_max); // (algo_lib.FDb.dirstack)
 
     // algo_lib.FDb.exec_args.Uninit (Tary)  //
     // remove all elements from algo_lib.FDb.exec_args
@@ -2919,8 +3093,9 @@ void algo_lib::FDispsigcheck_Uninit(algo_lib::FDispsigcheck& dispsigcheck) {
 }
 
 // --- algo_lib.FDispsigcheck..Print
-// print string representation of algo_lib::FDispsigcheck to string LHS, no header -- cprint:algo_lib.FDispsigcheck.String
-void algo_lib::FDispsigcheck_Print(algo_lib::FDispsigcheck & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.FDispsigcheck.String  printfmt:Tuple
+void algo_lib::FDispsigcheck_Print(algo_lib::FDispsigcheck& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.FDispsigcheck";
 
@@ -3580,8 +3755,9 @@ bool algo_lib::FieldId_ReadStrptrMaybe(algo_lib::FieldId &parent, algo::strptr i
 }
 
 // --- algo_lib.FieldId..Print
-// print string representation of algo_lib::FieldId to string LHS, no header -- cprint:algo_lib.FieldId.String
-void algo_lib::FieldId_Print(algo_lib::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.FieldId.String  printfmt:Raw
+void algo_lib::FieldId_Print(algo_lib::FieldId& row, algo::cstring& str) {
     algo_lib::value_Print(row, str);
 }
 
@@ -3940,11 +4116,14 @@ void algo_lib::RegxParse_Uninit(algo_lib::RegxParse& regxparse) {
 }
 
 // --- algo_lib.RegxParse..Print
-// print string representation of algo_lib::RegxParse to string LHS, no header -- cprint:algo_lib.RegxParse.String
-void algo_lib::RegxParse_Print(algo_lib::RegxParse & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxParse.String  printfmt:Tuple
+void algo_lib::RegxParse_Print(algo_lib::RegxParse& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.RegxParse";
-    (void)row;//only to avoid -Wunused-parameter
+
+    algo::strptr_Print(row.input, temp);
+    PrintAttrSpaceReset(str,"input", temp);
 }
 
 // --- algo_lib.RegxState.ch_class.Alloc
@@ -4382,8 +4561,9 @@ void algo_lib::Replscope_Uninit(algo_lib::Replscope& replscope) {
 }
 
 // --- algo_lib.Replscope..Print
-// print string representation of algo_lib::Replscope to string LHS, no header -- cprint:algo_lib.Replscope.String
-void algo_lib::Replscope_Print(algo_lib::Replscope & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.Replscope.String  printfmt:Tuple
+void algo_lib::Replscope_Print(algo_lib::Replscope& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.Replscope";
 
@@ -4469,8 +4649,9 @@ bool algo_lib::TableId_ReadStrptrMaybe(algo_lib::TableId &parent, algo::strptr i
 }
 
 // --- algo_lib.TableId..Print
-// print string representation of algo_lib::TableId to string LHS, no header -- cprint:algo_lib.TableId.String
-void algo_lib::TableId_Print(algo_lib::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.TableId.String  printfmt:Raw
+void algo_lib::TableId_Print(algo_lib::TableId& row, algo::cstring& str) {
     algo_lib::value_Print(row, str);
 }
 
@@ -4591,8 +4772,9 @@ void algo_lib::Tabulate_Uninit(algo_lib::Tabulate& tabulate) {
 }
 
 // --- algo_lib.Tabulate..Print
-// print string representation of algo_lib::Tabulate to string LHS, no header -- cprint:algo_lib.Tabulate.String
-void algo_lib::Tabulate_Print(algo_lib::Tabulate & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo_lib.Tabulate.String  printfmt:Tuple
+void algo_lib::Tabulate_Print(algo_lib::Tabulate& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo_lib.Tabulate";
 

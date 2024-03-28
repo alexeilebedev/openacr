@@ -21,6 +21,7 @@
 
 #include "include/algo.h"
 #include "include/ssimfilt.h"
+#include "include/lib_ctype.h"
 
 // -----------------------------------------------------------------------------
 
@@ -123,6 +124,61 @@ bool ssimfilt::MatchInputTuple(algo::Tuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
+void ssimfilt::PrintJson(algo::Tuple &tuple, cstring &out, bool toplevel) {
+    algo::ListSep ls(", ");
+    if (toplevel && _db.n_json_out++>0) {
+        out<<",";// comma between objects
+    }
+    out<<"{"<<ls;
+    out<<"@type:";
+    lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
+    lib_json::JsonSerializeString(tuple.head.value,out);
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (!toplevel || MatchOutputAttr(attr)) {
+            out<<ls;
+            out<<attr.name<<":";
+            bool quoted=true;
+            bool isbool=false;
+            bool istuple=false;
+            // for unknown schema, print fields using quotes
+            if (ctype) {
+                lib_ctype::FField *field = lib_ctype::FindField(*ctype,attr.name);
+                if (field) {
+                    istuple= TupleFieldQ(*field);
+                    quoted = !field->p_arg->c_bltin;
+                    isbool = field->p_arg == lib_ctype::_db.c_bool;
+                }
+            }
+            if (istuple) {// print recursive json object
+                algo::Tuple fieldtuple;
+                Tuple_ReadStrptrMaybe(fieldtuple,attr.value);
+                PrintJson(fieldtuple,out,false);
+            } else if (isbool) {
+                bool b=false;
+                (void)bool_ReadStrptrMaybe(b,attr.value);
+                out<<(b?"true":"false");
+            } else if (quoted) {
+                lib_json::JsonSerializeString(attr.value,out);
+            } else {
+                out<<attr.value; // matches json
+            }
+        }
+    }ind_end;
+    out<<"}";
+}
+
+// Print tuple as a JSON object
+// if schema is available (ctype found), determine if the field is a bool, print numeric types
+// without quotes.
+// if no schema is available, all field values are quoted
+void ssimfilt::PrintJson(algo::Tuple &tuple) {
+    tempstr out;
+    PrintJson(tuple,out,true);
+    prlog(out);
+}
+
+// -----------------------------------------------------------------------------
+
 void ssimfilt::PrintCsv(algo::Tuple &tuple) {
     // lock CSV header on first match
     tempstr out;
@@ -130,12 +186,15 @@ void ssimfilt::PrintCsv(algo::Tuple &tuple) {
     if (bool_Update(_db.csv_locked,true)) {
         verblog("#csv locked to typetag "<<tuple.head.value);
         Regx_ReadSql(_db.cmdline.typetag,tuple.head.value,true);
-        selfield_RemoveAll();
-        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (selfield_N()==0) {
+            ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+                KVRegx &kvregx=selfield_Alloc();
+                Regx_ReadSql(kvregx.key,attr.name,true);
+            }ind_end;
+        }
+        ind_beg(ssimfilt::_db_selfield_curs,selfield,_db) {
             out<<ls;
-            strptr_PrintCsv(attr.name,out);
-            KVRegx &kvregx=selfield_Alloc();
-            Regx_ReadSql(kvregx.key,attr.name,true);
+            strptr_PrintCsv(selfield.key.expr,out);
         }ind_end;
         out<<eol;
         ls.iter=0;
@@ -201,6 +260,7 @@ void ssimfilt::Table_Flush() {
 // -----------------------------------------------------------------------------
 
 void ssimfilt::Main() {
+    lib_ctype::Init();
     // Populate input filter
     ind_beg(command::ssimfilt_match_curs,match,_db.cmdline) {
         strptr key=Pathcomp(match,":LL");
@@ -222,6 +282,9 @@ void ssimfilt::Main() {
     if (_db.cmdline.cmd != "") {
         _db.cmdline.format = command_ssimfilt_format_cmd;
     }
+    if (_db.cmdline.format==command_ssimfilt_format_json) {
+        prlog("[");
+    }
     ind_beg(algo::FileLine_curs,line,algo::Fildes(0)) {
         algo::Tuple tuple;
         if (Tuple_ReadStrptr(tuple,line,false) && attrs_N(tuple)) {
@@ -232,9 +295,15 @@ void ssimfilt::Main() {
                     break; case command_ssimfilt_format_field: PrintField(tuple);
                     break; case command_ssimfilt_format_table: Table_Save(tuple);
                     break; case command_ssimfilt_format_cmd: PrintCmd(tuple);
+                    break; case command_ssimfilt_format_json: PrintJson(tuple);
                 }
             }
         }
     }ind_end;
-    Table_Flush();
+    if (_db.cmdline.format==command_ssimfilt_format_json) {
+        prlog("]");
+    }
+    if (_db.cmdline.format == command_ssimfilt_format_table) {
+        Table_Flush();
+    }
 }

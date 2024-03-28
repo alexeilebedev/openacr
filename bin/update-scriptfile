@@ -21,7 +21,7 @@
     acr scriptfile -cmd 'echo acr.delete dev.scriptfile gitfile:"$gitfile"' | bash
     # search for them again -- this undoes the deletion
     # -L follows symlinks
-    for X in $(find bin -exec file -L {} \; | egrep -i script | cut -f1 -d: | grep -v "~"); do
+    for X in $(find bin -exec file -L {} \; | egrep -i script | cut -f1 -d: | egrep -v "(~$|bin/bootstrap/)"); do
         echo dev.scriptfile gitfile:$X
     done
     for X in $(find bin -type f -executable | grep -v \~); do

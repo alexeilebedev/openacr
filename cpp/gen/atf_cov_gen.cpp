@@ -72,18 +72,29 @@ const char *atf_cov_help =
 } // namespace atf_cov
 namespace atf_cov { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_cov.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_cov.FDb.covline.InputMaybe
     static bool          covline_InputMaybe(dev::Covline &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.gitfile.InputMaybe
     static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.covtarget.InputMaybe
     static bool          covtarget_InputMaybe(dev::Covtarget &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.covfile.InputMaybe
     static bool          covfile_InputMaybe(dev::Covfile &elem) __attribute__((nothrow));
+    // func:atf_cov.FDb.tgtcov.InputMaybe
     static bool          tgtcov_InputMaybe(dev::Tgtcov &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_cov.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_cov.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_cov...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -163,8 +174,9 @@ void atf_cov::FCovline_Uninit(atf_cov::FCovline& covline) {
 }
 
 // --- atf_cov.FCovline..Print
-// print string representation of atf_cov::FCovline to string LHS, no header -- cprint:atf_cov.FCovline.String
-void atf_cov::FCovline_Print(atf_cov::FCovline & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cov.FCovline.String  printfmt:Tuple
+void atf_cov::FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_cov.FCovline";
 
@@ -218,8 +230,9 @@ void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) {
 }
 
 // --- atf_cov.trace..Print
-// print string representation of atf_cov::trace to string LHS, no header -- cprint:atf_cov.trace.String
-void atf_cov::trace_Print(atf_cov::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cov.trace.String  printfmt:Tuple
+void atf_cov::trace_Print(atf_cov::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_cov.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -2419,8 +2432,9 @@ bool atf_cov::FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_
 }
 
 // --- atf_cov.FieldId..Print
-// print string representation of atf_cov::FieldId to string LHS, no header -- cprint:atf_cov.FieldId.String
-void atf_cov::FieldId_Print(atf_cov::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cov.FieldId.String  printfmt:Raw
+void atf_cov::FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) {
     atf_cov::value_Print(row, str);
 }
 
@@ -2511,8 +2525,9 @@ bool atf_cov::Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str)
 }
 
 // --- atf_cov.Phase..Print
-// print string representation of atf_cov::Phase to string LHS, no header -- cprint:atf_cov.Phase.String
-void atf_cov::Phase_Print(atf_cov::Phase row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cov.Phase.String  printfmt:Raw
+void atf_cov::Phase_Print(atf_cov::Phase row, algo::cstring& str) {
     atf_cov::value_Print(row, str);
 }
 
@@ -2655,8 +2670,9 @@ bool atf_cov::TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_
 }
 
 // --- atf_cov.TableId..Print
-// print string representation of atf_cov::TableId to string LHS, no header -- cprint:atf_cov.TableId.String
-void atf_cov::TableId_Print(atf_cov::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_cov.TableId.String  printfmt:Raw
+void atf_cov::TableId_Print(atf_cov::TableId& row, algo::cstring& str) {
     atf_cov::value_Print(row, str);
 }
 

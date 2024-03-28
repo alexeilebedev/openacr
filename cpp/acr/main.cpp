@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
-// Source: cpp/acr/main.cpp
+// Source: cpp/acr/main.cpp -- Main file
 //
 // ACR: Algo Cross-Reference
 // See txt/acr.md for more information
@@ -36,53 +36,6 @@ algo::UnTime acr::FdModTime(algo::Fildes fd) {
         ret = ToUnTime(algo::UnixTime(S.st_mtime));
     }
     return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// Parse query and return object
-acr::FQuery& acr::ParseQuery(strptr expr) {
-    acr::FQuery& query = acr::query_Alloc();
-
-    // query: RELNAME:VAL or NS.RELNAME:VAL  NS.RELNAME.FIELD:VAL
-    strptr key    = Pathcomp(expr, ":LL");
-    strptr value  = Pathcomp(expr, ":LR");
-    if (value == "") {
-        value = "%";
-    }
-    Regx_ReadAcr(query.query.value, value, true);
-    query.queryop = acr_Queryop_value_select;
-
-    // query=RELNAME:VAL            s1:RELNAME   s2:""             s3:""         s4:""
-    // query=NS.RELNAME:VAL         s1:NS        s2:RELNAME        s3:RELNAME    s4:""
-    // query=NS.RELNAME.FIELD:VAL   s1:NS        s2:RELNAME.FIELD  s3:RELNAME    s4:FIELD
-    // so, field is always s4.
-    // relname is s3 if s3 is non-empty, else s1.
-    // ns is s1 if s3 is non-empty, else ""
-    strptr s1    = Pathcomp(key, ".LL");
-    strptr s2    = Pathcomp(key, ".LR");
-    strptr s3    = Pathcomp(s2,  ".LL");
-    strptr s4    = Pathcomp(s2,  ".LR");
-
-    strptr ns      = elems_N(s3) ? s1 : strptr();
-    strptr relname = elems_N(s3) ? s3 : s1;
-    strptr field   = s4;
-
-    if (!elems_N(ns)) {// omitted namespace = all namespace where this table matches
-        ns = "%";
-    }
-
-    Regx_ReadAcr(query.ssimfile, tempstr() << ns << "." << relname, true);
-    Regx_ReadAcr(query.query.name, field, true);
-    ind_beg(command::acr_where_curs,where,_db.cmdline) {
-        acr::AttrRegx &attr=where_Alloc(query);
-        Regx_ReadAcr(attr.name,Pathcomp(where,":LL"),true);
-        Regx_ReadAcr(attr.value,Pathcomp(where,":LR"),true);
-    }ind_end;
-
-    query.comment = "main command-line query";
-    (void)acr::query_XrefMaybe(query);
-    return query;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,22 +86,25 @@ static void Main_RewriteOpts() {
         acr::_db.cmdline.nup = 0;
         acr::_db.cmdline.ndown = 1;
     }
-    // check
-    if (acr::_db.cmdline.check) {
-        acr::_db.cmdline.select = true;
-    }
     if (acr::_db.cmdline.xref) {
         if (!acr::_db.cmdline.nup) acr::_db.cmdline.nup = 100; // set unless overridden
         if (!acr::_db.cmdline.ndown) acr::_db.cmdline.ndown = 100;
+    }
+    if (acr::_db.cmdline.insert || acr::_db.cmdline.sel || acr::_db.cmdline.merge
+        || acr::_db.cmdline.update || acr::_db.cmdline.replace) {
+        vrfy(!ch_N(acr::_db.cmdline.rename), "-rename is not compatible with reading of stdin");
     }
 }
 
 // -----------------------------------------------------------------------------
 
+// Compute c_child for each ctype -- list of all ctypes
+// that reference this ctype via one of their fields. This is the main
+// way to discover references.
 static void Main_BuildRefmap() {
-    // Build map field->target ssimfile (for going up)
-    // Build the inverse map as well.
     ind_beg(acr::_db_ctype_curs, ctype,acr::_db) {
+        // this considers all references
+        // should this take only pkey references?
         ind_beg(acr::ctype_c_field_curs, field, ctype) {
             acr::c_child_Insert(*field.p_arg, ctype);
         }ind_end;
@@ -160,24 +116,6 @@ static void Main_BuildRefmap() {
             ctype.show_rowid = !ctype.c_ssimfile || !(ctype.c_ssimfile->c_ssimsort && ctype.c_ssimfile->c_ssimsort->sortfld == first_fld->field);
         }
     }ind_end;
-    // If -in is a file or stdin, load tuples from stdin.
-    // Otherwise, they will be loaded on-demand during query run.
-}
-
-// -----------------------------------------------------------------------------
-
-static void Main_SelectRename() {
-    acr::FQuery& fquery = acr::ParseQuery(acr::_db.cmdline.query);
-    fquery.nup    = acr::_db.cmdline.nup;
-    fquery.ndown  = acr::_db.cmdline.ndown;
-    fquery.unused = acr::_db.cmdline.unused;
-    fquery.selmeta= acr::_db.cmdline.meta;
-    if (ch_N(acr::_db.cmdline.rename)) {
-        fquery.new_val = acr::_db.cmdline.rename;
-        fquery.queryop = acr_Queryop_value_set_attr;
-    }
-    fquery.comment = "command-line rename request";
-    acr::RunAllQueries();    // QUERY EXECUTION HERE
 }
 
 // -----------------------------------------------------------------------------
@@ -236,9 +174,85 @@ static void InitFieldProps() {
             field->unique=true;
         }
     }ind_end;
-    if (acr::FField *field=acr::ind_field_Find("algo.Comment.value")) {
-        field->max_attr_len=150;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr::Main_CmdQuery() {
+    acr::FQuery& query = acr::query_Alloc();
+
+    // query: RELNAME:VAL or NS.RELNAME:VAL  NS.RELNAME.FIELD:VAL
+    strptr key    = Pathcomp(_db.cmdline.query, ":LL");
+    strptr value  = Pathcomp(_db.cmdline.query, ":LR");
+    if (value == "") {
+        value = "%";
     }
+    Regx_ReadAcr(query.query.value, value, true);
+    query.queryop = acr_Queryop_value_select;
+
+    // query=RELNAME:VAL            s1:RELNAME   s2:""             s3:""         s4:""
+    // query=NS.RELNAME:VAL         s1:NS        s2:RELNAME        s3:RELNAME    s4:""
+    // query=NS.RELNAME.FIELD:VAL   s1:NS        s2:RELNAME.FIELD  s3:RELNAME    s4:FIELD
+    // so, field is always s4.
+    // relname is s3 if s3 is non-empty, else s1.
+    // ns is s1 if s3 is non-empty, else ""
+    strptr s1    = Pathcomp(key, ".LL");
+    strptr s2    = Pathcomp(key, ".LR");
+    strptr s3    = Pathcomp(s2,  ".LL");
+    strptr s4    = Pathcomp(s2,  ".LR");
+
+    strptr ns      = elems_N(s3) ? s1 : strptr();
+    strptr relname = elems_N(s3) ? s3 : s1;
+    strptr field   = s4;
+
+    if (!elems_N(ns)) {// omitted namespace = all namespace where this table matches
+        ns = "%";
+    }
+
+    Regx_ReadAcr(query.ssimfile, tempstr() << ns << "." << relname, true);
+    Regx_ReadAcr(query.query.name, field, true);
+    ind_beg(command::acr_where_curs,where,_db.cmdline) {
+        acr::AttrRegx &attr=where_Alloc(query);
+        Regx_ReadAcr(attr.name,Pathcomp(where,":LL"),true);
+        Regx_ReadAcr(attr.value,Pathcomp(where,":LR"),true);
+    }ind_end;
+
+    query.comment = "main command-line query";
+    (void)acr::query_XrefMaybe(query);
+
+    if (ch_N(acr::_db.cmdline.rename)) {
+        query.new_val = acr::_db.cmdline.rename;
+        query.queryop = acr_Queryop_value_set_attr;
+    }
+    query.comment = "command-line query";
+    acr::RunAllQueries();
+
+    if (_db.cmdline.nup) {
+        Main_SelectUp();
+    }
+    frep_(iter, _db.cmdline.ndown) {
+        if (!Main_SelectDown(false)) {
+            break;
+        }
+    }
+    if (_db.cmdline.unused) {
+        Main_SelectDown(true);
+    }
+    if (_db.cmdline.meta) {
+        Main_SelectMeta();
+    }
+    // delete selected records
+    if (acr::_db.cmdline.del) {
+        ind_beg(acr::_db_zd_all_selrec_curs,selrec,acr::_db) {
+            selrec.del=true;
+        }ind_end;
+    }
+    // propagate 'del' flag recursively down
+    acr::CascadeDelete();
+
+    // select modified records
+    acr::SelectModified();
+    acr::RunAllQueries();
 }
 
 // -----------------------------------------------------------------------------
@@ -248,24 +262,17 @@ void acr::Main() {
     // determine input/output modes
     // see FileInputQ(), FileOutputQ(), GetOutPath()
     acr::_db.file_input = FileQ(acr::_db.cmdline.in);
+    // look up important fields
+    _db.c_field_ctype = ind_ctype_Find("dmmeta.Ctype");
+    _db.c_ssimfile_ctype = ind_ctype_Find("dmmeta.Ssimfile");
+    ind_beg(_db_ssimreq_curs,ssimreq,_db) {
+        Regx_ReadAcr(ssimreq.regx_value,value_Get(ssimreq),true);
+    }ind_end;
 
     Main_BuildRefmap();
     Main_ReadIn();
     InitFieldProps();
-
-    // create main query
-    if (acr::_db.cmdline.select || ch_N(acr::_db.cmdline.rename)) {
-        Main_SelectRename();
-    }
-
-    if (acr::_db.cmdline.my) {
-        acr::Main_Mysql();
-    }
-
-    RunAllQueries();
-
-    // select modified records
-    acr::SelectModified();
+    Main_CmdQuery();
 
     // validate data and print suggestions.
     if (acr::_db.cmdline.check) {
@@ -276,17 +283,9 @@ void acr::Main() {
     if (acr::_db.cmdline.e) {
         acr::Main_AcrEdit();
         acr::_db.cmdline.cmt=false;
+    } else if (acr::_db.cmdline.my) {
+        acr::Main_Mysql();
     }
-
-    // delete selected records
-    if (acr::_db.cmdline.del) {
-        ind_beg(acr::_db_zd_all_selrec_curs,selrec,acr::_db) {
-            selrec.del=true;
-        }ind_end;
-    }
-
-    // propagate 'del' flag recursively down
-    acr::CascadeDelete();
 
     // count changes
     ind_beg(acr::_db_file_curs, file, acr::_db) {
@@ -313,6 +312,9 @@ void acr::Main() {
         Main_Regxof();
     } else if (acr::_db.cmdline.print) {
         Main_Print();
+    }
+    if (acr::_db.cmdline.g) {
+        acr::Main_GitTriggers();
     }
     // do not write files if an error occurred
     if (acr::_db.cmdline.write && (acr::_db.cmdline.e || algo_lib::_db.exit_code==0)) {

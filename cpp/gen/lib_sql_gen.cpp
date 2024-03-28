@@ -34,11 +34,15 @@
 //#pragma endinclude
 namespace lib_sql { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_sql.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:lib_sql.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_sql.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_sql...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -49,8 +53,9 @@ void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) {
 }
 
 // --- lib_sql.trace..Print
-// print string representation of lib_sql::trace to string LHS, no header -- cprint:lib_sql.trace.String
-void lib_sql::trace_Print(lib_sql::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_sql.trace.String  printfmt:Tuple
+void lib_sql::trace_Print(lib_sql::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_sql.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -495,8 +500,9 @@ bool lib_sql::FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_
 }
 
 // --- lib_sql.FieldId..Print
-// print string representation of lib_sql::FieldId to string LHS, no header -- cprint:lib_sql.FieldId.String
-void lib_sql::FieldId_Print(lib_sql::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_sql.FieldId.String  printfmt:Raw
+void lib_sql::FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) {
     lib_sql::value_Print(row, str);
 }
 

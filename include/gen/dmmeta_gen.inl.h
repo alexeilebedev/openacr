@@ -139,6 +139,17 @@ inline void dmmeta::Cextern_Init(dmmeta::Cextern& parent) {
     parent.initmemset = bool(false);
     parent.isstruct = bool(false);
 }
+inline dmmeta::Cfast::Cfast() {
+    dmmeta::Cfast_Init(*this);
+}
+
+
+// --- dmmeta.Cfast..Init
+// Set all fields to initial values.
+inline void dmmeta::Cfast_Init(dmmeta::Cfast& parent) {
+    parent.id = u32(0);
+    parent.reset = bool(false);
+}
 inline dmmeta::Cfmt::Cfmt(const algo::strptr&            in_cfmt
         ,const algo::strptr&            in_printfmt
         ,bool                           in_read
@@ -193,8 +204,16 @@ inline dmmeta::Chash::Chash() {
 }
 
 inline dmmeta::Cppfunc::Cppfunc() {
+    dmmeta::Cppfunc_Init(*this);
 }
 
+
+// --- dmmeta.Cppfunc..Init
+// Set all fields to initial values.
+inline void dmmeta::Cppfunc_Init(dmmeta::Cppfunc& parent) {
+    parent.print = bool(false);
+    parent.set = bool(false);
+}
 inline dmmeta::Cppkeyword::Cppkeyword(const algo::strptr&            in_cppkeyword)
     : cppkeyword(in_cppkeyword)
 {
@@ -355,6 +374,111 @@ inline void dmmeta::Disptrace_Init(dmmeta::Disptrace& parent) {
 inline dmmeta::Falias::Falias() {
 }
 
+inline dmmeta::Fastenc::Fastenc() {
+}
+
+inline dmmeta::FastencCase::FastencCase(u8                             in_fastenc)
+    : fastenc(in_fastenc)
+{
+}
+inline dmmeta::FastencCase::FastencCase(dmmeta_FastencCaseEnum arg) { this->fastenc = u8(arg); }
+inline dmmeta::FastencCase::FastencCase() {
+    dmmeta::FastencCase_Init(*this);
+}
+
+
+// --- dmmeta.FastencCase.fastenc.GetEnum
+// Get value of field as enum type
+inline dmmeta_FastencCaseEnum dmmeta::fastenc_GetEnum(const dmmeta::FastencCase& parent) {
+    return dmmeta_FastencCaseEnum(parent.fastenc);
+}
+
+// --- dmmeta.FastencCase.fastenc.SetEnum
+// Set value of field from enum type.
+inline void dmmeta::fastenc_SetEnum(dmmeta::FastencCase& parent, dmmeta_FastencCaseEnum rhs) {
+    parent.fastenc = u8(rhs);
+}
+
+// --- dmmeta.FastencCase.fastenc.Cast
+inline dmmeta::FastencCase::operator dmmeta_FastencCaseEnum () const {
+    return dmmeta_FastencCaseEnum((*this).fastenc);
+}
+
+// --- dmmeta.FastencCase..Init
+// Set all fields to initial values.
+inline void dmmeta::FastencCase_Init(dmmeta::FastencCase& parent) {
+    parent.fastenc = u8(0);
+}
+inline dmmeta::Fastinstr::Fastinstr() {
+}
+
+inline dmmeta::FastinstrCase::FastinstrCase(u8                             in_fastinstr)
+    : fastinstr(in_fastinstr)
+{
+}
+inline dmmeta::FastinstrCase::FastinstrCase(dmmeta_FastinstrCaseEnum arg) { this->fastinstr = u8(arg); }
+inline dmmeta::FastinstrCase::FastinstrCase() {
+    dmmeta::FastinstrCase_Init(*this);
+}
+
+
+// --- dmmeta.FastinstrCase.fastinstr.GetEnum
+// Get value of field as enum type
+inline dmmeta_FastinstrCaseEnum dmmeta::fastinstr_GetEnum(const dmmeta::FastinstrCase& parent) {
+    return dmmeta_FastinstrCaseEnum(parent.fastinstr);
+}
+
+// --- dmmeta.FastinstrCase.fastinstr.SetEnum
+// Set value of field from enum type.
+inline void dmmeta::fastinstr_SetEnum(dmmeta::FastinstrCase& parent, dmmeta_FastinstrCaseEnum rhs) {
+    parent.fastinstr = u8(rhs);
+}
+
+// --- dmmeta.FastinstrCase.fastinstr.Cast
+inline dmmeta::FastinstrCase::operator dmmeta_FastinstrCaseEnum () const {
+    return dmmeta_FastinstrCaseEnum((*this).fastinstr);
+}
+
+// --- dmmeta.FastinstrCase..Init
+// Set all fields to initial values.
+inline void dmmeta::FastinstrCase_Init(dmmeta::FastinstrCase& parent) {
+    parent.fastinstr = u8(0);
+}
+inline dmmeta::Fastop::Fastop() {
+}
+
+inline dmmeta::FastopCase::FastopCase(u8                             in_fastop)
+    : fastop(in_fastop)
+{
+}
+inline dmmeta::FastopCase::FastopCase(dmmeta_FastopCaseEnum arg) { this->fastop = u8(arg); }
+inline dmmeta::FastopCase::FastopCase() {
+    dmmeta::FastopCase_Init(*this);
+}
+
+
+// --- dmmeta.FastopCase.fastop.GetEnum
+// Get value of field as enum type
+inline dmmeta_FastopCaseEnum dmmeta::fastop_GetEnum(const dmmeta::FastopCase& parent) {
+    return dmmeta_FastopCaseEnum(parent.fastop);
+}
+
+// --- dmmeta.FastopCase.fastop.SetEnum
+// Set value of field from enum type.
+inline void dmmeta::fastop_SetEnum(dmmeta::FastopCase& parent, dmmeta_FastopCaseEnum rhs) {
+    parent.fastop = u8(rhs);
+}
+
+// --- dmmeta.FastopCase.fastop.Cast
+inline dmmeta::FastopCase::operator dmmeta_FastopCaseEnum () const {
+    return dmmeta_FastopCaseEnum((*this).fastop);
+}
+
+// --- dmmeta.FastopCase..Init
+// Set all fields to initial values.
+inline void dmmeta::FastopCase_Init(dmmeta::FastopCase& parent) {
+    parent.fastop = u8(0);
+}
 inline dmmeta::Fbase::Fbase() {
     dmmeta::Fbase_Init(*this);
 }
@@ -510,6 +634,10 @@ inline dmmeta::Fdelay::Fdelay() {
 inline void dmmeta::Fdelay_Init(dmmeta::Fdelay& parent) {
     parent.scale = bool(false);
 }
+inline dmmeta::Ffast::Ffast() {
+    dmmeta::Ffast_Init(*this);
+}
+
 inline dmmeta::Fflag::Fflag() {
     dmmeta::Fflag_Init(*this);
 }
@@ -849,6 +977,9 @@ inline dmmeta::Nscpp::Nscpp() {
 inline dmmeta::Nsdb::Nsdb() {
 }
 
+inline dmmeta::Nsfast::Nsfast() {
+}
+
 inline dmmeta::Nsinclude::Nsinclude() {
     dmmeta::Nsinclude_Init(*this);
 }
@@ -940,12 +1071,24 @@ inline dmmeta::Pack::Pack() {
 }
 
 inline dmmeta::Pmaskfld::Pmaskfld(const algo::strptr&            in_field
+        ,bool                           in_filter_print
         ,const algo::Comment&           in_comment)
     : field(in_field)
+    , filter_print(in_filter_print)
     , comment(in_comment)
 {
 }
 inline dmmeta::Pmaskfld::Pmaskfld() {
+    dmmeta::Pmaskfld_Init(*this);
+}
+
+
+// --- dmmeta.Pmaskfld..Init
+// Set all fields to initial values.
+inline void dmmeta::Pmaskfld_Init(dmmeta::Pmaskfld& parent) {
+    parent.filter_print = bool(true);
+}
+inline dmmeta::PmaskfldMember::PmaskfldMember() {
 }
 
 inline dmmeta::Pnew::Pnew(const algo::strptr&            in_pnew
@@ -1054,12 +1197,6 @@ inline dmmeta::Ssimreq::Ssimreq() {
     dmmeta::Ssimreq_Init(*this);
 }
 
-
-// --- dmmeta.Ssimreq..Init
-// Set all fields to initial values.
-inline void dmmeta::Ssimreq_Init(dmmeta::Ssimreq& parent) {
-    parent.bidir = bool(false);
-}
 inline dmmeta::Ssimsort::Ssimsort() {
 }
 
@@ -1245,6 +1382,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cexter
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cfast &row) {// cfmt:dmmeta.Cfast.String
+    dmmeta::Cfast_Print(const_cast<dmmeta::Cfast&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Cfmt &row) {// cfmt:dmmeta.Cfmt.String
     dmmeta::Cfmt_Print(const_cast<dmmeta::Cfmt&>(row), str);
     return str;
@@ -1340,6 +1482,21 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Falias
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fastenc &row) {// cfmt:dmmeta.Fastenc.String
+    dmmeta::Fastenc_Print(const_cast<dmmeta::Fastenc&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fastinstr &row) {// cfmt:dmmeta.Fastinstr.String
+    dmmeta::Fastinstr_Print(const_cast<dmmeta::Fastinstr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fastop &row) {// cfmt:dmmeta.Fastop.String
+    dmmeta::Fastop_Print(const_cast<dmmeta::Fastop&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fbase &row) {// cfmt:dmmeta.Fbase.String
     dmmeta::Fbase_Print(const_cast<dmmeta::Fbase&>(row), str);
     return str;
@@ -1417,6 +1574,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fdec &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fdelay &row) {// cfmt:dmmeta.Fdelay.String
     dmmeta::Fdelay_Print(const_cast<dmmeta::Fdelay&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ffast &row) {// cfmt:dmmeta.Ffast.String
+    dmmeta::Ffast_Print(const_cast<dmmeta::Ffast&>(row), str);
     return str;
 }
 
@@ -1605,6 +1767,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsdb &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsfast &row) {// cfmt:dmmeta.Nsfast.String
+    dmmeta::Nsfast_Print(const_cast<dmmeta::Nsfast&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsinclude &row) {// cfmt:dmmeta.Nsinclude.String
     dmmeta::Nsinclude_Print(const_cast<dmmeta::Nsinclude&>(row), str);
     return str;
@@ -1642,6 +1809,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Pack &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Pmaskfld &row) {// cfmt:dmmeta.Pmaskfld.String
     dmmeta::Pmaskfld_Print(const_cast<dmmeta::Pmaskfld&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::PmaskfldMember &row) {// cfmt:dmmeta.PmaskfldMember.String
+    dmmeta::PmaskfldMember_Print(const_cast<dmmeta::PmaskfldMember&>(row), str);
     return str;
 }
 

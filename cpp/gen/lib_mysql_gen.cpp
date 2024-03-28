@@ -28,17 +28,22 @@
 //#pragma endinclude
 namespace lib_mysql { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_mysql.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:lib_mysql.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_mysql.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_mysql...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_mysql.trace..Print
-// print string representation of lib_mysql::trace to string LHS, no header -- cprint:lib_mysql.trace.String
-void lib_mysql::trace_Print(lib_mysql::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_mysql.trace.String  printfmt:Tuple
+void lib_mysql::trace_Print(lib_mysql::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_mysql.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -258,8 +263,9 @@ bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr
 }
 
 // --- lib_mysql.FieldId..Print
-// print string representation of lib_mysql::FieldId to string LHS, no header -- cprint:lib_mysql.FieldId.String
-void lib_mysql::FieldId_Print(lib_mysql::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_mysql.FieldId.String  printfmt:Raw
+void lib_mysql::FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) {
     lib_mysql::value_Print(row, str);
 }
 

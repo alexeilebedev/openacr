@@ -1,0 +1,7 @@
+dmmeta.fastop  fastop:constant  comment:Constant
+dmmeta.fastop  fastop:copy  comment:Copy
+dmmeta.fastop  fastop:default  comment:Default
+dmmeta.fastop  fastop:delta  comment:Delta
+dmmeta.fastop  fastop:increment  comment:Increment
+dmmeta.fastop  fastop:none  comment:Unspecified
+dmmeta.fastop  fastop:tail  comment:Tail

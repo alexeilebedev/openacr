@@ -70,6 +70,20 @@ strptr algo::Pathcomp(strptr s, strptr expr) {
     return strptr(s.elems + start, end-start);
 }
 
+// Check if the Pathcomp expression PATHCOMP
+// refers to the leftmost part of the key
+// (The third character of each Pathcomp step must be 'L')
+bool algo::LeftPathcompQ(algo::strptr pathcomp) {
+    bool ret=true;
+    for (int i=0; i<pathcomp.n_elems; i+=3) {
+        if (i+2<pathcomp.n_elems && pathcomp.elems[i+2]!='L') {
+            ret=false;
+            break;
+        }
+    }
+    return ret;
+}
+
 // -----------------------------------------------------------------------------
 
 // Append NUL character to the end of the string and return a
@@ -383,6 +397,11 @@ tempstr algo::Tabulated(strptr in, strptr sep) {
 
 // -----------------------------------------------------------------------------
 
+// Given a string of up to 4 characters encoded in u32 STR
+// (LSB = first char, etc.)
+// Decode character into RESULT, returning number of characters read.
+// The character is C++-escaped: \a, \b, \f, \n, \r, \t, \v, \', \", \\, \? are supported
+// as well as octal (\OOO) and hex (\xHH) sequences.
 int algo::UnescapeC(u32 str, int len, u8 &result) {
     u32 lo = (str & 0xff);
     u32 i;
@@ -508,26 +527,47 @@ static int EatComma(strptr text, int j) {
 // Scan TEXT starting at position I for a variable that is defined in R
 // If the variable is found, I is set to the character position right after
 // the variable, and the variable value is returned.
-// If the variable is not found because another $-expression or end-of-string is found,
-// the program is killed (if R.fatal is set)
-// or the original text of the string is returned without substitution.
+// Initially I points to the '$' character.
+// If the variable is not found because end-of-string is found the substitution fails,
+// and the scanner advances one character.
+// In this case, if R.FATAL is set, the program is killed; otherwise
+// I is advanced 1 character and that character is returned as the substitution,
+// leaving the original string untouched.
+// If one variable is a prefix another (e.g. $field, $fieldval), then
+// one must use ${fieldval} to avoid the shortest substitution being used
 static strptr ScanVar(algo_lib::Replscope &R, strptr text, int &i) {
     strptr ret;
-    int j=i+1;
-    bool ok=false;
-    for (; j<=text.n_elems; j++) {
-        strptr key(text.elems+i, j-i);
-        if (algo_lib::FReplvar *replvar = algo_lib::ind_replvar_Find(R,key)) {
-            ok=true;
-            ret=replvar->value;
-            if (ret.n_elems==0 && R.eatcomma) {
-                j = EatComma(text,j);
+    int j=i+1;// right after the $
+    algo_lib::FReplvar *replvar=NULL;
+    if (j<text.n_elems-1 && text.elems[j]=='{') {    // scan ${....} expression
+        for (j++; j<text.n_elems; j++) {
+            if (text.elems[j]=='}') {
+                tempstr key = tempstr()<<'$'<<strptr(text.elems+(i+2),j-(i+2));// '$' + variable name
+                replvar = algo_lib::ind_replvar_Find(R,key);
+                if (replvar) {
+                    j++;// skip '}'
+                    break;
+                }
+            } else if (text.elems[j]=='$') {
+                break;// exit on start of next substitution
             }
-            break;
+        }
+    } else { // scan character-by-character
+        for (; j<=text.n_elems; j++) {
+            replvar = algo_lib::ind_replvar_Find(R,strptr(text.elems+i, j-i));
+            if (replvar) {
+                break;
+            }
+        }
+        if (j > text.n_elems) {
+            j=i+1;
         }
     }
-    if (LIKELY(ok)) {
-        i=j;
+    if (replvar) {
+        ret=replvar->value;
+        if (ret.n_elems==0 && R.eatcomma) {
+            j = EatComma(text,j);
+        }
     } else {
         if (R.fatal) {
             tempstr msg;
@@ -537,22 +577,18 @@ static strptr ScanVar(algo_lib::Replscope &R, strptr text, int &i) {
                <<Keyval("comment","substitution pattern not found");
             FatalErrorExit(Zeroterm(msg));
         } else {
-            ret=strptr(text.elems+i, 1);
-            i++; // just skip $
+            // leave text intact
+            ret=strptr(text.elems+i, j-i);
         }
     }
+    i=j;// whatever we grabbed so far
     return ret;
 }
 
 // -----------------------------------------------------------------------------
 
-// Append TEXT to OUT, performing $-substitution
-// There are no separators between $-parameters and rest
-// of the text. The earliest possible match is replaced.
-//
-// EOL      append end-of-line (default)
-// SCOPE    if not NULL, replace any $-string in TEXT with corresponding value.
-//            it is an error if any $-string does not expand.
+// Append TEXT to OUT, performing $-substitution using variables from SCOPE (must be non-NULL)
+// if EOL is set, then new line is appended at the end.
 void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol DFLTVAL(true)) {
     int i=0;
     int lim = text.n_elems;
@@ -579,13 +615,13 @@ void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, 
 // -----------------------------------------------------------------------------
 
 // Enable comma-eating (default true)
-void algo_lib::SetEatComma(algo_lib::Replscope &scope, bool enable) {
+void algo_lib::eatcomma_Set(algo_lib::Replscope &scope, bool enable) {
     scope.eatcomma=enable;
 }
 
 // Enable strict mode (default true -- any failed substitution kills process)
 // If strict mode is off, failed substitution acts as if there was no substitution
-void algo_lib::SetStrictMode(algo_lib::Replscope &scope, bool enable) {
+void algo_lib::fatal_Set(algo_lib::Replscope &scope, bool enable) {
     scope.fatal=enable;
 }
 
@@ -1358,48 +1394,6 @@ i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) {
         if (a[i] != b[i]) return a[i]-b[i];
     }
     return i32_Cmp(a.n_elems, b.n_elems);
-}
-
-// -----------------------------------------------------------------------------
-
-bool algo::strptr_Lt(algo::strptr a, algo::strptr b) {
-    int n = i32_Min(a.n_elems,b.n_elems);
-    for (int i=0; i<n; i++) {
-        if (a[i] != b[i]) return a[i]<b[i];
-    }
-    return a.n_elems < b.n_elems;
-}
-
-// -----------------------------------------------------------------------------
-
-// Compare two strings for equality, case-sensitively
-bool algo::strptr_Eq(algo::strptr a, algo::strptr b) {
-    int lim = a.n_elems;
-    if (lim != b.n_elems) {
-        return false;
-    }
-    int i=0;
-    // 8 bytes at a time
-    while (i+ssizeof(u64) <= lim) {
-        if (*(u64*)(a.elems+i) != *(u64*)(b.elems+i)) {
-            return false;
-        }
-        i += ssizeof(u64);
-    }
-    // another 4
-    if (i+ssizeof(u32) <= lim) {
-        if (*(u32*)(a.elems+i) != *(u32*)(b.elems+i)) {
-            return false;
-        }
-        i += ssizeof(u32);
-    }
-    // the rest
-    for (; i<lim; i++) {
-        if (a[i] != b[i]) {
-            return false;
-        }
-    }
-    return true;
 }
 
 // -----------------------------------------------------------------------------

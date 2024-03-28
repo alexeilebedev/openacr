@@ -25,36 +25,165 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
-#include "include/gen/dmmeta_gen.h"
-#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/amcdb_gen.h"
+#include "include/gen/amcdb_gen.inl.h"
+#include "include/gen/dmmeta_gen.h"
+#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 //#pragma endinclude
 namespace lib_ctype { // gen:ns_print_proto
+    // func:lib_ctype.FDb.fconst.InputMaybe
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.ftuple.InputMaybe
     static bool          ftuple_InputMaybe(dmmeta::Ftuple &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.cdflt.InputMaybe
     static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:lib_ctype.FDb._db.InitReflection
     static void          InitReflection();
+    // func:lib_ctype.FDb.cfmt.InputMaybe
     static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.cppfunc.InputMaybe
     static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.substr.InputMaybe
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.unstablefld.InputMaybe
     static bool          unstablefld_InputMaybe(dev::Unstablefld &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.bltin.InputMaybe
+    static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:lib_ctype.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_ctype.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_ctype...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
+
+// --- lib_ctype.Cmdline..ReadFieldMaybe
+bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    lib_ctype::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case lib_ctype_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- lib_ctype.Cmdline..ReadTupleMaybe
+// Read fields of lib_ctype::Cmdline from attributes of ascii tuple TUPLE
+bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = Cmdline_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- lib_ctype.Cmdline..PrintArgv
+// print command-line args of lib_ctype::Cmdline to string  -- cprint:lib_ctype.Cmdline.Argv
+void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring &str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)row;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- lib_ctype.Cmdline..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr lib_ctype::Cmdline_ToCmdline(lib_ctype::Cmdline& row) {
+    tempstr ret;
+    ret << "bin/Cmdline ";
+    Cmdline_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- lib_ctype.Cmdline..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case lib_ctype_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    (void)out_dflt;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- lib_ctype.FBltin.base.CopyOut
+// Copy fields out of row
+void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) {
+    out.ctype = row.ctype;
+    out.likeu64 = row.likeu64;
+    out.bigendok = row.bigendok;
+    out.issigned = row.issigned;
+    out.comment = row.comment;
+}
+
+// --- lib_ctype.FBltin.base.CopyIn
+// Copy fields in to row
+void lib_ctype::bltin_CopyIn(lib_ctype::FBltin &row, amcdb::Bltin &in) {
+    row.ctype = in.ctype;
+    row.likeu64 = in.likeu64;
+    row.bigendok = in.bigendok;
+    row.issigned = in.issigned;
+    row.comment = in.comment;
+}
+
+// --- lib_ctype.FBltin..Uninit
+void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& bltin) {
+    lib_ctype::FBltin &row = bltin; (void)row;
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+    if (p_ctype)  {
+        c_bltin_Remove(*p_ctype, row);// remove bltin from index c_bltin
+    }
+}
 
 // --- lib_ctype.FCdflt.base.CopyOut
 // Copy fields out of row
@@ -112,8 +241,8 @@ void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- lib_ctype.FCfmt.ctype.Get
-algo::Smallstr50 lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
-    algo::Smallstr50 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
+algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
+    algo::Smallstr100 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
     return ret;
 }
 
@@ -144,8 +273,9 @@ void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& cfmt) {
 }
 
 // --- lib_ctype.FCfmt..Print
-// print string representation of lib_ctype::FCfmt to string LHS, no header -- cprint:lib_ctype.FCfmt.String
-void lib_ctype::FCfmt_Print(lib_ctype::FCfmt & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.FCfmt.String  printfmt:Tuple
+void lib_ctype::FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.FCfmt";
 
@@ -179,6 +309,8 @@ void lib_ctype::FCfmt_Print(lib_ctype::FCfmt & row, algo::cstring &str) {
 void lib_ctype::cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) {
     out.field = row.field;
     out.expr = row.expr;
+    out.print = row.print;
+    out.set = row.set;
 }
 
 // --- lib_ctype.FCppfunc.base.CopyIn
@@ -186,6 +318,8 @@ void lib_ctype::cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) 
 void lib_ctype::cppfunc_CopyIn(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &in) {
     row.field = in.field;
     row.expr = in.expr;
+    row.print = in.print;
+    row.set = in.set;
 }
 
 // --- lib_ctype.FCppfunc..Uninit
@@ -218,8 +352,8 @@ algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FCtype& ctype) {
 }
 
 // --- lib_ctype.FCtype.name.Get
-algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -364,8 +498,9 @@ void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& ctype) {
 }
 
 // --- lib_ctype.trace..Print
-// print string representation of lib_ctype::trace to string LHS, no header -- cprint:lib_ctype.trace.String
-void lib_ctype::trace_Print(lib_ctype::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.trace.String  printfmt:Tuple
+void lib_ctype::trace_Print(lib_ctype::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1100,7 +1235,7 @@ bool lib_ctype::ctype_XrefMaybe(lib_ctype::FCtype &row) {
 // --- lib_ctype.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 lib_ctype::FCtype* lib_ctype::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     lib_ctype::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     lib_ctype::FCtype* ret=NULL;
     do {
@@ -1143,7 +1278,7 @@ bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (lib_ctype::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         lib_ctype::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             lib_ctype::FCtype* ret = *prev;
@@ -1169,7 +1304,7 @@ bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (lib_ctype::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         lib_ctype::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1206,7 +1341,7 @@ void lib_ctype::ind_ctype_Reserve(int n) {
             while (elem) {
                 lib_ctype::FCtype &row        = *elem;
                 lib_ctype::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1558,7 +1693,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'82201368d54da2ba1cbd348f2d2f1f3e9da957fe'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'4a7d003bc87cf109b94b2598d6297eda93c53aa1'");
 }
 
 // --- lib_ctype.FDb._db.StaticCheck
@@ -1634,6 +1769,12 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && unstablefld_InputMaybe(elem);
             break;
         }
+        case lib_ctype_TableId_amcdb_Bltin: { // finput:lib_ctype.FDb.bltin
+            amcdb::Bltin elem;
+            retval = amcdb::Bltin_ReadStrptrMaybe(elem, str);
+            retval = retval && bltin_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -1663,6 +1804,7 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -2293,6 +2435,118 @@ bool lib_ctype::unstablefld_XrefMaybe(lib_ctype::FUnstablefld &row) {
     return retval;
 }
 
+// --- lib_ctype.FDb.bltin.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+lib_ctype::FBltin& lib_ctype::bltin_Alloc() {
+    lib_ctype::FBltin* row = bltin_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.bltin  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_ctype.FDb.bltin.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+lib_ctype::FBltin* lib_ctype::bltin_AllocMaybe() {
+    lib_ctype::FBltin *row = (lib_ctype::FBltin*)bltin_AllocMem();
+    if (row) {
+        new (row) lib_ctype::FBltin; // call constructor
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.bltin.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+lib_ctype::FBltin* lib_ctype::bltin_InsertMaybe(const amcdb::Bltin &value) {
+    lib_ctype::FBltin *row = &bltin_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    bltin_CopyIn(*row,const_cast<amcdb::Bltin&>(value));
+    bool ok = bltin_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        bltin_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.bltin.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* lib_ctype::bltin_AllocMem() {
+    u64 new_nelems     = _db.bltin_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    lib_ctype::FBltin*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.bltin_lary[bsr];
+        if (!lev) {
+            lev=(lib_ctype::FBltin*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FBltin) * (u64(1)<<bsr));
+            _db.bltin_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.bltin_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- lib_ctype.FDb.bltin.RemoveAll
+// Remove all elements from Lary
+void lib_ctype::bltin_RemoveAll() {
+    for (u64 n = _db.bltin_n; n>0; ) {
+        n--;
+        bltin_qFind(u64(n)).~FBltin(); // destroy last element
+        _db.bltin_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.bltin.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void lib_ctype::bltin_RemoveLast() {
+    u64 n = _db.bltin_n;
+    if (n > 0) {
+        n -= 1;
+        bltin_qFind(u64(n)).~FBltin();
+        _db.bltin_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.bltin.InputMaybe
+static bool lib_ctype::bltin_InputMaybe(amcdb::Bltin &elem) {
+    bool retval = true;
+    retval = bltin_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- lib_ctype.FDb.bltin.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool lib_ctype::bltin_XrefMaybe(lib_ctype::FBltin &row) {
+    bool retval = true;
+    (void)row;
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "lib_ctype.bad_xref  index:lib_ctype.FDb.ind_ctype" << Keyval("key", row.ctype);
+        return false;
+    }
+    // insert bltin into index c_bltin
+    if (true) { // user-defined insert condition
+        bool success = c_bltin_InsertMaybe(*p_ctype, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "lib_ctype.duplicate_key  xref:lib_ctype.FCtype.c_bltin"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- lib_ctype.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr lib_ctype::trace_RowidFind(int t) {
@@ -2469,6 +2723,17 @@ void lib_ctype::FDb_Init() {
         _db.unstablefld_lary[i]  = unstablefld_first;
         unstablefld_first    += 1ULL<<i;
     }
+    // initialize LAry bltin (lib_ctype.FDb.bltin)
+    _db.bltin_n = 0;
+    memset(_db.bltin_lary, 0, sizeof(_db.bltin_lary)); // zero out all level pointers
+    lib_ctype::FBltin* bltin_first = (lib_ctype::FBltin*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FBltin) * (u64(1)<<4));
+    if (!bltin_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.bltin_lary[i]  = bltin_first;
+        bltin_first    += 1ULL<<i;
+    }
 
     lib_ctype::InitReflection();
 }
@@ -2476,6 +2741,9 @@ void lib_ctype::FDb_Init() {
 // --- lib_ctype.FDb..Uninit
 void lib_ctype::FDb_Uninit() {
     lib_ctype::FDb &row = _db; (void)row;
+
+    // lib_ctype.FDb.bltin.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // lib_ctype.FDb.unstablefld.Uninit (Lary)  //
     // skip destruction in global scope
@@ -2566,8 +2834,9 @@ void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& fconst) {
 }
 
 // --- lib_ctype.FFconst..Print
-// print string representation of lib_ctype::FFconst to string LHS, no header -- cprint:lib_ctype.FFconst.String
-void lib_ctype::FFconst_Print(lib_ctype::FFconst & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.FFconst.String  printfmt:Tuple
+void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.FFconst";
 
@@ -2605,8 +2874,8 @@ void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
 }
 
 // --- lib_ctype.FField.ctype.Get
-algo::Smallstr50 lib_ctype::ctype_Get(lib_ctype::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -2794,15 +3063,16 @@ void lib_ctype::FField_Uninit(lib_ctype::FField& field) {
 }
 
 // --- lib_ctype.FField..Print
-// print string representation of lib_ctype::FField to string LHS, no header -- cprint:lib_ctype.FField.String
-void lib_ctype::FField_Print(lib_ctype::FField & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.FField.String  printfmt:Tuple
+void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.FField";
 
     algo::Smallstr100_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
-    algo::Smallstr50_Print(row.arg, temp);
+    algo::Smallstr100_Print(row.arg, temp);
     PrintAttrSpaceReset(str,"arg", temp);
 
     algo::Smallstr50_Print(row.reftype, temp);
@@ -2958,6 +3228,7 @@ void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) {
 const char* lib_ctype::value_ToCstr(const lib_ctype::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case lib_ctype_FieldId_in          : ret = "in";  break;
         case lib_ctype_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -2982,6 +3253,14 @@ void lib_ctype::value_Print(const lib_ctype::FieldId& parent, algo::cstring &lhs
 bool lib_ctype::value_SetStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 2: {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
+                case LE_STR2('i','n'): {
+                    value_SetEnum(parent,lib_ctype_FieldId_in); ret = true; break;
+                }
+            }
+            break;
+        }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
@@ -3022,8 +3301,9 @@ bool lib_ctype::FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr
 }
 
 // --- lib_ctype.FieldId..Print
-// print string representation of lib_ctype::FieldId to string LHS, no header -- cprint:lib_ctype.FieldId.String
-void lib_ctype::FieldId_Print(lib_ctype::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.FieldId.String  printfmt:Raw
+void lib_ctype::FieldId_Print(lib_ctype::FieldId& row, algo::cstring& str) {
     lib_ctype::value_Print(row, str);
 }
 
@@ -3033,6 +3313,7 @@ void lib_ctype::FieldId_Print(lib_ctype::FieldId & row, algo::cstring &str) {
 const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case lib_ctype_TableId_amcdb_Bltin : ret = "amcdb.Bltin";  break;
         case lib_ctype_TableId_dmmeta_Cdflt: ret = "dmmeta.Cdflt";  break;
         case lib_ctype_TableId_dmmeta_Cfmt : ret = "dmmeta.Cfmt";  break;
         case lib_ctype_TableId_dmmeta_Cppfunc: ret = "dmmeta.Cppfunc";  break;
@@ -3068,6 +3349,14 @@ bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rh
     switch (elems_N(rhs)) {
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','c','d','b','.','B','l'): {
+                    if (memcmp(rhs.elems+8,"tin",3)==0) { value_SetEnum(parent,lib_ctype_TableId_amcdb_Bltin); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','c','d','b','.','b','l'): {
+                    if (memcmp(rhs.elems+8,"tin",3)==0) { value_SetEnum(parent,lib_ctype_TableId_amcdb_bltin); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"fmt",3)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_Cfmt); ret = true; break; }
                     break;
@@ -3191,8 +3480,9 @@ bool lib_ctype::TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr
 }
 
 // --- lib_ctype.TableId..Print
-// print string representation of lib_ctype::TableId to string LHS, no header -- cprint:lib_ctype.TableId.String
-void lib_ctype::TableId_Print(lib_ctype::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.TableId.String  printfmt:Raw
+void lib_ctype::TableId_Print(lib_ctype::TableId& row, algo::cstring& str) {
     lib_ctype::value_Print(row, str);
 }
 

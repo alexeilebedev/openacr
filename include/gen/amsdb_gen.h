@@ -64,32 +64,43 @@ struct FieldId { // amsdb.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:amsdb.FieldId.value.GetEnum
 amsdb_FieldIdEnum    value_GetEnum(const amsdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:amsdb.FieldId.value.SetEnum
 void                 value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:amsdb.FieldId.value.ToCstr
 const char*          value_ToCstr(const amsdb::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:amsdb.FieldId.value.Print
 void                 value_Print(const amsdb::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:amsdb.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:amsdb.FieldId.value.SetStrptr
 void                 value_SetStrptr(amsdb::FieldId& parent, algo::strptr rhs, amsdb_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:amsdb.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of amsdb::FieldId from an ascii string.
 // The format of the string is the format of the amsdb::FieldId's only field
+// func:amsdb.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amsdb.FieldId..Init
 void                 FieldId_Init(amsdb::FieldId& parent);
-// print string representation of amsdb::FieldId to string LHS, no header -- cprint:amsdb.FieldId.String
-void                 FieldId_Print(amsdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amsdb.FieldId.String  printfmt:Raw
+// func:amsdb.FieldId..Print
+void                 FieldId_Print(amsdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amsdb.ProcType
 struct ProcType { // amsdb.ProcType
@@ -99,14 +110,19 @@ struct ProcType { // amsdb.ProcType
     ProcType();
 };
 
-bool                 ProcType_ReadFieldMaybe(amsdb::ProcType &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amsdb.ProcType..ReadFieldMaybe
+bool                 ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amsdb::ProcType from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amsdb.ProcType..ReadStrptrMaybe
 bool                 ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:amsdb.ProcType..Init
 void                 ProcType_Init(amsdb::ProcType& parent);
-// print string representation of amsdb::ProcType to string LHS, no header -- cprint:amsdb.ProcType.String
-void                 ProcType_Print(amsdb::ProcType & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amsdb.ProcType.String  printfmt:Tuple
+// func:amsdb.ProcType..Print
+void                 ProcType_Print(amsdb::ProcType& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amsdb.StreamType
 struct StreamType { // amsdb.StreamType
@@ -116,12 +132,16 @@ struct StreamType { // amsdb.StreamType
     StreamType();
 };
 
-bool                 StreamType_ReadFieldMaybe(amsdb::StreamType &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:amsdb.StreamType..ReadFieldMaybe
+bool                 StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amsdb::StreamType from an ascii string.
 // The format of the string is an ssim Tuple
+// func:amsdb.StreamType..ReadStrptrMaybe
 bool                 StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str);
-// print string representation of amsdb::StreamType to string LHS, no header -- cprint:amsdb.StreamType.String
-void                 StreamType_Print(amsdb::StreamType & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amsdb.StreamType.String  printfmt:Tuple
+// func:amsdb.StreamType..Print
+void                 StreamType_Print(amsdb::StreamType& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amsdb { // gen:ns_func
 } // gen:ns_func

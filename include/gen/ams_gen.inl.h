@@ -55,13 +55,13 @@ inline ams::MsgHeader& ams::Castbase(ams::AlarmSyncMsg& parent) {
 
 // --- ams.AlarmSyncMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::AlarmSyncMsg& row) {
-    return i32(const_cast<ams::AlarmSyncMsg&>(row).length);
+inline i32 ams::AlarmSyncMsg_GetMsgLength(const ams::AlarmSyncMsg& parent) {
+    return i32(const_cast<ams::AlarmSyncMsg&>(parent).length);
 }
 
 // --- ams.AlarmSyncMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::AlarmSyncMsg& row) {
+inline algo::memptr ams::AlarmSyncMsg_GetMsgMemptr(const ams::AlarmSyncMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::AlarmSyncMsg&>(row).length));
 }
 
@@ -347,13 +347,13 @@ inline ams::MsgHeader& ams::Castbase(ams::DfltStream& parent) {
 
 // --- ams.DfltStream..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::DfltStream& row) {
-    return i32(const_cast<ams::DfltStream&>(row).length);
+inline i32 ams::DfltStream_GetMsgLength(const ams::DfltStream& parent) {
+    return i32(const_cast<ams::DfltStream&>(parent).length);
 }
 
 // --- ams.DfltStream..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::DfltStream& row) {
+inline algo::memptr ams::DfltStream_GetMsgMemptr(const ams::DfltStream& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::DfltStream&>(row).length));
 }
 
@@ -392,13 +392,13 @@ inline ams::MsgHeader& ams::Castbase(ams::DumpStreamTableMsg& parent) {
 
 // --- ams.DumpStreamTableMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::DumpStreamTableMsg& row) {
-    return i32(const_cast<ams::DumpStreamTableMsg&>(row).length);
+inline i32 ams::DumpStreamTableMsg_GetMsgLength(const ams::DumpStreamTableMsg& parent) {
+    return i32(const_cast<ams::DumpStreamTableMsg&>(parent).length);
 }
 
 // --- ams.DumpStreamTableMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::DumpStreamTableMsg& row) {
+inline algo::memptr ams::DumpStreamTableMsg_GetMsgMemptr(const ams::DumpStreamTableMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::DumpStreamTableMsg&>(row).length));
 }
 
@@ -468,13 +468,13 @@ inline char& ams::ExpectMsg_text_curs_Access(ExpectMsg_text_curs &curs) {
 
 // --- ams.ExpectMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::ExpectMsg& row) {
-    return i32(const_cast<ams::ExpectMsg&>(row).length);
+inline i32 ams::ExpectMsg_GetMsgLength(const ams::ExpectMsg& parent) {
+    return i32(const_cast<ams::ExpectMsg&>(parent).length);
 }
 
 // --- ams.ExpectMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::ExpectMsg& row) {
+inline algo::memptr ams::ExpectMsg_GetMsgMemptr(const ams::ExpectMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::ExpectMsg&>(row).length));
 }
 
@@ -545,13 +545,13 @@ inline ams::MsgHeader& ams::Castbase(ams::HeartbeatMsg& parent) {
 
 // --- ams.HeartbeatMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::HeartbeatMsg& row) {
-    return i32(const_cast<ams::HeartbeatMsg&>(row).length);
+inline i32 ams::HeartbeatMsg_GetMsgLength(const ams::HeartbeatMsg& parent) {
+    return i32(const_cast<ams::HeartbeatMsg&>(parent).length);
 }
 
 // --- ams.HeartbeatMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::HeartbeatMsg& row) {
+inline algo::memptr ams::HeartbeatMsg_GetMsgMemptr(const ams::HeartbeatMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::HeartbeatMsg&>(row).length));
 }
 
@@ -621,13 +621,13 @@ inline char& ams::InputLineMsg_payload_curs_Access(InputLineMsg_payload_curs &cu
 
 // --- ams.InputLineMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::InputLineMsg& row) {
-    return i32(const_cast<ams::InputLineMsg&>(row).length);
+inline i32 ams::InputLineMsg_GetMsgLength(const ams::InputLineMsg& parent) {
+    return i32(const_cast<ams::InputLineMsg&>(parent).length);
 }
 
 // --- ams.InputLineMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::InputLineMsg& row) {
+inline algo::memptr ams::InputLineMsg_GetMsgMemptr(const ams::InputLineMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::InputLineMsg&>(row).length));
 }
 
@@ -705,13 +705,13 @@ inline char& ams::LogMsg_text_curs_Access(LogMsg_text_curs &curs) {
 
 // --- ams.LogMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::LogMsg& row) {
-    return i32(const_cast<ams::LogMsg&>(row).length);
+inline i32 ams::LogMsg_GetMsgLength(const ams::LogMsg& parent) {
+    return i32(const_cast<ams::LogMsg&>(parent).length);
 }
 
 // --- ams.LogMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::LogMsg& row) {
+inline algo::memptr ams::LogMsg_GetMsgMemptr(const ams::LogMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::LogMsg&>(row).length));
 }
 
@@ -857,13 +857,13 @@ inline u8& ams::MsgBlock_messages_curs_Access(MsgBlock_messages_curs &curs) {
 
 // --- ams.MsgBlock..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::MsgBlock& row) {
-    return i32(const_cast<ams::MsgBlock&>(row).length);
+inline i32 ams::MsgBlock_GetMsgLength(const ams::MsgBlock& parent) {
+    return i32(const_cast<ams::MsgBlock&>(parent).length);
 }
 
 // --- ams.MsgBlock..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::MsgBlock& row) {
+inline algo::memptr ams::MsgBlock_GetMsgMemptr(const ams::MsgBlock& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::MsgBlock&>(row).length));
 }
 
@@ -901,13 +901,13 @@ inline void ams::type_SetEnum(ams::MsgHeader& data, ams_MsgHeader_type_Enum rhs)
 
 // --- ams.MsgHeader..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::MsgHeader& row) {
-    return i32(const_cast<ams::MsgHeader&>(row).length);
+inline i32 ams::MsgHeader_GetMsgLength(const ams::MsgHeader& parent) {
+    return i32(const_cast<ams::MsgHeader&>(parent).length);
 }
 
 // --- ams.MsgHeader..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::MsgHeader& row) {
+inline algo::memptr ams::MsgHeader_GetMsgMemptr(const ams::MsgHeader& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::MsgHeader&>(row).length));
 }
 
@@ -1054,13 +1054,13 @@ inline ams::MsgHeader& ams::Castbase(ams::OpenMsg& parent) {
 
 // --- ams.OpenMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::OpenMsg& row) {
-    return i32(const_cast<ams::OpenMsg&>(row).length);
+inline i32 ams::OpenMsg_GetMsgLength(const ams::OpenMsg& parent) {
+    return i32(const_cast<ams::OpenMsg&>(parent).length);
 }
 
 // --- ams.OpenMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::OpenMsg& row) {
+inline algo::memptr ams::OpenMsg_GetMsgMemptr(const ams::OpenMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::OpenMsg&>(row).length));
 }
 
@@ -1109,13 +1109,13 @@ inline ams::MsgHeader* ams::data_Get(ams::PrlogMsg& parent) {
 
 // --- ams.PrlogMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::PrlogMsg& row) {
-    return i32(const_cast<ams::PrlogMsg&>(row).length);
+inline i32 ams::PrlogMsg_GetMsgLength(const ams::PrlogMsg& parent) {
+    return i32(const_cast<ams::PrlogMsg&>(parent).length);
 }
 
 // --- ams.PrlogMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::PrlogMsg& row) {
+inline algo::memptr ams::PrlogMsg_GetMsgMemptr(const ams::PrlogMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::PrlogMsg&>(row).length));
 }
 
@@ -1154,13 +1154,13 @@ inline ams::MsgHeader& ams::Castbase(ams::ProcAddMsg& parent) {
 
 // --- ams.ProcAddMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::ProcAddMsg& row) {
-    return i32(const_cast<ams::ProcAddMsg&>(row).length);
+inline i32 ams::ProcAddMsg_GetMsgLength(const ams::ProcAddMsg& parent) {
+    return i32(const_cast<ams::ProcAddMsg&>(parent).length);
 }
 
 // --- ams.ProcAddMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::ProcAddMsg& row) {
+inline algo::memptr ams::ProcAddMsg_GetMsgMemptr(const ams::ProcAddMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::ProcAddMsg&>(row).length));
 }
 
@@ -1199,13 +1199,13 @@ inline ams::MsgHeader& ams::Castbase(ams::ProcRemoveMsg& parent) {
 
 // --- ams.ProcRemoveMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::ProcRemoveMsg& row) {
-    return i32(const_cast<ams::ProcRemoveMsg&>(row).length);
+inline i32 ams::ProcRemoveMsg_GetMsgLength(const ams::ProcRemoveMsg& parent) {
+    return i32(const_cast<ams::ProcRemoveMsg&>(parent).length);
 }
 
 // --- ams.ProcRemoveMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::ProcRemoveMsg& row) {
+inline algo::memptr ams::ProcRemoveMsg_GetMsgMemptr(const ams::ProcRemoveMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::ProcRemoveMsg&>(row).length));
 }
 
@@ -1284,13 +1284,13 @@ inline ams::MsgHeader* ams::payload_Get(ams::Seqmsg& parent) {
 
 // --- ams.Seqmsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::Seqmsg& row) {
-    return i32(const_cast<ams::Seqmsg&>(row).length);
+inline i32 ams::Seqmsg_GetMsgLength(const ams::Seqmsg& parent) {
+    return i32(const_cast<ams::Seqmsg&>(parent).length);
 }
 
 // --- ams.Seqmsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::Seqmsg& row) {
+inline algo::memptr ams::Seqmsg_GetMsgMemptr(const ams::Seqmsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::Seqmsg&>(row).length));
 }
 
@@ -1364,13 +1364,13 @@ inline ams::MsgHeader* ams::payload_Get(ams::SeqmsgTrace& parent) {
 
 // --- ams.SeqmsgTrace..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::SeqmsgTrace& row) {
-    return i32(const_cast<ams::SeqmsgTrace&>(row).length);
+inline i32 ams::SeqmsgTrace_GetMsgLength(const ams::SeqmsgTrace& parent) {
+    return i32(const_cast<ams::SeqmsgTrace&>(parent).length);
 }
 
 // --- ams.SeqmsgTrace..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::SeqmsgTrace& row) {
+inline algo::memptr ams::SeqmsgTrace_GetMsgMemptr(const ams::SeqmsgTrace& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::SeqmsgTrace&>(row).length));
 }
 
@@ -1542,13 +1542,13 @@ inline ams::MsgHeader& ams::Castbase(ams::StreamHbMsg& parent) {
 
 // --- ams.StreamHbMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::StreamHbMsg& row) {
-    return i32(const_cast<ams::StreamHbMsg&>(row).length);
+inline i32 ams::StreamHbMsg_GetMsgLength(const ams::StreamHbMsg& parent) {
+    return i32(const_cast<ams::StreamHbMsg&>(parent).length);
 }
 
 // --- ams.StreamHbMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::StreamHbMsg& row) {
+inline algo::memptr ams::StreamHbMsg_GetMsgMemptr(const ams::StreamHbMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::StreamHbMsg&>(row).length));
 }
 
@@ -1582,13 +1582,13 @@ inline ams::MsgHeader& ams::Castbase(ams::TerminateMsg& parent) {
 
 // --- ams.TerminateMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TerminateMsg& row) {
-    return i32(const_cast<ams::TerminateMsg&>(row).length);
+inline i32 ams::TerminateMsg_GetMsgLength(const ams::TerminateMsg& parent) {
+    return i32(const_cast<ams::TerminateMsg&>(parent).length);
 }
 
 // --- ams.TerminateMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TerminateMsg& row) {
+inline algo::memptr ams::TerminateMsg_GetMsgMemptr(const ams::TerminateMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::TerminateMsg&>(row).length));
 }
 
@@ -1668,13 +1668,13 @@ inline u64& ams::Trace2Msg_data_curs_Access(Trace2Msg_data_curs &curs) {
 
 // --- ams.Trace2Msg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::Trace2Msg& row) {
-    return i32(const_cast<ams::Trace2Msg&>(row).length);
+inline i32 ams::Trace2Msg_GetMsgLength(const ams::Trace2Msg& parent) {
+    return i32(const_cast<ams::Trace2Msg&>(parent).length);
 }
 
 // --- ams.Trace2Msg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::Trace2Msg& row) {
+inline algo::memptr ams::Trace2Msg_GetMsgMemptr(const ams::Trace2Msg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::Trace2Msg&>(row).length));
 }
 
@@ -1757,13 +1757,13 @@ inline char& ams::TraceInfo2Msg_data_curs_Access(TraceInfo2Msg_data_curs &curs) 
 
 // --- ams.TraceInfo2Msg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceInfo2Msg& row) {
-    return i32(const_cast<ams::TraceInfo2Msg&>(row).length);
+inline i32 ams::TraceInfo2Msg_GetMsgLength(const ams::TraceInfo2Msg& parent) {
+    return i32(const_cast<ams::TraceInfo2Msg&>(parent).length);
 }
 
 // --- ams.TraceInfo2Msg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceInfo2Msg& row) {
+inline algo::memptr ams::TraceInfo2Msg_GetMsgMemptr(const ams::TraceInfo2Msg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::TraceInfo2Msg&>(row).length));
 }
 
@@ -1845,13 +1845,13 @@ inline char& ams::TraceInfoMsg_data_curs_Access(TraceInfoMsg_data_curs &curs) {
 
 // --- ams.TraceInfoMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceInfoMsg& row) {
-    return i32(const_cast<ams::TraceInfoMsg&>(row).length);
+inline i32 ams::TraceInfoMsg_GetMsgLength(const ams::TraceInfoMsg& parent) {
+    return i32(const_cast<ams::TraceInfoMsg&>(parent).length);
 }
 
 // --- ams.TraceInfoMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceInfoMsg& row) {
+inline algo::memptr ams::TraceInfoMsg_GetMsgMemptr(const ams::TraceInfoMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::TraceInfoMsg&>(row).length));
 }
 
@@ -1930,13 +1930,13 @@ inline u64& ams::TraceMsg_data_curs_Access(TraceMsg_data_curs &curs) {
 
 // --- ams.TraceMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceMsg& row) {
-    return i32(const_cast<ams::TraceMsg&>(row).length);
+inline i32 ams::TraceMsg_GetMsgLength(const ams::TraceMsg& parent) {
+    return i32(const_cast<ams::TraceMsg&>(parent).length);
 }
 
 // --- ams.TraceMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceMsg& row) {
+inline algo::memptr ams::TraceMsg_GetMsgMemptr(const ams::TraceMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::TraceMsg&>(row).length));
 }
 
@@ -2006,13 +2006,13 @@ inline u8& ams::UdpFrame_payload_curs_Access(UdpFrame_payload_curs &curs) {
 
 // --- ams.UdpFrame..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::UdpFrame& row) {
-    return i32(const_cast<ams::UdpFrame&>(row).length);
+inline i32 ams::UdpFrame_GetMsgLength(const ams::UdpFrame& parent) {
+    return i32(const_cast<ams::UdpFrame&>(parent).length);
 }
 
 // --- ams.UdpFrame..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::UdpFrame& row) {
+inline algo::memptr ams::UdpFrame_GetMsgMemptr(const ams::UdpFrame& row) {
     return algo::memptr((u8*)&row, i32(const_cast<ams::UdpFrame&>(row).length));
 }
 

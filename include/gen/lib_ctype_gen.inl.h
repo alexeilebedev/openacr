@@ -23,10 +23,37 @@
 
 
 #pragma once
-#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/amcdb_gen.inl.h"
+#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
+inline lib_ctype::Cmdline::Cmdline() {
+    lib_ctype::Cmdline_Init(*this);
+}
+
+
+// --- lib_ctype.Cmdline..Init
+// Set all fields to initial values.
+inline void lib_ctype::Cmdline_Init(lib_ctype::Cmdline& parent) {
+    parent.in = algo::strptr("data");
+}
+inline lib_ctype::FBltin::FBltin() {
+    lib_ctype::FBltin_Init(*this);
+}
+
+inline lib_ctype::FBltin::~FBltin() {
+    lib_ctype::FBltin_Uninit(*this);
+}
+
+
+// --- lib_ctype.FBltin..Init
+// Set all fields to initial values.
+inline void lib_ctype::FBltin_Init(lib_ctype::FBltin& bltin) {
+    bltin.likeu64 = bool(false);
+    bltin.bigendok = bool(false);
+    bltin.issigned = bool(false);
+}
 inline lib_ctype::FCdflt::FCdflt() {
 }
 
@@ -43,12 +70,20 @@ inline lib_ctype::FCfmt::~FCfmt() {
 }
 
 inline lib_ctype::FCppfunc::FCppfunc() {
+    lib_ctype::FCppfunc_Init(*this);
 }
 
 inline lib_ctype::FCppfunc::~FCppfunc() {
     lib_ctype::FCppfunc_Uninit(*this);
 }
 
+
+// --- lib_ctype.FCppfunc..Init
+// Set all fields to initial values.
+inline void lib_ctype::FCppfunc_Init(lib_ctype::FCppfunc& cppfunc) {
+    cppfunc.print = bool(false);
+    cppfunc.set = bool(false);
+}
 inline lib_ctype::FCtype::FCtype() {
     lib_ctype::FCtype_Init(*this);
 }
@@ -194,6 +229,26 @@ inline lib_ctype::FCfmt& lib_ctype::c_cfmt_qLast(lib_ctype::FCtype& ctype) {
     return *ctype.c_cfmt_elems[ctype.c_cfmt_n-1];
 }
 
+// --- lib_ctype.FCtype.c_bltin.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ctype::c_bltin_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FBltin& row) {
+    lib_ctype::FBltin* ptr = ctype.c_bltin;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_bltin = &row;
+    }
+    return retval;
+}
+
+// --- lib_ctype.FCtype.c_bltin.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ctype::c_bltin_Remove(lib_ctype::FCtype& ctype, lib_ctype::FBltin& row) {
+    lib_ctype::FBltin *ptr = ctype.c_bltin;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_bltin = NULL;
+    }
+}
+
 // --- lib_ctype.FCtype.c_field_curs.Reset
 inline void lib_ctype::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -254,6 +309,7 @@ inline void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
     ctype.c_cfmt_elems = NULL; // (lib_ctype.FCtype.c_cfmt)
     ctype.c_cfmt_n = 0; // (lib_ctype.FCtype.c_cfmt)
     ctype.c_cfmt_max = 0; // (lib_ctype.FCtype.c_cfmt)
+    ctype.c_bltin = NULL;
     ctype.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
 }
 inline lib_ctype::trace::trace() {
@@ -752,6 +808,48 @@ inline lib_ctype::FUnstablefld& lib_ctype::unstablefld_qFind(u64 t) {
     return _db.unstablefld_lary[bsr][index];
 }
 
+// --- lib_ctype.FDb.bltin.EmptyQ
+// Return true if index is empty
+inline bool lib_ctype::bltin_EmptyQ() {
+    return _db.bltin_n == 0;
+}
+
+// --- lib_ctype.FDb.bltin.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ctype::FBltin* lib_ctype::bltin_Find(u64 t) {
+    lib_ctype::FBltin *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.bltin_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.bltin_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_ctype.FDb.bltin.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ctype::FBltin* lib_ctype::bltin_Last() {
+    return bltin_Find(u64(_db.bltin_n-1));
+}
+
+// --- lib_ctype.FDb.bltin.N
+// Return number of items in the pool
+inline i32 lib_ctype::bltin_N() {
+    return _db.bltin_n;
+}
+
+// --- lib_ctype.FDb.bltin.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ctype::FBltin& lib_ctype::bltin_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.bltin_lary[bsr][index];
+}
+
 // --- lib_ctype.FDb.fconst_curs.Reset
 // cursor points to valid item
 inline void lib_ctype::_db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent) {
@@ -1000,6 +1098,31 @@ inline void lib_ctype::_db_unstablefld_curs_Next(_db_unstablefld_curs &curs) {
 // item access
 inline lib_ctype::FUnstablefld& lib_ctype::_db_unstablefld_curs_Access(_db_unstablefld_curs &curs) {
     return unstablefld_qFind(u64(curs.index));
+}
+
+// --- lib_ctype.FDb.bltin_curs.Reset
+// cursor points to valid item
+inline void lib_ctype::_db_bltin_curs_Reset(_db_bltin_curs &curs, lib_ctype::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_ctype.FDb.bltin_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ctype::_db_bltin_curs_ValidQ(_db_bltin_curs &curs) {
+    return curs.index < _db.bltin_n;
+}
+
+// --- lib_ctype.FDb.bltin_curs.Next
+// proceed to next item
+inline void lib_ctype::_db_bltin_curs_Next(_db_bltin_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ctype.FDb.bltin_curs.Access
+// item access
+inline lib_ctype::FBltin& lib_ctype::_db_bltin_curs_Access(_db_bltin_curs &curs) {
+    return bltin_qFind(u64(curs.index));
 }
 inline lib_ctype::FFconst::FFconst() {
     lib_ctype::FFconst_Init(*this);

@@ -62,7 +62,7 @@ namespace atf_unit { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/acr.cpp
+    // cpp/atf_unit/acr.cpp
     //
 
     // Check selecting a single tuple from file.
@@ -123,13 +123,8 @@ namespace atf_unit { // update-hdr
     // Replace a record. Unspecified attributes revert to defaults.
     // void unittest_acr_Replace1();
 
-    // Test -meta query
-    // -meta loads meta-data from the same source as data, so we can't easily use it on a file,
-    // so for this query we use the default data set instead of good old temp/x.
-    // void unittest_acr_Meta1();
-
     // -------------------------------------------------------------------
-    // cpp/atf/unit/algo_fmt.cpp
+    // cpp/atf_unit/algo_fmt.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_FmtBufDec();
@@ -138,7 +133,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_Base64();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/algo_lib.cpp
+    // cpp/atf_unit/algo_lib.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_PopCnt1();
@@ -238,39 +233,53 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_ExitCode();
     // void unittest_algo_lib_KillRecurse();
 
+    // check that all characters print from memptr, and get parsed
+    // back as a string
+    // void unittest_algo_lib_PrintMemptr();
+    bool Smallstr150_Eq(const algo::Smallstr150 & lhs,const algo::Smallstr150 & rhs);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_algo_lib_SmallstrEq();
+    // void unittest_algo_lib_ReverseBits();
+
     // -------------------------------------------------------------------
-    // cpp/atf/unit/ams.cpp
+    // cpp/atf_unit/ams.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_ams_StreamId();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/bash.cpp
+    // cpp/atf_unit/bash.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_PrintBash();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/charset.cpp
+    // cpp/atf_unit/charset.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Charset();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/fm.cpp
+    // cpp/atf_unit/decimal.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_algo_lib_Decimal();
+
+    // -------------------------------------------------------------------
+    // cpp/atf_unit/fm.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_fm();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/lib_ams.cpp
+    // cpp/atf_unit/lib_ams.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_lib_ams_Test1();
     // void unittest_ams_sendtest();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/lib_exec.cpp
+    // cpp/atf_unit/lib_exec.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_lib_exec_Parallel1();
@@ -279,7 +288,7 @@ namespace atf_unit { // update-hdr
     // void unittest_lib_exec_Dependency();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/lib_json.cpp
+    // cpp/atf_unit/lib_json.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_lib_json_Empty();
@@ -390,25 +399,25 @@ namespace atf_unit { // update-hdr
     // void unittest_lib_json_FmtJson_Object();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/lib_sql.cpp
+    // cpp/atf_unit/lib_sql.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_lib_sql_Main();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/line.cpp
+    // cpp/atf_unit/line.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_FileLine_curs();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/lockfile.cpp
+    // cpp/atf_unit/lockfile.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Lockfile();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/main.cpp
+    // cpp/atf_unit/main.cpp
     //
     void AdjustDebugPath(algo::cstring &path);
 
@@ -432,13 +441,13 @@ namespace atf_unit { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/parsenum.cpp
+    // cpp/atf_unit/parsenum.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_ParseNumber();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/regx.cpp
+    // cpp/atf_unit/regx.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Regx();
@@ -450,7 +459,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_RegxReadTwice2();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/string.cpp
+    // cpp/atf_unit/string.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_SubstringIndex();
@@ -462,7 +471,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_StringSepCurs();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/time.cpp
+    // cpp/atf_unit/time.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_TimeConversion();
@@ -474,7 +483,7 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_TimeConvert();
 
     // -------------------------------------------------------------------
-    // cpp/atf/unit/tuple.cpp
+    // cpp/atf_unit/tuple.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_algo_lib_Tuple1();

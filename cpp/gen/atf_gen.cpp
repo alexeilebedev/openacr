@@ -29,6 +29,7 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace atf { // gen:ns_print_proto
+    // func:atf...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -138,8 +139,9 @@ bool atf::FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- atf.FieldId..Print
-// print string representation of atf::FieldId to string LHS, no header -- cprint:atf.FieldId.String
-void atf::FieldId_Print(atf::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf.FieldId.String  printfmt:Raw
+void atf::FieldId_Print(atf::FieldId& row, algo::cstring& str) {
     atf::value_Print(row, str);
 }
 
@@ -260,22 +262,38 @@ bool atf::Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_st
 }
 
 // --- atf.Testresult..Print
-// print string representation of atf::Testresult to string LHS, no header -- cprint:atf.Testresult.String
-void atf::Testresult_Print(atf::Testresult & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf.Testresult.String  printfmt:Raw
+void atf::Testresult_Print(atf::Testresult& row, algo::cstring& str) {
     atf::value_Print(row, str);
 }
 
 // --- atf.Testrun..ReadFieldMaybe
-bool atf::Testrun_ReadFieldMaybe(atf::Testrun &parent, algo::strptr field, algo::strptr strval) {
+bool atf::Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_FieldId_testrun: retval = algo::Smallstr50_ReadStrptrMaybe(parent.testrun, strval); break;
-        case atf_FieldId_testresult: retval = atf::Testresult_ReadStrptrMaybe(parent.testresult, strval); break;
-        case atf_FieldId_n_step: retval = u64_ReadStrptrMaybe(parent.n_step, strval); break;
-        case atf_FieldId_n_cmp: retval = u64_ReadStrptrMaybe(parent.n_cmp, strval); break;
-        case atf_FieldId_comment: retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval); break;
+        case atf_FieldId_testrun: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.testrun, strval);
+            break;
+        }
+        case atf_FieldId_testresult: {
+            retval = atf::Testresult_ReadStrptrMaybe(parent.testresult, strval);
+            break;
+        }
+        case atf_FieldId_n_step: {
+            retval = u64_ReadStrptrMaybe(parent.n_step, strval);
+            break;
+        }
+        case atf_FieldId_n_cmp: {
+            retval = u64_ReadStrptrMaybe(parent.n_cmp, strval);
+            break;
+        }
+        case atf_FieldId_comment: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -297,8 +315,9 @@ bool atf::Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) {
 }
 
 // --- atf.Testrun..Print
-// print string representation of atf::Testrun to string LHS, no header -- cprint:atf.Testrun.String
-void atf::Testrun_Print(atf::Testrun & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf.Testrun.String  printfmt:Tuple
+void atf::Testrun_Print(atf::Testrun& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf.Testrun";
 

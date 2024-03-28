@@ -59,17 +59,22 @@ const char *ssim2csv_help =
 } // namespace ssim2csv
 namespace ssim2csv { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:ssim2csv.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:ssim2csv.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:ssim2csv.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:ssim2csv...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- ssim2csv.trace..Print
-// print string representation of ssim2csv::trace to string LHS, no header -- cprint:ssim2csv.trace.String
-void ssim2csv::trace_Print(ssim2csv::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2csv.trace.String  printfmt:Tuple
+void ssim2csv::trace_Print(ssim2csv::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2csv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1181,14 +1186,16 @@ void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& expand) {
 }
 
 // --- ssim2csv.FExpand..Print
-// print string representation of ssim2csv::FExpand to string LHS, no header -- cprint:ssim2csv.FExpand.String
-void ssim2csv::FExpand_Print(ssim2csv::FExpand & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2csv.FExpand.String  printfmt:Raw
+void ssim2csv::FExpand_Print(ssim2csv::FExpand& row, algo::cstring& str) {
     algo::cstring_Print(row.expand, str);
 }
 
 // --- ssim2csv.FFlatten..Print
-// print string representation of ssim2csv::FFlatten to string LHS, no header -- cprint:ssim2csv.FFlatten.String
-void ssim2csv::FFlatten_Print(ssim2csv::FFlatten & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2csv.FFlatten.String  printfmt:Tuple
+void ssim2csv::FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2csv.FFlatten";
 
@@ -1206,8 +1213,9 @@ void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& outfile) {
 }
 
 // --- ssim2csv.FOutfile..Print
-// print string representation of ssim2csv::FOutfile to string LHS, no header -- cprint:ssim2csv.FOutfile.String
-void ssim2csv::FOutfile_Print(ssim2csv::FOutfile & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2csv.FOutfile.String  printfmt:Tuple
+void ssim2csv::FOutfile_Print(ssim2csv::FOutfile& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2csv.FOutfile";
 
@@ -1291,8 +1299,9 @@ bool ssim2csv::FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr i
 }
 
 // --- ssim2csv.FieldId..Print
-// print string representation of ssim2csv::FieldId to string LHS, no header -- cprint:ssim2csv.FieldId.String
-void ssim2csv::FieldId_Print(ssim2csv::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ssim2csv.FieldId.String  printfmt:Raw
+void ssim2csv::FieldId_Print(ssim2csv::FieldId& row, algo::cstring& str) {
     ssim2csv::value_Print(row, str);
 }
 

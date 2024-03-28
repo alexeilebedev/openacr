@@ -77,32 +77,43 @@ struct FieldId { // atf.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf.FieldId.value.GetEnum
 atf_FieldIdEnum      value_GetEnum(const atf::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf.FieldId.value.SetEnum
 void                 value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf.FieldId.value.Print
 void                 value_Print(const atf::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf::FieldId& parent, algo::strptr rhs, atf_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf::FieldId from an ascii string.
 // The format of the string is the format of the atf::FieldId's only field
+// func:atf.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf.FieldId..Init
 void                 FieldId_Init(atf::FieldId& parent);
-// print string representation of atf::FieldId to string LHS, no header -- cprint:atf.FieldId.String
-void                 FieldId_Print(atf::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf.FieldId.String  printfmt:Raw
+// func:atf.FieldId..Print
+void                 FieldId_Print(atf::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf.Protocol
 // access: atf.Protocol.proto (Protocol)
@@ -112,6 +123,7 @@ struct Protocol { // atf.Protocol: amc-generated struct for internal purposes
 };
 #pragma pack(pop)
 
+// func:atf.Protocol.proto.StaticCheck
 void                 StaticCheck();
 
 
@@ -125,32 +137,43 @@ struct Testresult { // atf.Testresult
 };
 
 // Get value of field as enum type
+// func:atf.Testresult.value.GetEnum
 atf_TestresultEnum   value_GetEnum(const atf::Testresult& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf.Testresult.value.SetEnum
 void                 value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf.Testresult.value.ToCstr
 const char*          value_ToCstr(const atf::Testresult& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf.Testresult.value.Print
 void                 value_Print(const atf::Testresult& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf.Testresult.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf.Testresult.value.SetStrptr
 void                 value_SetStrptr(atf::Testresult& parent, algo::strptr rhs, atf_TestresultEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf.Testresult.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf::Testresult from an ascii string.
 // The format of the string is the format of the atf::Testresult's only field
+// func:atf.Testresult..ReadStrptrMaybe
 bool                 Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf.Testresult..Init
 void                 Testresult_Init(atf::Testresult& parent);
-// print string representation of atf::Testresult to string LHS, no header -- cprint:atf.Testresult.String
-void                 Testresult_Print(atf::Testresult & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf.Testresult.String  printfmt:Raw
+// func:atf.Testresult..Print
+void                 Testresult_Print(atf::Testresult& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf.Testrun
 struct Testrun { // atf.Testrun
@@ -167,14 +190,19 @@ struct Testrun { // atf.Testrun
     Testrun();
 };
 
-bool                 Testrun_ReadFieldMaybe(atf::Testrun &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf.Testrun..ReadFieldMaybe
+bool                 Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf::Testrun from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf.Testrun..ReadStrptrMaybe
 bool                 Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf.Testrun..Init
 void                 Testrun_Init(atf::Testrun& parent);
-// print string representation of atf::Testrun to string LHS, no header -- cprint:atf.Testrun.String
-void                 Testrun_Print(atf::Testrun & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf.Testrun.String  printfmt:Tuple
+// func:atf.Testrun..Print
+void                 Testrun_Print(atf::Testrun& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf { // gen:ns_func
 } // gen:ns_func

@@ -23,11 +23,23 @@
 
 
 #pragma once
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
+inline lib_exec::Cmdline::Cmdline() {
+    lib_exec::Cmdline_Init(*this);
+}
+
+
+// --- lib_exec.Cmdline..Init
+// Set all fields to initial values.
+inline void lib_exec::Cmdline_Init(lib_exec::Cmdline& parent) {
+    parent.dry_run = bool(false);
+    parent.q = bool(true);
+    parent.maxjobs = i32(8);
+    parent.complooo = bool(false);
+}
 inline lib_exec::trace::trace() {
 }
 

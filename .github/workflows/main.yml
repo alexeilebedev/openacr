@@ -33,4 +33,6 @@ jobs:
           export PATH=bin:$PATH
           git config --global user.email root@localhost
           git config --global user.name runner
-          bin/normalize %
+          bin/normalize
+          bin/atf_ci -cijob:comp
+          bin/atf_ci -cijob:memcheck

@@ -85,37 +85,55 @@ const char *atf_unit_help =
 } // namespace atf_unit
 namespace atf_unit { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
+    // func:atf_unit.Cstr.val.Nextchar
     static int           val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Returns the child that has greater height.
+    // func:atf_unit.FDb.tr_number.TallerChild
     static atf_unit::FNumber* tr_number_TallerChild(atf_unit::FNumber& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
+    // func:atf_unit.FDb.tr_number.Disconnect
     static void          tr_number_Disconnect(atf_unit::FNumber& node) __attribute__((nothrow));
+    // func:atf_unit.FDb.tr_number.ElemLt
     static bool          tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) __attribute__((nothrow));
+    // func:atf_unit.FDb.tr_number.UpdateDepth
     static void          tr_number_updateDepth(atf_unit::FNumber& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
+    // func:atf_unit.FDb.tr_number.Turn
     static void          tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) __attribute__((nothrow));
+    // func:atf_unit.FDb.tr_number.Connect
     static void          tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
+    // func:atf_unit.FDb.unittest.LoadStatic
     static void          unittest_LoadStatic() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:atf_unit.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:atf_unit.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_unit.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Swap values elem_a and elem_b
+    // func:atf_unit.FPerfSort.sorted.Swap
     static void          sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:atf_unit.FPerfSort.sorted.Rotleft
     static void          sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:atf_unit.FPerfSort.sorted.Lt
     static bool          sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:atf_unit.FPerfSort.sorted.IntInsertionSort
     static void          sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:atf_unit.FPerfSort.sorted.IntHeapSort
     static void          sorted_IntHeapSort(atf_unit::Dbl *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:atf_unit.FPerfSort.sorted.IntQuickSort
     static void          sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) __attribute__((nothrow));
+    // func:atf_unit...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -132,7 +150,7 @@ inline static int atf_unit::val_Nextchar(const atf_unit::Cstr& parent, algo::str
 
 // --- atf_unit.Cstr..FmtJson
 // Create JSON representation of atf_unit::Cstr under PARENT node -- cprint:atf_unit.Cstr.Json
-lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) {
     return algo::cstring_FmtJson(const_cast<atf_unit::Cstr&>(row).val,parent);;
 }
 
@@ -146,8 +164,9 @@ bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) {
 }
 
 // --- atf_unit.Dbl..Print
-// print string representation of atf_unit::Dbl to string LHS, no header -- cprint:atf_unit.Dbl.String
-void atf_unit::Dbl_Print(atf_unit::Dbl row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.Dbl.String  printfmt:Raw
+void atf_unit::Dbl_Print(atf_unit::Dbl row, algo::cstring& str) {
     double_Print(row.val, str);
 }
 
@@ -158,8 +177,9 @@ lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *pare
 }
 
 // --- atf_unit.trace..Print
-// print string representation of atf_unit::trace to string LHS, no header -- cprint:atf_unit.trace.String
-void atf_unit::trace_Print(atf_unit::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.trace.String  printfmt:Tuple
+void atf_unit::trace_Print(atf_unit::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -630,7 +650,6 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:acr.Insert1  comment:\"\"", atf_unit::unittest_acr_Insert1 }
         ,{ "atfdb.unittest  unittest:acr.Insert2  comment:\"\"", atf_unit::unittest_acr_Insert2 }
         ,{ "atfdb.unittest  unittest:acr.Merge1  comment:\"\"", atf_unit::unittest_acr_Merge1 }
-        ,{ "atfdb.unittest  unittest:acr.Meta1  comment:\"\"", atf_unit::unittest_acr_Meta1 }
         ,{ "atfdb.unittest  unittest:acr.Read1  comment:\"\"", atf_unit::unittest_acr_Read1 }
         ,{ "atfdb.unittest  unittest:acr.Read2  comment:\"\"", atf_unit::unittest_acr_Read2 }
         ,{ "atfdb.unittest  unittest:acr.Read3  comment:\"\"", atf_unit::unittest_acr_Read3 }
@@ -660,6 +679,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.CurrentTime  comment:\"\"", atf_unit::unittest_algo_lib_CurrentTime }
         ,{ "atfdb.unittest  unittest:algo_lib.Datecache  comment:\"\"", atf_unit::unittest_algo_lib_Datecache }
         ,{ "atfdb.unittest  unittest:algo_lib.DayName  comment:\"\"", atf_unit::unittest_algo_lib_DayName }
+        ,{ "atfdb.unittest  unittest:algo_lib.Decimal  comment:\"\"", atf_unit::unittest_algo_lib_Decimal }
         ,{ "atfdb.unittest  unittest:algo_lib.DirBeg  comment:\"Test Dir_curs\"", atf_unit::unittest_algo_lib_DirBeg }
         ,{ "atfdb.unittest  unittest:algo_lib.DoTestRounding  comment:\"\"", atf_unit::unittest_algo_lib_DoTestRounding }
         ,{ "atfdb.unittest  unittest:algo_lib.ExitCode  comment:\"\"", atf_unit::unittest_algo_lib_ExitCode }
@@ -701,6 +721,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.PrintCppQuoted  comment:\"\"", atf_unit::unittest_algo_lib_PrintCppQuoted }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintDoubleWithCommas  comment:\"\"", atf_unit::unittest_algo_lib_PrintDoubleWithCommas }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintHex  comment:\"\"", atf_unit::unittest_algo_lib_PrintHex }
+        ,{ "atfdb.unittest  unittest:algo_lib.PrintMemptr  comment:\"\"", atf_unit::unittest_algo_lib_PrintMemptr }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintPad  comment:\"\"", atf_unit::unittest_algo_lib_PrintPad }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintSsim  comment:\"\"", atf_unit::unittest_algo_lib_PrintSsim }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintUnTime  comment:\"\"", atf_unit::unittest_algo_lib_PrintUnTime }
@@ -717,9 +738,11 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse3  comment:\"Do not follow symlinks\"", atf_unit::unittest_algo_lib_RemDirRecurse3 }
         ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse4  comment:\"Three levels deep\"", atf_unit::unittest_algo_lib_RemDirRecurse4 }
         ,{ "atfdb.unittest  unittest:algo_lib.Replscope  comment:\"\"", atf_unit::unittest_algo_lib_Replscope }
+        ,{ "atfdb.unittest  unittest:algo_lib.ReverseBits  comment:\"\"", atf_unit::unittest_algo_lib_ReverseBits }
         ,{ "atfdb.unittest  unittest:algo_lib.SchedTime  comment:\"\"", atf_unit::unittest_algo_lib_SchedTime }
         ,{ "atfdb.unittest  unittest:algo_lib.Sleep  comment:\"\"", atf_unit::unittest_algo_lib_Sleep }
         ,{ "atfdb.unittest  unittest:algo_lib.Smallstr  comment:\"\"", atf_unit::unittest_algo_lib_Smallstr }
+        ,{ "atfdb.unittest  unittest:algo_lib.SmallstrEq  comment:\"\"", atf_unit::unittest_algo_lib_SmallstrEq }
         ,{ "atfdb.unittest  unittest:algo_lib.Strfind  comment:\"\"", atf_unit::unittest_algo_lib_Strfind }
         ,{ "atfdb.unittest  unittest:algo_lib.StringCase  comment:\"\"", atf_unit::unittest_algo_lib_StringCase }
         ,{ "atfdb.unittest  unittest:algo_lib.StringFind  comment:\"\"", atf_unit::unittest_algo_lib_StringFind }
@@ -1474,7 +1497,7 @@ int atf_unit::acr_ed_Execv() {
     if (_db.acr_ed_cmd.ctype != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-ctype:";
-        Smallstr50_Print(_db.acr_ed_cmd.ctype, *arg);
+        Smallstr100_Print(_db.acr_ed_cmd.ctype, *arg);
     }
 
     if (_db.acr_ed_cmd.pooltype != "") {
@@ -1492,13 +1515,13 @@ int atf_unit::acr_ed_Execv() {
     if (_db.acr_ed_cmd.subset != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-subset:";
-        Smallstr50_Print(_db.acr_ed_cmd.subset, *arg);
+        Smallstr100_Print(_db.acr_ed_cmd.subset, *arg);
     }
 
     if (_db.acr_ed_cmd.subset2 != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-subset2:";
-        Smallstr50_Print(_db.acr_ed_cmd.subset2, *arg);
+        Smallstr100_Print(_db.acr_ed_cmd.subset2, *arg);
     }
 
     if (_db.acr_ed_cmd.separator != ".") {
@@ -1516,7 +1539,7 @@ int atf_unit::acr_ed_Execv() {
     if (_db.acr_ed_cmd.arg != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-arg:";
-        Smallstr50_Print(_db.acr_ed_cmd.arg, *arg);
+        Smallstr100_Print(_db.acr_ed_cmd.arg, *arg);
     }
 
     if (_db.acr_ed_cmd.dflt != "") {
@@ -2347,8 +2370,9 @@ void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& unittest) {
 }
 
 // --- atf_unit.FUnittest..Print
-// print string representation of atf_unit::FUnittest to string LHS, no header -- cprint:atf_unit.FUnittest.String
-void atf_unit::FUnittest_Print(atf_unit::FUnittest & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.FUnittest.String  printfmt:Tuple
+void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.FUnittest";
 
@@ -2457,8 +2481,9 @@ bool atf_unit::FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr i
 }
 
 // --- atf_unit.FieldId..Print
-// print string representation of atf_unit::FieldId to string LHS, no header -- cprint:atf_unit.FieldId.String
-void atf_unit::FieldId_Print(atf_unit::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.FieldId.String  printfmt:Raw
+void atf_unit::FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) {
     atf_unit::value_Print(row, str);
 }
 
@@ -2472,25 +2497,32 @@ bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_st
 }
 
 // --- atf_unit.TypeA..Print
-// print string representation of atf_unit::TypeA to string LHS, no header -- cprint:atf_unit.TypeA.String
-void atf_unit::TypeA_Print(atf_unit::TypeA & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TypeA.String  printfmt:Raw
+void atf_unit::TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) {
     i32_Print(row.typea, str);
 }
 
 // --- atf_unit.TypeA..FmtJson
 // Create JSON representation of atf_unit::TypeA under PARENT node -- cprint:atf_unit.TypeA.Json
-lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) {
     return i32_FmtJson(const_cast<atf_unit::TypeA&>(row).typea,parent);;
 }
 
 // --- atf_unit.TypeB..ReadFieldMaybe
-bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB &parent, algo::strptr field, algo::strptr strval) {
+bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     atf_unit::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case atf_unit_FieldId_typea: retval = i32_ReadStrptrMaybe(parent.typea, strval); break;
-        case atf_unit_FieldId_j: retval = i32_ReadStrptrMaybe(parent.j, strval); break;
+        case atf_unit_FieldId_typea: {
+            retval = i32_ReadStrptrMaybe(parent.typea, strval);
+            break;
+        }
+        case atf_unit_FieldId_j: {
+            retval = i32_ReadStrptrMaybe(parent.j, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2512,8 +2544,9 @@ bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_st
 }
 
 // --- atf_unit.TypeB..Print
-// print string representation of atf_unit::TypeB to string LHS, no header -- cprint:atf_unit.TypeB.String
-void atf_unit::TypeB_Print(atf_unit::TypeB & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TypeB.String  printfmt:Tuple
+void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.TypeB";
 
@@ -2526,7 +2559,7 @@ void atf_unit::TypeB_Print(atf_unit::TypeB & row, algo::cstring &str) {
 
 // --- atf_unit.TypeB..FmtJson
 // Create JSON representation of atf_unit::TypeB under PARENT node -- cprint:atf_unit.TypeB.Json
-lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;
@@ -2566,8 +2599,9 @@ void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
 }
 
 // --- atf_unit.TestJson..Print
-// print string representation of atf_unit::TestJson to string LHS, no header -- cprint:atf_unit.TestJson.String
-void atf_unit::TestJson_Print(atf_unit::TestJson & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TestJson.String  printfmt:Tuple
+void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.TestJson";
 
@@ -2607,6 +2641,9 @@ void atf_unit::TestJson_Print(atf_unit::TestJson & row, algo::cstring &str) {
     char_Print(row.fld_char, temp);
     PrintAttrSpaceReset(str,"fld_char", temp);
 
+    algo::strptr_Print(row.fld_strptr, temp);
+    PrintAttrSpaceReset(str,"fld_strptr", temp);
+
     algo::cstring_Print(row.fld_cstring, temp);
     PrintAttrSpaceReset(str,"fld_cstring", temp);
 
@@ -2622,7 +2659,7 @@ void atf_unit::TestJson_Print(atf_unit::TestJson & row, algo::cstring &str) {
 
 // --- atf_unit.TestJson..FmtJson
 // Create JSON representation of atf_unit::TestJson under PARENT node -- cprint:atf_unit.TestJson.Json
-lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson & row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;

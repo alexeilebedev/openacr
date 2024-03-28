@@ -195,6 +195,10 @@ static void PrepFconst() {
 
 // -----------------------------------------------------------------------------
 
+// Rewrite field with reftype Pkey by replacing Pkey with Val,
+// and arg,p_arg with new type
+// This happens recursively as long if the target field is also a Pkey
+// The default for the resulting field is then taken to be the default of the target type.
 static void RewritePkey() {
     ind_beg(lib_ctype::_db_field_curs,field,lib_ctype::_db) {
         if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
@@ -310,6 +314,7 @@ static void Match_Attr_Printfmt(lib_ctype::Match &match, lib_ctype::FField *fiel
 
 // Check if EXPECT is a proper subset of RESULT
 // Search exits early if match.distance exceeds match.maxdist.
+// match.distance is incremented on every mismatched attribute
 static void Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result, lib_ctype::FCtype &ctype) {
     ind_beg(algo::Tuple_attrs_curs, expected_attr, expect) {
         lib_ctype::FField *field = FindField(ctype, expected_attr.name);
@@ -352,7 +357,10 @@ void lib_ctype::Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &resul
 
 // -----------------------------------------------------------------------------
 
-// Remove unstable fields from a string that's supposed to correspond CTYPE
+// Remove unstable fields from a tuple encoded in STR, print it back and return
+// So, if STR is ams.TraceInfo2Msg  tstamp:... field:xxx
+// And ams.TraceInfo2Msg.tstamp appears in dmmeta.unstablefld table,
+// this attribute will be stripped from the tuple.
 tempstr lib_ctype::StabilizeSsimTuple(strptr str) {
     Tuple tuple;
     tempstr out;
@@ -377,21 +385,29 @@ tempstr lib_ctype::StabilizeSsimTuple(strptr str) {
 
 // -----------------------------------------------------------------------------
 
-// Fill Replscope with attribute values, including substr
+// Same as tuple version of FillReplscope, but also parses the tuple from STR
 void lib_ctype::FillReplscope(algo_lib::Replscope &R, strptr str) {
     Tuple tuple;
     if (Tuple_ReadStrptrMaybe(tuple,str)) {
-        lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
-        ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-            Set(R,tempstr()<<"$"<<attr.name,attr.value);
-            lib_ctype::FField *srcfield = ctype
-                ? ind_field_Find(dmmeta::Field_Concat_ctype_name(ctype->ctype,attr.name))
-                : NULL;
-            if (srcfield) {
-                ind_beg(field_c_substr_srcfield_curs,substr,*srcfield) {
-                    Set(R,tempstr()<<"$"<<name_Get(*substr.p_field),Pathcomp(attr.value,strptr(substr.expr.value)));
-                }ind_end;
-            }
-        }ind_end;
+        FillReplscope(R,tuple);
     }
+}
+
+// Fill Replscope with attribute values (including substrings) of tuple
+// So, if STR is dev.targdep targdep:a.b comment:"blah"
+// Then R will be filled with variables $targdep, $target, $parent, $comment
+// This can be used to perform $-substitution in strings.
+void lib_ctype::FillReplscope(algo_lib::Replscope &R, algo::Tuple &tuple) {
+    lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        Set(R,tempstr()<<"$"<<attr.name,attr.value);
+        lib_ctype::FField *srcfield = ctype
+            ? ind_field_Find(dmmeta::Field_Concat_ctype_name(ctype->ctype,attr.name))
+            : NULL;
+        if (srcfield) {
+            ind_beg(field_c_substr_srcfield_curs,substr,*srcfield) {
+                Set(R,tempstr()<<"$"<<name_Get(*substr.p_field),Pathcomp(attr.value,strptr(substr.expr.value)));
+            }ind_end;
+        }
+    }ind_end;
 }

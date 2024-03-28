@@ -50,6 +50,14 @@ namespace atf_ci { // update-hdr
     // void citest_acr_ed_target();
 
     // -------------------------------------------------------------------
+    // cpp/atf/ci/apm.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void citest_apm();
+    // void citest_apm_check();
+    // void citest_apm_reinstall();
+
+    // -------------------------------------------------------------------
     // cpp/atf/ci/bootstrap.cpp
     //
 
@@ -133,12 +141,4 @@ namespace atf_ci { // update-hdr
     // void citest_normalize_acr();
     // void citest_normalize_acr_my();
     // void citest_ssimfile();
-
-    // -------------------------------------------------------------------
-    // cpp/atf/ci/ssimfs.cpp
-    //
-
-    // check ssimfs rules
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void citest_ssimfs();
 }

@@ -57,17 +57,22 @@ const char *bash2html_help =
 } // namespace bash2html
 namespace bash2html { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:bash2html.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:bash2html.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:bash2html.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:bash2html...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- bash2html.trace..Print
-// print string representation of bash2html::trace to string LHS, no header -- cprint:bash2html.trace.String
-void bash2html::trace_Print(bash2html::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:bash2html.trace.String  printfmt:Tuple
+void bash2html::trace_Print(bash2html::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "bash2html.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -427,8 +432,9 @@ bool bash2html::FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr
 }
 
 // --- bash2html.FieldId..Print
-// print string representation of bash2html::FieldId to string LHS, no header -- cprint:bash2html.FieldId.String
-void bash2html::FieldId_Print(bash2html::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:bash2html.FieldId.String  printfmt:Raw
+void bash2html::FieldId_Print(bash2html::FieldId& row, algo::cstring& str) {
     bash2html::value_Print(row, str);
 }
 

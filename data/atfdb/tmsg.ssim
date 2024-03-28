@@ -28,6 +28,9 @@ atfdb.tmsg  tmsg:acr.Insert/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1        
 atfdb.tmsg  tmsg:acr.InsertDelete/100000.in  istuple:N  msg:"acr.insert dmmeta.ns ns:ttt"
 atfdb.tmsg  tmsg:acr.InsertDelete/100010.in  istuple:N  msg:"acr.delete dmmeta.ns ns:ttt"
 atfdb.tmsg  tmsg:acr.Merge/100000.in  istuple:N  msg:'dmmeta.ns  ns:acr        nstype:lib         comment:"nstype attribute will be updated"'
+atfdb.tmsg  tmsg:acr.RenameCollision/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
+atfdb.tmsg  tmsg:acr.RenameCollision/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.RenameCollision/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100010.in  istuple:N  msg:"dev.target  target:samp  compat:%-%g%.%-%"
 atfdb.tmsg  tmsg:acr.RenameRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'
@@ -38,6 +41,18 @@ atfdb.tmsg  tmsg:acr.Replace/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1       
 atfdb.tmsg  tmsg:acr.Select/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:"This will NOT be selected"'
 atfdb.tmsg  tmsg:acr.Select/100010.in  istuple:N  msg:'dmmeta.ns  ns:nsi1        nstype:exe      license:GPL   comment:"This will be selected"'
 atfdb.tmsg  tmsg:acr.Select/100020.in  istuple:N  msg:'dmmeta.ns  ns:nsi2      nstype:ssimdb    license:GPL  comment:"This will be selected"'
+atfdb.tmsg  tmsg:acr.SelectStdin/100000.in  istuple:N  msg:"dmmeta.ns  ns:acr"
+atfdb.tmsg  tmsg:acr.SelectTree/100000.in  istuple:N  msg:'dev.license  license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.SelectTree/100010.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
+atfdb.tmsg  tmsg:acr.SelectTree/100020.in  istuple:N  msg:'dmmeta.ns  ns:command  nstype:protocol  license:GPL  comment:"Command line descriptions"'
+atfdb.tmsg  tmsg:acr.SelectTree/100030.in  istuple:N  msg:'dmmeta.ctype  ctype:command.acr  comment:""'
+atfdb.tmsg  tmsg:acr.SelectTree/100040.in  istuple:N  msg:'dmmeta.field  field:command.acr.query  arg:algo.cstring  reftype:Val  dflt:\'""\'  comment:"Regx to match record"'
+atfdb.tmsg  tmsg:acr.SelectTree/100050.in  istuple:N  msg:'dmmeta.anonfld  field:command.acr.query  comment:""'
+atfdb.tmsg  tmsg:acr.SelectTree/100060.in  istuple:N  msg:'dmmeta.field  field:command.acr.schema    arg:algo.cstring  reftype:Val  dflt:\'"data"\'  comment:"Directory for initializing acr meta-data"'
+atfdb.tmsg  tmsg:acr.SelectTree/100070.in  istuple:N  msg:'dmmeta.floadtuples  field:command.acr.schema    comment:""'
+atfdb.tmsg  tmsg:acr.SelectTree/100080.in  istuple:N  msg:"dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21"
+atfdb.tmsg  tmsg:acr.SelectTree/100090.in  istuple:N  msg:'dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:""  comment:"command line"'
+atfdb.tmsg  tmsg:acr.SelectTree/100100.in  istuple:N  msg:'dmmeta.fcmdline  field:acr.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""'
 atfdb.tmsg  tmsg:acr.Trunc/100000.in  istuple:N  msg:"dev.timefmt timefmt:xyz"
 atfdb.tmsg  tmsg:acr.UpdateBad/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:"Namespace doesn\'t exist, but not a failure"'
 atfdb.tmsg  tmsg:acr.UpdateGood/100000.in  istuple:N  msg:'dmmeta.ns  ns:acr        nstype:lib      license:zzz   comment:"Namespace exists, attribute will be updated"'
@@ -56,8 +71,18 @@ atfdb.tmsg  tmsg:ssimfilt.Csv/100030.in  istuple:N  msg:'dmmeta.nstype  nstype:o
 atfdb.tmsg  tmsg:ssimfilt.Csv/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
 atfdb.tmsg  tmsg:ssimfilt.Csv/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
 atfdb.tmsg  tmsg:ssimfilt.Csv/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100030.in  istuple:N  msg:'dmmeta.nstype  nstype:objlist   comment:"Object files are added to dependents\' link line"'
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.CsvField/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
 atfdb.tmsg  tmsg:ssimfilt.FirstTag/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
 atfdb.tmsg  tmsg:ssimfilt.FirstTag/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
+atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100000.in  istuple:N  msg:"atf_amc.TypeTVal j:33 types:'atf_amc.TypeS types:1 comment:\"lkjljk\"'"
+atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100010.in  istuple:N  msg:"atf_amc.TypeTVal j:22 types:'atf_amc.TypeS types:2 comment:\"eryerty\"'"
+atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100020.in  istuple:N  msg:"atf_amc.TypeTVal j:11 types:'atf_amc.TypeS types:3 comment:\"asdf\"'"
 atfdb.tmsg  tmsg:ssimfilt.MatchField/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
 atfdb.tmsg  tmsg:ssimfilt.MatchField/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
 atfdb.tmsg  tmsg:ssimfilt.MatchField/100020.in  istuple:N  msg:"dev.target target:ssimfilt"

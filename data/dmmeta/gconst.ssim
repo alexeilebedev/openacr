@@ -14,6 +14,9 @@ dmmeta.gconst  field:dev.License.license  namefld:dev.License.license  idfld:"" 
 dmmeta.gconst  field:dev.Sandbox.sandbox  namefld:dev.Sandbox.sandbox  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Target.target  namefld:dev.Target.target  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Buftype.pnewtype  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
+dmmeta.gconst  field:dmmeta.Fastenc.fastenc  namefld:dmmeta.Fastenc.fastenc  idfld:""  wantenum:Y
+dmmeta.gconst  field:dmmeta.Fastinstr.fastinstr  namefld:dmmeta.Fastinstr.fastinstr  idfld:""  wantenum:Y
+dmmeta.gconst  field:dmmeta.Fastop.fastop  namefld:dmmeta.Fastop.fastop  idfld:""  wantenum:Y
 dmmeta.gconst  field:dmmeta.Fbufdir.fbufdir  namefld:dmmeta.Fbufdir.fbufdir  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fbuftype.fbuftype  namefld:dmmeta.Fbuftype.fbuftype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Hashtype.hashtype  namefld:dmmeta.Hashtype.hashtype  idfld:""  wantenum:N

@@ -98,206 +98,378 @@ namespace amc { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace amc { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
+    // func:amc.Enumstr.str.Nextchar
     static int           str_Nextchar(const amc::Enumstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:amc.FCtype.c_field.Swap
     static void          c_field_Swap(amc::FField* &elem_a, amc::FField* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:amc.FCtype.c_field.Rotleft
     static void          c_field_Rotleft(amc::FField* &elem_a, amc::FField* &elem_b, amc::FField* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:amc.FCtype.c_field.Lt
     static bool          c_field_Lt(amc::FField &elem_a, amc::FField &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:amc.FCtype.c_field.IntInsertionSort
     static void          c_field_IntInsertionSort(amc::FField* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:amc.FCtype.c_field.IntHeapSort
     static void          c_field_IntHeapSort(amc::FField* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:amc.FCtype.c_field.IntQuickSort
     static void          c_field_IntQuickSort(amc::FField* *elems, int n, int depth) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    // func:amc.FCtype.c_ffast.Swap
+    static void          c_ffast_Swap(amc::FFfast* &elem_a, amc::FFfast* &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    // func:amc.FCtype.c_ffast.Rotleft
+    static void          c_ffast_Rotleft(amc::FFfast* &elem_a, amc::FFfast* &elem_b, amc::FFfast* &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    // func:amc.FCtype.c_ffast.Lt
+    static bool          c_ffast_Lt(amc::FFfast &elem_a, amc::FFfast &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    // func:amc.FCtype.c_ffast.IntInsertionSort
+    static void          c_ffast_IntInsertionSort(amc::FFfast* *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    // func:amc.FCtype.c_ffast.IntHeapSort
+    static void          c_ffast_IntHeapSort(amc::FFfast* *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    // func:amc.FCtype.c_ffast.IntQuickSort
+    static void          c_ffast_IntQuickSort(amc::FFfast* *elems, int n, int depth) __attribute__((nothrow));
+    // func:amc.FDb.fsort.InputMaybe
     static bool          fsort_InputMaybe(dmmeta::Fsort &elem) __attribute__((nothrow));
+    // func:amc.FDb.dispfilter.InputMaybe
     static bool          dispfilter_InputMaybe(dmmeta::Dispfilter &elem) __attribute__((nothrow));
+    // func:amc.FDb.usertracefld.InputMaybe
     static bool          usertracefld_InputMaybe(dmmeta::Usertracefld &elem) __attribute__((nothrow));
+    // func:amc.FDb.cfmt.InputMaybe
     static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
+    // func:amc.FDb.dispatch.InputMaybe
     static bool          dispatch_InputMaybe(dmmeta::Dispatch &elem) __attribute__((nothrow));
+    // func:amc.FDb.dispatch_msg.InputMaybe
     static bool          dispatch_msg_InputMaybe(dmmeta::DispatchMsg &elem) __attribute__((nothrow));
+    // func:amc.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:amc.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:amc.FDb.basepool.InputMaybe
     static bool          basepool_InputMaybe(dmmeta::Basepool &elem) __attribute__((nothrow));
+    // func:amc.FDb.llist.InputMaybe
     static bool          llist_InputMaybe(dmmeta::Llist &elem) __attribute__((nothrow));
+    // func:amc.FDb.anonfld.InputMaybe
     static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
+    // func:amc.FDb.xref.InputMaybe
     static bool          xref_InputMaybe(dmmeta::Xref &elem) __attribute__((nothrow));
+    // func:amc.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:amc.FDb.pnew.InputMaybe
     static bool          pnew_InputMaybe(dmmeta::Pnew &elem) __attribute__((nothrow));
+    // func:amc.FDb.fldoffset.InputMaybe
     static bool          fldoffset_InputMaybe(dmmeta::Fldoffset &elem) __attribute__((nothrow));
+    // func:amc.FDb.typefld.InputMaybe
     static bool          typefld_InputMaybe(dmmeta::Typefld &elem) __attribute__((nothrow));
+    // func:amc.FDb.lenfld.InputMaybe
     static bool          lenfld_InputMaybe(dmmeta::Lenfld &elem) __attribute__((nothrow));
+    // func:amc.FDb.bltin.InputMaybe
     static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
+    // func:amc.FDb.msgtype.InputMaybe
     static bool          msgtype_InputMaybe(dmmeta::Msgtype &elem) __attribute__((nothrow));
+    // func:amc.FDb.gconst.InputMaybe
     static bool          gconst_InputMaybe(dmmeta::Gconst &elem) __attribute__((nothrow));
+    // func:amc.FDb.gstatic.InputMaybe
     static bool          gstatic_InputMaybe(dmmeta::Gstatic &elem) __attribute__((nothrow));
+    // func:amc.FDb.thash.InputMaybe
     static bool          thash_InputMaybe(dmmeta::Thash &elem) __attribute__((nothrow));
+    // func:amc.FDb.func.InputMaybe
     static bool          func_InputMaybe(dmmeta::Func &elem) __attribute__((nothrow));
+    // func:amc.FDb.smallstr.InputMaybe
     static bool          smallstr_InputMaybe(dmmeta::Smallstr &elem) __attribute__((nothrow));
+    // func:amc.FDb.numstr.InputMaybe
     static bool          numstr_InputMaybe(dmmeta::Numstr &elem) __attribute__((nothrow));
+    // func:amc.FDb.main.InputMaybe
     static bool          main_InputMaybe(dmmeta::Main &elem) __attribute__((nothrow));
+    // func:amc.FDb.reftype.LoadStatic
     static void          reftype_LoadStatic() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:amc.FDb._db.InitReflection
     static void          InitReflection();
+    // func:amc.FDb.cpptype.InputMaybe
     static bool          cpptype_InputMaybe(dmmeta::Cpptype &elem) __attribute__((nothrow));
+    // func:amc.FDb.inlary.InputMaybe
     static bool          inlary_InputMaybe(dmmeta::Inlary &elem) __attribute__((nothrow));
+    // func:amc.FDb.tary.InputMaybe
     static bool          tary_InputMaybe(dmmeta::Tary &elem) __attribute__((nothrow));
+    // func:amc.FDb.cppfunc.InputMaybe
     static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
+    // func:amc.FDb.rowid.InputMaybe
     static bool          rowid_InputMaybe(dmmeta::Rowid &elem) __attribute__((nothrow));
+    // func:amc.FDb.cascdel.InputMaybe
     static bool          cascdel_InputMaybe(dmmeta::Cascdel &elem) __attribute__((nothrow));
+    // func:amc.FDb.substr.InputMaybe
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:amc.FDb.bitfld.InputMaybe
     static bool          bitfld_InputMaybe(dmmeta::Bitfld &elem) __attribute__((nothrow));
+    // func:amc.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:amc.FDb.pack.InputMaybe
     static bool          pack_InputMaybe(dmmeta::Pack &elem) __attribute__((nothrow));
+    // func:amc.FDb.ptrary.InputMaybe
     static bool          ptrary_InputMaybe(dmmeta::Ptrary &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:amc.FDb.c_ctype_sorted.Swap
     static void          c_ctype_sorted_Swap(amc::FCtype* &elem_a, amc::FCtype* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:amc.FDb.c_ctype_sorted.Rotleft
     static void          c_ctype_sorted_Rotleft(amc::FCtype* &elem_a, amc::FCtype* &elem_b, amc::FCtype* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:amc.FDb.c_ctype_sorted.Lt
     static bool          c_ctype_sorted_Lt(amc::FCtype &elem_a, amc::FCtype &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:amc.FDb.c_ctype_sorted.IntInsertionSort
     static void          c_ctype_sorted_IntInsertionSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:amc.FDb.c_ctype_sorted.IntHeapSort
     static void          c_ctype_sorted_IntHeapSort(amc::FCtype* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:amc.FDb.c_ctype_sorted.IntQuickSort
     static void          c_ctype_sorted_IntQuickSort(amc::FCtype* *elems, int n, int depth) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:amc.FDb.bh_enumstr_len.Downheap
     static int           bh_enumstr_len_Downheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:amc.FDb.bh_enumstr_len.Upheap
     static int           bh_enumstr_len_Upheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
+    // func:amc.FDb.bh_enumstr_len.ElemLt
     static bool          bh_enumstr_len_ElemLt(amc::FEnumstrLen &a, amc::FEnumstrLen &b) __attribute__((nothrow));
+    // func:amc.FDb.bh_enumstr_len_curs.Add
     static void          _db_bh_enumstr_len_curs_Add(_db_bh_enumstr_len_curs &curs, amc::FEnumstrLen& row);
+    // func:amc.FDb.fbitset.InputMaybe
     static bool          fbitset_InputMaybe(dmmeta::Fbitset &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcleanup.InputMaybe
     static bool          fcleanup_InputMaybe(dmmeta::Fcleanup &elem) __attribute__((nothrow));
+    // func:amc.FDb.fdec.InputMaybe
     static bool          fdec_InputMaybe(dmmeta::Fdec &elem) __attribute__((nothrow));
+    // func:amc.FDb.fconst.InputMaybe
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    // func:amc.FDb.finput.InputMaybe
     static bool          finput_InputMaybe(dmmeta::Finput &elem) __attribute__((nothrow));
+    // func:amc.FDb.foutput.InputMaybe
     static bool          foutput_InputMaybe(dmmeta::Foutput &elem) __attribute__((nothrow));
+    // func:amc.FDb.fbuf.InputMaybe
     static bool          fbuf_InputMaybe(dmmeta::Fbuf &elem) __attribute__((nothrow));
+    // func:amc.FDb.chash.InputMaybe
     static bool          chash_InputMaybe(dmmeta::Chash &elem) __attribute__((nothrow));
+    // func:amc.FDb.ccmp.InputMaybe
     static bool          ccmp_InputMaybe(dmmeta::Ccmp &elem) __attribute__((nothrow));
+    // func:amc.FDb.fbigend.InputMaybe
     static bool          fbigend_InputMaybe(dmmeta::Fbigend &elem) __attribute__((nothrow));
+    // func:amc.FDb.cstr.InputMaybe
     static bool          cstr_InputMaybe(dmmeta::Cstr &elem) __attribute__((nothrow));
+    // func:amc.FDb.listtype.InputMaybe
     static bool          listtype_InputMaybe(dmmeta::Listtype &elem) __attribute__((nothrow));
+    // func:amc.FDb.fstep.InputMaybe
     static bool          fstep_InputMaybe(dmmeta::Fstep &elem) __attribute__((nothrow));
+    // func:amc.FDb.cextern.InputMaybe
     static bool          cextern_InputMaybe(dmmeta::Cextern &elem) __attribute__((nothrow));
+    // func:amc.FDb.fdelay.InputMaybe
     static bool          fdelay_InputMaybe(dmmeta::Fdelay &elem) __attribute__((nothrow));
+    // func:amc.FDb.disptrace.InputMaybe
     static bool          disptrace_InputMaybe(dmmeta::Disptrace &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:amc.FDb.c_dispsig_sorted.Swap
     static void          c_dispsig_sorted_Swap(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:amc.FDb.c_dispsig_sorted.Rotleft
     static void          c_dispsig_sorted_Rotleft(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b, amc::FDispsig* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:amc.FDb.c_dispsig_sorted.Lt
     static bool          c_dispsig_sorted_Lt(amc::FDispsig &elem_a, amc::FDispsig &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:amc.FDb.c_dispsig_sorted.IntInsertionSort
     static void          c_dispsig_sorted_IntInsertionSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:amc.FDb.c_dispsig_sorted.IntHeapSort
     static void          c_dispsig_sorted_IntHeapSort(amc::FDispsig* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:amc.FDb.c_dispsig_sorted.IntQuickSort
     static void          c_dispsig_sorted_IntQuickSort(amc::FDispsig* *elems, int n, int depth) __attribute__((nothrow));
+    // func:amc.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:amc.FDb.targdep.InputMaybe
     static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
+    // func:amc.FDb.dispctx.InputMaybe
     static bool          dispctx_InputMaybe(dmmeta::Dispctx &elem) __attribute__((nothrow));
+    // func:amc.FDb.pmaskfld.InputMaybe
     static bool          pmaskfld_InputMaybe(dmmeta::Pmaskfld &elem) __attribute__((nothrow));
+    // func:amc.FDb.fwddecl.InputMaybe
     static bool          fwddecl_InputMaybe(dmmeta::Fwddecl &elem) __attribute__((nothrow));
+    // func:amc.FDb.tfunc.LoadStatic
     static void          tfunc_LoadStatic() __attribute__((nothrow));
+    // func:amc.FDb.gen.LoadStatic
     static void          gen_LoadStatic() __attribute__((nothrow));
+    // func:amc.FDb.fregx.InputMaybe
     static bool          fregx_InputMaybe(dmmeta::Fregx &elem) __attribute__((nothrow));
+    // func:amc.FDb.tclass.LoadStatic
     static void          tclass_LoadStatic() __attribute__((nothrow));
+    // func:amc.FDb.fcmp.InputMaybe
     static bool          fcmp_InputMaybe(dmmeta::Fcmp &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcast.InputMaybe
     static bool          fcast_InputMaybe(dmmeta::Fcast &elem) __attribute__((nothrow));
+    // func:amc.FDb.noxref.InputMaybe
     static bool          noxref_InputMaybe(dmmeta::Noxref &elem) __attribute__((nothrow));
+    // func:amc.FDb.nocascdel.InputMaybe
     static bool          nocascdel_InputMaybe(dmmeta::Nocascdel &elem) __attribute__((nothrow));
+    // func:amc.FDb.cafter.InputMaybe
     static bool          cafter_InputMaybe(dmmeta::Cafter &elem) __attribute__((nothrow));
+    // func:amc.FDb.csize.InputMaybe
     static bool          csize_InputMaybe(dmmeta::Csize &elem) __attribute__((nothrow));
+    // func:amc.FDb.nsx.InputMaybe
     static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcompact.InputMaybe
     static bool          fcompact_InputMaybe(dmmeta::Fcompact &elem) __attribute__((nothrow));
+    // func:amc.FDb.findrem.InputMaybe
     static bool          findrem_InputMaybe(dmmeta::Findrem &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcurs.InputMaybe
     static bool          fcurs_InputMaybe(dmmeta::Fcurs &elem) __attribute__((nothrow));
+    // func:amc.FDb.cdflt.InputMaybe
     static bool          cdflt_InputMaybe(dmmeta::Cdflt &elem) __attribute__((nothrow));
+    // func:amc.FDb.argvtype.InputMaybe
     static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcmdline.InputMaybe
     static bool          fcmdline_InputMaybe(dmmeta::Fcmdline &elem) __attribute__((nothrow));
+    // func:amc.FDb.floadtuples.InputMaybe
     static bool          floadtuples_InputMaybe(dmmeta::Floadtuples &elem) __attribute__((nothrow));
+    // func:amc.FDb.fcmap.InputMaybe
     static bool          fcmap_InputMaybe(dmmeta::Fcmap &elem) __attribute__((nothrow));
+    // func:amc.FDb.nsproto.InputMaybe
     static bool          nsproto_InputMaybe(dmmeta::Nsproto &elem) __attribute__((nothrow));
+    // func:amc.FDb.nsdb.InputMaybe
     static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    // func:amc.FDb.fprefix.InputMaybe
     static bool          fprefix_InputMaybe(dmmeta::Fprefix &elem) __attribute__((nothrow));
+    // func:amc.FDb.ftrace.InputMaybe
     static bool          ftrace_InputMaybe(dmmeta::Ftrace &elem) __attribute__((nothrow));
+    // func:amc.FDb.fnoremove.InputMaybe
     static bool          fnoremove_InputMaybe(dmmeta::Fnoremove &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:amc.FDb.c_substr_field.Swap
     static void          c_substr_field_Swap(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:amc.FDb.c_substr_field.Rotleft
     static void          c_substr_field_Rotleft(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b, amc::FSubstr* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:amc.FDb.c_substr_field.Lt
     static bool          c_substr_field_Lt(amc::FSubstr &elem_a, amc::FSubstr &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:amc.FDb.c_substr_field.IntInsertionSort
     static void          c_substr_field_IntInsertionSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:amc.FDb.c_substr_field.IntHeapSort
     static void          c_substr_field_IntHeapSort(amc::FSubstr* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:amc.FDb.c_substr_field.IntQuickSort
     static void          c_substr_field_IntQuickSort(amc::FSubstr* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
+    // func:amc.FDb.c_ctypelen.Swap
     static void          c_ctypelen_Swap(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
+    // func:amc.FDb.c_ctypelen.Rotleft
     static void          c_ctypelen_Rotleft(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b, amc::FCtypelen* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
+    // func:amc.FDb.c_ctypelen.Lt
     static bool          c_ctypelen_Lt(amc::FCtypelen &elem_a, amc::FCtypelen &elem_b) __attribute__((nothrow));
     // Internal insertion sort
+    // func:amc.FDb.c_ctypelen.IntInsertionSort
     static void          c_ctypelen_IntInsertionSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
     // Internal heap sort
+    // func:amc.FDb.c_ctypelen.IntHeapSort
     static void          c_ctypelen_IntHeapSort(amc::FCtypelen* *elems, int n) __attribute__((nothrow));
     // Quick sort engine
+    // func:amc.FDb.c_ctypelen.IntQuickSort
     static void          c_ctypelen_IntQuickSort(amc::FCtypelen* *elems, int n, int depth) __attribute__((nothrow));
+    // func:amc.FDb.fbase.InputMaybe
     static bool          fbase_InputMaybe(dmmeta::Fbase &elem) __attribute__((nothrow));
+    // func:amc.FDb.nossimfile.InputMaybe
     static bool          nossimfile_InputMaybe(dmmeta::Nossimfile &elem) __attribute__((nothrow));
+    // func:amc.FDb.gsymbol.InputMaybe
     static bool          gsymbol_InputMaybe(dmmeta::Gsymbol &elem) __attribute__((nothrow));
+    // func:amc.FDb.sortfld.InputMaybe
     static bool          sortfld_InputMaybe(dmmeta::Sortfld &elem) __attribute__((nothrow));
+    // func:amc.FDb.cget.InputMaybe
     static bool          cget_InputMaybe(dmmeta::Cget &elem) __attribute__((nothrow));
+    // func:amc.FDb.hook.InputMaybe
     static bool          hook_InputMaybe(dmmeta::Hook &elem) __attribute__((nothrow));
+    // func:amc.FDb.charset.InputMaybe
     static bool          charset_InputMaybe(dmmeta::Charset &elem) __attribute__((nothrow));
+    // func:amc.FDb.nsinclude.InputMaybe
     static bool          nsinclude_InputMaybe(dmmeta::Nsinclude &elem) __attribute__((nothrow));
+    // func:amc.FDb.ssimvolatile.InputMaybe
     static bool          ssimvolatile_InputMaybe(dmmeta::Ssimvolatile &elem) __attribute__((nothrow));
+    // func:amc.FDb.funique.InputMaybe
     static bool          funique_InputMaybe(dmmeta::Funique &elem) __attribute__((nothrow));
+    // func:amc.FDb.fuserinit.InputMaybe
     static bool          fuserinit_InputMaybe(dmmeta::Fuserinit &elem) __attribute__((nothrow));
+    // func:amc.FDb.tcurs.InputMaybe
     static bool          tcurs_InputMaybe(amcdb::Tcurs &elem) __attribute__((nothrow));
+    // func:amc.FDb.nscpp.InputMaybe
     static bool          nscpp_InputMaybe(dmmeta::Nscpp &elem) __attribute__((nothrow));
+    // func:amc.FDb.fflag.InputMaybe
     static bool          fflag_InputMaybe(dmmeta::Fflag &elem) __attribute__((nothrow));
+    // func:amc.FDb.falias.InputMaybe
     static bool          falias_InputMaybe(dmmeta::Falias &elem) __attribute__((nothrow));
+    // func:amc.FDb.license.InputMaybe
     static bool          license_InputMaybe(dev::License &elem) __attribute__((nothrow));
+    // func:amc.FDb.cfast.InputMaybe
+    static bool          cfast_InputMaybe(dmmeta::Cfast &elem) __attribute__((nothrow));
+    // func:amc.FDb.ffast.InputMaybe
+    static bool          ffast_InputMaybe(dmmeta::Ffast &elem) __attribute__((nothrow));
+    // func:amc.FDb.pmaskfld_member.InputMaybe
+    static bool          pmaskfld_member_InputMaybe(dmmeta::PmaskfldMember &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:amc.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:amc.FEnumstrLen.bh_enumstr.Downheap
     static int           bh_enumstr_Downheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:amc.FEnumstrLen.bh_enumstr.Upheap
     static int           bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
+    // func:amc.FEnumstrLen.bh_enumstr.ElemLt
     static bool          bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
+    // func:amc.FEnumstrLen.bh_enumstr_curs.Add
     static void          enumstr_len_bh_enumstr_curs_Add(enumstr_len_bh_enumstr_curs &curs, amc::FEnumstr& row);
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:amc.FField.bh_bitfld.Downheap
     static int           bh_bitfld_Downheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:amc.FField.bh_bitfld.Upheap
     static int           bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
+    // func:amc.FField.bh_bitfld.ElemLt
     static bool          bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
+    // func:amc.FField.bh_bitfld_curs.Add
     static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
+    // func:amc...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -448,8 +620,9 @@ bool amc::BltinId_ReadStrptrMaybe(amc::BltinId &parent, algo::strptr in_str) {
 }
 
 // --- amc.BltinId..Print
-// print string representation of amc::BltinId to string LHS, no header -- cprint:amc.BltinId.String
-void amc::BltinId_Print(amc::BltinId row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.BltinId.String  printfmt:Raw
+void amc::BltinId_Print(amc::BltinId row, algo::cstring& str) {
     amc::value_Print(row, str);
 }
 
@@ -915,13 +1088,19 @@ inline static int amc::str_Nextchar(const amc::Enumstr& parent, algo::strptr &st
 }
 
 // --- amc.Enumstr..ReadFieldMaybe
-bool amc::Enumstr_ReadFieldMaybe(amc::Enumstr &parent, algo::strptr field, algo::strptr strval) {
+bool amc::Enumstr_ReadFieldMaybe(amc::Enumstr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amc_FieldId_len: retval = i32_ReadStrptrMaybe(parent.len, strval); break;
-        case amc_FieldId_str: retval = algo::RnullStr8_ReadStrptrMaybe(parent.str, strval); break;
+        case amc_FieldId_len: {
+            retval = i32_ReadStrptrMaybe(parent.len, strval);
+            break;
+        }
+        case amc_FieldId_str: {
+            retval = algo::RnullStr8_ReadStrptrMaybe(parent.str, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -943,8 +1122,9 @@ bool amc::Enumstr_ReadStrptrMaybe(amc::Enumstr &parent, algo::strptr in_str) {
 }
 
 // --- amc.Enumstr..Print
-// print string representation of amc::Enumstr to string LHS, no header -- cprint:amc.Enumstr.String
-void amc::Enumstr_Print(amc::Enumstr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.Enumstr.String  printfmt:Tuple
+void amc::Enumstr_Print(amc::Enumstr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc.Enumstr";
 
@@ -1110,14 +1290,14 @@ void amc::cafter_CopyIn(amc::FCafter &row, dmmeta::Cafter &in) {
 }
 
 // --- amc.FCafter.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FCafter& cafter) {
-    algo::Smallstr50 ret(algo::Pathcomp(cafter.cafter, "/RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FCafter& cafter) {
+    algo::Smallstr100 ret(algo::Pathcomp(cafter.cafter, "/RL"));
     return ret;
 }
 
 // --- amc.FCafter.after.Get
-algo::Smallstr50 amc::after_Get(amc::FCafter& cafter) {
-    algo::Smallstr50 ret(algo::Pathcomp(cafter.cafter, "/RR"));
+algo::Smallstr100 amc::after_Get(amc::FCafter& cafter) {
+    algo::Smallstr100 ret(algo::Pathcomp(cafter.cafter, "/RR"));
     return ret;
 }
 
@@ -1241,6 +1421,35 @@ void amc::FCextern_Uninit(amc::FCextern& cextern) {
     }
 }
 
+// --- amc.FCfast.base.CopyOut
+// Copy fields out of row
+void amc::cfast_CopyOut(amc::FCfast &row, dmmeta::Cfast &out) {
+    out.ctype = row.ctype;
+    out.id = row.id;
+    out.encoding = row.encoding;
+    out.reset = row.reset;
+    out.comment = row.comment;
+}
+
+// --- amc.FCfast.base.CopyIn
+// Copy fields in to row
+void amc::cfast_CopyIn(amc::FCfast &row, dmmeta::Cfast &in) {
+    row.ctype = in.ctype;
+    row.id = in.id;
+    row.encoding = in.encoding;
+    row.reset = in.reset;
+    row.comment = in.comment;
+}
+
+// --- amc.FCfast..Uninit
+void amc::FCfast_Uninit(amc::FCfast& cfast) {
+    amc::FCfast &row = cfast; (void)row;
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+    if (p_ctype)  {
+        c_cfast_Remove(*p_ctype, row);// remove cfast from index c_cfast
+    }
+}
+
 // --- amc.FCfmt.msghdr.CopyOut
 // Copy fields out of row
 void amc::cfmt_CopyOut(amc::FCfmt &row, dmmeta::Cfmt &out) {
@@ -1266,8 +1475,8 @@ void amc::cfmt_CopyIn(amc::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- amc.FCfmt.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FCfmt& cfmt) {
-    algo::Smallstr50 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FCfmt& cfmt) {
+    algo::Smallstr100 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
     return ret;
 }
 
@@ -1361,6 +1570,8 @@ void amc::FChash_Uninit(amc::FChash& chash) {
 void amc::cppfunc_CopyOut(amc::FCppfunc &row, dmmeta::Cppfunc &out) {
     out.field = row.field;
     out.expr = row.expr;
+    out.print = row.print;
+    out.set = row.set;
 }
 
 // --- amc.FCppfunc.msghdr.CopyIn
@@ -1368,6 +1579,8 @@ void amc::cppfunc_CopyOut(amc::FCppfunc &row, dmmeta::Cppfunc &out) {
 void amc::cppfunc_CopyIn(amc::FCppfunc &row, dmmeta::Cppfunc &in) {
     row.field = in.field;
     row.expr = in.expr;
+    row.print = in.print;
+    row.set = in.set;
 }
 
 // --- amc.FCppfunc..Uninit
@@ -1480,8 +1693,8 @@ algo::Smallstr16 amc::ns_Get(amc::FCtype& ctype) {
 }
 
 // --- amc.FCtype.name.Get
-algo::Smallstr50 amc::name_Get(amc::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 amc::name_Get(amc::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -1933,6 +2146,70 @@ void amc::c_parent_Reserve(amc::FCtype& ctype, u32 n) {
         }
         ctype.c_parent_elems = (amc::FCtype**)new_mem;
         ctype.c_parent_max = new_max;
+    }
+}
+
+// --- amc.FCtype.c_pmaskfld.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_pmaskfld_Insert(amc::FCtype& ctype, amc::FPmaskfld& row) {
+    if (bool_Update(row.ctype_c_pmaskfld_in_ary,true)) {
+        // reserve space
+        c_pmaskfld_Reserve(ctype, 1);
+        u32 n  = ctype.c_pmaskfld_n;
+        u32 at = n;
+        amc::FPmaskfld* *elems = ctype.c_pmaskfld_elems;
+        elems[at] = &row;
+        ctype.c_pmaskfld_n = n+1;
+
+    }
+}
+
+// --- amc.FCtype.c_pmaskfld.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_pmaskfld_InsertMaybe(amc::FCtype& ctype, amc::FPmaskfld& row) {
+    bool retval = !row.ctype_c_pmaskfld_in_ary;
+    c_pmaskfld_Insert(ctype,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FCtype.c_pmaskfld.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_pmaskfld_Remove(amc::FCtype& ctype, amc::FPmaskfld& row) {
+    if (bool_Update(row.ctype_c_pmaskfld_in_ary,false)) {
+        int lim = ctype.c_pmaskfld_n;
+        amc::FPmaskfld* *elems = ctype.c_pmaskfld_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FPmaskfld* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FPmaskfld*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                ctype.c_pmaskfld_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FCtype.c_pmaskfld.Reserve
+// Reserve space in index for N more elements;
+void amc::c_pmaskfld_Reserve(amc::FCtype& ctype, u32 n) {
+    u32 old_max = ctype.c_pmaskfld_max;
+    if (UNLIKELY(ctype.c_pmaskfld_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FPmaskfld*);
+        u32 new_size = new_max * sizeof(amc::FPmaskfld*);
+        void *new_mem = amc::lpool_ReallocMem(ctype.c_pmaskfld_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_pmaskfld");
+        }
+        ctype.c_pmaskfld_elems = (amc::FPmaskfld**)new_mem;
+        ctype.c_pmaskfld_max = new_max;
     }
 }
 
@@ -2432,6 +2709,236 @@ void amc::c_fcurs_Reserve(amc::FCtype& ctype, u32 n) {
     }
 }
 
+// --- amc.FCtype.c_ffast.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_ffast_Insert(amc::FCtype& ctype, amc::FFfast& row) {
+    if (bool_Update(row.ctype_c_ffast_in_ary,true)) {
+        // reserve space
+        c_ffast_Reserve(ctype, 1);
+        u32 n  = ctype.c_ffast_n;
+        u32 at = n;
+        amc::FFfast* *elems = ctype.c_ffast_elems;
+        elems[at] = &row;
+        ctype.c_ffast_n = n+1;
+
+    }
+}
+
+// --- amc.FCtype.c_ffast.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_ffast_InsertMaybe(amc::FCtype& ctype, amc::FFfast& row) {
+    bool retval = !row.ctype_c_ffast_in_ary;
+    c_ffast_Insert(ctype,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FCtype.c_ffast.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_ffast_Remove(amc::FCtype& ctype, amc::FFfast& row) {
+    if (bool_Update(row.ctype_c_ffast_in_ary,false)) {
+        int lim = ctype.c_ffast_n;
+        amc::FFfast* *elems = ctype.c_ffast_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FFfast* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FFfast*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                ctype.c_ffast_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FCtype.c_ffast.Reserve
+// Reserve space in index for N more elements;
+void amc::c_ffast_Reserve(amc::FCtype& ctype, u32 n) {
+    u32 old_max = ctype.c_ffast_max;
+    if (UNLIKELY(ctype.c_ffast_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FFfast*);
+        u32 new_size = new_max * sizeof(amc::FFfast*);
+        void *new_mem = amc::lpool_ReallocMem(ctype.c_ffast_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FCtype.c_ffast");
+        }
+        ctype.c_ffast_elems = (amc::FFfast**)new_mem;
+        ctype.c_ffast_max = new_max;
+    }
+}
+
+// --- amc.FCtype.c_ffast.Swap
+// Swap values elem_a and elem_b
+inline static void amc::c_ffast_Swap(amc::FFfast* &elem_a, amc::FFfast* &elem_b) {
+    amc::FFfast *temp = elem_a;
+    elem_a = elem_b;
+    elem_b = temp;
+}
+
+// --- amc.FCtype.c_ffast.Rotleft
+// Left circular shift of three-tuple
+inline static void amc::c_ffast_Rotleft(amc::FFfast* &elem_a, amc::FFfast* &elem_b, amc::FFfast* &elem_c) {
+    amc::FFfast *temp = elem_a;
+    elem_a = elem_b;
+    elem_b = elem_c;
+    elem_c = temp;
+}
+
+// --- amc.FCtype.c_ffast.Lt
+// Compare values elem_a and elem_b
+// The comparison function must be anti-symmetric: if a>b, then !(b>a).
+// If not, mayhem results.
+static bool amc::c_ffast_Lt(amc::FFfast &elem_a, amc::FFfast &elem_b) {
+    bool ret;
+    ret = elem_a.pos < elem_b.pos;
+    return ret;
+}
+
+// --- amc.FCtype.c_ffast.SortedQ
+// Verify whether array is sorted
+bool amc::c_ffast_SortedQ(amc::FCtype& ctype) {
+    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
+    int n = c_ffast_N(ctype);
+    for (int i = 1; i < n; i++) {
+        if (c_ffast_Lt(*elems[i], *elems[i-1])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- amc.FCtype.c_ffast.IntInsertionSort
+// Internal insertion sort
+static void amc::c_ffast_IntInsertionSort(amc::FFfast* *elems, int n) {
+    for (int i = 1; i < n; ++i) {
+        int j = i;
+        amc::FFfast *tmp = elems[i];
+        // shift elements up by one
+        if (c_ffast_Lt(*tmp, *elems[j-1])) {
+            do {
+                elems[j] = elems[j-1];
+                j--;
+            } while (j>0 && c_ffast_Lt(*tmp, *elems[j-1]));
+            elems[j] = tmp;
+        }
+    }
+}
+
+// --- amc.FCtype.c_ffast.IntHeapSort
+// Internal heap sort
+static void amc::c_ffast_IntHeapSort(amc::FFfast* *elems, int n) {
+    // construct max-heap.
+    // k=current element
+    // j=parent element
+    for (int i = 1; i < n; i++) {
+        int k=i;
+        int j=(i-1)/2;
+        while (c_ffast_Lt(*elems[j], *elems[k])) {
+            c_ffast_Swap(elems[k],elems[j]);
+            k=j;
+            j=(k-1)/2;
+        }
+    }
+    // remove elements from heap one-by-one,
+    // deposit them in reverse order starting at the end of ARY.
+    for (int i = n - 1; i>=0; i--) {
+        int k = 0;
+        int l = 1;
+        while (l<i) {
+            l += l<i-1 && c_ffast_Lt(*elems[l], *elems[l+1]);
+            if (c_ffast_Lt(*elems[l], *elems[i])) {
+                break;
+            }
+            c_ffast_Swap(elems[k], elems[l]);
+            k = l;
+            l = k*2+1;
+        }
+        if (i != k) {
+            c_ffast_Swap(elems[i],elems[k]);
+        }
+    }
+}
+
+// --- amc.FCtype.c_ffast.IntQuickSort
+// Quick sort engine
+static void amc::c_ffast_IntQuickSort(amc::FFfast* *elems, int n, int depth) {
+    while (n>16) {
+        // detect degenerate case and revert to heap sort
+        if (depth==0) {
+            c_ffast_IntHeapSort(elems,n);
+            return;
+        }
+        // elements to sort initially to determine pivot.
+        // choose pp=n/2 in case the input is already sorted.
+        int pi = 0;
+        int pp = n/2;
+        int pj = n-1;
+        // insertion sort for 1st, middle and last element
+        if (c_ffast_Lt(*elems[pp], *elems[pi])) {
+            c_ffast_Swap(elems[pi], elems[pp]);
+        }
+        if (c_ffast_Lt(*elems[pj], *elems[pp])) {
+            if (c_ffast_Lt(*elems[pj], *elems[pi])) {
+                c_ffast_Rotleft(elems[pi], elems[pj], elems[pp]);
+            } else {
+                c_ffast_Swap(elems[pj], elems[pp]);
+            }
+        }
+        // deposit pivot near the end of the array and skip it.
+        c_ffast_Swap(elems[--pj], elems[pp]);
+        // copy pivot into temporary variable
+        amc::FFfast *pivot = elems[pj];
+        for(;;){
+            while (c_ffast_Lt(*elems[++pi], *pivot)) {
+            }
+            while (c_ffast_Lt(*pivot, *elems[--pj])) {
+            }
+            if (pj <= pi) {
+                break;
+            }
+            c_ffast_Swap(elems[pi],elems[pj]);
+        }
+        depth -= 1;
+        c_ffast_IntQuickSort(elems, pi, depth);
+        elems += pi;
+        n -= pi;
+    }
+    // sort the remainder of this section
+    c_ffast_IntInsertionSort(elems,n);
+}
+
+// --- amc.FCtype.c_ffast.InsertionSort
+// Insertion sort
+void amc::c_ffast_InsertionSort(amc::FCtype& ctype) {
+    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
+    int n = c_ffast_N(ctype);
+    c_ffast_IntInsertionSort(elems, n);
+}
+
+// --- amc.FCtype.c_ffast.HeapSort
+// Heap sort
+void amc::c_ffast_HeapSort(amc::FCtype& ctype) {
+    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
+    int n = c_ffast_N(ctype);
+    c_ffast_IntHeapSort(elems, n);
+}
+
+// --- amc.FCtype.c_ffast.QuickSort
+// Quick sort
+void amc::c_ffast_QuickSort(amc::FCtype& ctype) {
+    // compute max recursion depth based on number of elements in the array
+    int max_depth = algo::CeilingLog2(u32(c_ffast_N(ctype) + 1)) + 3;
+    amc::FFfast* *elems = c_ffast_Getary(ctype).elems;
+    int n = c_ffast_N(ctype);
+    c_ffast_IntQuickSort(elems, n, max_depth);
+}
+
 // --- amc.FCtype..Init
 // Set all fields to initial values.
 void amc::FCtype_Init(amc::FCtype& ctype) {
@@ -2456,7 +2963,9 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.c_ssimfile = NULL;
     ctype.c_pack = NULL;
     ctype.c_lenfld = NULL;
-    ctype.c_pmaskfld = NULL;
+    ctype.c_pmaskfld_elems = NULL; // (amc.FCtype.c_pmaskfld)
+    ctype.c_pmaskfld_n = 0; // (amc.FCtype.c_pmaskfld)
+    ctype.c_pmaskfld_max = 0; // (amc.FCtype.c_pmaskfld)
     ctype.c_typefld = NULL;
     ctype.c_datafld_elems = NULL; // (amc.FCtype.c_datafld)
     ctype.c_datafld_n = 0; // (amc.FCtype.c_datafld)
@@ -2504,6 +3013,10 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.next_anon_idx = i32(0);
     ctype.c_nossimfile = NULL;
     ctype.topo_idx = i32(0);
+    ctype.c_cfast = NULL;
+    ctype.c_ffast_elems = NULL; // (amc.FCtype.c_ffast)
+    ctype.c_ffast_n = 0; // (amc.FCtype.c_ffast)
+    ctype.c_ffast_max = 0; // (amc.FCtype.c_ffast)
     ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ind_ctype_next = (amc::FCtype*)-1; // (amc.FDb.ind_ctype) not-in-hash
     ctype.zsl_ctype_pack_tran_next = (amc::FCtype*)-1; // (amc.FDb.zsl_ctype_pack_tran) not-in-list
@@ -2521,6 +3034,9 @@ void amc::FCtype_Uninit(amc::FCtype& ctype) {
     zsl_ctype_pack_tran_Remove(row); // remove ctype from index zsl_ctype_pack_tran
     zs_sig_visit_Remove(row); // remove ctype from index zs_sig_visit
 
+    // amc.FCtype.c_ffast.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(ctype.c_ffast_elems, sizeof(amc::FFfast*)*ctype.c_ffast_max); // (amc.FCtype.c_ffast)
+
     // amc.FCtype.c_fcurs.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ctype.c_fcurs_elems, sizeof(amc::FFcurs*)*ctype.c_fcurs_max); // (amc.FCtype.c_fcurs)
 
@@ -2529,6 +3045,9 @@ void amc::FCtype_Uninit(amc::FCtype& ctype) {
 
     // amc.FCtype.c_datafld.Uninit (Ptrary)  //Physical fields (non-fldfunc)
     amc::lpool_FreeMem(ctype.c_datafld_elems, sizeof(amc::FField*)*ctype.c_datafld_max); // (amc.FCtype.c_datafld)
+
+    // amc.FCtype.c_pmaskfld.Uninit (Ptrary)  //List of pmask fields in this ctype
+    amc::lpool_FreeMem(ctype.c_pmaskfld_elems, sizeof(amc::FPmaskfld*)*ctype.c_pmaskfld_max); // (amc.FCtype.c_pmaskfld)
 
     // amc.FCtype.c_parent.Uninit (Ptrary)  //
     amc::lpool_FreeMem(ctype.c_parent_elems, sizeof(amc::FCtype*)*ctype.c_parent_max); // (amc.FCtype.c_parent)
@@ -2656,8 +3175,9 @@ void amc::FTclass_Uninit(amc::FTclass& tclass) {
 }
 
 // --- amc.trace..Print
-// print string representation of amc::trace to string LHS, no header -- cprint:amc.trace.String
-void amc::trace_Print(amc::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.trace.String  printfmt:Tuple
+void amc::trace_Print(amc::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amc.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -6319,7 +6839,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'defa565d2cb1fa6ff1382714cec24e761f0a354d'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'a99278c1d678e3a11df6d5515ceede7d2824d8a8'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -6908,6 +7428,24 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && license_InputMaybe(elem);
             break;
         }
+        case amc_TableId_dmmeta_Cfast: { // finput:amc.FDb.cfast
+            dmmeta::Cfast elem;
+            retval = dmmeta::Cfast_ReadStrptrMaybe(elem, str);
+            retval = retval && cfast_InputMaybe(elem);
+            break;
+        }
+        case amc_TableId_dmmeta_Ffast: { // finput:amc.FDb.ffast
+            dmmeta::Ffast elem;
+            retval = dmmeta::Ffast_ReadStrptrMaybe(elem, str);
+            retval = retval && ffast_InputMaybe(elem);
+            break;
+        }
+        case amc_TableId_dmmeta_PmaskfldMember: { // finput:amc.FDb.pmaskfld_member
+            dmmeta::PmaskfldMember elem;
+            retval = dmmeta::PmaskfldMember_ReadStrptrMaybe(elem, str);
+            retval = retval && pmaskfld_member_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -6945,6 +7483,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ptrary"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pnew"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pmaskfld"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pmaskfld_member"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.numstr"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsx"),recursive);
@@ -6980,6 +7519,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.finput"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.findrem"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fflag"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ffast"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdelay"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fdec"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fcurs"),recursive);
@@ -7009,6 +7549,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.charset"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cget"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfast"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cextern"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ccmp"),recursive);
@@ -7108,7 +7649,7 @@ bool amc::_db_XrefMaybe() {
 // --- amc.FDb.ind_bltin.Find
 // Find row by key. Return NULL if not found.
 amc::FBltin* amc::ind_bltin_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
     amc::FBltin* *e = &_db.ind_bltin_buckets_elems[index];
     amc::FBltin* ret=NULL;
     do {
@@ -7143,7 +7684,7 @@ bool amc::ind_bltin_InsertMaybe(amc::FBltin& row) {
     ind_bltin_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_bltin_next == (amc::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
         amc::FBltin* *prev = &_db.ind_bltin_buckets_elems[index];
         do {
             amc::FBltin* ret = *prev;
@@ -7169,7 +7710,7 @@ bool amc::ind_bltin_InsertMaybe(amc::FBltin& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_bltin_Remove(amc::FBltin& row) {
     if (LIKELY(row.ind_bltin_next != (amc::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
         amc::FBltin* *prev = &_db.ind_bltin_buckets_elems[index]; // addr of pointer to current element
         while (amc::FBltin *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -7206,7 +7747,7 @@ void amc::ind_bltin_Reserve(int n) {
             while (elem) {
                 amc::FBltin &row        = *elem;
                 amc::FBltin* next       = row.ind_bltin_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_bltin_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -7222,7 +7763,7 @@ void amc::ind_bltin_Reserve(int n) {
 // --- amc.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 amc::FCtype* amc::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     amc::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     amc::FCtype* ret=NULL;
     do {
@@ -7257,7 +7798,7 @@ bool amc::ind_ctype_InsertMaybe(amc::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (amc::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             amc::FCtype* ret = *prev;
@@ -7283,7 +7824,7 @@ bool amc::ind_ctype_InsertMaybe(amc::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_ctype_Remove(amc::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (amc::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (amc::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -7320,7 +7861,7 @@ void amc::ind_ctype_Reserve(int n) {
             while (elem) {
                 amc::FCtype &row        = *elem;
                 amc::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -8118,7 +8659,7 @@ bool amc::cpptype_XrefMaybe(amc::FCpptype &row) {
 // --- amc.FDb.ind_cpptype.Find
 // Find row by key. Return NULL if not found.
 amc::FCpptype* amc::ind_cpptype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cpptype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cpptype_buckets_n - 1);
     amc::FCpptype* *e = &_db.ind_cpptype_buckets_elems[index];
     amc::FCpptype* ret=NULL;
     do {
@@ -8153,7 +8694,7 @@ bool amc::ind_cpptype_InsertMaybe(amc::FCpptype& row) {
     ind_cpptype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cpptype_next == (amc::FCpptype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_cpptype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_cpptype_buckets_n - 1);
         amc::FCpptype* *prev = &_db.ind_cpptype_buckets_elems[index];
         do {
             amc::FCpptype* ret = *prev;
@@ -8179,7 +8720,7 @@ bool amc::ind_cpptype_InsertMaybe(amc::FCpptype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_cpptype_Remove(amc::FCpptype& row) {
     if (LIKELY(row.ind_cpptype_next != (amc::FCpptype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_cpptype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_cpptype_buckets_n - 1);
         amc::FCpptype* *prev = &_db.ind_cpptype_buckets_elems[index]; // addr of pointer to current element
         while (amc::FCpptype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -8216,7 +8757,7 @@ void amc::ind_cpptype_Reserve(int n) {
             while (elem) {
                 amc::FCpptype &row        = *elem;
                 amc::FCpptype* next       = row.ind_cpptype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_cpptype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -9697,7 +10238,7 @@ bool amc::pack_XrefMaybe(amc::FPack &row) {
 // --- amc.FDb.ind_pack.Find
 // Find row by key. Return NULL if not found.
 amc::FPack* amc::ind_pack_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_pack_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_pack_buckets_n - 1);
     amc::FPack* *e = &_db.ind_pack_buckets_elems[index];
     amc::FPack* ret=NULL;
     do {
@@ -9732,7 +10273,7 @@ bool amc::ind_pack_InsertMaybe(amc::FPack& row) {
     ind_pack_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_pack_next == (amc::FPack*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_pack_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_pack_buckets_n - 1);
         amc::FPack* *prev = &_db.ind_pack_buckets_elems[index];
         do {
             amc::FPack* ret = *prev;
@@ -9758,7 +10299,7 @@ bool amc::ind_pack_InsertMaybe(amc::FPack& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_pack_Remove(amc::FPack& row) {
     if (LIKELY(row.ind_pack_next != (amc::FPack*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_pack_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_pack_buckets_n - 1);
         amc::FPack* *prev = &_db.ind_pack_buckets_elems[index]; // addr of pointer to current element
         while (amc::FPack *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -9795,7 +10336,7 @@ void amc::ind_pack_Reserve(int n) {
             while (elem) {
                 amc::FPack &row        = *elem;
                 amc::FPack* next       = row.ind_pack_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_pack_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -12404,7 +12945,7 @@ bool amc::chash_XrefMaybe(amc::FChash &row) {
 // --- amc.FDb.ind_chash.Find
 // Find row by key. Return NULL if not found.
 amc::FChash* amc::ind_chash_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_chash_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_chash_buckets_n - 1);
     amc::FChash* *e = &_db.ind_chash_buckets_elems[index];
     amc::FChash* ret=NULL;
     do {
@@ -12439,7 +12980,7 @@ bool amc::ind_chash_InsertMaybe(amc::FChash& row) {
     ind_chash_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_chash_next == (amc::FChash*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_chash_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_chash_buckets_n - 1);
         amc::FChash* *prev = &_db.ind_chash_buckets_elems[index];
         do {
             amc::FChash* ret = *prev;
@@ -12465,7 +13006,7 @@ bool amc::ind_chash_InsertMaybe(amc::FChash& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_chash_Remove(amc::FChash& row) {
     if (LIKELY(row.ind_chash_next != (amc::FChash*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_chash_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_chash_buckets_n - 1);
         amc::FChash* *prev = &_db.ind_chash_buckets_elems[index]; // addr of pointer to current element
         while (amc::FChash *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -12502,7 +13043,7 @@ void amc::ind_chash_Reserve(int n) {
             while (elem) {
                 amc::FChash &row        = *elem;
                 amc::FChash* next       = row.ind_chash_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_chash_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -12629,7 +13170,7 @@ bool amc::ccmp_XrefMaybe(amc::FCcmp &row) {
 // --- amc.FDb.ind_ccmp.Find
 // Find row by key. Return NULL if not found.
 amc::FCcmp* amc::ind_ccmp_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ccmp_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ccmp_buckets_n - 1);
     amc::FCcmp* *e = &_db.ind_ccmp_buckets_elems[index];
     amc::FCcmp* ret=NULL;
     do {
@@ -12664,7 +13205,7 @@ bool amc::ind_ccmp_InsertMaybe(amc::FCcmp& row) {
     ind_ccmp_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ccmp_next == (amc::FCcmp*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ccmp_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ccmp_buckets_n - 1);
         amc::FCcmp* *prev = &_db.ind_ccmp_buckets_elems[index];
         do {
             amc::FCcmp* ret = *prev;
@@ -12690,7 +13231,7 @@ bool amc::ind_ccmp_InsertMaybe(amc::FCcmp& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void amc::ind_ccmp_Remove(amc::FCcmp& row) {
     if (LIKELY(row.ind_ccmp_next != (amc::FCcmp*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ccmp_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ccmp_buckets_n - 1);
         amc::FCcmp* *prev = &_db.ind_ccmp_buckets_elems[index]; // addr of pointer to current element
         while (amc::FCcmp *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -12727,7 +13268,7 @@ void amc::ind_ccmp_Reserve(int n) {
             while (elem) {
                 amc::FCcmp &row        = *elem;
                 amc::FCcmp* next       = row.ind_ccmp_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ccmp_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -14956,12 +15497,7 @@ bool amc::pmaskfld_XrefMaybe(amc::FPmaskfld &row) {
     }
     // insert pmaskfld into index c_pmaskfld
     if (true) { // user-defined insert condition
-        bool success = c_pmaskfld_InsertMaybe(*p_ctype, row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FCtype.c_pmaskfld"; // check for duplicate key
-            return false;
-        }
+        c_pmaskfld_Insert(*p_ctype, row);
     }
     // insert pmaskfld into index c_pmaskfld
     if (true) { // user-defined insert condition
@@ -14969,6 +15505,15 @@ bool amc::pmaskfld_XrefMaybe(amc::FPmaskfld &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FField.c_pmaskfld"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert pmaskfld into index ind_pmaskfld
+    if (true) { // user-defined insert condition
+        bool success = ind_pmaskfld_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FDb.ind_pmaskfld"; // check for duplicate key
             return false;
         }
     }
@@ -15399,7 +15944,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ctype.Max  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return the greater of two values\"", amc::tfunc_Ctype_Max }
         ,{ "amcdb.tfunc  tfunc:Ctype.Eq  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Eq }
         ,{ "amcdb.tfunc  tfunc:Ctype.Update  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Set value. Return true if new value is different from old value.\"", amc::tfunc_Ctype_Update }
-        ,{ "amcdb.tfunc  tfunc:Ctype.EqStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_EqStrptr }
+        ,{ "amcdb.tfunc  tfunc:Ctype.EqStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_EqStrptr }
         ,{ "amcdb.tfunc  tfunc:Ctype.PrintArgv  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_PrintArgv }
         ,{ "amcdb.tfunc  tfunc:Ctype.ToCmdline  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_ToCmdline }
         ,{ "amcdb.tfunc  tfunc:Ctype.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Print }
@@ -15407,6 +15952,9 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ctype.EqEnum  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_EqEnum }
         ,{ "amcdb.tfunc  tfunc:Ctype.GetAnon  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_GetAnon }
         ,{ "amcdb.tfunc  tfunc:Ctype.NArgs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Used with command lines\"", amc::tfunc_Ctype_NArgs }
+        ,{ "amcdb.tfunc  tfunc:Ctype.FastEncode  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_FastEncode }
+        ,{ "amcdb.tfunc  tfunc:Ctype.FastDecode  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_FastDecode }
+        ,{ "amcdb.tfunc  tfunc:Ctype.FixEncode  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_FixEncode }
         ,{ "amcdb.tfunc  tfunc:Dec.qSetDouble  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Dec_qSetDouble }
         ,{ "amcdb.tfunc  tfunc:Dec.GetDouble  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Dec_GetDouble }
         ,{ "amcdb.tfunc  tfunc:Dec.GetInt  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Dec_GetInt }
@@ -15553,8 +16101,9 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Opt.Getary  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Access optional portion as an array of bytes\"", amc::tfunc_Opt_Getary }
         ,{ "amcdb.tfunc  tfunc:Opt.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Opt_Print }
         ,{ "amcdb.tfunc  tfunc:Opt.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Opt_ReadStrptrMaybe }
-        ,{ "amcdb.tfunc  tfunc:Pmask.PresentQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pmask_PresentQ }
-        ,{ "amcdb.tfunc  tfunc:Pmask.SetPresent  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pmask_SetPresent }
+        ,{ "amcdb.tfunc  tfunc:Pmask.PresentQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return true if the field is marked in the presence mask\"", amc::tfunc_Pmask_PresentQ }
+        ,{ "amcdb.tfunc  tfunc:Pmask.SetPresent  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Set presence bit for this field in the pmask\"", amc::tfunc_Pmask_SetPresent }
+        ,{ "amcdb.tfunc  tfunc:Pmask.GetBit  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return field's bit number in the pmask\"", amc::tfunc_Pmask_GetBit }
         ,{ "amcdb.tfunc  tfunc:Pool.Alloc  hasthrow:N  leaf:Y  poolfunc:Y  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pool_Alloc }
         ,{ "amcdb.tfunc  tfunc:Pool.AllocMaybe  hasthrow:N  leaf:Y  poolfunc:Y  inl:N  wur:Y  pure:N  ismacro:N  comment:\"Allocate memory for new element. If out of memory, return NULL.\"", amc::tfunc_Pool_AllocMaybe }
         ,{ "amcdb.tfunc  tfunc:Pool.AllocExtra  hasthrow:N  leaf:Y  poolfunc:Y  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pool_AllocExtra }
@@ -15608,7 +16157,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Smallstr.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Smallstr_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Smallstr.SetStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from strptr, clipping length\"", amc::tfunc_Smallstr_SetStrptr }
         ,{ "amcdb.tfunc  tfunc:Smallstr.AssignStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from strptr (operator=)\"", amc::tfunc_Smallstr_AssignStrptr }
-        ,{ "amcdb.tfunc  tfunc:Smallstr.Set  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy from same type\"", amc::tfunc_Smallstr_Set }
+        ,{ "amcdb.tfunc  tfunc:Smallstr.Set  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Copy from same type\"", amc::tfunc_Smallstr_Set }
         ,{ "amcdb.tfunc  tfunc:Smallstr.Ctor  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Construct from same type\"", amc::tfunc_Smallstr_Ctor }
         ,{ "amcdb.tfunc  tfunc:Smallstr.CtorStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Construct from stptr\"", amc::tfunc_Smallstr_CtorStrptr }
         ,{ "amcdb.tfunc  tfunc:Sort.Swap  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Sort_Swap }
@@ -15946,6 +16495,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:rewrite_regx  perns:N  comment:\"Rewrite RegxSql as Regx, regxtype Sql\"", amc::gen_rewrite_regx }
         ,{ "amcdb.gen  gen:tableenum  perns:N  comment:\"Create enum for tables\"", amc::gen_tableenum }
         ,{ "amcdb.gen  gen:gconst  perns:N  comment:\"Generate fconsts from tables\"", amc::gen_gconst }
+        ,{ "amcdb.gen  gen:fast_presence  perns:N  comment:\"Generate set for optional FAST fields\"", amc::gen_fast_presence }
         ,{ "amcdb.gen  gen:bitfldenum  perns:N  comment:\"Generate fconsts from bool bitfield\"", amc::gen_bitfldenum }
         ,{ "amcdb.gen  gen:proc  perns:N  comment:\"Create command::xyz_proc for every executable\"", amc::gen_proc }
         ,{ "amcdb.gen  gen:msgcurs  perns:N  comment:\"Generate message cursors\"", amc::gen_msgcurs }
@@ -16006,6 +16556,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:ns_check_pack  perns:Y  comment:\"Recursively check packing\"", amc::gen_ns_check_pack }
         ,{ "amcdb.gen  gen:ns_check_nstype  perns:Y  comment:\"Check namespace annotations\"", amc::gen_ns_check_nstype }
         ,{ "amcdb.gen  gen:ns_check_main  perns:Y  comment:\"Check main() usage\"", amc::gen_ns_check_main }
+        ,{ "amcdb.gen  gen:ns_fast  perns:Y  comment:\"Generate FAST decode\"", amc::gen_ns_fast }
         ,{ "amcdb.gen  gen:ns_dispatch  perns:Y  comment:\"Generate dispatch code\"", amc::gen_ns_dispatch }
         ,{ "amcdb.gen  gen:ns_pnew  perns:Y  comment:\"Generate custom constructors (placement new)\"", amc::gen_ns_pnew }
         ,{ "amcdb.gen  gen:ns_funcindex  perns:Y  comment:\"Generate index of functions per field/ctype\"", amc::gen_ns_funcindex }
@@ -16218,7 +16769,7 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Cmp  comment:Comparison", amc::tclass_Cmp }
         ,{ "amcdb.tclass  tclass:Count  comment:\"A cross-reference that simply counts # of children\"", amc::tclass_Count }
         ,{ "amcdb.tclass  tclass:Cppfunc  comment:\"\"", amc::tclass_Cppfunc }
-        ,{ "amcdb.tclass  tclass:Cppstack  comment:\"X-reference: count of elements\"", amc::tclass_Cppstack }
+        ,{ "amcdb.tclass  tclass:Cppstack  comment:\"A pool whose only purpose is to provide a name\"", amc::tclass_Cppstack }
         ,{ "amcdb.tclass  tclass:Ctype  comment:\"\"", amc::tclass_Ctype }
         ,{ "amcdb.tclass  tclass:Dec  comment:\"\"", amc::tclass_Dec }
         ,{ "amcdb.tclass  tclass:Delptr  comment:\"Pointer to a private cascade-delete value (like Val by starts as NULL)\"", amc::tclass_Delptr }
@@ -16232,7 +16783,7 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Hook  comment:\"Pointer to a function\"", amc::tclass_Hook }
         ,{ "amcdb.tclass  tclass:Inlary  comment:\"Zero to N values, allocated inside the parent struct\"", amc::tclass_Inlary }
         ,{ "amcdb.tclass  tclass:Io  comment:\"Load ssimfile/gstatic\"", amc::tclass_Io }
-        ,{ "amcdb.tclass  tclass:Lary  comment:\"Array of 32 non-resizable arrays of values. Permanent pointers.\"", amc::tclass_Lary }
+        ,{ "amcdb.tclass  tclass:Lary  comment:\"Level array with permanent pointers\"", amc::tclass_Lary }
         ,{ "amcdb.tclass  tclass:Llist  comment:\"X-reference: any of 32 possible types of linked list\"", amc::tclass_Llist }
         ,{ "amcdb.tclass  tclass:Lpool  comment:\"Varlen pool, implemented as array of 32 Tpools\"", amc::tclass_Lpool }
         ,{ "amcdb.tclass  tclass:Malloc  comment:\"Pass-through for malloc / free\"", amc::tclass_Malloc }
@@ -22201,6 +22752,503 @@ amc::FSsimfile* amc::zd_ssimfile_todo_RemoveFirst() {
     return row;
 }
 
+// --- amc.FDb.cfast.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FCfast& amc::cfast_Alloc() {
+    amc::FCfast* row = cfast_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.cfast  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.cfast.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FCfast* amc::cfast_AllocMaybe() {
+    amc::FCfast *row = (amc::FCfast*)cfast_AllocMem();
+    if (row) {
+        new (row) amc::FCfast; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.cfast.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FCfast* amc::cfast_InsertMaybe(const dmmeta::Cfast &value) {
+    amc::FCfast *row = &cfast_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    cfast_CopyIn(*row,const_cast<dmmeta::Cfast&>(value));
+    bool ok = cfast_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        cfast_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.cfast.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::cfast_AllocMem() {
+    u64 new_nelems     = _db.cfast_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FCfast*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.cfast_lary[bsr];
+        if (!lev) {
+            lev=(amc::FCfast*)amc::lpool_AllocMem(sizeof(amc::FCfast) * (u64(1)<<bsr));
+            _db.cfast_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.cfast_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.cfast.RemoveAll
+// Remove all elements from Lary
+void amc::cfast_RemoveAll() {
+    for (u64 n = _db.cfast_n; n>0; ) {
+        n--;
+        cfast_qFind(u64(n)).~FCfast(); // destroy last element
+        _db.cfast_n = i32(n);
+    }
+}
+
+// --- amc.FDb.cfast.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::cfast_RemoveLast() {
+    u64 n = _db.cfast_n;
+    if (n > 0) {
+        n -= 1;
+        cfast_qFind(u64(n)).~FCfast();
+        _db.cfast_n = i32(n);
+    }
+}
+
+// --- amc.FDb.cfast.InputMaybe
+static bool amc::cfast_InputMaybe(dmmeta::Cfast &elem) {
+    bool retval = true;
+    retval = cfast_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.cfast.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::cfast_XrefMaybe(amc::FCfast &row) {
+    bool retval = true;
+    (void)row;
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(row.ctype);
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", row.ctype);
+        return false;
+    }
+    // insert cfast into index c_cfast
+    if (true) { // user-defined insert condition
+        bool success = c_cfast_InsertMaybe(*p_ctype, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FCtype.c_cfast"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ffast.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FFfast& amc::ffast_Alloc() {
+    amc::FFfast* row = ffast_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.ffast  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.ffast.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FFfast* amc::ffast_AllocMaybe() {
+    amc::FFfast *row = (amc::FFfast*)ffast_AllocMem();
+    if (row) {
+        new (row) amc::FFfast; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.ffast.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FFfast* amc::ffast_InsertMaybe(const dmmeta::Ffast &value) {
+    amc::FFfast *row = &ffast_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ffast_CopyIn(*row,const_cast<dmmeta::Ffast&>(value));
+    bool ok = ffast_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ffast_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.ffast.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::ffast_AllocMem() {
+    u64 new_nelems     = _db.ffast_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FFfast*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ffast_lary[bsr];
+        if (!lev) {
+            lev=(amc::FFfast*)amc::lpool_AllocMem(sizeof(amc::FFfast) * (u64(1)<<bsr));
+            _db.ffast_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ffast_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.ffast.RemoveAll
+// Remove all elements from Lary
+void amc::ffast_RemoveAll() {
+    for (u64 n = _db.ffast_n; n>0; ) {
+        n--;
+        ffast_qFind(u64(n)).~FFfast(); // destroy last element
+        _db.ffast_n = i32(n);
+    }
+}
+
+// --- amc.FDb.ffast.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::ffast_RemoveLast() {
+    u64 n = _db.ffast_n;
+    if (n > 0) {
+        n -= 1;
+        ffast_qFind(u64(n)).~FFfast();
+        _db.ffast_n = i32(n);
+    }
+}
+
+// --- amc.FDb.ffast.InputMaybe
+static bool amc::ffast_InputMaybe(dmmeta::Ffast &elem) {
+    bool retval = true;
+    retval = ffast_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.ffast.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::ffast_XrefMaybe(amc::FFfast &row) {
+    bool retval = true;
+    (void)row;
+    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", field_Get(row));
+        return false;
+    }
+    // ffast: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
+    // insert ffast into index c_ffast_field
+    if (fastinstr_Get(row)==dmmeta_Fastinstr_fastinstr_field) { // user-defined insert condition
+        bool success = c_ffast_field_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FField.c_ffast_field"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert ffast into index c_ffast_length
+    if (fastinstr_Get(row)==dmmeta_Fastinstr_fastinstr_length) { // user-defined insert condition
+        bool success = c_ffast_length_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FField.c_ffast_length"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert ffast into index c_ffast_mantissa
+    if (fastinstr_Get(row)==dmmeta_Fastinstr_fastinstr_mantissa) { // user-defined insert condition
+        bool success = c_ffast_mantissa_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "amc.duplicate_key  xref:amc.FField.c_ffast_mantissa"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert ffast into index c_ffast
+    if (true) { // user-defined insert condition
+        c_ffast_Insert(*p_field, row);
+    }
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ctype" << Keyval("key", ctype_Get(row));
+        return false;
+    }
+    // insert ffast into index c_ffast
+    if (fastinstr_Get(row) == dmmeta_Fastinstr_fastinstr_field) { // user-defined insert condition
+        c_ffast_Insert(*p_ctype, row);
+    }
+    return retval;
+}
+
+// --- amc.FDb.pmaskfld_member.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FPmaskfldMember& amc::pmaskfld_member_Alloc() {
+    amc::FPmaskfldMember* row = pmaskfld_member_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.pmaskfld_member  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.pmaskfld_member.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FPmaskfldMember* amc::pmaskfld_member_AllocMaybe() {
+    amc::FPmaskfldMember *row = (amc::FPmaskfldMember*)pmaskfld_member_AllocMem();
+    if (row) {
+        new (row) amc::FPmaskfldMember; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.pmaskfld_member.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FPmaskfldMember* amc::pmaskfld_member_InsertMaybe(const dmmeta::PmaskfldMember &value) {
+    amc::FPmaskfldMember *row = &pmaskfld_member_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    pmaskfld_member_CopyIn(*row,const_cast<dmmeta::PmaskfldMember&>(value));
+    bool ok = pmaskfld_member_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        pmaskfld_member_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.pmaskfld_member.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::pmaskfld_member_AllocMem() {
+    u64 new_nelems     = _db.pmaskfld_member_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FPmaskfldMember*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.pmaskfld_member_lary[bsr];
+        if (!lev) {
+            lev=(amc::FPmaskfldMember*)amc::lpool_AllocMem(sizeof(amc::FPmaskfldMember) * (u64(1)<<bsr));
+            _db.pmaskfld_member_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.pmaskfld_member_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.pmaskfld_member.RemoveAll
+// Remove all elements from Lary
+void amc::pmaskfld_member_RemoveAll() {
+    for (u64 n = _db.pmaskfld_member_n; n>0; ) {
+        n--;
+        pmaskfld_member_qFind(u64(n)).~FPmaskfldMember(); // destroy last element
+        _db.pmaskfld_member_n = i32(n);
+    }
+}
+
+// --- amc.FDb.pmaskfld_member.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::pmaskfld_member_RemoveLast() {
+    u64 n = _db.pmaskfld_member_n;
+    if (n > 0) {
+        n -= 1;
+        pmaskfld_member_qFind(u64(n)).~FPmaskfldMember();
+        _db.pmaskfld_member_n = i32(n);
+    }
+}
+
+// --- amc.FDb.pmaskfld_member.InputMaybe
+static bool amc::pmaskfld_member_InputMaybe(dmmeta::PmaskfldMember &elem) {
+    bool retval = true;
+    retval = pmaskfld_member_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.pmaskfld_member.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::pmaskfld_member_XrefMaybe(amc::FPmaskfldMember &row) {
+    bool retval = true;
+    (void)row;
+    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", field_Get(row));
+        return false;
+    }
+    // pmaskfld_member: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
+    amc::FPmaskfld* p_pmaskfld = amc::ind_pmaskfld_Find(pmaskfld_Get(row));
+    if (UNLIKELY(!p_pmaskfld)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_pmaskfld" << Keyval("key", pmaskfld_Get(row));
+        return false;
+    }
+    // pmaskfld_member: save pointer to pmaskfld
+    if (true) { // user-defined insert condition
+        row.p_pmaskfld = p_pmaskfld;
+    }
+    // insert pmaskfld_member into index c_pmaskfld_member
+    if (true) { // user-defined insert condition
+        c_pmaskfld_member_Insert(*p_pmaskfld, row);
+    }
+    // insert pmaskfld_member into index c_pmaskfld_member
+    if (true) { // user-defined insert condition
+        c_pmaskfld_member_Insert(*p_field, row);
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_pmaskfld.Find
+// Find row by key. Return NULL if not found.
+amc::FPmaskfld* amc::ind_pmaskfld_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_pmaskfld_buckets_n - 1);
+    amc::FPmaskfld* *e = &_db.ind_pmaskfld_buckets_elems[index];
+    amc::FPmaskfld* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).field == key;
+        if (done) break;
+        e         = &ret->ind_pmaskfld_next;
+    } while (true);
+    return ret;
+}
+
+// --- amc.FDb.ind_pmaskfld.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+amc::FPmaskfld& amc::ind_pmaskfld_GetOrCreate(const algo::strptr& key) {
+    amc::FPmaskfld* ret = ind_pmaskfld_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &pmaskfld_Alloc();
+        (*ret).field = key;
+        bool good = pmaskfld_XrefMaybe(*ret);
+        if (!good) {
+            pmaskfld_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "amc.create_error  table:ind_pmaskfld  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- amc.FDb.ind_pmaskfld.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool amc::ind_pmaskfld_InsertMaybe(amc::FPmaskfld& row) {
+    ind_pmaskfld_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_pmaskfld_next == (amc::FPmaskfld*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_pmaskfld_buckets_n - 1);
+        amc::FPmaskfld* *prev = &_db.ind_pmaskfld_buckets_elems[index];
+        do {
+            amc::FPmaskfld* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).field == row.field) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_pmaskfld_next;
+        } while (true);
+        if (retval) {
+            row.ind_pmaskfld_next = *prev;
+            _db.ind_pmaskfld_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- amc.FDb.ind_pmaskfld.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void amc::ind_pmaskfld_Remove(amc::FPmaskfld& row) {
+    if (LIKELY(row.ind_pmaskfld_next != (amc::FPmaskfld*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_pmaskfld_buckets_n - 1);
+        amc::FPmaskfld* *prev = &_db.ind_pmaskfld_buckets_elems[index]; // addr of pointer to current element
+        while (amc::FPmaskfld *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_pmaskfld_next; // unlink (singly linked list)
+                _db.ind_pmaskfld_n--;
+                row.ind_pmaskfld_next = (amc::FPmaskfld*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_pmaskfld_next;
+        }
+    }
+}
+
+// --- amc.FDb.ind_pmaskfld.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void amc::ind_pmaskfld_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_pmaskfld_buckets_n;
+    u32 new_nelems   = _db.ind_pmaskfld_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(amc::FPmaskfld*);
+        u32 new_size = new_nbuckets * sizeof(amc::FPmaskfld*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        amc::FPmaskfld* *new_buckets = (amc::FPmaskfld**)amc::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FDb.ind_pmaskfld");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_pmaskfld_buckets_n; i++) {
+            amc::FPmaskfld* elem = _db.ind_pmaskfld_buckets_elems[i];
+            while (elem) {
+                amc::FPmaskfld &row        = *elem;
+                amc::FPmaskfld* next       = row.ind_pmaskfld_next;
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                row.ind_pmaskfld_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        amc::lpool_FreeMem(_db.ind_pmaskfld_buckets_elems, old_size);
+        _db.ind_pmaskfld_buckets_elems = new_buckets;
+        _db.ind_pmaskfld_buckets_n = new_nbuckets;
+    }
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -23815,6 +24863,47 @@ void amc::FDb_Init() {
     _db.zd_ssimfile_todo_head = NULL; // (amc.FDb.zd_ssimfile_todo)
     _db.zd_ssimfile_todo_n = 0; // (amc.FDb.zd_ssimfile_todo)
     _db.zd_ssimfile_todo_tail = NULL; // (amc.FDb.zd_ssimfile_todo)
+    // initialize LAry cfast (amc.FDb.cfast)
+    _db.cfast_n = 0;
+    memset(_db.cfast_lary, 0, sizeof(_db.cfast_lary)); // zero out all level pointers
+    amc::FCfast* cfast_first = (amc::FCfast*)amc::lpool_AllocMem(sizeof(amc::FCfast) * (u64(1)<<4));
+    if (!cfast_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.cfast_lary[i]  = cfast_first;
+        cfast_first    += 1ULL<<i;
+    }
+    // initialize LAry ffast (amc.FDb.ffast)
+    _db.ffast_n = 0;
+    memset(_db.ffast_lary, 0, sizeof(_db.ffast_lary)); // zero out all level pointers
+    amc::FFfast* ffast_first = (amc::FFfast*)amc::lpool_AllocMem(sizeof(amc::FFfast) * (u64(1)<<4));
+    if (!ffast_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ffast_lary[i]  = ffast_first;
+        ffast_first    += 1ULL<<i;
+    }
+    // initialize LAry pmaskfld_member (amc.FDb.pmaskfld_member)
+    _db.pmaskfld_member_n = 0;
+    memset(_db.pmaskfld_member_lary, 0, sizeof(_db.pmaskfld_member_lary)); // zero out all level pointers
+    amc::FPmaskfldMember* pmaskfld_member_first = (amc::FPmaskfldMember*)amc::lpool_AllocMem(sizeof(amc::FPmaskfldMember) * (u64(1)<<4));
+    if (!pmaskfld_member_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.pmaskfld_member_lary[i]  = pmaskfld_member_first;
+        pmaskfld_member_first    += 1ULL<<i;
+    }
+    // initialize hash table for amc::FPmaskfld;
+    _db.ind_pmaskfld_n             	= 0; // (amc.FDb.ind_pmaskfld)
+    _db.ind_pmaskfld_buckets_n     	= 4; // (amc.FDb.ind_pmaskfld)
+    _db.ind_pmaskfld_buckets_elems 	= (amc::FPmaskfld**)amc::lpool_AllocMem(sizeof(amc::FPmaskfld*)*_db.ind_pmaskfld_buckets_n); // initial buckets (amc.FDb.ind_pmaskfld)
+    if (!_db.ind_pmaskfld_buckets_elems) {
+        FatalErrorExit("out of memory"); // (amc.FDb.ind_pmaskfld)
+    }
+    memset(_db.ind_pmaskfld_buckets_elems, 0, sizeof(amc::FPmaskfld*)*_db.ind_pmaskfld_buckets_n); // (amc.FDb.ind_pmaskfld)
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
@@ -23826,6 +24915,18 @@ void amc::FDb_Init() {
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
     amc::FDb &row = _db; (void)row;
+
+    // amc.FDb.ind_pmaskfld.Uninit (Thash)  //
+    // skip destruction of ind_pmaskfld in global scope
+
+    // amc.FDb.pmaskfld_member.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.ffast.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // amc.FDb.cfast.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // amc.FDb.c_ssimfile_sorted.Uninit (Ptrary)  //Global list of ssimfiles topologically sorted by pkey
     amc::lpool_FreeMem(_db.c_ssimfile_sorted_elems, sizeof(amc::FSsimfile*)*_db.c_ssimfile_sorted_max); // (amc.FDb.c_ssimfile_sorted)
@@ -24442,8 +25543,8 @@ algo::Smallstr50 amc::dispatch_Get(amc::FDispatchmsg& dispatch_msg) {
 }
 
 // --- amc.FDispatchmsg.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FDispatchmsg& dispatch_msg) {
-    algo::Smallstr50 ret(algo::Pathcomp(dispatch_msg.dispatch_msg, "/RR"));
+algo::Smallstr100 amc::ctype_Get(amc::FDispatchmsg& dispatch_msg) {
+    algo::Smallstr100 ret(algo::Pathcomp(dispatch_msg.dispatch_msg, "/RR"));
     return ret;
 }
 
@@ -25324,8 +26425,8 @@ algo::Smallstr100 amc::field_Get(amc::FFcurs& fcurs) {
 }
 
 // --- amc.FFcurs.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FFcurs& fcurs) {
-    algo::Smallstr50 ret(algo::Pathcomp(fcurs.fcurs, "/RL.RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FFcurs& fcurs) {
+    algo::Smallstr100 ret(algo::Pathcomp(fcurs.fcurs, "/RL.RL"));
     return ret;
 }
 
@@ -25400,6 +26501,85 @@ void amc::FFdelay_Uninit(amc::FFdelay& fdelay) {
     }
 }
 
+// --- amc.FFfast.base.CopyOut
+// Copy fields out of row
+void amc::ffast_CopyOut(amc::FFfast &row, dmmeta::Ffast &out) {
+    out.ffast = row.ffast;
+    out.name = row.name;
+    out.id = row.id;
+    out.pos = row.pos;
+    out.optional = row.optional;
+    out.encoding = row.encoding;
+    out.op = row.op;
+    out.value = row.value;
+    out.comment = row.comment;
+}
+
+// --- amc.FFfast.base.CopyIn
+// Copy fields in to row
+void amc::ffast_CopyIn(amc::FFfast &row, dmmeta::Ffast &in) {
+    row.ffast = in.ffast;
+    row.name = in.name;
+    row.id = in.id;
+    row.pos = in.pos;
+    row.optional = in.optional;
+    row.encoding = in.encoding;
+    row.op = in.op;
+    row.value = in.value;
+    row.comment = in.comment;
+}
+
+// --- amc.FFfast.field.Get
+algo::Smallstr100 amc::field_Get(amc::FFfast& ffast) {
+    algo::Smallstr100 ret(algo::Pathcomp(ffast.ffast, ".RL"));
+    return ret;
+}
+
+// --- amc.FFfast.ctype.Get
+algo::Smallstr100 amc::ctype_Get(amc::FFfast& ffast) {
+    algo::Smallstr100 ret(algo::Pathcomp(ffast.ffast, ".RL.RL"));
+    return ret;
+}
+
+// --- amc.FFfast.fastinstr.Get
+algo::Smallstr50 amc::fastinstr_Get(amc::FFfast& ffast) {
+    algo::Smallstr50 ret(algo::Pathcomp(ffast.ffast, ".RR"));
+    return ret;
+}
+
+// --- amc.FFfast..Init
+// Set all fields to initial values.
+void amc::FFfast_Init(amc::FFfast& ffast) {
+    ffast.id = u32(0);
+    ffast.pos = u32(0);
+    ffast.optional = bool(false);
+    ffast.p_field = NULL;
+    ffast.ctype_c_ffast_in_ary = bool(false);
+    ffast.field_c_ffast_in_ary = bool(false);
+}
+
+// --- amc.FFfast..Uninit
+void amc::FFfast_Uninit(amc::FFfast& ffast) {
+    amc::FFfast &row = ffast; (void)row;
+    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    if (p_field)  {
+        c_ffast_field_Remove(*p_field, row);// remove ffast from index c_ffast_field
+    }
+    if (p_field)  {
+        c_ffast_length_Remove(*p_field, row);// remove ffast from index c_ffast_length
+    }
+    if (p_field)  {
+        c_ffast_mantissa_Remove(*p_field, row);// remove ffast from index c_ffast_mantissa
+    }
+    if (p_field)  {
+        c_ffast_Remove(*p_field, row);// remove ffast from index c_ffast
+    }
+    amc::FCtype* p_ctype = amc::ind_ctype_Find(ctype_Get(row));
+    if (p_ctype)  {
+        c_ffast_Remove(*p_ctype, row);// remove ffast from index c_ffast
+    }
+}
+
 // --- amc.FFflag.base.CopyOut
 // Copy fields out of row
 void amc::fflag_CopyOut(amc::FFflag &row, dmmeta::Fflag &out) {
@@ -25449,8 +26629,8 @@ void amc::field_CopyIn(amc::FField &row, dmmeta::Field &in) {
 }
 
 // --- amc.FField.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -25925,6 +27105,134 @@ inline static bool amc::bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, am
     return a.offset < b.offset;
 }
 
+// --- amc.FField.c_ffast.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_ffast_Insert(amc::FField& field, amc::FFfast& row) {
+    if (bool_Update(row.field_c_ffast_in_ary,true)) {
+        // reserve space
+        c_ffast_Reserve(field, 1);
+        u32 n  = field.c_ffast_n;
+        u32 at = n;
+        amc::FFfast* *elems = field.c_ffast_elems;
+        elems[at] = &row;
+        field.c_ffast_n = n+1;
+
+    }
+}
+
+// --- amc.FField.c_ffast.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_ffast_InsertMaybe(amc::FField& field, amc::FFfast& row) {
+    bool retval = !row.field_c_ffast_in_ary;
+    c_ffast_Insert(field,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FField.c_ffast.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_ffast_Remove(amc::FField& field, amc::FFfast& row) {
+    if (bool_Update(row.field_c_ffast_in_ary,false)) {
+        int lim = field.c_ffast_n;
+        amc::FFfast* *elems = field.c_ffast_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FFfast* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FFfast*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                field.c_ffast_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FField.c_ffast.Reserve
+// Reserve space in index for N more elements;
+void amc::c_ffast_Reserve(amc::FField& field, u32 n) {
+    u32 old_max = field.c_ffast_max;
+    if (UNLIKELY(field.c_ffast_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FFfast*);
+        u32 new_size = new_max * sizeof(amc::FFfast*);
+        void *new_mem = amc::lpool_ReallocMem(field.c_ffast_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FField.c_ffast");
+        }
+        field.c_ffast_elems = (amc::FFfast**)new_mem;
+        field.c_ffast_max = new_max;
+    }
+}
+
+// --- amc.FField.c_pmaskfld_member.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_pmaskfld_member_Insert(amc::FField& field, amc::FPmaskfldMember& row) {
+    if (bool_Update(row.field_c_pmaskfld_member_in_ary,true)) {
+        // reserve space
+        c_pmaskfld_member_Reserve(field, 1);
+        u32 n  = field.c_pmaskfld_member_n;
+        u32 at = n;
+        amc::FPmaskfldMember* *elems = field.c_pmaskfld_member_elems;
+        elems[at] = &row;
+        field.c_pmaskfld_member_n = n+1;
+
+    }
+}
+
+// --- amc.FField.c_pmaskfld_member.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_pmaskfld_member_InsertMaybe(amc::FField& field, amc::FPmaskfldMember& row) {
+    bool retval = !row.field_c_pmaskfld_member_in_ary;
+    c_pmaskfld_member_Insert(field,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FField.c_pmaskfld_member.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_pmaskfld_member_Remove(amc::FField& field, amc::FPmaskfldMember& row) {
+    if (bool_Update(row.field_c_pmaskfld_member_in_ary,false)) {
+        int lim = field.c_pmaskfld_member_n;
+        amc::FPmaskfldMember* *elems = field.c_pmaskfld_member_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FPmaskfldMember* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FPmaskfldMember*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                field.c_pmaskfld_member_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FField.c_pmaskfld_member.Reserve
+// Reserve space in index for N more elements;
+void amc::c_pmaskfld_member_Reserve(amc::FField& field, u32 n) {
+    u32 old_max = field.c_pmaskfld_member_max;
+    if (UNLIKELY(field.c_pmaskfld_member_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FPmaskfldMember*);
+        u32 new_size = new_max * sizeof(amc::FPmaskfldMember*);
+        void *new_mem = amc::lpool_ReallocMem(field.c_pmaskfld_member_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FField.c_pmaskfld_member");
+        }
+        field.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
+        field.c_pmaskfld_member_max = new_max;
+    }
+}
+
 // --- amc.FField..Init
 // Set all fields to initial values.
 void amc::FField_Init(amc::FField& field) {
@@ -26001,6 +27309,15 @@ void amc::FField_Init(amc::FField& field) {
     field.c_fuserinit = NULL;
     field.c_fflag = NULL;
     field.c_falias = NULL;
+    field.c_ffast_field = NULL;
+    field.c_ffast_length = NULL;
+    field.c_ffast_mantissa = NULL;
+    field.c_ffast_elems = NULL; // (amc.FField.c_ffast)
+    field.c_ffast_n = 0; // (amc.FField.c_ffast)
+    field.c_ffast_max = 0; // (amc.FField.c_ffast)
+    field.c_pmaskfld_member_elems = NULL; // (amc.FField.c_pmaskfld_member)
+    field.c_pmaskfld_member_n = 0; // (amc.FField.c_pmaskfld_member)
+    field.c_pmaskfld_member_max = 0; // (amc.FField.c_pmaskfld_member)
     field.ctype_c_datafld_in_ary = bool(false);
     field._db_c_tempfield_in_ary = bool(false);
     field.zd_inst_next = (amc::FField*)-1; // (amc.FCtype.zd_inst) not-in-list
@@ -26129,6 +27446,12 @@ void amc::FField_Uninit(amc::FField& field) {
     }
     zs_ordkeyfield_Remove(row); // remove field from index zs_ordkeyfield
 
+    // amc.FField.c_pmaskfld_member.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(field.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*field.c_pmaskfld_member_max); // (amc.FField.c_pmaskfld_member)
+
+    // amc.FField.c_ffast.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(field.c_ffast_elems, sizeof(amc::FFfast*)*field.c_ffast_max); // (amc.FField.c_ffast)
+
     // amc.FField.bh_bitfld.Uninit (Bheap)  //
     amc::lpool_FreeMem((u8*)field.bh_bitfld_elems, sizeof(amc::FBitfld*)*field.bh_bitfld_max); // (amc.FField.bh_bitfld)
 
@@ -26235,8 +27558,8 @@ void amc::floadtuples_CopyIn(amc::FFloadtuples &row, dmmeta::Floadtuples &in) {
 }
 
 // --- amc.FFloadtuples.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FFloadtuples& floadtuples) {
-    algo::Smallstr50 ret(algo::Pathcomp(floadtuples.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FFloadtuples& floadtuples) {
+    algo::Smallstr100 ret(algo::Pathcomp(floadtuples.field, ".RL"));
     return ret;
 }
 
@@ -26501,8 +27824,8 @@ algo::Smallstr50 amc::name_Get(amc::FFunc& func) {
 }
 
 // --- amc.FFunc.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FFunc& func) {
-    algo::Smallstr50 ret(algo::Pathcomp(func.func, ".RL.RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FFunc& func) {
+    algo::Smallstr100 ret(algo::Pathcomp(func.func, ".RL.RL"));
     return ret;
 }
 
@@ -26754,8 +28077,8 @@ algo::Smallstr16 amc::ns_Get(amc::FFwddecl& fwddecl) {
 }
 
 // --- amc.FFwddecl.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FFwddecl& fwddecl) {
-    algo::Smallstr50 ret(algo::Pathcomp(fwddecl.fwddecl, ".LR"));
+algo::Smallstr100 amc::ctype_Get(amc::FFwddecl& fwddecl) {
+    algo::Smallstr100 ret(algo::Pathcomp(fwddecl.fwddecl, ".LR"));
     return ret;
 }
 
@@ -26788,8 +28111,8 @@ void amc::gconst_CopyIn(amc::FGconst &row, dmmeta::Gconst &in) {
 }
 
 // --- amc.FGconst.namefldctyp.Get
-algo::Smallstr50 amc::namefldctyp_Get(amc::FGconst& gconst) {
-    algo::Smallstr50 ret(algo::Pathcomp(gconst.namefld, ".RL"));
+algo::Smallstr100 amc::namefldctyp_Get(amc::FGconst& gconst) {
+    algo::Smallstr100 ret(algo::Pathcomp(gconst.namefld, ".RL"));
     return ret;
 }
 
@@ -27178,8 +28501,8 @@ void amc::lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) {
 }
 
 // --- amc.FLenfld.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FLenfld& lenfld) {
-    algo::Smallstr50 ret(algo::Pathcomp(lenfld.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FLenfld& lenfld) {
+    algo::Smallstr100 ret(algo::Pathcomp(lenfld.field, ".RL"));
     return ret;
 }
 
@@ -28860,6 +30183,7 @@ void amc::FPack_Uninit(amc::FPack& pack) {
 // Copy fields out of row
 void amc::pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out) {
     out.field = row.field;
+    out.filter_print = row.filter_print;
     out.comment = row.comment;
 }
 
@@ -28867,13 +30191,78 @@ void amc::pmaskfld_CopyOut(amc::FPmaskfld &row, dmmeta::Pmaskfld &out) {
 // Copy fields in to row
 void amc::pmaskfld_CopyIn(amc::FPmaskfld &row, dmmeta::Pmaskfld &in) {
     row.field = in.field;
+    row.filter_print = in.filter_print;
     row.comment = in.comment;
 }
 
 // --- amc.FPmaskfld.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FPmaskfld& pmaskfld) {
-    algo::Smallstr50 ret(algo::Pathcomp(pmaskfld.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FPmaskfld& pmaskfld) {
+    algo::Smallstr100 ret(algo::Pathcomp(pmaskfld.field, ".RL"));
     return ret;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void amc::c_pmaskfld_member_Insert(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
+    if (bool_Update(row.pmaskfld_c_pmaskfld_member_in_ary,true)) {
+        // reserve space
+        c_pmaskfld_member_Reserve(pmaskfld, 1);
+        u32 n  = pmaskfld.c_pmaskfld_member_n;
+        u32 at = n;
+        amc::FPmaskfldMember* *elems = pmaskfld.c_pmaskfld_member_elems;
+        elems[at] = &row;
+        pmaskfld.c_pmaskfld_member_n = n+1;
+
+    }
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool amc::c_pmaskfld_member_InsertMaybe(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
+    bool retval = !row.pmaskfld_c_pmaskfld_member_in_ary;
+    c_pmaskfld_member_Insert(pmaskfld,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void amc::c_pmaskfld_member_Remove(amc::FPmaskfld& pmaskfld, amc::FPmaskfldMember& row) {
+    if (bool_Update(row.pmaskfld_c_pmaskfld_member_in_ary,false)) {
+        int lim = pmaskfld.c_pmaskfld_member_n;
+        amc::FPmaskfldMember* *elems = pmaskfld.c_pmaskfld_member_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = lim-1; i>=0; i--) {
+            amc::FPmaskfldMember* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(amc::FPmaskfldMember*) * (lim - j);
+                memmove(elems + i, elems + j, nbytes);
+                pmaskfld.c_pmaskfld_member_n = lim - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- amc.FPmaskfld.c_pmaskfld_member.Reserve
+// Reserve space in index for N more elements;
+void amc::c_pmaskfld_member_Reserve(amc::FPmaskfld& pmaskfld, u32 n) {
+    u32 old_max = pmaskfld.c_pmaskfld_member_max;
+    if (UNLIKELY(pmaskfld.c_pmaskfld_member_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(amc::FPmaskfldMember*);
+        u32 new_size = new_max * sizeof(amc::FPmaskfldMember*);
+        void *new_mem = amc::lpool_ReallocMem(pmaskfld.c_pmaskfld_member_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("amc.out_of_memory  field:amc.FPmaskfld.c_pmaskfld_member");
+        }
+        pmaskfld.c_pmaskfld_member_elems = (amc::FPmaskfldMember**)new_mem;
+        pmaskfld.c_pmaskfld_member_max = new_max;
+    }
 }
 
 // --- amc.FPmaskfld..Uninit
@@ -28886,6 +30275,49 @@ void amc::FPmaskfld_Uninit(amc::FPmaskfld& pmaskfld) {
     amc::FField* p_field = amc::ind_field_Find(row.field);
     if (p_field)  {
         c_pmaskfld_Remove(*p_field, row);// remove pmaskfld from index c_pmaskfld
+    }
+    ind_pmaskfld_Remove(row); // remove pmaskfld from index ind_pmaskfld
+
+    // amc.FPmaskfld.c_pmaskfld_member.Uninit (Ptrary)  //
+    amc::lpool_FreeMem(pmaskfld.c_pmaskfld_member_elems, sizeof(amc::FPmaskfldMember*)*pmaskfld.c_pmaskfld_member_max); // (amc.FPmaskfld.c_pmaskfld_member)
+}
+
+// --- amc.FPmaskfldMember.base.CopyOut
+// Copy fields out of row
+void amc::pmaskfld_member_CopyOut(amc::FPmaskfldMember &row, dmmeta::PmaskfldMember &out) {
+    out.pmaskfld_member = row.pmaskfld_member;
+    out.comment = row.comment;
+}
+
+// --- amc.FPmaskfldMember.base.CopyIn
+// Copy fields in to row
+void amc::pmaskfld_member_CopyIn(amc::FPmaskfldMember &row, dmmeta::PmaskfldMember &in) {
+    row.pmaskfld_member = in.pmaskfld_member;
+    row.comment = in.comment;
+}
+
+// --- amc.FPmaskfldMember.pmaskfld.Get
+algo::Smallstr100 amc::pmaskfld_Get(amc::FPmaskfldMember& pmaskfld_member) {
+    algo::Smallstr100 ret(algo::Pathcomp(pmaskfld_member.pmaskfld_member, "/RL"));
+    return ret;
+}
+
+// --- amc.FPmaskfldMember.field.Get
+algo::Smallstr100 amc::field_Get(amc::FPmaskfldMember& pmaskfld_member) {
+    algo::Smallstr100 ret(algo::Pathcomp(pmaskfld_member.pmaskfld_member, "/RR"));
+    return ret;
+}
+
+// --- amc.FPmaskfldMember..Uninit
+void amc::FPmaskfldMember_Uninit(amc::FPmaskfldMember& pmaskfld_member) {
+    amc::FPmaskfldMember &row = pmaskfld_member; (void)row;
+    amc::FPmaskfld* p_pmaskfld = amc::ind_pmaskfld_Find(pmaskfld_Get(row));
+    if (p_pmaskfld)  {
+        c_pmaskfld_member_Remove(*p_pmaskfld, row);// remove pmaskfld_member from index c_pmaskfld_member
+    }
+    amc::FField* p_field = amc::ind_field_Find(field_Get(row));
+    if (p_field)  {
+        c_pmaskfld_member_Remove(*p_field, row);// remove pmaskfld_member from index c_pmaskfld_member
     }
 }
 
@@ -28910,8 +30342,8 @@ algo::Smallstr16 amc::ns_Get(amc::FPnew& pnew) {
 }
 
 // --- amc.FPnew.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FPnew& pnew) {
-    algo::Smallstr50 ret(algo::Pathcomp(pnew.pnew, "/LR.RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FPnew& pnew) {
+    algo::Smallstr100 ret(algo::Pathcomp(pnew.pnew, "/LR.RL"));
     return ret;
 }
 
@@ -29136,8 +30568,8 @@ void amc::smallstr_CopyIn(amc::FSmallstr &row, dmmeta::Smallstr &in) {
 }
 
 // --- amc.FSmallstr.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FSmallstr& smallstr) {
-    algo::Smallstr50 ret(algo::Pathcomp(smallstr.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FSmallstr& smallstr) {
+    algo::Smallstr100 ret(algo::Pathcomp(smallstr.field, ".RL"));
     return ret;
 }
 
@@ -29608,7 +31040,13 @@ void amc::tracerec_CopyIn(amc::FTracerec &row, dmmeta::Tracerec &in) {
 
 // --- amc.FTracerec.name.Get
 algo::Smallstr50 amc::name_Get(amc::FTracerec& tracerec) {
-    algo::Smallstr50 ret(algo::Pathcomp(tracerec.tracerec, ".LL"));
+    algo::Smallstr50 ret(algo::Pathcomp(tracerec.tracerec, ".LR"));
+    return ret;
+}
+
+// --- amc.FTracerec.ns.Get
+algo::Smallstr16 amc::ns_Get(amc::FTracerec& tracerec) {
+    algo::Smallstr16 ret(algo::Pathcomp(tracerec.tracerec, ".LL"));
     return ret;
 }
 
@@ -29627,8 +31065,8 @@ void amc::typefld_CopyIn(amc::FTypefld &row, dmmeta::Typefld &in) {
 }
 
 // --- amc.FTypefld.ctype.Get
-algo::Smallstr50 amc::ctype_Get(amc::FTypefld& typefld) {
-    algo::Smallstr50 ret(algo::Pathcomp(typefld.field, ".RL"));
+algo::Smallstr100 amc::ctype_Get(amc::FTypefld& typefld) {
+    algo::Smallstr100 ret(algo::Pathcomp(typefld.field, ".RL"));
     return ret;
 }
 
@@ -29811,8 +31249,9 @@ bool amc::FieldId_ReadStrptrMaybe(amc::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- amc.FieldId..Print
-// print string representation of amc::FieldId to string LHS, no header -- cprint:amc.FieldId.String
-void amc::FieldId_Print(amc::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.FieldId.String  printfmt:Raw
+void amc::FieldId_Print(amc::FieldId& row, algo::cstring& str) {
     amc::value_Print(row, str);
 }
 
@@ -29934,8 +31373,9 @@ bool amc::Pnewtype_ReadStrptrMaybe(amc::Pnewtype &parent, algo::strptr in_str) {
 }
 
 // --- amc.Pnewtype..Print
-// print string representation of amc::Pnewtype to string LHS, no header -- cprint:amc.Pnewtype.String
-void amc::Pnewtype_Print(amc::Pnewtype row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.Pnewtype.String  printfmt:Raw
+void amc::Pnewtype_Print(amc::Pnewtype row, algo::cstring& str) {
     amc::value_Print(row, str);
 }
 
@@ -29955,6 +31395,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Ccmp       : ret = "dmmeta.Ccmp";  break;
         case amc_TableId_dmmeta_Cdflt      : ret = "dmmeta.Cdflt";  break;
         case amc_TableId_dmmeta_Cextern    : ret = "dmmeta.Cextern";  break;
+        case amc_TableId_dmmeta_Cfast      : ret = "dmmeta.Cfast";  break;
         case amc_TableId_dmmeta_Cfmt       : ret = "dmmeta.Cfmt";  break;
         case amc_TableId_dmmeta_Cget       : ret = "dmmeta.Cget";  break;
         case amc_TableId_dmmeta_Charset    : ret = "dmmeta.Charset";  break;
@@ -29984,6 +31425,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Fcurs      : ret = "dmmeta.Fcurs";  break;
         case amc_TableId_dmmeta_Fdec       : ret = "dmmeta.Fdec";  break;
         case amc_TableId_dmmeta_Fdelay     : ret = "dmmeta.Fdelay";  break;
+        case amc_TableId_dmmeta_Ffast      : ret = "dmmeta.Ffast";  break;
         case amc_TableId_dmmeta_Fflag      : ret = "dmmeta.Fflag";  break;
         case amc_TableId_dmmeta_Field      : ret = "dmmeta.Field";  break;
         case amc_TableId_dmmeta_Findrem    : ret = "dmmeta.Findrem";  break;
@@ -30024,6 +31466,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Numstr     : ret = "dmmeta.Numstr";  break;
         case amc_TableId_dmmeta_Pack       : ret = "dmmeta.Pack";  break;
         case amc_TableId_dmmeta_Pmaskfld   : ret = "dmmeta.Pmaskfld";  break;
+        case amc_TableId_dmmeta_PmaskfldMember: ret = "dmmeta.PmaskfldMember";  break;
         case amc_TableId_dmmeta_Pnew       : ret = "dmmeta.Pnew";  break;
         case amc_TableId_dmmeta_Ptrary     : ret = "dmmeta.Ptrary";  break;
         case amc_TableId_dmmeta_Rowid      : ret = "dmmeta.Rowid";  break;
@@ -30216,6 +31659,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','m','m','e','t','a','.','C'): {
                     if (memcmp(rhs.elems+8,"dflt",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Cdflt); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"fast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Cfast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"hash",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Chash); ret = true; break; }
                     if (memcmp(rhs.elems+8,"size",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Csize); ret = true; break; }
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Ctype); ret = true; break; }
@@ -30226,6 +31670,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"cast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Fcast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"cmap",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Fcmap); ret = true; break; }
                     if (memcmp(rhs.elems+8,"curs",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Fcurs); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"fast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Ffast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"flag",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Fflag); ret = true; break; }
                     if (memcmp(rhs.elems+8,"ield",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Field); ret = true; break; }
                     if (memcmp(rhs.elems+8,"regx",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Fregx); ret = true; break; }
@@ -30251,6 +31696,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','c'): {
                     if (memcmp(rhs.elems+8,"dflt",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_cdflt); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"fast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_cfast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"hash",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_chash); ret = true; break; }
                     if (memcmp(rhs.elems+8,"size",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_csize); ret = true; break; }
                     if (memcmp(rhs.elems+8,"type",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_ctype); ret = true; break; }
@@ -30261,6 +31707,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"cast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fcast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"cmap",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fcmap); ret = true; break; }
                     if (memcmp(rhs.elems+8,"curs",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fcurs); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"fast",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_ffast); ret = true; break; }
                     if (memcmp(rhs.elems+8,"flag",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fflag); ret = true; break; }
                     if (memcmp(rhs.elems+8,"ield",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_field); ret = true; break; }
                     if (memcmp(rhs.elems+8,"regx",4)==0) { value_SetEnum(parent,amc_TableId_dmmeta_fregx); ret = true; break; }
@@ -30638,6 +32085,24 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 21: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','P'): {
+                    if (memcmp(rhs.elems+8,"maskfldMember",13)==0) { value_SetEnum(parent,amc_TableId_dmmeta_PmaskfldMember); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 22: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','p'): {
+                    if (memcmp(rhs.elems+8,"maskfld_member",14)==0) { value_SetEnum(parent,amc_TableId_dmmeta_pmaskfld_member); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
     }
     return ret;
 }
@@ -30670,8 +32135,9 @@ bool amc::TableId_ReadStrptrMaybe(amc::TableId &parent, algo::strptr in_str) {
 }
 
 // --- amc.TableId..Print
-// print string representation of amc::TableId to string LHS, no header -- cprint:amc.TableId.String
-void amc::TableId_Print(amc::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amc.TableId.String  printfmt:Raw
+void amc::TableId_Print(amc::TableId& row, algo::cstring& str) {
     amc::value_Print(row, str);
 }
 

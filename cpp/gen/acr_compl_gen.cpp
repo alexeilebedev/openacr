@@ -71,29 +71,47 @@ acr_compl::_db_bh_completion_curs::~_db_bh_completion_curs() {
 
 namespace acr_compl { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:acr_compl.FDb._db.InitReflection
     static void          InitReflection();
+    // func:acr_compl.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.anonfld.InputMaybe
     static bool          anonfld_InputMaybe(dmmeta::Anonfld &elem) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:acr_compl.FDb.bh_completion.Downheap
     static int           bh_completion_Downheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:acr_compl.FDb.bh_completion.Upheap
     static int           bh_completion_Upheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
+    // func:acr_compl.FDb.bh_completion.ElemLt
     static bool          bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
+    // func:acr_compl.FDb.bh_completion_curs.Add
     static void          _db_bh_completion_curs_Add(_db_bh_completion_curs &curs, acr_compl::FCompletion& row);
+    // func:acr_compl.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.fconst.InputMaybe
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.fcmdline.InputMaybe
     static bool          fcmdline_InputMaybe(dmmeta::Fcmdline &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.fflag.InputMaybe
     static bool          fflag_InputMaybe(dmmeta::Fflag &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.argvtype.InputMaybe
     static bool          argvtype_InputMaybe(dmmeta::Argvtype &elem) __attribute__((nothrow));
+    // func:acr_compl.FDb.falias.InputMaybe
     static bool          falias_InputMaybe(dmmeta::Falias &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:acr_compl.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:acr_compl.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:acr_compl...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -173,13 +191,19 @@ bool acr_compl::badness_ReadStrptrMaybe(acr_compl::Badness& parent, algo::strptr
 }
 
 // --- acr_compl.Badness..ReadFieldMaybe
-bool acr_compl::Badness_ReadFieldMaybe(acr_compl::Badness &parent, algo::strptr field, algo::strptr strval) {
+bool acr_compl::Badness_ReadFieldMaybe(acr_compl::Badness& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     acr_compl::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case acr_compl_FieldId_badness: retval = badness_ReadStrptrMaybe(parent, strval); break;
-        case acr_compl_FieldId_strkey: retval = algo::cstring_ReadStrptrMaybe(parent.strkey, strval); break;
+        case acr_compl_FieldId_badness: {
+            retval = badness_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case acr_compl_FieldId_strkey: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.strkey, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -213,13 +237,19 @@ algo::strptr acr_compl::Badness_GetAnon(acr_compl::Badness &parent, i32 idx) {
 }
 
 // --- acr_compl.Completion..ReadFieldMaybe
-bool acr_compl::Completion_ReadFieldMaybe(acr_compl::Completion &parent, algo::strptr field, algo::strptr strval) {
+bool acr_compl::Completion_ReadFieldMaybe(acr_compl::Completion& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     acr_compl::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case acr_compl_FieldId_value: retval = algo::cstring_ReadStrptrMaybe(parent.value, strval); break;
-        case acr_compl_FieldId_nospace: retval = bool_ReadStrptrMaybe(parent.nospace, strval); break;
+        case acr_compl_FieldId_value: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case acr_compl_FieldId_nospace: {
+            retval = bool_ReadStrptrMaybe(parent.nospace, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -241,8 +271,9 @@ bool acr_compl::Completion_ReadStrptrMaybe(acr_compl::Completion &parent, algo::
 }
 
 // --- acr_compl.Completion..Print
-// print string representation of acr_compl::Completion to string LHS, no header -- cprint:acr_compl.Completion.String
-void acr_compl::Completion_Print(acr_compl::Completion & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.Completion.String  printfmt:Tuple
+void acr_compl::Completion_Print(acr_compl::Completion& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.Completion";
 
@@ -277,8 +308,9 @@ void acr_compl::FAnonfld_Uninit(acr_compl::FAnonfld& anonfld) {
 }
 
 // --- acr_compl.FAnonfld..Print
-// print string representation of acr_compl::FAnonfld to string LHS, no header -- cprint:acr_compl.FAnonfld.String
-void acr_compl::FAnonfld_Print(acr_compl::FAnonfld & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FAnonfld.String  printfmt:Tuple
+void acr_compl::FAnonfld_Print(acr_compl::FAnonfld& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FAnonfld";
 
@@ -329,16 +361,31 @@ void acr_compl::completion_CopyIn(acr_compl::FCompletion &row, acr_compl::Comple
 }
 
 // --- acr_compl.FCompletion..ReadFieldMaybe
-bool acr_compl::FCompletion_ReadFieldMaybe(acr_compl::FCompletion &parent, algo::strptr field, algo::strptr strval) {
+bool acr_compl::FCompletion_ReadFieldMaybe(acr_compl::FCompletion& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     acr_compl::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case acr_compl_FieldId_msghdr: retval = false; break;
-        case acr_compl_FieldId_value: retval = algo::cstring_ReadStrptrMaybe(parent.value, strval); break;
-        case acr_compl_FieldId_nospace: retval = bool_ReadStrptrMaybe(parent.nospace, strval); break;
-        case acr_compl_FieldId_badness: retval = acr_compl::Badness_ReadStrptrMaybe(parent.badness, strval); break;
-        case acr_compl_FieldId_field: retval = false; break;
+        case acr_compl_FieldId_msghdr: {
+            retval = false;
+            break;
+        }
+        case acr_compl_FieldId_value: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case acr_compl_FieldId_nospace: {
+            retval = bool_ReadStrptrMaybe(parent.nospace, strval);
+            break;
+        }
+        case acr_compl_FieldId_badness: {
+            retval = acr_compl::Badness_ReadStrptrMaybe(parent.badness, strval);
+            break;
+        }
+        case acr_compl_FieldId_field: {
+            retval = false;
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -366,8 +413,9 @@ void acr_compl::FCompletion_Uninit(acr_compl::FCompletion& completion) {
 }
 
 // --- acr_compl.FCompletion..Print
-// print string representation of acr_compl::FCompletion to string LHS, no header -- cprint:acr_compl.FCompletion.String
-void acr_compl::FCompletion_Print(acr_compl::FCompletion & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FCompletion.String  printfmt:Tuple
+void acr_compl::FCompletion_Print(acr_compl::FCompletion& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FCompletion";
 
@@ -402,8 +450,8 @@ algo::Smallstr16 acr_compl::ns_Get(acr_compl::FCtype& ctype) {
 }
 
 // --- acr_compl.FCtype.name.Get
-algo::Smallstr50 acr_compl::name_Get(acr_compl::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 acr_compl::name_Get(acr_compl::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -481,12 +529,13 @@ void acr_compl::FCtype_Uninit(acr_compl::FCtype& ctype) {
 }
 
 // --- acr_compl.FCtype..Print
-// print string representation of acr_compl::FCtype to string LHS, no header -- cprint:acr_compl.FCtype.String
-void acr_compl::FCtype_Print(acr_compl::FCtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FCtype.String  printfmt:Tuple
+void acr_compl::FCtype_Print(acr_compl::FCtype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FCtype";
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -500,8 +549,9 @@ void acr_compl::FCtype_Print(acr_compl::FCtype & row, algo::cstring &str) {
 }
 
 // --- acr_compl.trace..Print
-// print string representation of acr_compl::trace to string LHS, no header -- cprint:acr_compl.trace.String
-void acr_compl::trace_Print(acr_compl::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.trace.String  printfmt:Tuple
+void acr_compl::trace_Print(acr_compl::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -670,7 +720,7 @@ static void acr_compl::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'dab8aaf9cc440b037ce59d91ffe8aa39f4df4836'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'af49159b85d99a9b207d2eacdc5453c1f73d8e4b'");
 }
 
 // --- acr_compl.FDb._db.StaticCheck
@@ -1060,7 +1110,7 @@ bool acr_compl::ctype_XrefMaybe(acr_compl::FCtype &row) {
 // --- acr_compl.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_compl::FCtype* acr_compl::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_compl::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_compl::FCtype* ret=NULL;
     do {
@@ -1095,7 +1145,7 @@ bool acr_compl::ind_ctype_InsertMaybe(acr_compl::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_compl::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_compl::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_compl::FCtype* ret = *prev;
@@ -1121,7 +1171,7 @@ bool acr_compl::ind_ctype_InsertMaybe(acr_compl::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_compl::ind_ctype_Remove(acr_compl::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_compl::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_compl::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_compl::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1158,7 +1208,7 @@ void acr_compl::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_compl::FCtype &row        = *elem;
                 acr_compl::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3523,8 +3573,8 @@ void acr_compl::field_CopyIn(acr_compl::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr_compl.FField.ctype.Get
-algo::Smallstr50 acr_compl::ctype_Get(acr_compl::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 acr_compl::ctype_Get(acr_compl::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -3719,15 +3769,16 @@ void acr_compl::FField_Uninit(acr_compl::FField& field) {
 }
 
 // --- acr_compl.FField..Print
-// print string representation of acr_compl::FField to string LHS, no header -- cprint:acr_compl.FField.String
-void acr_compl::FField_Print(acr_compl::FField & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FField.String  printfmt:Tuple
+void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FField";
 
     algo::Smallstr100_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
-    algo::Smallstr50_Print(row.arg, temp);
+    algo::Smallstr100_Print(row.arg, temp);
     PrintAttrSpaceReset(str,"arg", temp);
 
     algo::Smallstr50_Print(row.reftype, temp);
@@ -3822,15 +3873,16 @@ void acr_compl::FSsimfile_Uninit(acr_compl::FSsimfile& ssimfile) {
 }
 
 // --- acr_compl.FSsimfile..Print
-// print string representation of acr_compl::FSsimfile to string LHS, no header -- cprint:acr_compl.FSsimfile.String
-void acr_compl::FSsimfile_Print(acr_compl::FSsimfile & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FSsimfile.String  printfmt:Tuple
+void acr_compl::FSsimfile_Print(acr_compl::FSsimfile& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_compl.FSsimfile";
 
     algo::Smallstr50_Print(row.ssimfile, temp);
     PrintAttrSpaceReset(str,"ssimfile", temp);
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 }
 
@@ -3943,8 +3995,9 @@ bool acr_compl::FieldId_ReadStrptrMaybe(acr_compl::FieldId &parent, algo::strptr
 }
 
 // --- acr_compl.FieldId..Print
-// print string representation of acr_compl::FieldId to string LHS, no header -- cprint:acr_compl.FieldId.String
-void acr_compl::FieldId_Print(acr_compl::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.FieldId.String  printfmt:Raw
+void acr_compl::FieldId_Print(acr_compl::FieldId& row, algo::cstring& str) {
     acr_compl::value_Print(row, str);
 }
 
@@ -4040,8 +4093,9 @@ bool acr_compl::Shellqtype_ReadStrptrMaybe(acr_compl::Shellqtype &parent, algo::
 }
 
 // --- acr_compl.Shellqtype..Print
-// print string representation of acr_compl::Shellqtype to string LHS, no header -- cprint:acr_compl.Shellqtype.String
-void acr_compl::Shellqtype_Print(acr_compl::Shellqtype row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.Shellqtype.String  printfmt:Raw
+void acr_compl::Shellqtype_Print(acr_compl::Shellqtype row, algo::cstring& str) {
     acr_compl::type_Print(row, str);
 }
 
@@ -4209,8 +4263,9 @@ bool acr_compl::TableId_ReadStrptrMaybe(acr_compl::TableId &parent, algo::strptr
 }
 
 // --- acr_compl.TableId..Print
-// print string representation of acr_compl::TableId to string LHS, no header -- cprint:acr_compl.TableId.String
-void acr_compl::TableId_Print(acr_compl::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_compl.TableId.String  printfmt:Raw
+void acr_compl::TableId_Print(acr_compl::TableId& row, algo::cstring& str) {
     acr_compl::value_Print(row, str);
 }
 

@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/unittest.cpp -- Create, delete, rename unit test
 //
@@ -64,10 +64,11 @@ void acr_ed::edaction_Create_Unittest() {
 void acr_ed::edaction_Create_Citest() {
     prlog("acr_ed.create_citest"
           <<Keyval("citest",acr_ed::_db.cmdline.citest));
-    acr_ed::_db.out_ssim<<"atfdb.citest"
-                        <<Keyval("citest",acr_ed::_db.cmdline.citest)
-                        <<Keyval("comment",acr_ed::_db.cmdline.comment)
-                        <<eol;
+    atfdb::Citest citest;
+    citest.citest = acr_ed::_db.cmdline.citest;
+    citest.cijob = atfdb_cijob_normalize;
+    citest.comment.value = acr_ed::_db.cmdline.comment;
+    acr_ed::_db.out_ssim<<citest<<eol;
 }
 
 // -----------------------------------------------------------------------------

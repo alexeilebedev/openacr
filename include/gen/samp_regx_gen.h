@@ -54,12 +54,14 @@ struct trace { // samp_regx.trace
 };
 #pragma pack(pop)
 
-// print string representation of samp_regx::trace to string LHS, no header -- cprint:samp_regx.trace.String
-void                 trace_Print(samp_regx::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:samp_regx.trace.String  printfmt:Tuple
+// func:samp_regx.trace..Print
+void                 trace_Print(samp_regx::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- samp_regx.FDb
 // create: samp_regx.FDb._db (Global)
-struct FDb { // samp_regx.FDb
+struct FDb { // samp_regx.FDb: In-memory database for samp_regx
     command::samp_regx   cmdline;   //
     samp_regx::trace     trace;     //
 };
@@ -68,18 +70,26 @@ struct FDb { // samp_regx.FDb
 // The following fields are updated:
 //     samp_regx.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:samp_regx.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:samp_regx.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:samp_regx.FDb._db.Step
 void                 Step();
 // Main function
+// func:samp_regx.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:samp_regx.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:samp_regx.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:samp_regx.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -87,19 +97,26 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:samp_regx.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:samp_regx.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:samp_regx.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:samp_regx.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:samp_regx.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Set all fields to initial values.
+// func:samp_regx.FDb..Init
 void                 FDb_Init();
+// func:samp_regx.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- samp_regx.FieldId
@@ -114,37 +131,50 @@ struct FieldId { // samp_regx.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:samp_regx.FieldId.value.GetEnum
 samp_regx_FieldIdEnum value_GetEnum(const samp_regx::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:samp_regx.FieldId.value.SetEnum
 void                 value_SetEnum(samp_regx::FieldId& parent, samp_regx_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:samp_regx.FieldId.value.ToCstr
 const char*          value_ToCstr(const samp_regx::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:samp_regx.FieldId.value.Print
 void                 value_Print(const samp_regx::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:samp_regx.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(samp_regx::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:samp_regx.FieldId.value.SetStrptr
 void                 value_SetStrptr(samp_regx::FieldId& parent, algo::strptr rhs, samp_regx_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:samp_regx.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(samp_regx::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of samp_regx::FieldId from an ascii string.
 // The format of the string is the format of the samp_regx::FieldId's only field
+// func:samp_regx.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:samp_regx.FieldId..Init
 void                 FieldId_Init(samp_regx::FieldId& parent);
-// print string representation of samp_regx::FieldId to string LHS, no header -- cprint:samp_regx.FieldId.String
-void                 FieldId_Print(samp_regx::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:samp_regx.FieldId.String  printfmt:Raw
+// func:samp_regx.FieldId..Print
+void                 FieldId_Print(samp_regx::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace samp_regx { // gen:ns_func
 } // gen:ns_func
+// func:samp_regx...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:samp_regx...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

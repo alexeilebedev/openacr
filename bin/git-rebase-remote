@@ -25,8 +25,8 @@ fi
 # if no params are specified, get it from git
 if (( $# == 0 )); then
     OB=$(git status -b --porcelain | head -1 | cut -d'.' -f5 | cut -d' ' -f1)
-    ORIGIN=$(echo $OB | cut -d'/' -f1)
-    BRANCH=$(echo $OB | cut -d'/' -f2)
+    ORIGIN=$(echo $OB | cut -d'/' -f1-2)
+    BRANCH=$(echo $OB | cut -d'/' -f3)
 fi
 echo "rebasing to remote:"$ORIGIN "branch:"$BRANCH
 

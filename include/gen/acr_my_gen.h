@@ -77,12 +77,14 @@ struct trace { // acr_my.trace
 };
 #pragma pack(pop)
 
-// print string representation of acr_my::trace to string LHS, no header -- cprint:acr_my.trace.String
-void                 trace_Print(acr_my::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:acr_my.trace.String  printfmt:Tuple
+// func:acr_my.trace..Print
+void                 trace_Print(acr_my::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_my.FDb
 // create: acr_my.FDb._db (Global)
-struct FDb { // acr_my.FDb: Function to convert to mysql
+struct FDb { // acr_my.FDb: In-memory database for acr_my
     algo_lib::Replscope   R;                   //
     algo::cstring         data_dir;            //
     algo::cstring         data_logdir;         //
@@ -100,58 +102,84 @@ struct FDb { // acr_my.FDb: Function to convert to mysql
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:acr_my.FDb.ary_ns.Alloc
 algo::cstring&       ary_ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_my.FDb.ary_ns.AllocAt
 algo::cstring&       ary_ns_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_my.FDb.ary_ns.AllocN
 algo::aryptr<algo::cstring> ary_ns_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:acr_my.FDb.ary_ns.EmptyQ
 bool                 ary_ns_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:acr_my.FDb.ary_ns.Find
 algo::cstring*       ary_ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:acr_my.FDb.ary_ns.Getary
 algo::aryptr<algo::cstring> ary_ns_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:acr_my.FDb.ary_ns.Last
 algo::cstring*       ary_ns_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:acr_my.FDb.ary_ns.Max
 i32                  ary_ns_Max() __attribute__((nothrow));
 // Return number of items in the array
+// func:acr_my.FDb.ary_ns.N
 i32                  ary_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:acr_my.FDb.ary_ns.Remove
 void                 ary_ns_Remove(u32 i) __attribute__((nothrow));
+// func:acr_my.FDb.ary_ns.RemoveAll
 void                 ary_ns_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:acr_my.FDb.ary_ns.RemoveLast
 void                 ary_ns_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_my.FDb.ary_ns.Reserve
 void                 ary_ns_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:acr_my.FDb.ary_ns.AbsReserve
 void                 ary_ns_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:acr_my.FDb.ary_ns.qFind
 algo::cstring&       ary_ns_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:acr_my.FDb.ary_ns.qLast
 algo::cstring&       ary_ns_qLast() __attribute__((nothrow));
 // Return row id of specified element
+// func:acr_my.FDb.ary_ns.rowid_Get
 u64                  ary_ns_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_my.FDb.ary_ns.AllocNVal
 algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
 //     acr_my.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:acr_my.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:acr_my.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:acr_my.FDb._db.Step
 void                 Step();
 // Main function
+// func:acr_my.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:acr_my.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:acr_my.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:acr_my.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -159,94 +187,135 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:acr_my.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:acr_my.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:acr_my.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:acr_my.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_my.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:acr_my.FDb.nsdb.Alloc
 acr_my::FNsdb&       nsdb_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:acr_my.FDb.nsdb.AllocMaybe
 acr_my::FNsdb*       nsdb_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_my.FDb.nsdb.InsertMaybe
 acr_my::FNsdb*       nsdb_InsertMaybe(const dmmeta::Nsdb &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:acr_my.FDb.nsdb.AllocMem
 void*                nsdb_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:acr_my.FDb.nsdb.EmptyQ
 bool                 nsdb_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:acr_my.FDb.nsdb.Find
 acr_my::FNsdb*       nsdb_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:acr_my.FDb.nsdb.Last
 acr_my::FNsdb*       nsdb_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:acr_my.FDb.nsdb.N
 i32                  nsdb_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:acr_my.FDb.nsdb.RemoveLast
 void                 nsdb_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:acr_my.FDb.nsdb.qFind
 acr_my::FNsdb&       nsdb_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_my.FDb.nsdb.XrefMaybe
 bool                 nsdb_XrefMaybe(acr_my::FNsdb &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:acr_my.FDb.ssimfile.Alloc
 acr_my::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:acr_my.FDb.ssimfile.AllocMaybe
 acr_my::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_my.FDb.ssimfile.InsertMaybe
 acr_my::FSsimfile*   ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:acr_my.FDb.ssimfile.AllocMem
 void*                ssimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:acr_my.FDb.ssimfile.EmptyQ
 bool                 ssimfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:acr_my.FDb.ssimfile.Find
 acr_my::FSsimfile*   ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:acr_my.FDb.ssimfile.Last
 acr_my::FSsimfile*   ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:acr_my.FDb.ssimfile.N
 i32                  ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
+// func:acr_my.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:acr_my.FDb.ssimfile.qFind
 acr_my::FSsimfile&   ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_my.FDb.ssimfile.XrefMaybe
 bool                 ssimfile_XrefMaybe(acr_my::FSsimfile &row);
 
 // proceed to next item
+// func:acr_my.FDb.ary_ns_curs.Next
 void                 _db_ary_ns_curs_Next(_db_ary_ns_curs &curs);
+// func:acr_my.FDb.ary_ns_curs.Reset
 void                 _db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &parent);
 // cursor points to valid item
+// func:acr_my.FDb.ary_ns_curs.ValidQ
 bool                 _db_ary_ns_curs_ValidQ(_db_ary_ns_curs &curs);
 // item access
+// func:acr_my.FDb.ary_ns_curs.Access
 algo::cstring&       _db_ary_ns_curs_Access(_db_ary_ns_curs &curs);
 // cursor points to valid item
+// func:acr_my.FDb.nsdb_curs.Reset
 void                 _db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_my::FDb &parent);
 // cursor points to valid item
+// func:acr_my.FDb.nsdb_curs.ValidQ
 bool                 _db_nsdb_curs_ValidQ(_db_nsdb_curs &curs);
 // proceed to next item
+// func:acr_my.FDb.nsdb_curs.Next
 void                 _db_nsdb_curs_Next(_db_nsdb_curs &curs);
 // item access
+// func:acr_my.FDb.nsdb_curs.Access
 acr_my::FNsdb&       _db_nsdb_curs_Access(_db_nsdb_curs &curs);
 // cursor points to valid item
+// func:acr_my.FDb.ssimfile_curs.Reset
 void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_my::FDb &parent);
 // cursor points to valid item
+// func:acr_my.FDb.ssimfile_curs.ValidQ
 bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
 // proceed to next item
+// func:acr_my.FDb.ssimfile_curs.Next
 void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
 // item access
+// func:acr_my.FDb.ssimfile_curs.Access
 acr_my::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
 // Set all fields to initial values.
+// func:acr_my.FDb..Init
 void                 FDb_Init();
+// func:acr_my.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- acr_my.FNsdb
@@ -263,18 +332,21 @@ private:
 };
 
 // Copy fields out of row
+// func:acr_my.FNsdb.base.CopyOut
 void                 nsdb_CopyOut(acr_my::FNsdb &row, dmmeta::Nsdb &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:acr_my.FNsdb.base.CopyIn
 void                 nsdb_CopyIn(acr_my::FNsdb &row, dmmeta::Nsdb &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:acr_my.FNsdb..Init
 void                 FNsdb_Init(acr_my::FNsdb& nsdb);
 
 // --- acr_my.FSsimfile
 // create: acr_my.FDb.ssimfile (Lary)
 struct FSsimfile { // acr_my.FSsimfile
-    algo::Smallstr50   ssimfile;   //
-    algo::Smallstr50   ctype;      //
+    algo::Smallstr50    ssimfile;   //
+    algo::Smallstr100   ctype;      //
 private:
     friend acr_my::FSsimfile&   ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr_my::FSsimfile*   ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -283,14 +355,19 @@ private:
 };
 
 // Copy fields out of row
+// func:acr_my.FSsimfile.base.CopyOut
 void                 ssimfile_CopyOut(acr_my::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:acr_my.FSsimfile.base.CopyIn
 void                 ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
+// func:acr_my.FSsimfile.ssimns.Get
 algo::Smallstr16     ssimns_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
+// func:acr_my.FSsimfile.ns.Get
 algo::Smallstr16     ns_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
+// func:acr_my.FSsimfile.name.Get
 algo::Smallstr50     name_Get(acr_my::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 
@@ -306,32 +383,43 @@ struct FieldId { // acr_my.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:acr_my.FieldId.value.GetEnum
 acr_my_FieldIdEnum   value_GetEnum(const acr_my::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:acr_my.FieldId.value.SetEnum
 void                 value_SetEnum(acr_my::FieldId& parent, acr_my_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:acr_my.FieldId.value.ToCstr
 const char*          value_ToCstr(const acr_my::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:acr_my.FieldId.value.Print
 void                 value_Print(const acr_my::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:acr_my.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:acr_my.FieldId.value.SetStrptr
 void                 value_SetStrptr(acr_my::FieldId& parent, algo::strptr rhs, acr_my_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:acr_my.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of acr_my::FieldId from an ascii string.
 // The format of the string is the format of the acr_my::FieldId's only field
+// func:acr_my.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:acr_my.FieldId..Init
 void                 FieldId_Init(acr_my::FieldId& parent);
-// print string representation of acr_my::FieldId to string LHS, no header -- cprint:acr_my.FieldId.String
-void                 FieldId_Print(acr_my::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:acr_my.FieldId.String  printfmt:Raw
+// func:acr_my.FieldId..Print
+void                 FieldId_Print(acr_my::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_my.TableId
 struct TableId { // acr_my.TableId: Index of table in this namespace
@@ -343,32 +431,43 @@ struct TableId { // acr_my.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:acr_my.TableId.value.GetEnum
 acr_my_TableIdEnum   value_GetEnum(const acr_my::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:acr_my.TableId.value.SetEnum
 void                 value_SetEnum(acr_my::TableId& parent, acr_my_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:acr_my.TableId.value.ToCstr
 const char*          value_ToCstr(const acr_my::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:acr_my.TableId.value.Print
 void                 value_Print(const acr_my::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:acr_my.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:acr_my.TableId.value.SetStrptr
 void                 value_SetStrptr(acr_my::TableId& parent, algo::strptr rhs, acr_my_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:acr_my.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of acr_my::TableId from an ascii string.
 // The format of the string is the format of the acr_my::TableId's only field
+// func:acr_my.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:acr_my.TableId..Init
 void                 TableId_Init(acr_my::TableId& parent);
-// print string representation of acr_my::TableId to string LHS, no header -- cprint:acr_my.TableId.String
-void                 TableId_Print(acr_my::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:acr_my.TableId.String  printfmt:Raw
+// func:acr_my.TableId..Print
+void                 TableId_Print(acr_my::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace acr_my { // gen:ns_curstext
 
@@ -399,8 +498,10 @@ struct _db_ssimfile_curs {// cursor
 } // gen:ns_curstext
 namespace acr_my { // gen:ns_func
 } // gen:ns_func
+// func:acr_my...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:acr_my...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

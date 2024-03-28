@@ -271,10 +271,18 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/cmp.cpp
     //
+
+    // Field comparison functions
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Cmp();
+
+    // Next char function for version sort
     // void tfunc_Cmp_Nextchar();
+
+    // Comparison function for field
     // void tfunc_Cmp_Cmp();
+
+    // Lt function for field
     // void tfunc_Cmp_Lt();
 
     // -------------------------------------------------------------------
@@ -310,7 +318,7 @@ namespace amc { // update-hdr
     // void tfunc_Cppfunc_Set();
 
     // -------------------------------------------------------------------
-    // cpp/amc/ctype/main.cpp -- Ctype code generators
+    // cpp/amc/ctype.cpp -- Ctype code generators
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Ctype();
@@ -318,7 +326,15 @@ namespace amc { // update-hdr
     // void tfunc_Ctype_XrefMaybe();
     // void tfunc_Ctype_Unref();
     // void tfunc_Ctype_Hash();
+
+    // Comparison function for ctype
+    // In amc, equality is not strictly a property of a type; it can be overriden on a per-field basis
+    // For example, the same field (algo.Smallstr100 for instance) can be made case-insensitive
+    // for the purposes of comparison within some ctype
+    // That's why the Cmp function for ctype does not call out fo
     // void tfunc_Ctype_Cmp();
+
+    // Less-than function for ctype
     // void tfunc_Ctype_Lt();
     // void tfunc_Ctype_Init();
     // void tfunc_Ctype_Update();
@@ -326,6 +342,16 @@ namespace amc { // update-hdr
     // void tfunc_Ctype_Max();
     // void tfunc_Ctype_UpdateMin();
     // void tfunc_Ctype_UpdateMax();
+
+    // Equality function for ctype
+    // The function proceeds field-by-field, using the following rules:
+    // - pad bytes are ignored
+    // - if a field has an Eq function defined (usually because its equality has been customized with the fcmp record)
+    // we call out to the defined Eq function.
+    // - pointers and big-endian fields are compared bitwise for equality
+    // - any string fields are compared as regular strings
+    // - if no custom Eq function is defined on a field, but the field's type has an Eq function, it is used
+    // - for all other fields, c++ operator "==" is used. it better be defined
     // void tfunc_Ctype_Eq();
     // void tfunc_Ctype_EqStrptr();
     // void tfunc_Ctype_PrintArgv();
@@ -339,20 +365,6 @@ namespace amc { // update-hdr
     // void tfunc_Ctype_GetAnon();
     // void tfunc_Ctype_GetMsgLength();
     // void tfunc_Ctype_GetMsgMemptr();
-
-    // -------------------------------------------------------------------
-    // cpp/amc/ctype/print.cpp -- Print ctype to string
-    //
-    tempstr CheckDfltExpr(amc::FField &field, strptr text, bool canskip);
-    void GenPrint(amc::FCtype &ctype, amc::FCfmt &cfmt);
-
-    // -------------------------------------------------------------------
-    // cpp/amc/ctype/read.cpp -- Read ctype from string
-    //
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_ReadTupleMaybe();
-    // void tfunc_Ctype_ReadStrptrMaybe();
-    // void tfunc_Ctype_ReadFieldMaybe();
 
     // -------------------------------------------------------------------
     // cpp/amc/delptr.cpp
@@ -475,6 +487,24 @@ namespace amc { // update-hdr
     void NewFieldExec();
 
     // -------------------------------------------------------------------
+    // cpp/amc/fast.cpp
+    //
+
+    // Prepare FAST data
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_fast_presence();
+
+    // Type FAST encode
+    // void tfunc_Ctype_FastEncode();
+
+    // Type FAST decode
+    // void tfunc_Ctype_FastDecode();
+    // void tfunc_Ctype_FixEncode();
+
+    // FAST - ns functions
+    // void gen_ns_fast();
+
+    // -------------------------------------------------------------------
     // cpp/amc/fbuf.cpp -- Byte buffer
     //
 
@@ -589,14 +619,15 @@ namespace amc { // update-hdr
     // Same but without condition
     amc::Funcarg* AddProtoArg(amc::FFunc &func, strptr type, strptr name);
 
-    // The declaration for retval is emitted when the initializer becomes available.
-    // This allows initialization of references (i.e. X &retval = <expr>)
-    // and also results in shorter code.
-    void GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initializer);
-
     // Declare return value for function FUNC.
-    // The value has type TYPE, name NAME< and is initialized with INITALIZER.
-    //
+    // Return types are stored in Funcarg array, and marked with RETVAL=true
+    // The value has type TYPE, name NAME, and is initialized with INITALIZER.
+    // If NAME is not an empty string, a variable with this name and type is also declared.
+    // The call to "return <retval>" is automatically inserted during function "finalize" step
+    // If INITIALIZER is "", the value is declared "as-is"
+    // TYPE NAME;
+    // Otherwise, equals sign is used:
+    // TYPE NAME = INITIALIZER;
     amc::Funcarg* AddRetval(amc::FFunc &func, strptr type, strptr name, strptr initializer);
 
     // Add a type argument to function FUNC,
@@ -604,8 +635,19 @@ namespace amc { // update-hdr
     // Function becomes a template.
     amc::Funcarg* AddTypearg(amc::FFunc &func, strptr type);
     void SetPresent(amc::FFunc &func, strptr ref, amc::FField &field);
-    amc::FFunc &CreateCurFunc(bool proto);
-    amc::FFunc &CreateCurFunc();
+
+    // Create function for current field (amc::_db.genfield.p_field) & tfunc (amc::_db.genfield.p_tfunc)
+    // The function name is constructed from the field name and the tfunc name, e.g. "field_FuncName"
+    // unless an explicit function name is passed through argument FUNCNAME.
+    //
+    // Return a reference to the resulting FUNC record
+    // The following options are set in FUNC based on the TFUNC prototype:
+    // glob, wur, inl, globns, isalloc, nothrow, ismacro, pure.
+    // The function comment is initialized from tfunc prototype
+    // Function is DISABLED if namespace has exceptions disabled and the tfunc is labeled HASTHROW.
+    // If PROTO flag is set, function prototype (FUNC.PROTO) string is initialized to the function name,
+    // and a default first argument is added unless the function is on a global field.
+    amc::FFunc &CreateCurFunc(bool proto = false, algo::strptr funcname = "");
 
     // Return non-null pointer to ctype's init function.
     amc::FFunc *init_GetOrCreate(amc::FCtype &ctype);
@@ -689,7 +731,6 @@ namespace amc { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_prep_ctype();
     // void gen_copypriv();
-    // void gen_pmask();
     // void gen_xref2();
     // void gen_select_ns();
 
@@ -977,6 +1018,9 @@ namespace amc { // update-hdr
     //
     bool PadQ(amc::FField &field);
     bool CanDeleteQ(amc::FCtype &ctype);
+
+    // Check if this field is a Lenfld and return pointer
+    // If not, return NULL
     amc::FLenfld *GetLenfld(amc::FField &field);
 
     // Compose expression for deleting child pointer CHILDREF
@@ -1017,6 +1061,11 @@ namespace amc { // update-hdr
     bool HasRemoveLastQ(amc::FReftype &reftype);
     bool GenThrowQ(amc::FNs &ns);
     amc::FThash *PrimaryIndex(amc::FCtype &ctype);
+
+    // Compute expression needed to cast the default value (field.dflt) of
+    // the field to the value that's being stored in the field
+    // By default, this is just the field's cpp_type
+    // But if the field has an fcast attached to it, it's the fcast expression
     tempstr Initcast(amc::FField &field);
 
     // True if ctype is instantiated through a memory pool that has an Alloc function.
@@ -1073,15 +1122,22 @@ namespace amc { // update-hdr
 
     // Return C++ expression for accessing the 'value' of the field
     // given parent reference PARNAME.
-    // The parent ctype is CTYPE -- it may not necessarily be a direct parent of FIELD.
-    // if CTYPE is NULL, it is assumed to be field.p_ctype
-    tempstr FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr name);
+    // if CTYPE is NULL, it is assumed to be FIELD.P_CTYPE
+    // The field may be an immediate field of CTYPE, or a field of one of the Val fields
+    // of CTYPE; But the search must yield exactly one match, otherwise it is an error
+    // If the field is accessed via a Get function, the corresponding expression is constructed.
+    // i.e. the outputs of this function could be
+    // parent.subfield.field
+    // parent.field
+    // field_Get(parent)
+    // field_Get(parent.subfield)
+    tempstr FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname);
 
     // Return C++ expression computing total length of ctype CTYPE
     // accessible via name NAME.
     tempstr LengthExpr(amc::FCtype &ctype, strptr name);
 
-    // Return C++ expression string assigning value VALUE to field FIELD
+    // Return C++ expression assigning value VALUE to field FIELD
     // given parent reference PARNAME.
     // If NEEDS_CAST is set, a cast is added to the target type
     tempstr AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast);
@@ -1141,7 +1197,15 @@ namespace amc { // update-hdr
     void CppSectionAll(amc::FNs& ns, strptr label);
     void TopoSortVisit(amc::FNs& ns, amc::FCtype& ctype);
     bool ExeQ(amc::FNs &ns);
-    tempstr ByvalArgtype(amc::FCtype &ctype);
+
+    // Return C++ expression for the arg type for ctype CTYPE
+    // argtype is how the type is passed to a function
+    // If the type is "cheap copy", the value is type itself (T). Otherwise
+    // it is T&.
+    // The optional ISCONST argument marks the expression as const
+    // For cheap types, 'const' is omitted since there is no sense in protecting
+    // a copy.
+    tempstr ByvalArgtype(amc::FCtype &ctype, bool isconst = false);
     void Main_CloneFconst_Field(amc::FField &field);
 
     // HOW IS THIS DIFFERENT FROM INSFIELD?
@@ -1225,9 +1289,31 @@ namespace amc { // update-hdr
     // cpp/amc/pmask.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_pmask();
     // void tclass_Pmask();
+
+    // Create multiple functions, one for each pmask of which this field is a member
     // void tfunc_Pmask_PresentQ();
+
+    // Return C++ expression(s) setting the present bit for the field
+    // in all presence masks of which the field is a member
+    // If no presence masks are defined, return empty string;
+    tempstr SetPresentExpr(amc::FField &field, strptr parent);
+
+    // Create multiple functions, one for each pmask of which this field is a member
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Pmask_SetPresent();
+
+    // Create multiple functions, one for each pmask of which this field is a member
+    // void tfunc_Pmask_GetBit();
+
+    // Return FPmaskfld which filters printing for ctype CTYPE
+    // NULL if none
+    amc::FPmaskfld *GetPrintFilter(amc::FCtype &ctype);
+
+    // Find PMASKFLD_MEMBER record for field FIELD and pmask PMASKFLD
+    // NULL if none
+    amc::FPmaskfldMember *FindMember(amc::FField &field, amc::FPmaskfld *pmaskfld);
 
     // -------------------------------------------------------------------
     // cpp/amc/pnew.cpp -- Custom constructors
@@ -1271,6 +1357,12 @@ namespace amc { // update-hdr
 
     // Find default used for allocating things in namespace NS
     amc::FField *DefaultPool(amc::FNs &ns);
+
+    // -------------------------------------------------------------------
+    // cpp/amc/print.cpp -- Print ctype to string
+    //
+    tempstr CheckDfltExpr(amc::FField &field, strptr text, bool canskip);
+    void GenPrint(amc::FCtype &ctype, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
     // cpp/amc/protocol.cpp
@@ -1321,14 +1413,17 @@ namespace amc { // update-hdr
     // cpp/amc/query.cpp
     //
     void Main_Querymode();
-    tempstr Query_GetKey();
-    tempstr Query_GetValue();
-
-    // Parse query argument, return regex of namespaces
-    tempstr Query_GetNs();
 
     // True if amc was invoked in query-only mode
     bool QueryModeQ();
+
+    // -------------------------------------------------------------------
+    // cpp/amc/read.cpp -- Read ctype from string
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tfunc_Ctype_ReadTupleMaybe();
+    // void tfunc_Ctype_ReadStrptrMaybe();
+    // void tfunc_Ctype_ReadFieldMaybe();
 
     // -------------------------------------------------------------------
     // cpp/amc/regx.cpp -- Small strings
@@ -1413,6 +1508,10 @@ namespace amc { // update-hdr
     // void tfunc_Smallstr_Max();
 
     // Set value as strptr
+    // For a padded string, the string value is allowed to use the pad character
+    // inside the string, i.e. a space-padded field can have a space ("abc def").
+    // Length of a padded string is determined by stripping the padded characters
+    // from the appropriate end.
     // void tfunc_Smallstr_SetStrptr();
 
     // Copy from same type

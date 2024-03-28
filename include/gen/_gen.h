@@ -36,6 +36,7 @@ struct pad_byte { // pad_byte
 #pragma pack(pop)
 
 // Set all fields to initial values.
+// func:pad_byte..Init
 void                 pad_byte_Init(pad_byte& parent);
 // Attempt to parse i8 from str
 // Leading whitespace is silently skipped
@@ -45,6 +46,7 @@ void                 pad_byte_Init(pad_byte& parent);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...i8_ReadStrptrMaybe
 bool                 i8_ReadStrptrMaybe(i8& result, algo::strptr str);
 // Attempt to parse u8 from str
 // Leading whitespace is silently skipped
@@ -54,6 +56,7 @@ bool                 i8_ReadStrptrMaybe(i8& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...u8_ReadStrptrMaybe
 bool                 u8_ReadStrptrMaybe(u8& result, algo::strptr str);
 // Attempt to parse i16 from str
 // Leading whitespace is silently skipped
@@ -63,6 +66,7 @@ bool                 u8_ReadStrptrMaybe(u8& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...i16_ReadStrptrMaybe
 bool                 i16_ReadStrptrMaybe(i16& result, algo::strptr str);
 // Attempt to parse u16 from str
 // Leading whitespace is silently skipped
@@ -72,6 +76,7 @@ bool                 i16_ReadStrptrMaybe(i16& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...u16_ReadStrptrMaybe
 bool                 u16_ReadStrptrMaybe(u16& result, algo::strptr str);
 // Attempt to parse i32 from str
 // Leading whitespace is silently skipped
@@ -81,6 +86,7 @@ bool                 u16_ReadStrptrMaybe(u16& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...i32_ReadStrptrMaybe
 bool                 i32_ReadStrptrMaybe(i32& result, algo::strptr str);
 // Attempt to parse u32 from str
 // Leading whitespace is silently skipped
@@ -90,6 +96,7 @@ bool                 i32_ReadStrptrMaybe(i32& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...u32_ReadStrptrMaybe
 bool                 u32_ReadStrptrMaybe(u32& result, algo::strptr str);
 // Attempt to parse i64 from str
 // Leading whitespace is silently skipped
@@ -99,6 +106,7 @@ bool                 u32_ReadStrptrMaybe(u32& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...i64_ReadStrptrMaybe
 bool                 i64_ReadStrptrMaybe(i64& result, algo::strptr str);
 // Attempt to parse u64 from str
 // Leading whitespace is silently skipped
@@ -108,6 +116,7 @@ bool                 i64_ReadStrptrMaybe(i64& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...u64_ReadStrptrMaybe
 bool                 u64_ReadStrptrMaybe(u64& result, algo::strptr str);
 // Attempt to parse u128 from str
 // Leading whitespace is silently skipped
@@ -117,261 +126,512 @@ bool                 u64_ReadStrptrMaybe(u64& result, algo::strptr str);
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
+// func:...u128_ReadStrptrMaybe
 bool                 u128_ReadStrptrMaybe(u128& result, algo::strptr str);
+// func:bool..Hash
+// this function is 'extrn' and implemented by user
 u32                  bool_Hash(u32 prev, bool rhs) __attribute__((nothrow));
 // Read fields of bool from an ascii string.
 // The function is implemented externally.
+// func:bool..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 bool_ReadStrptrMaybe(bool &parent, algo::strptr in_str);
+// func:bool..Lt
+// this function is 'extrn' and implemented by user
 bool                 bool_Lt(bool lhs, bool rhs) __attribute__((nothrow));
+// func:bool..Cmp
+// this function is 'extrn' and implemented by user
 i32                  bool_Cmp(bool lhs, bool rhs) __attribute__((nothrow));
+// func:bool..Eq
+// this function is 'extrn' and implemented by user
 bool                 bool_Eq(bool lhs, bool rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:bool..Update
 bool                 bool_Update(bool &lhs, bool rhs) __attribute__((nothrow));
-// Convert bool to a string (user-implemented function)
-void                 bool_Print(bool row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:bool.String  printfmt:Extern
+// func:bool..Print
+// this function is 'extrn' and implemented by user
+void                 bool_Print(bool row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of bool under PARENT node -- implemented externally
+// func:bool..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    bool_FmtJson(bool row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:char..Hash
+// this function is 'extrn' and implemented by user
 u32                  char_Hash(u32 prev, char rhs) __attribute__((nothrow));
 // Read fields of char from an ascii string.
 // The function is implemented externally.
+// func:char..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 char_ReadStrptrMaybe(char &parent, algo::strptr in_str);
+// func:char..Lt
+// this function is 'extrn' and implemented by user
 bool                 char_Lt(char lhs, char rhs) __attribute__((nothrow));
+// func:char..Cmp
+// this function is 'extrn' and implemented by user
 i32                  char_Cmp(char lhs, char rhs) __attribute__((nothrow));
+// func:char..Eq
+// this function is 'extrn' and implemented by user
 bool                 char_Eq(char lhs, char rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:char..Update
 bool                 char_Update(char &lhs, char rhs) __attribute__((nothrow));
-// Convert char to a string (user-implemented function)
-void                 char_Print(char row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:char.String  printfmt:Extern
+// func:char..Print
+// this function is 'extrn' and implemented by user
+void                 char_Print(char row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of char under PARENT node -- implemented externally
+// func:char..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    char_FmtJson(char row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:double..Hash
+// this function is 'extrn' and implemented by user
 u32                  double_Hash(u32 prev, double rhs) __attribute__((nothrow));
 // Read fields of double from an ascii string.
 // The function is implemented externally.
+// func:double..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 double_ReadStrptrMaybe(double &parent, algo::strptr in_str);
+// func:double..Lt
+// this function is 'extrn' and implemented by user
 bool                 double_Lt(double lhs, double rhs) __attribute__((nothrow));
+// func:double..Cmp
+// this function is 'extrn' and implemented by user
 i32                  double_Cmp(double lhs, double rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:double..UpdateMax
 bool                 double_UpdateMax(double &lhs, double rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:double..Min
 double               double_Min(double lhs, double rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:double..UpdateMin
 bool                 double_UpdateMin(double &lhs, double rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:double..Max
 double               double_Max(double lhs, double rhs) __attribute__((nothrow));
+// func:double..Eq
+// this function is 'extrn' and implemented by user
 bool                 double_Eq(double lhs, double rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:double..Update
 bool                 double_Update(double &lhs, double rhs) __attribute__((nothrow));
-// Convert double to a string (user-implemented function)
-void                 double_Print(double row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:double.String  printfmt:Extern
+// func:double..Print
+// this function is 'extrn' and implemented by user
+void                 double_Print(double row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of double under PARENT node -- implemented externally
+// func:double..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    double_FmtJson(double row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:float..Hash
+// this function is 'extrn' and implemented by user
 u32                  float_Hash(u32 prev, float rhs) __attribute__((nothrow));
 // Read fields of float from an ascii string.
 // The function is implemented externally.
+// func:float..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 float_ReadStrptrMaybe(float &parent, algo::strptr in_str);
+// func:float..Lt
+// this function is 'extrn' and implemented by user
 bool                 float_Lt(float lhs, float rhs) __attribute__((nothrow));
+// func:float..Cmp
+// this function is 'extrn' and implemented by user
 i32                  float_Cmp(float lhs, float rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:float..UpdateMax
 bool                 float_UpdateMax(float &lhs, float rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:float..Min
 float                float_Min(float lhs, float rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:float..UpdateMin
 bool                 float_UpdateMin(float &lhs, float rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:float..Max
 float                float_Max(float lhs, float rhs) __attribute__((nothrow));
+// func:float..Eq
+// this function is 'extrn' and implemented by user
 bool                 float_Eq(float lhs, float rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:float..Update
 bool                 float_Update(float &lhs, float rhs) __attribute__((nothrow));
-// Convert float to a string (user-implemented function)
-void                 float_Print(float row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:float.String  printfmt:Extern
+// func:float..Print
+// this function is 'extrn' and implemented by user
+void                 float_Print(float row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of float under PARENT node -- implemented externally
+// func:float..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    float_FmtJson(float row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:i16..Hash
+// this function is 'extrn' and implemented by user
 u32                  i16_Hash(u32 prev, i16 rhs) __attribute__((nothrow));
 // Read fields of i16 from an ascii string.
 // The function is implemented externally.
+// func:i16..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str);
+// func:i16..Lt
+// this function is 'extrn' and implemented by user
 bool                 i16_Lt(i16 lhs, i16 rhs) __attribute__((nothrow));
+// func:i16..Cmp
+// this function is 'extrn' and implemented by user
 i32                  i16_Cmp(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:i16..UpdateMax
 bool                 i16_UpdateMax(i16 &lhs, i16 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:i16..Min
 i16                  i16_Min(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:i16..UpdateMin
 bool                 i16_UpdateMin(i16 &lhs, i16 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:i16..Max
 i16                  i16_Max(i16 lhs, i16 rhs) __attribute__((nothrow));
+// func:i16..Eq
+// this function is 'extrn' and implemented by user
 bool                 i16_Eq(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:i16..Update
 bool                 i16_Update(i16 &lhs, i16 rhs) __attribute__((nothrow));
-// Convert i16 to a string (user-implemented function)
-void                 i16_Print(i16 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:i16.String  printfmt:Extern
+// func:i16..Print
+// this function is 'extrn' and implemented by user
+void                 i16_Print(i16 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of i16 under PARENT node -- implemented externally
+// func:i16..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    i16_FmtJson(i16 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:i32..Hash
+// this function is 'extrn' and implemented by user
 u32                  i32_Hash(u32 prev, i32 rhs) __attribute__((nothrow));
 // Read fields of i32 from an ascii string.
 // The function is implemented externally.
+// func:i32..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str);
+// func:i32..Lt
+// this function is 'extrn' and implemented by user
 bool                 i32_Lt(i32 lhs, i32 rhs) __attribute__((nothrow));
+// func:i32..Cmp
+// this function is 'extrn' and implemented by user
 i32                  i32_Cmp(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:i32..UpdateMax
 bool                 i32_UpdateMax(i32 &lhs, i32 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:i32..Min
 i32                  i32_Min(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:i32..UpdateMin
 bool                 i32_UpdateMin(i32 &lhs, i32 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:i32..Max
 i32                  i32_Max(i32 lhs, i32 rhs) __attribute__((nothrow));
+// func:i32..Eq
+// this function is 'extrn' and implemented by user
 bool                 i32_Eq(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:i32..Update
 bool                 i32_Update(i32 &lhs, i32 rhs) __attribute__((nothrow));
-// Convert i32 to a string (user-implemented function)
-void                 i32_Print(i32 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:i32.String  printfmt:Extern
+// func:i32..Print
+// this function is 'extrn' and implemented by user
+void                 i32_Print(i32 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of i32 under PARENT node -- implemented externally
+// func:i32..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    i32_FmtJson(i32 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:i64..Hash
+// this function is 'extrn' and implemented by user
 u32                  i64_Hash(u32 prev, i64 rhs) __attribute__((nothrow));
 // Read fields of i64 from an ascii string.
 // The function is implemented externally.
+// func:i64..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str);
+// func:i64..Lt
+// this function is 'extrn' and implemented by user
 bool                 i64_Lt(i64 lhs, i64 rhs) __attribute__((nothrow));
+// func:i64..Cmp
+// this function is 'extrn' and implemented by user
 i32                  i64_Cmp(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:i64..UpdateMax
 bool                 i64_UpdateMax(i64 &lhs, i64 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:i64..Min
 i64                  i64_Min(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:i64..UpdateMin
 bool                 i64_UpdateMin(i64 &lhs, i64 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:i64..Max
 i64                  i64_Max(i64 lhs, i64 rhs) __attribute__((nothrow));
+// func:i64..Eq
+// this function is 'extrn' and implemented by user
 bool                 i64_Eq(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:i64..Update
 bool                 i64_Update(i64 &lhs, i64 rhs) __attribute__((nothrow));
-// Convert i64 to a string (user-implemented function)
-void                 i64_Print(i64 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:i64.String  printfmt:Extern
+// func:i64..Print
+// this function is 'extrn' and implemented by user
+void                 i64_Print(i64 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of i64 under PARENT node -- implemented externally
+// func:i64..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    i64_FmtJson(i64 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:i8..Hash
+// this function is 'extrn' and implemented by user
 u32                  i8_Hash(u32 prev, i8 rhs) __attribute__((nothrow));
 // Read fields of i8 from an ascii string.
 // The function is implemented externally.
+// func:i8..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str);
+// func:i8..Lt
+// this function is 'extrn' and implemented by user
 bool                 i8_Lt(i8 lhs, i8 rhs) __attribute__((nothrow));
+// func:i8..Cmp
+// this function is 'extrn' and implemented by user
 i32                  i8_Cmp(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:i8..UpdateMax
 bool                 i8_UpdateMax(i8 &lhs, i8 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:i8..Min
 i8                   i8_Min(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:i8..UpdateMin
 bool                 i8_UpdateMin(i8 &lhs, i8 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:i8..Max
 i8                   i8_Max(i8 lhs, i8 rhs) __attribute__((nothrow));
+// func:i8..Eq
+// this function is 'extrn' and implemented by user
 bool                 i8_Eq(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:i8..Update
 bool                 i8_Update(i8 &lhs, i8 rhs) __attribute__((nothrow));
-// Convert i8 to a string (user-implemented function)
-void                 i8_Print(i8 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:i8.String  printfmt:Extern
+// func:i8..Print
+// this function is 'extrn' and implemented by user
+void                 i8_Print(i8 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of i8 under PARENT node -- implemented externally
+// func:i8..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    i8_FmtJson(i8 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:u8..Hash
+// this function is 'extrn' and implemented by user
 u32                  u8_Hash(u32 prev, u8 rhs) __attribute__((nothrow));
 // Read fields of u8 from an ascii string.
 // The function is implemented externally.
+// func:u8..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str);
+// func:u8..Lt
+// this function is 'extrn' and implemented by user
 bool                 u8_Lt(u8 lhs, u8 rhs) __attribute__((nothrow));
+// func:u8..Cmp
+// this function is 'extrn' and implemented by user
 i32                  u8_Cmp(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:u8..UpdateMax
 bool                 u8_UpdateMax(u8 &lhs, u8 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:u8..Min
 u8                   u8_Min(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:u8..UpdateMin
 bool                 u8_UpdateMin(u8 &lhs, u8 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:u8..Max
 u8                   u8_Max(u8 lhs, u8 rhs) __attribute__((nothrow));
+// func:u8..Eq
+// this function is 'extrn' and implemented by user
 bool                 u8_Eq(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:u8..Update
 bool                 u8_Update(u8 &lhs, u8 rhs) __attribute__((nothrow));
-// Convert u8 to a string (user-implemented function)
-void                 u8_Print(u8 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:u8.String  printfmt:Extern
+// func:u8..Print
+// this function is 'extrn' and implemented by user
+void                 u8_Print(u8 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of u8 under PARENT node -- implemented externally
+// func:u8..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    u8_FmtJson(u8 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:u128..Hash
+// this function is 'extrn' and implemented by user
 u32                  u128_Hash(u32 prev, u128 rhs) __attribute__((nothrow));
 // Read fields of u128 from an ascii string.
 // The function is implemented externally.
+// func:u128..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str);
+// func:u128..Lt
+// this function is 'extrn' and implemented by user
 bool                 u128_Lt(u128 lhs, u128 rhs) __attribute__((nothrow));
+// func:u128..Cmp
+// this function is 'extrn' and implemented by user
 i32                  u128_Cmp(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:u128..UpdateMax
 bool                 u128_UpdateMax(u128 &lhs, u128 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:u128..Min
 u128                 u128_Min(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:u128..UpdateMin
 bool                 u128_UpdateMin(u128 &lhs, u128 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:u128..Max
 u128                 u128_Max(u128 lhs, u128 rhs) __attribute__((nothrow));
+// func:u128..Eq
+// this function is 'extrn' and implemented by user
 bool                 u128_Eq(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:u128..Update
 bool                 u128_Update(u128 &lhs, u128 rhs) __attribute__((nothrow));
-// Convert u128 to a string (user-implemented function)
-void                 u128_Print(u128 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:u128.String  printfmt:Extern
+// func:u128..Print
+// this function is 'extrn' and implemented by user
+void                 u128_Print(u128 row, algo::cstring& str) __attribute__((nothrow));
+// func:u16..Hash
+// this function is 'extrn' and implemented by user
 u32                  u16_Hash(u32 prev, u16 rhs) __attribute__((nothrow));
 // Read fields of u16 from an ascii string.
 // The function is implemented externally.
+// func:u16..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str);
+// func:u16..Lt
+// this function is 'extrn' and implemented by user
 bool                 u16_Lt(u16 lhs, u16 rhs) __attribute__((nothrow));
+// func:u16..Cmp
+// this function is 'extrn' and implemented by user
 i32                  u16_Cmp(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:u16..UpdateMax
 bool                 u16_UpdateMax(u16 &lhs, u16 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:u16..Min
 u16                  u16_Min(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:u16..UpdateMin
 bool                 u16_UpdateMin(u16 &lhs, u16 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:u16..Max
 u16                  u16_Max(u16 lhs, u16 rhs) __attribute__((nothrow));
+// func:u16..Eq
+// this function is 'extrn' and implemented by user
 bool                 u16_Eq(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:u16..Update
 bool                 u16_Update(u16 &lhs, u16 rhs) __attribute__((nothrow));
-// Convert u16 to a string (user-implemented function)
-void                 u16_Print(u16 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:u16.String  printfmt:Extern
+// func:u16..Print
+// this function is 'extrn' and implemented by user
+void                 u16_Print(u16 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of u16 under PARENT node -- implemented externally
+// func:u16..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    u16_FmtJson(u16 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:u32..Hash
+// this function is 'extrn' and implemented by user
 u32                  u32_Hash(u32 prev, u32 rhs) __attribute__((nothrow));
 // Read fields of u32 from an ascii string.
 // The function is implemented externally.
+// func:u32..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str);
+// func:u32..Lt
+// this function is 'extrn' and implemented by user
 bool                 u32_Lt(u32 lhs, u32 rhs) __attribute__((nothrow));
+// func:u32..Cmp
+// this function is 'extrn' and implemented by user
 i32                  u32_Cmp(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:u32..UpdateMax
 bool                 u32_UpdateMax(u32 &lhs, u32 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:u32..Min
 u32                  u32_Min(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:u32..UpdateMin
 bool                 u32_UpdateMin(u32 &lhs, u32 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:u32..Max
 u32                  u32_Max(u32 lhs, u32 rhs) __attribute__((nothrow));
+// func:u32..Eq
+// this function is 'extrn' and implemented by user
 bool                 u32_Eq(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:u32..Update
 bool                 u32_Update(u32 &lhs, u32 rhs) __attribute__((nothrow));
-// Convert u32 to a string (user-implemented function)
-void                 u32_Print(u32 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:u32.String  printfmt:Extern
+// func:u32..Print
+// this function is 'extrn' and implemented by user
+void                 u32_Print(u32 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of u32 under PARENT node -- implemented externally
+// func:u32..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    u32_FmtJson(u32 row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:u64..Hash
+// this function is 'extrn' and implemented by user
 u32                  u64_Hash(u32 prev, u64 rhs) __attribute__((nothrow));
 // Read fields of u64 from an ascii string.
 // The function is implemented externally.
+// func:u64..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str);
+// func:u64..Lt
+// this function is 'extrn' and implemented by user
 bool                 u64_Lt(u64 lhs, u64 rhs) __attribute__((nothrow));
+// func:u64..Cmp
+// this function is 'extrn' and implemented by user
 i32                  u64_Cmp(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
+// func:u64..UpdateMax
 bool                 u64_UpdateMax(u64 &lhs, u64 rhs) __attribute__((nothrow));
 // Return the lesser of two values
+// func:u64..Min
 u64                  u64_Min(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
+// func:u64..UpdateMin
 bool                 u64_UpdateMin(u64 &lhs, u64 rhs) __attribute__((nothrow));
 // Return the greater of two values
+// func:u64..Max
 u64                  u64_Max(u64 lhs, u64 rhs) __attribute__((nothrow));
+// func:u64..Eq
+// this function is 'extrn' and implemented by user
 bool                 u64_Eq(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:u64..Update
 bool                 u64_Update(u64 &lhs, u64 rhs) __attribute__((nothrow));
-// Convert u64 to a string (user-implemented function)
-void                 u64_Print(u64 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:u64.String  printfmt:Extern
+// func:u64..Print
+// this function is 'extrn' and implemented by user
+void                 u64_Print(u64 row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of u64 under PARENT node -- implemented externally
+// func:u64..FmtJson
+// this function is 'extrn' and implemented by user
 lib_json::FNode *    u64_FmtJson(u64 row, lib_json::FNode *parent) __attribute__((nothrow));
 // gen:ns_operators
 namespace algo {

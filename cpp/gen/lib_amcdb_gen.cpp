@@ -31,6 +31,7 @@
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_amcdb { // gen:ns_print_proto
+    // func:lib_amcdb...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -104,8 +105,9 @@ bool lib_amcdb::FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr
 }
 
 // --- lib_amcdb.FieldId..Print
-// print string representation of lib_amcdb::FieldId to string LHS, no header -- cprint:lib_amcdb.FieldId.String
-void lib_amcdb::FieldId_Print(lib_amcdb::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_amcdb.FieldId.String  printfmt:Raw
+void lib_amcdb::FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) {
     lib_amcdb::value_Print(row, str);
 }
 

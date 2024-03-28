@@ -78,17 +78,22 @@ const char *ams_sendtest_help =
 } // namespace ams_sendtest
 namespace ams_sendtest { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:ams_sendtest.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:ams_sendtest.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:ams_sendtest.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:ams_sendtest...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- ams_sendtest.AmsSendTest..Print
-// print string representation of ams_sendtest::AmsSendTest to string LHS, no header -- cprint:ams_sendtest.AmsSendTest.String
-void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
+void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams_sendtest.AmsSendTest";
 
@@ -342,8 +347,9 @@ void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) {
 }
 
 // --- ams_sendtest.trace..Print
-// print string representation of ams_sendtest::trace to string LHS, no header -- cprint:ams_sendtest.trace.String
-void ams_sendtest::trace_Print(ams_sendtest::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.trace.String  printfmt:Tuple
+void ams_sendtest::trace_Print(ams_sendtest::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams_sendtest.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -796,8 +802,9 @@ bool ams_sendtest::FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::
 }
 
 // --- ams_sendtest.FieldId..Print
-// print string representation of ams_sendtest::FieldId to string LHS, no header -- cprint:ams_sendtest.FieldId.String
-void ams_sendtest::FieldId_Print(ams_sendtest::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.FieldId.String  printfmt:Raw
+void ams_sendtest::FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) {
     ams_sendtest::value_Print(row, str);
 }
 

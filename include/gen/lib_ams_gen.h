@@ -130,29 +130,38 @@ struct CtlConnCase { // lib_ams.CtlConnCase: Enum for dispatch lib_ams.CtlConn
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_ams.CtlConnCase.value.GetEnum
 lib_ams_CtlConnCaseEnum value_GetEnum(const lib_ams::CtlConnCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_ams.CtlConnCase.value.SetEnum
 void                 value_SetEnum(lib_ams::CtlConnCase& parent, lib_ams_CtlConnCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_ams.CtlConnCase.value.ToCstr
 const char*          value_ToCstr(const lib_ams::CtlConnCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_ams.CtlConnCase.value.Print
 void                 value_Print(const lib_ams::CtlConnCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_ams.CtlConnCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_ams::CtlConnCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_ams.CtlConnCase.value.SetStrptr
 void                 value_SetStrptr(lib_ams::CtlConnCase& parent, algo::strptr rhs, lib_ams_CtlConnCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_ams.CtlConnCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_ams::CtlConnCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_ams::CtlConnCase from an ascii string.
 // The format of the string is the format of the lib_ams::CtlConnCase's only field
+// func:lib_ams.CtlConnCase..ReadStrptrMaybe
 bool                 CtlConnCase_ReadStrptrMaybe(lib_ams::CtlConnCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_ams.CtlConnCase..Init
 void                 CtlConnCase_Init(lib_ams::CtlConnCase& parent);
 
 // --- lib_ams.CtlMsgCase
@@ -167,29 +176,38 @@ struct CtlMsgCase { // lib_ams.CtlMsgCase: Enum for dispatch lib_ams.CtlMsg
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_ams.CtlMsgCase.value.GetEnum
 lib_ams_CtlMsgCaseEnum value_GetEnum(const lib_ams::CtlMsgCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_ams.CtlMsgCase.value.SetEnum
 void                 value_SetEnum(lib_ams::CtlMsgCase& parent, lib_ams_CtlMsgCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_ams.CtlMsgCase.value.ToCstr
 const char*          value_ToCstr(const lib_ams::CtlMsgCase& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_ams.CtlMsgCase.value.Print
 void                 value_Print(const lib_ams::CtlMsgCase& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_ams.CtlMsgCase.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_ams::CtlMsgCase& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_ams.CtlMsgCase.value.SetStrptr
 void                 value_SetStrptr(lib_ams::CtlMsgCase& parent, algo::strptr rhs, lib_ams_CtlMsgCaseEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_ams.CtlMsgCase.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_ams::CtlMsgCase& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_ams::CtlMsgCase from an ascii string.
 // The format of the string is the format of the lib_ams::CtlMsgCase's only field
+// func:lib_ams.CtlMsgCase..ReadStrptrMaybe
 bool                 CtlMsgCase_ReadStrptrMaybe(lib_ams::CtlMsgCase &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_ams.CtlMsgCase..Init
 void                 CtlMsgCase_Init(lib_ams::CtlMsgCase& parent);
 
 // --- lib_ams.trace
@@ -204,13 +222,16 @@ struct trace { // lib_ams.trace
 #pragma pack(pop)
 
 // Set all fields to initial values.
+// func:lib_ams.trace..Init
 void                 trace_Init(lib_ams::trace& parent);
-// print string representation of lib_ams::trace to string LHS, no header -- cprint:lib_ams.trace.String
-void                 trace_Print(lib_ams::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_ams.trace.String  printfmt:Tuple
+// func:lib_ams.trace..Print
+void                 trace_Print(lib_ams::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_ams.FDb
 // create: lib_ams.FDb._db (Global)
-struct FDb { // lib_ams.FDb
+struct FDb { // lib_ams.FDb: In-memory database for lib_ams
     lib_ams::FFdin*          fdin_lary[32];                  // level array
     i32                      fdin_n;                         // number of elements in array
     lib_ams::FFdin*          cd_fdin_eof_head;               // zero-terminated doubly linked list
@@ -276,96 +297,141 @@ struct FDb { // lib_ams.FDb
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_ams.FDb.fdin.Alloc
 lib_ams::FFdin&      fdin_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ams.FDb.fdin.AllocMaybe
 lib_ams::FFdin*      fdin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_ams.FDb.fdin.AllocMem
 void*                fdin_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FDb.fdin.EmptyQ
 bool                 fdin_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FDb.fdin.Find
 lib_ams::FFdin*      fdin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FDb.fdin.Last
 lib_ams::FFdin*      fdin_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_ams.FDb.fdin.N
 i32                  fdin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_ams.FDb.fdin.RemoveAll
 void                 fdin_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FDb.fdin.RemoveLast
 void                 fdin_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FDb.fdin.qFind
 lib_ams::FFdin&      fdin_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.fdin.XrefMaybe
 bool                 fdin_XrefMaybe(lib_ams::FFdin &row);
 
 // Return true if index is empty
+// func:lib_ams.FDb.cd_fdin_eof.EmptyQ
 bool                 cd_fdin_eof_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.cd_fdin_eof.First
 lib_ams::FFdin*      cd_fdin_eof_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.cd_fdin_eof.InLlistQ
 bool                 cd_fdin_eof_InLlistQ(lib_ams::FFdin& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.cd_fdin_eof.Insert
 void                 cd_fdin_eof_Insert(lib_ams::FFdin& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.cd_fdin_eof.Last
 lib_ams::FFdin*      cd_fdin_eof_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.cd_fdin_eof.N
 i32                  cd_fdin_eof_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.cd_fdin_eof.Next
 lib_ams::FFdin*      cd_fdin_eof_Next(lib_ams::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.cd_fdin_eof.Prev
 lib_ams::FFdin*      cd_fdin_eof_Prev(lib_ams::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.cd_fdin_eof.Remove
 void                 cd_fdin_eof_Remove(lib_ams::FFdin& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.cd_fdin_eof.RemoveAll
 void                 cd_fdin_eof_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:lib_ams.FDb.cd_fdin_eof.RemoveFirst
 lib_ams::FFdin*      cd_fdin_eof_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:lib_ams.FDb.cd_fdin_eof.RotateFirst
 lib_ams::FFdin*      cd_fdin_eof_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.cd_fdin_eof.qLast
 lib_ams::FFdin&      cd_fdin_eof_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_ams.FDb.cd_fdin_eof.Step
+// this function is 'extrn' and implemented by user
 void                 cd_fdin_eof_Step() __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FDb.cd_fdin_read.EmptyQ
 bool                 cd_fdin_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.cd_fdin_read.First
 lib_ams::FFdin*      cd_fdin_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.cd_fdin_read.InLlistQ
 bool                 cd_fdin_read_InLlistQ(lib_ams::FFdin& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.cd_fdin_read.Insert
 void                 cd_fdin_read_Insert(lib_ams::FFdin& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.cd_fdin_read.Last
 lib_ams::FFdin*      cd_fdin_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.cd_fdin_read.N
 i32                  cd_fdin_read_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.cd_fdin_read.Next
 lib_ams::FFdin*      cd_fdin_read_Next(lib_ams::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.cd_fdin_read.Prev
 lib_ams::FFdin*      cd_fdin_read_Prev(lib_ams::FFdin &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.cd_fdin_read.Remove
 void                 cd_fdin_read_Remove(lib_ams::FFdin& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.cd_fdin_read.RemoveAll
 void                 cd_fdin_read_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:lib_ams.FDb.cd_fdin_read.RemoveFirst
 lib_ams::FFdin*      cd_fdin_read_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:lib_ams.FDb.cd_fdin_read.RotateFirst
 lib_ams::FFdin*      cd_fdin_read_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.cd_fdin_read.qLast
 lib_ams::FFdin&      cd_fdin_read_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_ams.FDb.cd_fdin_read.Step
+// this function is 'extrn' and implemented by user
 void                 cd_fdin_read_Step() __attribute__((nothrow));
 
 // Main step
+// func:lib_ams.FDb._db.Step
 void                 Step();
+// func:lib_ams.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:lib_ams.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:lib_ams.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -373,414 +439,604 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:lib_ams.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:lib_ams.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:lib_ams.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:lib_ams.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.writefile.XrefMaybe
 bool                 writefile_XrefMaybe(lib_ams::FWritefile &row);
 
 // Return true if index is empty
+// func:lib_ams.FDb.zd_flush.EmptyQ
 bool                 zd_flush_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.zd_flush.First
 lib_ams::FWritefile* zd_flush_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.zd_flush.InLlistQ
 bool                 zd_flush_InLlistQ(lib_ams::FWritefile& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.zd_flush.Insert
 void                 zd_flush_Insert(lib_ams::FWritefile& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.zd_flush.Last
 lib_ams::FWritefile* zd_flush_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.zd_flush.N
 i32                  zd_flush_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.zd_flush.Next
 lib_ams::FWritefile* zd_flush_Next(lib_ams::FWritefile &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.zd_flush.Prev
 lib_ams::FWritefile* zd_flush_Prev(lib_ams::FWritefile &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.zd_flush.Remove
 void                 zd_flush_Remove(lib_ams::FWritefile& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.zd_flush.RemoveAll
 void                 zd_flush_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:lib_ams.FDb.zd_flush.RemoveFirst
 lib_ams::FWritefile* zd_flush_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.zd_flush.qLast
 lib_ams::FWritefile& zd_flush_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
+// func:lib_ams.FDb.zd_flush.FirstChanged
 void                 zd_flush_FirstChanged() __attribute__((nothrow));
+// func:lib_ams.FDb.zd_flush.Step
+// this function is 'extrn' and implemented by user
 void                 zd_flush_Step() __attribute__((nothrow));
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
+// func:lib_ams.FDb.zd_flush.SetDelay
 void                 zd_flush_SetDelay(algo::SchedTime delay) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_ams.FDb.stream.Alloc
 lib_ams::FStream&    stream_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ams.FDb.stream.AllocMaybe
 lib_ams::FStream*    stream_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_ams.FDb.stream.AllocMem
 void*                stream_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FDb.stream.EmptyQ
 bool                 stream_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FDb.stream.Find
 lib_ams::FStream*    stream_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FDb.stream.Last
 lib_ams::FStream*    stream_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_ams.FDb.stream.N
 i32                  stream_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_ams.FDb.stream.RemoveAll
 void                 stream_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FDb.stream.RemoveLast
 void                 stream_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FDb.stream.qFind
 lib_ams::FStream&    stream_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.stream.XrefMaybe
 bool                 stream_XrefMaybe(lib_ams::FStream &row);
 
 // Return true if hash is empty
+// func:lib_ams.FDb.ind_stream.EmptyQ
 bool                 ind_stream_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_ams.FDb.ind_stream.Find
 lib_ams::FStream*    ind_stream_Find(ams::StreamId key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:lib_ams.FDb.ind_stream.FindX
 lib_ams::FStream&    ind_stream_FindX(ams::StreamId key);
 // Return number of items in the hash
+// func:lib_ams.FDb.ind_stream.N
 i32                  ind_stream_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_ams.FDb.ind_stream.InsertMaybe
 bool                 ind_stream_InsertMaybe(lib_ams::FStream& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_ams.FDb.ind_stream.Remove
 void                 ind_stream_Remove(lib_ams::FStream& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_ams.FDb.ind_stream.Reserve
 void                 ind_stream_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FDb.cd_stream_hb.EmptyQ
 bool                 cd_stream_hb_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.cd_stream_hb.First
 lib_ams::FStream*    cd_stream_hb_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.cd_stream_hb.InLlistQ
 bool                 cd_stream_hb_InLlistQ(lib_ams::FStream& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.cd_stream_hb.Insert
 void                 cd_stream_hb_Insert(lib_ams::FStream& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.cd_stream_hb.Last
 lib_ams::FStream*    cd_stream_hb_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.cd_stream_hb.N
 i32                  cd_stream_hb_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.cd_stream_hb.Next
 lib_ams::FStream*    cd_stream_hb_Next(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.cd_stream_hb.Prev
 lib_ams::FStream*    cd_stream_hb_Prev(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.cd_stream_hb.Remove
 void                 cd_stream_hb_Remove(lib_ams::FStream& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.cd_stream_hb.RemoveAll
 void                 cd_stream_hb_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:lib_ams.FDb.cd_stream_hb.RemoveFirst
 lib_ams::FStream*    cd_stream_hb_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:lib_ams.FDb.cd_stream_hb.RotateFirst
 lib_ams::FStream*    cd_stream_hb_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.cd_stream_hb.qLast
 lib_ams::FStream&    cd_stream_hb_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
+// func:lib_ams.FDb.cd_stream_hb.FirstChanged
 void                 cd_stream_hb_FirstChanged() __attribute__((nothrow));
+// func:lib_ams.FDb.cd_stream_hb.Step
+// this function is 'extrn' and implemented by user
 void                 cd_stream_hb_Step() __attribute__((nothrow));
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
+// func:lib_ams.FDb.cd_stream_hb.SetDelay
 void                 cd_stream_hb_SetDelay(algo::SchedTime delay) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FDb.cd_poll_read.EmptyQ
 bool                 cd_poll_read_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.cd_poll_read.First
 lib_ams::FStream*    cd_poll_read_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.cd_poll_read.InLlistQ
 bool                 cd_poll_read_InLlistQ(lib_ams::FStream& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.cd_poll_read.Insert
 void                 cd_poll_read_Insert(lib_ams::FStream& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.cd_poll_read.Last
 lib_ams::FStream*    cd_poll_read_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.cd_poll_read.N
 i32                  cd_poll_read_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.cd_poll_read.Next
 lib_ams::FStream*    cd_poll_read_Next(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.cd_poll_read.Prev
 lib_ams::FStream*    cd_poll_read_Prev(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.cd_poll_read.Remove
 void                 cd_poll_read_Remove(lib_ams::FStream& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.cd_poll_read.RemoveAll
 void                 cd_poll_read_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:lib_ams.FDb.cd_poll_read.RemoveFirst
 lib_ams::FStream*    cd_poll_read_RemoveFirst() __attribute__((nothrow));
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
+// func:lib_ams.FDb.cd_poll_read.RotateFirst
 lib_ams::FStream*    cd_poll_read_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.cd_poll_read.qLast
 lib_ams::FStream&    cd_poll_read_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_ams.FDb.cd_poll_read.Step
+// this function is 'extrn' and implemented by user
 void                 cd_poll_read_Step() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_ams.FDb.proc.Alloc
 lib_ams::FProc&      proc_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ams.FDb.proc.AllocMaybe
 lib_ams::FProc*      proc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:lib_ams.FDb.proc.Delete
 void                 proc_Delete(lib_ams::FProc &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:lib_ams.FDb.proc.AllocMem
 void*                proc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:lib_ams.FDb.proc.FreeMem
 void                 proc_FreeMem(lib_ams::FProc &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:lib_ams.FDb.proc.Reserve
 u64                  proc_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:lib_ams.FDb.proc.ReserveMem
 u64                  proc_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.proc.XrefMaybe
 bool                 proc_XrefMaybe(lib_ams::FProc &row);
 
 // Return true if hash is empty
+// func:lib_ams.FDb.ind_proc.EmptyQ
 bool                 ind_proc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_ams.FDb.ind_proc.Find
 lib_ams::FProc*      ind_proc_Find(ams::ProcId key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:lib_ams.FDb.ind_proc.FindX
 lib_ams::FProc&      ind_proc_FindX(ams::ProcId key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ams.FDb.ind_proc.GetOrCreate
 lib_ams::FProc&      ind_proc_GetOrCreate(ams::ProcId key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:lib_ams.FDb.ind_proc.N
 i32                  ind_proc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_ams.FDb.ind_proc.InsertMaybe
 bool                 ind_proc_InsertMaybe(lib_ams::FProc& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_ams.FDb.ind_proc.Remove
 void                 ind_proc_Remove(lib_ams::FProc& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_ams.FDb.ind_proc.Reserve
 void                 ind_proc_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_ams.FDb.member.Alloc
 lib_ams::FMember&    member_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ams.FDb.member.AllocMaybe
 lib_ams::FMember*    member_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:lib_ams.FDb.member.Delete
 void                 member_Delete(lib_ams::FMember &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:lib_ams.FDb.member.AllocMem
 void*                member_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:lib_ams.FDb.member.FreeMem
 void                 member_FreeMem(lib_ams::FMember &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:lib_ams.FDb.member.Reserve
 u64                  member_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:lib_ams.FDb.member.ReserveMem
 u64                  member_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.member.XrefMaybe
 bool                 member_XrefMaybe(lib_ams::FMember &row);
 
 // Return true if hash is empty
+// func:lib_ams.FDb.ind_member.EmptyQ
 bool                 ind_member_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_ams.FDb.ind_member.Find
 lib_ams::FMember*    ind_member_Find(ams::Member key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:lib_ams.FDb.ind_member.FindX
 lib_ams::FMember&    ind_member_FindX(ams::Member key);
 // Return number of items in the hash
+// func:lib_ams.FDb.ind_member.N
 i32                  ind_member_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_ams.FDb.ind_member.InsertMaybe
 bool                 ind_member_InsertMaybe(lib_ams::FMember& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_ams.FDb.ind_member.Remove
 void                 ind_member_Remove(lib_ams::FMember& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_ams.FDb.ind_member.Reserve
 void                 ind_member_Reserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:lib_ams.FDb.streamtype.Alloc
 lib_ams::FStreamType& streamtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ams.FDb.streamtype.AllocMaybe
 lib_ams::FStreamType* streamtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_ams.FDb.streamtype.InsertMaybe
 lib_ams::FStreamType* streamtype_InsertMaybe(const amsdb::StreamType &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:lib_ams.FDb.streamtype.AllocMem
 void*                streamtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FDb.streamtype.EmptyQ
 bool                 streamtype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FDb.streamtype.Find
 lib_ams::FStreamType* streamtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FDb.streamtype.Last
 lib_ams::FStreamType* streamtype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:lib_ams.FDb.streamtype.N
 i32                  streamtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:lib_ams.FDb.streamtype.RemoveAll
 void                 streamtype_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FDb.streamtype.RemoveLast
 void                 streamtype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FDb.streamtype.qFind
 lib_ams::FStreamType& streamtype_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ams.FDb.streamtype.XrefMaybe
 bool                 streamtype_XrefMaybe(lib_ams::FStreamType &row);
 
 // Return true if hash is empty
+// func:lib_ams.FDb.ind_streamtype.EmptyQ
 bool                 ind_streamtype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:lib_ams.FDb.ind_streamtype.Find
 lib_ams::FStreamType* ind_streamtype_Find(ams::StreamType key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:lib_ams.FDb.ind_streamtype.FindX
 lib_ams::FStreamType& ind_streamtype_FindX(ams::StreamType key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ams.FDb.ind_streamtype.GetOrCreate
 lib_ams::FStreamType& ind_streamtype_GetOrCreate(ams::StreamType key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:lib_ams.FDb.ind_streamtype.N
 i32                  ind_streamtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_ams.FDb.ind_streamtype.InsertMaybe
 bool                 ind_streamtype_InsertMaybe(lib_ams::FStreamType& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_ams.FDb.ind_streamtype.Remove
 void                 ind_streamtype_Remove(lib_ams::FStreamType& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_ams.FDb.ind_streamtype.Reserve
 void                 ind_streamtype_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FDb.zd_ctlin.EmptyQ
 bool                 zd_ctlin_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.zd_ctlin.First
 lib_ams::FStream*    zd_ctlin_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.zd_ctlin.InLlistQ
 bool                 zd_ctlin_InLlistQ(lib_ams::FStream& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.zd_ctlin.Insert
 void                 zd_ctlin_Insert(lib_ams::FStream& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.zd_ctlin.Last
 lib_ams::FStream*    zd_ctlin_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.zd_ctlin.N
 i32                  zd_ctlin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.zd_ctlin.Next
 lib_ams::FStream*    zd_ctlin_Next(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.zd_ctlin.Prev
 lib_ams::FStream*    zd_ctlin_Prev(lib_ams::FStream &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.zd_ctlin.Remove
 void                 zd_ctlin_Remove(lib_ams::FStream& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.zd_ctlin.RemoveAll
 void                 zd_ctlin_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_ams.FDb.zd_ctlin.RemoveFirst
 lib_ams::FStream*    zd_ctlin_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.zd_ctlin.qLast
 lib_ams::FStream&    zd_ctlin_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FDb.zd_proc.EmptyQ
 bool                 zd_proc_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FDb.zd_proc.First
 lib_ams::FProc*      zd_proc_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FDb.zd_proc.InLlistQ
 bool                 zd_proc_InLlistQ(lib_ams::FProc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FDb.zd_proc.Insert
 void                 zd_proc_Insert(lib_ams::FProc& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FDb.zd_proc.Last
 lib_ams::FProc*      zd_proc_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FDb.zd_proc.N
 i32                  zd_proc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FDb.zd_proc.Next
 lib_ams::FProc*      zd_proc_Next(lib_ams::FProc &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FDb.zd_proc.Prev
 lib_ams::FProc*      zd_proc_Prev(lib_ams::FProc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FDb.zd_proc.Remove
 void                 zd_proc_Remove(lib_ams::FProc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FDb.zd_proc.RemoveAll
 void                 zd_proc_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_ams.FDb.zd_proc.RemoveFirst
 lib_ams::FProc*      zd_proc_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FDb.zd_proc.qLast
 lib_ams::FProc&      zd_proc_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Print back to string
+// func:lib_ams.FDb.regx_trace.Print
 void                 regx_trace_Print(algo::cstring &out) __attribute__((nothrow));
 
 // cursor points to valid item
+// func:lib_ams.FDb.fdin_curs.Reset
 void                 _db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.fdin_curs.ValidQ
 bool                 _db_fdin_curs_ValidQ(_db_fdin_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.fdin_curs.Next
 void                 _db_fdin_curs_Next(_db_fdin_curs &curs);
 // item access
+// func:lib_ams.FDb.fdin_curs.Access
 lib_ams::FFdin&      _db_fdin_curs_Access(_db_fdin_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_fdin_eof_curs.Reset
 void                 _db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_fdin_eof_curs.ValidQ
 bool                 _db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.cd_fdin_eof_curs.Next
 void                 _db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs);
 // item access
+// func:lib_ams.FDb.cd_fdin_eof_curs.Access
 lib_ams::FFdin&      _db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_fdin_read_curs.Reset
 void                 _db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_fdin_read_curs.ValidQ
 bool                 _db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.cd_fdin_read_curs.Next
 void                 _db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs);
 // item access
+// func:lib_ams.FDb.cd_fdin_read_curs.Access
 lib_ams::FFdin&      _db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_flush_curs.Reset
 void                 _db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_flush_curs.ValidQ
 bool                 _db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.zd_flush_curs.Next
 void                 _db_zd_flush_curs_Next(_db_zd_flush_curs &curs);
 // item access
+// func:lib_ams.FDb.zd_flush_curs.Access
 lib_ams::FWritefile& _db_zd_flush_curs_Access(_db_zd_flush_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.stream_curs.Reset
 void                 _db_stream_curs_Reset(_db_stream_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.stream_curs.ValidQ
 bool                 _db_stream_curs_ValidQ(_db_stream_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.stream_curs.Next
 void                 _db_stream_curs_Next(_db_stream_curs &curs);
 // item access
+// func:lib_ams.FDb.stream_curs.Access
 lib_ams::FStream&    _db_stream_curs_Access(_db_stream_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_stream_hb_curs.Reset
 void                 _db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_stream_hb_curs.ValidQ
 bool                 _db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.cd_stream_hb_curs.Next
 void                 _db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs);
 // item access
+// func:lib_ams.FDb.cd_stream_hb_curs.Access
 lib_ams::FStream&    _db_cd_stream_hb_curs_Access(_db_cd_stream_hb_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_poll_read_curs.Reset
 void                 _db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.cd_poll_read_curs.ValidQ
 bool                 _db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.cd_poll_read_curs.Next
 void                 _db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs);
 // item access
+// func:lib_ams.FDb.cd_poll_read_curs.Access
 lib_ams::FStream&    _db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.streamtype_curs.Reset
 void                 _db_streamtype_curs_Reset(_db_streamtype_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.streamtype_curs.ValidQ
 bool                 _db_streamtype_curs_ValidQ(_db_streamtype_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.streamtype_curs.Next
 void                 _db_streamtype_curs_Next(_db_streamtype_curs &curs);
 // item access
+// func:lib_ams.FDb.streamtype_curs.Access
 lib_ams::FStreamType& _db_streamtype_curs_Access(_db_streamtype_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_ctlin_curs.Reset
 void                 _db_zd_ctlin_curs_Reset(_db_zd_ctlin_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_ctlin_curs.ValidQ
 bool                 _db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.zd_ctlin_curs.Next
 void                 _db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs);
 // item access
+// func:lib_ams.FDb.zd_ctlin_curs.Access
 lib_ams::FStream&    _db_zd_ctlin_curs_Access(_db_zd_ctlin_curs &curs);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_proc_curs.Reset
 void                 _db_zd_proc_curs_Reset(_db_zd_proc_curs &curs, lib_ams::FDb &parent);
 // cursor points to valid item
+// func:lib_ams.FDb.zd_proc_curs.ValidQ
 bool                 _db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs);
 // proceed to next item
+// func:lib_ams.FDb.zd_proc_curs.Next
 void                 _db_zd_proc_curs_Next(_db_zd_proc_curs &curs);
 // item access
+// func:lib_ams.FDb.zd_proc_curs.Access
 lib_ams::FProc&      _db_zd_proc_curs_Access(_db_zd_proc_curs &curs);
 // Set all fields to initial values.
+// func:lib_ams.FDb..Init
 void                 FDb_Init();
+// func:lib_ams.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_ams.FFdin
@@ -818,8 +1074,10 @@ private:
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by lib_ams::FFdin.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
+// func:lib_ams.FFdin.in.BeginRead
 void                 in_BeginRead(lib_ams::FFdin& fdin, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
+// func:lib_ams.FFdin.in.EndRead
 void                 in_EndRead(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
@@ -832,32 +1090,42 @@ void                 in_EndRead(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 //
+// func:lib_ams.FFdin.in.GetMsg
 algo::aryptr<char>   in_GetMsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
+// func:lib_ams.FFdin.in.Max
 i32                  in_Max(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Return number of bytes in the buffer.
+// func:lib_ams.FFdin.in.N
 i32                  in_N(lib_ams::FFdin& fdin) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
+// func:lib_ams.FFdin.in.Refill
 bool                 in_Refill(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Empty bfufer
 // Discard contents of the buffer.
+// func:lib_ams.FFdin.in.RemoveAll
 void                 in_RemoveAll(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 //
+// func:lib_ams.FFdin.in.SkipBytes
 void                 in_SkipBytes(lib_ams::FFdin& fdin, int n) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
+// func:lib_ams.FFdin.in.SkipMsg
 void                 in_SkipMsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
+// func:lib_ams.FFdin.in.WriteAll
 bool                 in_WriteAll(lib_ams::FFdin& fdin, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_ams.FFdin..Init
 void                 FFdin_Init(lib_ams::FFdin& fdin);
+// func:lib_ams.FFdin..Uninit
 void                 FFdin_Uninit(lib_ams::FFdin& fdin) __attribute__((nothrow));
 
 // --- lib_ams.FMember
@@ -889,7 +1157,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:lib_ams.FMember..Init
 void                 FMember_Init(lib_ams::FMember& member);
+// func:lib_ams.FMember..Uninit
 void                 FMember_Uninit(lib_ams::FMember& member) __attribute__((nothrow));
 
 // --- lib_ams.FProc
@@ -923,42 +1193,61 @@ private:
 };
 
 // Delete all elements in the linked list.
+// func:lib_ams.FProc.zd_member_byproc.Cascdel
 void                 zd_member_byproc_Cascdel(lib_ams::FProc& proc) __attribute__((nothrow));
 // Return true if index is empty
+// func:lib_ams.FProc.zd_member_byproc.EmptyQ
 bool                 zd_member_byproc_EmptyQ(lib_ams::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FProc.zd_member_byproc.First
 lib_ams::FMember*    zd_member_byproc_First(lib_ams::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FProc.zd_member_byproc.InLlistQ
 bool                 zd_member_byproc_InLlistQ(lib_ams::FMember& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FProc.zd_member_byproc.Insert
 void                 zd_member_byproc_Insert(lib_ams::FProc& proc, lib_ams::FMember& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FProc.zd_member_byproc.Last
 lib_ams::FMember*    zd_member_byproc_Last(lib_ams::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FProc.zd_member_byproc.N
 i32                  zd_member_byproc_N(const lib_ams::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FProc.zd_member_byproc.Next
 lib_ams::FMember*    zd_member_byproc_Next(lib_ams::FMember &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FProc.zd_member_byproc.Prev
 lib_ams::FMember*    zd_member_byproc_Prev(lib_ams::FMember &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FProc.zd_member_byproc.Remove
 void                 zd_member_byproc_Remove(lib_ams::FProc& proc, lib_ams::FMember& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FProc.zd_member_byproc.RemoveAll
 void                 zd_member_byproc_RemoveAll(lib_ams::FProc& proc) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_ams.FProc.zd_member_byproc.RemoveFirst
 lib_ams::FMember*    zd_member_byproc_RemoveFirst(lib_ams::FProc& proc) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FProc.zd_member_byproc.qLast
 lib_ams::FMember&    zd_member_byproc_qLast(lib_ams::FProc& proc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:lib_ams.FProc..Init
 void                 FProc_Init(lib_ams::FProc& proc);
 // cursor points to valid item
+// func:lib_ams.FProc.zd_member_byproc_curs.Reset
 void                 proc_zd_member_byproc_curs_Reset(proc_zd_member_byproc_curs &curs, lib_ams::FProc &parent);
 // cursor points to valid item
+// func:lib_ams.FProc.zd_member_byproc_curs.ValidQ
 bool                 proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_curs &curs);
 // proceed to next item
+// func:lib_ams.FProc.zd_member_byproc_curs.Next
 void                 proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs);
 // item access
+// func:lib_ams.FProc.zd_member_byproc_curs.Access
 lib_ams::FMember&    proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs);
+// func:lib_ams.FProc..Uninit
 void                 FProc_Uninit(lib_ams::FProc& proc) __attribute__((nothrow));
 
 // --- lib_ams.FReadfile
@@ -990,154 +1279,229 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field fd of lib_ams::FReadfile
+// func:lib_ams.FReadfile.fd.Cleanup
+// this function is 'extrn' and implemented by user
 void                 fd_Cleanup(lib_ams::FReadfile& parent) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:lib_ams.FReadfile.buf.Alloc
 u8&                  buf_Alloc(lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_ams.FReadfile.buf.AllocAt
 u8&                  buf_AllocAt(lib_ams::FReadfile& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.buf.AllocN
 algo::aryptr<u8>     buf_AllocN(lib_ams::FReadfile& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FReadfile.buf.EmptyQ
 bool                 buf_EmptyQ(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FReadfile.buf.Find
 u8*                  buf_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:lib_ams.FReadfile.buf.Getary
 algo::aryptr<u8>     buf_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FReadfile.buf.Last
 u8*                  buf_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:lib_ams.FReadfile.buf.Max
 i32                  buf_Max(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:lib_ams.FReadfile.buf.N
 i32                  buf_N(const lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:lib_ams.FReadfile.buf.Remove
 void                 buf_Remove(lib_ams::FReadfile& parent, u32 i) __attribute__((nothrow));
+// func:lib_ams.FReadfile.buf.RemoveAll
 void                 buf_RemoveAll(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FReadfile.buf.RemoveLast
 void                 buf_RemoveLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.buf.Reserve
 void                 buf_Reserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.buf.AbsReserve
 void                 buf_AbsReserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:lib_ams.FReadfile.buf.Setary
 void                 buf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FReadfile.buf.qFind
 u8&                  buf_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:lib_ams.FReadfile.buf.qLast
 u8&                  buf_qLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:lib_ams.FReadfile.buf.rowid_Get
 u64                  buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.buf.AllocNVal
 algo::aryptr<u8>     buf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:lib_ams.FReadfile.cbuf.Alloc
 u8&                  cbuf_Alloc(lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_ams.FReadfile.cbuf.AllocAt
 u8&                  cbuf_AllocAt(lib_ams::FReadfile& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.cbuf.AllocN
 algo::aryptr<u8>     cbuf_AllocN(lib_ams::FReadfile& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FReadfile.cbuf.EmptyQ
 bool                 cbuf_EmptyQ(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FReadfile.cbuf.Find
 u8*                  cbuf_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:lib_ams.FReadfile.cbuf.Getary
 algo::aryptr<u8>     cbuf_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FReadfile.cbuf.Last
 u8*                  cbuf_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:lib_ams.FReadfile.cbuf.Max
 i32                  cbuf_Max(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:lib_ams.FReadfile.cbuf.N
 i32                  cbuf_N(const lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:lib_ams.FReadfile.cbuf.Remove
 void                 cbuf_Remove(lib_ams::FReadfile& parent, u32 i) __attribute__((nothrow));
+// func:lib_ams.FReadfile.cbuf.RemoveAll
 void                 cbuf_RemoveAll(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FReadfile.cbuf.RemoveLast
 void                 cbuf_RemoveLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.cbuf.Reserve
 void                 cbuf_Reserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.cbuf.AbsReserve
 void                 cbuf_AbsReserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:lib_ams.FReadfile.cbuf.Setary
 void                 cbuf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FReadfile.cbuf.qFind
 u8&                  cbuf_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:lib_ams.FReadfile.cbuf.qLast
 u8&                  cbuf_qLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:lib_ams.FReadfile.cbuf.rowid_Get
 u64                  cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.cbuf.AllocNVal
 algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:lib_ams.FReadfile.offset.Alloc
 u32&                 offset_Alloc(lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_ams.FReadfile.offset.AllocAt
 u32&                 offset_AllocAt(lib_ams::FReadfile& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.offset.AllocN
 algo::aryptr<u32>    offset_AllocN(lib_ams::FReadfile& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FReadfile.offset.EmptyQ
 bool                 offset_EmptyQ(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FReadfile.offset.Find
 u32*                 offset_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:lib_ams.FReadfile.offset.Getary
 algo::aryptr<u32>    offset_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FReadfile.offset.Last
 u32*                 offset_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:lib_ams.FReadfile.offset.Max
 i32                  offset_Max(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:lib_ams.FReadfile.offset.N
 i32                  offset_N(const lib_ams::FReadfile& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:lib_ams.FReadfile.offset.Remove
 void                 offset_Remove(lib_ams::FReadfile& parent, u32 i) __attribute__((nothrow));
+// func:lib_ams.FReadfile.offset.RemoveAll
 void                 offset_RemoveAll(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FReadfile.offset.RemoveLast
 void                 offset_RemoveLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.offset.Reserve
 void                 offset_Reserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:lib_ams.FReadfile.offset.AbsReserve
 void                 offset_AbsReserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:lib_ams.FReadfile.offset.Setary
 void                 offset_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FReadfile.offset.qFind
 u32&                 offset_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:lib_ams.FReadfile.offset.qLast
 u32&                 offset_qLast(lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:lib_ams.FReadfile.offset.rowid_Get
 u64                  offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FReadfile.offset.AllocNVal
 algo::aryptr<u32>    offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u32& val) __attribute__((nothrow));
 
 // proceed to next item
+// func:lib_ams.FReadfile.buf_curs.Next
 void                 FReadfile_buf_curs_Next(FReadfile_buf_curs &curs);
+// func:lib_ams.FReadfile.buf_curs.Reset
 void                 FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent);
 // cursor points to valid item
+// func:lib_ams.FReadfile.buf_curs.ValidQ
 bool                 FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs);
 // item access
+// func:lib_ams.FReadfile.buf_curs.Access
 u8&                  FReadfile_buf_curs_Access(FReadfile_buf_curs &curs);
 // proceed to next item
+// func:lib_ams.FReadfile.cbuf_curs.Next
 void                 FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs);
+// func:lib_ams.FReadfile.cbuf_curs.Reset
 void                 FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent);
 // cursor points to valid item
+// func:lib_ams.FReadfile.cbuf_curs.ValidQ
 bool                 FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs);
 // item access
+// func:lib_ams.FReadfile.cbuf_curs.Access
 u8&                  FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs);
 // proceed to next item
+// func:lib_ams.FReadfile.offset_curs.Next
 void                 FReadfile_offset_curs_Next(FReadfile_offset_curs &curs);
+// func:lib_ams.FReadfile.offset_curs.Reset
 void                 FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent);
 // cursor points to valid item
+// func:lib_ams.FReadfile.offset_curs.ValidQ
 bool                 FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs);
 // item access
+// func:lib_ams.FReadfile.offset_curs.Access
 u32&                 FReadfile_offset_curs_Access(FReadfile_offset_curs &curs);
 // Set all fields to initial values.
+// func:lib_ams.FReadfile..Init
 void                 FReadfile_Init(lib_ams::FReadfile& parent);
+// func:lib_ams.FReadfile..Uninit
 void                 FReadfile_Uninit(lib_ams::FReadfile& parent) __attribute__((nothrow));
-// print string representation of lib_ams::FReadfile to string LHS, no header -- cprint:lib_ams.FReadfile.String
-void                 FReadfile_Print(lib_ams::FReadfile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FReadfile.String  printfmt:Tuple
+// func:lib_ams.FReadfile..Print
+void                 FReadfile_Print(lib_ams::FReadfile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_ams.FStream
 // create: lib_ams.FDb.stream (Lary)
@@ -1193,65 +1557,95 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field shm_file of lib_ams::FStream
+// func:lib_ams.FStream.shm_file.Cleanup
+// this function is 'extrn' and implemented by user
 void                 shm_file_Cleanup(lib_ams::FStream& stream) __attribute__((nothrow));
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field shm_handle of lib_ams::FStream
+// func:lib_ams.FStream.shm_handle.Cleanup
+// this function is 'extrn' and implemented by user
 void                 shm_handle_Cleanup(lib_ams::FStream& stream) __attribute__((nothrow));
 
 // Invoke function by pointer
+// func:lib_ams.FStream.h_msg.Call
 void                 h_msg_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
+// func:lib_ams.FStream.h_msg.Set0
 void                 h_msg_Set0(lib_ams::FStream& stream, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
+// func:lib_ams.FStream.h_msg.Set1
 template<class T> void h_msg_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
+// func:lib_ams.FStream.h_msg.Set2
 template<class T> void h_msg_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) __attribute__((nothrow));
 
 // Invoke function by pointer
+// func:lib_ams.FStream.h_msg_orig.Call
 void                 h_msg_orig_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
+// func:lib_ams.FStream.h_msg_orig.Set0
 void                 h_msg_orig_Set0(lib_ams::FStream& stream, void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
+// func:lib_ams.FStream.h_msg_orig.Set1
 template<class T> void h_msg_orig_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
+// func:lib_ams.FStream.h_msg_orig.Set2
 template<class T> void h_msg_orig_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:lib_ams.FStream.zd_member_bystream.EmptyQ
 bool                 zd_member_bystream_EmptyQ(lib_ams::FStream& stream) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_ams.FStream.zd_member_bystream.First
 lib_ams::FMember*    zd_member_bystream_First(lib_ams::FStream& stream) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:lib_ams.FStream.zd_member_bystream.InLlistQ
 bool                 zd_member_bystream_InLlistQ(lib_ams::FMember& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_ams.FStream.zd_member_bystream.Insert
 void                 zd_member_bystream_Insert(lib_ams::FStream& stream, lib_ams::FMember& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_ams.FStream.zd_member_bystream.Last
 lib_ams::FMember*    zd_member_bystream_Last(lib_ams::FStream& stream) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:lib_ams.FStream.zd_member_bystream.N
 i32                  zd_member_bystream_N(const lib_ams::FStream& stream) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:lib_ams.FStream.zd_member_bystream.Next
 lib_ams::FMember*    zd_member_bystream_Next(lib_ams::FMember &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:lib_ams.FStream.zd_member_bystream.Prev
 lib_ams::FMember*    zd_member_bystream_Prev(lib_ams::FMember &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:lib_ams.FStream.zd_member_bystream.Remove
 void                 zd_member_bystream_Remove(lib_ams::FStream& stream, lib_ams::FMember& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:lib_ams.FStream.zd_member_bystream.RemoveAll
 void                 zd_member_bystream_RemoveAll(lib_ams::FStream& stream) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_ams.FStream.zd_member_bystream.RemoveFirst
 lib_ams::FMember*    zd_member_bystream_RemoveFirst(lib_ams::FStream& stream) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:lib_ams.FStream.zd_member_bystream.qLast
 lib_ams::FMember&    zd_member_bystream_qLast(lib_ams::FStream& stream) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:lib_ams.FStream..Init
 void                 FStream_Init(lib_ams::FStream& stream);
 // cursor points to valid item
+// func:lib_ams.FStream.zd_member_bystream_curs.Reset
 void                 stream_zd_member_bystream_curs_Reset(stream_zd_member_bystream_curs &curs, lib_ams::FStream &parent);
 // cursor points to valid item
+// func:lib_ams.FStream.zd_member_bystream_curs.ValidQ
 bool                 stream_zd_member_bystream_curs_ValidQ(stream_zd_member_bystream_curs &curs);
 // proceed to next item
+// func:lib_ams.FStream.zd_member_bystream_curs.Next
 void                 stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs);
 // item access
+// func:lib_ams.FStream.zd_member_bystream_curs.Access
 lib_ams::FMember&    stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs);
+// func:lib_ams.FStream..Uninit
 void                 FStream_Uninit(lib_ams::FStream& stream) __attribute__((nothrow));
 
 // --- lib_ams.FStreamType
@@ -1275,12 +1669,16 @@ private:
 };
 
 // Copy fields out of row
+// func:lib_ams.FStreamType.base.CopyOut
 void                 streamtype_CopyOut(lib_ams::FStreamType &row, amsdb::StreamType &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:lib_ams.FStreamType.base.CopyIn
 void                 streamtype_CopyIn(lib_ams::FStreamType &row, amsdb::StreamType &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_ams.FStreamType..Init
 void                 FStreamType_Init(lib_ams::FStreamType& streamtype);
+// func:lib_ams.FStreamType..Uninit
 void                 FStreamType_Uninit(lib_ams::FStreamType& streamtype) __attribute__((nothrow));
 
 // --- lib_ams.FWritefile
@@ -1309,107 +1707,159 @@ private:
 
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field fd of lib_ams::FWritefile
+// func:lib_ams.FWritefile.fd.Cleanup
+// this function is 'extrn' and implemented by user
 void                 fd_Cleanup(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:lib_ams.FWritefile.buf.Alloc
 u8&                  buf_Alloc(lib_ams::FWritefile& writefile) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_ams.FWritefile.buf.AllocAt
 u8&                  buf_AllocAt(lib_ams::FWritefile& writefile, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FWritefile.buf.AllocN
 algo::aryptr<u8>     buf_AllocN(lib_ams::FWritefile& writefile, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FWritefile.buf.EmptyQ
 bool                 buf_EmptyQ(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FWritefile.buf.Find
 u8*                  buf_Find(lib_ams::FWritefile& writefile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:lib_ams.FWritefile.buf.Getary
 algo::aryptr<u8>     buf_Getary(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FWritefile.buf.Last
 u8*                  buf_Last(lib_ams::FWritefile& writefile) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:lib_ams.FWritefile.buf.Max
 i32                  buf_Max(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return number of items in the array
+// func:lib_ams.FWritefile.buf.N
 i32                  buf_N(const lib_ams::FWritefile& writefile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:lib_ams.FWritefile.buf.Remove
 void                 buf_Remove(lib_ams::FWritefile& writefile, u32 i) __attribute__((nothrow));
+// func:lib_ams.FWritefile.buf.RemoveAll
 void                 buf_RemoveAll(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FWritefile.buf.RemoveLast
 void                 buf_RemoveLast(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_ams.FWritefile.buf.Reserve
 void                 buf_Reserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:lib_ams.FWritefile.buf.AbsReserve
 void                 buf_AbsReserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:lib_ams.FWritefile.buf.Setary
 void                 buf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FWritefile.buf.qFind
 u8&                  buf_qFind(lib_ams::FWritefile& writefile, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:lib_ams.FWritefile.buf.qLast
 u8&                  buf_qLast(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return row id of specified element
+// func:lib_ams.FWritefile.buf.rowid_Get
 u64                  buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FWritefile.buf.AllocNVal
 algo::aryptr<u8>     buf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:lib_ams.FWritefile.cbuf.Alloc
 u8&                  cbuf_Alloc(lib_ams::FWritefile& writefile) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_ams.FWritefile.cbuf.AllocAt
 u8&                  cbuf_AllocAt(lib_ams::FWritefile& writefile, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FWritefile.cbuf.AllocN
 algo::aryptr<u8>     cbuf_AllocN(lib_ams::FWritefile& writefile, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:lib_ams.FWritefile.cbuf.EmptyQ
 bool                 cbuf_EmptyQ(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:lib_ams.FWritefile.cbuf.Find
 u8*                  cbuf_Find(lib_ams::FWritefile& writefile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:lib_ams.FWritefile.cbuf.Getary
 algo::aryptr<u8>     cbuf_Getary(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:lib_ams.FWritefile.cbuf.Last
 u8*                  cbuf_Last(lib_ams::FWritefile& writefile) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:lib_ams.FWritefile.cbuf.Max
 i32                  cbuf_Max(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return number of items in the array
+// func:lib_ams.FWritefile.cbuf.N
 i32                  cbuf_N(const lib_ams::FWritefile& writefile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:lib_ams.FWritefile.cbuf.Remove
 void                 cbuf_Remove(lib_ams::FWritefile& writefile, u32 i) __attribute__((nothrow));
+// func:lib_ams.FWritefile.cbuf.RemoveAll
 void                 cbuf_RemoveAll(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:lib_ams.FWritefile.cbuf.RemoveLast
 void                 cbuf_RemoveLast(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_ams.FWritefile.cbuf.Reserve
 void                 cbuf_Reserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:lib_ams.FWritefile.cbuf.AbsReserve
 void                 cbuf_AbsReserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:lib_ams.FWritefile.cbuf.Setary
 void                 cbuf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:lib_ams.FWritefile.cbuf.qFind
 u8&                  cbuf_qFind(lib_ams::FWritefile& writefile, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:lib_ams.FWritefile.cbuf.qLast
 u8&                  cbuf_qLast(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return row id of specified element
+// func:lib_ams.FWritefile.cbuf.rowid_Get
 u64                  cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_ams.FWritefile.cbuf.AllocNVal
 algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:lib_ams.FWritefile..Init
 void                 FWritefile_Init(lib_ams::FWritefile& writefile);
 // proceed to next item
+// func:lib_ams.FWritefile.buf_curs.Next
 void                 writefile_buf_curs_Next(writefile_buf_curs &curs);
+// func:lib_ams.FWritefile.buf_curs.Reset
 void                 writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent);
 // cursor points to valid item
+// func:lib_ams.FWritefile.buf_curs.ValidQ
 bool                 writefile_buf_curs_ValidQ(writefile_buf_curs &curs);
 // item access
+// func:lib_ams.FWritefile.buf_curs.Access
 u8&                  writefile_buf_curs_Access(writefile_buf_curs &curs);
 // proceed to next item
+// func:lib_ams.FWritefile.cbuf_curs.Next
 void                 writefile_cbuf_curs_Next(writefile_cbuf_curs &curs);
+// func:lib_ams.FWritefile.cbuf_curs.Reset
 void                 writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent);
 // cursor points to valid item
+// func:lib_ams.FWritefile.cbuf_curs.ValidQ
 bool                 writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs);
 // item access
+// func:lib_ams.FWritefile.cbuf_curs.Access
 u8&                  writefile_cbuf_curs_Access(writefile_cbuf_curs &curs);
+// func:lib_ams.FWritefile..Uninit
 void                 FWritefile_Uninit(lib_ams::FWritefile& writefile) __attribute__((nothrow));
-// print string representation of lib_ams::FWritefile to string LHS, no header -- cprint:lib_ams.FWritefile.String
-void                 FWritefile_Print(lib_ams::FWritefile & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FWritefile.String  printfmt:Tuple
+// func:lib_ams.FWritefile..Print
+void                 FWritefile_Print(lib_ams::FWritefile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_ams.FieldId
 #pragma pack(push,1)
@@ -1423,32 +1873,43 @@ struct FieldId { // lib_ams.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_ams.FieldId.value.GetEnum
 lib_ams_FieldIdEnum  value_GetEnum(const lib_ams::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_ams.FieldId.value.SetEnum
 void                 value_SetEnum(lib_ams::FieldId& parent, lib_ams_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_ams.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_ams::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_ams.FieldId.value.Print
 void                 value_Print(const lib_ams::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_ams.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_ams.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_ams::FieldId& parent, algo::strptr rhs, lib_ams_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_ams.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_ams::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_ams::FieldId from an ascii string.
 // The format of the string is the format of the lib_ams::FieldId's only field
+// func:lib_ams.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_ams::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_ams.FieldId..Init
 void                 FieldId_Init(lib_ams::FieldId& parent);
-// print string representation of lib_ams::FieldId to string LHS, no header -- cprint:lib_ams.FieldId.String
-void                 FieldId_Print(lib_ams::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_ams.FieldId.String  printfmt:Raw
+// func:lib_ams.FieldId..Print
+void                 FieldId_Print(lib_ams::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_ams { // gen:ns_curstext
 
@@ -1612,55 +2073,79 @@ struct writefile_cbuf_curs {// cursor
 } // gen:ns_curstext
 namespace lib_ams { // gen:ns_func
 // User-implemented callback function for dispatch CtlMsg
+// func:lib_ams.CtlMsg.ams.DumpStreamTableMsg
+// this function is 'extrn' and implemented by user
 void                 CtlMsg_DumpStreamTableMsg(ams::DumpStreamTableMsg &msg);
 // User-implemented callback function for dispatch CtlMsg
+// func:lib_ams.CtlMsg.ams.ProcAddMsg
+// this function is 'extrn' and implemented by user
 void                 CtlMsg_ProcAddMsg(ams::ProcAddMsg &msg);
 // User-implemented callback function for dispatch CtlMsg
+// func:lib_ams.CtlMsg.ams.ProcRemoveMsg
+// this function is 'extrn' and implemented by user
 void                 CtlMsg_ProcRemoveMsg(ams::ProcRemoveMsg &msg);
 // User-implemented callback function for dispatch CtlMsg
+// func:lib_ams.CtlMsg.ams.StreamHbMsg
+// this function is 'extrn' and implemented by user
 void                 CtlMsg_StreamHbMsg(ams::StreamHbMsg &msg);
+// func:lib_ams.CtlMsg..DispatchRaw
 int                  CtlMsgDispatchRaw(lib_ams::CtlMsgCase type, u8 *msg, u32 len);
+// func:lib_ams.CtlMsg..Dispatch
 int                  CtlMsgDispatch(ams::MsgHeader& msg);
 // void rettype useful for hooks
+// func:lib_ams.CtlMsg..Dispatch2
 void                 vCtlMsgDispatch(ams::MsgHeader& msg);
 // Construct a new ams::InputLineMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...InputLineMsg_FmtByteAry
 ams::InputLineMsg *  InputLineMsg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > payload);
 // Construct a new ams::LogMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...LogMsg_FmtAmsStream
 ams::LogMsg *        LogMsg_FmtAmsStream(lib_ams::FStream &stream, const algo::strptr& logcat, algo::SchedTime tstamp, algo::aryptr<char > text);
 // Construct a new ams::MsgBlock in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...MsgBlock_FmtAmsStream
 ams::MsgBlock *      MsgBlock_FmtAmsStream(lib_ams::FStream &stream, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages);
 // Construct a new ams::OpenMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...OpenMsg_FmtAmsStream
 ams::OpenMsg *       OpenMsg_FmtAmsStream(lib_ams::FStream &stream, ams::Member member, ams::StreamPos pos);
 // Construct a new ams::PrlogMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...PrlogMsg_FmtAmsStream
 ams::PrlogMsg *      PrlogMsg_FmtAmsStream(lib_ams::FStream &stream, const algo::strptr& logcat, algo::SchedTime tstamp, ams::MsgHeader* data);
 // Construct a new ams::ProcAddMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...ProcAddMsg_FmtAmsStream
 ams::ProcAddMsg *    ProcAddMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc_id);
 // Construct a new ams::ProcRemoveMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...ProcRemoveMsg_FmtAmsStream
 ams::ProcRemoveMsg * ProcRemoveMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc_id);
 // Construct a new ams::StreamHbMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...StreamHbMsg_FmtAmsStream
 ams::StreamHbMsg *   StreamHbMsg_FmtAmsStream(lib_ams::FStream &stream, ams::Member member, ams::StreamPos pos, u32 wbudget);
 // Construct a new ams::Trace2Msg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...Trace2Msg_FmtAmsStream
 ams::Trace2Msg *     Trace2Msg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, u8 trace, algo::UnTime tstamp, algo::aryptr<u64 > data);
 // Construct a new ams::TraceInfo2Msg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...TraceInfo2Msg_FmtAmsStream
 ams::TraceInfo2Msg * TraceInfo2Msg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, u8 trace, algo::UnTime tstamp, u8 part, algo::aryptr<char > data);
 // Construct a new ams::TraceInfoMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...TraceInfoMsg_FmtAmsStream
 ams::TraceInfoMsg *  TraceInfoMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, algo::UnTime tstamp, u8 part, algo::aryptr<char > data);
 // Construct a new ams::TraceMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...TraceMsg_FmtAmsStream
 ams::TraceMsg *      TraceMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, algo::UnTime tstamp, algo::aryptr<u64 > data);
 // Construct a new ams::UdpFrame in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
+// func:lib_ams...UdpFrame_FmtAmsStream
 ams::UdpFrame *      UdpFrame_FmtAmsStream(lib_ams::FStream &stream, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload);
 } // gen:ns_func
 // gen:ns_operators

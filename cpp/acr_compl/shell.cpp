@@ -27,24 +27,50 @@
 // Parse _db.line, split to args into _db.word array
 // The aim is to be more accurate and have less ambiguity vs. supplied in COMP_WORD (for complete -F),
 // or in args: cmd word precword
+//
+// Remove redirects only after space state (not screened and not quoted):
+// [n]<word
+// [n]>[|]word
+// [n]>>word
+// &>word
+// >&word
+// >word 2>&1
+// &>>word
+// >>word 2>&1
+// [n]<<[-]word
+// [n]<<< word
+// [n]<&word
+// [n]>&word
+// [n]<&digit-
+// [n]>&digit-
+// [n]<>word
 
-void acr_compl::Main_SplitLineToArgv() {
+bool acr_compl::Main_SplitLineToArgv() {
     strptr buf = _db.line;
     i32 ind = 0;
     i32 word_start=0;
     i32 paren_level=0;
-    enum {normal,space,squote,dquote,bquote,dbquote,paren} state = normal;
+    bool need_arg(false);
+    enum {normal,space,squote,dquote,bquote,dbquote,redirfd,redir} state = normal;
     while (ind < elems_N(buf)) {
         switch (state) {
         case normal:
             switch (buf[ind]) {
             case ' ' : // no break
             case '\t': // no break
-            case '\n': if (!paren_level) {
-                    word_Alloc() = RestFrom(FirstN(buf,ind),word_start);
+            case '\n':
+                if (!paren_level) {
+                    strptr word = RestFrom(FirstN(buf,ind),word_start);
+                    if (!need_arg) {
+                        word_Alloc() = word;
+                    } else {
+                        need_arg = !ch_N(word);
+                    }
                     word_start=ind+1;
                 }
-                state=space;    ++ind; break;
+                state=space;
+                ++ind;
+                break;
             case '\'': state=squote;   ++ind; break;
             case '"' : state=dquote;   ++ind; break;
             case '`' : state=bquote;   ++ind; break;
@@ -58,9 +84,31 @@ void acr_compl::Main_SplitLineToArgv() {
             switch (buf[ind]) {
             case ' ' : // no break
             case '\t': // no break
-            case '\n': ++ind;
+            case '\n':
+                ++ind;
                 if (!paren_level) {
                     word_start=ind;
+                }
+                break;
+            case '&' : // no break
+            case '>' : // no break
+            case '<' :
+                if (!paren_level) {
+                    state = redir;
+                }
+                break;
+            case '0' : // no break
+            case '1' : // no break
+            case '2' : // no break
+            case '3' : // no break
+            case '4' : // no break
+            case '5' : // no break
+            case '6' : // no break
+            case '7' : // no break
+            case '8' : // no break
+            case '9' : // no break
+                if (!paren_level) {
+                    state = redirfd;
                 }
                 break;
             default  : state = normal;        break;
@@ -96,11 +144,46 @@ void acr_compl::Main_SplitLineToArgv() {
             default  :                 ++ind; break;
             }
             break;
+        case redir:
+            switch (buf[ind]) {
+            case '>' : // no break
+            case '<' : // no break
+            case '&' : // no break
+            case '-' :                 ++ind; break;
+            default  :
+                word_start = ind;
+                need_arg = true;
+                state = normal;
+                break;
+            }
+            break;
+        case redirfd:
+            switch (buf[ind]) {
+            case '0' : // no break
+            case '1' : // no break
+            case '2' : // no break
+            case '3' : // no break
+            case '4' : // no break
+            case '5' : // no break
+            case '6' : // no break
+            case '7' : // no break
+            case '8' : // no break
+            case '9' :                 ++ind; break;
+            case '>' : // no break
+            case '<' : state = redir;  ++ind; break;
+            default  : state = normal;        break;
+            }
+            break;
         default:
             vrfy_(0);
         }
     }
-    word_Alloc() = RestFrom(FirstN(buf,ind),word_start);
+    dbglog("atf_compl.parse_word" << Keyval("need_arg",need_arg) << Keyval("state",state));
+    bool ok = !need_arg && state !=redir;
+    if (ok) {
+        word_Alloc() = RestFrom(FirstN(buf,ind),word_start);
+    }
+    return ok;
 }
 
 //

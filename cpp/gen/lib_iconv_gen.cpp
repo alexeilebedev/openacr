@@ -28,17 +28,22 @@
 //#pragma endinclude
 namespace lib_iconv { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:lib_iconv.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:lib_iconv.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:lib_iconv.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:lib_iconv...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_iconv.trace..Print
-// print string representation of lib_iconv::trace to string LHS, no header -- cprint:lib_iconv.trace.String
-void lib_iconv::trace_Print(lib_iconv::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_iconv.trace.String  printfmt:Tuple
+void lib_iconv::trace_Print(lib_iconv::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_iconv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -256,8 +261,9 @@ bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr
 }
 
 // --- lib_iconv.FieldId..Print
-// print string representation of lib_iconv::FieldId to string LHS, no header -- cprint:lib_iconv.FieldId.String
-void lib_iconv::FieldId_Print(lib_iconv::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_iconv.FieldId.String  printfmt:Raw
+void lib_iconv::FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) {
     lib_iconv::value_Print(row, str);
 }
 
@@ -268,8 +274,9 @@ void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
 }
 
 // --- lib_iconv.Icd..Print
-// print string representation of lib_iconv::Icd to string LHS, no header -- cprint:lib_iconv.Icd.String
-void lib_iconv::Icd_Print(lib_iconv::Icd & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_iconv.Icd.String  printfmt:Raw
+void lib_iconv::Icd_Print(lib_iconv::Icd& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }

@@ -41,6 +41,7 @@ samp_regx::FDb   samp_regx::_db;    // dependency found via dev.targdep
 
 namespace samp_regx {
 const char *samp_regx_help =
+"samp_regx: Test tool for regular expressions\n"
 "Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -64,17 +65,22 @@ const char *samp_regx_help =
 } // namespace samp_regx
 namespace samp_regx { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:samp_regx.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:samp_regx.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:samp_regx.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:samp_regx...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- samp_regx.trace..Print
-// print string representation of samp_regx::trace to string LHS, no header -- cprint:samp_regx.trace.String
-void samp_regx::trace_Print(samp_regx::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:samp_regx.trace.String  printfmt:Tuple
+void samp_regx::trace_Print(samp_regx::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "samp_regx.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -457,8 +463,9 @@ bool samp_regx::FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr
 }
 
 // --- samp_regx.FieldId..Print
-// print string representation of samp_regx::FieldId to string LHS, no header -- cprint:samp_regx.FieldId.String
-void samp_regx::FieldId_Print(samp_regx::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:samp_regx.FieldId.String  printfmt:Raw
+void samp_regx::FieldId_Print(samp_regx::FieldId& row, algo::cstring& str) {
     samp_regx::value_Print(row, str);
 }
 

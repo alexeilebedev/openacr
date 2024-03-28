@@ -64,7 +64,7 @@ namespace atf_comp { // update-hdr
     // If invoked with -coverage, wrap the command line with atf_cov
     // and initialize COMPTEST.COVDIR
     //
-    void SetupCmdline(atf_comp::FComptest &comptest);
+    void SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &R);
 
     // Initialize COMPTEST.FILE_TEST_IN
     // Write input messages to file

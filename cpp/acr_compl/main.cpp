@@ -348,24 +348,10 @@ void acr_compl::Main_Line() {
     i32                   qpoint = 0;
     _db.line = ch_FirstN(_db.cmdline.line,_db.point);
     // split to argv
-    Main_SplitLineToArgv();
-
-    // do not complete after one of the special characters is encountered.
-    bool has_specials = false;
-    ind_beg(_db_word_curs,word,_db) {
-        has_specials |= word == "|";
-        has_specials |= word == "&";
-        has_specials |= word == ">";
-        has_specials |= word == ">>";
-        has_specials |= word == ">&";
-        if (has_specials) {
-            break;
-        }
-    }ind_end;
-    if (has_specials) {
-        dbglog("Has special chars");
+    if (!Main_SplitLineToArgv()) {
+        dbglog("Unfinished io redirect");
         return;
-    }
+    };
 
     // perform shell expansion
     ind_beg(_db_word_curs,word,_db) {

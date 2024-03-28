@@ -128,9 +128,9 @@ static void Main_SelectSsimfile() {
         if (add) {
             if (ctype->c_ssimfile) {
                 ctype->c_ssimfile->is_finput = true;
+                acr_in::ind_nsssimfile_GetOrCreate(finput.p_ns->ns,ctype->c_ssimfile->ssimfile);
             }
             zd_todo_Insert(*ctype);
-            acr_in::ind_nsssimfile_GetOrCreate(finput.p_ns->ns,ctype->c_ssimfile->ssimfile);
         }
     }ind_end;
     // topologically sort ctypes that have ssimfiles

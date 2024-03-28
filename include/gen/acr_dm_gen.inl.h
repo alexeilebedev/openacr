@@ -378,9 +378,11 @@ inline bool acr_dm::_db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs) {
     return curs.temp_n > 0;
 }
 inline acr_dm::Rowid::Rowid(i32                            in_f1
-        ,i32                            in_f2)
+        ,i32                            in_f2
+        ,i32                            in_f3)
     : f1(in_f1)
     , f2(in_f2)
+    , f3(in_f3)
 {
 }
 
@@ -413,18 +415,22 @@ inline acr_dm::Rowid::Rowid() {
 
 
 // --- acr_dm.Rowid..Lt
-inline bool acr_dm::Rowid_Lt(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) {
+inline bool acr_dm::Rowid_Lt(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) {
     return Rowid_Cmp(lhs,rhs) < 0;
 }
 
 // --- acr_dm.Rowid..Cmp
-inline i32 acr_dm::Rowid_Cmp(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) {
+inline i32 acr_dm::Rowid_Cmp(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.f1, rhs.f1);
     if (retval != 0) {
         return retval;
     }
     retval = i32_Cmp(lhs.f2, rhs.f2);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = i32_Cmp(lhs.f3, rhs.f3);
     return retval;
 }
 
@@ -433,22 +439,27 @@ inline i32 acr_dm::Rowid_Cmp(acr_dm::Rowid & lhs, acr_dm::Rowid & rhs) {
 inline void acr_dm::Rowid_Init(acr_dm::Rowid& parent) {
     parent.f1 = i32(0);
     parent.f2 = i32(0);
+    parent.f3 = i32(0);
 }
 
 // --- acr_dm.Rowid..Eq
-inline bool acr_dm::Rowid_Eq(const acr_dm::Rowid & lhs,const acr_dm::Rowid & rhs) {
+inline bool acr_dm::Rowid_Eq(const acr_dm::Rowid& lhs, const acr_dm::Rowid& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.f1, rhs.f1);
     if (!retval) {
         return false;
     }
     retval = i32_Eq(lhs.f2, rhs.f2);
+    if (!retval) {
+        return false;
+    }
+    retval = i32_Eq(lhs.f3, rhs.f3);
     return retval;
 }
 
 // --- acr_dm.Rowid..Update
 // Set value. Return true if new value is different from old value.
-inline bool acr_dm::Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid & rhs) {
+inline bool acr_dm::Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid& rhs) {
     bool ret = !Rowid_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update

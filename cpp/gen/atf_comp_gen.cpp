@@ -37,6 +37,8 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/lib_amcdb_gen.h"
+#include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -75,7 +77,7 @@ const char *atf_comp_help =
 "    -memcheck                            Run under memory checker (valgrind)\n"
 "    -force                               (With -memcheck) run suppressed memcheck\n"
 "    -callgrind                           Run under callgrind profiler (valgrind)\n"
-"    -maxjobs          int     1          Maximum number of tests run in parallel\n"
+"    -maxjobs          int     0          Maximum number of tests run in parallel\n"
 "    -stream                              prints component's output\n"
 "    -i                                   Read and execute testcase from stdin\n"
 "    -write                    Y          (implied with -e) Write any changes back to ssim tables\n"
@@ -92,23 +94,36 @@ const char *atf_comp_help =
 } // namespace atf_comp
 namespace atf_comp { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_comp.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_comp.FDb.comptest.InputMaybe
     static bool          comptest_InputMaybe(atfdb::Comptest &elem) __attribute__((nothrow));
     // First element of index changed.
+    // func:atf_comp.FDb.zd_sel_comptest.FirstChanged
     static void          zd_sel_comptest_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:atf_comp.FDb.zd_sel_comptest.UpdateCycles
     static void          zd_sel_comptest_UpdateCycles() __attribute__((nothrow));
+    // func:atf_comp.FDb.zd_sel_comptest.Call
     static void          zd_sel_comptest_Call() __attribute__((nothrow));
+    // func:atf_comp.FDb.targs.InputMaybe
     static bool          targs_InputMaybe(atfdb::Targs &elem) __attribute__((nothrow));
+    // func:atf_comp.FDb.tmsg.InputMaybe
     static bool          tmsg_InputMaybe(atfdb::Tmsg &elem) __attribute__((nothrow));
+    // func:atf_comp.FDb.tfilt.InputMaybe
     static bool          tfilt_InputMaybe(atfdb::Tfilt &elem) __attribute__((nothrow));
     // Update cycles count from previous clock capture
+    // func:atf_comp.FDb.zd_run_comptest.UpdateCycles
     static void          zd_run_comptest_UpdateCycles() __attribute__((nothrow));
+    // func:atf_comp.FDb.zd_run_comptest.Call
     static void          zd_run_comptest_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_comp.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_comp.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_comp...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -283,8 +298,9 @@ void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
 }
 
 // --- atf_comp.trace..Print
-// print string representation of atf_comp::trace to string LHS, no header -- cprint:atf_comp.trace.String
-void atf_comp::trace_Print(atf_comp::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_comp.trace.String  printfmt:Tuple
+void atf_comp::trace_Print(atf_comp::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_comp.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -474,7 +490,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'992a7c431c3ffd5c6fb80d9918b452d5a2b4b9f8'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'b05bbcc62beda39e9afa4145fceb830147523bd6'");
 }
 
 // --- atf_comp.FDb._db.StaticCheck
@@ -547,6 +563,7 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tmsg"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -2080,8 +2097,9 @@ bool atf_comp::FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr i
 }
 
 // --- atf_comp.FieldId..Print
-// print string representation of atf_comp::FieldId to string LHS, no header -- cprint:atf_comp.FieldId.String
-void atf_comp::FieldId_Print(atf_comp::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_comp.FieldId.String  printfmt:Raw
+void atf_comp::FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) {
     atf_comp::value_Print(row, str);
 }
 
@@ -2197,8 +2215,9 @@ bool atf_comp::TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr i
 }
 
 // --- atf_comp.TableId..Print
-// print string representation of atf_comp::TableId to string LHS, no header -- cprint:atf_comp.TableId.String
-void atf_comp::TableId_Print(atf_comp::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_comp.TableId.String  printfmt:Raw
+void atf_comp::TableId_Print(atf_comp::TableId& row, algo::cstring& str) {
     atf_comp::value_Print(row, str);
 }
 

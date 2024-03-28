@@ -80,12 +80,12 @@ inline acr_compl::Badness::operator acr_compl_BadnessEnum () const {
 }
 
 // --- acr_compl.Badness..Lt
-inline bool acr_compl::Badness_Lt(acr_compl::Badness & lhs, acr_compl::Badness & rhs) {
+inline bool acr_compl::Badness_Lt(acr_compl::Badness& lhs, acr_compl::Badness& rhs) {
     return Badness_Cmp(lhs,rhs) < 0;
 }
 
 // --- acr_compl.Badness..Cmp
-inline i32 acr_compl::Badness_Cmp(acr_compl::Badness & lhs, acr_compl::Badness & rhs) {
+inline i32 acr_compl::Badness_Cmp(acr_compl::Badness& lhs, acr_compl::Badness& rhs) {
     i32 retval = 0;
     retval = u8_Cmp(lhs.badness, rhs.badness);
     if (retval != 0) {
@@ -102,7 +102,7 @@ inline void acr_compl::Badness_Init(acr_compl::Badness& parent) {
 }
 
 // --- acr_compl.Badness..Eq
-inline bool acr_compl::Badness_Eq(const acr_compl::Badness & lhs,const acr_compl::Badness & rhs) {
+inline bool acr_compl::Badness_Eq(const acr_compl::Badness& lhs, const acr_compl::Badness& rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.badness, rhs.badness);
     if (!retval) {
@@ -114,7 +114,7 @@ inline bool acr_compl::Badness_Eq(const acr_compl::Badness & lhs,const acr_compl
 
 // --- acr_compl.Badness..Update
 // Set value. Return true if new value is different from old value.
-inline bool acr_compl::Badness_Update(acr_compl::Badness &lhs, acr_compl::Badness & rhs) {
+inline bool acr_compl::Badness_Update(acr_compl::Badness &lhs, acr_compl::Badness& rhs) {
     bool ret = !Badness_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update

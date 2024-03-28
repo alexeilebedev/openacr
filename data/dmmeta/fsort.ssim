@@ -1,6 +1,7 @@
 dmmeta.fsort  field:acr.FWrite.c_cmtrec  sorttype:QuickSort  sortfld:acr.FRec.sortkey  comment:""
 dmmeta.fsort  field:algo_lib.FTxttbl.c_txtrow  sorttype:QuickSort  sortfld:algo_lib.FTxtrow.sortkey  comment:""
 dmmeta.fsort  field:algo_lib.RegxState.ch_class  sorttype:QuickSort  sortfld:algo.i32_Range.beg  comment:""
+dmmeta.fsort  field:amc.FCtype.c_ffast  sorttype:QuickSort  sortfld:dmmeta.Ffast.pos  comment:""
 dmmeta.fsort  field:amc.FCtype.c_field  sorttype:QuickSort  sortfld:amc.FField.rowid  comment:""
 dmmeta.fsort  field:amc.FDb.c_ctype_sorted  sorttype:QuickSort  sortfld:dmmeta.Ctype.ctype  comment:""
 dmmeta.fsort  field:amc.FDb.c_ctypelen  sorttype:QuickSort  sortfld:dmmeta.Ctypelen.ctype  comment:""
