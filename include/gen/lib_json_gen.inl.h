@@ -110,12 +110,12 @@ inline u32 lib_json::FldKey_Hash(u32 prev, const lib_json::FldKey & rhs) {
 }
 
 // --- lib_json.FldKey..Lt
-inline bool lib_json::FldKey_Lt(lib_json::FldKey & lhs, lib_json::FldKey & rhs) {
+inline bool lib_json::FldKey_Lt(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
     return FldKey_Cmp(lhs,rhs) < 0;
 }
 
 // --- lib_json.FldKey..Cmp
-inline i32 lib_json::FldKey_Cmp(lib_json::FldKey & lhs, lib_json::FldKey & rhs) {
+inline i32 lib_json::FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
     i32 retval = 0;
     retval = u64_Cmp((u64)(void*)lhs.object, (u64)(void*)rhs.object);
     if (retval != 0) {
@@ -132,7 +132,7 @@ inline void lib_json::FldKey_Init(lib_json::FldKey& parent) {
 }
 
 // --- lib_json.FldKey..Eq
-inline bool lib_json::FldKey_Eq(const lib_json::FldKey & lhs,const lib_json::FldKey & rhs) {
+inline bool lib_json::FldKey_Eq(const lib_json::FldKey& lhs, const lib_json::FldKey& rhs) {
     bool retval = true;
     retval = u64_Eq((u64)(void*)lhs.object, (u64)(void*)rhs.object);
     if (!retval) {
@@ -144,7 +144,7 @@ inline bool lib_json::FldKey_Eq(const lib_json::FldKey & lhs,const lib_json::Fld
 
 // --- lib_json.FldKey..Update
 // Set value. Return true if new value is different from old value.
-inline bool lib_json::FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey & rhs) {
+inline bool lib_json::FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey& rhs) {
     bool ret = !FldKey_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update

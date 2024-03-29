@@ -34,7 +34,7 @@ namespace atf_amc { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/atree.cpp
+    // cpp/atf_amc/atree.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_atree_test1();
@@ -42,7 +42,7 @@ namespace atf_amc { // update-hdr
     // void amctest_atree_RangeSearch();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/bheap.cpp
+    // cpp/atf_amc/bheap.cpp
     //
 
     //
@@ -61,14 +61,14 @@ namespace atf_amc { // update-hdr
     // void amctest_BhFirstChanged3();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/bigend.cpp
+    // cpp/atf_amc/bigend.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_BigEndian();
     // void amctest_BigendFconst();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/bitfld.cpp
+    // cpp/atf_amc/bitfld.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_TestBitfld();
@@ -84,7 +84,7 @@ namespace atf_amc { // update-hdr
     // void amctest_BitfldBitset();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/bitset.cpp
+    // cpp/atf_amc/bitset.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_BitsetTary64();
@@ -95,7 +95,7 @@ namespace atf_amc { // update-hdr
     // void amctest_BitsetBitcurs();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/cascdel.cpp
+    // cpp/atf_amc/cascdel.cpp
     //
     void key_Cleanup(atf_amc::FCascdel &parent);
 
@@ -137,7 +137,7 @@ namespace atf_amc { // update-hdr
     // void amctest_CascdelAtree();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/cdlist.cpp
+    // cpp/atf_amc/cdlist.cpp
     //
 
     //
@@ -215,7 +215,7 @@ namespace atf_amc { // update-hdr
     // void amctest_CdlistRotateFirst();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/cleanup.cpp
+    // cpp/atf_amc/cleanup.cpp
     //
     void field1_Cleanup(atf_amc::AmcCleanup2 &cleanup2);
     void field2_Cleanup(atf_amc::AmcCleanup2 &cleanup2);
@@ -223,13 +223,13 @@ namespace atf_amc { // update-hdr
     // void amctest_CleanupOrder();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/cmp.cpp
+    // cpp/atf_amc/cmp.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Fcmp();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/cslist.cpp
+    // cpp/atf_amc/cslist.cpp
     //
 
     //
@@ -321,13 +321,13 @@ namespace atf_amc { // update-hdr
     // void amctest_CslistRotateFirst();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/delptr.cpp
+    // cpp/atf_amc/delptr.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Delptr();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/dispatch.cpp
+    // cpp/atf_amc/dispatch.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_DispRead1();
@@ -343,7 +343,7 @@ namespace atf_amc { // update-hdr
     // void amctest_TestDispFilter4();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/exec.cpp
+    // cpp/atf_amc/exec.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Exec_Status();
@@ -352,7 +352,7 @@ namespace atf_amc { // update-hdr
     // void amctest_ExecVerbose();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/fbuf.cpp
+    // cpp/atf_amc/fbuf.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void cd_in_msg_Step();
@@ -380,7 +380,7 @@ namespace atf_amc { // update-hdr
     // void amctest_bytebuf_dyn_test1();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/fconst.cpp
+    // cpp/atf_amc/fconst.cpp
     //
 
     // FCONST tests
@@ -388,7 +388,7 @@ namespace atf_amc { // update-hdr
     // void amctest_Fconst();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/fstep.cpp
+    // cpp/atf_amc/fstep.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_fstep_Inline();
@@ -397,44 +397,44 @@ namespace atf_amc { // update-hdr
     // void amctest_fstep_TimeHookRecur();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/gsymbol.cpp
+    // cpp/atf_amc/gsymbol.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Gsymbol();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/hook.cpp
+    // cpp/atf_amc/hook.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Hook1();
     // void amctest_Hook2();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/inlary.cpp
+    // cpp/atf_amc/inlary.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Inlary_ReadPrint();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/lary.cpp
+    // cpp/atf_amc/lary.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_LaryFind();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/lineiter.cpp
+    // cpp/atf_amc/lineiter.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_LineIter();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/lpool.cpp
+    // cpp/atf_amc/lpool.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Lpool();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/main.cpp
+    // cpp/atf_amc/main.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_PrintBase36();
@@ -472,7 +472,7 @@ namespace atf_amc { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/msgcurs.cpp
+    // cpp/atf_amc/msgcurs.cpp
     //
 
     // Read 2 messages from byteary
@@ -489,14 +489,14 @@ namespace atf_amc { // update-hdr
     // void amctest_MsgCurs4();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/numstr.cpp
+    // cpp/atf_amc/numstr.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Numstr();
     // void amctest_NumstrCorruption();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/opt.cpp
+    // cpp/atf_amc/opt.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_OptG();
@@ -513,7 +513,7 @@ namespace atf_amc { // update-hdr
     // void amctest_OptAlloc();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/pmask.cpp
+    // cpp/atf_amc/pmask.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_TestPmask1();
@@ -524,16 +524,17 @@ namespace atf_amc { // update-hdr
     // void amctest_TestPmask6();
     // void amctest_TestPmask7();
     // void amctest_TestPmask8();
+    // void amctest_PmaskMultiple();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/ptrary.cpp
+    // cpp/atf_amc/ptrary.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_PtraryInsert();
     // void amctest_PtraryCursor();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/readstr.cpp
+    // cpp/atf_amc/readstr.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_ReadTuple1();
@@ -544,20 +545,20 @@ namespace atf_amc { // update-hdr
     // void amctest_ReadTuple5();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/sort.cpp
+    // cpp/atf_amc/sort.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_AmcSort();
     // void amctest_PerfSortString();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/strconv.cpp
+    // cpp/atf_amc/strconv.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_TestString();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/tary.cpp
+    // cpp/atf_amc/tary.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_TaryInit();
@@ -567,7 +568,7 @@ namespace atf_amc { // update-hdr
     // void amctest_TaryReserve();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/thash.cpp
+    // cpp/atf_amc/thash.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_ThashEmpty();
@@ -581,7 +582,7 @@ namespace atf_amc { // update-hdr
     // void amctest_PerfThashRemove();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/varlen.cpp
+    // cpp/atf_amc/varlen.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_VarlenExternLength();
@@ -593,7 +594,7 @@ namespace atf_amc { // update-hdr
     // void amctest_VarlenMsgsPnew();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/zdlist.cpp
+    // cpp/atf_amc/zdlist.cpp
     //
 
     //
@@ -685,7 +686,7 @@ namespace atf_amc { // update-hdr
     // void amctest_ZdlistDelCurs();
 
     // -------------------------------------------------------------------
-    // cpp/atf/amc/zslist.cpp
+    // cpp/atf_amc/zslist.cpp
     //
 
     //

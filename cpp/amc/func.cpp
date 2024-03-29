@@ -104,32 +104,30 @@ static void PrintDecl(strptr type, strptr name, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
-// The declaration for retval is emitted when the initializer becomes available.
-// This allows initialization of references (i.e. X &retval = <expr>)
-// and also results in shorter code.
-void amc::GenRetvalInit(amc::FFunc &func, amc::Funcarg &funcarg, strptr initializer) {
-    if (!funcarg.initialized) {
-        if (funcarg.name != "" && func.ret != "void" && initializer != "") {
-            PrintDecl(func.ret,funcarg.name,func.body);
-            func.body<< " = "<<initializer;
-            func.body<<";"<<eol;
-            funcarg.initialized=true;
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
 // Declare return value for function FUNC.
-// The value has type TYPE, name NAME< and is initialized with INITALIZER.
-//
+// Return types are stored in Funcarg array, and marked with RETVAL=true
+// The value has type TYPE, name NAME, and is initialized with INITALIZER.
+// If NAME is not an empty string, a variable with this name and type is also declared.
+// The call to "return <retval>" is automatically inserted during function "finalize" step
+// If INITIALIZER is "", the value is declared "as-is"
+//    TYPE NAME;
+// Otherwise, equals sign is used:
+//    TYPE NAME = INITIALIZER;
 amc::Funcarg* amc::AddRetval(amc::FFunc &func, strptr type, strptr name, strptr initializer) {
     amc::Funcarg &funcarg = funcarg_Alloc(func);
     funcarg.type = type;
     funcarg.name = name;
     funcarg.retval = true;
     func.ret=type;
-    GenRetvalInit(func,funcarg,initializer);
+    if (!funcarg.initialized && funcarg.name != "" && func.ret != "void") {
+        PrintDecl(func.ret,funcarg.name,func.body);
+        if (initializer == "") {
+        } else {
+            func.body<< " = "<<initializer;
+        }
+        func.body<<";"<<eol;
+        funcarg.initialized=true;
+    }
     return &funcarg;
 }
 
@@ -168,29 +166,41 @@ static void FinalizeFunc(amc::FFunc &func) {
 // -----------------------------------------------------------------------------
 
 void amc::SetPresent(amc::FFunc &func, strptr ref, amc::FField &field) {
-    if (field.p_ctype->c_pmaskfld) {
-        func.body << name_Get(field)<<"_SetPresent("<<ref<<");" << eol;
-    }
+    ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
+        func.body << name_Get(field)<<"_Set"<<pmaskfld_member.p_pmaskfld->funcname<<"("<<ref<<");" << eol;
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
-amc::FFunc &amc::CreateCurFunc(bool proto) {
+// Create function for current field (amc::_db.genfield.p_field) & tfunc (amc::_db.genfield.p_tfunc)
+// The function name is constructed from the field name and the tfunc name, e.g. "field_FuncName"
+// unless an explicit function name is passed through argument FUNCNAME.
+//
+// Return a reference to the resulting FUNC record
+// The following options are set in FUNC based on the TFUNC prototype:
+//     glob, wur, inl, globns, isalloc, nothrow, ismacro, pure.
+// The function comment is initialized from tfunc prototype
+// Function is DISABLED if namespace has exceptions disabled and the tfunc is labeled HASTHROW.
+// If PROTO flag is set, function prototype (FUNC.PROTO) string is initialized to the function name,
+// and a default first argument is added unless the function is on a global field.
+amc::FFunc &amc::CreateCurFunc(bool proto DFLTVAL(false), algo::strptr funcname DFLTVAL("")) {
     amc::FTfunc &tfunc = *amc::_db.genfield.p_tfunc;
     amc::FField *field=amc::_db.genfield.p_field;
-    algo::Smallstr50 name(name_Get(tfunc));
+    amc::FCtype *ctype=amc::_db.genfield.p_ctype;
+    algo::Smallstr50 name = funcname == "" ? strptr(name_Get(tfunc)) : funcname;
     tempstr key;
     if (field) {
         key << field->field << ".";
     } else {
-        key << amc::_db.genfield.p_ctype->ctype << "..";
+        key << ctype->ctype << "..";
     }
     key << name;
     amc::FFunc  &func = amc::ind_func_GetOrCreate(key);
-    func.glob         = !amc::_db.genfield.p_field;
+    func.glob         = !field;
     func.wur          = tfunc.wur;     // copy warn-unused-result flag
     func.inl          = tfunc.inl;     // default
-    func.globns       = !amc::_db.genfield.p_field && ns_Get(*amc::_db.genfield.p_ctype)=="";
+    func.globns       = !field && ns_Get(*ctype)=="";
     func.isalloc      = tfunc.poolfunc;
     func.nothrow      = !tfunc.hasthrow && tfunc.leaf;
     func.ismacro      = tfunc.ismacro;
@@ -200,23 +210,27 @@ amc::FFunc &amc::CreateCurFunc(bool proto) {
     }
     func.disable   = tfunc.hasthrow && !GenThrowQ(*func.p_ns);
     if (proto) {
-        if (field && field->reftype != dmmeta_Reftype_reftype_Global) {
-            func.proto << name_Get(*field);
-            if (name != "") {
-                func.proto<<"_";
+        if (field) {
+            if (field->reftype != dmmeta_Reftype_reftype_Global) {
+                // function name based on field
+                func.proto << name_Get(*field);
             }
+        } else {
+            if (!GlobalQ(*ctype)) {
+                // function name based on ctype
+                func.proto << name_Get(*ctype);
+            }
+        }
+        if (func.proto != "") {
+            func.proto<<"_";
         }
         func.proto<<name<<"()";
         // add first argument
-        if (field && !GlobalQ(*field->p_ctype)) {
-            AddProtoArg(func, tempstr()<<field->p_ctype->cpp_type<<"& ", Refname(*field->p_ctype));
+        if (field && !GlobalQ(*ctype)) {
+            AddProtoArg(func, Refto(ctype->cpp_type), Refname(*ctype));
         }
     }
     return func;
-}
-
-amc::FFunc &amc::CreateCurFunc() {
-    return CreateCurFunc(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -315,6 +329,10 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
         ind_beg(Line_curs,comment,func.comment) {
             out << "// "<<comment<<'\n';
         }ind_end;
+        out << "// func:"<<func.func<<eol;
+    }
+    if (func.extrn) {
+        out << "// this function is 'extrn' and implemented by user"<<eol;
     }
     int start = ch_N(out);
     TmplPrefix(func,out,true);

@@ -28,10 +28,8 @@
 // Default implementation of prlog handler
 //
 // Notes on WriteFile use:
-// some tools set fd 0 to nonblocking mode,
-// which in case of a terminal makes output non-blocking too (bug in gnome terminal?)
-// in any case it causes EAGAIN during fast writes, so we use WriteFile to
-// write all bytes out.
+// some tools set fd 1 to nonblocking mode, which causes EAGAIN during fast writes,
+// so we must use WriteFile (which contains a loop) to write all the bytes out.
 void algo::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) {
     try {
         algo::Fildes fildes = logcat == &algo_lib_logcat_stdout

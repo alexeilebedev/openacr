@@ -93,20 +93,36 @@ const char *amcdb_Tclass_tclass_Varlen     = "Varlen";
 const char *amcdb_Tclass_tclass_ZSListMT   = "ZSListMT";
 
 namespace amcdb { // gen:ns_print_proto
+    // func:amcdb...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- amcdb.Bltin..ReadFieldMaybe
-bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_ctype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.ctype, strval); break;
-        case amcdb_FieldId_likeu64: retval = bool_ReadStrptrMaybe(parent.likeu64, strval); break;
-        case amcdb_FieldId_bigendok: retval = bool_ReadStrptrMaybe(parent.bigendok, strval); break;
-        case amcdb_FieldId_issigned: retval = bool_ReadStrptrMaybe(parent.issigned, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+            break;
+        }
+        case amcdb_FieldId_likeu64: {
+            retval = bool_ReadStrptrMaybe(parent.likeu64, strval);
+            break;
+        }
+        case amcdb_FieldId_bigendok: {
+            retval = bool_ReadStrptrMaybe(parent.bigendok, strval);
+            break;
+        }
+        case amcdb_FieldId_issigned: {
+            retval = bool_ReadStrptrMaybe(parent.issigned, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -128,12 +144,13 @@ bool amcdb::Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str) {
 }
 
 // --- amcdb.Bltin..Print
-// print string representation of amcdb::Bltin to string LHS, no header -- cprint:amcdb.Bltin.String
-void amcdb::Bltin_Print(amcdb::Bltin & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Bltin.String  printfmt:Tuple
+void amcdb::Bltin_Print(amcdb::Bltin& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.bltin";
 
-    algo::Smallstr50_Print(row.ctype, temp);
+    algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     bool_Print(row.likeu64, temp);
@@ -150,13 +167,19 @@ void amcdb::Bltin_Print(amcdb::Bltin & row, algo::cstring &str) {
 }
 
 // --- amcdb.Curstype..ReadFieldMaybe
-bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_curstype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.curstype, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_curstype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.curstype, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -178,8 +201,9 @@ bool amcdb::Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_st
 }
 
 // --- amcdb.Curstype..Print
-// print string representation of amcdb::Curstype to string LHS, no header -- cprint:amcdb.Curstype.String
-void amcdb::Curstype_Print(amcdb::Curstype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Curstype.String  printfmt:Tuple
+void amcdb::Curstype_Print(amcdb::Curstype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.curstype";
 
@@ -365,20 +389,30 @@ bool amcdb::FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str)
 }
 
 // --- amcdb.FieldId..Print
-// print string representation of amcdb::FieldId to string LHS, no header -- cprint:amcdb.FieldId.String
-void amcdb::FieldId_Print(amcdb::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.FieldId.String  printfmt:Raw
+void amcdb::FieldId_Print(amcdb::FieldId& row, algo::cstring& str) {
     amcdb::value_Print(row, str);
 }
 
 // --- amcdb.Gen..ReadFieldMaybe
-bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_gen: retval = algo::Smallstr50_ReadStrptrMaybe(parent.gen, strval); break;
-        case amcdb_FieldId_perns: retval = bool_ReadStrptrMaybe(parent.perns, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_gen: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gen, strval);
+            break;
+        }
+        case amcdb_FieldId_perns: {
+            retval = bool_ReadStrptrMaybe(parent.perns, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -400,8 +434,9 @@ bool amcdb::Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str) {
 }
 
 // --- amcdb.Gen..Print
-// print string representation of amcdb::Gen to string LHS, no header -- cprint:amcdb.Gen.String
-void amcdb::Gen_Print(amcdb::Gen & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Gen.String  printfmt:Tuple
+void amcdb::Gen_Print(amcdb::Gen& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.gen";
 
@@ -416,13 +451,19 @@ void amcdb::Gen_Print(amcdb::Gen & row, algo::cstring &str) {
 }
 
 // --- amcdb.Regxtype..ReadFieldMaybe
-bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_regxtype: retval = algo::Smallstr50_ReadStrptrMaybe(parent.regxtype, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_regxtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.regxtype, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -444,8 +485,9 @@ bool amcdb::Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_st
 }
 
 // --- amcdb.Regxtype..Print
-// print string representation of amcdb::Regxtype to string LHS, no header -- cprint:amcdb.Regxtype.String
-void amcdb::Regxtype_Print(amcdb::Regxtype & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Regxtype.String  printfmt:Tuple
+void amcdb::Regxtype_Print(amcdb::Regxtype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.regxtype";
 
@@ -457,13 +499,19 @@ void amcdb::Regxtype_Print(amcdb::Regxtype & row, algo::cstring &str) {
 }
 
 // --- amcdb.Tclass..ReadFieldMaybe
-bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_tclass: retval = algo::Smallstr50_ReadStrptrMaybe(parent.tclass, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_tclass: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.tclass, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -485,8 +533,9 @@ bool amcdb::Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str) {
 }
 
 // --- amcdb.Tclass..Print
-// print string representation of amcdb::Tclass to string LHS, no header -- cprint:amcdb.Tclass.String
-void amcdb::Tclass_Print(amcdb::Tclass & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tclass.String  printfmt:Tuple
+void amcdb::Tclass_Print(amcdb::Tclass& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.tclass";
 
@@ -510,15 +559,27 @@ algo::Smallstr50 amcdb::Tcurs_curstype_Get(algo::strptr arg) {
 }
 
 // --- amcdb.Tcurs..ReadFieldMaybe
-bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_tfunc: retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval); break;
-        case amcdb_FieldId_dflt: retval = bool_ReadStrptrMaybe(parent.dflt, strval); break;
-        case amcdb_FieldId_curstype: retval = false; break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_tfunc: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval);
+            break;
+        }
+        case amcdb_FieldId_dflt: {
+            retval = bool_ReadStrptrMaybe(parent.dflt, strval);
+            break;
+        }
+        case amcdb_FieldId_curstype: {
+            retval = false;
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -540,8 +601,9 @@ bool amcdb::Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) {
 }
 
 // --- amcdb.Tcurs..Print
-// print string representation of amcdb::Tcurs to string LHS, no header -- cprint:amcdb.Tcurs.String
-void amcdb::Tcurs_Print(amcdb::Tcurs & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tcurs.String  printfmt:Tuple
+void amcdb::Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.tcurs";
 
@@ -585,22 +647,55 @@ tempstr amcdb::Tfunc_Concat_tclass_name( const algo::strptr& tclass ,const algo:
 }
 
 // --- amcdb.Tfunc..ReadFieldMaybe
-bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc &parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case amcdb_FieldId_tfunc: retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval); break;
-        case amcdb_FieldId_tclass: retval = false; break;
-        case amcdb_FieldId_name: retval = false; break;
-        case amcdb_FieldId_hasthrow: retval = bool_ReadStrptrMaybe(parent.hasthrow, strval); break;
-        case amcdb_FieldId_leaf: retval = bool_ReadStrptrMaybe(parent.leaf, strval); break;
-        case amcdb_FieldId_poolfunc: retval = bool_ReadStrptrMaybe(parent.poolfunc, strval); break;
-        case amcdb_FieldId_inl: retval = bool_ReadStrptrMaybe(parent.inl, strval); break;
-        case amcdb_FieldId_wur: retval = bool_ReadStrptrMaybe(parent.wur, strval); break;
-        case amcdb_FieldId_pure: retval = bool_ReadStrptrMaybe(parent.pure, strval); break;
-        case amcdb_FieldId_ismacro: retval = bool_ReadStrptrMaybe(parent.ismacro, strval); break;
-        case amcdb_FieldId_comment: retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval); break;
+        case amcdb_FieldId_tfunc: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval);
+            break;
+        }
+        case amcdb_FieldId_tclass: {
+            retval = false;
+            break;
+        }
+        case amcdb_FieldId_name: {
+            retval = false;
+            break;
+        }
+        case amcdb_FieldId_hasthrow: {
+            retval = bool_ReadStrptrMaybe(parent.hasthrow, strval);
+            break;
+        }
+        case amcdb_FieldId_leaf: {
+            retval = bool_ReadStrptrMaybe(parent.leaf, strval);
+            break;
+        }
+        case amcdb_FieldId_poolfunc: {
+            retval = bool_ReadStrptrMaybe(parent.poolfunc, strval);
+            break;
+        }
+        case amcdb_FieldId_inl: {
+            retval = bool_ReadStrptrMaybe(parent.inl, strval);
+            break;
+        }
+        case amcdb_FieldId_wur: {
+            retval = bool_ReadStrptrMaybe(parent.wur, strval);
+            break;
+        }
+        case amcdb_FieldId_pure: {
+            retval = bool_ReadStrptrMaybe(parent.pure, strval);
+            break;
+        }
+        case amcdb_FieldId_ismacro: {
+            retval = bool_ReadStrptrMaybe(parent.ismacro, strval);
+            break;
+        }
+        case amcdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -634,8 +729,9 @@ void amcdb::Tfunc_Init(amcdb::Tfunc& parent) {
 }
 
 // --- amcdb.Tfunc..Print
-// print string representation of amcdb::Tfunc to string LHS, no header -- cprint:amcdb.Tfunc.String
-void amcdb::Tfunc_Print(amcdb::Tfunc & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tfunc.String  printfmt:Tuple
+void amcdb::Tfunc_Print(amcdb::Tfunc& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amcdb.tfunc";
 

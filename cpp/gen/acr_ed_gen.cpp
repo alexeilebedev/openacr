@@ -49,7 +49,7 @@ acr_ed::FDb     acr_ed::_db;      // dependency found via dev.targdep
 
 namespace acr_ed {
 const char *acr_ed_help =
-"acr_ed: ACR Editor Set of useful recipes, uses acr, abt, git, and other tools\n"
+"acr_ed: Script generator for common dev tasks\n"
 "Usage: acr_ed [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
@@ -58,12 +58,12 @@ const char *acr_ed_help =
 "    -rename     string  \"\"      Rename to something else\n"
 "    -finput                     Create in-memory table based on ssimfile\n"
 "    -foutput                    Declare field as an output\n"
-"    -srcfile    string  \"\"          Create source file\n"
+"    -srcfile    string  \"\"      Create/Rename/Delete a source file\n"
 "    -gstatic                    Like -finput, but data is loaded at compile time\n"
 "    -indexed                    (with -finput) Add hash index\n"
-"    -target     string  \"\"      Create new target\n"
+"    -target     string  \"\"      Create/Rename/Delete target\n"
 "    -nstype     string  \"exe\"   (with -create -target): exe,lib,etc.\n"
-"    -ctype      string  \"\"      Create new ctype\n"
+"    -ctype      string  \"\"      Create/Rename/Delete ctype\n"
 "    -pooltype   string  \"\"       Pool reftype (Lary,Lpool etc) for finput/ctype\n"
 "    -ssimfile   string  \"\"        Ssimfile for new ctype\n"
 "    -subset     string  \"\"        Primary key is a subset of this ctype\n"
@@ -106,29 +106,59 @@ const char *acr_ed_help =
 
 
 } // namespace acr_ed
+namespace acr_ed { // gen:ns_gsymbol
+    const char* atfdb_cijob_comp("comp");
+    const char* atfdb_cijob_memcheck("memcheck");
+    const char* atfdb_cijob_normalize("normalize");
+} // gen:ns_gsymbol
+namespace acr_ed { // gen:ns_gsymbol
+    const algo::strptr dev_package_openacr("openacr");
+} // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_print_proto
+    // func:acr_ed.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:acr_ed.FDb._db.InitReflection
     static void          InitReflection();
+    // func:acr_ed.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.cstr.InputMaybe
     static bool          cstr_InputMaybe(dmmeta::Cstr &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.listtype.InputMaybe
     static bool          listtype_InputMaybe(dmmeta::Listtype &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.fprefix.InputMaybe
     static bool          fprefix_InputMaybe(dmmeta::Fprefix &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.sbpath.InputMaybe
     static bool          sbpath_InputMaybe(dev::Sbpath &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.pack.InputMaybe
     static bool          pack_InputMaybe(dmmeta::Pack &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.typefld.InputMaybe
     static bool          typefld_InputMaybe(dmmeta::Typefld &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.cpptype.InputMaybe
     static bool          cpptype_InputMaybe(dmmeta::Cpptype &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.cfmt.InputMaybe
     static bool          cfmt_InputMaybe(dmmeta::Cfmt &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.nsdb.InputMaybe
     static bool          nsdb_InputMaybe(dmmeta::Nsdb &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.edaction.LoadStatic
     static void          edaction_LoadStatic() __attribute__((nothrow));
+    // func:acr_ed.FDb.gitfile.InputMaybe
+    static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:acr_ed.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:acr_ed.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:acr_ed...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -157,8 +187,8 @@ void acr_ed::cfmt_CopyIn(acr_ed::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- acr_ed.FCfmt.ctype.Get
-algo::Smallstr50 acr_ed::ctype_Get(acr_ed::FCfmt& cfmt) {
-    algo::Smallstr50 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
+algo::Smallstr100 acr_ed::ctype_Get(acr_ed::FCfmt& cfmt) {
+    algo::Smallstr100 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
     return ret;
 }
 
@@ -250,8 +280,8 @@ algo::Smallstr16 acr_ed::ns_Get(acr_ed::FCtype& ctype) {
 }
 
 // --- acr_ed.FCtype.name.Get
-algo::Smallstr50 acr_ed::name_Get(acr_ed::FCtype& ctype) {
-    algo::Smallstr50 ret(algo::Pathcomp(ctype.ctype, ".RR"));
+algo::Smallstr100 acr_ed::name_Get(acr_ed::FCtype& ctype) {
+    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
 
@@ -457,8 +487,9 @@ void acr_ed::FEdaction_Uninit(acr_ed::FEdaction& edaction) {
 }
 
 // --- acr_ed.trace..Print
-// print string representation of acr_ed::trace to string LHS, no header -- cprint:acr_ed.trace.String
-void acr_ed::trace_Print(acr_ed::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_ed.trace.String  printfmt:Tuple
+void acr_ed::trace_Print(acr_ed::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr_ed.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -848,7 +879,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'9553e18360cb0dae4d67f43bb9a50f50a35a7459'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'92355dac29ccd1d641699881cd8aba742bb5987d'");
 }
 
 // --- acr_ed.FDb._db.StaticCheck
@@ -955,6 +986,12 @@ bool acr_ed::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && nsdb_InputMaybe(elem);
             break;
         }
+        case acr_ed_TableId_dev_Gitfile: { // finput:acr_ed.FDb.gitfile
+            dev::Gitfile elem;
+            retval = dev::Gitfile_ReadStrptrMaybe(elem, str);
+            retval = retval && gitfile_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -973,6 +1010,7 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = acr_ed::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
@@ -1402,7 +1440,7 @@ bool acr_ed::ctype_XrefMaybe(acr_ed::FCtype &row) {
 // --- acr_ed.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
 acr_ed::FCtype* acr_ed::ind_ctype_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     acr_ed::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     acr_ed::FCtype* ret=NULL;
     do {
@@ -1428,7 +1466,7 @@ bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_ed::FCtype* ret = *prev;
@@ -1454,7 +1492,7 @@ bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ctype_Remove(acr_ed::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1491,7 +1529,7 @@ void acr_ed::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_ed::FCtype &row        = *elem;
                 acr_ed::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1597,6 +1635,15 @@ bool acr_ed::ssimfile_XrefMaybe(acr_ed::FSsimfile &row) {
     // ssimfile: save pointer to ctype
     if (true) { // user-defined insert condition
         row.p_ctype = p_ctype;
+    }
+    acr_ed::FNs* p_ns = acr_ed::ind_ns_Find(ns_Get(row));
+    if (UNLIKELY(!p_ns)) {
+        algo_lib::ResetErrtext() << "acr_ed.bad_xref  index:acr_ed.FDb.ind_ns" << Keyval("key", ns_Get(row));
+        return false;
+    }
+    // ssimfile: save pointer to ns
+    if (true) { // user-defined insert condition
+        row.p_ns = p_ns;
     }
     // insert ssimfile into index ind_ssimfile
     if (true) { // user-defined insert condition
@@ -3977,6 +4024,104 @@ void acr_ed::ind_edaction_Reserve(int n) {
     }
 }
 
+// --- acr_ed.FDb.gitfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FGitfile& acr_ed::gitfile_Alloc() {
+    acr_ed::FGitfile* row = gitfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_ed.out_of_mem  field:acr_ed.FDb.gitfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_ed.FDb.gitfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FGitfile* acr_ed::gitfile_AllocMaybe() {
+    acr_ed::FGitfile *row = (acr_ed::FGitfile*)gitfile_AllocMem();
+    if (row) {
+        new (row) acr_ed::FGitfile; // call constructor
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.gitfile.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FGitfile* acr_ed::gitfile_InsertMaybe(const dev::Gitfile &value) {
+    acr_ed::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
+    bool ok = gitfile_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        gitfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.gitfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_ed::gitfile_AllocMem() {
+    u64 new_nelems     = _db.gitfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_ed::FGitfile*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.gitfile_lary[bsr];
+        if (!lev) {
+            lev=(acr_ed::FGitfile*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FGitfile) * (u64(1)<<bsr));
+            _db.gitfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gitfile_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_ed.FDb.gitfile.RemoveAll
+// Remove all elements from Lary
+void acr_ed::gitfile_RemoveAll() {
+    for (u64 n = _db.gitfile_n; n>0; ) {
+        n--;
+        gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
+        _db.gitfile_n = i32(n);
+    }
+}
+
+// --- acr_ed.FDb.gitfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_ed::gitfile_RemoveLast() {
+    u64 n = _db.gitfile_n;
+    if (n > 0) {
+        n -= 1;
+        gitfile_qFind(u64(n)).~FGitfile();
+        _db.gitfile_n = i32(n);
+    }
+}
+
+// --- acr_ed.FDb.gitfile.InputMaybe
+static bool acr_ed::gitfile_InputMaybe(dev::Gitfile &elem) {
+    bool retval = true;
+    retval = gitfile_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_ed.FDb.gitfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_ed::gitfile_XrefMaybe(acr_ed::FGitfile &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- acr_ed.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_ed::trace_RowidFind(int t) {
@@ -4239,6 +4384,17 @@ void acr_ed::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_ed.FDb.ind_edaction)
     }
     memset(_db.ind_edaction_buckets_elems, 0, sizeof(acr_ed::FEdaction*)*_db.ind_edaction_buckets_n); // (acr_ed.FDb.ind_edaction)
+    // initialize LAry gitfile (acr_ed.FDb.gitfile)
+    _db.gitfile_n = 0;
+    memset(_db.gitfile_lary, 0, sizeof(_db.gitfile_lary)); // zero out all level pointers
+    acr_ed::FGitfile* gitfile_first = (acr_ed::FGitfile*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FGitfile) * (u64(1)<<4));
+    if (!gitfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gitfile_lary[i]  = gitfile_first;
+        gitfile_first    += 1ULL<<i;
+    }
 
     acr_ed::InitReflection();
     edaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_ed.FDb.edaction  load acr_ed.FEdaction records
@@ -4247,6 +4403,9 @@ void acr_ed::FDb_Init() {
 // --- acr_ed.FDb..Uninit
 void acr_ed::FDb_Uninit() {
     acr_ed::FDb &row = _db; (void)row;
+
+    // acr_ed.FDb.gitfile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_ed.FDb.ind_edaction.Uninit (Thash)  //
     // skip destruction of ind_edaction in global scope
@@ -4354,8 +4513,8 @@ void acr_ed::field_CopyIn(acr_ed::FField &row, dmmeta::Field &in) {
 }
 
 // --- acr_ed.FField.ctype.Get
-algo::Smallstr50 acr_ed::ctype_Get(acr_ed::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RL"));
+algo::Smallstr100 acr_ed::ctype_Get(acr_ed::FField& field) {
+    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
@@ -4413,6 +4572,24 @@ void acr_ed::fprefix_CopyIn(acr_ed::FFprefix &row, dmmeta::Fprefix &in) {
 void acr_ed::FFprefix_Uninit(acr_ed::FFprefix& fprefix) {
     acr_ed::FFprefix &row = fprefix; (void)row;
     ind_fprefix_Remove(row); // remove fprefix from index ind_fprefix
+}
+
+// --- acr_ed.FGitfile.base.CopyOut
+// Copy fields out of row
+void acr_ed::gitfile_CopyOut(acr_ed::FGitfile &row, dev::Gitfile &out) {
+    out.gitfile = row.gitfile;
+}
+
+// --- acr_ed.FGitfile.base.CopyIn
+// Copy fields in to row
+void acr_ed::gitfile_CopyIn(acr_ed::FGitfile &row, dev::Gitfile &in) {
+    row.gitfile = in.gitfile;
+}
+
+// --- acr_ed.FGitfile.ext.Get
+algo::Smallstr50 acr_ed::ext_Get(acr_ed::FGitfile& gitfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
+    return ret;
 }
 
 // --- acr_ed.FListtype.msghdr.CopyOut
@@ -4712,8 +4889,8 @@ void acr_ed::typefld_CopyIn(acr_ed::FTypefld &row, dmmeta::Typefld &in) {
 }
 
 // --- acr_ed.FTypefld.ctype.Get
-algo::Smallstr50 acr_ed::ctype_Get(acr_ed::FTypefld& typefld) {
-    algo::Smallstr50 ret(algo::Pathcomp(typefld.field, ".RL"));
+algo::Smallstr100 acr_ed::ctype_Get(acr_ed::FTypefld& typefld) {
+    algo::Smallstr100 ret(algo::Pathcomp(typefld.field, ".RL"));
     return ret;
 }
 
@@ -4796,8 +4973,9 @@ bool acr_ed::FieldId_ReadStrptrMaybe(acr_ed::FieldId &parent, algo::strptr in_st
 }
 
 // --- acr_ed.FieldId..Print
-// print string representation of acr_ed::FieldId to string LHS, no header -- cprint:acr_ed.FieldId.String
-void acr_ed::FieldId_Print(acr_ed::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_ed.FieldId.String  printfmt:Raw
+void acr_ed::FieldId_Print(acr_ed::FieldId& row, algo::cstring& str) {
     acr_ed::value_Print(row, str);
 }
 
@@ -4813,6 +4991,7 @@ const char* acr_ed::value_ToCstr(const acr_ed::TableId& parent) {
         case acr_ed_TableId_dmmeta_Ctype   : ret = "dmmeta.Ctype";  break;
         case acr_ed_TableId_dmmeta_Field   : ret = "dmmeta.Field";  break;
         case acr_ed_TableId_dmmeta_Fprefix : ret = "dmmeta.Fprefix";  break;
+        case acr_ed_TableId_dev_Gitfile    : ret = "dev.Gitfile";  break;
         case acr_ed_TableId_dmmeta_Listtype: ret = "dmmeta.Listtype";  break;
         case acr_ed_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
         case acr_ed_TableId_dmmeta_Nsdb    : ret = "dmmeta.Nsdb";  break;
@@ -4881,8 +5060,16 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','G','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_Gitfile); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','g','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,acr_ed_TableId_dev_gitfile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -5021,8 +5208,9 @@ bool acr_ed::TableId_ReadStrptrMaybe(acr_ed::TableId &parent, algo::strptr in_st
 }
 
 // --- acr_ed.TableId..Print
-// print string representation of acr_ed::TableId to string LHS, no header -- cprint:acr_ed.TableId.String
-void acr_ed::TableId_Print(acr_ed::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:acr_ed.TableId.String  printfmt:Raw
+void acr_ed::TableId_Print(acr_ed::TableId& row, algo::cstring& str) {
     acr_ed::value_Print(row, str);
 }
 

@@ -7,12 +7,15 @@
 .tempgit
 .testgen
 \#*
-build/
+\.#*
+build/*
 cscope.out
 lock/
 /tags
 temp/
 vmlinux*
+*.swp
+.empty
 
 # ignore some editor and linters temp files
 .clangd
@@ -20,5 +23,6 @@ compile_commands.json
 .cache/
 compile_flags.txt
 .vscode/
+.openacr/
 .ccls
 .ccls-cache/

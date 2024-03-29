@@ -52,20 +52,25 @@ struct trace { // lib_git.trace
 };
 #pragma pack(pop)
 
-// print string representation of lib_git::trace to string LHS, no header -- cprint:lib_git.trace.String
-void                 trace_Print(lib_git::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_git.trace.String  printfmt:Tuple
+// func:lib_git.trace..Print
+void                 trace_Print(lib_git::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_git.FDb
 // create: lib_git.FDb._db (Global)
-struct FDb { // lib_git.FDb
+struct FDb { // lib_git.FDb: In-memory database for lib_git
     lib_git::trace   trace;   //
 };
 
+// func:lib_git.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:lib_git.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:lib_git.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -73,19 +78,26 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:lib_git.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:lib_git.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:lib_git.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:lib_git.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_git.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Set all fields to initial values.
+// func:lib_git.FDb..Init
 void                 FDb_Init();
+// func:lib_git.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_git.FieldId
@@ -100,32 +112,43 @@ struct FieldId { // lib_git.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_git.FieldId.value.GetEnum
 lib_git_FieldIdEnum  value_GetEnum(const lib_git::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_git.FieldId.value.SetEnum
 void                 value_SetEnum(lib_git::FieldId& parent, lib_git_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_git.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_git::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_git.FieldId.value.Print
 void                 value_Print(const lib_git::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_git.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_git.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_git::FieldId& parent, algo::strptr rhs, lib_git_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_git.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_git::FieldId from an ascii string.
 // The format of the string is the format of the lib_git::FieldId's only field
+// func:lib_git.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_git.FieldId..Init
 void                 FieldId_Init(lib_git::FieldId& parent);
-// print string representation of lib_git::FieldId to string LHS, no header -- cprint:lib_git.FieldId.String
-void                 FieldId_Print(lib_git::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_git.FieldId.String  printfmt:Raw
+// func:lib_git.FieldId..Print
+void                 FieldId_Print(lib_git::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_git { // gen:ns_func
 } // gen:ns_func

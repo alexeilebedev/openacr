@@ -138,7 +138,7 @@ static void Main_ComputeAlllib() {// transitively collect all libraries for targ
     ind_beg(abt::_db_target_curs, target, abt::_db) {
         ind_beg(abt::target_c_alldep_curs, dep, target) {
             ind_beg(abt::target_c_targsyslib_curs, targsyslib, dep) {
-                if (Regx_Match(targsyslib.uname, abt::_db.cmdline.uname)) {
+                if (uname_Get(targsyslib) == abt::_db.cmdline.uname) {
                     c_alllib_ScanInsertMaybe(target,*targsyslib.p_syslib);
                 }
             }ind_end;

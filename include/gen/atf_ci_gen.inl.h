@@ -46,6 +46,17 @@ inline void atf_ci::FBuilddir_Init(atf_ci::FBuilddir& builddir) {
 inline atf_ci::FCfg::FCfg() {
 }
 
+inline atf_ci::FCipackage::FCipackage() {
+    atf_ci::FCipackage_Init(*this);
+}
+
+
+// --- atf_ci.FCipackage..Init
+// Set all fields to initial values.
+inline void atf_ci::FCipackage_Init(atf_ci::FCipackage& cipackage) {
+    cipackage.remove = bool(false);
+    cipackage.build = bool(false);
+}
 inline atf_ci::FCitest::FCitest() {
     atf_ci::FCitest_Init(*this);
 }
@@ -610,48 +621,6 @@ inline i32 atf_ci::ind_citest_N() {
     return _db.ind_citest_n;
 }
 
-// --- atf_ci.FDb.ssimfs.EmptyQ
-// Return true if index is empty
-inline bool atf_ci::ssimfs_EmptyQ() {
-    return _db.ssimfs_n == 0;
-}
-
-// --- atf_ci.FDb.ssimfs.Find
-// Look up row by row id. Return NULL if out of range
-inline atf_ci::FSsimfs* atf_ci::ssimfs_Find(u64 t) {
-    atf_ci::FSsimfs *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.ssimfs_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.ssimfs_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- atf_ci.FDb.ssimfs.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline atf_ci::FSsimfs* atf_ci::ssimfs_Last() {
-    return ssimfs_Find(u64(_db.ssimfs_n-1));
-}
-
-// --- atf_ci.FDb.ssimfs.N
-// Return number of items in the pool
-inline i32 atf_ci::ssimfs_N() {
-    return _db.ssimfs_n;
-}
-
-// --- atf_ci.FDb.ssimfs.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline atf_ci::FSsimfs& atf_ci::ssimfs_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.ssimfs_lary[bsr][index];
-}
-
 // --- atf_ci.FDb.file.EmptyQ
 // Return true if index is empty
 inline bool atf_ci::file_EmptyQ() {
@@ -704,6 +673,48 @@ inline bool atf_ci::ind_file_EmptyQ() {
 // Return number of items in the hash
 inline i32 atf_ci::ind_file_N() {
     return _db.ind_file_n;
+}
+
+// --- atf_ci.FDb.cipackage.EmptyQ
+// Return true if index is empty
+inline bool atf_ci::cipackage_EmptyQ() {
+    return _db.cipackage_n == 0;
+}
+
+// --- atf_ci.FDb.cipackage.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_ci::FCipackage* atf_ci::cipackage_Find(u64 t) {
+    atf_ci::FCipackage *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cipackage_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cipackage_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_ci.FDb.cipackage.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_ci::FCipackage* atf_ci::cipackage_Last() {
+    return cipackage_Find(u64(_db.cipackage_n-1));
+}
+
+// --- atf_ci.FDb.cipackage.N
+// Return number of items in the pool
+inline i32 atf_ci::cipackage_N() {
+    return _db.cipackage_n;
+}
+
+// --- atf_ci.FDb.cipackage.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_ci::FCipackage& atf_ci::cipackage_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cipackage_lary[bsr][index];
 }
 
 // --- atf_ci.FDb.citest_curs.Reset
@@ -981,31 +992,6 @@ inline atf_ci::FMsgfile& atf_ci::_db_msgfile_curs_Access(_db_msgfile_curs &curs)
     return msgfile_qFind(u64(curs.index));
 }
 
-// --- atf_ci.FDb.ssimfs_curs.Reset
-// cursor points to valid item
-inline void atf_ci::_db_ssimfs_curs_Reset(_db_ssimfs_curs &curs, atf_ci::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- atf_ci.FDb.ssimfs_curs.ValidQ
-// cursor points to valid item
-inline bool atf_ci::_db_ssimfs_curs_ValidQ(_db_ssimfs_curs &curs) {
-    return curs.index < _db.ssimfs_n;
-}
-
-// --- atf_ci.FDb.ssimfs_curs.Next
-// proceed to next item
-inline void atf_ci::_db_ssimfs_curs_Next(_db_ssimfs_curs &curs) {
-    curs.index++;
-}
-
-// --- atf_ci.FDb.ssimfs_curs.Access
-// item access
-inline atf_ci::FSsimfs& atf_ci::_db_ssimfs_curs_Access(_db_ssimfs_curs &curs) {
-    return ssimfs_qFind(u64(curs.index));
-}
-
 // --- atf_ci.FDb.file_curs.Reset
 // cursor points to valid item
 inline void atf_ci::_db_file_curs_Reset(_db_file_curs &curs, atf_ci::FDb &parent) {
@@ -1029,6 +1015,31 @@ inline void atf_ci::_db_file_curs_Next(_db_file_curs &curs) {
 // item access
 inline atf_ci::File& atf_ci::_db_file_curs_Access(_db_file_curs &curs) {
     return file_qFind(u64(curs.index));
+}
+
+// --- atf_ci.FDb.cipackage_curs.Reset
+// cursor points to valid item
+inline void atf_ci::_db_cipackage_curs_Reset(_db_cipackage_curs &curs, atf_ci::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_ci.FDb.cipackage_curs.ValidQ
+// cursor points to valid item
+inline bool atf_ci::_db_cipackage_curs_ValidQ(_db_cipackage_curs &curs) {
+    return curs.index < _db.cipackage_n;
+}
+
+// --- atf_ci.FDb.cipackage_curs.Next
+// proceed to next item
+inline void atf_ci::_db_cipackage_curs_Next(_db_cipackage_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_ci.FDb.cipackage_curs.Access
+// item access
+inline atf_ci::FCipackage& atf_ci::_db_cipackage_curs_Access(_db_cipackage_curs &curs) {
+    return cipackage_qFind(u64(curs.index));
 }
 inline atf_ci::FExecLimit::FExecLimit() {
 }
@@ -1179,17 +1190,6 @@ inline atf_ci::FSsimfile::~FSsimfile() {
 // Set all fields to initial values.
 inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& ssimfile) {
     ssimfile.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
-}
-inline atf_ci::FSsimfs::FSsimfs() {
-    atf_ci::FSsimfs_Init(*this);
-}
-
-
-// --- atf_ci.FSsimfs..Init
-// Set all fields to initial values.
-inline void atf_ci::FSsimfs_Init(atf_ci::FSsimfs& ssimfs) {
-    ssimfs.rmfile = bool(false);
-    ssimfs.needfile = bool(false);
 }
 inline atf_ci::FTargsrc::FTargsrc() {
 }

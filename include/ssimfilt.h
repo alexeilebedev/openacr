@@ -44,6 +44,13 @@ namespace ssimfilt { // update-hdr
 
     // Check if input tuple matches filters
     bool MatchInputTuple(algo::Tuple &tuple);
+    void PrintJson(algo::Tuple &tuple, cstring &out, bool toplevel);
+
+    // Print tuple as a JSON object
+    // if schema is available (ctype found), determine if the field is a bool, print numeric types
+    // without quotes.
+    // if no schema is available, all field values are quoted
+    void PrintJson(algo::Tuple &tuple);
     void PrintCsv(algo::Tuple &tuple);
     void Table_Save(algo::Tuple &tuple);
     void Table_Flush();

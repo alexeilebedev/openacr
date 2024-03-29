@@ -80,18 +80,26 @@ struct Cstr { // atf_unit.Cstr
 };
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:atf_unit.Cstr.val.Lt
 bool                 val_Lt(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
 // Compare two fields.
+// func:atf_unit.Cstr.val.Cmp
 i32                  val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
 
+// func:atf_unit.Cstr..Hash
 u32                  Cstr_Hash(u32 prev, const atf_unit::Cstr & rhs) __attribute__((nothrow));
-bool                 Cstr_Lt(atf_unit::Cstr & lhs, atf_unit::Cstr & rhs) __attribute__((nothrow));
-i32                  Cstr_Cmp(atf_unit::Cstr & lhs, atf_unit::Cstr & rhs) __attribute__((nothrow));
-bool                 Cstr_Eq(const atf_unit::Cstr & lhs,const atf_unit::Cstr & rhs) __attribute__((nothrow));
+// func:atf_unit.Cstr..Lt
+bool                 Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+// func:atf_unit.Cstr..Cmp
+i32                  Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+// func:atf_unit.Cstr..Eq
+bool                 Cstr_Eq(const atf_unit::Cstr& lhs, const atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr & rhs) __attribute__((nothrow));
+// func:atf_unit.Cstr..Update
+bool                 Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Create JSON representation of atf_unit::Cstr under PARENT node -- cprint:atf_unit.Cstr.Json
-lib_json::FNode *    Cstr_FmtJson(atf_unit::Cstr & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_unit.Cstr..FmtJson
+lib_json::FNode *    Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.Dbl
 // create: atf_unit.FPerfSort.orig (Tary)
@@ -109,20 +117,30 @@ struct Dbl { // atf_unit.Dbl
     Dbl();
 };
 
+// func:atf_unit.Dbl..Hash
 u32                  Dbl_Hash(u32 prev, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Read fields of atf_unit::Dbl from an ascii string.
 // The format of the string is the format of the atf_unit::Dbl's only field
+// func:atf_unit.Dbl..ReadStrptrMaybe
 bool                 Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str);
+// func:atf_unit.Dbl..Lt
 bool                 Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+// func:atf_unit.Dbl..Cmp
 i32                  Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_unit.Dbl..Init
 void                 Dbl_Init(atf_unit::Dbl& orig);
+// func:atf_unit.Dbl..Eq
 bool                 Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:atf_unit.Dbl..Update
 bool                 Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
-// print string representation of atf_unit::Dbl to string LHS, no header -- cprint:atf_unit.Dbl.String
-void                 Dbl_Print(atf_unit::Dbl row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.Dbl.String  printfmt:Raw
+// func:atf_unit.Dbl..Print
+void                 Dbl_Print(atf_unit::Dbl row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_unit::Dbl under PARENT node -- cprint:atf_unit.Dbl.Json
+// func:atf_unit.Dbl..FmtJson
 lib_json::FNode *    Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.trace
@@ -132,12 +150,14 @@ struct trace { // atf_unit.trace
 };
 #pragma pack(pop)
 
-// print string representation of atf_unit::trace to string LHS, no header -- cprint:atf_unit.trace.String
-void                 trace_Print(atf_unit::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.trace.String  printfmt:Tuple
+// func:atf_unit.trace..Print
+void                 trace_Print(atf_unit::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_unit.FDb
 // create: atf_unit.FDb._db (Global)
-struct FDb { // atf_unit.FDb
+struct FDb { // atf_unit.FDb: In-memory database for atf_unit
     u64                     number_blocksize;             // # bytes per block
     atf_unit::FNumber*      number_free;                  //
     atf_unit::FNumber*      tr_number_root;               // Root of the tree
@@ -151,7 +171,7 @@ struct FDb { // atf_unit.FDb
     algo::cstring           curdir;                       //
     atf_unit::FUnittest*    c_curtest;                    // Currently running test. optional pointer
     algo::Smallstr100       cur_teststep;                 //
-    report::atf_unit        report;                       //
+    report::atf_unit        report;                       // Final report
     u64                     perf_cycle_budget;            //   0
     algo::cstring           acr_ed_path;                  //   "bin/acr_ed"  path for executable
     command::acr_ed         acr_ed_cmd;                   // command line for child process
@@ -166,106 +186,154 @@ struct FDb { // atf_unit.FDb
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_unit.FDb.number.Alloc
 atf_unit::FNumber&   number_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_unit.FDb.number.AllocMaybe
 atf_unit::FNumber*   number_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_unit.FDb.number.Delete
 void                 number_Delete(atf_unit::FNumber &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_unit.FDb.number.AllocMem
 void*                number_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_unit.FDb.number.FreeMem
 void                 number_FreeMem(atf_unit::FNumber &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_unit.FDb.number.Reserve
 u64                  number_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_unit.FDb.number.ReserveMem
 u64                  number_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_unit.FDb.number.XrefMaybe
 bool                 number_XrefMaybe(atf_unit::FNumber &row);
 
 // Return true if index is empty
+// func:atf_unit.FDb.tr_number.EmptyQ
 bool                 tr_number_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_unit.FDb.tr_number.FirstImpl
 atf_unit::FNumber*   tr_number_FirstImpl(atf_unit::FNumber* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the first(smallest) element in the tree
+// func:atf_unit.FDb.tr_number.First
 atf_unit::FNumber*   tr_number_First() __attribute__((__warn_unused_result__, nothrow));
 // Return true if row is in the tree, false otherwise
+// func:atf_unit.FDb.tr_number.InTreeQ
 bool                 tr_number_InTreeQ(atf_unit::FNumber& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_unit.FDb.tr_number.InsertImpl
 void                 tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) __attribute__((nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
+// func:atf_unit.FDb.tr_number.Insert
 void                 tr_number_Insert(atf_unit::FNumber& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_unit.FDb.tr_number.Remove
 void                 tr_number_Remove(atf_unit::FNumber& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_unit.FDb.tr_number.RemoveAll
 void                 tr_number_RemoveAll() __attribute__((nothrow));
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_unit.FDb.tr_number.RemoveFirst
 void                 tr_number_RemoveFirst() __attribute__((nothrow));
+// func:atf_unit.FDb.tr_number.Balance
 i32                  tr_number_Balance(atf_unit::FNumber& row) __attribute__((nothrow));
 // Recalculate depth and keep rebalancing if needed
+// func:atf_unit.FDb.tr_number.Propagate
 atf_unit::FNumber*   tr_number_Propagate(atf_unit::FNumber& pnode) __attribute__((nothrow));
 // Rebalances the node if needed.
+// func:atf_unit.FDb.tr_number.Rebalance
 void                 tr_number_Rebalance(atf_unit::FNumber& node) __attribute__((nothrow));
+// func:atf_unit.FDb.tr_number.Next
 atf_unit::FNumber*   tr_number_Next(atf_unit::FNumber& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_unit.FDb.tr_number.Prev
 atf_unit::FNumber*   tr_number_Prev(atf_unit::FNumber& node) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_unit.FDb.tr_number.LastImpl
 atf_unit::FNumber*   tr_number_LastImpl(atf_unit::FNumber* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the last(largest) element in tree
+// func:atf_unit.FDb.tr_number.Last
 atf_unit::FNumber*   tr_number_Last() __attribute__((__warn_unused_result__, nothrow));
 // Empty the index. (rows may be deleted if cascdel)
+// func:atf_unit.FDb.tr_number.RemoveAllImpl
 void                 tr_number_RemoveAllImpl(atf_unit::FNumber* root, bool del) __attribute__((nothrow));
 // Reinsert a row with modified key(Reheap semantics)
+// func:atf_unit.FDb.tr_number.Reinsert
 void                 tr_number_Reinsert(atf_unit::FNumber& node) __attribute__((nothrow));
 // Find the first element that is greater or equal to a sortfld value
+// func:atf_unit.FDb.tr_number.FirstGe
 atf_unit::FNumber*   tr_number_FirstGe(const i32& val) __attribute__((nothrow));
 // Find the last element that is smaller or equal to a sortfld value
+// func:atf_unit.FDb.tr_number.LastLt
 atf_unit::FNumber*   tr_number_LastLt(const i32& val) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_unit.FDb.unittest.Alloc
 atf_unit::FUnittest& unittest_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_unit.FDb.unittest.AllocMaybe
 atf_unit::FUnittest* unittest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_unit.FDb.unittest.InsertMaybe
 atf_unit::FUnittest* unittest_InsertMaybe(const atfdb::Unittest &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_unit.FDb.unittest.AllocMem
 void*                unittest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_unit.FDb.unittest.EmptyQ
 bool                 unittest_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_unit.FDb.unittest.Find
 atf_unit::FUnittest* unittest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_unit.FDb.unittest.Last
 atf_unit::FUnittest* unittest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_unit.FDb.unittest.N
 i32                  unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_unit.FDb.unittest.RemoveAll
 void                 unittest_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_unit.FDb.unittest.RemoveLast
 void                 unittest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_unit.FDb.unittest.qFind
 atf_unit::FUnittest& unittest_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_unit.FDb.unittest.XrefMaybe
 bool                 unittest_XrefMaybe(atf_unit::FUnittest &row);
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
 //     atf_unit.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:atf_unit.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:atf_unit.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:atf_unit.FDb._db.Step
 void                 Step();
 // Main function
+// func:atf_unit.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:atf_unit.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:atf_unit.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:atf_unit.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -273,72 +341,103 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:atf_unit.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:atf_unit.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:atf_unit.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:atf_unit.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_unit.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
+// func:atf_unit.FDb.ind_unittest.EmptyQ
 bool                 ind_unittest_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_unit.FDb.ind_unittest.Find
 atf_unit::FUnittest* ind_unittest_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_unit.FDb.ind_unittest.FindX
 atf_unit::FUnittest& ind_unittest_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_unit.FDb.ind_unittest.GetOrCreate
 atf_unit::FUnittest& ind_unittest_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_unit.FDb.ind_unittest.N
 i32                  ind_unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_unit.FDb.ind_unittest.InsertMaybe
 bool                 ind_unittest_InsertMaybe(atf_unit::FUnittest& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_unit.FDb.ind_unittest.Remove
 void                 ind_unittest_Remove(atf_unit::FUnittest& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_unit.FDb.ind_unittest.Reserve
 void                 ind_unittest_Reserve(int n) __attribute__((nothrow));
 
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
+// func:atf_unit.FDb.acr_ed.Start
 int                  acr_ed_Start() __attribute__((nothrow));
 // Start subprocess & Read output
+// func:atf_unit.FDb.acr_ed.StartRead
 algo::Fildes         acr_ed_StartRead(algo_lib::FFildes &read) __attribute__((nothrow));
 // Kill subprocess and wait
+// func:atf_unit.FDb.acr_ed.Kill
 void                 acr_ed_Kill();
 // Wait for subprocess to return
+// func:atf_unit.FDb.acr_ed.Wait
 void                 acr_ed_Wait() __attribute__((nothrow));
 // Start + Wait
 // Execute subprocess and return exit code
+// func:atf_unit.FDb.acr_ed.Exec
 int                  acr_ed_Exec() __attribute__((nothrow));
 // Start + Wait, throw exception on error
 // Execute subprocess; throw human-readable exception on error
+// func:atf_unit.FDb.acr_ed.ExecX
 void                 acr_ed_ExecX();
 // Call execv()
 // Call execv with specified parameters -- cprint:acr_ed.Argv
+// func:atf_unit.FDb.acr_ed.Execv
 int                  acr_ed_Execv() __attribute__((nothrow));
+// func:atf_unit.FDb.acr_ed.ToCmdline
 algo::tempstr        acr_ed_ToCmdline() __attribute__((nothrow));
 
 // cursor points to valid item
+// func:atf_unit.FDb.tr_number_curs.Reset
 void                 _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& );
 // cursor points to valid item
+// func:atf_unit.FDb.tr_number_curs.ValidQ
 bool                 _db_tr_number_curs_ValidQ(_db_tr_number_curs &curs);
 // proceed to next item
+// func:atf_unit.FDb.tr_number_curs.Next
 void                 _db_tr_number_curs_Next(_db_tr_number_curs &curs);
 // item access
+// func:atf_unit.FDb.tr_number_curs.Access
 atf_unit::FNumber&   _db_tr_number_curs_Access(_db_tr_number_curs &curs);
 // cursor points to valid item
+// func:atf_unit.FDb.unittest_curs.Reset
 void                 _db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent);
 // cursor points to valid item
+// func:atf_unit.FDb.unittest_curs.ValidQ
 bool                 _db_unittest_curs_ValidQ(_db_unittest_curs &curs);
 // proceed to next item
+// func:atf_unit.FDb.unittest_curs.Next
 void                 _db_unittest_curs_Next(_db_unittest_curs &curs);
 // item access
+// func:atf_unit.FDb.unittest_curs.Access
 atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs);
 // Set all fields to initial values.
+// func:atf_unit.FDb..Init
 void                 FDb_Init();
+// func:atf_unit.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_unit.FNumber
@@ -362,7 +461,9 @@ private:
 };
 
 // Set all fields to initial values.
+// func:atf_unit.FNumber..Init
 void                 FNumber_Init(atf_unit::FNumber& number);
+// func:atf_unit.FNumber..Uninit
 void                 FNumber_Uninit(atf_unit::FNumber& number) __attribute__((nothrow));
 
 // --- atf_unit.FPerfSort
@@ -389,165 +490,243 @@ private:
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_unit.FPerfSort.orig.Alloc
 atf_unit::Dbl&       orig_Alloc(atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.orig.AllocAt
 atf_unit::Dbl&       orig_AllocAt(atf_unit::FPerfSort& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.orig.AllocN
 algo::aryptr<atf_unit::Dbl> orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_unit.FPerfSort.orig.EmptyQ
 bool                 orig_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_unit.FPerfSort.orig.Find
 atf_unit::Dbl*       orig_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_unit.FPerfSort.orig.Getary
 algo::aryptr<atf_unit::Dbl> orig_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_unit.FPerfSort.orig.Last
 atf_unit::Dbl*       orig_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_unit.FPerfSort.orig.Max
 i32                  orig_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_unit.FPerfSort.orig.N
 i32                  orig_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_unit.FPerfSort.orig.Remove
 void                 orig_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
+// func:atf_unit.FPerfSort.orig.RemoveAll
 void                 orig_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_unit.FPerfSort.orig.RemoveLast
 void                 orig_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.orig.Reserve
 void                 orig_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.orig.AbsReserve
 void                 orig_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_unit.FPerfSort.orig.Setary
 void                 orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_unit.FPerfSort.orig.qFind
 atf_unit::Dbl&       orig_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_unit.FPerfSort.orig.qLast
 atf_unit::Dbl&       orig_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_unit.FPerfSort.orig.rowid_Get
 u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.orig.AllocNVal
 algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_unit.FPerfSort.orig.XrefMaybe
 bool                 orig_XrefMaybe(atf_unit::Dbl &row);
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.sorted.Addary
 algo::aryptr<atf_unit::Dbl> sorted_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_unit.FPerfSort.sorted.Alloc
 atf_unit::Dbl&       sorted_Alloc(atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.sorted.AllocAt
 atf_unit::Dbl&       sorted_AllocAt(atf_unit::FPerfSort& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.sorted.AllocN
 algo::aryptr<atf_unit::Dbl> sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_unit.FPerfSort.sorted.EmptyQ
 bool                 sorted_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_unit.FPerfSort.sorted.Find
 atf_unit::Dbl*       sorted_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_unit.FPerfSort.sorted.Getary
 algo::aryptr<atf_unit::Dbl> sorted_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_unit.FPerfSort.sorted.Last
 atf_unit::Dbl*       sorted_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_unit.FPerfSort.sorted.Max
 i32                  sorted_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_unit.FPerfSort.sorted.N
 i32                  sorted_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_unit.FPerfSort.sorted.Remove
 void                 sorted_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
+// func:atf_unit.FPerfSort.sorted.RemoveAll
 void                 sorted_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_unit.FPerfSort.sorted.RemoveLast
 void                 sorted_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.sorted.Reserve
 void                 sorted_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.sorted.AbsReserve
 void                 sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_unit.FPerfSort.sorted.Setary
 void                 sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) __attribute__((nothrow));
 // Copy specified array into sorted, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:atf_unit.FPerfSort.sorted.Setary2
 void                 sorted_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_unit.FPerfSort.sorted.qFind
 atf_unit::Dbl&       sorted_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_unit.FPerfSort.sorted.qLast
 atf_unit::Dbl&       sorted_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_unit.FPerfSort.sorted.rowid_Get
 u64                  sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.sorted.AllocNVal
 algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
 // Verify whether array is sorted
+// func:atf_unit.FPerfSort.sorted.SortedQ
 bool                 sorted_SortedQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Insertion sort
+// func:atf_unit.FPerfSort.sorted.InsertionSort
 void                 sorted_InsertionSort(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Heap sort
+// func:atf_unit.FPerfSort.sorted.HeapSort
 void                 sorted_HeapSort(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Quick sort
+// func:atf_unit.FPerfSort.sorted.QuickSort
 void                 sorted_QuickSort(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
+// func:atf_unit.FPerfSort.index.Alloc
 i32&                 index_Alloc(atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.index.AllocAt
 i32&                 index_AllocAt(atf_unit::FPerfSort& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.index.AllocN
 algo::aryptr<i32>    index_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_unit.FPerfSort.index.EmptyQ
 bool                 index_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
+// func:atf_unit.FPerfSort.index.Find
 i32*                 index_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
+// func:atf_unit.FPerfSort.index.Getary
 algo::aryptr<i32>    index_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_unit.FPerfSort.index.Last
 i32*                 index_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
+// func:atf_unit.FPerfSort.index.Max
 i32                  index_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
+// func:atf_unit.FPerfSort.index.N
 i32                  index_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
+// func:atf_unit.FPerfSort.index.Remove
 void                 index_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
+// func:atf_unit.FPerfSort.index.RemoveAll
 void                 index_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_unit.FPerfSort.index.RemoveLast
 void                 index_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.index.Reserve
 void                 index_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
+// func:atf_unit.FPerfSort.index.AbsReserve
 void                 index_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
+// func:atf_unit.FPerfSort.index.Setary
 void                 index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_unit.FPerfSort.index.qFind
 i32&                 index_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
+// func:atf_unit.FPerfSort.index.qLast
 i32&                 index_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
+// func:atf_unit.FPerfSort.index.rowid_Get
 u64                  index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:atf_unit.FPerfSort.index.AllocNVal
 algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((nothrow));
 
 // proceed to next item
+// func:atf_unit.FPerfSort.orig_curs.Next
 void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs);
+// func:atf_unit.FPerfSort.orig_curs.Reset
 void                 FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent);
 // cursor points to valid item
+// func:atf_unit.FPerfSort.orig_curs.ValidQ
 bool                 FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs);
 // item access
+// func:atf_unit.FPerfSort.orig_curs.Access
 atf_unit::Dbl&       FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs);
 // proceed to next item
+// func:atf_unit.FPerfSort.sorted_curs.Next
 void                 FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs);
+// func:atf_unit.FPerfSort.sorted_curs.Reset
 void                 FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent);
 // cursor points to valid item
+// func:atf_unit.FPerfSort.sorted_curs.ValidQ
 bool                 FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs);
 // item access
+// func:atf_unit.FPerfSort.sorted_curs.Access
 atf_unit::Dbl&       FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs);
 // proceed to next item
+// func:atf_unit.FPerfSort.index_curs.Next
 void                 FPerfSort_index_curs_Next(FPerfSort_index_curs &curs);
+// func:atf_unit.FPerfSort.index_curs.Reset
 void                 FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent);
 // cursor points to valid item
+// func:atf_unit.FPerfSort.index_curs.ValidQ
 bool                 FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs);
 // item access
+// func:atf_unit.FPerfSort.index_curs.Access
 i32&                 FPerfSort_index_curs_Access(FPerfSort_index_curs &curs);
 // Set all fields to initial values.
+// func:atf_unit.FPerfSort..Init
 void                 FPerfSort_Init(atf_unit::FPerfSort& parent);
+// func:atf_unit.FPerfSort..Uninit
 void                 FPerfSort_Uninit(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
 // --- atf_unit.FUnittest
@@ -573,22 +752,31 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_unit.FUnittest.base.CopyOut
 void                 unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_unit.FUnittest.base.CopyIn
 void                 unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) __attribute__((nothrow));
 
+// func:atf_unit.FUnittest.target.Get
 algo::Smallstr16     target_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_unit.FUnittest.testname.Get
 algo::Smallstr50     testname_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
 
 // Invoke function by pointer
+// func:atf_unit.FUnittest.step.Call
 void                 step_Call(atf_unit::FUnittest& unittest) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_unit.FUnittest..Init
 void                 FUnittest_Init(atf_unit::FUnittest& unittest);
+// func:atf_unit.FUnittest..Uninit
 void                 FUnittest_Uninit(atf_unit::FUnittest& unittest) __attribute__((nothrow));
-// print string representation of atf_unit::FUnittest to string LHS, no header -- cprint:atf_unit.FUnittest.String
-void                 FUnittest_Print(atf_unit::FUnittest & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.FUnittest.String  printfmt:Tuple
+// func:atf_unit.FUnittest..Print
+void                 FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_unit.FieldId
 #pragma pack(push,1)
@@ -602,32 +790,43 @@ struct FieldId { // atf_unit.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_unit.FieldId.value.GetEnum
 atf_unit_FieldIdEnum value_GetEnum(const atf_unit::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_unit.FieldId.value.SetEnum
 void                 value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_unit.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf_unit::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_unit.FieldId.value.Print
 void                 value_Print(const atf_unit::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_unit.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_unit.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf_unit::FieldId& parent, algo::strptr rhs, atf_unit_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_unit.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_unit::FieldId from an ascii string.
 // The format of the string is the format of the atf_unit::FieldId's only field
+// func:atf_unit.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_unit.FieldId..Init
 void                 FieldId_Init(atf_unit::FieldId& parent);
-// print string representation of atf_unit::FieldId to string LHS, no header -- cprint:atf_unit.FieldId.String
-void                 FieldId_Print(atf_unit::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.FieldId.String  printfmt:Raw
+// func:atf_unit.FieldId..Print
+void                 FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_unit.TypeA
 struct TypeA { // atf_unit.TypeA
@@ -641,21 +840,31 @@ struct TypeA { // atf_unit.TypeA
     TypeA();
 };
 
+// func:atf_unit.TypeA..Hash
 u32                  TypeA_Hash(u32 prev, const atf_unit::TypeA & rhs) __attribute__((nothrow));
 // Read fields of atf_unit::TypeA from an ascii string.
 // The format of the string is the format of the atf_unit::TypeA's only field
+// func:atf_unit.TypeA..ReadStrptrMaybe
 bool                 TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str);
-bool                 TypeA_Lt(atf_unit::TypeA & lhs, atf_unit::TypeA & rhs) __attribute__((nothrow));
-i32                  TypeA_Cmp(atf_unit::TypeA & lhs, atf_unit::TypeA & rhs) __attribute__((nothrow));
+// func:atf_unit.TypeA..Lt
+bool                 TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+// func:atf_unit.TypeA..Cmp
+i32                  TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_unit.TypeA..Init
 void                 TypeA_Init(atf_unit::TypeA& parent);
-bool                 TypeA_Eq(const atf_unit::TypeA & lhs,const atf_unit::TypeA & rhs) __attribute__((nothrow));
+// func:atf_unit.TypeA..Eq
+bool                 TypeA_Eq(const atf_unit::TypeA& lhs, const atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA & rhs) __attribute__((nothrow));
-// print string representation of atf_unit::TypeA to string LHS, no header -- cprint:atf_unit.TypeA.String
-void                 TypeA_Print(atf_unit::TypeA & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_unit.TypeA..Update
+bool                 TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TypeA.String  printfmt:Raw
+// func:atf_unit.TypeA..Print
+void                 TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TypeA under PARENT node -- cprint:atf_unit.TypeA.Json
-lib_json::FNode *    TypeA_FmtJson(atf_unit::TypeA & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_unit.TypeA..FmtJson
+lib_json::FNode *    TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.TypeB
 struct TypeB { // atf_unit.TypeB
@@ -670,22 +879,33 @@ struct TypeB { // atf_unit.TypeB
     TypeB();
 };
 
+// func:atf_unit.TypeB..Hash
 u32                  TypeB_Hash(u32 prev, const atf_unit::TypeB & rhs) __attribute__((nothrow));
-bool                 TypeB_ReadFieldMaybe(atf_unit::TypeB &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:atf_unit.TypeB..ReadFieldMaybe
+bool                 TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_unit::TypeB from an ascii string.
 // The format of the string is an ssim Tuple
+// func:atf_unit.TypeB..ReadStrptrMaybe
 bool                 TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str);
-bool                 TypeB_Lt(atf_unit::TypeB & lhs, atf_unit::TypeB & rhs) __attribute__((nothrow));
-i32                  TypeB_Cmp(atf_unit::TypeB & lhs, atf_unit::TypeB & rhs) __attribute__((nothrow));
+// func:atf_unit.TypeB..Lt
+bool                 TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+// func:atf_unit.TypeB..Cmp
+i32                  TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:atf_unit.TypeB..Init
 void                 TypeB_Init(atf_unit::TypeB& parent);
-bool                 TypeB_Eq(const atf_unit::TypeB & lhs,const atf_unit::TypeB & rhs) __attribute__((nothrow));
+// func:atf_unit.TypeB..Eq
+bool                 TypeB_Eq(const atf_unit::TypeB& lhs, const atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
-bool                 TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB & rhs) __attribute__((nothrow));
-// print string representation of atf_unit::TypeB to string LHS, no header -- cprint:atf_unit.TypeB.String
-void                 TypeB_Print(atf_unit::TypeB & row, algo::cstring &str) __attribute__((nothrow));
+// func:atf_unit.TypeB..Update
+bool                 TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TypeB.String  printfmt:Tuple
+// func:atf_unit.TypeB..Print
+void                 TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TypeB under PARENT node -- cprint:atf_unit.TypeB.Json
-lib_json::FNode *    TypeB_FmtJson(atf_unit::TypeB & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_unit.TypeB..FmtJson
+lib_json::FNode *    TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.TestJson
 struct TestJson { // atf_unit.TestJson
@@ -711,11 +931,15 @@ struct TestJson { // atf_unit.TestJson
 };
 
 // Set all fields to initial values.
+// func:atf_unit.TestJson..Init
 void                 TestJson_Init(atf_unit::TestJson& parent);
-// print string representation of atf_unit::TestJson to string LHS, no header -- cprint:atf_unit.TestJson.String
-void                 TestJson_Print(atf_unit::TestJson & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TestJson.String  printfmt:Tuple
+// func:atf_unit.TestJson..Print
+void                 TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TestJson under PARENT node -- cprint:atf_unit.TestJson.Json
-lib_json::FNode *    TestJson_FmtJson(atf_unit::TestJson & row, lib_json::FNode *parent) __attribute__((nothrow));
+// func:atf_unit.TestJson..FmtJson
+lib_json::FNode *    TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_unit { // gen:ns_curstext
 
@@ -765,494 +989,994 @@ struct FPerfSort_index_curs {// cursor
 } // gen:ns_curstext
 namespace atf_unit { // gen:ns_func
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Check1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Check1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Del1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Del1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Field1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Field1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Fldfunc1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Fldfunc1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Insert1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Insert1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Insert2
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Insert2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Merge1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Merge1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
-void                 unittest_acr_Meta1();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Read1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Read1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Read2
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Read2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Read3
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Read3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Read5
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Read5();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Regx1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Regx1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Replace1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Replace1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Rowid1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Rowid1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Unused1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Unused1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Write1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Write1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Write2
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Write2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Xref1
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Xref1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_acr_Xref2
+// this function is 'extrn' and implemented by user
 void                 unittest_acr_Xref2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_Base64
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_Base64();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_FileFlags
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_FileFlags();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Abs
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Abs();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Aligned
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Aligned();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_AvlvsMap
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_AvlvsMap();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CSVTokens
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CSVTokens();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CString
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CaseConversion
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CaseConversion();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Ceiling
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Ceiling();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Charset
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Charset();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CheckIpmask
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CheckIpmask();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CheckShiftMask
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CheckShiftMask();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Clipped
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Clipped();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Cmp
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Cmp();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_CurrentTime
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_CurrentTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Datecache
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Datecache();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_DayName
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_DayName();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Decimal
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Decimal();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_DirBeg
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_DirBeg();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_DoTestRounding
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_DoTestRounding();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ExitCode
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ExitCode();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FTruncate
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FTruncate();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FileLine_curs
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FileLine_curs();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FileQ
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FileQ();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FileToString
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FileToString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FmtBufDec
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FmtBufDec();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_GetCpuHz
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_GetCpuHz();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_I32Dec3Fmt
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_I32Dec3Fmt();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_IntPrice
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_IntPrice();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Keyval
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Keyval();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_KillRecurse
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_KillRecurse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Lockfile
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Lockfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_MinMax
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_MinMax();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Mmap
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Mmap();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_NToh
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_NToh();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_NextSep
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_NextSep();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_OrderID
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_OrderID();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseHex1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseHex1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseHex2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseHex2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseNumber
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseNumber();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseNumber_Overflow1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseNumber_Overflow1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseNumber_Overflow2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseNumber_Overflow2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseNumber_Overflow3
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseNumber_Overflow3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseOct1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseOct1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseOct3
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseOct3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseURL1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseURL1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ParseUnTime
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ParseUnTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfIntrinsics
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfIntrinsics();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfMinMaxAvg
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfMinMaxAvg();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfParseDouble
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfParseDouble();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfParseNum
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfParseNum();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfSort
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfSort();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PerfTruncVsFtol
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PerfTruncVsFtol();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PopCnt1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PopCnt1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PopCnt2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PopCnt2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintBash
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintBash();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintCppQuoted
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintCppQuoted();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintDoubleWithCommas
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintDoubleWithCommas();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintHex
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintHex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintMemptr
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_PrintMemptr();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintPad
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintPad();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintSsim
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintSsim();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintUnTime
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintUnTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintWithCommas
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintWithCommas();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ReadLine
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ReadLine();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ReadModuleId
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ReadModuleId();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Regx
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Regx();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RegxReadTwice
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RegxReadTwice();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RegxReadTwice2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RegxReadTwice2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RegxShortCircuit
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RegxShortCircuit();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RemDirRecurse
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RemDirRecurse1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RemDirRecurse2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RemDirRecurse3
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_RemDirRecurse4
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Replscope
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Replscope();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ReverseBits
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_ReverseBits();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_SchedTime
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_SchedTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Sleep
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Sleep();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Smallstr
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Smallstr();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_SmallstrEq
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_SmallstrEq();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Strfind
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Strfind();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringCase
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringCase();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringFind
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringFind();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringIter
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringIter();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringSepCurs
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringSepCurs();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringSubrange
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringSubrange();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_StringToFile
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_StringToFile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_SubstringIndex
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_SubstringIndex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_SysEval
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_SysEval();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Tabulate
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tabulate();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Tempfile
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tempfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TestString
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TestString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TestStringFmt
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TestStringFmt();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TestStringFmt2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TestStringFmt2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TestStringFmt3
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TestStringFmt3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TimeConstants
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TimeConstants();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TimeConversion
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TimeConversion();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TimeConvert
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TimeConvert();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TrimZerosRight
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TrimZerosRight();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_TstampCache
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_TstampCache();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Tuple
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tuple();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Tuple1
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tuple1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Tuple2
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tuple2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_U128PrintHex
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_U128PrintHex();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_UnescapeC
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_UnescapeC();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_flock
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_flock();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_strptr_Eq
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_strptr_Eq();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_test_strptr
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_test_strptr();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_u128
+// this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_u128();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_amc_Unit
+// this function is 'extrn' and implemented by user
 void                 unittest_amc_Unit();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_ams_StreamId
+// this function is 'extrn' and implemented by user
 void                 unittest_ams_StreamId();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_ams_sendtest
+// this function is 'extrn' and implemented by user
 void                 unittest_ams_sendtest();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_atf_unit_Outfile
+// this function is 'extrn' and implemented by user
 void                 unittest_atf_unit_Outfile();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_fm
+// this function is 'extrn' and implemented by user
 void                 unittest_fm();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_ams_Test1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_ams_Test1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_exec_Dependency
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_exec_Dependency();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_exec_Parallel1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_exec_Parallel1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_exec_Timeout
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_exec_Timeout();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_exec_TooManyFds
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_exec_TooManyFds();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayAll
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayAll();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayEmptyArray
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayEmptyArray();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayEmptyObject
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayEmptyObject();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArraySimpleNumber
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArraySimpleNumber();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArraySimpleString
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArraySimpleString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayTokenFalse
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayTokenFalse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayTokenNull
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayTokenNull();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ArrayTokenTrue
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ArrayTokenTrue();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_CtrlCharEscape
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_CtrlCharEscape();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_Empty
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_Empty();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_EmptyArray
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_EmptyArray();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_Emptyobject
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_Emptyobject();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorArrayColon
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorArrayColon();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorArrayComma1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorArrayComma1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorArrayComma2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorArrayComma2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorArrayComma3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorArrayComma3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorArrayComma4
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorArrayComma4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadNumber
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadNumber();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadString1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadString1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadString2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadString2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadString3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadString3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadToken1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadToken1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadToken2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadToken2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString4
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString5
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString5();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString6
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString6();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBadUString7
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBadUString7();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBareColon
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBareColon();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBareComma
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBareComma();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBareValuesWithColon
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBareValuesWithColon();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBareValuesWithComma
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBareValuesWithComma();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch10
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch10();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch11
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch11();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch12
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch12();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch13
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch13();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch14
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch14();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch4
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch5
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch5();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch6
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch6();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch7
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch7();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch8
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch8();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorBrMismatch9
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorBrMismatch9();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectColon1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectColon1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectColon2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectColon2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectColon3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectColon3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectColon4
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectColon4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectColon5
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectColon5();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectComma1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectComma1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectComma2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectComma2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectComma3
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectComma3();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectComma4
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectComma4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectDupField
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectDupField();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ErrorObjectNoValue
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ErrorObjectNoValue();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_Object
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_Object();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_TypeA
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_TypeA();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_bool_false
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_bool_false();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_bool_true
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_bool_true();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_char
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_char();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_double_prec
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_double_prec();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_float_prec
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_float_prec();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i16_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i16_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i16_min
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i16_min();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i32_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i32_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i32_min
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i32_min();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i64_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i64_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i64_min
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i64_min();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i8_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i8_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_i8_min
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_i8_min();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u16_0
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u16_0();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u16_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u16_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u32_0
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u32_0();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u32_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u32_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u64_0
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u64_0();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u64_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u64_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u8_0
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u8_0();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_FmtJson_u8_max
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_FmtJson_u8_max();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberCombined1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberCombined1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberCombined2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberCombined2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberDecimal
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberDecimal();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberExponent1
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberExponent1();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberExponent2
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberExponent2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberManyDigits
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberManyDigits();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_NumberZero
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_NumberZero();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldAll
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldAll();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldEmptyArray
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldEmptyArray();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldEmptyObject
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldEmptyObject();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldSimpleNumber
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldSimpleNumber();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldSimpleString
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldSimpleString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldTokenFalse
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldTokenFalse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldTokenNull
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldTokenNull();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_ObjFieldTokenTrue
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_ObjFieldTokenTrue();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_SecString
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_SecString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_SimpleNumber
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_SimpleNumber();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_SimpleString
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_SimpleString();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_StringEmpty
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_StringEmpty();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_StringWithEscapes
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_StringWithEscapes();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_TokenFalse
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_TokenFalse();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_TokenNull
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_TokenNull();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_TokenTrue
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_TokenTrue();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_json_Typical
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_json_Typical();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_sql_Main
+// this function is 'extrn' and implemented by user
 void                 unittest_lib_sql_Main();
 } // gen:ns_func
+// func:atf_unit...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:atf_unit...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

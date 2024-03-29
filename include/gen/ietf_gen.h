@@ -62,32 +62,43 @@ struct FieldId { // ietf.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:ietf.FieldId.value.GetEnum
 ietf_FieldIdEnum     value_GetEnum(const ietf::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:ietf.FieldId.value.SetEnum
 void                 value_SetEnum(ietf::FieldId& parent, ietf_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:ietf.FieldId.value.ToCstr
 const char*          value_ToCstr(const ietf::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:ietf.FieldId.value.Print
 void                 value_Print(const ietf::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:ietf.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:ietf.FieldId.value.SetStrptr
 void                 value_SetStrptr(ietf::FieldId& parent, algo::strptr rhs, ietf_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:ietf.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of ietf::FieldId from an ascii string.
 // The format of the string is the format of the ietf::FieldId's only field
+// func:ietf.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:ietf.FieldId..Init
 void                 FieldId_Init(ietf::FieldId& parent);
-// print string representation of ietf::FieldId to string LHS, no header -- cprint:ietf.FieldId.String
-void                 FieldId_Print(ietf::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ietf.FieldId.String  printfmt:Raw
+// func:ietf.FieldId..Print
+void                 FieldId_Print(ietf::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ietf.Ipv4
 #pragma pack(push,1)
@@ -104,19 +115,30 @@ struct Ipv4 { // ietf.Ipv4
 };
 #pragma pack(pop)
 
+// func:ietf.Ipv4..Hash
 u32                  Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4 from an ascii string.
 // The function is implemented externally.
+// func:ietf.Ipv4..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 Ipv4_ReadStrptrMaybe(ietf::Ipv4 &parent, algo::strptr in_str);
+// func:ietf.Ipv4..Lt
 bool                 Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
+// func:ietf.Ipv4..Cmp
 i32                  Ipv4_Cmp(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:ietf.Ipv4..Init
 void                 Ipv4_Init(ietf::Ipv4& parent);
+// func:ietf.Ipv4..Eq
 bool                 Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:ietf.Ipv4..Update
 bool                 Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
-// Convert ietf::Ipv4 to a string (user-implemented function)
-void                 Ipv4_Print(ietf::Ipv4 row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ietf.Ipv4.String  printfmt:Extern
+// func:ietf.Ipv4..Print
+// this function is 'extrn' and implemented by user
+void                 Ipv4_Print(ietf::Ipv4 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ietf.Ipport
 #pragma pack(push,1)
@@ -135,19 +157,30 @@ struct Ipport { // ietf.Ipport: IP+Port: host format
 };
 #pragma pack(pop)
 
+// func:ietf.Ipport..Hash
 u32                  Ipport_Hash(u32 prev, ietf::Ipport rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipport from an ascii string.
 // The function is implemented externally.
+// func:ietf.Ipport..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 Ipport_ReadStrptrMaybe(ietf::Ipport &parent, algo::strptr in_str);
+// func:ietf.Ipport..Lt
 bool                 Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
+// func:ietf.Ipport..Cmp
 i32                  Ipport_Cmp(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:ietf.Ipport..Init
 void                 Ipport_Init(ietf::Ipport& parent);
+// func:ietf.Ipport..Eq
 bool                 Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:ietf.Ipport..Update
 bool                 Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) __attribute__((nothrow));
-// Convert ietf::Ipport to a string (user-implemented function)
-void                 Ipport_Print(ietf::Ipport row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ietf.Ipport.String  printfmt:Extern
+// func:ietf.Ipport..Print
+// this function is 'extrn' and implemented by user
+void                 Ipport_Print(ietf::Ipport row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ietf.Ipv4Addr
 #pragma pack(push,1)
@@ -164,22 +197,35 @@ struct Ipv4Addr { // ietf.Ipv4Addr
 };
 #pragma pack(pop)
 
+// func:ietf.Ipv4Addr.addr.Get
 u32                  addr_Get(const ietf::Ipv4Addr& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:ietf.Ipv4Addr.addr.Set
 void                 addr_Set(ietf::Ipv4Addr& parent, u32 rhs) __attribute__((nothrow));
 
+// func:ietf.Ipv4Addr..Hash
 u32                  Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4Addr from an ascii string.
 // The function is implemented externally.
+// func:ietf.Ipv4Addr..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
 bool                 Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str);
+// func:ietf.Ipv4Addr..Lt
 bool                 Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+// func:ietf.Ipv4Addr..Cmp
 i32                  Ipv4Addr_Cmp(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Set all fields to initial values.
+// func:ietf.Ipv4Addr..Init
 void                 Ipv4Addr_Init(ietf::Ipv4Addr& parent);
+// func:ietf.Ipv4Addr..Eq
 bool                 Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
+// func:ietf.Ipv4Addr..Update
 bool                 Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
-// Convert ietf::Ipv4Addr to a string (user-implemented function)
-void                 Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ietf.Ipv4Addr.String  printfmt:Extern
+// func:ietf.Ipv4Addr..Print
+// this function is 'extrn' and implemented by user
+void                 Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ietf.Protocol
 // access: ietf.Protocol.proto (Protocol)
@@ -189,6 +235,7 @@ struct Protocol { // ietf.Protocol: amc-generated struct for internal purposes
 };
 #pragma pack(pop)
 
+// func:ietf.Protocol.proto.StaticCheck
 void                 StaticCheck();
 
 } // gen:ns_print_struct

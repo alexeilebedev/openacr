@@ -9,6 +9,7 @@ dmmeta.ssimfile  ssimfile:amsdb.proctype  ctype:amsdb.ProcType
 dmmeta.ssimfile  ssimfile:amsdb.streamtype  ctype:amsdb.StreamType
 dmmeta.ssimfile  ssimfile:atfdb.amctest  ctype:atfdb.Amctest
 dmmeta.ssimfile  ssimfile:atfdb.cijob  ctype:atfdb.Cijob
+dmmeta.ssimfile  ssimfile:atfdb.cipackage  ctype:atfdb.Cipackage
 dmmeta.ssimfile  ssimfile:atfdb.citest  ctype:atfdb.Citest
 dmmeta.ssimfile  ssimfile:atfdb.comptest  ctype:atfdb.Comptest
 dmmeta.ssimfile  ssimfile:atfdb.fuzzstrat  ctype:atfdb.Fuzzstrat
@@ -25,6 +26,7 @@ dmmeta.ssimfile  ssimfile:dev.badline  ctype:dev.Badline
 dmmeta.ssimfile  ssimfile:dev.builddir  ctype:dev.Builddir
 dmmeta.ssimfile  ssimfile:dev.cfg  ctype:dev.Cfg
 dmmeta.ssimfile  ssimfile:dev.compiler  ctype:dev.Compiler
+dmmeta.ssimfile  ssimfile:dev.copyright  ctype:dev.Copyright
 dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
@@ -41,13 +43,14 @@ dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
 dmmeta.ssimfile  ssimfile:dev.msgfile  ctype:dev.Msgfile
 dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
+dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
+dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
+dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
-dmmeta.ssimfile  ssimfile:dev.readmens  ctype:dev.Readmens
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile
 dmmeta.ssimfile  ssimfile:dev.srcfile  ctype:dev.Srcfile
-dmmeta.ssimfile  ssimfile:dev.ssimfs  ctype:dev.Ssimfs
 dmmeta.ssimfile  ssimfile:dev.syscmd  ctype:dev.Syscmd
 dmmeta.ssimfile  ssimfile:dev.syscmddep  ctype:dev.Syscmddep
 dmmeta.ssimfile  ssimfile:dev.syslib  ctype:dev.Syslib
@@ -69,6 +72,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.cascdel  ctype:dmmeta.Cascdel
 dmmeta.ssimfile  ssimfile:dmmeta.ccmp  ctype:dmmeta.Ccmp
 dmmeta.ssimfile  ssimfile:dmmeta.cdflt  ctype:dmmeta.Cdflt
 dmmeta.ssimfile  ssimfile:dmmeta.cextern  ctype:dmmeta.Cextern
+dmmeta.ssimfile  ssimfile:dmmeta.cfast  ctype:dmmeta.Cfast
 dmmeta.ssimfile  ssimfile:dmmeta.cfmt  ctype:dmmeta.Cfmt
 dmmeta.ssimfile  ssimfile:dmmeta.cget  ctype:dmmeta.Cget
 dmmeta.ssimfile  ssimfile:dmmeta.charset  ctype:dmmeta.Charset
@@ -88,6 +92,9 @@ dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
 dmmeta.ssimfile  ssimfile:dmmeta.dispsigcheck  ctype:dmmeta.Dispsigcheck
 dmmeta.ssimfile  ssimfile:dmmeta.disptrace  ctype:dmmeta.Disptrace
 dmmeta.ssimfile  ssimfile:dmmeta.falias  ctype:dmmeta.Falias
+dmmeta.ssimfile  ssimfile:dmmeta.fastenc  ctype:dmmeta.Fastenc
+dmmeta.ssimfile  ssimfile:dmmeta.fastinstr  ctype:dmmeta.Fastinstr
+dmmeta.ssimfile  ssimfile:dmmeta.fastop  ctype:dmmeta.Fastop
 dmmeta.ssimfile  ssimfile:dmmeta.fbase  ctype:dmmeta.Fbase
 dmmeta.ssimfile  ssimfile:dmmeta.fbigend  ctype:dmmeta.Fbigend
 dmmeta.ssimfile  ssimfile:dmmeta.fbitset  ctype:dmmeta.Fbitset
@@ -104,6 +111,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fconst  ctype:dmmeta.Fconst
 dmmeta.ssimfile  ssimfile:dmmeta.fcurs  ctype:dmmeta.Fcurs
 dmmeta.ssimfile  ssimfile:dmmeta.fdec  ctype:dmmeta.Fdec
 dmmeta.ssimfile  ssimfile:dmmeta.fdelay  ctype:dmmeta.Fdelay
+dmmeta.ssimfile  ssimfile:dmmeta.ffast  ctype:dmmeta.Ffast
 dmmeta.ssimfile  ssimfile:dmmeta.fflag  ctype:dmmeta.Fflag
 dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field
 dmmeta.ssimfile  ssimfile:dmmeta.findrem  ctype:dmmeta.Findrem
@@ -140,6 +148,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.noxref  ctype:dmmeta.Noxref
 dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
 dmmeta.ssimfile  ssimfile:dmmeta.nscpp  ctype:dmmeta.Nscpp
 dmmeta.ssimfile  ssimfile:dmmeta.nsdb  ctype:dmmeta.Nsdb
+dmmeta.ssimfile  ssimfile:dmmeta.nsfast  ctype:dmmeta.Nsfast
 dmmeta.ssimfile  ssimfile:dmmeta.nsinclude  ctype:dmmeta.Nsinclude
 dmmeta.ssimfile  ssimfile:dmmeta.nsproto  ctype:dmmeta.Nsproto
 dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
@@ -148,6 +157,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.nsx  ctype:dmmeta.Nsx
 dmmeta.ssimfile  ssimfile:dmmeta.numstr  ctype:dmmeta.Numstr
 dmmeta.ssimfile  ssimfile:dmmeta.pack  ctype:dmmeta.Pack
 dmmeta.ssimfile  ssimfile:dmmeta.pmaskfld  ctype:dmmeta.Pmaskfld
+dmmeta.ssimfile  ssimfile:dmmeta.pmaskfld_member  ctype:dmmeta.PmaskfldMember
 dmmeta.ssimfile  ssimfile:dmmeta.pnew  ctype:dmmeta.Pnew
 dmmeta.ssimfile  ssimfile:dmmeta.pnewtype  ctype:dmmeta.Buftype
 dmmeta.ssimfile  ssimfile:dmmeta.printfmt  ctype:dmmeta.Printfmt

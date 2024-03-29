@@ -78,33 +78,54 @@ const char *gcli_help =
 } // namespace gcli
 namespace gcli { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:gcli.FDb._db.InitReflection
     static void          InitReflection();
+    // func:gcli.FDb.gtype.InputMaybe
     static bool          gtype_InputMaybe(gclidb::Gtype &elem) __attribute__((nothrow));
+    // func:gcli.FDb.grepossh.InputMaybe
     static bool          grepossh_InputMaybe(gclidb::Grepossh &elem) __attribute__((nothrow));
+    // func:gcli.FDb.grepogitport.InputMaybe
     static bool          grepogitport_InputMaybe(gclidb::Grepogitport &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gstatet.InputMaybe
     static bool          gstatet_InputMaybe(gclidb::Gstatet &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gmethod.InputMaybe
     static bool          gmethod_InputMaybe(gclidb::Gmethod &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gclicmdt.InputMaybe
     static bool          gclicmdt_InputMaybe(gclidb::Gclicmdt &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gclicmdf2j.InputMaybe
     static bool          gclicmdf2j_InputMaybe(gclidb::Gclicmdf2j &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gclicmd.LoadStatic
     static void          gclicmd_LoadStatic() __attribute__((nothrow));
+    // func:gcli.FDb.gtypeh.InputMaybe
     static bool          gtypeh_InputMaybe(gclidb::Gtypeh &elem) __attribute__((nothrow));
+    // func:gcli.FDb.grepo.InputMaybe
     static bool          grepo_InputMaybe(gclidb::Grepo &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gtypeprefix.InputMaybe
     static bool          gtypeprefix_InputMaybe(gclidb::Gtypeprefix &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gtblact.LoadStatic
     static void          gtblact_LoadStatic() __attribute__((nothrow));
+    // func:gcli.FDb.gtblactfld.InputMaybe
     static bool          gtblactfld_InputMaybe(gclidb::Gtblactfld &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gfld.InputMaybe
     static bool          gfld_InputMaybe(gclidb::Gfld &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gtbl.InputMaybe
     static bool          gtbl_InputMaybe(gclidb::Gtbl &elem) __attribute__((nothrow));
+    // func:gcli.FDb.gact.InputMaybe
     static bool          gact_InputMaybe(gclidb::Gact &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:gcli.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:gcli.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:gcli...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- gcli.trace..Print
-// print string representation of gcli::trace to string LHS, no header -- cprint:gcli.trace.String
-void gcli::trace_Print(gcli::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.trace.String  printfmt:Tuple
+void gcli::trace_Print(gcli::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcli.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -9125,8 +9146,9 @@ void gcli::FHttp_Uninit(gcli::FHttp& parent) {
 }
 
 // --- gcli.FHttp..Print
-// print string representation of gcli::FHttp to string LHS, no header -- cprint:gcli.FHttp.String
-void gcli::FHttp_Print(gcli::FHttp & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.FHttp.String  printfmt:Tuple
+void gcli::FHttp_Print(gcli::FHttp& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcli.FHttp";
 
@@ -9440,8 +9462,9 @@ void gcli::FMilestone_Uninit(gcli::FMilestone& milestone) {
 }
 
 // --- gcli.FMilestone..Print
-// print string representation of gcli::FMilestone to string LHS, no header -- cprint:gcli.FMilestone.String
-void gcli::FMilestone_Print(gcli::FMilestone & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.FMilestone.String  printfmt:Tuple
+void gcli::FMilestone_Print(gcli::FMilestone& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcli.FMilestone";
 
@@ -9658,8 +9681,9 @@ void gcli::FMr_Uninit(gcli::FMr& mr) {
 }
 
 // --- gcli.FMr..Print
-// print string representation of gcli::FMr to string LHS, no header -- cprint:gcli.FMr.String
-void gcli::FMr_Print(gcli::FMr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.FMr.String  printfmt:Tuple
+void gcli::FMr_Print(gcli::FMr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcli.FMr";
 
@@ -9890,8 +9914,9 @@ bool gcli::FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- gcli.FieldId..Print
-// print string representation of gcli::FieldId to string LHS, no header -- cprint:gcli.FieldId.String
-void gcli::FieldId_Print(gcli::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.FieldId.String  printfmt:Raw
+void gcli::FieldId_Print(gcli::FieldId& row, algo::cstring& str) {
     gcli::value_Print(row, str);
 }
 
@@ -10086,8 +10111,9 @@ bool gcli::TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) {
 }
 
 // --- gcli.TableId..Print
-// print string representation of gcli::TableId to string LHS, no header -- cprint:gcli.TableId.String
-void gcli::TableId_Print(gcli::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcli.TableId.String  printfmt:Raw
+void gcli::TableId_Print(gcli::TableId& row, algo::cstring& str) {
     gcli::value_Print(row, str);
 }
 

@@ -90,31 +90,48 @@ struct Alarm { // fmdb.Alarm
     Alarm();
 };
 
+// func:fmdb.Alarm.code.Get
 fm::Code             code_Get(fmdb::Alarm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:fmdb.Alarm.code.Get2
 fm::Code             Alarm_code_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:fmdb.Alarm.object.Get
 algo::Smallstr200    object_Get(fmdb::Alarm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:fmdb.Alarm.object.Get2
 algo::Smallstr200    Alarm_object_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:fmdb.Alarm.objtype.Get
 fm::Objtype          objtype_Get(fmdb::Alarm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:fmdb.Alarm.objtype.Get2
 fm::Objtype          Alarm_objtype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:fmdb.Alarm.objinst.Get
 fm::Objinst          objinst_Get(fmdb::Alarm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:fmdb.Alarm.objinst.Get2
 fm::Objinst          Alarm_objinst_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:fmdb.Alarm.objprefix.Get
 algo::Smallstr50     objprefix_Get(fmdb::Alarm& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:fmdb.Alarm.objprefix.Get2
 algo::Smallstr50     Alarm_objprefix_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:fmdb.Alarm..Concat_code_object
 tempstr              Alarm_Concat_code_object( const algo::strptr& code ,const algo::strptr& object );
+// func:fmdb.Alarm..Concat_objtype_objinst
 tempstr              Alarm_Concat_objtype_objinst( const algo::strptr& objtype ,const algo::strptr& objinst );
-bool                 Alarm_ReadFieldMaybe(fmdb::Alarm &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:fmdb.Alarm..ReadFieldMaybe
+bool                 Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of fmdb::Alarm from an ascii string.
 // The format of the string is an ssim Tuple
+// func:fmdb.Alarm..ReadStrptrMaybe
 bool                 Alarm_ReadStrptrMaybe(fmdb::Alarm &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:fmdb.Alarm..Init
 void                 Alarm_Init(fmdb::Alarm& parent);
-// print string representation of fmdb::Alarm to string LHS, no header -- cprint:fmdb.Alarm.String
-void                 Alarm_Print(fmdb::Alarm & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:fmdb.Alarm.String  printfmt:Tuple
+// func:fmdb.Alarm..Print
+void                 Alarm_Print(fmdb::Alarm& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- fmdb.AlmCode
 struct AlmCode { // fmdb.AlmCode
@@ -125,12 +142,16 @@ struct AlmCode { // fmdb.AlmCode
     AlmCode();
 };
 
-bool                 AlmCode_ReadFieldMaybe(fmdb::AlmCode &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:fmdb.AlmCode..ReadFieldMaybe
+bool                 AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of fmdb::AlmCode from an ascii string.
 // The format of the string is an ssim Tuple
+// func:fmdb.AlmCode..ReadStrptrMaybe
 bool                 AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str);
-// print string representation of fmdb::AlmCode to string LHS, no header -- cprint:fmdb.AlmCode.String
-void                 AlmCode_Print(fmdb::AlmCode & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmCode.String  printfmt:Tuple
+// func:fmdb.AlmCode..Print
+void                 AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- fmdb.AlmObjtype
 struct AlmObjtype { // fmdb.AlmObjtype: Alarm resource type
@@ -139,12 +160,16 @@ struct AlmObjtype { // fmdb.AlmObjtype: Alarm resource type
     AlmObjtype();
 };
 
-bool                 AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:fmdb.AlmObjtype..ReadFieldMaybe
+bool                 AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of fmdb::AlmObjtype from an ascii string.
 // The format of the string is an ssim Tuple
+// func:fmdb.AlmObjtype..ReadStrptrMaybe
 bool                 AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_str);
-// print string representation of fmdb::AlmObjtype to string LHS, no header -- cprint:fmdb.AlmObjtype.String
-void                 AlmObjtype_Print(fmdb::AlmObjtype & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmObjtype.String  printfmt:Tuple
+// func:fmdb.AlmObjtype..Print
+void                 AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- fmdb.AlmSource
 struct AlmSource { // fmdb.AlmSource: Subsystem where alarm has been detected
@@ -153,12 +178,16 @@ struct AlmSource { // fmdb.AlmSource: Subsystem where alarm has been detected
     AlmSource();
 };
 
-bool                 AlmSource_ReadFieldMaybe(fmdb::AlmSource &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:fmdb.AlmSource..ReadFieldMaybe
+bool                 AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of fmdb::AlmSource from an ascii string.
 // The format of the string is an ssim Tuple
+// func:fmdb.AlmSource..ReadStrptrMaybe
 bool                 AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_str);
-// print string representation of fmdb::AlmSource to string LHS, no header -- cprint:fmdb.AlmSource.String
-void                 AlmSource_Print(fmdb::AlmSource & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:fmdb.AlmSource.String  printfmt:Tuple
+// func:fmdb.AlmSource..Print
+void                 AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- fmdb.FieldId
 #pragma pack(push,1)
@@ -172,32 +201,43 @@ struct FieldId { // fmdb.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:fmdb.FieldId.value.GetEnum
 fmdb_FieldIdEnum     value_GetEnum(const fmdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:fmdb.FieldId.value.SetEnum
 void                 value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:fmdb.FieldId.value.ToCstr
 const char*          value_ToCstr(const fmdb::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:fmdb.FieldId.value.Print
 void                 value_Print(const fmdb::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:fmdb.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:fmdb.FieldId.value.SetStrptr
 void                 value_SetStrptr(fmdb::FieldId& parent, algo::strptr rhs, fmdb_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:fmdb.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of fmdb::FieldId from an ascii string.
 // The format of the string is the format of the fmdb::FieldId's only field
+// func:fmdb.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:fmdb.FieldId..Init
 void                 FieldId_Init(fmdb::FieldId& parent);
-// print string representation of fmdb::FieldId to string LHS, no header -- cprint:fmdb.FieldId.String
-void                 FieldId_Print(fmdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:fmdb.FieldId.String  printfmt:Raw
+// func:fmdb.FieldId..Print
+void                 FieldId_Print(fmdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace fmdb { // gen:ns_func
 } // gen:ns_func

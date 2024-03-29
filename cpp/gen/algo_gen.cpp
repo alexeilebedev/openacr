@@ -27,23 +27,41 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 namespace algo { // gen:ns_print_proto
+    // func:algo.FileFlags.append.ReadStrptrMaybe
     static bool          append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.read.ReadStrptrMaybe
     static bool          read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.write.ReadStrptrMaybe
     static bool          write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags._throw.ReadStrptrMaybe
     static bool          _throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.temp.ReadStrptrMaybe
     static bool          temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.overlap.ReadStrptrMaybe
     static bool          overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.linear.ReadStrptrMaybe
     static bool          linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.FileFlags.printerr.ReadStrptrMaybe
     static bool          printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.IOEvtFlags.read.ReadStrptrMaybe
     static bool          read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.IOEvtFlags.write.ReadStrptrMaybe
     static bool          write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.IOEvtFlags.eof.ReadStrptrMaybe
     static bool          eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.IOEvtFlags.err.ReadStrptrMaybe
     static bool          err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.NumParseFlags.err.ReadStrptrMaybe
     static bool          err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.NumParseFlags.ok.ReadStrptrMaybe
     static bool          ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.NumParseFlags.neg.ReadStrptrMaybe
     static bool          neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.NumParseFlags.overflow.ReadStrptrMaybe
     static bool          overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo.NumParseFlags.hex.ReadStrptrMaybe
     static bool          hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {
@@ -525,7 +543,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 150);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -553,8 +571,9 @@ bool algo::Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr i
 }
 
 // --- algo.Smallstr150..Print
-// print string representation of algo::Smallstr150 to string LHS, no header -- cprint:algo.Smallstr150.String
-void algo::Smallstr150_Print(algo::Smallstr150 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr150.String  printfmt:Raw
+void algo::Smallstr150_Print(algo::Smallstr150& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -568,8 +587,9 @@ bool algo::Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str) {
 }
 
 // --- algo.Comment..Print
-// print string representation of algo::Comment to string LHS, no header -- cprint:algo.Comment.String
-void algo::Comment_Print(algo::Comment & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Comment.String  printfmt:Raw
+void algo::Comment_Print(algo::Comment& row, algo::cstring& str) {
     algo::Smallstr150_Print(row.value, str);
 }
 
@@ -595,7 +615,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 250);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -623,8 +643,9 @@ bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr i
 }
 
 // --- algo.Smallstr250..Print
-// print string representation of algo::Smallstr250 to string LHS, no header -- cprint:algo.Smallstr250.String
-void algo::Smallstr250_Print(algo::Smallstr250 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr250.String  printfmt:Raw
+void algo::Smallstr250_Print(algo::Smallstr250& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -638,64 +659,10 @@ bool algo::CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) {
 }
 
 // --- algo.CppExpr..Print
-// print string representation of algo::CppExpr to string LHS, no header -- cprint:algo.CppExpr.String
-void algo::CppExpr_Print(algo::CppExpr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.CppExpr.String  printfmt:Raw
+void algo::CppExpr_Print(algo::CppExpr& row, algo::cstring& str) {
     algo::Smallstr250_Print(row.value, str);
-}
-
-// --- algo.Dbbox..ReadFieldMaybe
-bool algo::Dbbox_ReadFieldMaybe(algo::Dbbox &parent, algo::strptr field, algo::strptr strval) {
-    algo::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
-    switch(field_id) {
-        case algo_FieldId_min: retval = double_ReadStrptrMaybe(parent.min, strval); break;
-        case algo_FieldId_max: retval = double_ReadStrptrMaybe(parent.max, strval); break;
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- algo.Dbbox..ReadStrptrMaybe
-// Read fields of algo::Dbbox from an ascii string.
-// The format of the string is an ssim Tuple
-bool algo::Dbbox_ReadStrptrMaybe(algo::Dbbox &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "algo.Dbbox");
-    int anon_idx = 0;
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        if (ch_N(attr.name) == 0) {
-            attr.name = Dbbox_GetAnon(parent, anon_idx++);
-        }
-        retval = retval && Dbbox_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- algo.Dbbox..Print
-// print string representation of algo::Dbbox to string LHS, no header -- cprint:algo.Dbbox.String
-void algo::Dbbox_Print(algo::Dbbox & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "algo.Dbbox";
-
-    double_Print(row.min, temp);
-    PrintAttrSpaceReset(str,"min", temp);
-
-    double_Print(row.max, temp);
-    PrintAttrSpaceReset(str,"max", temp);
-}
-
-// --- algo.Dbbox..GetAnon
-algo::strptr algo::Dbbox_GetAnon(algo::Dbbox &parent, i32 idx) {
-    (void)parent;//only to avoid -Wunused-parameter
-    switch(idx) {
-        case(0): return strptr("min", 3);
-        case(1): return strptr("max", 3);
-        default: return algo::strptr();
-    }
 }
 
 // --- algo.DirEntry..Init
@@ -716,8 +683,9 @@ void algo::DirEntry_Uninit(algo::DirEntry& parent) {
 }
 
 // --- algo.DryrunQ..Print
-// print string representation of algo::DryrunQ to string LHS, no header -- cprint:algo.DryrunQ.String
-void algo::DryrunQ_Print(algo::DryrunQ row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.DryrunQ.String  printfmt:Raw
+void algo::DryrunQ_Print(algo::DryrunQ row, algo::cstring& str) {
     bool_Print(row.value, str);
 }
 
@@ -780,8 +748,9 @@ void algo::value_SetStrptr(algo::EchoQ& parent, algo::strptr rhs, algo_EchoQEnum
 }
 
 // --- algo.EchoQ..Print
-// print string representation of algo::EchoQ to string LHS, no header -- cprint:algo.EchoQ.String
-void algo::EchoQ_Print(algo::EchoQ row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.EchoQ.String  printfmt:Raw
+void algo::EchoQ_Print(algo::EchoQ row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -902,8 +871,9 @@ void algo::value_SetStrptr(algo::FailokQ& parent, algo::strptr rhs, algo_FailokQ
 }
 
 // --- algo.FailokQ..Print
-// print string representation of algo::FailokQ to string LHS, no header -- cprint:algo.FailokQ.String
-void algo::FailokQ_Print(algo::FailokQ row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.FailokQ.String  printfmt:Raw
+void algo::FailokQ_Print(algo::FailokQ row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -916,8 +886,8 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
         case algo_FieldId_name             : ret = "name";  break;
         case algo_FieldId_value            : ret = "value";  break;
         case algo_FieldId_ch               : ret = "ch";  break;
-        case algo_FieldId_min              : ret = "min";  break;
-        case algo_FieldId_max              : ret = "max";  break;
+        case algo_FieldId_exponent         : ret = "exponent";  break;
+        case algo_FieldId_mantissa         : ret = "mantissa";  break;
         case algo_FieldId_append           : ret = "append";  break;
         case algo_FieldId_read             : ret = "read";  break;
         case algo_FieldId_write            : ret = "write";  break;
@@ -1006,12 +976,6 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('h','e','x'): {
                     value_SetEnum(parent,algo_FieldId_hex); ret = true; break;
                 }
-                case LE_STR3('m','a','x'): {
-                    value_SetEnum(parent,algo_FieldId_max); ret = true; break;
-                }
-                case LE_STR3('m','i','n'): {
-                    value_SetEnum(parent,algo_FieldId_min); ret = true; break;
-                }
                 case LE_STR3('n','e','g'): {
                     value_SetEnum(parent,algo_FieldId_neg); ret = true; break;
                 }
@@ -1091,6 +1055,12 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('e','x','p','o','n','e','n','t'): {
+                    value_SetEnum(parent,algo_FieldId_exponent); ret = true; break;
+                }
+                case LE_STR8('m','a','n','t','i','s','s','a'): {
+                    value_SetEnum(parent,algo_FieldId_mantissa); ret = true; break;
+                }
                 case LE_STR8('o','v','e','r','f','l','o','w'): {
                     value_SetEnum(parent,algo_FieldId_overflow); ret = true; break;
                 }
@@ -1150,8 +1120,9 @@ bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- algo.FieldId..Print
-// print string representation of algo::FieldId to string LHS, no header -- cprint:algo.FieldId.String
-void algo::FieldId_Print(algo::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.FieldId.String  printfmt:Raw
+void algo::FieldId_Print(algo::FieldId& row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1244,20 +1215,47 @@ inline static bool algo::printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo:
 }
 
 // --- algo.FileFlags..ReadFieldMaybe
-bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags &parent, algo::strptr field, algo::strptr strval) {
+bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
-        case algo_FieldId_append: retval = append_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_read: retval = read_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_write: retval = write_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId__throw: retval = _throw_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_temp: retval = temp_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_overlap: retval = overlap_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_linear: retval = linear_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_printerr: retval = printerr_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_value: {
+            retval = u32_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case algo_FieldId_append: {
+            retval = append_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_read: {
+            retval = read_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_write: {
+            retval = write_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId__throw: {
+            retval = _throw_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_temp: {
+            retval = temp_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_overlap: {
+            retval = overlap_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_linear: {
+            retval = linear_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_printerr: {
+            retval = printerr_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1270,6 +1268,16 @@ bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags &parent, algo::strptr field,
 // Read fields of algo::FileFlags from an ascii string.
 bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
     bool retval = true;
+    // Clear affected bits first)
+    append_Set(parent, false);
+    read_Set(parent, false);
+    write_Set(parent, false);
+    _throw_Set(parent, false);
+    temp_Set(parent, false);
+    overlap_Set(parent, false);
+    linear_Set(parent, false);
+    printerr_Set(parent, false);
+    // Read ','-separated list of bools
     while (ch_N(in_str)) {
         strptr field_name;
         algo::NextSep(in_str,',',field_name);
@@ -1279,14 +1287,30 @@ bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_st
             bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
             if (ok) {
                 switch (field_id) {
-                    case algo_FieldId_append: append_Set(parent,true); break;
-                    case algo_FieldId_read: read_Set(parent,true); break;
-                    case algo_FieldId_write: write_Set(parent,true); break;
-                    case algo_FieldId__throw: _throw_Set(parent,true); break;
-                    case algo_FieldId_temp: temp_Set(parent,true); break;
-                    case algo_FieldId_overlap: overlap_Set(parent,true); break;
-                    case algo_FieldId_linear: linear_Set(parent,true); break;
-                    case algo_FieldId_printerr: printerr_Set(parent,true); break;
+                    case algo_FieldId_append: {
+                        append_Set(parent, true);
+                    } break;
+                    case algo_FieldId_read: {
+                        read_Set(parent, true);
+                    } break;
+                    case algo_FieldId_write: {
+                        write_Set(parent, true);
+                    } break;
+                    case algo_FieldId__throw: {
+                        _throw_Set(parent, true);
+                    } break;
+                    case algo_FieldId_temp: {
+                        temp_Set(parent, true);
+                    } break;
+                    case algo_FieldId_overlap: {
+                        overlap_Set(parent, true);
+                    } break;
+                    case algo_FieldId_linear: {
+                        linear_Set(parent, true);
+                    } break;
+                    case algo_FieldId_printerr: {
+                        printerr_Set(parent, true);
+                    } break;
                     default: ok = false; break;
                 }
             }
@@ -1300,8 +1324,9 @@ bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_st
 }
 
 // --- algo.FileFlags..Print
-// print string representation of algo::FileFlags to string LHS, no header -- cprint:algo.FileFlags.String
-void algo::FileFlags_Print(algo::FileFlags & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.FileFlags.String  printfmt:Bitset
+void algo::FileFlags_Print(algo::FileFlags& row, algo::cstring& str) {
     algo::ListSep ls(",");
     if (append_Get(row)) {
         str << ls << "append";
@@ -1424,8 +1449,9 @@ bool algo::I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I32Dec1..Print
-// print string representation of algo::I32Dec1 to string LHS, no header -- cprint:algo.I32Dec1.String
-void algo::I32Dec1_Print(algo::I32Dec1 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I32Dec1.String  printfmt:Raw
+void algo::I32Dec1_Print(algo::I32Dec1 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1515,8 +1541,9 @@ bool algo::I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I32Dec2..Print
-// print string representation of algo::I32Dec2 to string LHS, no header -- cprint:algo.I32Dec2.String
-void algo::I32Dec2_Print(algo::I32Dec2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I32Dec2.String  printfmt:Raw
+void algo::I32Dec2_Print(algo::I32Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1606,8 +1633,9 @@ bool algo::I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I32Dec3..Print
-// print string representation of algo::I32Dec3 to string LHS, no header -- cprint:algo.I32Dec3.String
-void algo::I32Dec3_Print(algo::I32Dec3 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I32Dec3.String  printfmt:Raw
+void algo::I32Dec3_Print(algo::I32Dec3 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1697,8 +1725,9 @@ bool algo::I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I32Dec4..Print
-// print string representation of algo::I32Dec4 to string LHS, no header -- cprint:algo.I32Dec4.String
-void algo::I32Dec4_Print(algo::I32Dec4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I32Dec4.String  printfmt:Raw
+void algo::I32Dec4_Print(algo::I32Dec4 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1788,8 +1817,9 @@ bool algo::I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I32Dec5..Print
-// print string representation of algo::I32Dec5 to string LHS, no header -- cprint:algo.I32Dec5.String
-void algo::I32Dec5_Print(algo::I32Dec5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I32Dec5.String  printfmt:Raw
+void algo::I32Dec5_Print(algo::I32Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1879,8 +1909,9 @@ bool algo::I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec1..Print
-// print string representation of algo::I64Dec1 to string LHS, no header -- cprint:algo.I64Dec1.String
-void algo::I64Dec1_Print(algo::I64Dec1 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec1.String  printfmt:Raw
+void algo::I64Dec1_Print(algo::I64Dec1 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -1970,8 +2001,9 @@ bool algo::I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str)
 }
 
 // --- algo.I64Dec10..Print
-// print string representation of algo::I64Dec10 to string LHS, no header -- cprint:algo.I64Dec10.String
-void algo::I64Dec10_Print(algo::I64Dec10 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec10.String  printfmt:Raw
+void algo::I64Dec10_Print(algo::I64Dec10 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2061,8 +2093,9 @@ bool algo::I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec2..Print
-// print string representation of algo::I64Dec2 to string LHS, no header -- cprint:algo.I64Dec2.String
-void algo::I64Dec2_Print(algo::I64Dec2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec2.String  printfmt:Raw
+void algo::I64Dec2_Print(algo::I64Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2152,8 +2185,9 @@ bool algo::I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec3..Print
-// print string representation of algo::I64Dec3 to string LHS, no header -- cprint:algo.I64Dec3.String
-void algo::I64Dec3_Print(algo::I64Dec3 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec3.String  printfmt:Raw
+void algo::I64Dec3_Print(algo::I64Dec3 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2243,8 +2277,9 @@ bool algo::I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec4..Print
-// print string representation of algo::I64Dec4 to string LHS, no header -- cprint:algo.I64Dec4.String
-void algo::I64Dec4_Print(algo::I64Dec4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec4.String  printfmt:Raw
+void algo::I64Dec4_Print(algo::I64Dec4 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2334,8 +2369,9 @@ bool algo::I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec5..Print
-// print string representation of algo::I64Dec5 to string LHS, no header -- cprint:algo.I64Dec5.String
-void algo::I64Dec5_Print(algo::I64Dec5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec5.String  printfmt:Raw
+void algo::I64Dec5_Print(algo::I64Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2425,8 +2461,9 @@ bool algo::I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec6..Print
-// print string representation of algo::I64Dec6 to string LHS, no header -- cprint:algo.I64Dec6.String
-void algo::I64Dec6_Print(algo::I64Dec6 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec6.String  printfmt:Raw
+void algo::I64Dec6_Print(algo::I64Dec6 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2516,8 +2553,9 @@ bool algo::I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec7..Print
-// print string representation of algo::I64Dec7 to string LHS, no header -- cprint:algo.I64Dec7.String
-void algo::I64Dec7_Print(algo::I64Dec7 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec7.String  printfmt:Raw
+void algo::I64Dec7_Print(algo::I64Dec7 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2607,8 +2645,9 @@ bool algo::I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec8..Print
-// print string representation of algo::I64Dec8 to string LHS, no header -- cprint:algo.I64Dec8.String
-void algo::I64Dec8_Print(algo::I64Dec8 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec8.String  printfmt:Raw
+void algo::I64Dec8_Print(algo::I64Dec8 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2698,8 +2737,9 @@ bool algo::I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str) {
 }
 
 // --- algo.I64Dec9..Print
-// print string representation of algo::I64Dec9 to string LHS, no header -- cprint:algo.I64Dec9.String
-void algo::I64Dec9_Print(algo::I64Dec9 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.I64Dec9.String  printfmt:Raw
+void algo::I64Dec9_Print(algo::I64Dec9 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -2748,16 +2788,31 @@ inline static bool algo::err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::str
 }
 
 // --- algo.IOEvtFlags..ReadFieldMaybe
-bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags &parent, algo::strptr field, algo::strptr strval) {
+bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
-        case algo_FieldId_read: retval = read_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_write: retval = write_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_eof: retval = eof_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_err: retval = err_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_value: {
+            retval = u32_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case algo_FieldId_read: {
+            retval = read_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_write: {
+            retval = write_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_eof: {
+            retval = eof_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_err: {
+            retval = err_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2770,6 +2825,12 @@ bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags &parent, algo::strptr fiel
 // Read fields of algo::IOEvtFlags from an ascii string.
 bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
     bool retval = true;
+    // Clear affected bits first)
+    read_Set(parent, false);
+    write_Set(parent, false);
+    eof_Set(parent, false);
+    err_Set(parent, false);
+    // Read ','-separated list of bools
     while (ch_N(in_str)) {
         strptr field_name;
         algo::NextSep(in_str,',',field_name);
@@ -2779,10 +2840,18 @@ bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_
             bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
             if (ok) {
                 switch (field_id) {
-                    case algo_FieldId_read: read_Set(parent,true); break;
-                    case algo_FieldId_write: write_Set(parent,true); break;
-                    case algo_FieldId_eof: eof_Set(parent,true); break;
-                    case algo_FieldId_err: err_Set(parent,true); break;
+                    case algo_FieldId_read: {
+                        read_Set(parent, true);
+                    } break;
+                    case algo_FieldId_write: {
+                        write_Set(parent, true);
+                    } break;
+                    case algo_FieldId_eof: {
+                        eof_Set(parent, true);
+                    } break;
+                    case algo_FieldId_err: {
+                        err_Set(parent, true);
+                    } break;
                     default: ok = false; break;
                 }
             }
@@ -2796,8 +2865,9 @@ bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_
 }
 
 // --- algo.IOEvtFlags..Print
-// print string representation of algo::IOEvtFlags to string LHS, no header -- cprint:algo.IOEvtFlags.String
-void algo::IOEvtFlags_Print(algo::IOEvtFlags & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.IOEvtFlags.String  printfmt:Bitset
+void algo::IOEvtFlags_Print(algo::IOEvtFlags& row, algo::cstring& str) {
     algo::ListSep ls(",");
     if (read_Get(row)) {
         str << ls << "read";
@@ -2823,13 +2893,19 @@ algo::strptr algo::IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) {
 }
 
 // --- algo.IPoint..ReadFieldMaybe
-bool algo::IPoint_ReadFieldMaybe(algo::IPoint &parent, algo::strptr field, algo::strptr strval) {
+bool algo::IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case algo_FieldId_x: retval = i32_ReadStrptrMaybe(parent.x, strval); break;
-        case algo_FieldId_y: retval = i32_ReadStrptrMaybe(parent.y, strval); break;
+        case algo_FieldId_x: {
+            retval = i32_ReadStrptrMaybe(parent.x, strval);
+            break;
+        }
+        case algo_FieldId_y: {
+            retval = i32_ReadStrptrMaybe(parent.y, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2854,8 +2930,9 @@ bool algo::IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) {
 }
 
 // --- algo.IPoint..Print
-// print string representation of algo::IPoint to string LHS, no header -- cprint:algo.IPoint.String
-void algo::IPoint_Print(algo::IPoint & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.IPoint.String  printfmt:Sep
+void algo::IPoint_Print(algo::IPoint& row, algo::cstring& str) {
     i32_Print(row.x, str);
     str << ' ';
     i32_Print(row.y, str);
@@ -2883,7 +2960,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -2911,14 +2988,16 @@ bool algo::Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr50..Print
-// print string representation of algo::Smallstr50 to string LHS, no header -- cprint:algo.Smallstr50.String
-void algo::Smallstr50_Print(algo::Smallstr50 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr50.String  printfmt:Raw
+void algo::Smallstr50_Print(algo::Smallstr50& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Imdb..Print
-// print string representation of algo::Imdb to string LHS, no header -- cprint:algo.Imdb.String
-void algo::Imdb_Print(algo::Imdb & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Imdb.String  printfmt:Tuple
+void algo::Imdb_Print(algo::Imdb& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo.Imdb";
 
@@ -2930,21 +3009,79 @@ void algo::Imdb_Print(algo::Imdb & row, algo::cstring &str) {
 }
 
 // --- algo.ImrowPtr..Print
-// print string representation of algo::ImrowPtr to string LHS, no header -- cprint:algo.ImrowPtr.String
-void algo::ImrowPtr_Print(algo::ImrowPtr & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.ImrowPtr.String  printfmt:Raw
+void algo::ImrowPtr_Print(algo::ImrowPtr& row, algo::cstring& str) {
     u64_Print(row.value, str);
 }
 
+// --- algo.Smallstr100.ch.Print
+void algo::ch_Print(algo::Smallstr100& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr100.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 100) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 100");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr100.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 100);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr100..Hash
+u32 algo::Smallstr100_Hash(u32 prev, const algo::Smallstr100 & rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr100..ReadStrptrMaybe
+// Read fields of algo::Smallstr100 from an ascii string.
+// The format of the string is the format of the algo::Smallstr100's only field
+bool algo::Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr100..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr100.String  printfmt:Raw
+void algo::Smallstr100_Print(algo::Smallstr100& row, algo::cstring& str) {
+    algo::ch_Print(row, str);
+}
+
 // --- algo.Imtable..Print
-// print string representation of algo::Imtable to string LHS, no header -- cprint:algo.Imtable.String
-void algo::Imtable_Print(algo::Imtable & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Imtable.String  printfmt:Tuple
+void algo::Imtable_Print(algo::Imtable& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "algo.Imtable";
 
     algo::Smallstr50_Print(row.imtable, temp);
     PrintAttrSpaceReset(str,"imtable", temp);
 
-    algo::Smallstr50_Print(row.elem_type, temp);
+    algo::Smallstr100_Print(row.elem_type, temp);
     PrintAttrSpaceReset(str,"elem_type", temp);
 
     i32_Print(row.size, temp);
@@ -3114,7 +3251,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3196,8 +3333,9 @@ bool algo::LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strp
 }
 
 // --- algo.LnumStr10_U64..Print
-// print string representation of algo::LnumStr10_U64 to string LHS, no header -- cprint:algo.LnumStr10_U64.String
-void algo::LnumStr10_U64_Print(algo::LnumStr10_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr10_U64.String  printfmt:Raw
+void algo::LnumStr10_U64_Print(algo::LnumStr10_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3223,7 +3361,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3305,8 +3443,9 @@ bool algo::LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strp
 }
 
 // --- algo.LnumStr11_U64..Print
-// print string representation of algo::LnumStr11_U64 to string LHS, no header -- cprint:algo.LnumStr11_U64.String
-void algo::LnumStr11_U64_Print(algo::LnumStr11_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr11_U64.String  printfmt:Raw
+void algo::LnumStr11_U64_Print(algo::LnumStr11_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3332,7 +3471,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3414,8 +3553,9 @@ bool algo::LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strp
 }
 
 // --- algo.LnumStr12_U64..Print
-// print string representation of algo::LnumStr12_U64 to string LHS, no header -- cprint:algo.LnumStr12_U64.String
-void algo::LnumStr12_U64_Print(algo::LnumStr12_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr12_U64.String  printfmt:Raw
+void algo::LnumStr12_U64_Print(algo::LnumStr12_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3441,7 +3581,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr r
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 13);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3543,8 +3683,9 @@ bool algo::LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &pare
 }
 
 // --- algo.LnumStr13_U64_Base36..Print
-// print string representation of algo::LnumStr13_U64_Base36 to string LHS, no header -- cprint:algo.LnumStr13_U64_Base36.String
-void algo::LnumStr13_U64_Base36_Print(algo::LnumStr13_U64_Base36 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr13_U64_Base36.String  printfmt:Raw
+void algo::LnumStr13_U64_Base36_Print(algo::LnumStr13_U64_Base36& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3570,7 +3711,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr r
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3670,8 +3811,9 @@ bool algo::LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &pare
 }
 
 // --- algo.LnumStr16_U64_Base16..Print
-// print string representation of algo::LnumStr16_U64_Base16 to string LHS, no header -- cprint:algo.LnumStr16_U64_Base16.String
-void algo::LnumStr16_U64_Base16_Print(algo::LnumStr16_U64_Base16 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr16_U64_Base16.String  printfmt:Raw
+void algo::LnumStr16_U64_Base16_Print(algo::LnumStr16_U64_Base16& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3697,7 +3839,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3779,8 +3921,9 @@ bool algo::LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr1_U32..Print
-// print string representation of algo::LnumStr1_U32 to string LHS, no header -- cprint:algo.LnumStr1_U32.String
-void algo::LnumStr1_U32_Print(algo::LnumStr1_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr1_U32.String  printfmt:Raw
+void algo::LnumStr1_U32_Print(algo::LnumStr1_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3806,7 +3949,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3896,8 +4039,9 @@ bool algo::LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strp
 }
 
 // --- algo.LnumStr20_U64..Print
-// print string representation of algo::LnumStr20_U64 to string LHS, no header -- cprint:algo.LnumStr20_U64.String
-void algo::LnumStr20_U64_Print(algo::LnumStr20_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr20_U64.String  printfmt:Raw
+void algo::LnumStr20_U64_Print(algo::LnumStr20_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -3923,7 +4067,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 22);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4013,8 +4157,9 @@ bool algo::LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strp
 }
 
 // --- algo.LnumStr22_U64..Print
-// print string representation of algo::LnumStr22_U64 to string LHS, no header -- cprint:algo.LnumStr22_U64.String
-void algo::LnumStr22_U64_Print(algo::LnumStr22_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr22_U64.String  printfmt:Raw
+void algo::LnumStr22_U64_Print(algo::LnumStr22_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4040,7 +4185,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4122,8 +4267,9 @@ bool algo::LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr2_U32..Print
-// print string representation of algo::LnumStr2_U32 to string LHS, no header -- cprint:algo.LnumStr2_U32.String
-void algo::LnumStr2_U32_Print(algo::LnumStr2_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr2_U32.String  printfmt:Raw
+void algo::LnumStr2_U32_Print(algo::LnumStr2_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4149,7 +4295,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4231,8 +4377,9 @@ bool algo::LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr3_U32..Print
-// print string representation of algo::LnumStr3_U32 to string LHS, no header -- cprint:algo.LnumStr3_U32.String
-void algo::LnumStr3_U32_Print(algo::LnumStr3_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr3_U32.String  printfmt:Raw
+void algo::LnumStr3_U32_Print(algo::LnumStr3_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4258,7 +4405,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4340,8 +4487,9 @@ bool algo::LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr4_U32..Print
-// print string representation of algo::LnumStr4_U32 to string LHS, no header -- cprint:algo.LnumStr4_U32.String
-void algo::LnumStr4_U32_Print(algo::LnumStr4_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr4_U32.String  printfmt:Raw
+void algo::LnumStr4_U32_Print(algo::LnumStr4_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4367,7 +4515,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4449,8 +4597,9 @@ bool algo::LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr5_U32..Print
-// print string representation of algo::LnumStr5_U32 to string LHS, no header -- cprint:algo.LnumStr5_U32.String
-void algo::LnumStr5_U32_Print(algo::LnumStr5_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr5_U32.String  printfmt:Raw
+void algo::LnumStr5_U32_Print(algo::LnumStr5_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4476,7 +4625,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4575,8 +4724,9 @@ bool algo::LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent
 }
 
 // --- algo.LnumStr5_U32_Base36..Print
-// print string representation of algo::LnumStr5_U32_Base36 to string LHS, no header -- cprint:algo.LnumStr5_U32_Base36.String
-void algo::LnumStr5_U32_Base36_Print(algo::LnumStr5_U32_Base36 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr5_U32_Base36.String  printfmt:Raw
+void algo::LnumStr5_U32_Base36_Print(algo::LnumStr5_U32_Base36& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4602,7 +4752,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4684,8 +4834,9 @@ bool algo::LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr6_U32..Print
-// print string representation of algo::LnumStr6_U32 to string LHS, no header -- cprint:algo.LnumStr6_U32.String
-void algo::LnumStr6_U32_Print(algo::LnumStr6_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr6_U32.String  printfmt:Raw
+void algo::LnumStr6_U32_Print(algo::LnumStr6_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4711,7 +4862,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4793,8 +4944,9 @@ bool algo::LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr7_U32..Print
-// print string representation of algo::LnumStr7_U32 to string LHS, no header -- cprint:algo.LnumStr7_U32.String
-void algo::LnumStr7_U32_Print(algo::LnumStr7_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr7_U32.String  printfmt:Raw
+void algo::LnumStr7_U32_Print(algo::LnumStr7_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4820,7 +4972,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4920,8 +5072,9 @@ bool algo::LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent
 }
 
 // --- algo.LnumStr7_U32_Base36..Print
-// print string representation of algo::LnumStr7_U32_Base36 to string LHS, no header -- cprint:algo.LnumStr7_U32_Base36.String
-void algo::LnumStr7_U32_Base36_Print(algo::LnumStr7_U32_Base36 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr7_U32_Base36.String  printfmt:Raw
+void algo::LnumStr7_U32_Base36_Print(algo::LnumStr7_U32_Base36& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -4947,7 +5100,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5029,8 +5182,9 @@ bool algo::LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr8_U32..Print
-// print string representation of algo::LnumStr8_U32 to string LHS, no header -- cprint:algo.LnumStr8_U32.String
-void algo::LnumStr8_U32_Print(algo::LnumStr8_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr8_U32.String  printfmt:Raw
+void algo::LnumStr8_U32_Print(algo::LnumStr8_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5056,7 +5210,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5156,8 +5310,9 @@ bool algo::LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent
 }
 
 // --- algo.LnumStr8_U32_Base16..Print
-// print string representation of algo::LnumStr8_U32_Base16 to string LHS, no header -- cprint:algo.LnumStr8_U32_Base16.String
-void algo::LnumStr8_U32_Base16_Print(algo::LnumStr8_U32_Base16 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr8_U32_Base16.String  printfmt:Raw
+void algo::LnumStr8_U32_Base16_Print(algo::LnumStr8_U32_Base16& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5183,7 +5338,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5265,8 +5420,9 @@ bool algo::LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr
 }
 
 // --- algo.LnumStr8_U64..Print
-// print string representation of algo::LnumStr8_U64 to string LHS, no header -- cprint:algo.LnumStr8_U64.String
-void algo::LnumStr8_U64_Print(algo::LnumStr8_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr8_U64.String  printfmt:Raw
+void algo::LnumStr8_U64_Print(algo::LnumStr8_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5292,7 +5448,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5374,8 +5530,9 @@ bool algo::LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr
 }
 
 // --- algo.LnumStr9_U32..Print
-// print string representation of algo::LnumStr9_U32 to string LHS, no header -- cprint:algo.LnumStr9_U32.String
-void algo::LnumStr9_U32_Print(algo::LnumStr9_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr9_U32.String  printfmt:Raw
+void algo::LnumStr9_U32_Print(algo::LnumStr9_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5401,7 +5558,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5483,131 +5640,10 @@ bool algo::LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr
 }
 
 // --- algo.LnumStr9_U64..Print
-// print string representation of algo::LnumStr9_U64 to string LHS, no header -- cprint:algo.LnumStr9_U64.String
-void algo::LnumStr9_U64_Print(algo::LnumStr9_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LnumStr9_U64.String  printfmt:Raw
+void algo::LnumStr9_U64_Print(algo::LnumStr9_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
-}
-
-// --- algo.LogcatId..ReadStrptrMaybe
-// Read fields of algo::LogcatId from an ascii string.
-// The format of the string is the format of the algo::LogcatId's only field
-bool algo::LogcatId_ReadStrptrMaybe(algo::LogcatId &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && i32_ReadStrptrMaybe(parent.value, in_str);
-    return retval;
-}
-
-// --- algo.LogcatId..Print
-// print string representation of algo::LogcatId to string LHS, no header -- cprint:algo.LogcatId.String
-void algo::LogcatId_Print(algo::LogcatId row, algo::cstring &str) {
-    i32_Print(row.value, str);
-}
-
-// --- algo.LogcatKey..ReadStrptrMaybe
-// Read fields of algo::LogcatKey from an ascii string.
-// The format of the string is the format of the algo::LogcatKey's only field
-bool algo::LogcatKey_ReadStrptrMaybe(algo::LogcatKey &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && algo::Smallstr50_ReadStrptrMaybe(parent.value, in_str);
-    return retval;
-}
-
-// --- algo.LogcatKey..Print
-// print string representation of algo::LogcatKey to string LHS, no header -- cprint:algo.LogcatKey.String
-void algo::LogcatKey_Print(algo::LogcatKey & row, algo::cstring &str) {
-    algo::Smallstr50_Print(row.value, str);
-}
-
-// --- algo.SchedTime..ReadStrptrMaybe
-// Read fields of algo::SchedTime from an ascii string.
-// The format of the string is the format of the algo::SchedTime's only field
-bool algo::SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && u64_ReadStrptrMaybe(parent.value, in_str);
-    return retval;
-}
-
-// --- algo.SchedTime..Print
-// print string representation of algo::SchedTime to string LHS, no header -- cprint:algo.SchedTime.String
-void algo::SchedTime_Print(algo::SchedTime row, algo::cstring &str) {
-    u64_Print(row.value, str);
-}
-
-// --- algo.Smallstr200.ch.Print
-void algo::ch_Print(algo::Smallstr200& parent, algo::cstring &out) {
-    ch_Addary(out, ch_Getary(parent));
-}
-
-// --- algo.Smallstr200.ch.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
-    bool retval = false;
-    if (rhs.n_elems <= 200) {
-        ch_SetStrptr(parent, rhs);
-        retval = true;
-    } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 200");
-    }
-    return retval;
-}
-
-// --- algo.Smallstr200.ch.SetStrptr
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr &rhs) {
-    int len = i32_Min(rhs.n_elems, 200);
-    char *rhs_elems = rhs.elems;
-    int i = 0;
-    int j = 0;
-    for (; i < len; i++, j++) {
-        parent.ch[j] = rhs_elems[i];
-    }
-    parent.n_ch       = u8(len);
-}
-
-// --- algo.Smallstr200..Hash
-u32 algo::Smallstr200_Hash(u32 prev, const algo::Smallstr200 & rhs) {
-    algo::strptr ch_strptr = ch_Getary(rhs);
-    prev = ::strptr_Hash(prev, ch_strptr);
-    return prev;
-}
-
-// --- algo.Smallstr200..ReadStrptrMaybe
-// Read fields of algo::Smallstr200 from an ascii string.
-// The format of the string is the format of the algo::Smallstr200's only field
-bool algo::Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- algo.Smallstr200..Print
-// print string representation of algo::Smallstr200 to string LHS, no header -- cprint:algo.Smallstr200.String
-void algo::Smallstr200_Print(algo::Smallstr200 & row, algo::cstring &str) {
-    algo::ch_Print(row, str);
-}
-
-// --- algo.Logmsg..Print
-// print string representation of algo::Logmsg to string LHS, no header -- cprint:algo.Logmsg.String
-void algo::Logmsg_Print(algo::Logmsg & row, algo::cstring &str) {
-    algo::tempstr temp;
-    str << "algo.Logmsg";
-
-    u64_Print(row.logmsg, temp);
-    PrintAttrSpaceReset(str,"logmsg", temp);
-
-    algo::SchedTime_Print(row.time, temp);
-    PrintAttrSpaceReset(str,"time", temp);
-
-    bool_Print(row.err, temp);
-    PrintAttrSpaceReset(str,"err", temp);
-
-    bool_Print(row.part, temp);
-    PrintAttrSpaceReset(str,"part", temp);
-
-    algo::Smallstr200_Print(row.text, temp);
-    PrintAttrSpaceReset(str,"text", temp);
 }
 
 // --- algo.LspaceStr10.ch.Print
@@ -5632,7 +5668,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5662,8 +5698,9 @@ bool algo::LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr i
 }
 
 // --- algo.LspaceStr10..Print
-// print string representation of algo::LspaceStr10 to string LHS, no header -- cprint:algo.LspaceStr10.String
-void algo::LspaceStr10_Print(algo::LspaceStr10 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr10.String  printfmt:Raw
+void algo::LspaceStr10_Print(algo::LspaceStr10& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5689,7 +5726,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5719,8 +5756,9 @@ bool algo::LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr i
 }
 
 // --- algo.LspaceStr12..Print
-// print string representation of algo::LspaceStr12 to string LHS, no header -- cprint:algo.LspaceStr12.String
-void algo::LspaceStr12_Print(algo::LspaceStr12 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr12.String  printfmt:Raw
+void algo::LspaceStr12_Print(algo::LspaceStr12& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5746,7 +5784,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5776,8 +5814,9 @@ bool algo::LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr i
 }
 
 // --- algo.LspaceStr14..Print
-// print string representation of algo::LspaceStr14 to string LHS, no header -- cprint:algo.LspaceStr14.String
-void algo::LspaceStr14_Print(algo::LspaceStr14 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr14.String  printfmt:Raw
+void algo::LspaceStr14_Print(algo::LspaceStr14& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5803,7 +5842,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5833,8 +5872,9 @@ bool algo::LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr i
 }
 
 // --- algo.LspaceStr15..Print
-// print string representation of algo::LspaceStr15 to string LHS, no header -- cprint:algo.LspaceStr15.String
-void algo::LspaceStr15_Print(algo::LspaceStr15 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr15.String  printfmt:Raw
+void algo::LspaceStr15_Print(algo::LspaceStr15& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5860,7 +5900,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5963,8 +6003,9 @@ bool algo::LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::
 }
 
 // --- algo.LspaceStr20_I64..Print
-// print string representation of algo::LspaceStr20_I64 to string LHS, no header -- cprint:algo.LspaceStr20_I64.String
-void algo::LspaceStr20_I64_Print(algo::LspaceStr20_I64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr20_I64.String  printfmt:Raw
+void algo::LspaceStr20_I64_Print(algo::LspaceStr20_I64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -5990,7 +6031,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6080,8 +6121,9 @@ bool algo::LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::
 }
 
 // --- algo.LspaceStr20_U64..Print
-// print string representation of algo::LspaceStr20_U64 to string LHS, no header -- cprint:algo.LspaceStr20_U64.String
-void algo::LspaceStr20_U64_Print(algo::LspaceStr20_U64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr20_U64.String  printfmt:Raw
+void algo::LspaceStr20_U64_Print(algo::LspaceStr20_U64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6107,7 +6149,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6137,8 +6179,9 @@ bool algo::LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr3..Print
-// print string representation of algo::LspaceStr3 to string LHS, no header -- cprint:algo.LspaceStr3.String
-void algo::LspaceStr3_Print(algo::LspaceStr3 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr3.String  printfmt:Raw
+void algo::LspaceStr3_Print(algo::LspaceStr3& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6164,7 +6207,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6259,8 +6302,9 @@ bool algo::LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::st
 }
 
 // --- algo.LspaceStr3_I16..Print
-// print string representation of algo::LspaceStr3_I16 to string LHS, no header -- cprint:algo.LspaceStr3_I16.String
-void algo::LspaceStr3_I16_Print(algo::LspaceStr3_I16 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr3_I16.String  printfmt:Raw
+void algo::LspaceStr3_I16_Print(algo::LspaceStr3_I16& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6286,7 +6330,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6316,8 +6360,9 @@ bool algo::LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr4..Print
-// print string representation of algo::LspaceStr4 to string LHS, no header -- cprint:algo.LspaceStr4.String
-void algo::LspaceStr4_Print(algo::LspaceStr4 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr4.String  printfmt:Raw
+void algo::LspaceStr4_Print(algo::LspaceStr4& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6343,7 +6388,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6373,8 +6418,9 @@ bool algo::LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr5..Print
-// print string representation of algo::LspaceStr5 to string LHS, no header -- cprint:algo.LspaceStr5.String
-void algo::LspaceStr5_Print(algo::LspaceStr5 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr5.String  printfmt:Raw
+void algo::LspaceStr5_Print(algo::LspaceStr5& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6400,7 +6446,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6488,8 +6534,9 @@ bool algo::LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::st
 }
 
 // --- algo.LspaceStr5_I16..Print
-// print string representation of algo::LspaceStr5_I16 to string LHS, no header -- cprint:algo.LspaceStr5_I16.String
-void algo::LspaceStr5_I16_Print(algo::LspaceStr5_I16 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr5_I16.String  printfmt:Raw
+void algo::LspaceStr5_I16_Print(algo::LspaceStr5_I16& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6515,7 +6562,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6545,8 +6592,9 @@ bool algo::LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr6..Print
-// print string representation of algo::LspaceStr6 to string LHS, no header -- cprint:algo.LspaceStr6.String
-void algo::LspaceStr6_Print(algo::LspaceStr6 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr6.String  printfmt:Raw
+void algo::LspaceStr6_Print(algo::LspaceStr6& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6572,7 +6620,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6654,8 +6702,9 @@ bool algo::LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::st
 }
 
 // --- algo.LspaceStr6_U32..Print
-// print string representation of algo::LspaceStr6_U32 to string LHS, no header -- cprint:algo.LspaceStr6_U32.String
-void algo::LspaceStr6_U32_Print(algo::LspaceStr6_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr6_U32.String  printfmt:Raw
+void algo::LspaceStr6_U32_Print(algo::LspaceStr6_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6681,7 +6730,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr 
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6794,8 +6843,9 @@ bool algo::LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &pa
 }
 
 // --- algo.LspaceStr7_I32_Base36..Print
-// print string representation of algo::LspaceStr7_I32_Base36 to string LHS, no header -- cprint:algo.LspaceStr7_I32_Base36.String
-void algo::LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr7_I32_Base36.String  printfmt:Raw
+void algo::LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6821,7 +6871,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6851,8 +6901,9 @@ bool algo::LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr8..Print
-// print string representation of algo::LspaceStr8 to string LHS, no header -- cprint:algo.LspaceStr8.String
-void algo::LspaceStr8_Print(algo::LspaceStr8 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr8.String  printfmt:Raw
+void algo::LspaceStr8_Print(algo::LspaceStr8& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6878,7 +6929,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6908,8 +6959,9 @@ bool algo::LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_
 }
 
 // --- algo.LspaceStr9..Print
-// print string representation of algo::LspaceStr9 to string LHS, no header -- cprint:algo.LspaceStr9.String
-void algo::LspaceStr9_Print(algo::LspaceStr9 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.LspaceStr9.String  printfmt:Raw
+void algo::LspaceStr9_Print(algo::LspaceStr9& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -6951,8 +7003,9 @@ bool algo::Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_st
 }
 
 // --- algo.Md5Digest..Print
-// print string representation of algo::Md5Digest to string LHS, no header -- cprint:algo.Md5Digest.String
-void algo::Md5Digest_Print(algo::Md5Digest row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Md5Digest.String  printfmt:Raw
+void algo::Md5Digest_Print(algo::Md5Digest row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -7105,125 +7158,10 @@ bool algo::Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str) {
 }
 
 // --- algo.Month..Print
-// print string representation of algo::Month to string LHS, no header -- cprint:algo.Month.String
-void algo::Month_Print(algo::Month row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Month.String  printfmt:Raw
+void algo::Month_Print(algo::Month row, algo::cstring& str) {
     algo::value_Print(row, str);
-}
-
-// --- algo.NormTxttbl.start.Alloc
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-i32& algo::start_Alloc(algo::NormTxttbl& parent) {
-    start_Reserve(parent, 1);
-    int n  = parent.start_n;
-    int at = n;
-    i32 *elems = parent.start_elems;
-    new (elems + at) i32(0); // construct new element, default initializer
-    parent.start_n = n+1;
-    return elems[at];
-}
-
-// --- algo.NormTxttbl.start.AllocAt
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& algo::start_AllocAt(algo::NormTxttbl& parent, int at) {
-    start_Reserve(parent, 1);
-    int n  = parent.start_n;
-    if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("algo.bad_alloc_at  field:algo.NormTxttbl.start  comment:'index out of range'");
-    }
-    i32 *elems = parent.start_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(i32));
-    new (elems + at) i32(0); // construct element, default initializer
-    parent.start_n = n+1;
-    return elems[at];
-}
-
-// --- algo.NormTxttbl.start.AllocN
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> algo::start_AllocN(algo::NormTxttbl& parent, int n_elems) {
-    start_Reserve(parent, n_elems);
-    int old_n  = parent.start_n;
-    int new_n = old_n + n_elems;
-    i32 *elems = parent.start_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) i32(0); // construct new element, default initialize
-    }
-    parent.start_n = new_n;
-    return algo::aryptr<i32>(elems + old_n, n_elems);
-}
-
-// --- algo.NormTxttbl.start.Remove
-// Remove item by index. If index outside of range, do nothing.
-void algo::start_Remove(algo::NormTxttbl& parent, u32 i) {
-    u32 lim = parent.start_n;
-    i32 *elems = parent.start_elems;
-    if (i < lim) {
-        memmove(elems + i, elems + (i + 1), sizeof(i32) * (lim - (i + 1)));
-        parent.start_n = lim - 1;
-    }
-}
-
-// --- algo.NormTxttbl.start.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void algo::start_RemoveLast(algo::NormTxttbl& parent) {
-    u64 n = parent.start_n;
-    if (n > 0) {
-        n -= 1;
-        parent.start_n = n;
-    }
-}
-
-// --- algo.NormTxttbl.start.AbsReserve
-// Make sure N elements fit in array. Process dies if out of memory
-void algo::start_AbsReserve(algo::NormTxttbl& parent, int n) {
-    u32 old_max  = parent.start_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(parent.start_elems, old_max * sizeof(i32), new_max * sizeof(i32));
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("algo.tary_nomem  field:algo.NormTxttbl.start  comment:'out of memory'");
-        }
-        parent.start_elems = (i32*)new_mem;
-        parent.start_max = new_max;
-    }
-}
-
-// --- algo.NormTxttbl.start.Setary
-// Copy contents of RHS to PARENT.
-void algo::start_Setary(algo::NormTxttbl& parent, algo::NormTxttbl &rhs) {
-    start_RemoveAll(parent);
-    int nnew = rhs.start_n;
-    start_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
-        new (parent.start_elems + i) i32(start_qFind(rhs, i));
-        parent.start_n = i + 1;
-    }
-}
-
-// --- algo.NormTxttbl.start.AllocNVal
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> algo::start_AllocNVal(algo::NormTxttbl& parent, int n_elems, const i32& val) {
-    start_Reserve(parent, n_elems);
-    int old_n  = parent.start_n;
-    int new_n = old_n + n_elems;
-    i32 *elems = parent.start_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) i32(val);
-    }
-    parent.start_n = new_n;
-    return algo::aryptr<i32>(elems + old_n, n_elems);
-}
-
-// --- algo.NormTxttbl..Uninit
-void algo::NormTxttbl_Uninit(algo::NormTxttbl& parent) {
-    algo::NormTxttbl &row = parent; (void)row;
-
-    // algo.NormTxttbl.start.Uninit (Tary)  //
-    // remove all elements from algo.NormTxttbl.start
-    start_RemoveAll(parent);
-    // free memory for Tary algo.NormTxttbl.start
-    algo_lib::malloc_FreeMem(parent.start_elems, sizeof(i32)*parent.start_max); // (algo.NormTxttbl.start)
 }
 
 // --- algo.NumParseFlags.err.ReadStrptrMaybe
@@ -7282,17 +7220,35 @@ inline static bool algo::hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::
 }
 
 // --- algo.NumParseFlags..ReadFieldMaybe
-bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags &parent, algo::strptr field, algo::strptr strval) {
+bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case algo_FieldId_value: retval = u32_ReadStrptrMaybe(parent.value, strval); break;
-        case algo_FieldId_err: retval = err_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_ok: retval = ok_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_neg: retval = neg_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_overflow: retval = overflow_ReadStrptrMaybe(parent, strval); break;
-        case algo_FieldId_hex: retval = hex_ReadStrptrMaybe(parent, strval); break;
+        case algo_FieldId_value: {
+            retval = u32_ReadStrptrMaybe(parent.value, strval);
+            break;
+        }
+        case algo_FieldId_err: {
+            retval = err_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_ok: {
+            retval = ok_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_neg: {
+            retval = neg_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_overflow: {
+            retval = overflow_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case algo_FieldId_hex: {
+            retval = hex_ReadStrptrMaybe(parent, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -7305,6 +7261,13 @@ bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags &parent, algo::strpt
 // Read fields of algo::NumParseFlags from an ascii string.
 bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
     bool retval = true;
+    // Clear affected bits first)
+    err_Set(parent, false);
+    ok_Set(parent, false);
+    neg_Set(parent, false);
+    overflow_Set(parent, false);
+    hex_Set(parent, false);
+    // Read ','-separated list of bools
     while (ch_N(in_str)) {
         strptr field_name;
         algo::NextSep(in_str,',',field_name);
@@ -7314,11 +7277,21 @@ bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strp
             bool ok = algo::value_SetStrptrMaybe(field_id,field_name);
             if (ok) {
                 switch (field_id) {
-                    case algo_FieldId_err: err_Set(parent,true); break;
-                    case algo_FieldId_ok: ok_Set(parent,true); break;
-                    case algo_FieldId_neg: neg_Set(parent,true); break;
-                    case algo_FieldId_overflow: overflow_Set(parent,true); break;
-                    case algo_FieldId_hex: hex_Set(parent,true); break;
+                    case algo_FieldId_err: {
+                        err_Set(parent, true);
+                    } break;
+                    case algo_FieldId_ok: {
+                        ok_Set(parent, true);
+                    } break;
+                    case algo_FieldId_neg: {
+                        neg_Set(parent, true);
+                    } break;
+                    case algo_FieldId_overflow: {
+                        overflow_Set(parent, true);
+                    } break;
+                    case algo_FieldId_hex: {
+                        hex_Set(parent, true);
+                    } break;
                     default: ok = false; break;
                 }
             }
@@ -7332,8 +7305,9 @@ bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strp
 }
 
 // --- algo.NumParseFlags..Print
-// print string representation of algo::NumParseFlags to string LHS, no header -- cprint:algo.NumParseFlags.String
-void algo::NumParseFlags_Print(algo::NumParseFlags & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.NumParseFlags.String  printfmt:Bitset
+void algo::NumParseFlags_Print(algo::NumParseFlags& row, algo::cstring& str) {
     algo::ListSep ls(",");
     if (err_Get(row)) {
         str << ls << "err";
@@ -7385,9 +7359,9 @@ void algo::StaticCheck() {
     algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::IOEvtFlags*)0)->value)*8 >= 4);
-    algo_assert(_offset_of(algo::SchedTime, value) + sizeof(((algo::SchedTime*)0)->value) == sizeof(algo::SchedTime));
     // check that bitfield fits width
     algo_assert(sizeof(((algo::NumParseFlags*)0)->value)*8 >= 5);
+    algo_assert(_offset_of(algo::SchedTime, value) + sizeof(((algo::SchedTime*)0)->value) == sizeof(algo::SchedTime));
     algo_assert(_offset_of(algo::SeqType, value) + sizeof(((algo::SeqType*)0)->value) == sizeof(algo::SeqType));
     algo_assert(_offset_of(algo::U16Dec2, value) + sizeof(((algo::U16Dec2*)0)->value) == sizeof(algo::U16Dec2));
     algo_assert(_offset_of(algo::U32Dec1, value) + sizeof(((algo::U32Dec1*)0)->value) == sizeof(algo::U32Dec1));
@@ -7422,7 +7396,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7452,8 +7426,9 @@ bool algo::RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr1..Print
-// print string representation of algo::RnullStr1 to string LHS, no header -- cprint:algo.RnullStr1.String
-void algo::RnullStr1_Print(algo::RnullStr1 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr1.String  printfmt:Raw
+void algo::RnullStr1_Print(algo::RnullStr1 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7479,7 +7454,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7509,8 +7484,9 @@ bool algo::RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr10..Print
-// print string representation of algo::RnullStr10 to string LHS, no header -- cprint:algo.RnullStr10.String
-void algo::RnullStr10_Print(algo::RnullStr10 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr10.String  printfmt:Raw
+void algo::RnullStr10_Print(algo::RnullStr10 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7536,7 +7512,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 100);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7566,8 +7542,9 @@ bool algo::RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr i
 }
 
 // --- algo.RnullStr100..Print
-// print string representation of algo::RnullStr100 to string LHS, no header -- cprint:algo.RnullStr100.String
-void algo::RnullStr100_Print(algo::RnullStr100 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr100.String  printfmt:Raw
+void algo::RnullStr100_Print(algo::RnullStr100& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7593,7 +7570,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 1000);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7623,8 +7600,9 @@ bool algo::RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr
 }
 
 // --- algo.RnullStr1000..Print
-// print string representation of algo::RnullStr1000 to string LHS, no header -- cprint:algo.RnullStr1000.String
-void algo::RnullStr1000_Print(algo::RnullStr1000 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr1000.String  printfmt:Raw
+void algo::RnullStr1000_Print(algo::RnullStr1000& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7650,7 +7628,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7680,8 +7658,9 @@ bool algo::RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr11..Print
-// print string representation of algo::RnullStr11 to string LHS, no header -- cprint:algo.RnullStr11.String
-void algo::RnullStr11_Print(algo::RnullStr11 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr11.String  printfmt:Raw
+void algo::RnullStr11_Print(algo::RnullStr11& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7707,7 +7686,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7737,8 +7716,9 @@ bool algo::RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr12..Print
-// print string representation of algo::RnullStr12 to string LHS, no header -- cprint:algo.RnullStr12.String
-void algo::RnullStr12_Print(algo::RnullStr12 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr12.String  printfmt:Raw
+void algo::RnullStr12_Print(algo::RnullStr12& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7764,7 +7744,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 129);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7794,8 +7774,9 @@ bool algo::RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr i
 }
 
 // --- algo.RnullStr129..Print
-// print string representation of algo::RnullStr129 to string LHS, no header -- cprint:algo.RnullStr129.String
-void algo::RnullStr129_Print(algo::RnullStr129 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr129.String  printfmt:Raw
+void algo::RnullStr129_Print(algo::RnullStr129& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7821,7 +7802,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 13);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7851,8 +7832,9 @@ bool algo::RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr13..Print
-// print string representation of algo::RnullStr13 to string LHS, no header -- cprint:algo.RnullStr13.String
-void algo::RnullStr13_Print(algo::RnullStr13 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr13.String  printfmt:Raw
+void algo::RnullStr13_Print(algo::RnullStr13& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7878,7 +7860,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7908,8 +7890,9 @@ bool algo::RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr14..Print
-// print string representation of algo::RnullStr14 to string LHS, no header -- cprint:algo.RnullStr14.String
-void algo::RnullStr14_Print(algo::RnullStr14 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr14.String  printfmt:Raw
+void algo::RnullStr14_Print(algo::RnullStr14& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7935,7 +7918,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7965,8 +7948,9 @@ bool algo::RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr15..Print
-// print string representation of algo::RnullStr15 to string LHS, no header -- cprint:algo.RnullStr15.String
-void algo::RnullStr15_Print(algo::RnullStr15 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr15.String  printfmt:Raw
+void algo::RnullStr15_Print(algo::RnullStr15& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -7992,7 +7976,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 151);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8022,8 +8006,9 @@ bool algo::RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr i
 }
 
 // --- algo.RnullStr151..Print
-// print string representation of algo::RnullStr151 to string LHS, no header -- cprint:algo.RnullStr151.String
-void algo::RnullStr151_Print(algo::RnullStr151 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr151.String  printfmt:Raw
+void algo::RnullStr151_Print(algo::RnullStr151& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8049,7 +8034,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8079,8 +8064,9 @@ bool algo::RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr16..Print
-// print string representation of algo::RnullStr16 to string LHS, no header -- cprint:algo.RnullStr16.String
-void algo::RnullStr16_Print(algo::RnullStr16 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr16.String  printfmt:Raw
+void algo::RnullStr16_Print(algo::RnullStr16 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8106,7 +8092,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 17);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8136,8 +8122,9 @@ bool algo::RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr17..Print
-// print string representation of algo::RnullStr17 to string LHS, no header -- cprint:algo.RnullStr17.String
-void algo::RnullStr17_Print(algo::RnullStr17 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr17.String  printfmt:Raw
+void algo::RnullStr17_Print(algo::RnullStr17& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8163,7 +8150,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 18);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8193,8 +8180,9 @@ bool algo::RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr18..Print
-// print string representation of algo::RnullStr18 to string LHS, no header -- cprint:algo.RnullStr18.String
-void algo::RnullStr18_Print(algo::RnullStr18 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr18.String  printfmt:Raw
+void algo::RnullStr18_Print(algo::RnullStr18 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8220,7 +8208,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 19);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8250,8 +8238,9 @@ bool algo::RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr19..Print
-// print string representation of algo::RnullStr19 to string LHS, no header -- cprint:algo.RnullStr19.String
-void algo::RnullStr19_Print(algo::RnullStr19 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr19.String  printfmt:Raw
+void algo::RnullStr19_Print(algo::RnullStr19& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8277,7 +8266,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8307,8 +8296,9 @@ bool algo::RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr2..Print
-// print string representation of algo::RnullStr2 to string LHS, no header -- cprint:algo.RnullStr2.String
-void algo::RnullStr2_Print(algo::RnullStr2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr2.String  printfmt:Raw
+void algo::RnullStr2_Print(algo::RnullStr2 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8334,7 +8324,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8364,8 +8354,9 @@ bool algo::RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr20..Print
-// print string representation of algo::RnullStr20 to string LHS, no header -- cprint:algo.RnullStr20.String
-void algo::RnullStr20_Print(algo::RnullStr20 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr20.String  printfmt:Raw
+void algo::RnullStr20_Print(algo::RnullStr20 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8391,7 +8382,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 21);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8421,8 +8412,9 @@ bool algo::RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr21..Print
-// print string representation of algo::RnullStr21 to string LHS, no header -- cprint:algo.RnullStr21.String
-void algo::RnullStr21_Print(algo::RnullStr21 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr21.String  printfmt:Raw
+void algo::RnullStr21_Print(algo::RnullStr21& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8448,7 +8440,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 24);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8478,8 +8470,9 @@ bool algo::RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr24..Print
-// print string representation of algo::RnullStr24 to string LHS, no header -- cprint:algo.RnullStr24.String
-void algo::RnullStr24_Print(algo::RnullStr24 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr24.String  printfmt:Raw
+void algo::RnullStr24_Print(algo::RnullStr24& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8505,7 +8498,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8535,8 +8528,9 @@ bool algo::RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr25..Print
-// print string representation of algo::RnullStr25 to string LHS, no header -- cprint:algo.RnullStr25.String
-void algo::RnullStr25_Print(algo::RnullStr25 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr25.String  printfmt:Raw
+void algo::RnullStr25_Print(algo::RnullStr25& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8562,7 +8556,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 28);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8592,8 +8586,9 @@ bool algo::RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr28..Print
-// print string representation of algo::RnullStr28 to string LHS, no header -- cprint:algo.RnullStr28.String
-void algo::RnullStr28_Print(algo::RnullStr28 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr28.String  printfmt:Raw
+void algo::RnullStr28_Print(algo::RnullStr28& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8619,7 +8614,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8649,8 +8644,9 @@ bool algo::RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr3..Print
-// print string representation of algo::RnullStr3 to string LHS, no header -- cprint:algo.RnullStr3.String
-void algo::RnullStr3_Print(algo::RnullStr3 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr3.String  printfmt:Raw
+void algo::RnullStr3_Print(algo::RnullStr3 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8676,7 +8672,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 30);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8706,8 +8702,9 @@ bool algo::RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr30..Print
-// print string representation of algo::RnullStr30 to string LHS, no header -- cprint:algo.RnullStr30.String
-void algo::RnullStr30_Print(algo::RnullStr30 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr30.String  printfmt:Raw
+void algo::RnullStr30_Print(algo::RnullStr30 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8733,7 +8730,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8763,8 +8760,9 @@ bool algo::RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr32..Print
-// print string representation of algo::RnullStr32 to string LHS, no header -- cprint:algo.RnullStr32.String
-void algo::RnullStr32_Print(algo::RnullStr32 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr32.String  printfmt:Raw
+void algo::RnullStr32_Print(algo::RnullStr32 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8790,7 +8788,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 33);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8820,8 +8818,9 @@ bool algo::RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr33..Print
-// print string representation of algo::RnullStr33 to string LHS, no header -- cprint:algo.RnullStr33.String
-void algo::RnullStr33_Print(algo::RnullStr33 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr33.String  printfmt:Raw
+void algo::RnullStr33_Print(algo::RnullStr33& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8847,7 +8846,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 35);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8877,8 +8876,9 @@ bool algo::RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr35..Print
-// print string representation of algo::RnullStr35 to string LHS, no header -- cprint:algo.RnullStr35.String
-void algo::RnullStr35_Print(algo::RnullStr35 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr35.String  printfmt:Raw
+void algo::RnullStr35_Print(algo::RnullStr35& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8904,7 +8904,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 36);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8934,8 +8934,9 @@ bool algo::RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr36..Print
-// print string representation of algo::RnullStr36 to string LHS, no header -- cprint:algo.RnullStr36.String
-void algo::RnullStr36_Print(algo::RnullStr36 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr36.String  printfmt:Raw
+void algo::RnullStr36_Print(algo::RnullStr36& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -8961,7 +8962,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8991,8 +8992,9 @@ bool algo::RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr4..Print
-// print string representation of algo::RnullStr4 to string LHS, no header -- cprint:algo.RnullStr4.String
-void algo::RnullStr4_Print(algo::RnullStr4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr4.String  printfmt:Raw
+void algo::RnullStr4_Print(algo::RnullStr4 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9018,7 +9020,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9048,8 +9050,9 @@ bool algo::RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr40..Print
-// print string representation of algo::RnullStr40 to string LHS, no header -- cprint:algo.RnullStr40.String
-void algo::RnullStr40_Print(algo::RnullStr40 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr40.String  printfmt:Raw
+void algo::RnullStr40_Print(algo::RnullStr40& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9075,7 +9078,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 41);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9105,8 +9108,9 @@ bool algo::RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr41..Print
-// print string representation of algo::RnullStr41 to string LHS, no header -- cprint:algo.RnullStr41.String
-void algo::RnullStr41_Print(algo::RnullStr41 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr41.String  printfmt:Raw
+void algo::RnullStr41_Print(algo::RnullStr41& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9132,7 +9136,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 43);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9162,8 +9166,9 @@ bool algo::RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr43..Print
-// print string representation of algo::RnullStr43 to string LHS, no header -- cprint:algo.RnullStr43.String
-void algo::RnullStr43_Print(algo::RnullStr43 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr43.String  printfmt:Raw
+void algo::RnullStr43_Print(algo::RnullStr43& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9189,7 +9194,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 44);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9219,8 +9224,9 @@ bool algo::RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr44..Print
-// print string representation of algo::RnullStr44 to string LHS, no header -- cprint:algo.RnullStr44.String
-void algo::RnullStr44_Print(algo::RnullStr44 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr44.String  printfmt:Raw
+void algo::RnullStr44_Print(algo::RnullStr44& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9246,7 +9252,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 48);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9276,8 +9282,9 @@ bool algo::RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr48..Print
-// print string representation of algo::RnullStr48 to string LHS, no header -- cprint:algo.RnullStr48.String
-void algo::RnullStr48_Print(algo::RnullStr48 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr48.String  printfmt:Raw
+void algo::RnullStr48_Print(algo::RnullStr48& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9303,7 +9310,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9333,8 +9340,9 @@ bool algo::RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr5..Print
-// print string representation of algo::RnullStr5 to string LHS, no header -- cprint:algo.RnullStr5.String
-void algo::RnullStr5_Print(algo::RnullStr5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr5.String  printfmt:Raw
+void algo::RnullStr5_Print(algo::RnullStr5 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9360,7 +9368,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9390,8 +9398,9 @@ bool algo::RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr50..Print
-// print string representation of algo::RnullStr50 to string LHS, no header -- cprint:algo.RnullStr50.String
-void algo::RnullStr50_Print(algo::RnullStr50 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr50.String  printfmt:Raw
+void algo::RnullStr50_Print(algo::RnullStr50& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9417,7 +9426,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 54);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9447,8 +9456,9 @@ bool algo::RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr54..Print
-// print string representation of algo::RnullStr54 to string LHS, no header -- cprint:algo.RnullStr54.String
-void algo::RnullStr54_Print(algo::RnullStr54 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr54.String  printfmt:Raw
+void algo::RnullStr54_Print(algo::RnullStr54& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9474,7 +9484,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 55);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9504,8 +9514,9 @@ bool algo::RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr55..Print
-// print string representation of algo::RnullStr55 to string LHS, no header -- cprint:algo.RnullStr55.String
-void algo::RnullStr55_Print(algo::RnullStr55 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr55.String  printfmt:Raw
+void algo::RnullStr55_Print(algo::RnullStr55& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9531,7 +9542,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9561,8 +9572,9 @@ bool algo::RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr6..Print
-// print string representation of algo::RnullStr6 to string LHS, no header -- cprint:algo.RnullStr6.String
-void algo::RnullStr6_Print(algo::RnullStr6 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr6.String  printfmt:Raw
+void algo::RnullStr6_Print(algo::RnullStr6 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9588,7 +9600,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 60);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9618,8 +9630,9 @@ bool algo::RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr60..Print
-// print string representation of algo::RnullStr60 to string LHS, no header -- cprint:algo.RnullStr60.String
-void algo::RnullStr60_Print(algo::RnullStr60 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr60.String  printfmt:Raw
+void algo::RnullStr60_Print(algo::RnullStr60& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9645,7 +9658,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 62);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9675,8 +9688,9 @@ bool algo::RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr62..Print
-// print string representation of algo::RnullStr62 to string LHS, no header -- cprint:algo.RnullStr62.String
-void algo::RnullStr62_Print(algo::RnullStr62 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr62.String  printfmt:Raw
+void algo::RnullStr62_Print(algo::RnullStr62& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9702,7 +9716,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 66);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9732,8 +9746,9 @@ bool algo::RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr66..Print
-// print string representation of algo::RnullStr66 to string LHS, no header -- cprint:algo.RnullStr66.String
-void algo::RnullStr66_Print(algo::RnullStr66 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr66.String  printfmt:Raw
+void algo::RnullStr66_Print(algo::RnullStr66& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9759,7 +9774,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9841,8 +9856,9 @@ bool algo::RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strp
 }
 
 // --- algo.RnullStr6_U32..Print
-// print string representation of algo::RnullStr6_U32 to string LHS, no header -- cprint:algo.RnullStr6_U32.String
-void algo::RnullStr6_U32_Print(algo::RnullStr6_U32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr6_U32.String  printfmt:Raw
+void algo::RnullStr6_U32_Print(algo::RnullStr6_U32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9868,7 +9884,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9898,8 +9914,9 @@ bool algo::RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr7..Print
-// print string representation of algo::RnullStr7 to string LHS, no header -- cprint:algo.RnullStr7.String
-void algo::RnullStr7_Print(algo::RnullStr7 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr7.String  printfmt:Raw
+void algo::RnullStr7_Print(algo::RnullStr7 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9925,7 +9942,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9955,8 +9972,9 @@ bool algo::RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr8..Print
-// print string representation of algo::RnullStr8 to string LHS, no header -- cprint:algo.RnullStr8.String
-void algo::RnullStr8_Print(algo::RnullStr8 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr8.String  printfmt:Raw
+void algo::RnullStr8_Print(algo::RnullStr8 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -9982,7 +10000,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 80);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10012,8 +10030,9 @@ bool algo::RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_
 }
 
 // --- algo.RnullStr80..Print
-// print string representation of algo::RnullStr80 to string LHS, no header -- cprint:algo.RnullStr80.String
-void algo::RnullStr80_Print(algo::RnullStr80 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr80.String  printfmt:Raw
+void algo::RnullStr80_Print(algo::RnullStr80& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10039,7 +10058,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10069,8 +10088,9 @@ bool algo::RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_st
 }
 
 // --- algo.RnullStr9..Print
-// print string representation of algo::RnullStr9 to string LHS, no header -- cprint:algo.RnullStr9.String
-void algo::RnullStr9_Print(algo::RnullStr9 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RnullStr9.String  printfmt:Raw
+void algo::RnullStr9_Print(algo::RnullStr9& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10096,7 +10116,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10126,8 +10146,9 @@ bool algo::RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr10..Print
-// print string representation of algo::RspaceStr10 to string LHS, no header -- cprint:algo.RspaceStr10.String
-void algo::RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr10.String  printfmt:Raw
+void algo::RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10153,7 +10174,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 100);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10183,8 +10204,9 @@ bool algo::RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr
 }
 
 // --- algo.RspaceStr100..Print
-// print string representation of algo::RspaceStr100 to string LHS, no header -- cprint:algo.RspaceStr100.String
-void algo::RspaceStr100_Print(algo::RspaceStr100 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr100.String  printfmt:Raw
+void algo::RspaceStr100_Print(algo::RspaceStr100& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10210,7 +10232,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10240,8 +10262,9 @@ bool algo::RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr11..Print
-// print string representation of algo::RspaceStr11 to string LHS, no header -- cprint:algo.RspaceStr11.String
-void algo::RspaceStr11_Print(algo::RspaceStr11 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr11.String  printfmt:Raw
+void algo::RspaceStr11_Print(algo::RspaceStr11& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10267,7 +10290,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10297,8 +10320,9 @@ bool algo::RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr12..Print
-// print string representation of algo::RspaceStr12 to string LHS, no header -- cprint:algo.RspaceStr12.String
-void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr12.String  printfmt:Raw
+void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10324,7 +10348,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 128);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10354,8 +10378,9 @@ bool algo::RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr
 }
 
 // --- algo.RspaceStr128..Print
-// print string representation of algo::RspaceStr128 to string LHS, no header -- cprint:algo.RspaceStr128.String
-void algo::RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr128.String  printfmt:Raw
+void algo::RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10381,7 +10406,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10411,8 +10436,9 @@ bool algo::RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr14..Print
-// print string representation of algo::RspaceStr14 to string LHS, no header -- cprint:algo.RspaceStr14.String
-void algo::RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr14.String  printfmt:Raw
+void algo::RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10438,7 +10464,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10468,8 +10494,9 @@ bool algo::RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr15..Print
-// print string representation of algo::RspaceStr15 to string LHS, no header -- cprint:algo.RspaceStr15.String
-void algo::RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr15.String  printfmt:Raw
+void algo::RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10495,7 +10522,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10525,8 +10552,9 @@ bool algo::RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr16..Print
-// print string representation of algo::RspaceStr16 to string LHS, no header -- cprint:algo.RspaceStr16.String
-void algo::RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr16.String  printfmt:Raw
+void algo::RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10552,7 +10580,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 18);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10582,8 +10610,9 @@ bool algo::RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr18..Print
-// print string representation of algo::RspaceStr18 to string LHS, no header -- cprint:algo.RspaceStr18.String
-void algo::RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr18.String  printfmt:Raw
+void algo::RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10609,7 +10638,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10639,8 +10668,9 @@ bool algo::RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr2..Print
-// print string representation of algo::RspaceStr2 to string LHS, no header -- cprint:algo.RspaceStr2.String
-void algo::RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr2.String  printfmt:Raw
+void algo::RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10666,7 +10696,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10696,8 +10726,9 @@ bool algo::RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr20..Print
-// print string representation of algo::RspaceStr20 to string LHS, no header -- cprint:algo.RspaceStr20.String
-void algo::RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr20.String  printfmt:Raw
+void algo::RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10723,7 +10754,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 200);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10753,8 +10784,9 @@ bool algo::RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr
 }
 
 // --- algo.RspaceStr200..Print
-// print string representation of algo::RspaceStr200 to string LHS, no header -- cprint:algo.RspaceStr200.String
-void algo::RspaceStr200_Print(algo::RspaceStr200 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr200.String  printfmt:Raw
+void algo::RspaceStr200_Print(algo::RspaceStr200& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10780,7 +10812,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 21);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10810,8 +10842,9 @@ bool algo::RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr21..Print
-// print string representation of algo::RspaceStr21 to string LHS, no header -- cprint:algo.RspaceStr21.String
-void algo::RspaceStr21_Print(algo::RspaceStr21 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr21.String  printfmt:Raw
+void algo::RspaceStr21_Print(algo::RspaceStr21& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10837,7 +10870,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 24);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10867,8 +10900,9 @@ bool algo::RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr24..Print
-// print string representation of algo::RspaceStr24 to string LHS, no header -- cprint:algo.RspaceStr24.String
-void algo::RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr24.String  printfmt:Raw
+void algo::RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10894,7 +10928,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 240);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10924,8 +10958,9 @@ bool algo::RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr
 }
 
 // --- algo.RspaceStr240..Print
-// print string representation of algo::RspaceStr240 to string LHS, no header -- cprint:algo.RspaceStr240.String
-void algo::RspaceStr240_Print(algo::RspaceStr240 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr240.String  printfmt:Raw
+void algo::RspaceStr240_Print(algo::RspaceStr240& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10951,7 +10986,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr25& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr25& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10981,8 +11016,9 @@ bool algo::RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr25..Print
-// print string representation of algo::RspaceStr25 to string LHS, no header -- cprint:algo.RspaceStr25.String
-void algo::RspaceStr25_Print(algo::RspaceStr25 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr25.String  printfmt:Raw
+void algo::RspaceStr25_Print(algo::RspaceStr25 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11008,7 +11044,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 26);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11038,8 +11074,9 @@ bool algo::RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr26..Print
-// print string representation of algo::RspaceStr26 to string LHS, no header -- cprint:algo.RspaceStr26.String
-void algo::RspaceStr26_Print(algo::RspaceStr26 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr26.String  printfmt:Raw
+void algo::RspaceStr26_Print(algo::RspaceStr26& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11065,7 +11102,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11095,8 +11132,9 @@ bool algo::RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr3..Print
-// print string representation of algo::RspaceStr3 to string LHS, no header -- cprint:algo.RspaceStr3.String
-void algo::RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr3.String  printfmt:Raw
+void algo::RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11122,7 +11160,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 31);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11152,8 +11190,9 @@ bool algo::RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr31..Print
-// print string representation of algo::RspaceStr31 to string LHS, no header -- cprint:algo.RspaceStr31.String
-void algo::RspaceStr31_Print(algo::RspaceStr31 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr31.String  printfmt:Raw
+void algo::RspaceStr31_Print(algo::RspaceStr31& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11179,7 +11218,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11209,8 +11248,9 @@ bool algo::RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr32..Print
-// print string representation of algo::RspaceStr32 to string LHS, no header -- cprint:algo.RspaceStr32.String
-void algo::RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr32.String  printfmt:Raw
+void algo::RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11236,7 +11276,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11266,8 +11306,9 @@ bool algo::RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr4..Print
-// print string representation of algo::RspaceStr4 to string LHS, no header -- cprint:algo.RspaceStr4.String
-void algo::RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr4.String  printfmt:Raw
+void algo::RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11293,7 +11334,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11323,8 +11364,9 @@ bool algo::RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr40..Print
-// print string representation of algo::RspaceStr40 to string LHS, no header -- cprint:algo.RspaceStr40.String
-void algo::RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr40.String  printfmt:Raw
+void algo::RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11350,7 +11392,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11380,8 +11422,9 @@ bool algo::RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr5..Print
-// print string representation of algo::RspaceStr5 to string LHS, no header -- cprint:algo.RspaceStr5.String
-void algo::RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr5.String  printfmt:Raw
+void algo::RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11407,7 +11450,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11437,8 +11480,9 @@ bool algo::RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr50..Print
-// print string representation of algo::RspaceStr50 to string LHS, no header -- cprint:algo.RspaceStr50.String
-void algo::RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr50.String  printfmt:Raw
+void algo::RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11464,7 +11508,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11494,8 +11538,9 @@ bool algo::RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr6..Print
-// print string representation of algo::RspaceStr6 to string LHS, no header -- cprint:algo.RspaceStr6.String
-void algo::RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr6.String  printfmt:Raw
+void algo::RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11521,7 +11566,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 64);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11551,8 +11596,9 @@ bool algo::RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr64..Print
-// print string representation of algo::RspaceStr64 to string LHS, no header -- cprint:algo.RspaceStr64.String
-void algo::RspaceStr64_Print(algo::RspaceStr64 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr64.String  printfmt:Raw
+void algo::RspaceStr64_Print(algo::RspaceStr64& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11578,7 +11624,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11608,8 +11654,9 @@ bool algo::RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr7..Print
-// print string representation of algo::RspaceStr7 to string LHS, no header -- cprint:algo.RspaceStr7.String
-void algo::RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr7.String  printfmt:Raw
+void algo::RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11635,7 +11682,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 75);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11665,8 +11712,9 @@ bool algo::RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr i
 }
 
 // --- algo.RspaceStr75..Print
-// print string representation of algo::RspaceStr75 to string LHS, no header -- cprint:algo.RspaceStr75.String
-void algo::RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr75.String  printfmt:Raw
+void algo::RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11692,7 +11740,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11722,8 +11770,9 @@ bool algo::RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr8..Print
-// print string representation of algo::RspaceStr8 to string LHS, no header -- cprint:algo.RspaceStr8.String
-void algo::RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr8.String  printfmt:Raw
+void algo::RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11749,7 +11798,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11779,9 +11828,26 @@ bool algo::RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_
 }
 
 // --- algo.RspaceStr9..Print
-// print string representation of algo::RspaceStr9 to string LHS, no header -- cprint:algo.RspaceStr9.String
-void algo::RspaceStr9_Print(algo::RspaceStr9 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.RspaceStr9.String  printfmt:Raw
+void algo::RspaceStr9_Print(algo::RspaceStr9& row, algo::cstring& str) {
     algo::ch_Print(row, str);
+}
+
+// --- algo.SchedTime..ReadStrptrMaybe
+// Read fields of algo::SchedTime from an ascii string.
+// The format of the string is the format of the algo::SchedTime's only field
+bool algo::SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && u64_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
+// --- algo.SchedTime..Print
+// print string representation of ROW to string STR
+// cfmt:algo.SchedTime.String  printfmt:Raw
+void algo::SchedTime_Print(algo::SchedTime row, algo::cstring& str) {
+    u64_Print(row.value, str);
 }
 
 // --- algo.SeqType..ReadStrptrMaybe
@@ -11794,8 +11860,9 @@ bool algo::SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str) {
 }
 
 // --- algo.SeqType..Print
-// print string representation of algo::SeqType to string LHS, no header -- cprint:algo.SeqType.String
-void algo::SeqType_Print(algo::SeqType row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.SeqType.String  printfmt:Raw
+void algo::SeqType_Print(algo::SeqType row, algo::cstring& str) {
     u64_Print(row.value, str);
 }
 
@@ -11873,7 +11940,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11901,8 +11968,9 @@ bool algo::Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_st
 }
 
 // --- algo.Smallstr1..Print
-// print string representation of algo::Smallstr1 to string LHS, no header -- cprint:algo.Smallstr1.String
-void algo::Smallstr1_Print(algo::Smallstr1 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr1.String  printfmt:Raw
+void algo::Smallstr1_Print(algo::Smallstr1& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -11928,7 +11996,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11956,63 +12024,9 @@ bool algo::Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr10..Print
-// print string representation of algo::Smallstr10 to string LHS, no header -- cprint:algo.Smallstr10.String
-void algo::Smallstr10_Print(algo::Smallstr10 & row, algo::cstring &str) {
-    algo::ch_Print(row, str);
-}
-
-// --- algo.Smallstr100.ch.Print
-void algo::ch_Print(algo::Smallstr100& parent, algo::cstring &out) {
-    ch_Addary(out, ch_Getary(parent));
-}
-
-// --- algo.Smallstr100.ch.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
-    bool retval = false;
-    if (rhs.n_elems <= 100) {
-        ch_SetStrptr(parent, rhs);
-        retval = true;
-    } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 100");
-    }
-    return retval;
-}
-
-// --- algo.Smallstr100.ch.SetStrptr
-// Copy from strptr, clipping length
-// Set string to the value provided by RHS.
-// If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr &rhs) {
-    int len = i32_Min(rhs.n_elems, 100);
-    char *rhs_elems = rhs.elems;
-    int i = 0;
-    int j = 0;
-    for (; i < len; i++, j++) {
-        parent.ch[j] = rhs_elems[i];
-    }
-    parent.n_ch       = u8(len);
-}
-
-// --- algo.Smallstr100..Hash
-u32 algo::Smallstr100_Hash(u32 prev, const algo::Smallstr100 & rhs) {
-    algo::strptr ch_strptr = ch_Getary(rhs);
-    prev = ::strptr_Hash(prev, ch_strptr);
-    return prev;
-}
-
-// --- algo.Smallstr100..ReadStrptrMaybe
-// Read fields of algo::Smallstr100 from an ascii string.
-// The format of the string is the format of the algo::Smallstr100's only field
-bool algo::Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- algo.Smallstr100..Print
-// print string representation of algo::Smallstr100 to string LHS, no header -- cprint:algo.Smallstr100.String
-void algo::Smallstr100_Print(algo::Smallstr100 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr10.String  printfmt:Raw
+void algo::Smallstr10_Print(algo::Smallstr10& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12038,7 +12052,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12066,8 +12080,9 @@ bool algo::Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr16..Print
-// print string representation of algo::Smallstr16 to string LHS, no header -- cprint:algo.Smallstr16.String
-void algo::Smallstr16_Print(algo::Smallstr16 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr16.String  printfmt:Raw
+void algo::Smallstr16_Print(algo::Smallstr16& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12093,7 +12108,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12121,8 +12136,9 @@ bool algo::Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_st
 }
 
 // --- algo.Smallstr2..Print
-// print string representation of algo::Smallstr2 to string LHS, no header -- cprint:algo.Smallstr2.String
-void algo::Smallstr2_Print(algo::Smallstr2 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr2.String  printfmt:Raw
+void algo::Smallstr2_Print(algo::Smallstr2& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12148,7 +12164,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12176,8 +12192,65 @@ bool algo::Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr20..Print
-// print string representation of algo::Smallstr20 to string LHS, no header -- cprint:algo.Smallstr20.String
-void algo::Smallstr20_Print(algo::Smallstr20 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr20.String  printfmt:Raw
+void algo::Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) {
+    algo::ch_Print(row, str);
+}
+
+// --- algo.Smallstr200.ch.Print
+void algo::ch_Print(algo::Smallstr200& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr200.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 200) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::SaveBadTag("comment","text too long, limit 200");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr200.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 200);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr200..Hash
+u32 algo::Smallstr200_Hash(u32 prev, const algo::Smallstr200 & rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr200..ReadStrptrMaybe
+// Read fields of algo::Smallstr200 from an ascii string.
+// The format of the string is the format of the algo::Smallstr200's only field
+bool algo::Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr200..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr200.String  printfmt:Raw
+void algo::Smallstr200_Print(algo::Smallstr200& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12203,7 +12276,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12231,8 +12304,9 @@ bool algo::Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr25..Print
-// print string representation of algo::Smallstr25 to string LHS, no header -- cprint:algo.Smallstr25.String
-void algo::Smallstr25_Print(algo::Smallstr25 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr25.String  printfmt:Raw
+void algo::Smallstr25_Print(algo::Smallstr25& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12258,7 +12332,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12286,8 +12360,9 @@ bool algo::Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_st
 }
 
 // --- algo.Smallstr3..Print
-// print string representation of algo::Smallstr3 to string LHS, no header -- cprint:algo.Smallstr3.String
-void algo::Smallstr3_Print(algo::Smallstr3 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr3.String  printfmt:Raw
+void algo::Smallstr3_Print(algo::Smallstr3& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12313,7 +12388,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 30);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12341,8 +12416,9 @@ bool algo::Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr30..Print
-// print string representation of algo::Smallstr30 to string LHS, no header -- cprint:algo.Smallstr30.String
-void algo::Smallstr30_Print(algo::Smallstr30 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr30.String  printfmt:Raw
+void algo::Smallstr30_Print(algo::Smallstr30& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12368,7 +12444,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12396,8 +12472,9 @@ bool algo::Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr32..Print
-// print string representation of algo::Smallstr32 to string LHS, no header -- cprint:algo.Smallstr32.String
-void algo::Smallstr32_Print(algo::Smallstr32 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr32.String  printfmt:Raw
+void algo::Smallstr32_Print(algo::Smallstr32& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12423,7 +12500,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12451,8 +12528,9 @@ bool algo::Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_st
 }
 
 // --- algo.Smallstr4..Print
-// print string representation of algo::Smallstr4 to string LHS, no header -- cprint:algo.Smallstr4.String
-void algo::Smallstr4_Print(algo::Smallstr4 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr4.String  printfmt:Raw
+void algo::Smallstr4_Print(algo::Smallstr4& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12478,7 +12556,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12506,8 +12584,9 @@ bool algo::Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_
 }
 
 // --- algo.Smallstr40..Print
-// print string representation of algo::Smallstr40 to string LHS, no header -- cprint:algo.Smallstr40.String
-void algo::Smallstr40_Print(algo::Smallstr40 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr40.String  printfmt:Raw
+void algo::Smallstr40_Print(algo::Smallstr40& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12533,7 +12612,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr &rhs) {
+void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr& rhs) {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12561,8 +12640,9 @@ bool algo::Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_st
 }
 
 // --- algo.Smallstr5..Print
-// print string representation of algo::Smallstr5 to string LHS, no header -- cprint:algo.Smallstr5.String
-void algo::Smallstr5_Print(algo::Smallstr5 & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr5.String  printfmt:Raw
+void algo::Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -12667,8 +12747,9 @@ bool algo::TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_st
 }
 
 // --- algo.TermStyle..Print
-// print string representation of algo::TermStyle to string LHS, no header -- cprint:algo.TermStyle.String
-void algo::TermStyle_Print(algo::TermStyle row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.TermStyle.String  printfmt:Raw
+void algo::TermStyle_Print(algo::TermStyle row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -12760,8 +12841,9 @@ bool algo::TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str)
 }
 
 // --- algo.TextJust..Print
-// print string representation of algo::TextJust to string LHS, no header -- cprint:algo.TextJust.String
-void algo::TextJust_Print(algo::TextJust row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.TextJust.String  printfmt:Raw
+void algo::TextJust_Print(algo::TextJust row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -12924,7 +13006,7 @@ algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems,
 void algo::Tuple_Uninit(algo::Tuple& parent) {
     algo::Tuple &row = parent; (void)row;
 
-    // algo.Tuple.attrs.Uninit (Tary)  //
+    // algo.Tuple.attrs.Uninit (Tary)  //Array of attributes
     // remove all elements from algo.Tuple.attrs
     attrs_RemoveAll(parent);
     // free memory for Tary algo.Tuple.attrs
@@ -13009,8 +13091,9 @@ bool algo::U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U16Dec2..Print
-// print string representation of algo::U16Dec2 to string LHS, no header -- cprint:algo.U16Dec2.String
-void algo::U16Dec2_Print(algo::U16Dec2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U16Dec2.String  printfmt:Raw
+void algo::U16Dec2_Print(algo::U16Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13092,8 +13175,9 @@ bool algo::U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U32Dec1..Print
-// print string representation of algo::U32Dec1 to string LHS, no header -- cprint:algo.U32Dec1.String
-void algo::U32Dec1_Print(algo::U32Dec1 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U32Dec1.String  printfmt:Raw
+void algo::U32Dec1_Print(algo::U32Dec1 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13175,8 +13259,9 @@ bool algo::U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U32Dec2..Print
-// print string representation of algo::U32Dec2 to string LHS, no header -- cprint:algo.U32Dec2.String
-void algo::U32Dec2_Print(algo::U32Dec2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U32Dec2.String  printfmt:Raw
+void algo::U32Dec2_Print(algo::U32Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13258,8 +13343,9 @@ bool algo::U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U32Dec3..Print
-// print string representation of algo::U32Dec3 to string LHS, no header -- cprint:algo.U32Dec3.String
-void algo::U32Dec3_Print(algo::U32Dec3 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U32Dec3.String  printfmt:Raw
+void algo::U32Dec3_Print(algo::U32Dec3 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13341,8 +13427,9 @@ bool algo::U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U32Dec4..Print
-// print string representation of algo::U32Dec4 to string LHS, no header -- cprint:algo.U32Dec4.String
-void algo::U32Dec4_Print(algo::U32Dec4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U32Dec4.String  printfmt:Raw
+void algo::U32Dec4_Print(algo::U32Dec4 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13424,8 +13511,9 @@ bool algo::U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U32Dec5..Print
-// print string representation of algo::U32Dec5 to string LHS, no header -- cprint:algo.U32Dec5.String
-void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U32Dec5.String  printfmt:Raw
+void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13650,8 +13738,9 @@ bool algo::U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str)
 }
 
 // --- algo.U64Dec10..Print
-// print string representation of algo::U64Dec10 to string LHS, no header -- cprint:algo.U64Dec10.String
-void algo::U64Dec10_Print(algo::U64Dec10 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec10.String  printfmt:Raw
+void algo::U64Dec10_Print(algo::U64Dec10 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13733,8 +13822,9 @@ bool algo::U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec2..Print
-// print string representation of algo::U64Dec2 to string LHS, no header -- cprint:algo.U64Dec2.String
-void algo::U64Dec2_Print(algo::U64Dec2 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec2.String  printfmt:Raw
+void algo::U64Dec2_Print(algo::U64Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13816,8 +13906,9 @@ bool algo::U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec4..Print
-// print string representation of algo::U64Dec4 to string LHS, no header -- cprint:algo.U64Dec4.String
-void algo::U64Dec4_Print(algo::U64Dec4 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec4.String  printfmt:Raw
+void algo::U64Dec4_Print(algo::U64Dec4 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13899,8 +13990,9 @@ bool algo::U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec5..Print
-// print string representation of algo::U64Dec5 to string LHS, no header -- cprint:algo.U64Dec5.String
-void algo::U64Dec5_Print(algo::U64Dec5 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec5.String  printfmt:Raw
+void algo::U64Dec5_Print(algo::U64Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -13982,8 +14074,9 @@ bool algo::U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec6..Print
-// print string representation of algo::U64Dec6 to string LHS, no header -- cprint:algo.U64Dec6.String
-void algo::U64Dec6_Print(algo::U64Dec6 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec6.String  printfmt:Raw
+void algo::U64Dec6_Print(algo::U64Dec6 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -14065,8 +14158,9 @@ bool algo::U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec7..Print
-// print string representation of algo::U64Dec7 to string LHS, no header -- cprint:algo.U64Dec7.String
-void algo::U64Dec7_Print(algo::U64Dec7 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec7.String  printfmt:Raw
+void algo::U64Dec7_Print(algo::U64Dec7 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -14148,8 +14242,9 @@ bool algo::U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec8..Print
-// print string representation of algo::U64Dec8 to string LHS, no header -- cprint:algo.U64Dec8.String
-void algo::U64Dec8_Print(algo::U64Dec8 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec8.String  printfmt:Raw
+void algo::U64Dec8_Print(algo::U64Dec8 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
@@ -14231,8 +14326,9 @@ bool algo::U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Dec9..Print
-// print string representation of algo::U64Dec9 to string LHS, no header -- cprint:algo.U64Dec9.String
-void algo::U64Dec9_Print(algo::U64Dec9 row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:algo.U64Dec9.String  printfmt:Raw
+void algo::U64Dec9_Print(algo::U64Dec9 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 

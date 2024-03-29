@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: lib_amcdb (lib)
+// Target: lib_amcdb (lib) -- Library used by amc
 // Exceptions: yes
 // Header: include/lib_amcdb.h
 //

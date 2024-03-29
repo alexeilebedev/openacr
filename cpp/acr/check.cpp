@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
-// Source: cpp/acr/check.cpp
+// Source: cpp/acr/check.cpp -- Check constraints & referential integrity
 //
 
 #include "include/acr.h"
@@ -64,7 +64,7 @@ static void CheckArgs_Rec(acr::FRec &rec, acr::FCtype &ctype, acr::FCheck &check
 
 static void CheckArgs(acr::FCheck &check) {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
-        ind_beg(acr::ctype_zd_selrec_curs,  rec, ctype) {
+        ind_beg(acr::ctype_zd_ctype_selrec_curs,  rec, ctype) {
             CheckArgs_Rec(rec,ctype,check);
         }ind_end;
     }ind_end;
@@ -85,7 +85,7 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
         help << "Valid values       ";
         algo::ListSep ls(", ");
         int idx = 0;
-        ind_beg(acr::ctype_zd_trec_curs,  rec, *field.p_arg) {
+        ind_beg(acr::ctype_zd_ctype_rec_curs,  rec, *field.p_arg) {
             if (idx++ > 100) {
                 help << ", ...";
                 break;
@@ -101,9 +101,9 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
 static void CheckXref_Field(acr::FCtype &ctype, acr::FField &field, acr::FCheck &check) {
     LoadRecords(*field.p_arg);
     acr::c_bad_rec_RemoveAll(check);
-    ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
+    ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, ctype) {// loop through all records for this ctype
         tempstr attr(EvalAttr(rec.tuple, field));// find attribute value
-        if (!acr::ind_rec_Find(*field.p_arg,attr)) {// check index for pkey
+        if (!acr::ind_ctype_rec_Find(*field.p_arg,attr)) {// check index for pkey
             c_bad_rec_Insert(check, rec);
         }
     }ind_end;
@@ -140,7 +140,7 @@ static void CheckFunique() {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
         ind_beg(acr::ctype_c_field_curs, field, ctype) if (field.unique) {
             // compute key: it is field + field value
-            ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
+            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, ctype) {// loop through all records for this ctype
                 tempstr value(EvalAttr(rec.tuple, field));// find attribute value
                 tempstr key = tempstr()<<field.field<<":"<<value;// is this a valid combination?
                 if (acr::ind_uniqueattr_Find(key)) {
@@ -158,48 +158,89 @@ static void CheckFunique() {
 
 // -----------------------------------------------------------------------------
 
+// Fill replscope R from tuple TUPLE
+// using schema from record REC.
+// Return child record pkey from SSIMREQ
+tempstr acr::GetChildKey(acr::FRec &rec, acr::FSsimreq &ssimreq, algo::Tuple &tuple, algo_lib::Replscope &R) {
+    Set(R,"$Ctype",rec.p_ctype->ctype);// meta-information
+    Set(R,"$Ssimfile",rec.p_ctype->c_ssimfile->ssimfile);
+    ind_beg(acr::ctype_c_field_curs,field,*rec.p_ctype) {
+        Set(R,tempstr()<<"$"<<name_Get(field),acr::EvalAttr(tuple, field));
+    }ind_end;
+    return Subst(R,child_key_Get(ssimreq));
+}
+
+// Fill R with wildcards for every variable that might be required by GetChildKey
+void acr::FillWildcardKey(acr::FSsimreq &ssimreq, algo_lib::Regx &regx_child) {
+    algo_lib::Replscope R;
+    R.eatcomma=false;
+    Set(R,"$Ctype","%");
+    Set(R,"$Ssimfile","%");
+    ind_beg(acr::ctype_c_field_curs,field,*ssimreq.p_ctype) {
+        Set(R,tempstr()<<"$"<<name_Get(field),"%");
+    }ind_end;
+    Regx_ReadAcr(regx_child,Subst(R,child_key_Get(ssimreq)),true);
+}
+
+// -----------------------------------------------------------------------------
+
+// Check ssimreq table
+// e.g.
+// dmmeta.ssimreq  ssimreq:atfdb.Comptest.comptest:% child:dev.gitfile:test/atf_comp/$comptest    req:Y  bidir:N  comment:""
+// here,
+//    parent=atfdb.Comptest
+//    child=dev.Gitfile
+// We scan parent records and then check that child table records are found
 void acr::CheckSsimreq() {
     ind_beg(acr::_db_ssimreq_curs,ssimreq,acr::_db) {
-        acr::FCtype *sub = ssimreq.p_ssimfile->p_ctype;
-        acr::FCtype *super = ssimreq.p_field->p_ctype;
+        acr::FCtype *parent = ssimreq.p_ctype;
+        acr::FCtype *child = ssimreq.p_child_ssimfile->p_ctype;
 
         // load files that are needed to execute the check
         // (but only if the involved records are already loaded)
-        if (!acr::zd_selrec_EmptyQ(*sub)) {
-            LoadRecords(*super);
-        }
-        if (ssimreq.bidir && !acr::zd_selrec_EmptyQ(*super)) {
-            LoadRecords(*sub);
-        }
-
-        algo_lib::Regx regx;
-        Regx_ReadSql(regx,ssimreq.value,true);
-
-        // check that every subtype record has a corresponding supertype record
-        ind_beg(acr::ctype_zd_selrec_curs, rec, *sub) {
-            if (acr::FRec *parentrec=ind_rec_Find(*super,rec.pkey)) {
-                tempstr value(acr::EvalAttr(parentrec->tuple, *ssimreq.p_field));
-                if (!Regx_Match(regx,value)) {
-                    NoteErr(NULL,&rec,ssimreq.p_field,tempstr()<<"acr.ssimreq"
-                            <<Keyval("comment",tempstr()<<ssimreq.ssimfile
-                                     <<" requires that "<<super->c_ssimfile->ssimfile<<"."<<name_Get(*ssimreq.p_field)
-                                     <<" have value "<<ssimreq.value<<" (found:"<<value<<")"));
-                }
-            }
-        }ind_end;
-
-        // check that every supertype record has a corresponding subtype record
-        if (ssimreq.bidir) {
-            ind_beg(acr::ctype_zd_selrec_curs, rec, *super) {
-                tempstr value(acr::EvalAttr(rec.tuple, *ssimreq.p_field));
-                if (Regx_Match(regx,value) && !ind_rec_Find(*sub,rec.pkey)) {
-                    NoteErr(NULL,&rec,ssimreq.p_field,tempstr()<<"acr.ssimreq"
-                            <<Keyval("rec",tempstr()<<super->ctype<<":"<<rec.pkey)
-                            <<Keyval("value",tempstr()<<name_Get(*ssimreq.p_field)<<":"<<value)
-                            <<Keyval("comment",tempstr()<<"This value requires a corresponding entry in "<<ssimreq.ssimfile));
+        if (!acr::zd_ctype_selrec_EmptyQ(*parent)) {
+            LoadRecords(*child);
+            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, *parent) {
+                if (Regx_Match(ssimreq.regx_value,acr::EvalAttr(rec.tuple, *ssimreq.p_parent_field))) {
+                    // prepare replscope for $-substitution
+                    algo_lib::Replscope R;
+                    R.eatcomma=false;
+                    tempstr child_key = acr::GetChildKey(rec,ssimreq,rec.tuple,R);
+                    acr::FRec *child_rec = ind_ctype_rec_Find(*child,child_key);
+                    if (!child_rec && ssimreq.reqchild) {
+                        NoteErr(NULL,&rec,ssimreq.p_parent_field,tempstr()<<"acr.ssimreq"
+                                <<Keyval("ssimreq",ssimreq.parent)
+                                <<Keyval("record",tempstr()<<parent->c_ssimfile->ssimfile<<":"<<rec.pkey)
+                                <<Keyval("requires",tempstr()<<child_ssimfile_Get(ssimreq)<<":"<<child_key)
+                                <<Keyval("comment",tempstr()<<"Required entry is missing"));
+                    }
+                    if (child_rec) {
+                        // remember all child records
+                        c_ssimreq_rec_Insert(*child_rec);
+                    }
                 }
             }ind_end;
         }
+        // for bidirecitonal check, we now have a list of all child records that
+        // were "found" through parent records.
+        // now prepare a Replscope where % is used in place of every variable
+        //   (so test/atf_comp/$comptest becomes test/atf_comp/%)
+        // scan the list of child records, and for any record whose primary key matches this regx,
+        // require that it be in the "found" list.
+        if (ssimreq.bidir && !acr::zd_ctype_selrec_EmptyQ(*child)) {
+            algo_lib::Regx regx_child;
+            FillWildcardKey(ssimreq,regx_child);
+            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, *child) {
+                if (Regx_Match(regx_child, rec.pkey) && !c_ssimreq_rec_InAryQ(rec)) {
+                    NoteErr(NULL,&rec,ssimreq.p_parent_field,tempstr()<<"acr.ssimreq"
+                            <<Keyval("ssimreq",tempstr()<<ssimreq.parent)
+                            <<Keyval("record",tempstr()<<rec.p_ctype->c_ssimfile->ssimfile<<":"<<rec.pkey)
+                            <<Keyval("regx",tempstr()<<regx_child.expr)
+                            <<Keyval("comment",tempstr()<<"record has no match in "<<ssimreq.p_ctype->c_ssimfile->ssimfile));
+                }
+            }ind_end;
+        }
+        c_ssimreq_rec_RemoveAll();
     }ind_end;
 }
 

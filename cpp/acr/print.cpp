@@ -1,7 +1,7 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: acr (exe) -- Algo Cross-Reference - ssimfile database & update tool
 // Exceptions: NO
-// Source: cpp/acr/print.cpp
+// Source: cpp/acr/print.cpp -- Code for output
 //
 // Print records in normalized order.
 // Absent of any dependencies between record keys, print records
@@ -113,7 +113,7 @@ static void PrintCtypeComments(acr::FPrint &print) {
     // show sample tuples for any ctype for which it makes
     // sense for the user to type in a tuple
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
-        if (!zd_selrec_EmptyQ(ctype) || acr::zd_all_selrec_EmptyQ()) {
+        if (!zd_ctype_selrec_EmptyQ(ctype) || acr::zd_all_selrec_EmptyQ()) {
             PrintSampleTuple(ctype,print.out);
             nsample++;
         }
@@ -275,7 +275,7 @@ static void CreateRecPline(acr::FPrint &print) {
             // global rank
             pline.key.ctype_rank = rec.p_ctype->rank;
             // sort by line id
-            pline.key.rowid      = rec.sortkey.rowid;
+            pline.key.sortkey    = rec.sortkey;
             pline.p_rec          = &rec;
             (void)acr::pline_XrefMaybe(pline);
         }
@@ -291,7 +291,7 @@ static void CreateRecPline(acr::FPrint &print) {
         ind_beg(acr::_db_zd_pline_curs, pline,acr::_db) {
             int lindex=0;// index of how far "left" the reference is ... aesthetic purposes
             ind_beg(acr::ctype_c_field_curs, field, *pline.p_rec->p_ctype) {
-                acr::FRec *parent_rec = acr::ind_rec_Find(*field.p_arg, EvalAttr(pline.p_rec->tuple, field));
+                acr::FRec *parent_rec = acr::ind_ctype_rec_Find(*field.p_arg, EvalAttr(pline.p_rec->tuple, field));
                 if (parent_rec && zd_all_selrec_InLlistQ(*parent_rec)) {
                     CreatePdep(*parent_rec->c_pline, pline, lindex);
                     if (print.loose) break;

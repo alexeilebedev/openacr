@@ -202,6 +202,8 @@ extern const char *  gclidb_Gfld_gfld_user;           // user            fconst:
 extern const char *  gclidb_Grepogitport_grepogitport_default;             // default              fconst:gclidb.Grepogitport.grepogitport/default
 extern const char *  gclidb_Grepogitport_grepogitport_github_com;          // github.com           fconst:gclidb.Grepogitport.grepogitport/github.com
 extern const char *  gclidb_Grepogitport_grepogitport_gitlab_vovaco_com;   // gitlab.vovaco.com    fconst:gclidb.Grepogitport.grepogitport/gitlab.vovaco.com
+extern const char *  gclidb_Grepossh_grepossh_glpat;          // glpat           fconst:gclidb.Grepossh.grepossh/glpat
+extern const char *  gclidb_Grepossh_grepossh_vparizhs_ghp;   // vparizhs/ghp    fconst:gclidb.Grepossh.grepossh/vparizhs/ghp
 extern const char *  gclidb_Gstate_gstate_state_all;          // state_all           fconst:gclidb.Gstate.gstate/state_all
 extern const char *  gclidb_Gstate_gstate_state_close;        // state_close         fconst:gclidb.Gstate.gstate/state_close
 extern const char *  gclidb_Gstate_gstate_state_closed;       // state_closed        fconst:gclidb.Gstate.gstate/state_closed
@@ -356,32 +358,43 @@ struct FieldId { // gclidb.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:gclidb.FieldId.value.GetEnum
 gclidb_FieldIdEnum   value_GetEnum(const gclidb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:gclidb.FieldId.value.SetEnum
 void                 value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:gclidb.FieldId.value.ToCstr
 const char*          value_ToCstr(const gclidb::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:gclidb.FieldId.value.Print
 void                 value_Print(const gclidb::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:gclidb.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:gclidb.FieldId.value.SetStrptr
 void                 value_SetStrptr(gclidb::FieldId& parent, algo::strptr rhs, gclidb_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:gclidb.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of gclidb::FieldId from an ascii string.
 // The format of the string is the format of the gclidb::FieldId's only field
+// func:gclidb.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.FieldId..Init
 void                 FieldId_Init(gclidb::FieldId& parent);
-// print string representation of gclidb::FieldId to string LHS, no header -- cprint:gclidb.FieldId.String
-void                 FieldId_Print(gclidb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.FieldId.String  printfmt:Raw
+// func:gclidb.FieldId..Print
+void                 FieldId_Print(gclidb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gact
 struct Gact { // gclidb.Gact: Action that may be performed on a table
@@ -390,12 +403,16 @@ struct Gact { // gclidb.Gact: Action that may be performed on a table
     Gact();
 };
 
-bool                 Gact_ReadFieldMaybe(gclidb::Gact &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gact..ReadFieldMaybe
+bool                 Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gact from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gact..ReadStrptrMaybe
 bool                 Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str);
-// print string representation of gclidb::Gact to string LHS, no header -- cprint:gclidb.Gact.String
-void                 Gact_Print(gclidb::Gact & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gact.String  printfmt:Tuple
+// func:gclidb.Gact..Print
+void                 Gact_Print(gclidb::Gact& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gatv
 struct Gatv { // gclidb.Gatv
@@ -404,12 +421,16 @@ struct Gatv { // gclidb.Gatv
     Gatv();
 };
 
-bool                 Gatv_ReadFieldMaybe(gclidb::Gatv &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gatv..ReadFieldMaybe
+bool                 Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gatv from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gatv..ReadStrptrMaybe
 bool                 Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str);
-// print string representation of gclidb::Gatv to string LHS, no header -- cprint:gclidb.Gatv.String
-void                 Gatv_Print(gclidb::Gatv & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gatv.String  printfmt:Tuple
+// func:gclidb.Gatv..Print
+void                 Gatv_Print(gclidb::Gatv& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclicmd
 struct Gclicmd { // gclidb.Gclicmd
@@ -419,12 +440,16 @@ struct Gclicmd { // gclidb.Gclicmd
     Gclicmd();
 };
 
-bool                 Gclicmd_ReadFieldMaybe(gclidb::Gclicmd &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclicmd..ReadFieldMaybe
+bool                 Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclicmd from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclicmd..ReadStrptrMaybe
 bool                 Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_str);
-// print string representation of gclidb::Gclicmd to string LHS, no header -- cprint:gclidb.Gclicmd.String
-void                 Gclicmd_Print(gclidb::Gclicmd & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmd.String  printfmt:Tuple
+// func:gclidb.Gclicmd..Print
+void                 Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclicmdf2j
 struct Gclicmdf2j { // gclidb.Gclicmdf2j: Mapping of internal fields to JSON fields for gitlab/github
@@ -434,27 +459,41 @@ struct Gclicmdf2j { // gclidb.Gclicmdf2j: Mapping of internal fields to JSON fie
     Gclicmdf2j();
 };
 
+// func:gclidb.Gclicmdf2j.gclicmdf.Get
 algo::cstring        gclicmdf_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdf2j.gclicmdf.Get2
 algo::cstring        Gclicmdf2j_gclicmdf_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdf2j.gclicmd.Get
 algo::Smallstr250    gclicmd_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdf2j.gclicmd.Get2
 algo::Smallstr250    Gclicmdf2j_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdf2j.field.Get
 algo::Smallstr100    field_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdf2j.field.Get2
 algo::Smallstr100    Gclicmdf2j_field_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdf2j.jkey.Get
 algo::cstring        jkey_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdf2j.jkey.Get2
 algo::cstring        Gclicmdf2j_jkey_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdf2j..Concat_gclicmd_field_jkey
 tempstr              Gclicmdf2j_Concat_gclicmd_field_jkey( const algo::strptr& gclicmd ,const algo::strptr& field ,const algo::strptr& jkey );
-bool                 Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclicmdf2j..ReadFieldMaybe
+bool                 Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclicmdf2j from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclicmdf2j..ReadStrptrMaybe
 bool                 Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gclicmdf2j..Init
 void                 Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent);
-// print string representation of gclidb::Gclicmdf2j to string LHS, no header -- cprint:gclidb.Gclicmdf2j.String
-void                 Gclicmdf2j_Print(gclidb::Gclicmdf2j & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmdf2j.String  printfmt:Tuple
+// func:gclidb.Gclicmdf2j..Print
+void                 Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclicmdt
 struct Gclicmdt { // gclidb.Gclicmdt: Internal test
@@ -465,21 +504,31 @@ struct Gclicmdt { // gclidb.Gclicmdt: Internal test
     Gclicmdt();
 };
 
+// func:gclidb.Gclicmdt.gclicmd.Get
 algo::Smallstr250    gclicmd_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdt.gclicmd.Get2
 algo::Smallstr250    Gclicmdt_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdt.gtype.Get
 algo::Smallstr50     gtype_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclicmdt.gtype.Get2
 algo::Smallstr50     Gclicmdt_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclicmdt..Concat_gclicmd_gtype
 tempstr              Gclicmdt_Concat_gclicmd_gtype( const algo::strptr& gclicmd ,const algo::strptr& gtype );
-bool                 Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclicmdt..ReadFieldMaybe
+bool                 Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclicmdt from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclicmdt..ReadStrptrMaybe
 bool                 Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gclicmdt..Init
 void                 Gclicmdt_Init(gclidb::Gclicmdt& parent);
-// print string representation of gclidb::Gclicmdt to string LHS, no header -- cprint:gclidb.Gclicmdt.String
-void                 Gclicmdt_Print(gclidb::Gclicmdt & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclicmdt.String  printfmt:Tuple
+// func:gclidb.Gclicmdt..Print
+void                 Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclienv
 struct Gclienv { // gclidb.Gclienv
@@ -489,12 +538,16 @@ struct Gclienv { // gclidb.Gclienv
     Gclienv();
 };
 
-bool                 Gclienv_ReadFieldMaybe(gclidb::Gclienv &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclienv..ReadFieldMaybe
+bool                 Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclienv from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclienv..ReadStrptrMaybe
 bool                 Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str);
-// print string representation of gclidb::Gclienv to string LHS, no header -- cprint:gclidb.Gclienv.String
-void                 Gclienv_Print(gclidb::Gclienv & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclienv.String  printfmt:Tuple
+// func:gclidb.Gclienv..Print
+void                 Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclienvsub
 struct Gclienvsub { // gclidb.Gclienvsub
@@ -505,21 +558,31 @@ struct Gclienvsub { // gclidb.Gclienvsub
     Gclienvsub();
 };
 
+// func:gclidb.Gclienvsub.gclienv.Get
 algo::Smallstr50     gclienv_Get(gclidb::Gclienvsub& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclienvsub.gclienv.Get2
 algo::Smallstr50     Gclienvsub_gclienv_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclienvsub.sub.Get
 algo::Smallstr50     sub_Get(gclidb::Gclienvsub& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gclienvsub.sub.Get2
 algo::Smallstr50     Gclienvsub_sub_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gclienvsub..Concat_gclienv_sub
 tempstr              Gclienvsub_Concat_gclienv_sub( const algo::strptr& gclienv ,const algo::strptr& sub );
-bool                 Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclienvsub..ReadFieldMaybe
+bool                 Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclienvsub from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclienvsub..ReadStrptrMaybe
 bool                 Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gclienvsub..Init
 void                 Gclienvsub_Init(gclidb::Gclienvsub& parent);
-// print string representation of gclidb::Gclienvsub to string LHS, no header -- cprint:gclidb.Gclienvsub.String
-void                 Gclienvsub_Print(gclidb::Gclienvsub & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
+// func:gclidb.Gclienvsub..Print
+void                 Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclisub
 struct Gclisub { // gclidb.Gclisub
@@ -528,12 +591,16 @@ struct Gclisub { // gclidb.Gclisub
     Gclisub();
 };
 
-bool                 Gclisub_ReadFieldMaybe(gclidb::Gclisub &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gclisub..ReadFieldMaybe
+bool                 Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclisub from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gclisub..ReadStrptrMaybe
 bool                 Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str);
-// print string representation of gclidb::Gclisub to string LHS, no header -- cprint:gclidb.Gclisub.String
-void                 Gclisub_Print(gclidb::Gclisub & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gclisub.String  printfmt:Tuple
+// func:gclidb.Gclisub..Print
+void                 Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gfld
 struct Gfld { // gclidb.Gfld: Gitlab/github field name
@@ -542,12 +609,16 @@ struct Gfld { // gclidb.Gfld: Gitlab/github field name
     Gfld();
 };
 
-bool                 Gfld_ReadFieldMaybe(gclidb::Gfld &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gfld..ReadFieldMaybe
+bool                 Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gfld from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gfld..ReadStrptrMaybe
 bool                 Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str);
-// print string representation of gclidb::Gfld to string LHS, no header -- cprint:gclidb.Gfld.String
-void                 Gfld_Print(gclidb::Gfld & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gfld.String  printfmt:Tuple
+// func:gclidb.Gfld..Print
+void                 Gfld_Print(gclidb::Gfld& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Githost
 struct Githost { // gclidb.Githost
@@ -555,15 +626,22 @@ struct Githost { // gclidb.Githost
     Githost();
 };
 
+// func:gclidb.Githost.git.Get
 algo::cstring        git_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Githost.git.Get2
 algo::cstring        Githost_git_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Githost.host.Get
 algo::cstring        host_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Githost.host.Get2
 algo::cstring        Githost_host_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Githost.gitrepo.Get
 algo::cstring        gitrepo_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Githost.gitrepo.Get2
 algo::cstring        Githost_gitrepo_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Githost..Concat_git_host_gitrepo
 tempstr              Githost_Concat_git_host_gitrepo( const algo::strptr& git ,const algo::strptr& host ,const algo::strptr& gitrepo );
 
 // --- gclidb.Gmethod
@@ -574,14 +652,19 @@ struct Gmethod { // gclidb.Gmethod: HTTP method list
     Gmethod();
 };
 
-bool                 Gmethod_ReadFieldMaybe(gclidb::Gmethod &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gmethod..ReadFieldMaybe
+bool                 Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gmethod from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gmethod..ReadStrptrMaybe
 bool                 Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gmethod..Init
 void                 Gmethod_Init(gclidb::Gmethod& parent);
-// print string representation of gclidb::Gmethod to string LHS, no header -- cprint:gclidb.Gmethod.String
-void                 Gmethod_Print(gclidb::Gmethod & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gmethod.String  printfmt:Tuple
+// func:gclidb.Gmethod..Print
+void                 Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Grepo
 struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
@@ -598,21 +681,31 @@ struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
     Grepo();
 };
 
+// func:gclidb.Grepo.host.Get
 algo::cstring        host_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Grepo.host.Get2
 algo::cstring        Grepo_host_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Grepo.fname.Get
 algo::cstring        fname_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Grepo.fname.Get2
 algo::cstring        Grepo_fname_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Grepo..Concat_host_fname
 tempstr              Grepo_Concat_host_fname( const algo::strptr& host ,const algo::strptr& fname );
-bool                 Grepo_ReadFieldMaybe(gclidb::Grepo &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Grepo..ReadFieldMaybe
+bool                 Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Grepo from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Grepo..ReadStrptrMaybe
 bool                 Grepo_ReadStrptrMaybe(gclidb::Grepo &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Grepo..Init
 void                 Grepo_Init(gclidb::Grepo& parent);
-// print string representation of gclidb::Grepo to string LHS, no header -- cprint:gclidb.Grepo.String
-void                 Grepo_Print(gclidb::Grepo & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepo.String  printfmt:Tuple
+// func:gclidb.Grepo..Print
+void                 Grepo_Print(gclidb::Grepo& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Grepogitport
 struct Grepogitport { // gclidb.Grepogitport: Default ports for repositories
@@ -622,12 +715,16 @@ struct Grepogitport { // gclidb.Grepogitport: Default ports for repositories
     Grepogitport();
 };
 
-bool                 Grepogitport_ReadFieldMaybe(gclidb::Grepogitport &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Grepogitport..ReadFieldMaybe
+bool                 Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Grepogitport from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Grepogitport..ReadStrptrMaybe
 bool                 Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str);
-// print string representation of gclidb::Grepogitport to string LHS, no header -- cprint:gclidb.Grepogitport.String
-void                 Grepogitport_Print(gclidb::Grepogitport & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepogitport.String  printfmt:Tuple
+// func:gclidb.Grepogitport..Print
+void                 Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Grepossh
 struct Grepossh { // gclidb.Grepossh: Ssh key table
@@ -637,15 +734,21 @@ struct Grepossh { // gclidb.Grepossh: Ssh key table
     Grepossh();
 };
 
+// func:gclidb.Grepossh.name.Get
 algo::cstring        name_Get(gclidb::Grepossh& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Grepossh.name.Get2
 algo::cstring        Grepossh_name_Get(algo::strptr arg) __attribute__((nothrow));
 
-bool                 Grepossh_ReadFieldMaybe(gclidb::Grepossh &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Grepossh..ReadFieldMaybe
+bool                 Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Grepossh from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Grepossh..ReadStrptrMaybe
 bool                 Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str);
-// print string representation of gclidb::Grepossh to string LHS, no header -- cprint:gclidb.Grepossh.String
-void                 Grepossh_Print(gclidb::Grepossh & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Grepossh.String  printfmt:Tuple
+// func:gclidb.Grepossh..Print
+void                 Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gstate
 struct Gstate { // gclidb.Gstate: Issue/MR state list
@@ -654,19 +757,28 @@ struct Gstate { // gclidb.Gstate: Issue/MR state list
     Gstate();
 };
 
+// func:gclidb.Gstate.st.Get
 algo::cstring        st_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gstate.st.Get2
 algo::cstring        Gstate_st_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gstate.state.Get
 algo::cstring        state_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gstate.state.Get2
 algo::cstring        Gstate_state_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gstate..Concat_st_state
 tempstr              Gstate_Concat_st_state( const algo::strptr& st ,const algo::strptr& state );
-bool                 Gstate_ReadFieldMaybe(gclidb::Gstate &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gstate..ReadFieldMaybe
+bool                 Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gstate from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gstate..ReadStrptrMaybe
 bool                 Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str);
-// print string representation of gclidb::Gstate to string LHS, no header -- cprint:gclidb.Gstate.String
-void                 Gstate_Print(gclidb::Gstate & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gstate.String  printfmt:Tuple
+// func:gclidb.Gstate..Print
+void                 Gstate_Print(gclidb::Gstate& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gstatet
 struct Gstatet { // gclidb.Gstatet: Internal
@@ -675,19 +787,28 @@ struct Gstatet { // gclidb.Gstatet: Internal
     Gstatet();
 };
 
+// func:gclidb.Gstatet.gtype.Get
 algo::Smallstr50     gtype_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gstatet.gtype.Get2
 algo::Smallstr50     Gstatet_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gstatet.gstate.Get
 algo::Smallstr50     gstate_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gstatet.gstate.Get2
 algo::Smallstr50     Gstatet_gstate_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gstatet..Concat_gstate_gtype
 tempstr              Gstatet_Concat_gstate_gtype( const algo::strptr& gstate ,const algo::strptr& gtype );
-bool                 Gstatet_ReadFieldMaybe(gclidb::Gstatet &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gstatet..ReadFieldMaybe
+bool                 Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gstatet from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gstatet..ReadStrptrMaybe
 bool                 Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_str);
-// print string representation of gclidb::Gstatet to string LHS, no header -- cprint:gclidb.Gstatet.String
-void                 Gstatet_Print(gclidb::Gstatet & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gstatet.String  printfmt:Tuple
+// func:gclidb.Gstatet..Print
+void                 Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtbl
 struct Gtbl { // gclidb.Gtbl: Supported gcli tables
@@ -696,12 +817,16 @@ struct Gtbl { // gclidb.Gtbl: Supported gcli tables
     Gtbl();
 };
 
-bool                 Gtbl_ReadFieldMaybe(gclidb::Gtbl &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtbl..ReadFieldMaybe
+bool                 Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtbl from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtbl..ReadStrptrMaybe
 bool                 Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str);
-// print string representation of gclidb::Gtbl to string LHS, no header -- cprint:gclidb.Gtbl.String
-void                 Gtbl_Print(gclidb::Gtbl & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtbl.String  printfmt:Tuple
+// func:gclidb.Gtbl..Print
+void                 Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtblact
 struct Gtblact { // gclidb.Gtblact
@@ -712,21 +837,31 @@ struct Gtblact { // gclidb.Gtblact
     Gtblact();
 };
 
+// func:gclidb.Gtblact.gtbl.Get
 algo::Smallstr250    gtbl_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblact.gtbl.Get2
 algo::Smallstr250    Gtblact_gtbl_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblact.gact.Get
 algo::Smallstr50     gact_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblact.gact.Get2
 algo::Smallstr50     Gtblact_gact_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblact..Concat_gtbl_gact
 tempstr              Gtblact_Concat_gtbl_gact( const algo::strptr& gtbl ,const algo::strptr& gact );
-bool                 Gtblact_ReadFieldMaybe(gclidb::Gtblact &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtblact..ReadFieldMaybe
+bool                 Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtblact from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtblact..ReadStrptrMaybe
 bool                 Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gtblact..Init
 void                 Gtblact_Init(gclidb::Gtblact& parent);
-// print string representation of gclidb::Gtblact to string LHS, no header -- cprint:gclidb.Gtblact.String
-void                 Gtblact_Print(gclidb::Gtblact & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblact.String  printfmt:Tuple
+// func:gclidb.Gtblact..Print
+void                 Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtblactfld
 struct Gtblactfld { // gclidb.Gtblactfld: List of available for each table & action combination
@@ -739,21 +874,31 @@ struct Gtblactfld { // gclidb.Gtblactfld: List of available for each table & act
     Gtblactfld();
 };
 
+// func:gclidb.Gtblactfld.gtblact.Get
 algo::Smallstr50     gtblact_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblactfld.gtblact.Get2
 algo::Smallstr50     Gtblactfld_gtblact_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblactfld.field.Get
 algo::Smallstr50     field_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblactfld.field.Get2
 algo::Smallstr50     Gtblactfld_field_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblactfld..Concat_gtblact_field
 tempstr              Gtblactfld_Concat_gtblact_field( const algo::strptr& gtblact ,const algo::strptr& field );
-bool                 Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtblactfld..ReadFieldMaybe
+bool                 Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtblactfld from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtblactfld..ReadStrptrMaybe
 bool                 Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gtblactfld..Init
 void                 Gtblactfld_Init(gclidb::Gtblactfld& parent);
-// print string representation of gclidb::Gtblactfld to string LHS, no header -- cprint:gclidb.Gtblactfld.String
-void                 Gtblactfld_Print(gclidb::Gtblactfld & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblactfld.String  printfmt:Tuple
+// func:gclidb.Gtblactfld..Print
+void                 Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtblacttst
 struct Gtblacttst { // gclidb.Gtblacttst
@@ -764,23 +909,34 @@ struct Gtblacttst { // gclidb.Gtblacttst
     Gtblacttst();
 };
 
+// func:gclidb.Gtblacttst.gtblact.Get
 algo::Smallstr50     gtblact_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblacttst.gtblact.Get2
 algo::Smallstr50     Gtblacttst_gtblact_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblacttst.gclienv.Get
 algo::Smallstr50     gclienv_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblacttst.gclienv.Get2
 algo::Smallstr50     Gtblacttst_gclienv_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblacttst.t.Get
 algo::cstring        t_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblacttst.t.Get2
 algo::cstring        Gtblacttst_t_Get(algo::strptr arg) __attribute__((nothrow));
 
-bool                 Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtblacttst..ReadFieldMaybe
+bool                 Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtblacttst from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtblacttst..ReadStrptrMaybe
 bool                 Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.Gtblacttst..Init
 void                 Gtblacttst_Init(gclidb::Gtblacttst& parent);
-// print string representation of gclidb::Gtblacttst to string LHS, no header -- cprint:gclidb.Gtblacttst.String
-void                 Gtblacttst_Print(gclidb::Gtblacttst & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
+// func:gclidb.Gtblacttst..Print
+void                 Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtblacttstout
 struct Gtblacttstout { // gclidb.Gtblacttstout
@@ -789,19 +945,28 @@ struct Gtblacttstout { // gclidb.Gtblacttstout
     Gtblacttstout();
 };
 
+// func:gclidb.Gtblacttstout.gtblacttst.Get
 algo::Smallstr250    gtblacttst_Get(gclidb::Gtblacttstout& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblacttstout.gtblacttst.Get2
 algo::Smallstr250    Gtblacttstout_gtblacttst_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblacttstout.out.Get
 algo::cstring        out_Get(gclidb::Gtblacttstout& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtblacttstout.out.Get2
 algo::cstring        Gtblacttstout_out_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtblacttstout..Concat_gtblacttst_out
 tempstr              Gtblacttstout_Concat_gtblacttst_out( const algo::strptr& gtblacttst ,const algo::strptr& out );
-bool                 Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtblacttstout..ReadFieldMaybe
+bool                 Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtblacttstout from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtblacttstout..ReadStrptrMaybe
 bool                 Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str);
-// print string representation of gclidb::Gtblacttstout to string LHS, no header -- cprint:gclidb.Gtblacttstout.String
-void                 Gtblacttstout_Print(gclidb::Gtblacttstout & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
+// func:gclidb.Gtblacttstout..Print
+void                 Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtype
 struct Gtype { // gclidb.Gtype: Platform type (ghp=github; glpat=gitlab)
@@ -811,12 +976,16 @@ struct Gtype { // gclidb.Gtype: Platform type (ghp=github; glpat=gitlab)
     Gtype();
 };
 
-bool                 Gtype_ReadFieldMaybe(gclidb::Gtype &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtype..ReadFieldMaybe
+bool                 Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtype from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtype..ReadStrptrMaybe
 bool                 Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str);
-// print string representation of gclidb::Gtype to string LHS, no header -- cprint:gclidb.Gtype.String
-void                 Gtype_Print(gclidb::Gtype & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtype.String  printfmt:Tuple
+// func:gclidb.Gtype..Print
+void                 Gtype_Print(gclidb::Gtype& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtypeh
 struct Gtypeh { // gclidb.Gtypeh: HTTP heaaderes for user with platform
@@ -825,19 +994,28 @@ struct Gtypeh { // gclidb.Gtypeh: HTTP heaaderes for user with platform
     Gtypeh();
 };
 
+// func:gclidb.Gtypeh.gtype.Get
 algo::Smallstr50     gtype_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtypeh.gtype.Get2
 algo::Smallstr50     Gtypeh_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtypeh.name.Get
 algo::cstring        name_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtypeh.name.Get2
 algo::cstring        Gtypeh_name_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtypeh..Concat_gtype_name
 tempstr              Gtypeh_Concat_gtype_name( const algo::strptr& gtype ,const algo::strptr& name );
-bool                 Gtypeh_ReadFieldMaybe(gclidb::Gtypeh &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtypeh..ReadFieldMaybe
+bool                 Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtypeh from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtypeh..ReadStrptrMaybe
 bool                 Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str);
-// print string representation of gclidb::Gtypeh to string LHS, no header -- cprint:gclidb.Gtypeh.String
-void                 Gtypeh_Print(gclidb::Gtypeh & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtypeh.String  printfmt:Tuple
+// func:gclidb.Gtypeh..Print
+void                 Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtypeprefix
 struct Gtypeprefix { // gclidb.Gtypeprefix: Token prefix mapping to platform
@@ -846,19 +1024,28 @@ struct Gtypeprefix { // gclidb.Gtypeprefix: Token prefix mapping to platform
     Gtypeprefix();
 };
 
+// func:gclidb.Gtypeprefix.gtype.Get
 algo::Smallstr50     gtype_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtypeprefix.gtype.Get2
 algo::Smallstr50     Gtypeprefix_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtypeprefix.prefix.Get
 algo::cstring        prefix_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Gtypeprefix.prefix.Get2
 algo::cstring        Gtypeprefix_prefix_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Gtypeprefix..Concat_gtype_prefix
 tempstr              Gtypeprefix_Concat_gtype_prefix( const algo::strptr& gtype ,const algo::strptr& prefix );
-bool                 Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Gtypeprefix..ReadFieldMaybe
+bool                 Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtypeprefix from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Gtypeprefix..ReadStrptrMaybe
 bool                 Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strptr in_str);
-// print string representation of gclidb::Gtypeprefix to string LHS, no header -- cprint:gclidb.Gtypeprefix.String
-void                 Gtypeprefix_Print(gclidb::Gtypeprefix & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Gtypeprefix.String  printfmt:Tuple
+// func:gclidb.Gtypeprefix..Print
+void                 Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Issue
 struct Issue { // gclidb.Issue: Gitlab project issue
@@ -876,19 +1063,28 @@ struct Issue { // gclidb.Issue: Gitlab project issue
     Issue();
 };
 
+// func:gclidb.Issue.project.Get
 algo::Smallstr50     project_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issue.project.Get2
 algo::Smallstr50     Issue_project_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issue.iid.Get
 algo::cstring        iid_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issue.iid.Get2
 algo::cstring        Issue_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issue..Concat_project_iid
 tempstr              Issue_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid );
-bool                 Issue_ReadFieldMaybe(gclidb::Issue &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Issue..ReadFieldMaybe
+bool                 Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Issue from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Issue..ReadStrptrMaybe
 bool                 Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str);
-// print string representation of gclidb::Issue to string LHS, no header -- cprint:gclidb.Issue.String
-void                 Issue_Print(gclidb::Issue & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issue.String  printfmt:Tuple
+// func:gclidb.Issue..Print
+void                 Issue_Print(gclidb::Issue& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Issuenote
 struct Issuenote { // gclidb.Issuenote: Issue note
@@ -899,19 +1095,28 @@ struct Issuenote { // gclidb.Issuenote: Issue note
     Issuenote();
 };
 
+// func:gclidb.Issuenote.issue.Get
 algo::Smallstr50     issue_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issuenote.issue.Get2
 algo::Smallstr50     Issuenote_issue_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issuenote.nid.Get
 algo::cstring        nid_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issuenote.nid.Get2
 algo::cstring        Issuenote_nid_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issuenote..Concat_issue_nid
 tempstr              Issuenote_Concat_issue_nid( const algo::strptr& issue ,const algo::strptr& nid );
-bool                 Issuenote_ReadFieldMaybe(gclidb::Issuenote &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Issuenote..ReadFieldMaybe
+bool                 Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Issuenote from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Issuenote..ReadStrptrMaybe
 bool                 Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str);
-// print string representation of gclidb::Issuenote to string LHS, no header -- cprint:gclidb.Issuenote.String
-void                 Issuenote_Print(gclidb::Issuenote & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issuenote.String  printfmt:Tuple
+// func:gclidb.Issuenote..Print
+void                 Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Issuepipeline
 struct Issuepipeline { // gclidb.Issuepipeline: Issue pipeline
@@ -921,19 +1126,28 @@ struct Issuepipeline { // gclidb.Issuepipeline: Issue pipeline
     Issuepipeline();
 };
 
+// func:gclidb.Issuepipeline.issue.Get
 algo::Smallstr50     issue_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issuepipeline.issue.Get2
 algo::Smallstr50     Issuepipeline_issue_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issuepipeline.id.Get
 algo::cstring        id_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Issuepipeline.id.Get2
 algo::cstring        Issuepipeline_id_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Issuepipeline..Concat_issue_id
 tempstr              Issuepipeline_Concat_issue_id( const algo::strptr& issue ,const algo::strptr& id );
-bool                 Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Issuepipeline..ReadFieldMaybe
+bool                 Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Issuepipeline from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Issuepipeline..ReadStrptrMaybe
 bool                 Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str);
-// print string representation of gclidb::Issuepipeline to string LHS, no header -- cprint:gclidb.Issuepipeline.String
-void                 Issuepipeline_Print(gclidb::Issuepipeline & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Issuepipeline.String  printfmt:Tuple
+// func:gclidb.Issuepipeline..Print
+void                 Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Label
 struct Label { // gclidb.Label: List of labels for gitlab/github
@@ -942,12 +1156,16 @@ struct Label { // gclidb.Label: List of labels for gitlab/github
     Label();
 };
 
-bool                 Label_ReadFieldMaybe(gclidb::Label &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Label..ReadFieldMaybe
+bool                 Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Label from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Label..ReadStrptrMaybe
 bool                 Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str);
-// print string representation of gclidb::Label to string LHS, no header -- cprint:gclidb.Label.String
-void                 Label_Print(gclidb::Label & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Label.String  printfmt:Tuple
+// func:gclidb.Label..Print
+void                 Label_Print(gclidb::Label& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Milestone
 struct Milestone { // gclidb.Milestone: Gclidb project milestone
@@ -957,19 +1175,28 @@ struct Milestone { // gclidb.Milestone: Gclidb project milestone
     Milestone();
 };
 
+// func:gclidb.Milestone.project.Get
 algo::Smallstr50     project_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Milestone.project.Get2
 algo::Smallstr50     Milestone_project_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Milestone.iid.Get
 algo::cstring        iid_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Milestone.iid.Get2
 algo::cstring        Milestone_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Milestone..Concat_project_iid
 tempstr              Milestone_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid );
-bool                 Milestone_ReadFieldMaybe(gclidb::Milestone &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Milestone..ReadFieldMaybe
+bool                 Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Milestone from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Milestone..ReadStrptrMaybe
 bool                 Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str);
-// print string representation of gclidb::Milestone to string LHS, no header -- cprint:gclidb.Milestone.String
-void                 Milestone_Print(gclidb::Milestone & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Milestone.String  printfmt:Tuple
+// func:gclidb.Milestone..Print
+void                 Milestone_Print(gclidb::Milestone& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Mr
 struct Mr { // gclidb.Mr: Gitlab project mr
@@ -988,19 +1215,28 @@ struct Mr { // gclidb.Mr: Gitlab project mr
     Mr();
 };
 
+// func:gclidb.Mr.proj.Get
 algo::Smallstr50     proj_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mr.proj.Get2
 algo::Smallstr50     Mr_proj_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mr.iid.Get
 algo::cstring        iid_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mr.iid.Get2
 algo::cstring        Mr_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mr..Concat_proj_iid
 tempstr              Mr_Concat_proj_iid( const algo::strptr& proj ,const algo::strptr& iid );
-bool                 Mr_ReadFieldMaybe(gclidb::Mr &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Mr..ReadFieldMaybe
+bool                 Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Mr from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Mr..ReadStrptrMaybe
 bool                 Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str);
-// print string representation of gclidb::Mr to string LHS, no header -- cprint:gclidb.Mr.String
-void                 Mr_Print(gclidb::Mr & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mr.String  printfmt:Tuple
+// func:gclidb.Mr..Print
+void                 Mr_Print(gclidb::Mr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Mrjob
 struct Mrjob { // gclidb.Mrjob: Mr job
@@ -1014,19 +1250,28 @@ struct Mrjob { // gclidb.Mrjob: Mr job
     Mrjob();
 };
 
+// func:gclidb.Mrjob.mr.Get
 algo::Smallstr150    mr_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mrjob.mr.Get2
 algo::Smallstr150    Mrjob_mr_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mrjob.job.Get
 algo::cstring        job_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mrjob.job.Get2
 algo::cstring        Mrjob_job_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mrjob..Concat_mr_job
 tempstr              Mrjob_Concat_mr_job( const algo::strptr& mr ,const algo::strptr& job );
-bool                 Mrjob_ReadFieldMaybe(gclidb::Mrjob &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Mrjob..ReadFieldMaybe
+bool                 Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Mrjob from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Mrjob..ReadStrptrMaybe
 bool                 Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str);
-// print string representation of gclidb::Mrjob to string LHS, no header -- cprint:gclidb.Mrjob.String
-void                 Mrjob_Print(gclidb::Mrjob & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mrjob.String  printfmt:Tuple
+// func:gclidb.Mrjob..Print
+void                 Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Mrnote
 struct Mrnote { // gclidb.Mrnote: Issue note
@@ -1037,19 +1282,28 @@ struct Mrnote { // gclidb.Mrnote: Issue note
     Mrnote();
 };
 
+// func:gclidb.Mrnote.nid.Get
 algo::cstring        nid_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mrnote.nid.Get2
 algo::cstring        Mrnote_nid_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mrnote.mr.Get
 algo::Smallstr150    mr_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Mrnote.mr.Get2
 algo::Smallstr150    Mrnote_mr_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:gclidb.Mrnote..Concat_mr_nid
 tempstr              Mrnote_Concat_mr_nid( const algo::strptr& mr ,const algo::strptr& nid );
-bool                 Mrnote_ReadFieldMaybe(gclidb::Mrnote &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.Mrnote..ReadFieldMaybe
+bool                 Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Mrnote from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.Mrnote..ReadStrptrMaybe
 bool                 Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str);
-// print string representation of gclidb::Mrnote to string LHS, no header -- cprint:gclidb.Mrnote.String
-void                 Mrnote_Print(gclidb::Mrnote & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Mrnote.String  printfmt:Tuple
+// func:gclidb.Mrnote..Print
+void                 Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Project
 struct Project { // gclidb.Project: Gitlab project mr
@@ -1066,14 +1320,19 @@ struct User { // gclidb.User
     User();
 };
 
-bool                 User_ReadFieldMaybe(gclidb::User &parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// func:gclidb.User..ReadFieldMaybe
+bool                 User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::User from an ascii string.
 // The format of the string is an ssim Tuple
+// func:gclidb.User..ReadStrptrMaybe
 bool                 User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:gclidb.User..Init
 void                 User_Init(gclidb::User& parent);
-// print string representation of gclidb::User to string LHS, no header -- cprint:gclidb.User.String
-void                 User_Print(gclidb::User & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.User.String  printfmt:Tuple
+// func:gclidb.User..Print
+void                 User_Print(gclidb::User& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace gclidb { // gen:ns_func
 } // gen:ns_func

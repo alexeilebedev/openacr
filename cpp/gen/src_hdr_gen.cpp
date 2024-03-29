@@ -27,10 +27,10 @@
 #include "include/gen/src_hdr_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/command_gen.h"
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/command_gen.h"
+#include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
@@ -50,7 +50,7 @@ src_hdr::FDb    src_hdr::_db;     // dependency found via dev.targdep
 
 namespace src_hdr {
 const char *src_hdr_help =
-"src_hdr: Update source file / copyright header\n"
+"src_hdr: Manage source copyright+license header in source files and scripts\n"
 "Usage: src_hdr [options]\n"
 "    OPTION             TYPE    DFLT    COMMENT\n"
 "    -in                string  \"data\"  Input directory or filename, - for stdin\n"
@@ -70,17 +70,29 @@ const char *src_hdr_help =
 } // namespace src_hdr
 namespace src_hdr { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:src_hdr.FDb._db.InitReflection
     static void          InitReflection();
+    // func:src_hdr.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.nsx.InputMaybe
     static bool          nsx_InputMaybe(dmmeta::Nsx &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.license.InputMaybe
     static bool          license_InputMaybe(dev::License &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.scriptfile.InputMaybe
     static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
+    // func:src_hdr.FDb.copyright.InputMaybe
+    static bool          copyright_InputMaybe(dev::Copyright &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:src_hdr.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:src_hdr.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:src_hdr...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -90,9 +102,33 @@ void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& fcopyline) {
     ind_fcopyline_Remove(row); // remove fcopyline from index ind_fcopyline
 }
 
+// --- src_hdr.FCopyright.base.CopyOut
+// Copy fields out of row
+void src_hdr::copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) {
+    out.copyright = row.copyright;
+    out.dflt = row.dflt;
+    out.comment = row.comment;
+}
+
+// --- src_hdr.FCopyright.base.CopyIn
+// Copy fields in to row
+void src_hdr::copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &in) {
+    row.copyright = in.copyright;
+    row.dflt = in.dflt;
+    row.comment = in.comment;
+}
+
+// --- src_hdr.FCopyright..Uninit
+void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) {
+    src_hdr::FCopyright &row = copyright; (void)row;
+    c_dflt_copyright_Remove(row); // remove copyright from index c_dflt_copyright
+    ind_copyright_Remove(row); // remove copyright from index ind_copyright
+}
+
 // --- src_hdr.trace..Print
-// print string representation of src_hdr::trace to string LHS, no header -- cprint:src_hdr.trace.String
-void src_hdr::trace_Print(src_hdr::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_hdr.trace.String  printfmt:Tuple
+void src_hdr::trace_Print(src_hdr::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "src_hdr.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -263,7 +299,7 @@ static void src_hdr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'ba646a29d87bb2b4e55e5f7cf38f30fc92d02f6e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'323f10076c68df02dee95ec49c713fe77dc669b1'");
 }
 
 // --- src_hdr.FDb._db.StaticCheck
@@ -315,6 +351,12 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && scriptfile_InputMaybe(elem);
             break;
         }
+        case src_hdr_TableId_dev_Copyright: { // finput:src_hdr.FDb.copyright
+            dev::Copyright elem;
+            retval = dev::Copyright_ReadStrptrMaybe(elem, str);
+            retval = retval && copyright_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -340,6 +382,7 @@ bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
+        retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.copyright"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -1607,6 +1650,227 @@ void src_hdr::ind_fcopyline_Reserve(int n) {
     }
 }
 
+// --- src_hdr.FDb.copyright.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_hdr::FCopyright& src_hdr::copyright_Alloc() {
+    src_hdr::FCopyright* row = copyright_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.copyright  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- src_hdr.FDb.copyright.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+src_hdr::FCopyright* src_hdr::copyright_AllocMaybe() {
+    src_hdr::FCopyright *row = (src_hdr::FCopyright*)copyright_AllocMem();
+    if (row) {
+        new (row) src_hdr::FCopyright; // call constructor
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.copyright.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_hdr::FCopyright* src_hdr::copyright_InsertMaybe(const dev::Copyright &value) {
+    src_hdr::FCopyright *row = &copyright_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    copyright_CopyIn(*row,const_cast<dev::Copyright&>(value));
+    bool ok = copyright_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        copyright_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.copyright.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* src_hdr::copyright_AllocMem() {
+    u64 new_nelems     = _db.copyright_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    src_hdr::FCopyright*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.copyright_lary[bsr];
+        if (!lev) {
+            lev=(src_hdr::FCopyright*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FCopyright) * (u64(1)<<bsr));
+            _db.copyright_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.copyright_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- src_hdr.FDb.copyright.RemoveAll
+// Remove all elements from Lary
+void src_hdr::copyright_RemoveAll() {
+    for (u64 n = _db.copyright_n; n>0; ) {
+        n--;
+        copyright_qFind(u64(n)).~FCopyright(); // destroy last element
+        _db.copyright_n = i32(n);
+    }
+}
+
+// --- src_hdr.FDb.copyright.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void src_hdr::copyright_RemoveLast() {
+    u64 n = _db.copyright_n;
+    if (n > 0) {
+        n -= 1;
+        copyright_qFind(u64(n)).~FCopyright();
+        _db.copyright_n = i32(n);
+    }
+}
+
+// --- src_hdr.FDb.copyright.InputMaybe
+static bool src_hdr::copyright_InputMaybe(dev::Copyright &elem) {
+    bool retval = true;
+    retval = copyright_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- src_hdr.FDb.copyright.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool src_hdr::copyright_XrefMaybe(src_hdr::FCopyright &row) {
+    bool retval = true;
+    (void)row;
+    // insert copyright into index c_dflt_copyright
+    if (row.dflt==true) { // user-defined insert condition
+        bool success = c_dflt_copyright_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "src_hdr.duplicate_key  xref:src_hdr.FDb.c_dflt_copyright"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert copyright into index ind_copyright
+    if (true) { // user-defined insert condition
+        bool success = ind_copyright_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "src_hdr.duplicate_key  xref:src_hdr.FDb.ind_copyright"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_copyright.Find
+// Find row by key. Return NULL if not found.
+src_hdr::FCopyright* src_hdr::ind_copyright_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_copyright_buckets_n - 1);
+    src_hdr::FCopyright* *e = &_db.ind_copyright_buckets_elems[index];
+    src_hdr::FCopyright* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).copyright == key;
+        if (done) break;
+        e         = &ret->ind_copyright_next;
+    } while (true);
+    return ret;
+}
+
+// --- src_hdr.FDb.ind_copyright.FindX
+// Look up row by key and return reference. Throw exception if not found
+src_hdr::FCopyright& src_hdr::ind_copyright_FindX(const algo::strptr& key) {
+    src_hdr::FCopyright* ret = ind_copyright_Find(key);
+    vrfy(ret, tempstr() << "src_hdr.key_error  table:ind_copyright  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- src_hdr.FDb.ind_copyright.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) {
+    ind_copyright_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_copyright_next == (src_hdr::FCopyright*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.copyright) & (_db.ind_copyright_buckets_n - 1);
+        src_hdr::FCopyright* *prev = &_db.ind_copyright_buckets_elems[index];
+        do {
+            src_hdr::FCopyright* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).copyright == row.copyright) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_copyright_next;
+        } while (true);
+        if (retval) {
+            row.ind_copyright_next = *prev;
+            _db.ind_copyright_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.ind_copyright.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) {
+    if (LIKELY(row.ind_copyright_next != (src_hdr::FCopyright*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.copyright) & (_db.ind_copyright_buckets_n - 1);
+        src_hdr::FCopyright* *prev = &_db.ind_copyright_buckets_elems[index]; // addr of pointer to current element
+        while (src_hdr::FCopyright *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_copyright_next; // unlink (singly linked list)
+                _db.ind_copyright_n--;
+                row.ind_copyright_next = (src_hdr::FCopyright*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_copyright_next;
+        }
+    }
+}
+
+// --- src_hdr.FDb.ind_copyright.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void src_hdr::ind_copyright_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_copyright_buckets_n;
+    u32 new_nelems   = _db.ind_copyright_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(src_hdr::FCopyright*);
+        u32 new_size = new_nbuckets * sizeof(src_hdr::FCopyright*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        src_hdr::FCopyright* *new_buckets = (src_hdr::FCopyright**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FDb.ind_copyright");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_copyright_buckets_n; i++) {
+            src_hdr::FCopyright* elem = _db.ind_copyright_buckets_elems[i];
+            while (elem) {
+                src_hdr::FCopyright &row        = *elem;
+                src_hdr::FCopyright* next       = row.ind_copyright_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.copyright) & (new_nbuckets-1);
+                row.ind_copyright_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_copyright_buckets_elems, old_size);
+        _db.ind_copyright_buckets_elems = new_buckets;
+        _db.ind_copyright_buckets_n = new_nbuckets;
+    }
+}
+
 // --- src_hdr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr src_hdr::trace_RowidFind(int t) {
@@ -1723,6 +1987,26 @@ void src_hdr::FDb_Init() {
         FatalErrorExit("out of memory"); // (src_hdr.FDb.ind_fcopyline)
     }
     memset(_db.ind_fcopyline_buckets_elems, 0, sizeof(src_hdr::FCopyline*)*_db.ind_fcopyline_buckets_n); // (src_hdr.FDb.ind_fcopyline)
+    // initialize LAry copyright (src_hdr.FDb.copyright)
+    _db.copyright_n = 0;
+    memset(_db.copyright_lary, 0, sizeof(_db.copyright_lary)); // zero out all level pointers
+    src_hdr::FCopyright* copyright_first = (src_hdr::FCopyright*)algo_lib::malloc_AllocMem(sizeof(src_hdr::FCopyright) * (u64(1)<<4));
+    if (!copyright_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.copyright_lary[i]  = copyright_first;
+        copyright_first    += 1ULL<<i;
+    }
+    _db.c_dflt_copyright = NULL;
+    // initialize hash table for src_hdr::FCopyright;
+    _db.ind_copyright_n             	= 0; // (src_hdr.FDb.ind_copyright)
+    _db.ind_copyright_buckets_n     	= 4; // (src_hdr.FDb.ind_copyright)
+    _db.ind_copyright_buckets_elems 	= (src_hdr::FCopyright**)algo_lib::malloc_AllocMem(sizeof(src_hdr::FCopyright*)*_db.ind_copyright_buckets_n); // initial buckets (src_hdr.FDb.ind_copyright)
+    if (!_db.ind_copyright_buckets_elems) {
+        FatalErrorExit("out of memory"); // (src_hdr.FDb.ind_copyright)
+    }
+    memset(_db.ind_copyright_buckets_elems, 0, sizeof(src_hdr::FCopyright*)*_db.ind_copyright_buckets_n); // (src_hdr.FDb.ind_copyright)
 
     src_hdr::InitReflection();
 }
@@ -1730,6 +2014,12 @@ void src_hdr::FDb_Init() {
 // --- src_hdr.FDb..Uninit
 void src_hdr::FDb_Uninit() {
     src_hdr::FDb &row = _db; (void)row;
+
+    // src_hdr.FDb.ind_copyright.Uninit (Thash)  //
+    // skip destruction of ind_copyright in global scope
+
+    // src_hdr.FDb.copyright.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // src_hdr.FDb.ind_fcopyline.Uninit (Thash)  //
     // skip destruction of ind_fcopyline in global scope
@@ -1853,6 +2143,12 @@ void src_hdr::scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) 
     row.gitfile = in.gitfile;
     row.license = in.license;
     row.comment = in.comment;
+}
+
+// --- src_hdr.FScriptfile.name.Get
+algo::Smallstr50 src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) {
+    algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
+    return ret;
 }
 
 // --- src_hdr.FSrc..Init
@@ -2061,8 +2357,9 @@ bool src_hdr::FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_
 }
 
 // --- src_hdr.FieldId..Print
-// print string representation of src_hdr::FieldId to string LHS, no header -- cprint:src_hdr.FieldId.String
-void src_hdr::FieldId_Print(src_hdr::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_hdr.FieldId.String  printfmt:Raw
+void src_hdr::FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) {
     src_hdr::value_Print(row, str);
 }
 
@@ -2072,6 +2369,7 @@ void src_hdr::FieldId_Print(src_hdr::FieldId & row, algo::cstring &str) {
 const char* src_hdr::value_ToCstr(const src_hdr::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case src_hdr_TableId_dev_Copyright : ret = "dev.Copyright";  break;
         case src_hdr_TableId_dev_License   : ret = "dev.License";  break;
         case src_hdr_TableId_dmmeta_Ns     : ret = "dmmeta.Ns";  break;
         case src_hdr_TableId_dmmeta_Nsx    : ret = "dmmeta.Nsx";  break;
@@ -2156,6 +2454,19 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','C','o','p','y'): {
+                    if (memcmp(rhs.elems+8,"right",5)==0) { value_SetEnum(parent,src_hdr_TableId_dev_Copyright); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','c','o','p','y'): {
+                    if (memcmp(rhs.elems+8,"right",5)==0) { value_SetEnum(parent,src_hdr_TableId_dev_copyright); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','S','c','r','i'): {
@@ -2201,8 +2512,9 @@ bool src_hdr::TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_
 }
 
 // --- src_hdr.TableId..Print
-// print string representation of src_hdr::TableId to string LHS, no header -- cprint:src_hdr.TableId.String
-void src_hdr::TableId_Print(src_hdr::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:src_hdr.TableId.String  printfmt:Raw
+void src_hdr::TableId_Print(src_hdr::TableId& row, algo::cstring& str) {
     src_hdr::value_Print(row, str);
 }
 

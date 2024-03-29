@@ -107,7 +107,7 @@ inline fm::Code::operator algo::strptr () const {
 }
 
 // --- fm.Code..Cmp
-inline i32 fm::Code_Cmp(fm::Code & lhs, fm::Code & rhs) {
+inline i32 fm::Code_Cmp(fm::Code& lhs, fm::Code& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -120,14 +120,18 @@ inline void fm::Code_Init(fm::Code& parent) {
 }
 
 // --- fm.Code..Eq
-inline bool fm::Code_Eq(const fm::Code & lhs,const fm::Code & rhs) {
+inline bool fm::Code_Eq(const fm::Code& lhs, const fm::Code& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u64*)(lhs.ch+8) == *(u64*)(rhs.ch+8)
+    &&*(u64*)(lhs.ch+16) == *(u64*)(rhs.ch+16)
+    &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24);
     return retval;
 }
 
 // --- fm.Code..EqStrptr
-inline bool fm::Code_EqStrptr(fm::Code & lhs, const algo::strptr &rhs) {
+inline bool fm::Code_EqStrptr(const fm::Code& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -211,7 +215,7 @@ inline fm::Objtype::operator algo::strptr () const {
 }
 
 // --- fm.Objtype..Cmp
-inline i32 fm::Objtype_Cmp(fm::Objtype & lhs, fm::Objtype & rhs) {
+inline i32 fm::Objtype_Cmp(fm::Objtype& lhs, fm::Objtype& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -224,14 +228,18 @@ inline void fm::Objtype_Init(fm::Objtype& parent) {
 }
 
 // --- fm.Objtype..Eq
-inline bool fm::Objtype_Eq(const fm::Objtype & lhs,const fm::Objtype & rhs) {
+inline bool fm::Objtype_Eq(const fm::Objtype& lhs, const fm::Objtype& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u32*)(lhs.ch+8) == *(u32*)(rhs.ch+8)
+    &&*(u16*)(lhs.ch+12) == *(u16*)(rhs.ch+12)
+    &&*(u8*)(lhs.ch+14) == *(u8*)(rhs.ch+14);
     return retval;
 }
 
 // --- fm.Objtype..EqStrptr
-inline bool fm::Objtype_EqStrptr(fm::Objtype & lhs, const algo::strptr &rhs) {
+inline bool fm::Objtype_EqStrptr(const fm::Objtype& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -315,7 +323,7 @@ inline fm::Objinst::operator algo::strptr () const {
 }
 
 // --- fm.Objinst..Cmp
-inline i32 fm::Objinst_Cmp(fm::Objinst & lhs, fm::Objinst & rhs) {
+inline i32 fm::Objinst_Cmp(fm::Objinst& lhs, fm::Objinst& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -328,14 +336,26 @@ inline void fm::Objinst_Init(fm::Objinst& parent) {
 }
 
 // --- fm.Objinst..Eq
-inline bool fm::Objinst_Eq(const fm::Objinst & lhs,const fm::Objinst & rhs) {
+inline bool fm::Objinst_Eq(const fm::Objinst& lhs, const fm::Objinst& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u64*)(lhs.ch+8) == *(u64*)(rhs.ch+8)
+    &&*(u64*)(lhs.ch+16) == *(u64*)(rhs.ch+16)
+    &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24)
+    &&*(u64*)(lhs.ch+32) == *(u64*)(rhs.ch+32)
+    &&*(u64*)(lhs.ch+40) == *(u64*)(rhs.ch+40)
+    &&*(u64*)(lhs.ch+48) == *(u64*)(rhs.ch+48)
+    &&*(u64*)(lhs.ch+56) == *(u64*)(rhs.ch+56)
+    &&*(u64*)(lhs.ch+64) == *(u64*)(rhs.ch+64)
+    &&*(u32*)(lhs.ch+72) == *(u32*)(rhs.ch+72)
+    &&*(u16*)(lhs.ch+76) == *(u16*)(rhs.ch+76)
+    &&*(u8*)(lhs.ch+78) == *(u8*)(rhs.ch+78);
     return retval;
 }
 
 // --- fm.Objinst..EqStrptr
-inline bool fm::Objinst_EqStrptr(fm::Objinst & lhs, const algo::strptr &rhs) {
+inline bool fm::Objinst_EqStrptr(const fm::Objinst& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 inline fm::Flag::Flag() {
@@ -558,7 +578,7 @@ inline fm::Summary::operator algo::strptr () const {
 }
 
 // --- fm.Summary..Cmp
-inline i32 fm::Summary_Cmp(fm::Summary & lhs, fm::Summary & rhs) {
+inline i32 fm::Summary_Cmp(fm::Summary& lhs, fm::Summary& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -571,14 +591,22 @@ inline void fm::Summary_Init(fm::Summary& parent) {
 }
 
 // --- fm.Summary..Eq
-inline bool fm::Summary_Eq(const fm::Summary & lhs,const fm::Summary & rhs) {
+inline bool fm::Summary_Eq(const fm::Summary& lhs, const fm::Summary& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u64*)(lhs.ch+8) == *(u64*)(rhs.ch+8)
+    &&*(u64*)(lhs.ch+16) == *(u64*)(rhs.ch+16)
+    &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24)
+    &&*(u64*)(lhs.ch+32) == *(u64*)(rhs.ch+32)
+    &&*(u64*)(lhs.ch+40) == *(u64*)(rhs.ch+40)
+    &&*(u64*)(lhs.ch+48) == *(u64*)(rhs.ch+48)
+    &&*(u64*)(lhs.ch+56) == *(u64*)(rhs.ch+56);
     return retval;
 }
 
 // --- fm.Summary..EqStrptr
-inline bool fm::Summary_EqStrptr(fm::Summary & lhs, const algo::strptr &rhs) {
+inline bool fm::Summary_EqStrptr(const fm::Summary& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -662,7 +690,7 @@ inline fm::Description::operator algo::strptr () const {
 }
 
 // --- fm.Description..Cmp
-inline i32 fm::Description_Cmp(fm::Description & lhs, fm::Description & rhs) {
+inline i32 fm::Description_Cmp(fm::Description& lhs, fm::Description& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -675,14 +703,30 @@ inline void fm::Description_Init(fm::Description& parent) {
 }
 
 // --- fm.Description..Eq
-inline bool fm::Description_Eq(const fm::Description & lhs,const fm::Description & rhs) {
+inline bool fm::Description_Eq(const fm::Description& lhs, const fm::Description& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u64*)(lhs.ch+8) == *(u64*)(rhs.ch+8)
+    &&*(u64*)(lhs.ch+16) == *(u64*)(rhs.ch+16)
+    &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24)
+    &&*(u64*)(lhs.ch+32) == *(u64*)(rhs.ch+32)
+    &&*(u64*)(lhs.ch+40) == *(u64*)(rhs.ch+40)
+    &&*(u64*)(lhs.ch+48) == *(u64*)(rhs.ch+48)
+    &&*(u64*)(lhs.ch+56) == *(u64*)(rhs.ch+56)
+    &&*(u64*)(lhs.ch+64) == *(u64*)(rhs.ch+64)
+    &&*(u64*)(lhs.ch+72) == *(u64*)(rhs.ch+72)
+    &&*(u64*)(lhs.ch+80) == *(u64*)(rhs.ch+80)
+    &&*(u64*)(lhs.ch+88) == *(u64*)(rhs.ch+88)
+    &&*(u64*)(lhs.ch+96) == *(u64*)(rhs.ch+96)
+    &&*(u64*)(lhs.ch+104) == *(u64*)(rhs.ch+104)
+    &&*(u64*)(lhs.ch+112) == *(u64*)(rhs.ch+112)
+    &&*(u64*)(lhs.ch+120) == *(u64*)(rhs.ch+120);
     return retval;
 }
 
 // --- fm.Description..EqStrptr
-inline bool fm::Description_EqStrptr(fm::Description & lhs, const algo::strptr &rhs) {
+inline bool fm::Description_EqStrptr(const fm::Description& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 
@@ -766,7 +810,7 @@ inline fm::Source::operator algo::strptr () const {
 }
 
 // --- fm.Source..Cmp
-inline i32 fm::Source_Cmp(fm::Source & lhs, fm::Source & rhs) {
+inline i32 fm::Source_Cmp(fm::Source& lhs, fm::Source& rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -779,14 +823,18 @@ inline void fm::Source_Init(fm::Source& parent) {
 }
 
 // --- fm.Source..Eq
-inline bool fm::Source_Eq(const fm::Source & lhs,const fm::Source & rhs) {
+inline bool fm::Source_Eq(const fm::Source& lhs, const fm::Source& rhs) {
     bool retval = true;
-    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    retval = retval
+    &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
+    &&*(u64*)(lhs.ch+8) == *(u64*)(rhs.ch+8)
+    &&*(u64*)(lhs.ch+16) == *(u64*)(rhs.ch+16)
+    &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24);
     return retval;
 }
 
 // --- fm.Source..EqStrptr
-inline bool fm::Source_EqStrptr(fm::Source & lhs, const algo::strptr &rhs) {
+inline bool fm::Source_EqStrptr(const fm::Source& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
 }
 inline fm::AlarmMsg::AlarmMsg() {
@@ -812,13 +860,13 @@ inline ams::MsgHeader& fm::Castbase(fm::AlarmMsg& parent) {
 
 // --- fm.AlarmMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 fm::GetMsgLength(const fm::AlarmMsg& row) {
-    return i32(const_cast<fm::AlarmMsg&>(row).length);
+inline i32 fm::AlarmMsg_GetMsgLength(const fm::AlarmMsg& parent) {
+    return i32(const_cast<fm::AlarmMsg&>(parent).length);
 }
 
 // --- fm.AlarmMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr fm::GetMsgMemptr(const fm::AlarmMsg& row) {
+inline algo::memptr fm::AlarmMsg_GetMsgMemptr(const fm::AlarmMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<fm::AlarmMsg&>(row).length));
 }
 inline fm::FieldId::FieldId(i32                            in_value)

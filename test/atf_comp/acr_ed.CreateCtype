@@ -1,4 +1,5 @@
-bin/acr  '' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
 dmmeta.ctype  ctype:ams.ChildTypeMsg  comment:""
 dmmeta.field  field:ams.ChildTypeMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
 dmmeta.pack  ctype:ams.ChildTypeMsg  comment:""
@@ -7,5 +8,4 @@ dmmeta.cpptype  ctype:ams.ChildTypeMsg  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cfmt  cfmt:ams.ChildTypeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 EOF
 
-set -e
 bin/amc

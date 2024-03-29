@@ -6,6 +6,7 @@ dmmeta.ccmp  ctype:acr_compl.Badness  extrn:N  genop:Y  order:Y  minmax:N  comme
 dmmeta.ccmp  ctype:acr_dm.Rowid  extrn:N  genop:Y  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.Attr  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.Comment  extrn:N  genop:N  order:N  minmax:N  comment:""
+dmmeta.ccmp  ctype:algo.Decimal  extrn:N  genop:Y  order:N  minmax:N  comment:"Exponent and mantissa exact match"
 dmmeta.ccmp  ctype:algo.Fildes  extrn:N  genop:Y  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.LnumStr10_U64  extrn:N  genop:Y  order:N  minmax:N  comment:""
 dmmeta.ccmp  ctype:algo.LnumStr11_U64  extrn:N  genop:Y  order:N  minmax:N  comment:""

@@ -128,7 +128,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
     ok = ok && !field.c_cppfunc;// do not read these
     ok = ok && !GetLenfld(field);  // this field cannot be read
     ok = ok && !field.c_typefld; // this field cannot be read
-    ok = ok && !(ctype.c_pmaskfld && ctype.c_pmaskfld->p_field == &field);
+    ok = ok && !field.c_pmaskfld;
     ok = ok && (ValQ(field) || field.reftype == dmmeta_Reftype_reftype_Bitfld);
     ok = ok && !amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"));
     bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
@@ -139,7 +139,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
          <<Keyval("fflag",field.field)
          <<Keyval("comment", "fflag.cumulative can't be used on a field with Set function"));
     if (HasReadQ(*field.p_ctype) && ok) {
-        if (has_ctyperead && !has_set && !ctype.c_pmaskfld && !field.c_fflag) {
+        if (has_ctyperead && !has_set && !c_pmaskfld_N(ctype) && !field.c_fflag) {
             field.ctype_read=true;// use ctype's function to read this field
         } else {
             amc::FFunc& doread = amc::CreateCurFunc();
@@ -227,6 +227,8 @@ tempstr amc::ReadFieldExpr(amc::FField &field, algo::strptr parent, algo::strptr
         ret << field.cpp_type<<"_ReadStrptrMaybe("<<parent<<"."<<name_Get(field)<<", "<<strval<<")";
     } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"))) {
         ret << name_Get(field)<<"_ReadStrptrMaybe("<<parent<<", "<<strval<<")";
+    } else if (field.c_cppfunc && field.c_cppfunc->print) {
+        ret << "true"; // TODO support set
     } else {
         ret << "false";
     }

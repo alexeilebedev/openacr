@@ -82,6 +82,16 @@ namespace lib_json { // update-hdr
     // AMC cleanup function - automatically delete parsed JSON tree
     void root_node_Cleanup(lib_json::FParser& parent);
 
+    // encode json string
+    // "The representation of strings is similar to conventions used in the C
+    // family of programming languages.  A string begins and ends with
+    // quotation marks.  All Unicode characters may be placed within the
+    // quotation marks except for the characters that must be escaped:
+    // quotation mark, reverse solidus, and the control characters (U+0000
+    // through U+001F)."
+    // -- this says that solidus need not be escaped when printing -- only when parsing!
+    void JsonSerializeString(algo::strptr str, algo::cstring &lhs);
+
     // Serialize to string
     // Serialize to JSON tree to text
     // NODE      root node to start from

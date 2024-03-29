@@ -24,8 +24,8 @@
 
 #pragma once
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
 inline src_hdr::FCopyline::FCopyline() {
@@ -42,6 +42,21 @@ inline src_hdr::FCopyline::~FCopyline() {
 inline void src_hdr::FCopyline_Init(src_hdr::FCopyline& fcopyline) {
     fcopyline.fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.fcopyline) not-in-tpool's freelist
     fcopyline.ind_fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.ind_fcopyline) not-in-hash
+}
+inline src_hdr::FCopyright::FCopyright() {
+    src_hdr::FCopyright_Init(*this);
+}
+
+inline src_hdr::FCopyright::~FCopyright() {
+    src_hdr::FCopyright_Uninit(*this);
+}
+
+
+// --- src_hdr.FCopyright..Init
+// Set all fields to initial values.
+inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& copyright) {
+    copyright.dflt = bool(false);
+    copyright.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
 }
 inline src_hdr::trace::trace() {
 }
@@ -347,6 +362,80 @@ inline i32 src_hdr::ind_fcopyline_N() {
     return _db.ind_fcopyline_n;
 }
 
+// --- src_hdr.FDb.copyright.EmptyQ
+// Return true if index is empty
+inline bool src_hdr::copyright_EmptyQ() {
+    return _db.copyright_n == 0;
+}
+
+// --- src_hdr.FDb.copyright.Find
+// Look up row by row id. Return NULL if out of range
+inline src_hdr::FCopyright* src_hdr::copyright_Find(u64 t) {
+    src_hdr::FCopyright *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.copyright_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.copyright_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.copyright.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline src_hdr::FCopyright* src_hdr::copyright_Last() {
+    return copyright_Find(u64(_db.copyright_n-1));
+}
+
+// --- src_hdr.FDb.copyright.N
+// Return number of items in the pool
+inline i32 src_hdr::copyright_N() {
+    return _db.copyright_n;
+}
+
+// --- src_hdr.FDb.copyright.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline src_hdr::FCopyright& src_hdr::copyright_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.copyright_lary[bsr][index];
+}
+
+// --- src_hdr.FDb.c_dflt_copyright.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool src_hdr::c_dflt_copyright_InsertMaybe(src_hdr::FCopyright& row) {
+    src_hdr::FCopyright* ptr = _db.c_dflt_copyright;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        _db.c_dflt_copyright = &row;
+    }
+    return retval;
+}
+
+// --- src_hdr.FDb.c_dflt_copyright.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void src_hdr::c_dflt_copyright_Remove(src_hdr::FCopyright& row) {
+    src_hdr::FCopyright *ptr = _db.c_dflt_copyright;
+    if (LIKELY(ptr == &row)) {
+        _db.c_dflt_copyright = NULL;
+    }
+}
+
+// --- src_hdr.FDb.ind_copyright.EmptyQ
+// Return true if hash is empty
+inline bool src_hdr::ind_copyright_EmptyQ() {
+    return _db.ind_copyright_n == 0;
+}
+
+// --- src_hdr.FDb.ind_copyright.N
+// Return number of items in the hash
+inline i32 src_hdr::ind_copyright_N() {
+    return _db.ind_copyright_n;
+}
+
 // --- src_hdr.FDb.targsrc_curs.Reset
 // cursor points to valid item
 inline void src_hdr::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent) {
@@ -495,6 +584,31 @@ inline void src_hdr::_db_scriptfile_curs_Next(_db_scriptfile_curs &curs) {
 // item access
 inline src_hdr::FScriptfile& src_hdr::_db_scriptfile_curs_Access(_db_scriptfile_curs &curs) {
     return scriptfile_qFind(u64(curs.index));
+}
+
+// --- src_hdr.FDb.copyright_curs.Reset
+// cursor points to valid item
+inline void src_hdr::_db_copyright_curs_Reset(_db_copyright_curs &curs, src_hdr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- src_hdr.FDb.copyright_curs.ValidQ
+// cursor points to valid item
+inline bool src_hdr::_db_copyright_curs_ValidQ(_db_copyright_curs &curs) {
+    return curs.index < _db.copyright_n;
+}
+
+// --- src_hdr.FDb.copyright_curs.Next
+// proceed to next item
+inline void src_hdr::_db_copyright_curs_Next(_db_copyright_curs &curs) {
+    curs.index++;
+}
+
+// --- src_hdr.FDb.copyright_curs.Access
+// item access
+inline src_hdr::FCopyright& src_hdr::_db_copyright_curs_Access(_db_copyright_curs &curs) {
+    return copyright_qFind(u64(curs.index));
 }
 inline src_hdr::FLicense::FLicense() {
     src_hdr::FLicense_Init(*this);

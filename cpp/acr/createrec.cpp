@@ -1,6 +1,6 @@
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
         LoadRecords(*ctype);
         // truncate table on first insertion
         if (!file.autoloaded && ctype->n_insert == 0 && acr::_db.cmdline.trunc) {
-            ind_beg(acr::ctype_zd_trec_curs,rec,*ctype) {
+            ind_beg(acr::ctype_zd_ctype_rec_curs,rec,*ctype) {
                 rec.del=true;
             }ind_end;
         }
@@ -94,7 +94,7 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
 
 // Calculate record's SORTKEY which is a combination
 // of the value of its SSIMSORT attribute and rowid.
-static void InitSortkey(acr::FRec &rec, float rowid) {
+void acr::UpdateSortkey(acr::FRec &rec, float rowid) {
     // initialize string sort field
     rec.sortkey.num=0;
     ch_RemoveAll(rec.sortkey.str);
@@ -139,7 +139,7 @@ static acr::FFile *PickOutfile(acr::FFile &infile, acr::FCtype *ctype) {
 // into an existing record if one exists
 acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, acr::ReadMode read_mode) {
     strptr pkey     = pkey_attr->value;
-    acr::FRec *ret  = acr::ind_rec_Find(*ctype, pkey);
+    acr::FRec *ret  = acr::ind_ctype_rec_Find(*ctype, pkey);
     // determine line of record
     // each time a record is inserted into a ssimfile, assign it ssimfile's next_rowid,
     // and increment ssimfile's next_rowid field.
@@ -148,7 +148,11 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
     // and strip the attribute before saving record.
     // records are written to disk in rowid order.
     float rowid   = ret ? ret->sortkey.rowid : ctype->next_rowid;
-    if (read_mode == acr_ReadMode_acr_delete) {
+    if (read_mode == acr_ReadMode_acr_select) {
+        if (ret) {
+            Rec_Select(*ret);
+        }
+    } else if (read_mode == acr_ReadMode_acr_delete) {
         if (ret) {
             ret->del = true;
         } else {
@@ -213,7 +217,7 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
         if (!file.autoloaded && !ret->isnew && !Tuple_EqualQ(prev,ret->tuple)) {
             ret->mod = true;
         }
-        InitSortkey(*ret,rowid);
+        UpdateSortkey(*ret,rowid);
     }
     return ret;
 }

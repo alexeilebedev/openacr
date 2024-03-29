@@ -54,32 +54,43 @@ struct FieldId { // lib_amcdb.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:lib_amcdb.FieldId.value.GetEnum
 lib_amcdb_FieldIdEnum value_GetEnum(const lib_amcdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:lib_amcdb.FieldId.value.SetEnum
 void                 value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:lib_amcdb.FieldId.value.ToCstr
 const char*          value_ToCstr(const lib_amcdb::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:lib_amcdb.FieldId.value.Print
 void                 value_Print(const lib_amcdb::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:lib_amcdb.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:lib_amcdb.FieldId.value.SetStrptr
 void                 value_SetStrptr(lib_amcdb::FieldId& parent, algo::strptr rhs, lib_amcdb_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:lib_amcdb.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of lib_amcdb::FieldId from an ascii string.
 // The format of the string is the format of the lib_amcdb::FieldId's only field
+// func:lib_amcdb.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:lib_amcdb.FieldId..Init
 void                 FieldId_Init(lib_amcdb::FieldId& parent);
-// print string representation of lib_amcdb::FieldId to string LHS, no header -- cprint:lib_amcdb.FieldId.String
-void                 FieldId_Print(lib_amcdb::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_amcdb.FieldId.String  printfmt:Raw
+// func:lib_amcdb.FieldId..Print
+void                 FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_amcdb { // gen:ns_func
 } // gen:ns_func

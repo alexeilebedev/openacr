@@ -270,7 +270,7 @@ static void NewField_Filter(amc::FDispatch &dispatch) {
     dmmeta::FieldPkey pmaskname(tempstr()<<ctype.ctype<<".pmask");
     amc::FField &pmask = *amc::InsField(dmmeta::Field(pmaskname, "u64", "Inlary", algo::CppExpr(), algo::Comment()));
     amc::FInlary *inlary = amc::inlary_InsertMaybe(dmmeta::Inlary(pmaskname, 1,1, algo::Comment()));
-    amc::pmaskfld_InsertMaybe(dmmeta::Pmaskfld(pmask.field, algo::Comment()));
+    amc::pmaskfld_InsertMaybe(dmmeta::Pmaskfld(pmask.field, true, algo::Comment()));
     amc::cfmt_InsertMaybe(dmmeta::Cfmt(tempstr()<<ctype.ctype<<"."<<dmmeta_Strfmt_strfmt_Tuple
                                        ,dmmeta_Printfmt_printfmt_Auto
                                        , true

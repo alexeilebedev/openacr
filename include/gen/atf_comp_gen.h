@@ -116,6 +116,7 @@ struct FComptest { // atf_comp.FComptest
     atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
     bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
     algo::cstring          err;                    // Error string
+    algo::cstring          filter_command;         //
     atf_comp::FComptest*   ind_comptest_next;      // hash next
     atf_comp::FComptest*   zd_sel_comptest_next;   // zslist link; -1 means not-in-list
     atf_comp::FComptest*   zd_sel_comptest_prev;   // previous element
@@ -135,67 +136,96 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_comp.FComptest.base.CopyOut
 void                 comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_comp.FComptest.base.CopyIn
 void                 comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) __attribute__((nothrow));
 
+// func:atf_comp.FComptest.target.Get
 algo::Smallstr16     target_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_comp.FComptest.testname.Get
 algo::Smallstr50     testname_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
 
 // Delete referred-to items.
 // Deleted pointed-to item.
+// func:atf_comp.FComptest.c_targs.Cascdel
 void                 c_targs_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
+// func:atf_comp.FComptest.c_targs.InsertMaybe
 bool                 c_targs_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FComptest.c_targs.Remove
 void                 c_targs_Remove(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
 
 // Delete referred-to items.
 // Deleted pointed-to item.
+// func:atf_comp.FComptest.c_tfilt.Cascdel
 void                 c_tfilt_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
+// func:atf_comp.FComptest.c_tfilt.InsertMaybe
 bool                 c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FComptest.c_tfilt.Remove
 void                 c_tfilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
 
 // Delete all elements in the linked list.
+// func:atf_comp.FComptest.zd_tmsg.Cascdel
 void                 zd_tmsg_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Return true if index is empty
+// func:atf_comp.FComptest.zd_tmsg.EmptyQ
 bool                 zd_tmsg_EmptyQ(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FComptest.zd_tmsg.First
 atf_comp::FTmsg*     zd_tmsg_First(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FComptest.zd_tmsg.InLlistQ
 bool                 zd_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FComptest.zd_tmsg.Insert
 void                 zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FComptest.zd_tmsg.Last
 atf_comp::FTmsg*     zd_tmsg_Last(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FComptest.zd_tmsg.N
 i32                  zd_tmsg_N(const atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FComptest.zd_tmsg.Next
 atf_comp::FTmsg*     zd_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FComptest.zd_tmsg.Prev
 atf_comp::FTmsg*     zd_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FComptest.zd_tmsg.Remove
 void                 zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FComptest.zd_tmsg.RemoveAll
 void                 zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FComptest.zd_tmsg.RemoveFirst
 atf_comp::FTmsg*     zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FComptest.zd_tmsg.qLast
 atf_comp::FTmsg&     zd_tmsg_qLast(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
 
 // cursor points to valid item
+// func:atf_comp.FComptest.zd_tmsg_curs.Reset
 void                 comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent);
 // cursor points to valid item
+// func:atf_comp.FComptest.zd_tmsg_curs.ValidQ
 bool                 comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs);
 // proceed to next item
+// func:atf_comp.FComptest.zd_tmsg_curs.Next
 void                 comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs);
 // item access
+// func:atf_comp.FComptest.zd_tmsg_curs.Access
 atf_comp::FTmsg&     comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs);
 // Set all fields to initial values.
+// func:atf_comp.FComptest..Init
 void                 FComptest_Init(atf_comp::FComptest& comptest);
+// func:atf_comp.FComptest..Uninit
 void                 FComptest_Uninit(atf_comp::FComptest& comptest) __attribute__((nothrow));
 
 // --- atf_comp.trace
@@ -205,12 +235,14 @@ struct trace { // atf_comp.trace
 };
 #pragma pack(pop)
 
-// print string representation of atf_comp::trace to string LHS, no header -- cprint:atf_comp.trace.String
-void                 trace_Print(atf_comp::trace & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_comp.trace.String  printfmt:Tuple
+// func:atf_comp.trace..Print
+void                 trace_Print(atf_comp::trace& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_comp.FDb
 // create: atf_comp.FDb._db (Global)
-struct FDb { // atf_comp.FDb
+struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     command::atf_comp       cmdline;                      //
     algo::cstring           tempdir;                      //   "temp/atf_comp"
     atf_comp::FComptest*    comptest_lary[32];            // level array
@@ -219,7 +251,7 @@ struct FDb { // atf_comp.FDb
     i32                     ind_comptest_buckets_n;       // number of elements in bucket array
     i32                     ind_comptest_n;               // number of elements in the hash table
     algo::cstring           compdir;                      //
-    report::atf_comp        report;                       //
+    report::atf_comp        report;                       // Final report
     atf_comp::FComptest*    zd_sel_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_sel_comptest_n;            // zero-terminated doubly linked list
     atf_comp::FComptest*    zd_sel_comptest_tail;         // pointer to last element
@@ -254,18 +286,26 @@ struct FDb { // atf_comp.FDb
 // The following fields are updated:
 //     atf_comp.FDb.cmdline
 //     algo_lib.FDb.cmdline
+// func:atf_comp.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
+// func:atf_comp.FDb._db.MainLoop
 void                 MainLoop();
 // Main step
+// func:atf_comp.FDb._db.Step
 void                 Step();
 // Main function
+// func:atf_comp.FDb._db.Main
+// this function is 'extrn' and implemented by user
 void                 Main();
+// func:atf_comp.FDb._db.StaticCheck
 void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
+// func:atf_comp.FDb._db.InsertStrptrMaybe
 bool                 InsertStrptrMaybe(algo::strptr str);
 // Load all finputs from given directory.
+// func:atf_comp.FDb._db.LoadTuplesMaybe
 bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file.
 // Read tuples from file FNAME into this namespace's in-memory database.
@@ -273,364 +313,529 @@ bool                 LoadTuplesMaybe(algo::strptr root, bool recursive) __attrib
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
+// func:atf_comp.FDb._db.LoadTuplesFile
 bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Load all finputs from given file descriptor.
+// func:atf_comp.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Save ssim data to given directory.
+// func:atf_comp.FDb._db.SaveTuples
 u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
+// func:atf_comp.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
 // Calls Step function of dependencies
+// func:atf_comp.FDb._db.Steps
 void                 Steps();
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_comp.FDb.comptest.Alloc
 atf_comp::FComptest& comptest_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.comptest.AllocMaybe
 atf_comp::FComptest* comptest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.comptest.InsertMaybe
 atf_comp::FComptest* comptest_InsertMaybe(const atfdb::Comptest &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
+// func:atf_comp.FDb.comptest.AllocMem
 void*                comptest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
+// func:atf_comp.FDb.comptest.EmptyQ
 bool                 comptest_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
+// func:atf_comp.FDb.comptest.Find
 atf_comp::FComptest* comptest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
+// func:atf_comp.FDb.comptest.Last
 atf_comp::FComptest* comptest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
+// func:atf_comp.FDb.comptest.N
 i32                  comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
+// func:atf_comp.FDb.comptest.RemoveAll
 void                 comptest_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
+// func:atf_comp.FDb.comptest.RemoveLast
 void                 comptest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
+// func:atf_comp.FDb.comptest.qFind
 atf_comp::FComptest& comptest_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.comptest.XrefMaybe
 bool                 comptest_XrefMaybe(atf_comp::FComptest &row);
 
 // Return true if hash is empty
+// func:atf_comp.FDb.ind_comptest.EmptyQ
 bool                 ind_comptest_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
+// func:atf_comp.FDb.ind_comptest.Find
 atf_comp::FComptest* ind_comptest_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
+// func:atf_comp.FDb.ind_comptest.FindX
 atf_comp::FComptest& ind_comptest_FindX(const algo::strptr& key);
 // Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_comp.FDb.ind_comptest.GetOrCreate
 atf_comp::FComptest& ind_comptest_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
+// func:atf_comp.FDb.ind_comptest.N
 i32                  ind_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_comp.FDb.ind_comptest.InsertMaybe
 bool                 ind_comptest_InsertMaybe(atf_comp::FComptest& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_comp.FDb.ind_comptest.Remove
 void                 ind_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_comp.FDb.ind_comptest.Reserve
 void                 ind_comptest_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_sel_comptest.EmptyQ
 bool                 zd_sel_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_sel_comptest.First
 atf_comp::FComptest* zd_sel_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_sel_comptest.InLlistQ
 bool                 zd_sel_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_sel_comptest.Insert
 void                 zd_sel_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_sel_comptest.Last
 atf_comp::FComptest* zd_sel_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_sel_comptest.N
 i32                  zd_sel_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_sel_comptest.Next
 atf_comp::FComptest* zd_sel_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_sel_comptest.Prev
 atf_comp::FComptest* zd_sel_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_sel_comptest.Remove
 void                 zd_sel_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_sel_comptest.RemoveAll
 void                 zd_sel_comptest_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_comp.FDb.zd_sel_comptest.RemoveFirst
 atf_comp::FComptest* zd_sel_comptest_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_sel_comptest.qLast
 atf_comp::FComptest& zd_sel_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.zd_sel_comptest.Step
+// this function is 'extrn' and implemented by user
 void                 zd_sel_comptest_Step() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_comp.FDb.targs.Alloc
 atf_comp::FTargs&    targs_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.targs.AllocMaybe
 atf_comp::FTargs*    targs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.targs.InsertMaybe
 atf_comp::FTargs*    targs_InsertMaybe(const atfdb::Targs &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_comp.FDb.targs.Delete
 void                 targs_Delete(atf_comp::FTargs &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_comp.FDb.targs.AllocMem
 void*                targs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_comp.FDb.targs.FreeMem
 void                 targs_FreeMem(atf_comp::FTargs &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_comp.FDb.targs.Reserve
 u64                  targs_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_comp.FDb.targs.ReserveMem
 u64                  targs_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.targs.XrefMaybe
 bool                 targs_XrefMaybe(atf_comp::FTargs &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_comp.FDb.tmsg.Alloc
 atf_comp::FTmsg&     tmsg_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.tmsg.AllocMaybe
 atf_comp::FTmsg*     tmsg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.tmsg.InsertMaybe
 atf_comp::FTmsg*     tmsg_InsertMaybe(const atfdb::Tmsg &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_comp.FDb.tmsg.Delete
 void                 tmsg_Delete(atf_comp::FTmsg &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_comp.FDb.tmsg.AllocMem
 void*                tmsg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_comp.FDb.tmsg.FreeMem
 void                 tmsg_FreeMem(atf_comp::FTmsg &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_comp.FDb.tmsg.Reserve
 u64                  tmsg_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_comp.FDb.tmsg.ReserveMem
 u64                  tmsg_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.tmsg.XrefMaybe
 bool                 tmsg_XrefMaybe(atf_comp::FTmsg &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_comp.FDb.tfilt.Alloc
 atf_comp::FTfilt&    tfilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.tfilt.AllocMaybe
 atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.tfilt.InsertMaybe
 atf_comp::FTfilt*    tfilt_InsertMaybe(const atfdb::Tfilt &value) __attribute__((nothrow));
 // Remove row from all global and cross indices, then deallocate row
+// func:atf_comp.FDb.tfilt.Delete
 void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
+// func:atf_comp.FDb.tfilt.AllocMem
 void*                tfilt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
+// func:atf_comp.FDb.tfilt.FreeMem
 void                 tfilt_FreeMem(atf_comp::FTfilt &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
+// func:atf_comp.FDb.tfilt.Reserve
 u64                  tfilt_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
+// func:atf_comp.FDb.tfilt.ReserveMem
 u64                  tfilt_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.tfilt.XrefMaybe
 bool                 tfilt_XrefMaybe(atf_comp::FTfilt &row);
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_run_comptest.EmptyQ
 bool                 zd_run_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_run_comptest.First
 atf_comp::FComptest* zd_run_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_run_comptest.InLlistQ
 bool                 zd_run_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_run_comptest.Insert
 void                 zd_run_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_run_comptest.Last
 atf_comp::FComptest* zd_run_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_run_comptest.N
 i32                  zd_run_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_run_comptest.Next
 atf_comp::FComptest* zd_run_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_run_comptest.Prev
 atf_comp::FComptest* zd_run_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_run_comptest.Remove
 void                 zd_run_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_run_comptest.RemoveAll
 void                 zd_run_comptest_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
+// func:atf_comp.FDb.zd_run_comptest.RemoveFirst
 atf_comp::FComptest* zd_run_comptest_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_run_comptest.qLast
 atf_comp::FComptest& zd_run_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
+// func:atf_comp.FDb.zd_run_comptest.FirstChanged
 void                 zd_run_comptest_FirstChanged() __attribute__((nothrow));
+// func:atf_comp.FDb.zd_run_comptest.Step
+// this function is 'extrn' and implemented by user
 void                 zd_run_comptest_Step() __attribute__((nothrow));
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
+// func:atf_comp.FDb.zd_run_comptest.SetDelay
 void                 zd_run_comptest_SetDelay(algo::SchedTime delay) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_out_tmsg.EmptyQ
 bool                 zd_out_tmsg_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_out_tmsg.First
 atf_comp::FTmsg*     zd_out_tmsg_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_out_tmsg.InLlistQ
 bool                 zd_out_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_out_tmsg.Insert
 void                 zd_out_tmsg_Insert(atf_comp::FTmsg& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_out_tmsg.Last
 atf_comp::FTmsg*     zd_out_tmsg_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_out_tmsg.N
 i32                  zd_out_tmsg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_out_tmsg.Next
 atf_comp::FTmsg*     zd_out_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_out_tmsg.Prev
 atf_comp::FTmsg*     zd_out_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_out_tmsg.Remove
 void                 zd_out_tmsg_Remove(atf_comp::FTmsg& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_out_tmsg.RemoveAll
 void                 zd_out_tmsg_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_out_tmsg.RemoveFirst
 atf_comp::FTmsg*     zd_out_tmsg_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_out_tmsg.qLast
 atf_comp::FTmsg&     zd_out_tmsg_qLast() __attribute__((__warn_unused_result__, nothrow));
 // Save table to ssimfile
+// func:atf_comp.FDb.zd_out_tmsg.SaveSsimfile
 bool                 zd_out_tmsg_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_out_comptest.EmptyQ
 bool                 zd_out_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_out_comptest.First
 atf_comp::FComptest* zd_out_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_out_comptest.InLlistQ
 bool                 zd_out_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_out_comptest.Insert
 void                 zd_out_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_out_comptest.Last
 atf_comp::FComptest* zd_out_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_out_comptest.N
 i32                  zd_out_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_out_comptest.Next
 atf_comp::FComptest* zd_out_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_out_comptest.Prev
 atf_comp::FComptest* zd_out_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_out_comptest.Remove
 void                 zd_out_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_out_comptest.RemoveAll
 void                 zd_out_comptest_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_out_comptest.RemoveFirst
 atf_comp::FComptest* zd_out_comptest_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_out_comptest.qLast
 atf_comp::FComptest& zd_out_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
 // Save table to ssimfile
+// func:atf_comp.FDb.zd_out_comptest.SaveSsimfile
 bool                 zd_out_comptest_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_out_tfilt.EmptyQ
 bool                 zd_out_tfilt_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_out_tfilt.First
 atf_comp::FTfilt*    zd_out_tfilt_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_out_tfilt.InLlistQ
 bool                 zd_out_tfilt_InLlistQ(atf_comp::FTfilt& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_out_tfilt.Insert
 void                 zd_out_tfilt_Insert(atf_comp::FTfilt& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_out_tfilt.Last
 atf_comp::FTfilt*    zd_out_tfilt_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_out_tfilt.N
 i32                  zd_out_tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_out_tfilt.Next
 atf_comp::FTfilt*    zd_out_tfilt_Next(atf_comp::FTfilt &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_out_tfilt.Prev
 atf_comp::FTfilt*    zd_out_tfilt_Prev(atf_comp::FTfilt &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_out_tfilt.Remove
 void                 zd_out_tfilt_Remove(atf_comp::FTfilt& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_out_tfilt.RemoveAll
 void                 zd_out_tfilt_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_out_tfilt.RemoveFirst
 atf_comp::FTfilt*    zd_out_tfilt_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_out_tfilt.qLast
 atf_comp::FTfilt&    zd_out_tfilt_qLast() __attribute__((__warn_unused_result__, nothrow));
 // Save table to ssimfile
+// func:atf_comp.FDb.zd_out_tfilt.SaveSsimfile
 bool                 zd_out_tfilt_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
+// func:atf_comp.FDb.zd_out_targs.EmptyQ
 bool                 zd_out_targs_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_out_targs.First
 atf_comp::FTargs*    zd_out_targs_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_out_targs.InLlistQ
 bool                 zd_out_targs_InLlistQ(atf_comp::FTargs& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_out_targs.Insert
 void                 zd_out_targs_Insert(atf_comp::FTargs& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_out_targs.Last
 atf_comp::FTargs*    zd_out_targs_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
+// func:atf_comp.FDb.zd_out_targs.N
 i32                  zd_out_targs_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
+// func:atf_comp.FDb.zd_out_targs.Next
 atf_comp::FTargs*    zd_out_targs_Next(atf_comp::FTargs &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_out_targs.Prev
 atf_comp::FTargs*    zd_out_targs_Prev(atf_comp::FTargs &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_out_targs.Remove
 void                 zd_out_targs_Remove(atf_comp::FTargs& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_out_targs.RemoveAll
 void                 zd_out_targs_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_out_targs.RemoveFirst
 atf_comp::FTargs*    zd_out_targs_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_out_targs.qLast
 atf_comp::FTargs&    zd_out_targs_qLast() __attribute__((__warn_unused_result__, nothrow));
 // Save table to ssimfile
+// func:atf_comp.FDb.zd_out_targs.SaveSsimfile
 bool                 zd_out_targs_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // cursor points to valid item
+// func:atf_comp.FDb.comptest_curs.Reset
 void                 _db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.comptest_curs.ValidQ
 bool                 _db_comptest_curs_ValidQ(_db_comptest_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.comptest_curs.Next
 void                 _db_comptest_curs_Next(_db_comptest_curs &curs);
 // item access
+// func:atf_comp.FDb.comptest_curs.Access
 atf_comp::FComptest& _db_comptest_curs_Access(_db_comptest_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_sel_comptest_curs.Reset
 void                 _db_zd_sel_comptest_curs_Reset(_db_zd_sel_comptest_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_sel_comptest_curs.ValidQ
 bool                 _db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_sel_comptest_curs.Next
 void                 _db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_sel_comptest_curs.Access
 atf_comp::FComptest& _db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_run_comptest_curs.Reset
 void                 _db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_run_comptest_curs.ValidQ
 bool                 _db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_run_comptest_curs.Next
 void                 _db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_run_comptest_curs.Access
 atf_comp::FComptest& _db_zd_run_comptest_curs_Access(_db_zd_run_comptest_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_tmsg_curs.Reset
 void                 _db_zd_out_tmsg_curs_Reset(_db_zd_out_tmsg_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_tmsg_curs.ValidQ
 bool                 _db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_out_tmsg_curs.Next
 void                 _db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_out_tmsg_curs.Access
 atf_comp::FTmsg&     _db_zd_out_tmsg_curs_Access(_db_zd_out_tmsg_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_comptest_curs.Reset
 void                 _db_zd_out_comptest_curs_Reset(_db_zd_out_comptest_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_comptest_curs.ValidQ
 bool                 _db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_out_comptest_curs.Next
 void                 _db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_out_comptest_curs.Access
 atf_comp::FComptest& _db_zd_out_comptest_curs_Access(_db_zd_out_comptest_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_tfilt_curs.Reset
 void                 _db_zd_out_tfilt_curs_Reset(_db_zd_out_tfilt_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_tfilt_curs.ValidQ
 bool                 _db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_out_tfilt_curs.Next
 void                 _db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_out_tfilt_curs.Access
 atf_comp::FTfilt&    _db_zd_out_tfilt_curs_Access(_db_zd_out_tfilt_curs &curs);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_targs_curs.Reset
 void                 _db_zd_out_targs_curs_Reset(_db_zd_out_targs_curs &curs, atf_comp::FDb &parent);
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_targs_curs.ValidQ
 bool                 _db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs);
 // proceed to next item
+// func:atf_comp.FDb.zd_out_targs_curs.Next
 void                 _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs);
 // item access
+// func:atf_comp.FDb.zd_out_targs_curs.Access
 atf_comp::FTargs&    _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs);
 // Set all fields to initial values.
+// func:atf_comp.FDb..Init
 void                 FDb_Init();
+// func:atf_comp.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_comp.FTargs
@@ -654,12 +859,16 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_comp.FTargs.base.CopyOut
 void                 targs_CopyOut(atf_comp::FTargs &row, atfdb::Targs &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_comp.FTargs.base.CopyIn
 void                 targs_CopyIn(atf_comp::FTargs &row, atfdb::Targs &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_comp.FTargs..Init
 void                 FTargs_Init(atf_comp::FTargs& targs);
+// func:atf_comp.FTargs..Uninit
 void                 FTargs_Uninit(atf_comp::FTargs& targs) __attribute__((nothrow));
 
 // --- atf_comp.FTfilt
@@ -684,12 +893,16 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_comp.FTfilt.base.CopyOut
 void                 tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_comp.FTfilt.base.CopyIn
 void                 tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
+// func:atf_comp.FTfilt..Init
 void                 FTfilt_Init(atf_comp::FTfilt& tfilt);
+// func:atf_comp.FTfilt..Uninit
 void                 FTfilt_Uninit(atf_comp::FTfilt& tfilt) __attribute__((nothrow));
 
 // --- atf_comp.FTmsg
@@ -716,18 +929,25 @@ private:
 };
 
 // Copy fields out of row
+// func:atf_comp.FTmsg.base.CopyOut
 void                 tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) __attribute__((nothrow));
 // Copy fields in to row
+// func:atf_comp.FTmsg.base.CopyIn
 void                 tmsg_CopyIn(atf_comp::FTmsg &row, atfdb::Tmsg &in) __attribute__((nothrow));
 
+// func:atf_comp.FTmsg.comptest.Get
 algo::Smallstr50     comptest_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_comp.FTmsg.rank.Get
 i32                  rank_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
 
+// func:atf_comp.FTmsg.dir.Get
 algo::Smallstr50     dir_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
+// func:atf_comp.FTmsg..Init
 void                 FTmsg_Init(atf_comp::FTmsg& tmsg);
+// func:atf_comp.FTmsg..Uninit
 void                 FTmsg_Uninit(atf_comp::FTmsg& tmsg) __attribute__((nothrow));
 
 // --- atf_comp.FieldId
@@ -742,32 +962,43 @@ struct FieldId { // atf_comp.FieldId: Field read helper
 #pragma pack(pop)
 
 // Get value of field as enum type
+// func:atf_comp.FieldId.value.GetEnum
 atf_comp_FieldIdEnum value_GetEnum(const atf_comp::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_comp.FieldId.value.SetEnum
 void                 value_SetEnum(atf_comp::FieldId& parent, atf_comp_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_comp.FieldId.value.ToCstr
 const char*          value_ToCstr(const atf_comp::FieldId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_comp.FieldId.value.Print
 void                 value_Print(const atf_comp::FieldId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_comp.FieldId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_comp.FieldId.value.SetStrptr
 void                 value_SetStrptr(atf_comp::FieldId& parent, algo::strptr rhs, atf_comp_FieldIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_comp.FieldId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_comp::FieldId from an ascii string.
 // The format of the string is the format of the atf_comp::FieldId's only field
+// func:atf_comp.FieldId..ReadStrptrMaybe
 bool                 FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_comp.FieldId..Init
 void                 FieldId_Init(atf_comp::FieldId& parent);
-// print string representation of atf_comp::FieldId to string LHS, no header -- cprint:atf_comp.FieldId.String
-void                 FieldId_Print(atf_comp::FieldId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_comp.FieldId.String  printfmt:Raw
+// func:atf_comp.FieldId..Print
+void                 FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_comp.TableId
 struct TableId { // atf_comp.TableId: Index of table in this namespace
@@ -779,32 +1010,43 @@ struct TableId { // atf_comp.TableId: Index of table in this namespace
 };
 
 // Get value of field as enum type
+// func:atf_comp.TableId.value.GetEnum
 atf_comp_TableIdEnum value_GetEnum(const atf_comp::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
+// func:atf_comp.TableId.value.SetEnum
 void                 value_SetEnum(atf_comp::TableId& parent, atf_comp_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_comp.TableId.value.ToCstr
 const char*          value_ToCstr(const atf_comp::TableId& parent) __attribute__((nothrow));
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
+// func:atf_comp.TableId.value.Print
 void                 value_Print(const atf_comp::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
+// func:atf_comp.TableId.value.SetStrptrMaybe
 bool                 value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
+// func:atf_comp.TableId.value.SetStrptr
 void                 value_SetStrptr(atf_comp::TableId& parent, algo::strptr rhs, atf_comp_TableIdEnum dflt) __attribute__((nothrow));
 // Convert string to field. Return success value
+// func:atf_comp.TableId.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // Read fields of atf_comp::TableId from an ascii string.
 // The format of the string is the format of the atf_comp::TableId's only field
+// func:atf_comp.TableId..ReadStrptrMaybe
 bool                 TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr in_str);
 // Set all fields to initial values.
+// func:atf_comp.TableId..Init
 void                 TableId_Init(atf_comp::TableId& parent);
-// print string representation of atf_comp::TableId to string LHS, no header -- cprint:atf_comp.TableId.String
-void                 TableId_Print(atf_comp::TableId & row, algo::cstring &str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_comp.TableId.String  printfmt:Raw
+// func:atf_comp.TableId..Print
+void                 TableId_Print(atf_comp::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_comp { // gen:ns_curstext
 
@@ -881,8 +1123,10 @@ struct _db_zd_out_targs_curs {// fcurs:atf_comp.FDb.zd_out_targs/curs
 } // gen:ns_curstext
 namespace atf_comp { // gen:ns_func
 } // gen:ns_func
+// func:atf_comp...main
 int                  main(int argc, char **argv);
 #if defined(WIN32)
+// func:atf_comp...WinMain
 int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators

@@ -14,7 +14,7 @@ dmmeta.cpptype  ctype:algo.Bool  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Comment  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.CppExpr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.DateCache  ctor:N  dtor:N  cheap_copy:N
-dmmeta.cpptype  ctype:algo.Dbbox  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:algo.Decimal  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.DryrunQ  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.EchoQ  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Errns  ctor:Y  dtor:N  cheap_copy:N
@@ -44,8 +44,6 @@ dmmeta.cpptype  ctype:algo.Imtable  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LnumStr12_U64  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LnumStr6_U32  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LnumStr8_U32  ctor:N  dtor:N  cheap_copy:N
-dmmeta.cpptype  ctype:algo.LogcatId  ctor:Y  dtor:Y  cheap_copy:Y
-dmmeta.cpptype  ctype:algo.LogcatKey  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LspaceStr10  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LspaceStr12  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.LspaceStr14  ctor:N  dtor:N  cheap_copy:N

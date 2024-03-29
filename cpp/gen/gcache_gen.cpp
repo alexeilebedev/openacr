@@ -72,26 +72,48 @@ const char *gcache_help =
 } // namespace gcache
 namespace gcache { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:gcache.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:gcache.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:gcache.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:gcache...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- gcache.cleanreport..ReadFieldMaybe
-bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport &parent, algo::strptr field, algo::strptr strval) {
+bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
     gcache::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
-    bool retval = true; // default is no error
     switch(field_id) {
-        case gcache_FieldId_n_cachefile: retval = i32_ReadStrptrMaybe(parent.n_cachefile, strval); break;
-        case gcache_FieldId_n_cachefile_del: retval = i32_ReadStrptrMaybe(parent.n_cachefile_del, strval); break;
-        case gcache_FieldId_n_cachefile_recent: retval = i32_ReadStrptrMaybe(parent.n_cachefile_recent, strval); break;
-        case gcache_FieldId_n_logline: retval = i32_ReadStrptrMaybe(parent.n_logline, strval); break;
-        case gcache_FieldId_n_logline_del: retval = i32_ReadStrptrMaybe(parent.n_logline_del, strval); break;
-        case gcache_FieldId_new_cachesize_mb: retval = i64_ReadStrptrMaybe(parent.new_cachesize_mb, strval); break;
+        case gcache_FieldId_n_cachefile: {
+            retval = i32_ReadStrptrMaybe(parent.n_cachefile, strval);
+            break;
+        }
+        case gcache_FieldId_n_cachefile_del: {
+            retval = i32_ReadStrptrMaybe(parent.n_cachefile_del, strval);
+            break;
+        }
+        case gcache_FieldId_n_cachefile_recent: {
+            retval = i32_ReadStrptrMaybe(parent.n_cachefile_recent, strval);
+            break;
+        }
+        case gcache_FieldId_n_logline: {
+            retval = i32_ReadStrptrMaybe(parent.n_logline, strval);
+            break;
+        }
+        case gcache_FieldId_n_logline_del: {
+            retval = i32_ReadStrptrMaybe(parent.n_logline_del, strval);
+            break;
+        }
+        case gcache_FieldId_new_cachesize_mb: {
+            retval = i64_ReadStrptrMaybe(parent.new_cachesize_mb, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -113,8 +135,9 @@ bool gcache::cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strp
 }
 
 // --- gcache.cleanreport..Print
-// print string representation of gcache::cleanreport to string LHS, no header -- cprint:gcache.cleanreport.String
-void gcache::cleanreport_Print(gcache::cleanreport & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcache.cleanreport.String  printfmt:Tuple
+void gcache::cleanreport_Print(gcache::cleanreport& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcache.cleanreport";
 
@@ -138,8 +161,9 @@ void gcache::cleanreport_Print(gcache::cleanreport & row, algo::cstring &str) {
 }
 
 // --- gcache.trace..Print
-// print string representation of gcache::trace to string LHS, no header -- cprint:gcache.trace.String
-void gcache::trace_Print(gcache::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcache.trace.String  printfmt:Tuple
+void gcache::trace_Print(gcache::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcache.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -541,8 +565,9 @@ void gcache::FDb_Uninit() {
 }
 
 // --- gcache.FHeader..Print
-// print string representation of gcache::FHeader to string LHS, no header -- cprint:gcache.FHeader.String
-void gcache::FHeader_Print(gcache::FHeader & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcache.FHeader.String  printfmt:Tuple
+void gcache::FHeader_Print(gcache::FHeader& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcache.FHeader";
 
@@ -695,8 +720,9 @@ bool gcache::FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_st
 }
 
 // --- gcache.FieldId..Print
-// print string representation of gcache::FieldId to string LHS, no header -- cprint:gcache.FieldId.String
-void gcache::FieldId_Print(gcache::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:gcache.FieldId.String  printfmt:Raw
+void gcache::FieldId_Print(gcache::FieldId& row, algo::cstring& str) {
     gcache::value_Print(row, str);
 }
 

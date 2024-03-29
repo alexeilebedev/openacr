@@ -17,7 +17,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Contacting ICE: <https://www.theice.com/contact>
-// Target: acr_ed (exe) -- ACR Editor Set of useful recipes, uses acr, abt, git, and other tools
+// Target: acr_ed (exe) -- Script generator for common dev tasks
 // Exceptions: yes
 // Source: cpp/acr_ed/main.cpp
 //
@@ -37,6 +37,7 @@ void acr_ed::NeedAmc() {
 
 // -----------------------------------------------------------------------------
 
+// Retrieve BASE type for CTYPE
 acr_ed::FCtype *acr_ed::Basetype(acr_ed::FCtype &ctype) {
     acr_ed::FCtype *retval = &ctype;
     ind_beg(acr_ed::ctype_c_field_curs,field,ctype) {
@@ -49,18 +50,30 @@ acr_ed::FCtype *acr_ed::Basetype(acr_ed::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
-acr_ed::FField *acr_ed::PkeyField(strptr ctype) {
-    acr_ed::FCtype &fctype = acr_ed::ind_ctype_FindX(ctype);
-    acr_ed::FCtype *basetype = acr_ed::Basetype(fctype);
-    vrfy(c_field_N(*basetype) > 0, tempstr() << "no fields in "<<ctype);
+// Retrieve pkey field for ctype CTYPE
+// or throw an exception if CTYPE has no fields
+acr_ed::FField *acr_ed::PkeyField(algo::strptr pkey) {
+    acr_ed::FCtype &ctype = ind_ctype_FindX(pkey);
+    acr_ed::FCtype *basetype = acr_ed::Basetype(ctype);
+    vrfy(c_field_N(*basetype) > 0, tempstr() << "no fields in "<<ctype.ctype);
     return c_field_Find(*basetype, 0);
 }
 
 // -----------------------------------------------------------------------------
 
+// Convert string to lower_under format: SomeString -> some_String
 tempstr acr_ed::ToLowerUnder(strptr str) {
     tempstr lower;
     algo::strptr_PrintLowerUnder(str,lower);
+    return lower;
+}
+
+// -----------------------------------------------------------------------------
+
+// Convert string to CamelCase format: some_string -> SomeString
+tempstr acr_ed::ToCamelCase(strptr str) {
+    tempstr lower;
+    algo::strptr_PrintCamel(str,lower);
     return lower;
 }
 
@@ -71,6 +84,7 @@ void acr_ed::InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader) {
         Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.h\"");
         Ins(&R, acr_ed::_db.script, "#include \"include/gen/$target_gen.inl.h\"");
     } else {
+        Ins(&R, acr_ed::_db.script, "#include \"include/algo.h\"");
         Ins(&R, acr_ed::_db.script, "#include \"include/$target.h\"");
     }
     Ins(&R, acr_ed::_db.script, "");
@@ -119,11 +133,10 @@ static void SelectCreate() {
         acr_ed_edaction_Create_Finput.select=true;
     } else if (ch_N(acr_ed::_db.cmdline.ssimfile) > 0) {
         acr_ed_edaction_Create_Ssimfile.select=true;
+    } else if (ch_N(acr_ed::_db.cmdline.srcfile) > 0) {
+        acr_ed_edaction_Create_Srcfile.select=true;
     } else if (ch_N(acr_ed::_db.cmdline.target) > 0) {
         acr_ed_edaction_Create_Target.select=true;
-    }
-    if (ch_N(acr_ed::_db.cmdline.srcfile) > 0) {
-        acr_ed_edaction_Create_Srcfile.select=true;
     }
     if (ch_N(acr_ed::_db.cmdline.ctype) > 0) {
         acr_ed_edaction_Create_Ctype.select=true;
@@ -188,6 +201,7 @@ static void ExecuteTransaction() {
     if (algo_lib::_db.cmdline.verbose > 0) {
         final_script << "set -x" << eol;// echo all output
     }
+    final_script << "set -e" << eol;
     {
         command::acr acr;
         acr.t       = true;
@@ -212,10 +226,12 @@ static void ExecuteTransaction() {
     if (acr_ed::_db.need_amc) {
         final_script <<  "bin/amc" << eol;
     }
+    algo_lib::FTempfile tempfile;
     // highlight proposed change
     if (!acr_ed::_db.cmdline.write) {
-        StringToFile(final_script, "temp/acr_ed.ssim", algo_FileFlags__throw);
-        final_script = "cat temp/acr_ed.ssim";
+        TempfileInitX(tempfile,"acr_ed");
+        StringToFile(final_script, tempfile.filename, algo_FileFlags__throw);
+        final_script = tempstr() << "cat "<<tempfile.filename;
         if (algo::SaneTerminalQ()) {
             algo_lib::Replscope R;
             Set(R, "$field" , dmmeta::Field_name_Get(acr_ed::_db.cmdline.field));
@@ -229,7 +245,6 @@ static void ExecuteTransaction() {
     if (rc!=0) {
         algo_lib::_db.exit_code++;
     }
-    (void)unlink("temp/acr_ed.ssim");
 }
 
 // -----------------------------------------------------------------------------
@@ -302,9 +317,9 @@ void acr_ed::ProcessAction() {
 
 void acr_ed::Main() {
     algo_lib::FLockfile lockfile;
-    LockFileInit(lockfile, "lock/acr_ed");
-
-    acr_ed::_db.script << "set -e" << eol;
+    if (_db.cmdline.write) {
+        LockFileInit(lockfile, "lock/acr_ed");
+    }
 
     if (acr_ed::_db.cmdline.create) {
         SelectCreate();
@@ -334,7 +349,7 @@ void acr_ed::Main() {
             sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
             sandbox.cmd.reset = true;
             sandbox_ExecX(sandbox);
-            algo_lib::SandboxEnter(dev_Sandbox_sandbox_acr_ed);
+            algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_acr_ed));
             acr_ed::_db.cmdline.write = true;// !!! enable write mode from now on
             NeedAmc();
         }
@@ -347,7 +362,7 @@ void acr_ed::Main() {
 
         // END SANDBOX (if requested)
         if (acr_ed::_db.cmdline.sandbox) {
-            algo_lib::SandboxExit();
+            algo_lib::PopDir();
             command::sandbox_proc sandbox;
             sandbox.cmd.name.expr = dev_Sandbox_sandbox_acr_ed;
             sandbox.cmd.diff = true;

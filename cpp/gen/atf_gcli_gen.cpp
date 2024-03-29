@@ -70,22 +70,32 @@ const char *atf_gcli_help =
 } // namespace atf_gcli
 namespace atf_gcli { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:atf_gcli.FDb._db.InitReflection
     static void          InitReflection();
+    // func:atf_gcli.FDb.gtblacttst.InputMaybe
     static bool          gtblacttst_InputMaybe(gclidb::Gtblacttst &elem) __attribute__((nothrow));
+    // func:atf_gcli.FDb.gtblacttstout.InputMaybe
     static bool          gtblacttstout_InputMaybe(gclidb::Gtblacttstout &elem) __attribute__((nothrow));
+    // func:atf_gcli.FDb.gclienvsub.InputMaybe
     static bool          gclienvsub_InputMaybe(gclidb::Gclienvsub &elem) __attribute__((nothrow));
+    // func:atf_gcli.FDb.gclienv.InputMaybe
     static bool          gclienv_InputMaybe(gclidb::Gclienv &elem) __attribute__((nothrow));
+    // func:atf_gcli.FDb.gtblact.InputMaybe
     static bool          gtblact_InputMaybe(gclidb::Gtblact &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:atf_gcli.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:atf_gcli.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:atf_gcli...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_gcli.trace..Print
-// print string representation of atf_gcli::trace to string LHS, no header -- cprint:atf_gcli.trace.String
-void atf_gcli::trace_Print(atf_gcli::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_gcli.trace.String  printfmt:Tuple
+void atf_gcli::trace_Print(atf_gcli::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_gcli.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -2153,8 +2163,9 @@ bool atf_gcli::FieldId_ReadStrptrMaybe(atf_gcli::FieldId &parent, algo::strptr i
 }
 
 // --- atf_gcli.FieldId..Print
-// print string representation of atf_gcli::FieldId to string LHS, no header -- cprint:atf_gcli.FieldId.String
-void atf_gcli::FieldId_Print(atf_gcli::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_gcli.FieldId.String  printfmt:Raw
+void atf_gcli::FieldId_Print(atf_gcli::FieldId& row, algo::cstring& str) {
     atf_gcli::value_Print(row, str);
 }
 
@@ -2267,8 +2278,9 @@ bool atf_gcli::TableId_ReadStrptrMaybe(atf_gcli::TableId &parent, algo::strptr i
 }
 
 // --- atf_gcli.TableId..Print
-// print string representation of atf_gcli::TableId to string LHS, no header -- cprint:atf_gcli.TableId.String
-void atf_gcli::TableId_Print(atf_gcli::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:atf_gcli.TableId.String  printfmt:Raw
+void atf_gcli::TableId_Print(atf_gcli::TableId& row, algo::cstring& str) {
     atf_gcli::value_Print(row, str);
 }
 

@@ -705,13 +705,6 @@ void amc::gen_prep_ctype() {
 void amc::gen_copypriv() {
 }
 
-void amc::gen_pmask() {
-    // create bitsets for pmask fields
-    ind_beg(amc::_db_pmaskfld_curs, pmaskfld, amc::_db) if (!pmaskfld.p_field->c_fbitset) {
-        amc::fbitset_InsertMaybe(dmmeta::Fbitset(pmaskfld.field, algo::Comment()));
-    }ind_end;
-}
-
 void amc::gen_xref2() {
     // for each ctype, calculate list of xrefs where the ctype is a child
     ind_beg(amc::_db_xref_curs, xref, amc::_db) {
@@ -727,13 +720,8 @@ void amc::gen_xref2() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_select_ns() {
-    // skip namespaces that can't match
-    algo_lib::Regx ns_regx;
-    (void)Regx_ReadStrptrMaybe(ns_regx, amc::Query_GetNs());
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
-        ns.select = ns.c_nscpp
-            && (!amc::QueryModeQ()
-                || Regx_Match(ns_regx,ns.ns));
+        ns.select = ns.c_nscpp;
     }ind_end;
 }
 

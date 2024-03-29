@@ -61,17 +61,22 @@ const char *ams_cat_help =
 } // namespace ams_cat
 namespace ams_cat { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
+    // func:ams_cat.FDb._db.InitReflection
     static void          InitReflection();
     // find trace by row id (used to implement reflection)
+    // func:ams_cat.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:ams_cat.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:ams_cat...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
 // --- ams_cat.trace..Print
-// print string representation of ams_cat::trace to string LHS, no header -- cprint:ams_cat.trace.String
-void ams_cat::trace_Print(ams_cat::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ams_cat.trace.String  printfmt:Tuple
+void ams_cat::trace_Print(ams_cat::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams_cat.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -432,8 +437,9 @@ bool ams_cat::FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_
 }
 
 // --- ams_cat.FieldId..Print
-// print string representation of ams_cat::FieldId to string LHS, no header -- cprint:ams_cat.FieldId.String
-void ams_cat::FieldId_Print(ams_cat::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:ams_cat.FieldId.String  printfmt:Raw
+void ams_cat::FieldId_Print(ams_cat::FieldId& row, algo::cstring& str) {
     ams_cat::value_Print(row, str);
 }
 

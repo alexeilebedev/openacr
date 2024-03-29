@@ -24,9 +24,11 @@
 // -----------------------------------------------------------------------------
 
 void sandbox::ResetSandbox(sandbox::FSandbox &sandbox) {
-    prerr("sandbox.reset"
-          <<Keyval("sandbox",sandbox.sandbox)
-          <<Keyval("dir",sandbox.dir));
+    if (!_db.cmdline.q) {
+        prerr("sandbox.reset"
+              <<Keyval("sandbox",sandbox.sandbox)
+              <<Keyval("dir",sandbox.dir));
+    }
     // use git clone
     // shallow repos (such as used in CI jobs) cannot use --local.
     if (!algo::FileObjectExistsQ(sandbox.dir)) {
@@ -35,7 +37,7 @@ void sandbox::ResetSandbox(sandbox::FSandbox &sandbox) {
     }
     tempstr curdir=algo::GetCurDir();
     int rc=SysCmd(tempstr()
-                  <<"git -C "<<sandbox.dir<<" fetch "<<curdir<<" -q"
+                  <<"git -C "<<sandbox.dir<<" fetch -q "<<curdir<<" "<<_db.cmdline.refs
                   // checkout -B may fail if directory non-clean
                   <<" && "
                   <<"git -C "<<sandbox.dir<<" reset --hard -q"
@@ -77,6 +79,7 @@ void sandbox::AcrApply(algo::strptr script, algo::strptr op) {
         acr.cmd.del=true;
     }
     acr.cmd.write=true;
+    acr.cmd.report=false;
     acr.fstdin << "<"<<tempfile.filename;
     acr_ExecX(acr);
 }
@@ -121,6 +124,11 @@ void sandbox::Main() {
     if (_db.cmdline.create) {
         _db.cmdline.reset=true;
     }
+    if (_db.cmdline.shell) {
+        cmd_RemoveAll(_db.cmdline);
+        cmd_Alloc(_db.cmdline)="bash";
+        cmd_Alloc(_db.cmdline)="-l";
+    }
     if (_db.cmdline.create) {
         tempstr script;
         dev::Sandbox sandbox;
@@ -138,7 +146,9 @@ void sandbox::Main() {
         sandbox.dir = algo_lib::SandboxDir(sandbox.sandbox);
         nsel += sandbox.select;
     }ind_end;
-    if (nsel == 0) {
+    // no arguments provided - list sandboxes
+    if (nsel == 0 && _db.cmdline.name.expr == ""
+        && !(_db.cmdline.reset || _db.cmdline.gc || _db.cmdline.diff || _db.cmdline.clean || _db.cmdline.del)) {
         _db.cmdline.list=true;
         algo_lib::_db.exit_code=1;
         ind_beg(_db_sandbox_curs,sandbox,_db) {
@@ -159,7 +169,7 @@ void sandbox::Main() {
     }
     if (cmd_N(_db.cmdline)) {
         ind_beg(_db_sandbox_curs,sandbox,_db) if (sandbox.select) {
-            algo_lib::SandboxEnter(sandbox.sandbox);
+            algo_lib::PushDir(algo_lib::SandboxDir(sandbox.sandbox));
             tempstr fullcmd;
             ind_beg(command::sandbox_cmd_curs,cmd,_db.cmdline) {
                 fullcmd<<" "<<strptr_ToBash(cmd);
@@ -169,29 +179,29 @@ void sandbox::Main() {
             if (rc!=0) {
                 algo_lib::_db.exit_code=rc;
             }
-            algo_lib::SandboxExit();
+            algo_lib::PopDir();
         }ind_end;
     }
     if (_db.cmdline.diff) {
         ind_beg(_db_sandbox_curs,sandbox,_db) if (sandbox.select) {
-            algo_lib::SandboxEnter(sandbox.sandbox);
+            algo_lib::PushDir(algo_lib::SandboxDir(sandbox.sandbox));
             SysCmd("git diff");
-            algo_lib::SandboxExit();
+            algo_lib::PopDir();
         }ind_end;
     }
     if (_db.cmdline.clean) {
         ind_beg(_db_sandbox_curs,sandbox,_db) if (sandbox.select) {
-            algo_lib::SandboxEnter(sandbox.sandbox);
+            algo_lib::PushDir(algo_lib::SandboxDir(sandbox.sandbox));
             SysCmd(tempstr()<<"git reset --hard -q");
             SysCmd(tempstr()<<"git clean -df . -q");
-            algo_lib::SandboxExit();
+            algo_lib::PopDir();
         }ind_end;
     }
     if (_db.cmdline.gc) {
         ind_beg(_db_sandbox_curs,sandbox,_db) if (sandbox.select) {
-            algo_lib::SandboxEnter(sandbox.sandbox);
+            algo_lib::PushDir(algo_lib::SandboxDir(sandbox.sandbox));
             SysCmd(tempstr()<<"git gc");
-            algo_lib::SandboxExit();
+            algo_lib::PopDir();
         }ind_end;
     }
     if (_db.cmdline.del) {

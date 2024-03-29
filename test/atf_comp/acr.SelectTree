@@ -1,0 +1,15 @@
+dev.license  license:GPL  comment:""
+dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
+  dmmeta.ns  ns:command  nstype:protocol  license:GPL  comment:"Command line descriptions"
+    dmmeta.ctype  ctype:command.acr  comment:""
+      dmmeta.field  field:command.acr.query  arg:algo.cstring  reftype:Val  dflt:'""'  comment:"Regx to match record"
+        dmmeta.anonfld  field:command.acr.query  comment:""
+
+      dmmeta.field  field:command.acr.schema  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Directory for initializing acr meta-data"
+        dmmeta.floadtuples  field:command.acr.schema  comment:""
+
+      dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21
+
+dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:""  comment:"command line"
+  dmmeta.fcmdline  field:acr.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+report.acr  n_select:11  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

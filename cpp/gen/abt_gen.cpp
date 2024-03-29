@@ -107,34 +107,56 @@ namespace abt { // gen:ns_gsymbol
     const char* dev_opt_type_RC("RC");
 } // gen:ns_gsymbol
 namespace abt { // gen:ns_print_proto
+    // func:abt.FDb.targdep.InputMaybe
     static bool          targdep_InputMaybe(dev::Targdep &elem) __attribute__((nothrow));
+    // func:abt.FDb.tool_opt.InputMaybe
     static bool          tool_opt_InputMaybe(dev::ToolOpt &elem) __attribute__((nothrow));
+    // func:abt.FDb.target.InputMaybe
     static bool          target_InputMaybe(dev::Target &elem) __attribute__((nothrow));
+    // func:abt.FDb.targsrc.InputMaybe
     static bool          targsrc_InputMaybe(dev::Targsrc &elem) __attribute__((nothrow));
+    // func:abt.FDb.syscmddep.InputMaybe
     static bool          syscmddep_InputMaybe(dev::Syscmddep &elem) __attribute__((nothrow));
+    // func:abt.FDb.syscmd.InputMaybe
     static bool          syscmd_InputMaybe(dev::Syscmd &elem) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
+    // func:abt.FDb._db.InitReflection
     static void          InitReflection();
+    // func:abt.FDb.cfg.InputMaybe
     static bool          cfg_InputMaybe(dev::Cfg &elem) __attribute__((nothrow));
+    // func:abt.FDb.uname.InputMaybe
     static bool          uname_InputMaybe(dev::Uname &elem) __attribute__((nothrow));
+    // func:abt.FDb.compiler.InputMaybe
     static bool          compiler_InputMaybe(dev::Compiler &elem) __attribute__((nothrow));
+    // func:abt.FDb.arch.InputMaybe
     static bool          arch_InputMaybe(dev::Arch &elem) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:abt.FDb.bh_syscmd.Downheap
     static int           bh_syscmd_Downheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
     // Find and return index of new location for element ROW in the heap, starting at index IDX.
     // Move any elements along the way but do not modify ROW.
+    // func:abt.FDb.bh_syscmd.Upheap
     static int           bh_syscmd_Upheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
+    // func:abt.FDb.bh_syscmd.ElemLt
     static bool          bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
+    // func:abt.FDb.bh_syscmd_curs.Add
     static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, abt::FSyscmd& row);
+    // func:abt.FDb.targsyslib.InputMaybe
     static bool          targsyslib_InputMaybe(dev::Targsyslib &elem) __attribute__((nothrow));
+    // func:abt.FDb.syslib.InputMaybe
     static bool          syslib_InputMaybe(dev::Syslib &elem) __attribute__((nothrow));
+    // func:abt.FDb.include.InputMaybe
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
+    // func:abt.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
+    // func:abt.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
+    // func:abt.FDb.trace.N
     static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    // func:abt...SizeCheck
     static void          SizeCheck();
 } // gen:ns_print_proto
 
@@ -217,8 +239,9 @@ void abt::FCompiler_Uninit(abt::FCompiler& compiler) {
 }
 
 // --- abt.trace..Print
-// print string representation of abt::trace to string LHS, no header -- cprint:abt.trace.String
-void abt::trace_Print(abt::trace & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:abt.trace.String  printfmt:Tuple
+void abt::trace_Print(abt::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "abt.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -1456,7 +1479,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'c4875676c218a86ad11f65d6ef52afbee531a3c5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'7e023e6a973c96b9eff77b297f4736dc1b800211'");
 }
 
 // --- abt.FDb._db.StaticCheck
@@ -5883,7 +5906,6 @@ void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) {
 // Copy fields out of row
 void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
     out.targsyslib = row.targsyslib;
-    (void)Regx_ReadSql(out.uname, row.uname.expr, true);
     out.comment = row.comment;
 }
 
@@ -5891,26 +5913,25 @@ void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
 // Copy fields in to row
 void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) {
     row.targsyslib = in.targsyslib;
-    (void)Regx_ReadSql(row.uname, in.uname.expr, true);
     row.comment = in.comment;
 }
 
 // --- abt.FTargsyslib.target.Get
 algo::Smallstr16 abt::target_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsyslib.targsyslib, ".RL"));
+    algo::Smallstr16 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LL"));
     return ret;
 }
 
 // --- abt.FTargsyslib.syslib.Get
 algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) {
-    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, ".RR"));
+    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LR"));
     return ret;
 }
 
-// --- abt.FTargsyslib.uname.Print
-// Print back to string
-void abt::uname_Print(abt::FTargsyslib& targsyslib, algo::cstring &out) {
-    Regx_Print(targsyslib.uname, out);
+// --- abt.FTargsyslib.uname.Get
+algo::Smallstr50 abt::uname_Get(abt::FTargsyslib& targsyslib) {
+    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LL"));
+    return ret;
 }
 
 // --- abt.FTargsyslib..Uninit
@@ -5936,33 +5957,9 @@ void abt::tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) {
     row.comment = in.comment;
 }
 
-// --- abt.FToolOpt.opt_type.Get
-algo::Smallstr50 abt::opt_type_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LR"));
-    return ret;
-}
-
-// --- abt.FToolOpt.opt.Get
-algo::Smallstr100 abt::opt_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr100 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LR"));
-    return ret;
-}
-
-// --- abt.FToolOpt.target.Get
-algo::Smallstr50 abt::target_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LL"));
-    return ret;
-}
-
 // --- abt.FToolOpt.uname.Get
 algo::Smallstr50 abt::uname_Get(abt::FToolOpt& tool_opt) {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LL"));
-    return ret;
-}
-
-// --- abt.FToolOpt.sortfld.Get
-algo::Smallstr50 abt::sortfld_Get(abt::FToolOpt& tool_opt) {
-    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, ".LL"));
     return ret;
 }
 
@@ -5981,6 +5978,30 @@ algo::Smallstr50 abt::cfg_Get(abt::FToolOpt& tool_opt) {
 // --- abt.FToolOpt.arch.Get
 algo::Smallstr50 abt::arch_Get(abt::FToolOpt& tool_opt) {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LR"));
+    return ret;
+}
+
+// --- abt.FToolOpt.target.Get
+algo::Smallstr50 abt::target_Get(abt::FToolOpt& tool_opt) {
+    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LL"));
+    return ret;
+}
+
+// --- abt.FToolOpt.opt_type.Get
+algo::Smallstr50 abt::opt_type_Get(abt::FToolOpt& tool_opt) {
+    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LR"));
+    return ret;
+}
+
+// --- abt.FToolOpt.opt.Get
+algo::Smallstr100 abt::opt_Get(abt::FToolOpt& tool_opt) {
+    algo::Smallstr100 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LR"));
+    return ret;
+}
+
+// --- abt.FToolOpt.sortfld.Get
+algo::Smallstr50 abt::sortfld_Get(abt::FToolOpt& tool_opt) {
+    algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, ".LL"));
     return ret;
 }
 
@@ -6092,8 +6113,9 @@ bool abt::FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) {
 }
 
 // --- abt.FieldId..Print
-// print string representation of abt::FieldId to string LHS, no header -- cprint:abt.FieldId.String
-void abt::FieldId_Print(abt::FieldId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:abt.FieldId.String  printfmt:Raw
+void abt::FieldId_Print(abt::FieldId& row, algo::cstring& str) {
     abt::value_Print(row, str);
 }
 
@@ -6314,8 +6336,9 @@ bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) {
 }
 
 // --- abt.TableId..Print
-// print string representation of abt::TableId to string LHS, no header -- cprint:abt.TableId.String
-void abt::TableId_Print(abt::TableId & row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:abt.TableId.String  printfmt:Raw
+void abt::TableId_Print(abt::TableId& row, algo::cstring& str) {
     abt::value_Print(row, str);
 }
 

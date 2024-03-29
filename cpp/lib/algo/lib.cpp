@@ -674,19 +674,21 @@ tempstr algo_lib::SandboxDir(algo::strptr sandbox) {
 
 // -----------------------------------------------------------------------------
 
-// Enter sandbox and remember previous directory
-void algo_lib::SandboxEnter(algo::strptr sandbox) {
-    algo_lib::_db.sandbox_orig_dir=algo::GetCurDir();
-    verblog("sandbox.begin"
-            <<Keyval("dir",sandbox));
-    errno_vrfy(chdir(Zeroterm(algo_lib::SandboxDir(sandbox)))==0, "chdir sandbox");
+// Enter sandbox directory remember previous directory
+void algo_lib::PushDir(algo::strptr dir) {
+    algo_lib::dirstack_Alloc()=algo::GetCurDir();
+    verblog("pushd "<<dir);
+    errno_vrfy(chdir(Zeroterm(tempstr()<<dir))==0, "chdir");
 }
 
 // -----------------------------------------------------------------------------
 
 // Change to the directory that was current before sandbox mode
-// Must be balanced with SandboxEnter
-void algo_lib::SandboxExit() {
-    verblog("sandbox.end");
-    errno_vrfy(chdir(Zeroterm(algo_lib::_db.sandbox_orig_dir))==0, "chdir");
+// Must be balanced with PushDir
+void algo_lib::PopDir() {
+    if (algo_lib::dirstack_N()) {
+        verblog("popd");
+        errno_vrfy(chdir(Zeroterm(dirstack_qLast()))==0, "chdir");
+        dirstack_RemoveLast();
+    }
 }

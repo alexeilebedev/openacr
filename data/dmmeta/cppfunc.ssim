@@ -1,4 +1,4 @@
-dmmeta.cppfunc  field:atf_amc.VarlenExtern.length  expr:""
-dmmeta.cppfunc  field:dev.Syscmd.execkey  expr:""
-dmmeta.cppfunc  field:dev.Syscmddep.syscmddep  expr:""
-dmmeta.cppfunc  field:lib_json.FNode.fldkey  expr:""
+dmmeta.cppfunc  field:atf_amc.VarlenExtern.length  expr:""  print:N  set:Y
+dmmeta.cppfunc  field:dev.Syscmd.execkey  expr:""  print:N  set:N
+dmmeta.cppfunc  field:dev.Syscmddep.syscmddep  expr:""  print:N  set:N
+dmmeta.cppfunc  field:lib_json.FNode.fldkey  expr:""  print:N  set:N

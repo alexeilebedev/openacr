@@ -91,9 +91,18 @@ namespace lib_ctype { // update-hdr
     // Search exits early if match.distance exceeds match.maxdist.
     void Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result);
 
-    // Remove unstable fields from a string that's supposed to correspond CTYPE
+    // Remove unstable fields from a tuple encoded in STR, print it back and return
+    // So, if STR is ams.TraceInfo2Msg  tstamp:... field:xxx
+    // And ams.TraceInfo2Msg.tstamp appears in dmmeta.unstablefld table,
+    // this attribute will be stripped from the tuple.
     tempstr StabilizeSsimTuple(strptr str);
 
-    // Fill Replscope with attribute values, including substr
+    // Same as tuple version of FillReplscope, but also parses the tuple from STR
     void FillReplscope(algo_lib::Replscope &R, strptr str);
+
+    // Fill Replscope with attribute values (including substrings) of tuple
+    // So, if STR is dev.targdep targdep:a.b comment:"blah"
+    // Then R will be filled with variables $targdep, $target, $parent, $comment
+    // This can be used to perform $-substitution in strings.
+    void FillReplscope(algo_lib::Replscope &R, algo::Tuple &tuple);
 }

@@ -76,6 +76,16 @@ inline dev::Compiler::Compiler(const algo::strptr&            in_compiler
 inline dev::Compiler::Compiler() {
 }
 
+inline dev::Copyright::Copyright() {
+    dev::Copyright_Init(*this);
+}
+
+
+// --- dev.Copyright..Init
+// Set all fields to initial values.
+inline void dev::Copyright_Init(dev::Copyright& parent) {
+    parent.dflt = bool(false);
+}
 inline dev::Covfile::Covfile() {
     dev::Covfile_Init(*this);
 }
@@ -237,15 +247,8 @@ inline void dev::Linelim_Init(dev::Linelim& parent) {
     parent.nmysteryfunc = u32(0);
 }
 inline dev::Mdsection::Mdsection() {
-    dev::Mdsection_Init(*this);
 }
 
-
-// --- dev.Mdsection..Init
-// Set all fields to initial values.
-inline void dev::Mdsection_Init(dev::Mdsection& parent) {
-    parent.perns = bool(false);
-}
 inline dev::Msgfile::Msgfile() {
     dev::Msgfile_Init(*this);
 }
@@ -268,6 +271,22 @@ inline dev::OptType::OptType(const algo::strptr&            in_opt_type
 {
 }
 inline dev::OptType::OptType() {
+}
+
+inline dev::Package::Package() {
+}
+
+inline dev::Pkgdep::Pkgdep() {
+    dev::Pkgdep_Init(*this);
+}
+
+
+// --- dev.Pkgdep..Init
+// Set all fields to initial values.
+inline void dev::Pkgdep_Init(dev::Pkgdep& parent) {
+    parent.soft = bool(false);
+}
+inline dev::Pkgkey::Pkgkey() {
 }
 
 inline dev::Readme::Readme(const algo::strptr&            in_gitfile
@@ -293,9 +312,6 @@ inline void dev::Readme_Init(dev::Readme& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
 }
-inline dev::Readmens::Readmens() {
-}
-
 inline dev::Sandbox::Sandbox() {
 }
 
@@ -308,17 +324,6 @@ inline dev::Scriptfile::Scriptfile() {
 inline dev::Srcfile::Srcfile() {
 }
 
-inline dev::Ssimfs::Ssimfs() {
-    dev::Ssimfs_Init(*this);
-}
-
-
-// --- dev.Ssimfs..Init
-// Set all fields to initial values.
-inline void dev::Ssimfs_Init(dev::Ssimfs& parent) {
-    parent.rmfile = bool(false);
-    parent.needfile = bool(false);
-}
 inline dev::Syscmd::Syscmd(i64                            in_syscmd
         ,const algo::strptr&            in_command
         ,i32                            in_pid
@@ -450,6 +455,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Badline &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Copyright &row) {// cfmt:dev.Copyright.String
+    dev::Copyright_Print(const_cast<dev::Copyright&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covfile &row) {// cfmt:dev.Covfile.String
     dev::Covfile_Print(const_cast<dev::Covfile&>(row), str);
     return str;
@@ -525,13 +535,23 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Noindent 
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
-    dev::Readme_Print(const_cast<dev::Readme&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Package &row) {// cfmt:dev.Package.String
+    dev::Package_Print(const_cast<dev::Package&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmens &row) {// cfmt:dev.Readmens.String
-    dev::Readmens_Print(const_cast<dev::Readmens&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdep &row) {// cfmt:dev.Pkgdep.String
+    dev::Pkgdep_Print(const_cast<dev::Pkgdep&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgkey &row) {// cfmt:dev.Pkgkey.String
+    dev::Pkgkey_Print(const_cast<dev::Pkgkey&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
+    dev::Readme_Print(const_cast<dev::Readme&>(row), str);
     return str;
 }
 
@@ -552,11 +572,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Scriptfil
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Srcfile &row) {// cfmt:dev.Srcfile.String
     dev::Srcfile_Print(const_cast<dev::Srcfile&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Ssimfs &row) {// cfmt:dev.Ssimfs.String
-    dev::Ssimfs_Print(const_cast<dev::Ssimfs&>(row), str);
     return str;
 }
 
