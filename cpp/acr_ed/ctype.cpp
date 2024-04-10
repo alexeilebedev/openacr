@@ -29,12 +29,18 @@
 // Determine name of pkey for the newly created ctype
 // By converting the ctype's name to lower_under form.
 static tempstr PkeyName(strptr ctype) {
-    tempstr ret(acr_ed::ToLowerUnder(dmmeta::Ctype_name_Get(ctype)));
-    // if command line read -create -ctype amc.FCtype,
-    // remove leading f_ from pkey name.
-    if (StartsWithQ(ret,"f_")) {
-        ret=ch_RestFrom(ret,2);
+    algo::tempstr _name(dmmeta::Ctype_name_Get(ctype));
+    algo::strptr name(_name);
+    // if name starts with two caps, drop the first one
+    if (ch_N(name)>2
+        && algo_lib::UpperCharQ(name.elems[0])
+        && algo_lib::UpperCharQ(name.elems[1])
+        && !algo_lib::UpperCharQ(name.elems[2])
+        ) {
+        name=ch_RestFrom(name,1);
     }
+    tempstr ret;
+    strptr_PrintLowerUnder(name,ret);
     return ret;
 }
 

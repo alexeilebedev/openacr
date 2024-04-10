@@ -276,24 +276,24 @@ algo::aryptr<u64>    ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const 
 // func:algo_lib.Bitset.ary_bitcurs.Next
 void                 Bitset_ary_bitcurs_Next(Bitset_ary_bitcurs &curs);
 // func:algo_lib.Bitset.ary_bitcurs.Reset
-void                 Bitset_ary_bitcurs_Reset(Bitset_ary_bitcurs &curs, algo_lib::Bitset &parent);
+void                 Bitset_ary_bitcurs_Reset(Bitset_ary_bitcurs &curs, algo_lib::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.Bitset.ary_bitcurs.ValidQ
-bool                 Bitset_ary_bitcurs_ValidQ(Bitset_ary_bitcurs &curs);
+bool                 Bitset_ary_bitcurs_ValidQ(Bitset_ary_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.Bitset.ary_bitcurs.Access
-int&                 Bitset_ary_bitcurs_Access(Bitset_ary_bitcurs &curs);
+int&                 Bitset_ary_bitcurs_Access(Bitset_ary_bitcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.Bitset.ary_curs.Next
-void                 Bitset_ary_curs_Next(Bitset_ary_curs &curs);
+void                 Bitset_ary_curs_Next(Bitset_ary_curs &curs) __attribute__((nothrow));
 // func:algo_lib.Bitset.ary_curs.Reset
-void                 Bitset_ary_curs_Reset(Bitset_ary_curs &curs, algo_lib::Bitset &parent);
+void                 Bitset_ary_curs_Reset(Bitset_ary_curs &curs, algo_lib::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.Bitset.ary_curs.ValidQ
-bool                 Bitset_ary_curs_ValidQ(Bitset_ary_curs &curs);
+bool                 Bitset_ary_curs_ValidQ(Bitset_ary_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.Bitset.ary_curs.Access
-u64&                 Bitset_ary_curs_Access(Bitset_ary_curs &curs);
+u64&                 Bitset_ary_curs_Access(Bitset_ary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Bitset..Init
 void                 Bitset_Init(algo_lib::Bitset& parent);
@@ -456,15 +456,15 @@ algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int 
 
 // proceed to next item
 // func:algo_lib.CsvParse.ary_tok_curs.Next
-void                 csvparse_ary_tok_curs_Next(csvparse_ary_tok_curs &curs);
+void                 csvparse_ary_tok_curs_Next(csvparse_ary_tok_curs &curs) __attribute__((nothrow));
 // func:algo_lib.CsvParse.ary_tok_curs.Reset
-void                 csvparse_ary_tok_curs_Reset(csvparse_ary_tok_curs &curs, algo_lib::CsvParse &parent);
+void                 csvparse_ary_tok_curs_Reset(csvparse_ary_tok_curs &curs, algo_lib::CsvParse &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.CsvParse.ary_tok_curs.ValidQ
-bool                 csvparse_ary_tok_curs_ValidQ(csvparse_ary_tok_curs &curs);
+bool                 csvparse_ary_tok_curs_ValidQ(csvparse_ary_tok_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.CsvParse.ary_tok_curs.Access
-algo::cstring&       csvparse_ary_tok_curs_Access(csvparse_ary_tok_curs &curs);
+algo::cstring&       csvparse_ary_tok_curs_Access(csvparse_ary_tok_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.CsvParse..Init
 void                 CsvParse_Init(algo_lib::CsvParse& csvparse);
@@ -1534,28 +1534,28 @@ algo::aryptr<algo::cstring> dirstack_AllocNVal(int n_elems, const algo::cstring&
 
 // cursor points to valid item
 // func:algo_lib.FDb.temp_strings_curs.Reset
-void                 _db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent);
+void                 _db_temp_strings_curs_Reset(_db_temp_strings_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.temp_strings_curs.ValidQ
-bool                 _db_temp_strings_curs_ValidQ(_db_temp_strings_curs &curs);
+bool                 _db_temp_strings_curs_ValidQ(_db_temp_strings_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.temp_strings_curs.Next
-void                 _db_temp_strings_curs_Next(_db_temp_strings_curs &curs);
+void                 _db_temp_strings_curs_Next(_db_temp_strings_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.temp_strings_curs.Access
-algo::cstring&       _db_temp_strings_curs_Access(_db_temp_strings_curs &curs);
+algo::cstring&       _db_temp_strings_curs_Access(_db_temp_strings_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.imtable_curs.Reset
-void                 _db_imtable_curs_Reset(_db_imtable_curs &curs, algo_lib::FDb &parent);
+void                 _db_imtable_curs_Reset(_db_imtable_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.imtable_curs.ValidQ
-bool                 _db_imtable_curs_ValidQ(_db_imtable_curs &curs);
+bool                 _db_imtable_curs_ValidQ(_db_imtable_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.imtable_curs.Next
-void                 _db_imtable_curs_Next(_db_imtable_curs &curs);
+void                 _db_imtable_curs_Next(_db_imtable_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.imtable_curs.Access
-algo_lib::FImtable&  _db_imtable_curs_Access(_db_imtable_curs &curs);
+algo_lib::FImtable&  _db_imtable_curs_Access(_db_imtable_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FDb.bh_timehook_curs.Reserve
 void                 _db_bh_timehook_curs_Reserve(_db_bh_timehook_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -1566,71 +1566,71 @@ void                 _db_bh_timehook_curs_Reset(_db_bh_timehook_curs &curs, algo
 void                 _db_bh_timehook_curs_Next(_db_bh_timehook_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:algo_lib.FDb.bh_timehook_curs.Access
-algo_lib::FTimehook& _db_bh_timehook_curs_Access(_db_bh_timehook_curs &curs);
+algo_lib::FTimehook& _db_bh_timehook_curs_Access(_db_bh_timehook_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:algo_lib.FDb.bh_timehook_curs.ValidQ
-bool                 _db_bh_timehook_curs_ValidQ(_db_bh_timehook_curs &curs);
+bool                 _db_bh_timehook_curs_ValidQ(_db_bh_timehook_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.dispsigcheck_curs.Reset
-void                 _db_dispsigcheck_curs_Reset(_db_dispsigcheck_curs &curs, algo_lib::FDb &parent);
+void                 _db_dispsigcheck_curs_Reset(_db_dispsigcheck_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.dispsigcheck_curs.ValidQ
-bool                 _db_dispsigcheck_curs_ValidQ(_db_dispsigcheck_curs &curs);
+bool                 _db_dispsigcheck_curs_ValidQ(_db_dispsigcheck_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.dispsigcheck_curs.Next
-void                 _db_dispsigcheck_curs_Next(_db_dispsigcheck_curs &curs);
+void                 _db_dispsigcheck_curs_Next(_db_dispsigcheck_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.dispsigcheck_curs.Access
-algo_lib::FDispsigcheck& _db_dispsigcheck_curs_Access(_db_dispsigcheck_curs &curs);
+algo_lib::FDispsigcheck& _db_dispsigcheck_curs_Access(_db_dispsigcheck_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.imdb_curs.Reset
-void                 _db_imdb_curs_Reset(_db_imdb_curs &curs, algo_lib::FDb &parent);
+void                 _db_imdb_curs_Reset(_db_imdb_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.imdb_curs.ValidQ
-bool                 _db_imdb_curs_ValidQ(_db_imdb_curs &curs);
+bool                 _db_imdb_curs_ValidQ(_db_imdb_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.imdb_curs.Next
-void                 _db_imdb_curs_Next(_db_imdb_curs &curs);
+void                 _db_imdb_curs_Next(_db_imdb_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.imdb_curs.Access
-algo_lib::FImdb&     _db_imdb_curs_Access(_db_imdb_curs &curs);
+algo_lib::FImdb&     _db_imdb_curs_Access(_db_imdb_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.FDb..Init
 void                 FDb_Init();
 // cursor points to valid item
 // func:algo_lib.FDb.logcat_curs.Reset
-void                 _db_logcat_curs_Reset(_db_logcat_curs &curs, algo_lib::FDb &parent);
+void                 _db_logcat_curs_Reset(_db_logcat_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.logcat_curs.ValidQ
-bool                 _db_logcat_curs_ValidQ(_db_logcat_curs &curs);
+bool                 _db_logcat_curs_ValidQ(_db_logcat_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.logcat_curs.Next
-void                 _db_logcat_curs_Next(_db_logcat_curs &curs);
+void                 _db_logcat_curs_Next(_db_logcat_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.logcat_curs.Access
-algo_lib::FLogcat&   _db_logcat_curs_Access(_db_logcat_curs &curs);
+algo_lib::FLogcat&   _db_logcat_curs_Access(_db_logcat_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.exec_args_curs.Next
-void                 _db_exec_args_curs_Next(_db_exec_args_curs &curs);
+void                 _db_exec_args_curs_Next(_db_exec_args_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FDb.exec_args_curs.Reset
-void                 _db_exec_args_curs_Reset(_db_exec_args_curs &curs, algo_lib::FDb &parent);
+void                 _db_exec_args_curs_Reset(_db_exec_args_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.exec_args_curs.ValidQ
-bool                 _db_exec_args_curs_ValidQ(_db_exec_args_curs &curs);
+bool                 _db_exec_args_curs_ValidQ(_db_exec_args_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.exec_args_curs.Access
-algo::cstring&       _db_exec_args_curs_Access(_db_exec_args_curs &curs);
+algo::cstring&       _db_exec_args_curs_Access(_db_exec_args_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FDb.dirstack_curs.Next
-void                 _db_dirstack_curs_Next(_db_dirstack_curs &curs);
+void                 _db_dirstack_curs_Next(_db_dirstack_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FDb.dirstack_curs.Reset
-void                 _db_dirstack_curs_Reset(_db_dirstack_curs &curs, algo_lib::FDb &parent);
+void                 _db_dirstack_curs_Reset(_db_dirstack_curs &curs, algo_lib::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FDb.dirstack_curs.ValidQ
-bool                 _db_dirstack_curs_ValidQ(_db_dirstack_curs &curs);
+bool                 _db_dirstack_curs_ValidQ(_db_dirstack_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FDb.dirstack_curs.Access
-algo::cstring&       _db_dirstack_curs_Access(_db_dirstack_curs &curs);
+algo::cstring&       _db_dirstack_curs_Access(_db_dirstack_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
@@ -1915,16 +1915,16 @@ algo_lib::FTxtcell&  c_txtcell_qLast(algo_lib::FTxtrow& txtrow) __attribute__((n
 // func:algo_lib.FTxtrow..Init
 void                 FTxtrow_Init(algo_lib::FTxtrow& txtrow);
 // func:algo_lib.FTxtrow.c_txtcell_curs.Reset
-void                 txtrow_c_txtcell_curs_Reset(txtrow_c_txtcell_curs &curs, algo_lib::FTxtrow &parent);
+void                 txtrow_c_txtcell_curs_Reset(txtrow_c_txtcell_curs &curs, algo_lib::FTxtrow &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FTxtrow.c_txtcell_curs.ValidQ
-bool                 txtrow_c_txtcell_curs_ValidQ(txtrow_c_txtcell_curs &curs);
+bool                 txtrow_c_txtcell_curs_ValidQ(txtrow_c_txtcell_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FTxtrow.c_txtcell_curs.Next
-void                 txtrow_c_txtcell_curs_Next(txtrow_c_txtcell_curs &curs);
+void                 txtrow_c_txtcell_curs_Next(txtrow_c_txtcell_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FTxtrow.c_txtcell_curs.Access
-algo_lib::FTxtcell&  txtrow_c_txtcell_curs_Access(txtrow_c_txtcell_curs &curs);
+algo_lib::FTxtcell&  txtrow_c_txtcell_curs_Access(txtrow_c_txtcell_curs &curs) __attribute__((nothrow));
 // func:algo_lib.FTxtrow..Uninit
 void                 FTxtrow_Uninit(algo_lib::FTxtrow& txtrow) __attribute__((nothrow));
 
@@ -2002,16 +2002,16 @@ void                 c_txtrow_HeapSort(algo_lib::FTxttbl& txttbl) __attribute__(
 void                 c_txtrow_QuickSort(algo_lib::FTxttbl& txttbl) __attribute__((nothrow));
 
 // func:algo_lib.FTxttbl.c_txtrow_curs.Reset
-void                 txttbl_c_txtrow_curs_Reset(txttbl_c_txtrow_curs &curs, algo_lib::FTxttbl &parent);
+void                 txttbl_c_txtrow_curs_Reset(txttbl_c_txtrow_curs &curs, algo_lib::FTxttbl &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.FTxttbl.c_txtrow_curs.ValidQ
-bool                 txttbl_c_txtrow_curs_ValidQ(txttbl_c_txtrow_curs &curs);
+bool                 txttbl_c_txtrow_curs_ValidQ(txttbl_c_txtrow_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.FTxttbl.c_txtrow_curs.Next
-void                 txttbl_c_txtrow_curs_Next(txttbl_c_txtrow_curs &curs);
+void                 txttbl_c_txtrow_curs_Next(txttbl_c_txtrow_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.FTxttbl.c_txtrow_curs.Access
-algo_lib::FTxtrow&   txttbl_c_txtrow_curs_Access(txttbl_c_txtrow_curs &curs);
+algo_lib::FTxtrow&   txttbl_c_txtrow_curs_Access(txttbl_c_txtrow_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.FTxttbl..Init
 void                 FTxttbl_Init(algo_lib::FTxttbl& txttbl);
@@ -2129,16 +2129,16 @@ u64                  temp_buf_rowid_Get(algo_lib::InTextFile& parent, u8 &row) _
 
 // cursor points to valid item
 // func:algo_lib.InTextFile.temp_buf_curs.Reset
-void                 InTextFile_temp_buf_curs_Reset(InTextFile_temp_buf_curs &curs, algo_lib::InTextFile &parent);
+void                 InTextFile_temp_buf_curs_Reset(InTextFile_temp_buf_curs &curs, algo_lib::InTextFile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.InTextFile.temp_buf_curs.ValidQ
-bool                 InTextFile_temp_buf_curs_ValidQ(InTextFile_temp_buf_curs &curs);
+bool                 InTextFile_temp_buf_curs_ValidQ(InTextFile_temp_buf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.InTextFile.temp_buf_curs.Next
-void                 InTextFile_temp_buf_curs_Next(InTextFile_temp_buf_curs &curs);
+void                 InTextFile_temp_buf_curs_Next(InTextFile_temp_buf_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.InTextFile.temp_buf_curs.Access
-u8&                  InTextFile_temp_buf_curs_Access(InTextFile_temp_buf_curs &curs);
+u8&                  InTextFile_temp_buf_curs_Access(InTextFile_temp_buf_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.InTextFile..Init
 void                 InTextFile_Init(algo_lib::InTextFile& parent);
@@ -2264,15 +2264,15 @@ bool                 state_XrefMaybe(algo_lib::RegxState &row);
 
 // proceed to next item
 // func:algo_lib.Regx.state_curs.Next
-void                 regx_state_curs_Next(regx_state_curs &curs);
+void                 regx_state_curs_Next(regx_state_curs &curs) __attribute__((nothrow));
 // func:algo_lib.Regx.state_curs.Reset
-void                 regx_state_curs_Reset(regx_state_curs &curs, algo_lib::Regx &parent);
+void                 regx_state_curs_Reset(regx_state_curs &curs, algo_lib::Regx &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.Regx.state_curs.ValidQ
-bool                 regx_state_curs_ValidQ(regx_state_curs &curs);
+bool                 regx_state_curs_ValidQ(regx_state_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.Regx.state_curs.Access
-algo_lib::RegxState& regx_state_curs_Access(regx_state_curs &curs);
+algo_lib::RegxState& regx_state_curs_Access(regx_state_curs &curs) __attribute__((nothrow));
 // Read fields of algo_lib::Regx from an ascii string.
 // The function is implemented externally.
 // func:algo_lib.Regx..ReadStrptrMaybe
@@ -2418,15 +2418,15 @@ bool                 ary_expr_XrefMaybe(algo_lib::RegxExpr &row);
 
 // proceed to next item
 // func:algo_lib.RegxParse.ary_expr_curs.Next
-void                 regxparse_ary_expr_curs_Next(regxparse_ary_expr_curs &curs);
+void                 regxparse_ary_expr_curs_Next(regxparse_ary_expr_curs &curs) __attribute__((nothrow));
 // func:algo_lib.RegxParse.ary_expr_curs.Reset
-void                 regxparse_ary_expr_curs_Reset(regxparse_ary_expr_curs &curs, algo_lib::RegxParse &parent);
+void                 regxparse_ary_expr_curs_Reset(regxparse_ary_expr_curs &curs, algo_lib::RegxParse &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.RegxParse.ary_expr_curs.ValidQ
-bool                 regxparse_ary_expr_curs_ValidQ(regxparse_ary_expr_curs &curs);
+bool                 regxparse_ary_expr_curs_ValidQ(regxparse_ary_expr_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.RegxParse.ary_expr_curs.Access
-algo_lib::RegxExpr&  regxparse_ary_expr_curs_Access(regxparse_ary_expr_curs &curs);
+algo_lib::RegxExpr&  regxparse_ary_expr_curs_Access(regxparse_ary_expr_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxParse..Init
 void                 RegxParse_Init(algo_lib::RegxParse& regxparse);
@@ -2527,15 +2527,15 @@ void                 ch_class_QuickSort(algo_lib::RegxState& state) __attribute_
 
 // proceed to next item
 // func:algo_lib.RegxState.ch_class_curs.Next
-void                 state_ch_class_curs_Next(state_ch_class_curs &curs);
+void                 state_ch_class_curs_Next(state_ch_class_curs &curs) __attribute__((nothrow));
 // func:algo_lib.RegxState.ch_class_curs.Reset
-void                 state_ch_class_curs_Reset(state_ch_class_curs &curs, algo_lib::RegxState &parent);
+void                 state_ch_class_curs_Reset(state_ch_class_curs &curs, algo_lib::RegxState &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.RegxState.ch_class_curs.ValidQ
-bool                 state_ch_class_curs_ValidQ(state_ch_class_curs &curs);
+bool                 state_ch_class_curs_ValidQ(state_ch_class_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.RegxState.ch_class_curs.Access
-algo::i32_Range&     state_ch_class_curs_Access(state_ch_class_curs &curs);
+algo::i32_Range&     state_ch_class_curs_Access(state_ch_class_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxState..Init
 void                 RegxState_Init(algo_lib::RegxState& state);
@@ -2592,16 +2592,16 @@ void                 ind_replvar_Remove(algo_lib::Replscope& replscope, algo_lib
 void                 ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) __attribute__((nothrow));
 
 // func:algo_lib.Replscope.ind_replvar_curs.Reset
-void                 replscope_ind_replvar_curs_Reset(replscope_ind_replvar_curs &curs, algo_lib::Replscope &parent);
+void                 replscope_ind_replvar_curs_Reset(replscope_ind_replvar_curs &curs, algo_lib::Replscope &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.Replscope.ind_replvar_curs.ValidQ
-bool                 replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_curs &curs);
+bool                 replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo_lib.Replscope.ind_replvar_curs.Next
-void                 replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs);
+void                 replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.Replscope.ind_replvar_curs.Access
-algo_lib::FReplvar&  replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs);
+algo_lib::FReplvar&  replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Replscope..Init
 void                 Replscope_Init(algo_lib::Replscope& replscope);
@@ -2763,15 +2763,15 @@ algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, 
 
 // proceed to next item
 // func:algo_lib.Tabulate.width_curs.Next
-void                 tabulate_width_curs_Next(tabulate_width_curs &curs);
+void                 tabulate_width_curs_Next(tabulate_width_curs &curs) __attribute__((nothrow));
 // func:algo_lib.Tabulate.width_curs.Reset
-void                 tabulate_width_curs_Reset(tabulate_width_curs &curs, algo_lib::Tabulate &parent);
+void                 tabulate_width_curs_Reset(tabulate_width_curs &curs, algo_lib::Tabulate &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.Tabulate.width_curs.ValidQ
-bool                 tabulate_width_curs_ValidQ(tabulate_width_curs &curs);
+bool                 tabulate_width_curs_ValidQ(tabulate_width_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.Tabulate.width_curs.Access
-i32&                 tabulate_width_curs_Access(tabulate_width_curs &curs);
+i32&                 tabulate_width_curs_Access(tabulate_width_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Tabulate..Init
 void                 Tabulate_Init(algo_lib::Tabulate& tabulate);

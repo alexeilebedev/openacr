@@ -151,6 +151,10 @@ bool atfdb::Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::strptr fiel
             retval = bool_ReadStrptrMaybe(parent.build, strval);
             break;
         }
+        case atfdb_FieldId_reinstall: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.reinstall, strval);
+            break;
+        }
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
             break;
@@ -190,6 +194,9 @@ void atfdb::Cipackage_Print(atfdb::Cipackage& row, algo::cstring& str) {
 
     bool_Print(row.build, temp);
     PrintAttrSpaceReset(str,"build", temp);
+
+    algo::Smallstr100_Print(row.reinstall, temp);
+    PrintAttrSpaceReset(str,"reinstall", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -375,6 +382,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_package         : ret = "package";  break;
         case atfdb_FieldId_remove          : ret = "remove";  break;
         case atfdb_FieldId_build           : ret = "build";  break;
+        case atfdb_FieldId_reinstall       : ret = "reinstall";  break;
         case atfdb_FieldId_citest          : ret = "citest";  break;
         case atfdb_FieldId_sandbox         : ret = "sandbox";  break;
         case atfdb_FieldId_comptest        : ret = "comptest";  break;
@@ -527,6 +535,10 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('f','u','z','z','s','t','r','a'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,atfdb_FieldId_fuzzstrat); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','i','n','s','t','a','l'): {
+                    if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,atfdb_FieldId_reinstall); ret = true; break; }
                     break;
                 }
             }

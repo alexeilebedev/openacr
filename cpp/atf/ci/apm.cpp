@@ -324,6 +324,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
 
     Stage("final check - back to original state");
+    algo::SysCmd("git add -u");
     vrfy(Trimmed(algo::SysEval("git ls-files -m",FailokQ(false),100))=="", "not all files were removed");
 }
 
@@ -342,13 +343,13 @@ void atf_ci::citest_apm_reinstall() {
     ind_beg(_db_cipackage_curs,cipackage,_db) {
         // remove package
         if (cipackage.remove) {
+            prlog("# --- remove/reinstall "<<cipackage.package<<" ---");
             command::apm_proc apm;
             apm.cmd.package.expr=cipackage.package;
             apm.cmd.checkclean=false;
             apm.cmd.remove=true;
             apm_ExecX(apm);
 
-            // don't build here (doesn't work yet)
             if (cipackage.build) {
                 command::abt_proc abt;
                 abt.cmd.target.expr="%";
@@ -356,13 +357,16 @@ void atf_ci::citest_apm_reinstall() {
                 abt_ExecX(abt);
             }
 
-            // reinstall package
-            apm.cmd.remove=false;
-            apm.cmd.install=true;
-            apm.cmd.checkclean=false;
-            apm.cmd.origin=".";
-            apm.cmd.ref="HEAD";
-            apm_ExecX(apm);
+            if (cipackage.reinstall != "") {
+                // reinstall package
+                apm.cmd.remove=false;
+                apm.cmd.package.expr=cipackage.reinstall;
+                apm.cmd.install=true;
+                apm.cmd.checkclean=false;
+                apm.cmd.origin=".";
+                apm.cmd.ref="HEAD";
+                apm_ExecX(apm);
+            }
         }
 
         // should round trip cleanly

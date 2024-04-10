@@ -519,15 +519,15 @@ algo::aryptr<char>   ch_AllocNVal(algo::cstring& parent, int n_elems, const char
 
 // proceed to next item
 // func:algo.cstring.ch_curs.Next
-void                 cstring_ch_curs_Next(cstring_ch_curs &curs);
+void                 cstring_ch_curs_Next(cstring_ch_curs &curs) __attribute__((nothrow));
 // func:algo.cstring.ch_curs.Reset
-void                 cstring_ch_curs_Reset(cstring_ch_curs &curs, algo::cstring &parent);
+void                 cstring_ch_curs_Reset(cstring_ch_curs &curs, algo::cstring &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.cstring.ch_curs.ValidQ
-bool                 cstring_ch_curs_ValidQ(cstring_ch_curs &curs);
+bool                 cstring_ch_curs_ValidQ(cstring_ch_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.cstring.ch_curs.Access
-char&                cstring_ch_curs_Access(cstring_ch_curs &curs);
+char&                cstring_ch_curs_Access(cstring_ch_curs &curs) __attribute__((nothrow));
 // func:algo.cstring..Hash
 // this function is 'extrn' and implemented by user
 u32                  cstring_Hash(u32 prev, const algo::cstring & rhs) __attribute__((nothrow));
@@ -712,15 +712,15 @@ algo::aryptr<u8>     ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8&
 
 // proceed to next item
 // func:algo.ByteAry.ary_curs.Next
-void                 ByteAry_ary_curs_Next(ByteAry_ary_curs &curs);
+void                 ByteAry_ary_curs_Next(ByteAry_ary_curs &curs) __attribute__((nothrow));
 // func:algo.ByteAry.ary_curs.Reset
-void                 ByteAry_ary_curs_Reset(ByteAry_ary_curs &curs, algo::ByteAry &parent);
+void                 ByteAry_ary_curs_Reset(ByteAry_ary_curs &curs, algo::ByteAry &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.ByteAry.ary_curs.ValidQ
-bool                 ByteAry_ary_curs_ValidQ(ByteAry_ary_curs &curs);
+bool                 ByteAry_ary_curs_ValidQ(ByteAry_ary_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.ByteAry.ary_curs.Access
-u8&                  ByteAry_ary_curs_Access(ByteAry_ary_curs &curs);
+u8&                  ByteAry_ary_curs_Access(ByteAry_ary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.ByteAry..Init
 void                 ByteAry_Init(algo::ByteAry& parent);
@@ -813,25 +813,25 @@ bool                 ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_s
 // func:algo.Charset.ch_bitcurs.Next
 void                 Charset_ch_bitcurs_Next(Charset_ch_bitcurs &curs);
 // func:algo.Charset.ch_bitcurs.Reset
-void                 Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent);
+void                 Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Charset.ch_bitcurs.ValidQ
-bool                 Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs);
+bool                 Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:algo.Charset.ch_bitcurs.Access
-int&                 Charset_ch_bitcurs_Access(Charset_ch_bitcurs &curs);
+int&                 Charset_ch_bitcurs_Access(Charset_ch_bitcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Charset.ch_curs.Reset
-void                 Charset_ch_curs_Reset(Charset_ch_curs &curs, algo::Charset &parent);
+void                 Charset_ch_curs_Reset(Charset_ch_curs &curs, algo::Charset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Charset.ch_curs.ValidQ
-bool                 Charset_ch_curs_ValidQ(Charset_ch_curs &curs);
+bool                 Charset_ch_curs_ValidQ(Charset_ch_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo.Charset.ch_curs.Next
-void                 Charset_ch_curs_Next(Charset_ch_curs &curs);
+void                 Charset_ch_curs_Next(Charset_ch_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.Charset.ch_curs.Access
-u64&                 Charset_ch_curs_Access(Charset_ch_curs &curs);
+u64&                 Charset_ch_curs_Access(Charset_ch_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Charset from an ascii string.
 // The function is implemented externally.
 // func:algo.Charset..ReadStrptrMaybe
@@ -2648,15 +2648,15 @@ algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const cha
 
 // proceed to next item
 // func:algo.LineBuf.buf_curs.Next
-void                 LineBuf_buf_curs_Next(LineBuf_buf_curs &curs);
+void                 LineBuf_buf_curs_Next(LineBuf_buf_curs &curs) __attribute__((nothrow));
 // func:algo.LineBuf.buf_curs.Reset
-void                 LineBuf_buf_curs_Reset(LineBuf_buf_curs &curs, algo::LineBuf &parent);
+void                 LineBuf_buf_curs_Reset(LineBuf_buf_curs &curs, algo::LineBuf &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.LineBuf.buf_curs.ValidQ
-bool                 LineBuf_buf_curs_ValidQ(LineBuf_buf_curs &curs);
+bool                 LineBuf_buf_curs_ValidQ(LineBuf_buf_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.LineBuf.buf_curs.Access
-char&                LineBuf_buf_curs_Access(LineBuf_buf_curs &curs);
+char&                LineBuf_buf_curs_Access(LineBuf_buf_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LineBuf..Init
 void                 LineBuf_Init(algo::LineBuf& parent);
@@ -5712,16 +5712,16 @@ bool                 value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr
 
 // cursor points to valid item
 // func:algo.Md5Digest.value_curs.Reset
-void                 Md5Digest_value_curs_Reset(Md5Digest_value_curs &curs, algo::Md5Digest &parent);
+void                 Md5Digest_value_curs_Reset(Md5Digest_value_curs &curs, algo::Md5Digest &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Md5Digest.value_curs.ValidQ
-bool                 Md5Digest_value_curs_ValidQ(Md5Digest_value_curs &curs);
+bool                 Md5Digest_value_curs_ValidQ(Md5Digest_value_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo.Md5Digest.value_curs.Next
-void                 Md5Digest_value_curs_Next(Md5Digest_value_curs &curs);
+void                 Md5Digest_value_curs_Next(Md5Digest_value_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.Md5Digest.value_curs.Access
-u8&                  Md5Digest_value_curs_Access(Md5Digest_value_curs &curs);
+u8&                  Md5Digest_value_curs_Access(Md5Digest_value_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Md5Digest from an ascii string.
 // The format of the string is the format of the algo::Md5Digest's only field
 // func:algo.Md5Digest..ReadStrptrMaybe
@@ -11396,16 +11396,16 @@ bool                 sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr
 
 // cursor points to valid item
 // func:algo.Sha1sig.sha1sig_curs.Reset
-void                 Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent);
+void                 Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Sha1sig.sha1sig_curs.ValidQ
-bool                 Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs);
+bool                 Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:algo.Sha1sig.sha1sig_curs.Next
-void                 Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs);
+void                 Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.Sha1sig.sha1sig_curs.Access
-u8&                  Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs);
+u8&                  Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Sha1sig from an ascii string.
 // The function is implemented externally.
 // func:algo.Sha1sig..ReadStrptrMaybe
@@ -12640,15 +12640,15 @@ algo::aryptr<algo::Attr> attrs_AllocNVal(algo::Tuple& parent, int n_elems, const
 
 // proceed to next item
 // func:algo.Tuple.attrs_curs.Next
-void                 Tuple_attrs_curs_Next(Tuple_attrs_curs &curs);
+void                 Tuple_attrs_curs_Next(Tuple_attrs_curs &curs) __attribute__((nothrow));
 // func:algo.Tuple.attrs_curs.Reset
-void                 Tuple_attrs_curs_Reset(Tuple_attrs_curs &curs, algo::Tuple &parent);
+void                 Tuple_attrs_curs_Reset(Tuple_attrs_curs &curs, algo::Tuple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.Tuple.attrs_curs.ValidQ
-bool                 Tuple_attrs_curs_ValidQ(Tuple_attrs_curs &curs);
+bool                 Tuple_attrs_curs_ValidQ(Tuple_attrs_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.Tuple.attrs_curs.Access
-algo::Attr&          Tuple_attrs_curs_Access(Tuple_attrs_curs &curs);
+algo::Attr&          Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Tuple from an ascii string.
 // The function is implemented externally.
 // func:algo.Tuple..ReadStrptrMaybe
@@ -13034,15 +13034,15 @@ algo::aryptr<u64>    ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64&
 
 // proceed to next item
 // func:algo.U64Ary.ary_curs.Next
-void                 U64Ary_ary_curs_Next(U64Ary_ary_curs &curs);
+void                 U64Ary_ary_curs_Next(U64Ary_ary_curs &curs) __attribute__((nothrow));
 // func:algo.U64Ary.ary_curs.Reset
-void                 U64Ary_ary_curs_Reset(U64Ary_ary_curs &curs, algo::U64Ary &parent);
+void                 U64Ary_ary_curs_Reset(U64Ary_ary_curs &curs, algo::U64Ary &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo.U64Ary.ary_curs.ValidQ
-bool                 U64Ary_ary_curs_ValidQ(U64Ary_ary_curs &curs);
+bool                 U64Ary_ary_curs_ValidQ(U64Ary_ary_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo.U64Ary.ary_curs.Access
-u64&                 U64Ary_ary_curs_Access(U64Ary_ary_curs &curs);
+u64&                 U64Ary_ary_curs_Access(U64Ary_ary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Ary..Init
 void                 U64Ary_Init(algo::U64Ary& parent);

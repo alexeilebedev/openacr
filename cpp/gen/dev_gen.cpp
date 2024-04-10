@@ -86,64 +86,6 @@ const char *dev_Sandbox_sandbox_atf_ci       = "atf_ci";
 const char *dev_Sandbox_sandbox_atf_ci_apm   = "atf_ci-apm";
 const char *dev_Sandbox_sandbox_atf_fuzz     = "atf_fuzz";
 
-// compile-time string constants for dev.Target.target
-const char *dev_Target_target_            = "";
-const char *dev_Target_target_abt         = "abt";
-const char *dev_Target_target_abt_md      = "abt_md";
-const char *dev_Target_target_acr         = "acr";
-const char *dev_Target_target_acr_compl   = "acr_compl";
-const char *dev_Target_target_acr_dm      = "acr_dm";
-const char *dev_Target_target_acr_ed      = "acr_ed";
-const char *dev_Target_target_acr_in      = "acr_in";
-const char *dev_Target_target_acr_my      = "acr_my";
-const char *dev_Target_target_algo_lib    = "algo_lib";
-const char *dev_Target_target_amc         = "amc";
-
-const char *dev_Target_target_amc_gc    = "amc_gc";
-const char *dev_Target_target_amc_vis   = "amc_vis";
-
-const char *dev_Target_target_ams_cat        = "ams_cat";
-const char *dev_Target_target_ams_sendtest   = "ams_sendtest";
-const char *dev_Target_target_apm            = "apm";
-const char *dev_Target_target_atf_amc        = "atf_amc";
-const char *dev_Target_target_atf_ci         = "atf_ci";
-const char *dev_Target_target_atf_cmdline    = "atf_cmdline";
-const char *dev_Target_target_atf_comp       = "atf_comp";
-const char *dev_Target_target_atf_cov        = "atf_cov";
-const char *dev_Target_target_atf_fuzz       = "atf_fuzz";
-const char *dev_Target_target_atf_gcli       = "atf_gcli";
-const char *dev_Target_target_atf_nrun       = "atf_nrun";
-const char *dev_Target_target_atf_unit       = "atf_unit";
-const char *dev_Target_target_bash2html      = "bash2html";
-const char *dev_Target_target_gcache         = "gcache";
-const char *dev_Target_target_gcli           = "gcli";
-const char *dev_Target_target_lib_amcdb      = "lib_amcdb";
-const char *dev_Target_target_lib_ams        = "lib_ams";
-const char *dev_Target_target_lib_ctype      = "lib_ctype";
-const char *dev_Target_target_lib_exec       = "lib_exec";
-const char *dev_Target_target_lib_fm         = "lib_fm";
-
-const char *dev_Target_target_lib_git      = "lib_git";
-const char *dev_Target_target_lib_iconv    = "lib_iconv";
-const char *dev_Target_target_lib_json     = "lib_json";
-const char *dev_Target_target_lib_mysql    = "lib_mysql";
-const char *dev_Target_target_lib_prot     = "lib_prot";
-const char *dev_Target_target_lib_sql      = "lib_sql";
-const char *dev_Target_target_mdbg         = "mdbg";
-const char *dev_Target_target_mysql2ssim   = "mysql2ssim";
-const char *dev_Target_target_orgfile      = "orgfile";
-
-const char *dev_Target_target_samp_regx    = "samp_regx";
-const char *dev_Target_target_sandbox      = "sandbox";
-const char *dev_Target_target_src_func     = "src_func";
-const char *dev_Target_target_src_hdr      = "src_hdr";
-const char *dev_Target_target_src_lim      = "src_lim";
-const char *dev_Target_target_ssim2csv     = "ssim2csv";
-const char *dev_Target_target_ssim2mysql   = "ssim2mysql";
-const char *dev_Target_target_ssimfilt     = "ssimfilt";
-const char *dev_Target_target_strconv      = "strconv";
-const char *dev_Target_target_sv2ssim      = "sv2ssim";
-
 namespace dev { // gen:ns_print_proto
     // func:dev...SizeCheck
     static void          SizeCheck();
@@ -1165,7 +1107,6 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_syslib            : ret = "syslib";  break;
         case dev_FieldId_targdep           : ret = "targdep";  break;
         case dev_FieldId_target            : ret = "target";  break;
-        case dev_FieldId_compat            : ret = "compat";  break;
         case dev_FieldId_targsrc           : ret = "targsrc";  break;
         case dev_FieldId_targsyslib        : ret = "targsyslib";  break;
         case dev_FieldId_cov_min           : ret = "cov_min";  break;
@@ -1326,9 +1267,6 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('a','u','t','h','o','r'): {
                     value_SetEnum(parent,dev_FieldId_author); ret = true; break;
-                }
-                case LE_STR6('c','o','m','p','a','t'): {
-                    value_SetEnum(parent,dev_FieldId_compat); ret = true; break;
                 }
                 case LE_STR6('e','x','e','e','x','t'): {
                     value_SetEnum(parent,dev_FieldId_exeext); ret = true; break;
@@ -3148,10 +3086,6 @@ bool dev::Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::s
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
             break;
         }
-        case dev_FieldId_compat: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.compat, strval);
-            break;
-        }
         default: break;
     }
     if (!retval) {
@@ -3181,9 +3115,6 @@ void dev::Target_Print(dev::Target& row, algo::cstring& str) {
 
     algo::Smallstr16_Print(row.target, temp);
     PrintAttrSpaceReset(str,"target", temp);
-
-    algo::Smallstr50_Print(row.compat, temp);
-    PrintAttrSpaceReset(str,"compat", temp);
 }
 
 // --- dev.Targsrc.target.Get

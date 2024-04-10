@@ -191,7 +191,7 @@ inline-command: acr ns:atf_nrun -t -report:N | egrep -v '(dev.targsrc|dmmeta.cty
 dev.license  license:GPL  comment:""
 dmmeta.nstype  nstype:exe  comment:Executable
   dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:"Run N subprocesses in parallel"
-    dev.target  target:atf_nrun  compat:%-%.%-%
+    dev.target  target:atf_nrun
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
       dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:1.00  comment:""
 

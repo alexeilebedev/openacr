@@ -160,6 +160,7 @@ namespace acr { struct _db_cppfunc_curs; }
 namespace acr { struct _db_ssimreq_curs; }
 namespace acr { struct _db_c_ssimreq_rec_curs; }
 namespace acr { struct _db_c_ctype_front_curs; }
+namespace acr { struct _db_sortkey_curs; }
 namespace acr { struct file_zd_frec_curs; }
 namespace acr { struct pline_zd_child_curs; }
 namespace acr { struct print_c_pline_curs; }
@@ -187,6 +188,7 @@ namespace acr { struct FPrintAttr; }
 namespace acr { struct Queryop; }
 namespace acr { struct FQuery; }
 namespace acr { struct FSmallstr; }
+namespace acr { struct FSortkey; }
 namespace acr { struct FSsimreq; }
 namespace acr { struct FSsimsort; }
 namespace acr { struct FSubstr; }
@@ -473,27 +475,27 @@ u64                  ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem)
 algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((nothrow));
 
 // func:acr.FCheck.c_bad_rec_curs.Reset
-void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent);
+void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCheck.c_bad_rec_curs.ValidQ
-bool                 check_c_bad_rec_curs_ValidQ(check_c_bad_rec_curs &curs);
+bool                 check_c_bad_rec_curs_ValidQ(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCheck.c_bad_rec_curs.Next
-void                 check_c_bad_rec_curs_Next(check_c_bad_rec_curs &curs);
+void                 check_c_bad_rec_curs_Next(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCheck.c_bad_rec_curs.Access
-acr::FRec&           check_c_bad_rec_curs_Access(check_c_bad_rec_curs &curs);
+acr::FRec&           check_c_bad_rec_curs_Access(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCheck.ary_name_curs.Next
-void                 check_ary_name_curs_Next(check_ary_name_curs &curs);
+void                 check_ary_name_curs_Next(check_ary_name_curs &curs) __attribute__((nothrow));
 // func:acr.FCheck.ary_name_curs.Reset
-void                 check_ary_name_curs_Reset(check_ary_name_curs &curs, acr::FCheck &parent);
+void                 check_ary_name_curs_Reset(check_ary_name_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCheck.ary_name_curs.ValidQ
-bool                 check_ary_name_curs_ValidQ(check_ary_name_curs &curs);
+bool                 check_ary_name_curs_ValidQ(check_ary_name_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCheck.ary_name_curs.Access
-algo::cstring&       check_ary_name_curs_Access(check_ary_name_curs &curs);
+algo::cstring&       check_ary_name_curs_Access(check_ary_name_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FCheck..Init
 void                 FCheck_Init(acr::FCheck& check);
@@ -876,85 +878,85 @@ bool                 ctype_c_ssimreq_InAryQ(acr::FSsimreq& row) __attribute__((n
 acr::FSsimreq&       c_ssimreq_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // func:acr.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_field_curs.Access
-acr::FField&         ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+acr::FField&         ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_rec_curs.Reset
-void                 ctype_zd_ctype_rec_curs_Reset(ctype_zd_ctype_rec_curs &curs, acr::FCtype &parent);
+void                 ctype_zd_ctype_rec_curs_Reset(ctype_zd_ctype_rec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_rec_curs.ValidQ
-bool                 ctype_zd_ctype_rec_curs_ValidQ(ctype_zd_ctype_rec_curs &curs);
+bool                 ctype_zd_ctype_rec_curs_ValidQ(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_ctype_rec_curs.Next
-void                 ctype_zd_ctype_rec_curs_Next(ctype_zd_ctype_rec_curs &curs);
+void                 ctype_zd_ctype_rec_curs_Next(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_ctype_rec_curs.Access
-acr::FRec&           ctype_zd_ctype_rec_curs_Access(ctype_zd_ctype_rec_curs &curs);
+acr::FRec&           ctype_zd_ctype_rec_curs_Access(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.ind_ctype_rec_curs.Reset
-void                 ctype_ind_ctype_rec_curs_Reset(ctype_ind_ctype_rec_curs &curs, acr::FCtype &parent);
+void                 ctype_ind_ctype_rec_curs_Reset(ctype_ind_ctype_rec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.ind_ctype_rec_curs.ValidQ
-bool                 ctype_ind_ctype_rec_curs_ValidQ(ctype_ind_ctype_rec_curs &curs);
+bool                 ctype_ind_ctype_rec_curs_ValidQ(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.ind_ctype_rec_curs.Next
-void                 ctype_ind_ctype_rec_curs_Next(ctype_ind_ctype_rec_curs &curs);
+void                 ctype_ind_ctype_rec_curs_Next(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.ind_ctype_rec_curs.Access
-acr::FRec&           ctype_ind_ctype_rec_curs_Access(ctype_ind_ctype_rec_curs &curs);
+acr::FRec&           ctype_ind_ctype_rec_curs_Access(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_selrec_curs.Reset
-void                 ctype_zd_ctype_selrec_curs_Reset(ctype_zd_ctype_selrec_curs &curs, acr::FCtype &parent);
+void                 ctype_zd_ctype_selrec_curs_Reset(ctype_zd_ctype_selrec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_selrec_curs.ValidQ
-bool                 ctype_zd_ctype_selrec_curs_ValidQ(ctype_zd_ctype_selrec_curs &curs);
+bool                 ctype_zd_ctype_selrec_curs_ValidQ(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_ctype_selrec_curs.Next
-void                 ctype_zd_ctype_selrec_curs_Next(ctype_zd_ctype_selrec_curs &curs);
+void                 ctype_zd_ctype_selrec_curs_Next(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_ctype_selrec_curs.Access
-acr::FRec&           ctype_zd_ctype_selrec_curs_Access(ctype_zd_ctype_selrec_curs &curs);
+acr::FRec&           ctype_zd_ctype_selrec_curs_Access(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.c_child_curs.Reset
-void                 ctype_c_child_curs_Reset(ctype_c_child_curs &curs, acr::FCtype &parent);
+void                 ctype_c_child_curs_Reset(ctype_c_child_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_child_curs.ValidQ
-bool                 ctype_c_child_curs_ValidQ(ctype_c_child_curs &curs);
+bool                 ctype_c_child_curs_ValidQ(ctype_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_child_curs.Next
-void                 ctype_c_child_curs_Next(ctype_c_child_curs &curs);
+void                 ctype_c_child_curs_Next(ctype_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_child_curs.Access
-acr::FCtype&         ctype_c_child_curs_Access(ctype_c_child_curs &curs);
+acr::FCtype&         ctype_c_child_curs_Access(ctype_c_child_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_arg_curs.Reset
-void                 ctype_zd_arg_curs_Reset(ctype_zd_arg_curs &curs, acr::FCtype &parent);
+void                 ctype_zd_arg_curs_Reset(ctype_zd_arg_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_arg_curs.ValidQ
-bool                 ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs);
+bool                 ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_arg_curs.Next
-void                 ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs);
+void                 ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_arg_curs.Access
-acr::FField&         ctype_zd_arg_curs_Access(ctype_zd_arg_curs &curs);
+acr::FField&         ctype_zd_arg_curs_Access(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.c_ssimreq_curs.Reset
-void                 ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, acr::FCtype &parent);
+void                 ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_ssimreq_curs.ValidQ
-bool                 ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs);
+bool                 ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_ssimreq_curs.Next
-void                 ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs);
+void                 ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_ssimreq_curs.Access
-acr::FSsimreq&       ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs);
+acr::FSsimreq&       ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FCtype..Init
 void                 FCtype_Init(acr::FCtype& ctype);
@@ -1072,6 +1074,11 @@ struct FDb { // acr.FDb: In-memory database for acr
     acr::FCtype**        c_ctype_front_elems;            // array of pointers
     u32                  c_ctype_front_n;                // array of pointers
     u32                  c_ctype_front_max;              // capacity of allocated array
+    acr::FSortkey*       sortkey_lary[32];               // level array
+    i32                  sortkey_n;                      // number of elements in array
+    acr::FSortkey**      ind_sortkey_buckets_elems;      // pointer to bucket array
+    i32                  ind_sortkey_buckets_n;          // number of elements in bucket array
+    i32                  ind_sortkey_n;                  // number of elements in the hash table
     acr::trace           trace;                          //
 };
 
@@ -2388,138 +2395,196 @@ bool                 c_ctype_front_InAryQ(acr::FCtype& row) __attribute__((nothr
 // func:acr.FDb.c_ctype_front.qLast
 acr::FCtype&         c_ctype_front_qLast() __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr.FDb.sortkey.Alloc
+acr::FSortkey&       sortkey_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr.FDb.sortkey.AllocMaybe
+acr::FSortkey*       sortkey_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr.FDb.sortkey.AllocMem
+void*                sortkey_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr.FDb.sortkey.EmptyQ
+bool                 sortkey_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr.FDb.sortkey.Find
+acr::FSortkey*       sortkey_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr.FDb.sortkey.Last
+acr::FSortkey*       sortkey_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr.FDb.sortkey.N
+i32                  sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr.FDb.sortkey.RemoveAll
+void                 sortkey_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr.FDb.sortkey.RemoveLast
+void                 sortkey_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr.FDb.sortkey.qFind
+acr::FSortkey&       sortkey_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr.FDb.sortkey.XrefMaybe
+bool                 sortkey_XrefMaybe(acr::FSortkey &row);
+
+// Return true if hash is empty
+// func:acr.FDb.ind_sortkey.EmptyQ
+bool                 ind_sortkey_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr.FDb.ind_sortkey.Find
+acr::FSortkey*       ind_sortkey_Find(const acr::RecSortkey& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr.FDb.ind_sortkey.GetOrCreate
+acr::FSortkey&       ind_sortkey_GetOrCreate(const acr::RecSortkey& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr.FDb.ind_sortkey.N
+i32                  ind_sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr.FDb.ind_sortkey.InsertMaybe
+bool                 ind_sortkey_InsertMaybe(acr::FSortkey& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr.FDb.ind_sortkey.Remove
+void                 ind_sortkey_Remove(acr::FSortkey& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr.FDb.ind_sortkey.Reserve
+void                 ind_sortkey_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr.FDb.zd_pline_curs.Reset
-void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent);
+void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pline_curs.ValidQ
-bool                 _db_zd_pline_curs_ValidQ(_db_zd_pline_curs &curs);
+bool                 _db_zd_pline_curs_ValidQ(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_pline_curs.Next
-void                 _db_zd_pline_curs_Next(_db_zd_pline_curs &curs);
+void                 _db_zd_pline_curs_Next(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_pline_curs.Access
-acr::FPline&         _db_zd_pline_curs_Access(_db_zd_pline_curs &curs);
+acr::FPline&         _db_zd_pline_curs_Access(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pdep_curs.Reset
-void                 _db_zd_pdep_curs_Reset(_db_zd_pdep_curs &curs, acr::FDb &parent);
+void                 _db_zd_pdep_curs_Reset(_db_zd_pdep_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pdep_curs.ValidQ
-bool                 _db_zd_pdep_curs_ValidQ(_db_zd_pdep_curs &curs);
+bool                 _db_zd_pdep_curs_ValidQ(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_pdep_curs.Next
-void                 _db_zd_pdep_curs_Next(_db_zd_pdep_curs &curs);
+void                 _db_zd_pdep_curs_Next(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_pdep_curs.Access
-acr::FPdep&          _db_zd_pdep_curs_Access(_db_zd_pdep_curs &curs);
+acr::FPdep&          _db_zd_pdep_curs_Access(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, acr::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ctype_curs.Access
-acr::FCtype&         _db_ctype_curs_Access(_db_ctype_curs &curs);
+acr::FCtype&         _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.anonfld_curs.Reset
-void                 _db_anonfld_curs_Reset(_db_anonfld_curs &curs, acr::FDb &parent);
+void                 _db_anonfld_curs_Reset(_db_anonfld_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.anonfld_curs.ValidQ
-bool                 _db_anonfld_curs_ValidQ(_db_anonfld_curs &curs);
+bool                 _db_anonfld_curs_ValidQ(_db_anonfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.anonfld_curs.Next
-void                 _db_anonfld_curs_Next(_db_anonfld_curs &curs);
+void                 _db_anonfld_curs_Next(_db_anonfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.anonfld_curs.Access
-acr::FAnonfld&       _db_anonfld_curs_Access(_db_anonfld_curs &curs);
+acr::FAnonfld&       _db_anonfld_curs_Access(_db_anonfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cdflt_curs.Reset
-void                 _db_cdflt_curs_Reset(_db_cdflt_curs &curs, acr::FDb &parent);
+void                 _db_cdflt_curs_Reset(_db_cdflt_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cdflt_curs.ValidQ
-bool                 _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs);
+bool                 _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.cdflt_curs.Next
-void                 _db_cdflt_curs_Next(_db_cdflt_curs &curs);
+void                 _db_cdflt_curs_Next(_db_cdflt_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.cdflt_curs.Access
-acr::FCdflt&         _db_cdflt_curs_Access(_db_cdflt_curs &curs);
+acr::FCdflt&         _db_cdflt_curs_Access(_db_cdflt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, acr::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.field_curs.Access
-acr::FField&         _db_field_curs_Access(_db_field_curs &curs);
+acr::FField&         _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.file_curs.Reset
-void                 _db_file_curs_Reset(_db_file_curs &curs, acr::FDb &parent);
+void                 _db_file_curs_Reset(_db_file_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.file_curs.ValidQ
-bool                 _db_file_curs_ValidQ(_db_file_curs &curs);
+bool                 _db_file_curs_ValidQ(_db_file_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.file_curs.Next
-void                 _db_file_curs_Next(_db_file_curs &curs);
+void                 _db_file_curs_Next(_db_file_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.file_curs.Access
-acr::FFile&          _db_file_curs_Access(_db_file_curs &curs);
+acr::FFile&          _db_file_curs_Access(_db_file_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_curs.Reset
-void                 _db_zd_all_selrec_curs_Reset(_db_zd_all_selrec_curs &curs, acr::FDb &parent);
+void                 _db_zd_all_selrec_curs_Reset(_db_zd_all_selrec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_curs.ValidQ
-bool                 _db_zd_all_selrec_curs_ValidQ(_db_zd_all_selrec_curs &curs);
+bool                 _db_zd_all_selrec_curs_ValidQ(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_selrec_curs.Next
-void                 _db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs);
+void                 _db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_selrec_curs.Access
-acr::FRec&           _db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &curs);
+acr::FRec&           _db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_delcurs.Reset
-void                 _db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent);
+void                 _db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_delcurs.ValidQ
-bool                 _db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs);
+bool                 _db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_selrec_delcurs.Next
-void                 _db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs);
+void                 _db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_selrec_delcurs.Access
-acr::FRec&           _db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs);
+acr::FRec&           _db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_err_curs.Reset
-void                 _db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent);
+void                 _db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_err_curs.ValidQ
-bool                 _db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs);
+bool                 _db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_err_curs.Next
-void                 _db_zd_all_err_curs_Next(_db_zd_all_err_curs &curs);
+void                 _db_zd_all_err_curs_Next(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_err_curs.Access
-acr::FErr&           _db_zd_all_err_curs_Access(_db_zd_all_err_curs &curs);
+acr::FErr&           _db_zd_all_err_curs_Access(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_sel_ctype_curs.Reset
-void                 _db_zd_sel_ctype_curs_Reset(_db_zd_sel_ctype_curs &curs, acr::FDb &parent);
+void                 _db_zd_sel_ctype_curs_Reset(_db_zd_sel_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_sel_ctype_curs.ValidQ
-bool                 _db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs);
+bool                 _db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_sel_ctype_curs.Next
-void                 _db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs);
+void                 _db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_sel_ctype_curs.Access
-acr::FCtype&         _db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs);
+acr::FCtype&         _db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.bh_pline_curs.Reserve
 void                 _db_bh_pline_curs_Reserve(_db_bh_pline_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -2530,106 +2595,106 @@ void                 _db_bh_pline_curs_Reset(_db_bh_pline_curs &curs, acr::FDb &
 void                 _db_bh_pline_curs_Next(_db_bh_pline_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:acr.FDb.bh_pline_curs.Access
-acr::FPline&         _db_bh_pline_curs_Access(_db_bh_pline_curs &curs);
+acr::FPline&         _db_bh_pline_curs_Access(_db_bh_pline_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:acr.FDb.bh_pline_curs.ValidQ
-bool                 _db_bh_pline_curs_ValidQ(_db_bh_pline_curs &curs);
+bool                 _db_bh_pline_curs_ValidQ(_db_bh_pline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, acr::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.substr_curs.Access
-acr::FSubstr&        _db_substr_curs_Access(_db_substr_curs &curs);
+acr::FSubstr&        _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimfile_curs.Access
-acr::FSsimfile&      _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+acr::FSsimfile&      _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.tempkey_curs.Reset
-void                 _db_tempkey_curs_Reset(_db_tempkey_curs &curs, acr::FDb &parent);
+void                 _db_tempkey_curs_Reset(_db_tempkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.tempkey_curs.ValidQ
-bool                 _db_tempkey_curs_ValidQ(_db_tempkey_curs &curs);
+bool                 _db_tempkey_curs_ValidQ(_db_tempkey_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.tempkey_curs.Next
-void                 _db_tempkey_curs_Next(_db_tempkey_curs &curs);
+void                 _db_tempkey_curs_Next(_db_tempkey_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.tempkey_curs.Access
-acr::FTempkey&       _db_tempkey_curs_Access(_db_tempkey_curs &curs);
+acr::FTempkey&       _db_tempkey_curs_Access(_db_tempkey_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zs_query_curs.Reset
-void                 _db_zs_query_curs_Reset(_db_zs_query_curs &curs, acr::FDb &parent);
+void                 _db_zs_query_curs_Reset(_db_zs_query_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zs_query_curs.ValidQ
-bool                 _db_zs_query_curs_ValidQ(_db_zs_query_curs &curs);
+bool                 _db_zs_query_curs_ValidQ(_db_zs_query_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zs_query_curs.Next
-void                 _db_zs_query_curs_Next(_db_zs_query_curs &curs);
+void                 _db_zs_query_curs_Next(_db_zs_query_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zs_query_curs.Access
-acr::FQuery&         _db_zs_query_curs_Access(_db_zs_query_curs &curs);
+acr::FQuery&         _db_zs_query_curs_Access(_db_zs_query_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimsort_curs.Reset
-void                 _db_ssimsort_curs_Reset(_db_ssimsort_curs &curs, acr::FDb &parent);
+void                 _db_ssimsort_curs_Reset(_db_ssimsort_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimsort_curs.ValidQ
-bool                 _db_ssimsort_curs_ValidQ(_db_ssimsort_curs &curs);
+bool                 _db_ssimsort_curs_ValidQ(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimsort_curs.Next
-void                 _db_ssimsort_curs_Next(_db_ssimsort_curs &curs);
+void                 _db_ssimsort_curs_Next(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimsort_curs.Access
-acr::FSsimsort&      _db_ssimsort_curs_Access(_db_ssimsort_curs &curs);
+acr::FSsimsort&      _db_ssimsort_curs_Access(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.smallstr_curs.Reset
-void                 _db_smallstr_curs_Reset(_db_smallstr_curs &curs, acr::FDb &parent);
+void                 _db_smallstr_curs_Reset(_db_smallstr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.smallstr_curs.ValidQ
-bool                 _db_smallstr_curs_ValidQ(_db_smallstr_curs &curs);
+bool                 _db_smallstr_curs_ValidQ(_db_smallstr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.smallstr_curs.Next
-void                 _db_smallstr_curs_Next(_db_smallstr_curs &curs);
+void                 _db_smallstr_curs_Next(_db_smallstr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.smallstr_curs.Access
-acr::FSmallstr&      _db_smallstr_curs_Access(_db_smallstr_curs &curs);
+acr::FSmallstr&      _db_smallstr_curs_Access(_db_smallstr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.funique_curs.Reset
-void                 _db_funique_curs_Reset(_db_funique_curs &curs, acr::FDb &parent);
+void                 _db_funique_curs_Reset(_db_funique_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.funique_curs.ValidQ
-bool                 _db_funique_curs_ValidQ(_db_funique_curs &curs);
+bool                 _db_funique_curs_ValidQ(_db_funique_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.funique_curs.Next
-void                 _db_funique_curs_Next(_db_funique_curs &curs);
+void                 _db_funique_curs_Next(_db_funique_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.funique_curs.Access
-acr::FFunique&       _db_funique_curs_Access(_db_funique_curs &curs);
+acr::FFunique&       _db_funique_curs_Access(_db_funique_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.bltin_curs.Reset
-void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, acr::FDb &parent);
+void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.bltin_curs.ValidQ
-bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs);
+bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.bltin_curs.Next
-void                 _db_bltin_curs_Next(_db_bltin_curs &curs);
+void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.bltin_curs.Access
-acr::FBltin&         _db_bltin_curs_Access(_db_bltin_curs &curs);
+acr::FBltin&         _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.bh_ctype_topo_curs.Reserve
 void                 _db_bh_ctype_topo_curs_Reserve(_db_bh_ctype_topo_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -2640,56 +2705,68 @@ void                 _db_bh_ctype_topo_curs_Reset(_db_bh_ctype_topo_curs &curs, 
 void                 _db_bh_ctype_topo_curs_Next(_db_bh_ctype_topo_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:acr.FDb.bh_ctype_topo_curs.Access
-acr::FCtype&         _db_bh_ctype_topo_curs_Access(_db_bh_ctype_topo_curs &curs);
+acr::FCtype&         _db_bh_ctype_topo_curs_Access(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:acr.FDb.bh_ctype_topo_curs.ValidQ
-bool                 _db_bh_ctype_topo_curs_ValidQ(_db_bh_ctype_topo_curs &curs);
+bool                 _db_bh_ctype_topo_curs_ValidQ(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cppfunc_curs.Reset
-void                 _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, acr::FDb &parent);
+void                 _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cppfunc_curs.ValidQ
-bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs);
+bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.cppfunc_curs.Next
-void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs);
+void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.cppfunc_curs.Access
-acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs);
+acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimreq_curs.Reset
-void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent);
+void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimreq_curs.ValidQ
-bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs);
+bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimreq_curs.Next
-void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs);
+void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimreq_curs.Access
-acr::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs);
+acr::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.c_ssimreq_rec_curs.Reset
-void                 _db_c_ssimreq_rec_curs_Reset(_db_c_ssimreq_rec_curs &curs, acr::FDb &parent);
+void                 _db_c_ssimreq_rec_curs_Reset(_db_c_ssimreq_rec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.c_ssimreq_rec_curs.ValidQ
-bool                 _db_c_ssimreq_rec_curs_ValidQ(_db_c_ssimreq_rec_curs &curs);
+bool                 _db_c_ssimreq_rec_curs_ValidQ(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.c_ssimreq_rec_curs.Next
-void                 _db_c_ssimreq_rec_curs_Next(_db_c_ssimreq_rec_curs &curs);
+void                 _db_c_ssimreq_rec_curs_Next(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.c_ssimreq_rec_curs.Access
-acr::FRec&           _db_c_ssimreq_rec_curs_Access(_db_c_ssimreq_rec_curs &curs);
+acr::FRec&           _db_c_ssimreq_rec_curs_Access(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.c_ctype_front_curs.Reset
-void                 _db_c_ctype_front_curs_Reset(_db_c_ctype_front_curs &curs, acr::FDb &parent);
+void                 _db_c_ctype_front_curs_Reset(_db_c_ctype_front_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.c_ctype_front_curs.ValidQ
-bool                 _db_c_ctype_front_curs_ValidQ(_db_c_ctype_front_curs &curs);
+bool                 _db_c_ctype_front_curs_ValidQ(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.c_ctype_front_curs.Next
-void                 _db_c_ctype_front_curs_Next(_db_c_ctype_front_curs &curs);
+void                 _db_c_ctype_front_curs_Next(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.c_ctype_front_curs.Access
-acr::FCtype&         _db_c_ctype_front_curs_Access(_db_c_ctype_front_curs &curs);
+acr::FCtype&         _db_c_ctype_front_curs_Access(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr.FDb.sortkey_curs.Reset
+void                 _db_sortkey_curs_Reset(_db_sortkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr.FDb.sortkey_curs.ValidQ
+bool                 _db_sortkey_curs_ValidQ(_db_sortkey_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr.FDb.sortkey_curs.Next
+void                 _db_sortkey_curs_Next(_db_sortkey_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr.FDb.sortkey_curs.Access
+acr::FSortkey&       _db_sortkey_curs_Access(_db_sortkey_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FDb..Init
 void                 FDb_Init();
@@ -2886,16 +2963,16 @@ acr::FRec&           zd_frec_qLast(acr::FFile& file) __attribute__((__warn_unuse
 void                 FFile_Init(acr::FFile& file);
 // cursor points to valid item
 // func:acr.FFile.zd_frec_curs.Reset
-void                 file_zd_frec_curs_Reset(file_zd_frec_curs &curs, acr::FFile &parent);
+void                 file_zd_frec_curs_Reset(file_zd_frec_curs &curs, acr::FFile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FFile.zd_frec_curs.ValidQ
-bool                 file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs);
+bool                 file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FFile.zd_frec_curs.Next
-void                 file_zd_frec_curs_Next(file_zd_frec_curs &curs);
+void                 file_zd_frec_curs_Next(file_zd_frec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FFile.zd_frec_curs.Access
-acr::FRec&           file_zd_frec_curs_Access(file_zd_frec_curs &curs);
+acr::FRec&           file_zd_frec_curs_Access(file_zd_frec_curs &curs) __attribute__((nothrow));
 // func:acr.FFile..Uninit
 void                 FFile_Uninit(acr::FFile& file) __attribute__((nothrow));
 
@@ -2950,9 +3027,10 @@ void                 FPdep_Uninit(acr::FPdep& pdep) __attribute__((nothrow));
 
 // --- acr.RecSortkey
 struct RecSortkey { // acr.RecSortkey: One record
-    double          num;     //   0.0  Numeric key (if present)
-    algo::cstring   str;     // String key (sort key)
-    float           rowid;   //   0.f  row id
+    algo::Smallstr100   ctype;   // Type prefix
+    double              num;     //   0.0  Numeric key (if present)
+    algo::cstring       str;     // String key (sort key)
+    float               rowid;   //   0.f  row id
     bool operator ==(const acr::RecSortkey &rhs) const;
     bool operator !=(const acr::RecSortkey &rhs) const;
     bool operator <(const acr::RecSortkey &rhs) const;
@@ -3088,16 +3166,16 @@ acr::FPdep&          zd_child_qLast(acr::FPline& pline) __attribute__((__warn_un
 void                 FPline_Init(acr::FPline& pline);
 // cursor points to valid item
 // func:acr.FPline.zd_child_curs.Reset
-void                 pline_zd_child_curs_Reset(pline_zd_child_curs &curs, acr::FPline &parent);
+void                 pline_zd_child_curs_Reset(pline_zd_child_curs &curs, acr::FPline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FPline.zd_child_curs.ValidQ
-bool                 pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs);
+bool                 pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FPline.zd_child_curs.Next
-void                 pline_zd_child_curs_Next(pline_zd_child_curs &curs);
+void                 pline_zd_child_curs_Next(pline_zd_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FPline.zd_child_curs.Access
-acr::FPdep&          pline_zd_child_curs_Access(pline_zd_child_curs &curs);
+acr::FPdep&          pline_zd_child_curs_Access(pline_zd_child_curs &curs) __attribute__((nothrow));
 // func:acr.FPline..Uninit
 void                 FPline_Uninit(acr::FPline& pline) __attribute__((nothrow));
 
@@ -3194,16 +3272,16 @@ acr::FPline&         c_pline_qFind(acr::FPrint& print, u32 idx) __attribute__((n
 acr::FPline&         c_pline_qLast(acr::FPrint& print) __attribute__((nothrow));
 
 // func:acr.FPrint.c_pline_curs.Reset
-void                 print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent);
+void                 print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FPrint.c_pline_curs.ValidQ
-bool                 print_c_pline_curs_ValidQ(print_c_pline_curs &curs);
+bool                 print_c_pline_curs_ValidQ(print_c_pline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FPrint.c_pline_curs.Next
-void                 print_c_pline_curs_Next(print_c_pline_curs &curs);
+void                 print_c_pline_curs_Next(print_c_pline_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FPrint.c_pline_curs.Access
-acr::FPline&         print_c_pline_curs_Access(print_c_pline_curs &curs);
+acr::FPline&         print_c_pline_curs_Access(print_c_pline_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FPrint..Init
 void                 FPrint_Init(acr::FPrint& print);
@@ -3492,48 +3570,48 @@ acr::FRec&           c_rec_qLast(acr::FQuery& query) __attribute__((nothrow));
 void                 FQuery_Init(acr::FQuery& query);
 // proceed to next item
 // func:acr.FQuery.where_curs.Next
-void                 query_where_curs_Next(query_where_curs &curs);
+void                 query_where_curs_Next(query_where_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.where_curs.Reset
-void                 query_where_curs_Reset(query_where_curs &curs, acr::FQuery &parent);
+void                 query_where_curs_Reset(query_where_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.where_curs.ValidQ
-bool                 query_where_curs_ValidQ(query_where_curs &curs);
+bool                 query_where_curs_ValidQ(query_where_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.where_curs.Access
-acr::AttrRegx&       query_where_curs_Access(query_where_curs &curs);
+acr::AttrRegx&       query_where_curs_Access(query_where_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_ctype_curs.Reset
-void                 query_c_ctype_curs_Reset(query_c_ctype_curs &curs, acr::FQuery &parent);
+void                 query_c_ctype_curs_Reset(query_c_ctype_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_ctype_curs.ValidQ
-bool                 query_c_ctype_curs_ValidQ(query_c_ctype_curs &curs);
+bool                 query_c_ctype_curs_ValidQ(query_c_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_ctype_curs.Next
-void                 query_c_ctype_curs_Next(query_c_ctype_curs &curs);
+void                 query_c_ctype_curs_Next(query_c_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_ctype_curs.Access
-acr::FCtype&         query_c_ctype_curs_Access(query_c_ctype_curs &curs);
+acr::FCtype&         query_c_ctype_curs_Access(query_c_ctype_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_field_curs.Reset
-void                 query_c_field_curs_Reset(query_c_field_curs &curs, acr::FQuery &parent);
+void                 query_c_field_curs_Reset(query_c_field_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_field_curs.ValidQ
-bool                 query_c_field_curs_ValidQ(query_c_field_curs &curs);
+bool                 query_c_field_curs_ValidQ(query_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_field_curs.Next
-void                 query_c_field_curs_Next(query_c_field_curs &curs);
+void                 query_c_field_curs_Next(query_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_field_curs.Access
-acr::FField&         query_c_field_curs_Access(query_c_field_curs &curs);
+acr::FField&         query_c_field_curs_Access(query_c_field_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_rec_curs.Reset
-void                 query_c_rec_curs_Reset(query_c_rec_curs &curs, acr::FQuery &parent);
+void                 query_c_rec_curs_Reset(query_c_rec_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_rec_curs.ValidQ
-bool                 query_c_rec_curs_ValidQ(query_c_rec_curs &curs);
+bool                 query_c_rec_curs_ValidQ(query_c_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_rec_curs.Next
-void                 query_c_rec_curs_Next(query_c_rec_curs &curs);
+void                 query_c_rec_curs_Next(query_c_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_rec_curs.Access
-acr::FRec&           query_c_rec_curs_Access(query_c_rec_curs &curs);
+acr::FRec&           query_c_rec_curs_Access(query_c_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery..Uninit
 void                 FQuery_Uninit(acr::FQuery& query) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3644,6 +3722,30 @@ algo::Smallstr100    ctype_Get(acr::FSmallstr& smallstr) __attribute__((__warn_u
 // Set all fields to initial values.
 // func:acr.FSmallstr..Init
 void                 FSmallstr_Init(acr::FSmallstr& smallstr);
+
+// --- acr.FSortkey
+// create: acr.FDb.sortkey (Lary)
+// global access: ind_sortkey (Thash)
+struct FSortkey { // acr.FSortkey: Keep track of next rowid for each sortkey
+    acr::FSortkey*    ind_sortkey_next;   // hash next
+    acr::RecSortkey   sortkey;            // Sort key
+    double            next_rowid;         //   0
+private:
+    friend acr::FSortkey&       sortkey_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr::FSortkey*       sortkey_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 sortkey_RemoveAll() __attribute__((nothrow));
+    friend void                 sortkey_RemoveLast() __attribute__((nothrow));
+    FSortkey();
+    ~FSortkey();
+    FSortkey(const FSortkey&){ /*disallow copy constructor */}
+    void operator =(const FSortkey&){ /*disallow direct assignment */}
+};
+
+// Set all fields to initial values.
+// func:acr.FSortkey..Init
+void                 FSortkey_Init(acr::FSortkey& sortkey);
+// func:acr.FSortkey..Uninit
+void                 FSortkey_Uninit(acr::FSortkey& sortkey) __attribute__((nothrow));
 
 // --- acr.FSsimfile
 // create: acr.FDb.ssimfile (Lary)
@@ -3922,16 +4024,16 @@ void                 c_cmtrec_HeapSort(acr::FWrite& write) __attribute__((nothro
 void                 c_cmtrec_QuickSort(acr::FWrite& write) __attribute__((nothrow));
 
 // func:acr.FWrite.c_cmtrec_curs.Reset
-void                 write_c_cmtrec_curs_Reset(write_c_cmtrec_curs &curs, acr::FWrite &parent);
+void                 write_c_cmtrec_curs_Reset(write_c_cmtrec_curs &curs, acr::FWrite &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FWrite.c_cmtrec_curs.ValidQ
-bool                 write_c_cmtrec_curs_ValidQ(write_c_cmtrec_curs &curs);
+bool                 write_c_cmtrec_curs_ValidQ(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FWrite.c_cmtrec_curs.Next
-void                 write_c_cmtrec_curs_Next(write_c_cmtrec_curs &curs);
+void                 write_c_cmtrec_curs_Next(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FWrite.c_cmtrec_curs.Access
-acr::FRec&           write_c_cmtrec_curs_Access(write_c_cmtrec_curs &curs);
+acr::FRec&           write_c_cmtrec_curs_Access(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FWrite..Init
 void                 FWrite_Init(acr::FWrite& write);
@@ -4383,6 +4485,14 @@ struct _db_c_ctype_front_curs {// fcurs:acr.FDb.c_ctype_front/curs
 };
 
 
+struct _db_sortkey_curs {// cursor
+    typedef acr::FSortkey ChildType;
+    acr::FDb *parent;
+    i64 index;
+    _db_sortkey_curs(){ parent=NULL; index=0; }
+};
+
+
 struct file_zd_frec_curs {// fcurs:acr.FFile.zd_frec/curs
     typedef acr::FRec ChildType;
     acr::FRec* row;
@@ -4467,6 +4577,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr::CtypeTopoKey &row);// cfmt:acr.CtypeTopoKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::trace &row);// cfmt:acr.trace.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr::RecSortkey &row);// cfmt:acr.RecSortkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::PlineKey &row);// cfmt:acr.PlineKey.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::Queryop &row);// cfmt:acr.Queryop.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr::FQuery &row);// cfmt:acr.FQuery.String

@@ -2,7 +2,7 @@
 <a href="#about"></a>
 This is OpenACR, a meta-programming language for generative systems programming.
 It consists of a powerful and extensible set of tools for creating programs and meta-algorithms,
-and writing code as data. OpenACR is published at https://github.com/alexeilebedev/openacr
+and writing code as data. OpenACR is published at [https://github.com/alexeilebedev/openacr](https://github.com/alexeilebedev/openacr)
 
 It is the result of over 15 years of development and
 production use. The tools were initially written with the goal of formalizing

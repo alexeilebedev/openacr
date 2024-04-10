@@ -67,7 +67,6 @@ dev.readme  gitfile:txt/lib/lib_json/README.md  inl:N  sandbox:N  filter:""  com
 dev.readme  gitfile:txt/lib/lib_mysql/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/lib/lib_prot/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/lib/lib_sql/README.md  inl:N  sandbox:N  filter:""  comment:""
-dev.readme  gitfile:txt/protocol/.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/protocol/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/protocol/algo/Attr.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/protocol/algo/Bool.md  inl:N  sandbox:N  filter:""  comment:""

@@ -670,88 +670,88 @@ void                 ind_copyright_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:src_hdr.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent);
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.targsrc_curs.Access
-src_hdr::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+src_hdr::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, src_hdr::FDb &parent);
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs);
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.ns_curs.Access
-src_hdr::FNs&        _db_ns_curs_Access(_db_ns_curs &curs);
+src_hdr::FNs&        _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.nsx_curs.Reset
-void                 _db_nsx_curs_Reset(_db_nsx_curs &curs, src_hdr::FDb &parent);
+void                 _db_nsx_curs_Reset(_db_nsx_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.nsx_curs.ValidQ
-bool                 _db_nsx_curs_ValidQ(_db_nsx_curs &curs);
+bool                 _db_nsx_curs_ValidQ(_db_nsx_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.nsx_curs.Next
-void                 _db_nsx_curs_Next(_db_nsx_curs &curs);
+void                 _db_nsx_curs_Next(_db_nsx_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.nsx_curs.Access
-src_hdr::FNsx&       _db_nsx_curs_Access(_db_nsx_curs &curs);
+src_hdr::FNsx&       _db_nsx_curs_Access(_db_nsx_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.license_curs.Reset
-void                 _db_license_curs_Reset(_db_license_curs &curs, src_hdr::FDb &parent);
+void                 _db_license_curs_Reset(_db_license_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.license_curs.ValidQ
-bool                 _db_license_curs_ValidQ(_db_license_curs &curs);
+bool                 _db_license_curs_ValidQ(_db_license_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.license_curs.Next
-void                 _db_license_curs_Next(_db_license_curs &curs);
+void                 _db_license_curs_Next(_db_license_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.license_curs.Access
-src_hdr::FLicense&   _db_license_curs_Access(_db_license_curs &curs);
+src_hdr::FLicense&   _db_license_curs_Access(_db_license_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, src_hdr::FDb &parent);
+void                 _db_target_curs_Reset(_db_target_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
+bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs);
+void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.target_curs.Access
-src_hdr::FTarget&    _db_target_curs_Access(_db_target_curs &curs);
+src_hdr::FTarget&    _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.scriptfile_curs.Reset
-void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, src_hdr::FDb &parent);
+void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.scriptfile_curs.ValidQ
-bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs);
+bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.scriptfile_curs.Next
-void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs);
+void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.scriptfile_curs.Access
-src_hdr::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs);
+src_hdr::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.copyright_curs.Reset
-void                 _db_copyright_curs_Reset(_db_copyright_curs &curs, src_hdr::FDb &parent);
+void                 _db_copyright_curs_Reset(_db_copyright_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FDb.copyright_curs.ValidQ
-bool                 _db_copyright_curs_ValidQ(_db_copyright_curs &curs);
+bool                 _db_copyright_curs_ValidQ(_db_copyright_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FDb.copyright_curs.Next
-void                 _db_copyright_curs_Next(_db_copyright_curs &curs);
+void                 _db_copyright_curs_Next(_db_copyright_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FDb.copyright_curs.Access
-src_hdr::FCopyright& _db_copyright_curs_Access(_db_copyright_curs &curs);
+src_hdr::FCopyright& _db_copyright_curs_Access(_db_copyright_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_hdr.FDb..Init
 void                 FDb_Init();
@@ -928,7 +928,6 @@ void                 FSrc_Init(src_hdr::FSrc& parent);
 struct FTarget { // src_hdr.FTarget
     src_hdr::FTarget*     ind_target_next;   // hash next
     algo::Smallstr16      target;            // Primary key - name of target
-    algo::Smallstr50      compat;            //   "Linux-%.%-%"  Compatibility (regx of builddir)
     src_hdr::FTargsrc**   c_targsrc_elems;   // array of pointers
     u32                   c_targsrc_n;       // array of pointers
     u32                   c_targsrc_max;     // capacity of allocated array
@@ -995,16 +994,16 @@ src_hdr::FTargsrc&   c_targsrc_qLast(src_hdr::FTarget& target) __attribute__((no
 // func:src_hdr.FTarget..Init
 void                 FTarget_Init(src_hdr::FTarget& target);
 // func:src_hdr.FTarget.c_targsrc_curs.Reset
-void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent);
+void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, src_hdr::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_hdr.FTarget.c_targsrc_curs.ValidQ
-bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs);
+bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_hdr.FTarget.c_targsrc_curs.Next
-void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs);
+void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_hdr.FTarget.c_targsrc_curs.Access
-src_hdr::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs);
+src_hdr::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:src_hdr.FTarget..Uninit
 void                 FTarget_Uninit(src_hdr::FTarget& target) __attribute__((nothrow));
 

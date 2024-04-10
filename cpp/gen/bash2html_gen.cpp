@@ -194,6 +194,13 @@ void bash2html::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:bash2html.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!bash2html::LoadTuplesMaybe(cmd.in,true)) {
+            err << "bash2html.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -206,8 +213,6 @@ void bash2html::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(bash2html::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- bash2html.FDb._db.MainLoop

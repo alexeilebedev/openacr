@@ -265,6 +265,13 @@ void sv2ssim::ReadArgv() {
             doexit = true;
         }
     }
+    // dmmeta.floadtuples:sv2ssim.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!sv2ssim::LoadTuplesMaybe(cmd.in,true)) {
+            err << "sv2ssim.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -277,8 +284,6 @@ void sv2ssim::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(sv2ssim::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- sv2ssim.FDb._db.MainLoop

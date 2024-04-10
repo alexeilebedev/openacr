@@ -2611,6 +2611,13 @@ void acr::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:acr.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!acr::LoadTuplesMaybe(cmd.schema,true)) {
+            err << "acr.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -2623,8 +2630,6 @@ void acr::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr::LoadTuplesMaybe(cmd.schema,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- acr.FDb._db.MainLoop
@@ -5383,6 +5388,206 @@ void acr::c_ctype_front_Reserve(u32 n) {
     }
 }
 
+// --- acr.FDb.sortkey.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr::FSortkey& acr::sortkey_Alloc() {
+    acr::FSortkey* row = sortkey_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr.out_of_mem  field:acr.FDb.sortkey  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr.FDb.sortkey.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr::FSortkey* acr::sortkey_AllocMaybe() {
+    acr::FSortkey *row = (acr::FSortkey*)sortkey_AllocMem();
+    if (row) {
+        new (row) acr::FSortkey; // call constructor
+    }
+    return row;
+}
+
+// --- acr.FDb.sortkey.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr::sortkey_AllocMem() {
+    u64 new_nelems     = _db.sortkey_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr::FSortkey*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.sortkey_lary[bsr];
+        if (!lev) {
+            lev=(acr::FSortkey*)algo_lib::malloc_AllocMem(sizeof(acr::FSortkey) * (u64(1)<<bsr));
+            _db.sortkey_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.sortkey_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr.FDb.sortkey.RemoveAll
+// Remove all elements from Lary
+void acr::sortkey_RemoveAll() {
+    for (u64 n = _db.sortkey_n; n>0; ) {
+        n--;
+        sortkey_qFind(u64(n)).~FSortkey(); // destroy last element
+        _db.sortkey_n = i32(n);
+    }
+}
+
+// --- acr.FDb.sortkey.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr::sortkey_RemoveLast() {
+    u64 n = _db.sortkey_n;
+    if (n > 0) {
+        n -= 1;
+        sortkey_qFind(u64(n)).~FSortkey();
+        _db.sortkey_n = i32(n);
+    }
+}
+
+// --- acr.FDb.sortkey.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr::sortkey_XrefMaybe(acr::FSortkey &row) {
+    bool retval = true;
+    (void)row;
+    // insert sortkey into index ind_sortkey
+    if (true) { // user-defined insert condition
+        bool success = ind_sortkey_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr.duplicate_key  xref:acr.FDb.ind_sortkey"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr.FDb.ind_sortkey.Find
+// Find row by key. Return NULL if not found.
+acr::FSortkey* acr::ind_sortkey_Find(const acr::RecSortkey& key) {
+    u32 index = acr::RecSortkey_Hash(0, key) & (_db.ind_sortkey_buckets_n - 1);
+    acr::FSortkey* *e = &_db.ind_sortkey_buckets_elems[index];
+    acr::FSortkey* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).sortkey == key;
+        if (done) break;
+        e         = &ret->ind_sortkey_next;
+    } while (true);
+    return ret;
+}
+
+// --- acr.FDb.ind_sortkey.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr::FSortkey& acr::ind_sortkey_GetOrCreate(const acr::RecSortkey& key) {
+    acr::FSortkey* ret = ind_sortkey_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &sortkey_Alloc();
+        (*ret).sortkey = key;
+        bool good = sortkey_XrefMaybe(*ret);
+        if (!good) {
+            sortkey_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr.create_error  table:ind_sortkey  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr.FDb.ind_sortkey.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr::ind_sortkey_InsertMaybe(acr::FSortkey& row) {
+    ind_sortkey_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_sortkey_next == (acr::FSortkey*)-1)) {// check if in hash already
+        u32 index = acr::RecSortkey_Hash(0, row.sortkey) & (_db.ind_sortkey_buckets_n - 1);
+        acr::FSortkey* *prev = &_db.ind_sortkey_buckets_elems[index];
+        do {
+            acr::FSortkey* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).sortkey == row.sortkey) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_sortkey_next;
+        } while (true);
+        if (retval) {
+            row.ind_sortkey_next = *prev;
+            _db.ind_sortkey_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr.FDb.ind_sortkey.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr::ind_sortkey_Remove(acr::FSortkey& row) {
+    if (LIKELY(row.ind_sortkey_next != (acr::FSortkey*)-1)) {// check if in hash already
+        u32 index = acr::RecSortkey_Hash(0, row.sortkey) & (_db.ind_sortkey_buckets_n - 1);
+        acr::FSortkey* *prev = &_db.ind_sortkey_buckets_elems[index]; // addr of pointer to current element
+        while (acr::FSortkey *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_sortkey_next; // unlink (singly linked list)
+                _db.ind_sortkey_n--;
+                row.ind_sortkey_next = (acr::FSortkey*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_sortkey_next;
+        }
+    }
+}
+
+// --- acr.FDb.ind_sortkey.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr::ind_sortkey_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_sortkey_buckets_n;
+    u32 new_nelems   = _db.ind_sortkey_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr::FSortkey*);
+        u32 new_size = new_nbuckets * sizeof(acr::FSortkey*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr::FSortkey* *new_buckets = (acr::FSortkey**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr.out_of_memory  field:acr.FDb.ind_sortkey");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_sortkey_buckets_n; i++) {
+            acr::FSortkey* elem = _db.ind_sortkey_buckets_elems[i];
+            while (elem) {
+                acr::FSortkey &row        = *elem;
+                acr::FSortkey* next       = row.ind_sortkey_next;
+                u32 index          = acr::RecSortkey_Hash(0, row.sortkey) & (new_nbuckets-1);
+                row.ind_sortkey_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_sortkey_buckets_elems, old_size);
+        _db.ind_sortkey_buckets_elems = new_buckets;
+        _db.ind_sortkey_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr::trace_RowidFind(int t) {
@@ -5835,6 +6040,25 @@ void acr::FDb_Init() {
     _db.c_ctype_front_elems = NULL; // (acr.FDb.c_ctype_front)
     _db.c_ctype_front_n = 0; // (acr.FDb.c_ctype_front)
     _db.c_ctype_front_max = 0; // (acr.FDb.c_ctype_front)
+    // initialize LAry sortkey (acr.FDb.sortkey)
+    _db.sortkey_n = 0;
+    memset(_db.sortkey_lary, 0, sizeof(_db.sortkey_lary)); // zero out all level pointers
+    acr::FSortkey* sortkey_first = (acr::FSortkey*)algo_lib::malloc_AllocMem(sizeof(acr::FSortkey) * (u64(1)<<4));
+    if (!sortkey_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.sortkey_lary[i]  = sortkey_first;
+        sortkey_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr::FSortkey;
+    _db.ind_sortkey_n             	= 0; // (acr.FDb.ind_sortkey)
+    _db.ind_sortkey_buckets_n     	= 4; // (acr.FDb.ind_sortkey)
+    _db.ind_sortkey_buckets_elems 	= (acr::FSortkey**)algo_lib::malloc_AllocMem(sizeof(acr::FSortkey*)*_db.ind_sortkey_buckets_n); // initial buckets (acr.FDb.ind_sortkey)
+    if (!_db.ind_sortkey_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr.FDb.ind_sortkey)
+    }
+    memset(_db.ind_sortkey_buckets_elems, 0, sizeof(acr::FSortkey*)*_db.ind_sortkey_buckets_n); // (acr.FDb.ind_sortkey)
 
     acr::InitReflection();
 }
@@ -5844,6 +6068,12 @@ void acr::FDb_Uninit() {
     acr::FDb &row = _db; (void)row;
     zd_pdep_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pdep
     zd_pline_Cascdel(); // dmmeta.cascdel:acr.FDb.zd_pline
+
+    // acr.FDb.ind_sortkey.Uninit (Thash)  //
+    // skip destruction of ind_sortkey in global scope
+
+    // acr.FDb.sortkey.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr.FDb.c_ctype_front.Uninit (Ptrary)  //Down front (for -ndown)
     algo_lib::malloc_FreeMem(_db.c_ctype_front_elems, sizeof(acr::FCtype*)*_db.c_ctype_front_max); // (acr.FDb.c_ctype_front)
@@ -6115,12 +6345,53 @@ void acr::FPdep_Uninit(acr::FPdep& pdep) {
     }
 }
 
+// --- acr.RecSortkey..Cmp
+i32 acr::RecSortkey_Cmp(acr::RecSortkey& lhs, acr::RecSortkey& rhs) {
+    i32 retval = 0;
+    retval = algo::Smallstr100_Cmp(lhs.ctype, rhs.ctype);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = double_Cmp(lhs.num, rhs.num);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = algo::cstring_Cmp(lhs.str, rhs.str);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = float_Cmp(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
+// --- acr.RecSortkey..Eq
+bool acr::RecSortkey_Eq(const acr::RecSortkey& lhs, const acr::RecSortkey& rhs) {
+    bool retval = true;
+    retval = algo::Smallstr100_Eq(lhs.ctype, rhs.ctype);
+    if (!retval) {
+        return false;
+    }
+    retval = double_Eq(lhs.num, rhs.num);
+    if (!retval) {
+        return false;
+    }
+    retval = algo::cstring_Eq(lhs.str, rhs.str);
+    if (!retval) {
+        return false;
+    }
+    retval = float_Eq(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
 // --- acr.RecSortkey..Print
 // print string representation of ROW to string STR
 // cfmt:acr.RecSortkey.String  printfmt:Tuple
 void acr::RecSortkey_Print(acr::RecSortkey& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr.RecSortkey";
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
 
     double_Print(row.num, temp);
     PrintAttrSpaceReset(str,"num", temp);
@@ -7159,6 +7430,12 @@ void acr::smallstr_CopyIn(acr::FSmallstr &row, dmmeta::Smallstr &in) {
 algo::Smallstr100 acr::ctype_Get(acr::FSmallstr& smallstr) {
     algo::Smallstr100 ret(algo::Pathcomp(smallstr.field, ".RL"));
     return ret;
+}
+
+// --- acr.FSortkey..Uninit
+void acr::FSortkey_Uninit(acr::FSortkey& sortkey) {
+    acr::FSortkey &row = sortkey; (void)row;
+    ind_sortkey_Remove(row); // remove sortkey from index ind_sortkey
 }
 
 // --- acr.FSsimfile.base.CopyOut

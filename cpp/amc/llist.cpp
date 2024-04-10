@@ -697,8 +697,7 @@ void amc::Llist_curs(bool needdel) {
     Ins(&R, ns.curstext    , "");
 
     {
-        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Reset"));
-        func.inl = true;
+        amc::FFunc& func = amc::CreateInlineFunc(Subst(R,"$field_$curstype.Reset"));
         Ins(&R, func.comment, "cursor points to valid item");
         Ins(&R, func.ret  , "void", false);
         Ins(&R, func.proto, "$Parname_$name_$curstype_Reset($Parname_$name_$curstype &curs, $Partype &parent)", false);
@@ -723,8 +722,7 @@ void amc::Llist_curs(bool needdel) {
     }
 
     {
-        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.ValidQ"));
-        func.inl = true;
+        amc::FFunc& func = amc::CreateInlineFunc(Subst(R,"$field_$curstype.ValidQ"));
         Ins(&R, func.comment, "cursor points to valid item");
         Ins(&R, func.ret  , "bool", false);
         Ins(&R, func.proto, "$Parname_$name_$curstype_ValidQ($Parname_$name_$curstype &curs)", false);
@@ -732,8 +730,7 @@ void amc::Llist_curs(bool needdel) {
     }
 
     {
-        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Next"));
-        func.inl = true;
+        amc::FFunc& func = amc::CreateInlineFunc(Subst(R,"$field_$curstype.Next"));
         Ins(&R, func.comment, "proceed to next item");
         Ins(&R, func.ret  , "void", false);
         Ins(&R, func.proto, "$Parname_$name_$curstype_Next($Parname_$name_$curstype &curs)", false);
@@ -761,8 +758,7 @@ void amc::Llist_curs(bool needdel) {
     }
 
     {
-        amc::FFunc& func = amc::ind_func_GetOrCreate(Subst(R,"$field_$curstype.Access"));
-        func.inl = true;
+        amc::FFunc& func = amc::CreateInlineFunc(Subst(R,"$field_$curstype.Access"));
         Ins(&R, func.comment, "item access");
         Ins(&R, func.ret  , "$Cpptype&", false);
         Ins(&R, func.proto, "$Parname_$name_$curstype_Access($Parname_$name_$curstype &curs)", false);

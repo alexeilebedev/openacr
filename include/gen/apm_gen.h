@@ -47,21 +47,23 @@ enum apm_TableIdEnum {                   // apm.TableId.value
     ,apm_TableId_dmmeta_ctype      = 0   // dmmeta.ctype -> apm.FCtype
     ,apm_TableId_dmmeta_Field      = 1   // dmmeta.Field -> apm.FField
     ,apm_TableId_dmmeta_field      = 1   // dmmeta.field -> apm.FField
-    ,apm_TableId_dev_Package       = 2   // dev.Package -> apm.FPackage
-    ,apm_TableId_dev_package       = 2   // dev.package -> apm.FPackage
-    ,apm_TableId_dev_Pkgdep        = 3   // dev.Pkgdep -> apm.FPkgdep
-    ,apm_TableId_dev_pkgdep        = 3   // dev.pkgdep -> apm.FPkgdep
-    ,apm_TableId_dev_Pkgkey        = 4   // dev.Pkgkey -> apm.FPkgkey
-    ,apm_TableId_dev_pkgkey        = 4   // dev.pkgkey -> apm.FPkgkey
-    ,apm_TableId_dmmeta_Ssimfile   = 5   // dmmeta.Ssimfile -> apm.FSsimfile
-    ,apm_TableId_dmmeta_ssimfile   = 5   // dmmeta.ssimfile -> apm.FSsimfile
-    ,apm_TableId_dmmeta_Ssimreq    = 6   // dmmeta.Ssimreq -> apm.FSsimreq
-    ,apm_TableId_dmmeta_ssimreq    = 6   // dmmeta.ssimreq -> apm.FSsimreq
-    ,apm_TableId_dmmeta_Substr     = 7   // dmmeta.Substr -> apm.FSubstr
-    ,apm_TableId_dmmeta_substr     = 7   // dmmeta.substr -> apm.FSubstr
+    ,apm_TableId_dmmeta_Ns         = 2   // dmmeta.Ns -> apm.FNs
+    ,apm_TableId_dmmeta_ns         = 2   // dmmeta.ns -> apm.FNs
+    ,apm_TableId_dev_Package       = 3   // dev.Package -> apm.FPackage
+    ,apm_TableId_dev_package       = 3   // dev.package -> apm.FPackage
+    ,apm_TableId_dev_Pkgdep        = 4   // dev.Pkgdep -> apm.FPkgdep
+    ,apm_TableId_dev_pkgdep        = 4   // dev.pkgdep -> apm.FPkgdep
+    ,apm_TableId_dev_Pkgkey        = 5   // dev.Pkgkey -> apm.FPkgkey
+    ,apm_TableId_dev_pkgkey        = 5   // dev.pkgkey -> apm.FPkgkey
+    ,apm_TableId_dmmeta_Ssimfile   = 6   // dmmeta.Ssimfile -> apm.FSsimfile
+    ,apm_TableId_dmmeta_ssimfile   = 6   // dmmeta.ssimfile -> apm.FSsimfile
+    ,apm_TableId_dmmeta_Ssimreq    = 7   // dmmeta.Ssimreq -> apm.FSsimreq
+    ,apm_TableId_dmmeta_ssimreq    = 7   // dmmeta.ssimreq -> apm.FSsimreq
+    ,apm_TableId_dmmeta_Substr     = 8   // dmmeta.Substr -> apm.FSubstr
+    ,apm_TableId_dmmeta_substr     = 8   // dmmeta.substr -> apm.FSubstr
 };
 
-enum { apm_TableIdEnum_N = 16 };
+enum { apm_TableIdEnum_N = 18 };
 
 namespace apm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -72,6 +74,7 @@ extern const char *apm_help;
 namespace dmmeta { struct Ctype; }
 namespace dmmeta { struct Field; }
 namespace apm { struct FCtype; }
+namespace dmmeta { struct Ns; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace apm { struct FPackage; }
@@ -101,6 +104,7 @@ namespace apm { struct _db_substr_curs; }
 namespace apm { struct _db_zd_topo_package_curs; }
 namespace apm { struct _db_ssimreq_curs; }
 namespace apm { struct _db_mkdir_curs; }
+namespace apm { struct _db_ns_curs; }
 namespace apm { struct package_zd_pkgkey_curs; }
 namespace apm { struct package_c_pkgdep_curs; }
 namespace apm { struct package_c_pkgdep_parent_curs; }
@@ -113,6 +117,7 @@ namespace apm { struct trace; }
 namespace apm { struct FDb; }
 namespace apm { struct FMergefile; }
 namespace apm { struct FMkdir; }
+namespace apm { struct FNs; }
 namespace apm { struct FPkgdep; }
 namespace apm { struct FPkgrec; }
 namespace apm { struct FSsimreq; }
@@ -121,6 +126,8 @@ namespace apm { struct FieldId; }
 namespace apm { struct TableId; }
 namespace apm { extern struct apm::FDb _db; }
 namespace apm { // gen:ns_gsymbol
+    extern const algo::strptr dev_package_amc; // "amc"
+    extern const algo::strptr dev_package_apm; // "apm"
     extern const algo::strptr dev_package_openacr; // "openacr"
 } // gen:ns_gsymbol
 namespace apm { // gen:ns_print_struct
@@ -255,27 +262,27 @@ bool                 ctype_c_ssimreq_InAryQ(apm::FSsimreq& row) __attribute__((n
 apm::FSsimreq&       c_ssimreq_qLast(apm::FCtype& ctype) __attribute__((nothrow));
 
 // func:apm.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, apm::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, apm::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FCtype.c_field_curs.Access
-apm::FField&         ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+apm::FField&         ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // func:apm.FCtype.c_ssimreq_curs.Reset
-void                 ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, apm::FCtype &parent);
+void                 ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, apm::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FCtype.c_ssimreq_curs.ValidQ
-bool                 ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs);
+bool                 ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FCtype.c_ssimreq_curs.Next
-void                 ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs);
+void                 ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FCtype.c_ssimreq_curs.Access
-apm::FSsimreq&       ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs);
+apm::FSsimreq&       ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:apm.FCtype..Init
 void                 FCtype_Init(apm::FCtype& ctype);
@@ -369,6 +376,9 @@ struct FDb { // apm.FDb: In-memory database for apm
     apm::FMkdir**       ind_mkdir_buckets_elems;       // pointer to bucket array
     i32                 ind_mkdir_buckets_n;           // number of elements in bucket array
     i32                 ind_mkdir_n;                   // number of elements in the hash table
+    apm::FNs*           ns_lary[32];                   // level array
+    i32                 ns_n;                          // number of elements in array
+    algo::cstring       pkgdata_recfile;               // File containing new package definitions
     apm::trace          trace;                         //
 };
 
@@ -1244,198 +1254,250 @@ void                 ind_mkdir_Remove(apm::FMkdir& row) __attribute__((nothrow))
 // func:apm.FDb.ind_mkdir.Reserve
 void                 ind_mkdir_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:apm.FDb.ns.Alloc
+apm::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:apm.FDb.ns.AllocMaybe
+apm::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:apm.FDb.ns.InsertMaybe
+apm::FNs*            ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:apm.FDb.ns.AllocMem
+void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:apm.FDb.ns.EmptyQ
+bool                 ns_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:apm.FDb.ns.Find
+apm::FNs*            ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:apm.FDb.ns.Last
+apm::FNs*            ns_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:apm.FDb.ns.N
+i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:apm.FDb.ns.RemoveAll
+void                 ns_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:apm.FDb.ns.RemoveLast
+void                 ns_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:apm.FDb.ns.qFind
+apm::FNs&            ns_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:apm.FDb.ns.XrefMaybe
+bool                 ns_XrefMaybe(apm::FNs &row);
+
 // cursor points to valid item
 // func:apm.FDb.package_curs.Reset
-void                 _db_package_curs_Reset(_db_package_curs &curs, apm::FDb &parent);
+void                 _db_package_curs_Reset(_db_package_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.package_curs.ValidQ
-bool                 _db_package_curs_ValidQ(_db_package_curs &curs);
+bool                 _db_package_curs_ValidQ(_db_package_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.package_curs.Next
-void                 _db_package_curs_Next(_db_package_curs &curs);
+void                 _db_package_curs_Next(_db_package_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.package_curs.Access
-apm::FPackage&       _db_package_curs_Access(_db_package_curs &curs);
+apm::FPackage&       _db_package_curs_Access(_db_package_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_sel_package_curs.Reset
-void                 _db_zd_sel_package_curs_Reset(_db_zd_sel_package_curs &curs, apm::FDb &parent);
+void                 _db_zd_sel_package_curs_Reset(_db_zd_sel_package_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_sel_package_curs.ValidQ
-bool                 _db_zd_sel_package_curs_ValidQ(_db_zd_sel_package_curs &curs);
+bool                 _db_zd_sel_package_curs_ValidQ(_db_zd_sel_package_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_sel_package_curs.Next
-void                 _db_zd_sel_package_curs_Next(_db_zd_sel_package_curs &curs);
+void                 _db_zd_sel_package_curs_Next(_db_zd_sel_package_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_sel_package_curs.Access
-apm::FPackage&       _db_zd_sel_package_curs_Access(_db_zd_sel_package_curs &curs);
+apm::FPackage&       _db_zd_sel_package_curs_Access(_db_zd_sel_package_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.pkgkey_curs.Reset
-void                 _db_pkgkey_curs_Reset(_db_pkgkey_curs &curs, apm::FDb &parent);
+void                 _db_pkgkey_curs_Reset(_db_pkgkey_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.pkgkey_curs.ValidQ
-bool                 _db_pkgkey_curs_ValidQ(_db_pkgkey_curs &curs);
+bool                 _db_pkgkey_curs_ValidQ(_db_pkgkey_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.pkgkey_curs.Next
-void                 _db_pkgkey_curs_Next(_db_pkgkey_curs &curs);
+void                 _db_pkgkey_curs_Next(_db_pkgkey_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.pkgkey_curs.Access
-apm::FPkgkey&        _db_pkgkey_curs_Access(_db_pkgkey_curs &curs);
+apm::FPkgkey&        _db_pkgkey_curs_Access(_db_pkgkey_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.pkgdep_curs.Reset
-void                 _db_pkgdep_curs_Reset(_db_pkgdep_curs &curs, apm::FDb &parent);
+void                 _db_pkgdep_curs_Reset(_db_pkgdep_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.pkgdep_curs.ValidQ
-bool                 _db_pkgdep_curs_ValidQ(_db_pkgdep_curs &curs);
+bool                 _db_pkgdep_curs_ValidQ(_db_pkgdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.pkgdep_curs.Next
-void                 _db_pkgdep_curs_Next(_db_pkgdep_curs &curs);
+void                 _db_pkgdep_curs_Next(_db_pkgdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.pkgdep_curs.Access
-apm::FPkgdep&        _db_pkgdep_curs_Access(_db_pkgdep_curs &curs);
+apm::FPkgdep&        _db_pkgdep_curs_Access(_db_pkgdep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.mergefile_curs.Reset
-void                 _db_mergefile_curs_Reset(_db_mergefile_curs &curs, apm::FDb &parent);
+void                 _db_mergefile_curs_Reset(_db_mergefile_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.mergefile_curs.ValidQ
-bool                 _db_mergefile_curs_ValidQ(_db_mergefile_curs &curs);
+bool                 _db_mergefile_curs_ValidQ(_db_mergefile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.mergefile_curs.Next
-void                 _db_mergefile_curs_Next(_db_mergefile_curs &curs);
+void                 _db_mergefile_curs_Next(_db_mergefile_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.mergefile_curs.Access
-apm::FMergefile&     _db_mergefile_curs_Access(_db_mergefile_curs &curs);
+apm::FMergefile&     _db_mergefile_curs_Access(_db_mergefile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, apm::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.ctype_curs.Access
-apm::FCtype&         _db_ctype_curs_Access(_db_ctype_curs &curs);
+apm::FCtype&         _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, apm::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.field_curs.Access
-apm::FField&         _db_field_curs_Access(_db_field_curs &curs);
+apm::FField&         _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, apm::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.ssimfile_curs.Access
-apm::FSsimfile&      _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+apm::FSsimfile&      _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_rec_curs.Reset
-void                 _db_zd_rec_curs_Reset(_db_zd_rec_curs &curs, apm::FDb &parent);
+void                 _db_zd_rec_curs_Reset(_db_zd_rec_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_rec_curs.ValidQ
-bool                 _db_zd_rec_curs_ValidQ(_db_zd_rec_curs &curs);
+bool                 _db_zd_rec_curs_ValidQ(_db_zd_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_rec_curs.Next
-void                 _db_zd_rec_curs_Next(_db_zd_rec_curs &curs);
+void                 _db_zd_rec_curs_Next(_db_zd_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_rec_curs.Access
-apm::FRec&           _db_zd_rec_curs_Access(_db_zd_rec_curs &curs);
+apm::FRec&           _db_zd_rec_curs_Access(_db_zd_rec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_selrec_curs.Reset
-void                 _db_zd_selrec_curs_Reset(_db_zd_selrec_curs &curs, apm::FDb &parent);
+void                 _db_zd_selrec_curs_Reset(_db_zd_selrec_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_selrec_curs.ValidQ
-bool                 _db_zd_selrec_curs_ValidQ(_db_zd_selrec_curs &curs);
+bool                 _db_zd_selrec_curs_ValidQ(_db_zd_selrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_selrec_curs.Next
-void                 _db_zd_selrec_curs_Next(_db_zd_selrec_curs &curs);
+void                 _db_zd_selrec_curs_Next(_db_zd_selrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_selrec_curs.Access
-apm::FRec&           _db_zd_selrec_curs_Access(_db_zd_selrec_curs &curs);
+apm::FRec&           _db_zd_selrec_curs_Access(_db_zd_selrec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_chooserec_curs.Reset
-void                 _db_zd_chooserec_curs_Reset(_db_zd_chooserec_curs &curs, apm::FDb &parent);
+void                 _db_zd_chooserec_curs_Reset(_db_zd_chooserec_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_chooserec_curs.ValidQ
-bool                 _db_zd_chooserec_curs_ValidQ(_db_zd_chooserec_curs &curs);
+bool                 _db_zd_chooserec_curs_ValidQ(_db_zd_chooserec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_chooserec_curs.Next
-void                 _db_zd_chooserec_curs_Next(_db_zd_chooserec_curs &curs);
+void                 _db_zd_chooserec_curs_Next(_db_zd_chooserec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_chooserec_curs.Access
-apm::FRec&           _db_zd_chooserec_curs_Access(_db_zd_chooserec_curs &curs);
+apm::FRec&           _db_zd_chooserec_curs_Access(_db_zd_chooserec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_chooserec_delcurs.Reset
-void                 _db_zd_chooserec_delcurs_Reset(_db_zd_chooserec_delcurs &curs, apm::FDb &parent);
+void                 _db_zd_chooserec_delcurs_Reset(_db_zd_chooserec_delcurs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_chooserec_delcurs.ValidQ
-bool                 _db_zd_chooserec_delcurs_ValidQ(_db_zd_chooserec_delcurs &curs);
+bool                 _db_zd_chooserec_delcurs_ValidQ(_db_zd_chooserec_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_chooserec_delcurs.Next
-void                 _db_zd_chooserec_delcurs_Next(_db_zd_chooserec_delcurs &curs);
+void                 _db_zd_chooserec_delcurs_Next(_db_zd_chooserec_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_chooserec_delcurs.Access
-apm::FRec&           _db_zd_chooserec_delcurs_Access(_db_zd_chooserec_delcurs &curs);
+apm::FRec&           _db_zd_chooserec_delcurs_Access(_db_zd_chooserec_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, apm::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.substr_curs.Access
-apm::FSubstr&        _db_substr_curs_Access(_db_substr_curs &curs);
+apm::FSubstr&        _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_topo_package_curs.Reset
-void                 _db_zd_topo_package_curs_Reset(_db_zd_topo_package_curs &curs, apm::FDb &parent);
+void                 _db_zd_topo_package_curs_Reset(_db_zd_topo_package_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.zd_topo_package_curs.ValidQ
-bool                 _db_zd_topo_package_curs_ValidQ(_db_zd_topo_package_curs &curs);
+bool                 _db_zd_topo_package_curs_ValidQ(_db_zd_topo_package_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.zd_topo_package_curs.Next
-void                 _db_zd_topo_package_curs_Next(_db_zd_topo_package_curs &curs);
+void                 _db_zd_topo_package_curs_Next(_db_zd_topo_package_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.zd_topo_package_curs.Access
-apm::FPackage&       _db_zd_topo_package_curs_Access(_db_zd_topo_package_curs &curs);
+apm::FPackage&       _db_zd_topo_package_curs_Access(_db_zd_topo_package_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ssimreq_curs.Reset
-void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, apm::FDb &parent);
+void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.ssimreq_curs.ValidQ
-bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs);
+bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.ssimreq_curs.Next
-void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs);
+void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.ssimreq_curs.Access
-apm::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs);
+apm::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.mkdir_curs.Reset
-void                 _db_mkdir_curs_Reset(_db_mkdir_curs &curs, apm::FDb &parent);
+void                 _db_mkdir_curs_Reset(_db_mkdir_curs &curs, apm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FDb.mkdir_curs.ValidQ
-bool                 _db_mkdir_curs_ValidQ(_db_mkdir_curs &curs);
+bool                 _db_mkdir_curs_ValidQ(_db_mkdir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FDb.mkdir_curs.Next
-void                 _db_mkdir_curs_Next(_db_mkdir_curs &curs);
+void                 _db_mkdir_curs_Next(_db_mkdir_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FDb.mkdir_curs.Access
-apm::FMkdir&         _db_mkdir_curs_Access(_db_mkdir_curs &curs);
+apm::FMkdir&         _db_mkdir_curs_Access(_db_mkdir_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.ns_curs.Reset
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, apm::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:apm.FDb.ns_curs.ValidQ
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:apm.FDb.ns_curs.Next
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
+// item access
+// func:apm.FDb.ns_curs.Access
+apm::FNs&            _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:apm.FDb..Init
 void                 FDb_Init();
@@ -1554,6 +1616,29 @@ private:
 void                 FMkdir_Init(apm::FMkdir& mkdir);
 // func:apm.FMkdir..Uninit
 void                 FMkdir_Uninit(apm::FMkdir& mkdir) __attribute__((nothrow));
+
+// --- apm.FNs
+// create: apm.FDb.ns (Lary)
+struct FNs { // apm.FNs
+    algo::Smallstr16   ns;        // Namespace name (primary key)
+    algo::Smallstr50   nstype;    // Namespace type
+    algo::Smallstr50   license;   // Associated license
+    algo::Comment      comment;   //
+private:
+    friend apm::FNs&            ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend apm::FNs*            ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ns_RemoveAll() __attribute__((nothrow));
+    friend void                 ns_RemoveLast() __attribute__((nothrow));
+    FNs();
+};
+
+// Copy fields out of row
+// func:apm.FNs.base.CopyOut
+void                 ns_CopyOut(apm::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:apm.FNs.base.CopyIn
+void                 ns_CopyIn(apm::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
+
 
 // --- apm.FPackage
 // create: apm.FDb.package (Lary)
@@ -1763,50 +1848,50 @@ apm::FPkgrec&        zd_pkgrec_qLast(apm::FPackage& package) __attribute__((__wa
 void                 FPackage_Init(apm::FPackage& package);
 // cursor points to valid item
 // func:apm.FPackage.zd_pkgkey_curs.Reset
-void                 package_zd_pkgkey_curs_Reset(package_zd_pkgkey_curs &curs, apm::FPackage &parent);
+void                 package_zd_pkgkey_curs_Reset(package_zd_pkgkey_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPackage.zd_pkgkey_curs.ValidQ
-bool                 package_zd_pkgkey_curs_ValidQ(package_zd_pkgkey_curs &curs);
+bool                 package_zd_pkgkey_curs_ValidQ(package_zd_pkgkey_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FPackage.zd_pkgkey_curs.Next
-void                 package_zd_pkgkey_curs_Next(package_zd_pkgkey_curs &curs);
+void                 package_zd_pkgkey_curs_Next(package_zd_pkgkey_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FPackage.zd_pkgkey_curs.Access
-apm::FPkgkey&        package_zd_pkgkey_curs_Access(package_zd_pkgkey_curs &curs);
+apm::FPkgkey&        package_zd_pkgkey_curs_Access(package_zd_pkgkey_curs &curs) __attribute__((nothrow));
 // func:apm.FPackage.c_pkgdep_curs.Reset
-void                 package_c_pkgdep_curs_Reset(package_c_pkgdep_curs &curs, apm::FPackage &parent);
+void                 package_c_pkgdep_curs_Reset(package_c_pkgdep_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPackage.c_pkgdep_curs.ValidQ
-bool                 package_c_pkgdep_curs_ValidQ(package_c_pkgdep_curs &curs);
+bool                 package_c_pkgdep_curs_ValidQ(package_c_pkgdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FPackage.c_pkgdep_curs.Next
-void                 package_c_pkgdep_curs_Next(package_c_pkgdep_curs &curs);
+void                 package_c_pkgdep_curs_Next(package_c_pkgdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FPackage.c_pkgdep_curs.Access
-apm::FPkgdep&        package_c_pkgdep_curs_Access(package_c_pkgdep_curs &curs);
+apm::FPkgdep&        package_c_pkgdep_curs_Access(package_c_pkgdep_curs &curs) __attribute__((nothrow));
 // func:apm.FPackage.c_pkgdep_parent_curs.Reset
-void                 package_c_pkgdep_parent_curs_Reset(package_c_pkgdep_parent_curs &curs, apm::FPackage &parent);
+void                 package_c_pkgdep_parent_curs_Reset(package_c_pkgdep_parent_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPackage.c_pkgdep_parent_curs.ValidQ
-bool                 package_c_pkgdep_parent_curs_ValidQ(package_c_pkgdep_parent_curs &curs);
+bool                 package_c_pkgdep_parent_curs_ValidQ(package_c_pkgdep_parent_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FPackage.c_pkgdep_parent_curs.Next
-void                 package_c_pkgdep_parent_curs_Next(package_c_pkgdep_parent_curs &curs);
+void                 package_c_pkgdep_parent_curs_Next(package_c_pkgdep_parent_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FPackage.c_pkgdep_parent_curs.Access
-apm::FPkgdep&        package_c_pkgdep_parent_curs_Access(package_c_pkgdep_parent_curs &curs);
+apm::FPkgdep&        package_c_pkgdep_parent_curs_Access(package_c_pkgdep_parent_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPackage.zd_pkgrec_curs.Reset
-void                 package_zd_pkgrec_curs_Reset(package_zd_pkgrec_curs &curs, apm::FPackage &parent);
+void                 package_zd_pkgrec_curs_Reset(package_zd_pkgrec_curs &curs, apm::FPackage &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPackage.zd_pkgrec_curs.ValidQ
-bool                 package_zd_pkgrec_curs_ValidQ(package_zd_pkgrec_curs &curs);
+bool                 package_zd_pkgrec_curs_ValidQ(package_zd_pkgrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FPackage.zd_pkgrec_curs.Next
-void                 package_zd_pkgrec_curs_Next(package_zd_pkgrec_curs &curs);
+void                 package_zd_pkgrec_curs_Next(package_zd_pkgrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FPackage.zd_pkgrec_curs.Access
-apm::FPkgrec&        package_zd_pkgrec_curs_Access(package_zd_pkgrec_curs &curs);
+apm::FPkgrec&        package_zd_pkgrec_curs_Access(package_zd_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FPackage..Uninit
 void                 FPackage_Uninit(apm::FPackage& package) __attribute__((nothrow));
 
@@ -1934,16 +2019,16 @@ apm::FPkgrec&        c_pkgrec_qLast(apm::FPkgkey& pkgkey) __attribute__((nothrow
 // func:apm.FPkgkey..Init
 void                 FPkgkey_Init(apm::FPkgkey& pkgkey);
 // func:apm.FPkgkey.c_pkgrec_curs.Reset
-void                 pkgkey_c_pkgrec_curs_Reset(pkgkey_c_pkgrec_curs &curs, apm::FPkgkey &parent);
+void                 pkgkey_c_pkgrec_curs_Reset(pkgkey_c_pkgrec_curs &curs, apm::FPkgkey &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FPkgkey.c_pkgrec_curs.ValidQ
-bool                 pkgkey_c_pkgrec_curs_ValidQ(pkgkey_c_pkgrec_curs &curs);
+bool                 pkgkey_c_pkgrec_curs_ValidQ(pkgkey_c_pkgrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FPkgkey.c_pkgrec_curs.Next
-void                 pkgkey_c_pkgrec_curs_Next(pkgkey_c_pkgrec_curs &curs);
+void                 pkgkey_c_pkgrec_curs_Next(pkgkey_c_pkgrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FPkgkey.c_pkgrec_curs.Access
-apm::FPkgrec&        pkgkey_c_pkgrec_curs_Access(pkgkey_c_pkgrec_curs &curs);
+apm::FPkgrec&        pkgkey_c_pkgrec_curs_Access(pkgkey_c_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FPkgkey..Uninit
 void                 FPkgkey_Uninit(apm::FPkgkey& pkgkey) __attribute__((nothrow));
 
@@ -2006,7 +2091,6 @@ struct FRec { // apm.FRec
     apm::FPkgrec*     zd_rec_pkgrec_head;     // zero-terminated doubly linked list
     i32               zd_rec_pkgrec_n;        // zero-terminated doubly linked list
     apm::FPkgrec*     zd_rec_pkgrec_tail;     // pointer to last element
-    i32               rowid;                  //   0
     apm::FRec*        zd_ssimfile_rec_next;   // zslist link; -1 means not-in-list
     apm::FRec*        zd_ssimfile_rec_prev;   // previous element
 private:
@@ -2101,28 +2185,28 @@ apm::FPkgrec&        zd_rec_pkgrec_qLast(apm::FRec& rec) __attribute__((__warn_u
 // func:apm.FRec..Init
 void                 FRec_Init(apm::FRec& rec);
 // func:apm.FRec.c_child_curs.Reset
-void                 rec_c_child_curs_Reset(rec_c_child_curs &curs, apm::FRec &parent);
+void                 rec_c_child_curs_Reset(rec_c_child_curs &curs, apm::FRec &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FRec.c_child_curs.ValidQ
-bool                 rec_c_child_curs_ValidQ(rec_c_child_curs &curs);
+bool                 rec_c_child_curs_ValidQ(rec_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FRec.c_child_curs.Next
-void                 rec_c_child_curs_Next(rec_c_child_curs &curs);
+void                 rec_c_child_curs_Next(rec_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FRec.c_child_curs.Access
-apm::FRec&           rec_c_child_curs_Access(rec_c_child_curs &curs);
+apm::FRec&           rec_c_child_curs_Access(rec_c_child_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FRec.zd_rec_pkgrec_curs.Reset
-void                 rec_zd_rec_pkgrec_curs_Reset(rec_zd_rec_pkgrec_curs &curs, apm::FRec &parent);
+void                 rec_zd_rec_pkgrec_curs_Reset(rec_zd_rec_pkgrec_curs &curs, apm::FRec &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FRec.zd_rec_pkgrec_curs.ValidQ
-bool                 rec_zd_rec_pkgrec_curs_ValidQ(rec_zd_rec_pkgrec_curs &curs);
+bool                 rec_zd_rec_pkgrec_curs_ValidQ(rec_zd_rec_pkgrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FRec.zd_rec_pkgrec_curs.Next
-void                 rec_zd_rec_pkgrec_curs_Next(rec_zd_rec_pkgrec_curs &curs);
+void                 rec_zd_rec_pkgrec_curs_Next(rec_zd_rec_pkgrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FRec.zd_rec_pkgrec_curs.Access
-apm::FPkgrec&        rec_zd_rec_pkgrec_curs_Access(rec_zd_rec_pkgrec_curs &curs);
+apm::FPkgrec&        rec_zd_rec_pkgrec_curs_Access(rec_zd_rec_pkgrec_curs &curs) __attribute__((nothrow));
 // func:apm.FRec..Uninit
 void                 FRec_Uninit(apm::FRec& rec) __attribute__((nothrow));
 
@@ -2209,16 +2293,16 @@ apm::FRec&           zd_ssimfile_rec_qLast(apm::FSsimfile& ssimfile) __attribute
 void                 FSsimfile_Init(apm::FSsimfile& ssimfile);
 // cursor points to valid item
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.Reset
-void                 ssimfile_zd_ssimfile_rec_curs_Reset(ssimfile_zd_ssimfile_rec_curs &curs, apm::FSsimfile &parent);
+void                 ssimfile_zd_ssimfile_rec_curs_Reset(ssimfile_zd_ssimfile_rec_curs &curs, apm::FSsimfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.ValidQ
-bool                 ssimfile_zd_ssimfile_rec_curs_ValidQ(ssimfile_zd_ssimfile_rec_curs &curs);
+bool                 ssimfile_zd_ssimfile_rec_curs_ValidQ(ssimfile_zd_ssimfile_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.Next
-void                 ssimfile_zd_ssimfile_rec_curs_Next(ssimfile_zd_ssimfile_rec_curs &curs);
+void                 ssimfile_zd_ssimfile_rec_curs_Next(ssimfile_zd_ssimfile_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:apm.FSsimfile.zd_ssimfile_rec_curs.Access
-apm::FRec&           ssimfile_zd_ssimfile_rec_curs_Access(ssimfile_zd_ssimfile_rec_curs &curs);
+apm::FRec&           ssimfile_zd_ssimfile_rec_curs_Access(ssimfile_zd_ssimfile_rec_curs &curs) __attribute__((nothrow));
 // func:apm.FSsimfile..Uninit
 void                 FSsimfile_Uninit(apm::FSsimfile& ssimfile) __attribute__((nothrow));
 
@@ -2559,6 +2643,14 @@ struct _db_mkdir_curs {// cursor
     apm::FDb *parent;
     i64 index;
     _db_mkdir_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ns_curs {// cursor
+    typedef apm::FNs ChildType;
+    apm::FDb *parent;
+    i64 index;
+    _db_ns_curs(){ parent=NULL; index=0; }
 };
 
 

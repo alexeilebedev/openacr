@@ -782,7 +782,6 @@ inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& target)
 // --- src_func.FTarget..Init
 // Set all fields to initial values.
 inline void src_func::FTarget_Init(src_func::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.cd_targsrc_head = NULL; // (src_func.FTarget.cd_targsrc)
     target.cd_targsrc_n = 0; // (src_func.FTarget.cd_targsrc)
     target.select = bool(false);

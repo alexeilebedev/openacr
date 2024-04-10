@@ -228,40 +228,40 @@ ssimfilt::KVRegx&    selfield_qFind(u64 t) __attribute__((nothrow, pure));
 
 // cursor points to valid item
 // func:ssimfilt.FDb.tuple_curs.Reset
-void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent);
+void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.tuple_curs.ValidQ
-bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs);
+bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.tuple_curs.Next
-void                 _db_tuple_curs_Next(_db_tuple_curs &curs);
+void                 _db_tuple_curs_Next(_db_tuple_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.tuple_curs.Access
-algo::Tuple&         _db_tuple_curs_Access(_db_tuple_curs &curs);
+algo::Tuple&         _db_tuple_curs_Access(_db_tuple_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.matchfield_curs.Reset
-void                 _db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent);
+void                 _db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.matchfield_curs.ValidQ
-bool                 _db_matchfield_curs_ValidQ(_db_matchfield_curs &curs);
+bool                 _db_matchfield_curs_ValidQ(_db_matchfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.matchfield_curs.Next
-void                 _db_matchfield_curs_Next(_db_matchfield_curs &curs);
+void                 _db_matchfield_curs_Next(_db_matchfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.matchfield_curs.Access
-ssimfilt::KVRegx&    _db_matchfield_curs_Access(_db_matchfield_curs &curs);
+ssimfilt::KVRegx&    _db_matchfield_curs_Access(_db_matchfield_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.selfield_curs.Reset
-void                 _db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent);
+void                 _db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.selfield_curs.ValidQ
-bool                 _db_selfield_curs_ValidQ(_db_selfield_curs &curs);
+bool                 _db_selfield_curs_ValidQ(_db_selfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.selfield_curs.Next
-void                 _db_selfield_curs_Next(_db_selfield_curs &curs);
+void                 _db_selfield_curs_Next(_db_selfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.selfield_curs.Access
-ssimfilt::KVRegx&    _db_selfield_curs_Access(_db_selfield_curs &curs);
+ssimfilt::KVRegx&    _db_selfield_curs_Access(_db_selfield_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssimfilt.FDb..Init
 void                 FDb_Init();

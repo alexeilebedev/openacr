@@ -182,18 +182,25 @@ static void PrintNewField(dmmeta::Field &field) {
     acr_ed::_db.out_ssim << field << eol;
 
     acr_ed::FCtype &parent = acr_ed::ind_ctype_FindX(ctype_Get(field));
+    dmmeta::FieldPkey before = acr_ed::_db.cmdline.before;
 
     // if last field is named comment, insert before that...
-    if (ch_N(acr_ed::_db.cmdline.before) == 0 && c_field_N(parent) > 0) {
+    if (ch_N(before) == 0 && c_field_N(parent) > 0) {
         if (name_Get(*c_field_Find(parent, c_field_N(parent)-1)) == "comment") {
-            acr_ed::_db.cmdline.before = c_field_Find(parent, c_field_N(parent)-1)->field;
+            before = c_field_Find(parent, c_field_N(parent)-1)->field;
         }
     }
 
-    if (ch_N(acr_ed::_db.cmdline.before) > 0) {
-        acr_ed::FField &rhs = acr_ed::ind_field_FindX(acr_ed::_db.cmdline.before);
-        acr_ed::_db.out_ssim.ch_n--;// newline?
-        acr_ed::_db.out_ssim << "  acr.rowid:"<<rhs.rowid-0.5 << eol;
+    float rowid=1;
+    ind_beg(acr_ed::ctype_c_field_curs,otherfield,parent) {
+        if (otherfield.field==before) {
+            rowid=ind_curs(otherfield).index-0.5;
+        }
+    }ind_end;
+
+    if (ch_N(before) > 0) {
+        acr_ed::_db.out_ssim.ch_n--;// dlete new line
+        acr_ed::_db.out_ssim << "  acr.rowid:"<<rowid << eol;
     }
 }
 void acr_ed::edaction_Delete_Field() {

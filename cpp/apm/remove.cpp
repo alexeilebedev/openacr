@@ -29,9 +29,7 @@
 // TODO: this must be implemented as an UPDATE
 // with target being an empty set.
 void apm::Main_Remove() {
-    if (zd_sel_package_N()==0) {
-        prlog("apm: nothing to remove");
-    }
+    vrfy(zd_sel_package_N()>0, "apm: no packages selected");
     cstring acrscript;
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         apm::CollectPkgrecToFile(package,_db.ours_recfile);
@@ -39,15 +37,15 @@ void apm::Main_Remove() {
         ind_beg(algo::FileLine_curs,line,_db.ours_recfile) {
             dev::Gitfile gitfile;
             if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
-                _db.script << "git rm --force "<<strptr_ToBash(gitfile.gitfile)<<eol;
+                _db.script << "git rm -q --force "<<strptr_ToBash(gitfile.gitfile)<<eol;
             }
             acrscript << "acr.delete "<<line<<eol;
         }ind_end;
     }ind_end;
     if (acrscript!="") {
-        _db.script << "acr -replace -write -report:N << EOF\n" << acrscript << "\nEOF\n";
+        _db.script << "acr -replace -write -print:N -report:N << EOF\n" << acrscript << "\nEOF\n";
     }
     // re-generate code after removing package
     _db.script << "update-gitfile" << eol;
-    _db.script << "amc" << eol;
+    _db.script << "amc -report:N" << eol;
 }

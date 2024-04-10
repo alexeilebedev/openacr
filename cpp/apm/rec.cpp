@@ -28,7 +28,6 @@ static void LoadRecsFile(algo::strptr filename) {
     ind_beg(algo::FileLine_curs,line,filename) {
         apm::FRec &rec=apm::rec_Alloc();
         bool good=false;
-        rec.rowid=ind_curs(line).i+1;
         if (Tuple_ReadStrptrMaybe(rec.tuple,line) && attrs_N(rec.tuple)>0) {
             rec.p_ssimfile=apm::ind_ssimfile_Find(rec.tuple.head.value);
             if (rec.p_ssimfile) {
@@ -118,11 +117,18 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
 // and group FPkgrec by FRec (zd_rec_pkgrec) and by FPackage (zd_rec)
 // This structure allows full analysis of package composition and checking
 void apm::LoadRecs() {
-    // load all ssimfile records
     if (DirectoryQ(_db.cmdline.data_in)) {
-        ind_beg(_db_ssimfile_curs,ssimfile,_db) {
-            LoadRecsFile(algo::SsimFname(_db.cmdline.data_in,ssimfile.ssimfile));
-        }ind_end;
+        // load all ssimfile records
+        // use acr with `-rowid` option to capture correct rowids
+        command::acr_proc acr;
+        acr.cmd.query="%";
+        acr.cmd.loose=true;
+        acr.cmd.rowid=true;
+        algo_lib::FTempfile tempfile;
+        TempfileInitX(tempfile, "apm.recs");
+        acr.fstdout << ">"<<tempfile.filename;
+        acr_Exec(acr);
+        LoadRecsFile(tempfile.filename);
     } else {
         LoadRecsFile(_db.cmdline.data_in);
     }

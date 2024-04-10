@@ -208,16 +208,16 @@ bool                 header_XrefMaybe(gcache::FHeader &row);
 
 // cursor points to valid item
 // func:gcache.FDb.header_curs.Reset
-void                 _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent);
+void                 _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcache.FDb.header_curs.ValidQ
-bool                 _db_header_curs_ValidQ(_db_header_curs &curs);
+bool                 _db_header_curs_ValidQ(_db_header_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcache.FDb.header_curs.Next
-void                 _db_header_curs_Next(_db_header_curs &curs);
+void                 _db_header_curs_Next(_db_header_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcache.FDb.header_curs.Access
-gcache::FHeader&     _db_header_curs_Access(_db_header_curs &curs);
+gcache::FHeader&     _db_header_curs_Access(_db_header_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.FDb..Init
 void                 FDb_Init();

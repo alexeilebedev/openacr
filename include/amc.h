@@ -661,6 +661,9 @@ namespace amc { // update-hdr
     void MaybeUnused(amc::FFunc &func, strptr name);
     amc::Funcarg* FindArg(amc::FFunc &func, strptr name);
 
+    // Create function marked as inline,nothrow,ret.
+    amc::FFunc &CreateInlineFunc(algo::strptr name);
+
     // -------------------------------------------------------------------
     // cpp/amc/fwddecl.cpp
     //
@@ -693,6 +696,7 @@ namespace amc { // update-hdr
     // void gen_include();
     // void gen_ns_check_main();
     // void gen_check_cascdel();
+    // void gen_check_ssimsort();
     // void gen_countxref();
 
     // Check that a struct marked cheap_copy does not contain structs not marked that way
@@ -730,7 +734,6 @@ namespace amc { // update-hdr
     tempstr Argtype(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_prep_ctype();
-    // void gen_copypriv();
     // void gen_xref2();
     // void gen_select_ns();
 

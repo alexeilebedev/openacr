@@ -363,16 +363,16 @@ lib_json::FldKey     fldkey_Get(lib_json::FNode& node) __attribute__((__warn_unu
 // func:lib_json.FNode..Init
 void                 FNode_Init(lib_json::FNode& node);
 // func:lib_json.FNode.c_child_curs.Reset
-void                 node_c_child_curs_Reset(node_c_child_curs &curs, lib_json::FNode &parent);
+void                 node_c_child_curs_Reset(node_c_child_curs &curs, lib_json::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_json.FNode.c_child_curs.ValidQ
-bool                 node_c_child_curs_ValidQ(node_c_child_curs &curs);
+bool                 node_c_child_curs_ValidQ(node_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_json.FNode.c_child_curs.Next
-void                 node_c_child_curs_Next(node_c_child_curs &curs);
+void                 node_c_child_curs_Next(node_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_json.FNode.c_child_curs.Access
-lib_json::FNode&     node_c_child_curs_Access(node_c_child_curs &curs);
+lib_json::FNode&     node_c_child_curs_Access(node_c_child_curs &curs) __attribute__((nothrow));
 // func:lib_json.FNode..Uninit
 void                 FNode_Uninit(lib_json::FNode& node) __attribute__((nothrow));
 // print string representation of ROW to string STR

@@ -31,6 +31,10 @@ atfdb.tmsg  tmsg:acr.Merge/100000.in  istuple:N  msg:'dmmeta.ns  ns:acr        n
 atfdb.tmsg  tmsg:acr.RenameCollision/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
 atfdb.tmsg  tmsg:acr.RenameCollision/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.RenameCollision/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'
+atfdb.tmsg  tmsg:acr.RenameField/100000.in  istuple:N  msg:'dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"'
+atfdb.tmsg  tmsg:acr.RenameField/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
+atfdb.tmsg  tmsg:acr.RenameField/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
+atfdb.tmsg  tmsg:acr.RenameField/100030.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.RenameRecord/100010.in  istuple:N  msg:"dev.target  target:samp  compat:%-%g%.%-%"
 atfdb.tmsg  tmsg:acr.RenameRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'

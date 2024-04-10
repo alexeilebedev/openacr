@@ -2093,6 +2093,60 @@ inline acr::FCtype& acr::c_ctype_front_qLast() {
     return *_db.c_ctype_front_elems[_db.c_ctype_front_n-1];
 }
 
+// --- acr.FDb.sortkey.EmptyQ
+// Return true if index is empty
+inline bool acr::sortkey_EmptyQ() {
+    return _db.sortkey_n == 0;
+}
+
+// --- acr.FDb.sortkey.Find
+// Look up row by row id. Return NULL if out of range
+inline acr::FSortkey* acr::sortkey_Find(u64 t) {
+    acr::FSortkey *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.sortkey_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.sortkey_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr.FDb.sortkey.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr::FSortkey* acr::sortkey_Last() {
+    return sortkey_Find(u64(_db.sortkey_n-1));
+}
+
+// --- acr.FDb.sortkey.N
+// Return number of items in the pool
+inline i32 acr::sortkey_N() {
+    return _db.sortkey_n;
+}
+
+// --- acr.FDb.sortkey.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr::FSortkey& acr::sortkey_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.sortkey_lary[bsr][index];
+}
+
+// --- acr.FDb.ind_sortkey.EmptyQ
+// Return true if hash is empty
+inline bool acr::ind_sortkey_EmptyQ() {
+    return _db.ind_sortkey_n == 0;
+}
+
+// --- acr.FDb.ind_sortkey.N
+// Return number of items in the hash
+inline i32 acr::ind_sortkey_N() {
+    return _db.ind_sortkey_n;
+}
+
 // --- acr.FDb.zd_pline_curs.Reset
 // cursor points to valid item
 inline void acr::_db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) {
@@ -2697,6 +2751,31 @@ inline void acr::_db_c_ctype_front_curs_Next(_db_c_ctype_front_curs &curs) {
 inline acr::FCtype& acr::_db_c_ctype_front_curs_Access(_db_c_ctype_front_curs &curs) {
     return *curs.elems[curs.index];
 }
+
+// --- acr.FDb.sortkey_curs.Reset
+// cursor points to valid item
+inline void acr::_db_sortkey_curs_Reset(_db_sortkey_curs &curs, acr::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr.FDb.sortkey_curs.ValidQ
+// cursor points to valid item
+inline bool acr::_db_sortkey_curs_ValidQ(_db_sortkey_curs &curs) {
+    return curs.index < _db.sortkey_n;
+}
+
+// --- acr.FDb.sortkey_curs.Next
+// proceed to next item
+inline void acr::_db_sortkey_curs_Next(_db_sortkey_curs &curs) {
+    curs.index++;
+}
+
+// --- acr.FDb.sortkey_curs.Access
+// item access
+inline acr::FSortkey& acr::_db_sortkey_curs_Access(_db_sortkey_curs &curs) {
+    return sortkey_qFind(u64(curs.index));
+}
 inline acr::FErr::FErr() {
     acr::FErr_Init(*this);
 }
@@ -2923,6 +3002,7 @@ inline acr::RecSortkey::RecSortkey() {
 
 // --- acr.RecSortkey..Hash
 inline u32 acr::RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) {
+    prev = Smallstr100_Hash(prev, rhs.ctype);
     prev = double_Hash(prev, rhs.num);
     prev = cstring_Hash(prev, rhs.str);
     prev = float_Hash(prev, rhs.rowid);
@@ -2934,41 +3014,11 @@ inline bool acr::RecSortkey_Lt(acr::RecSortkey& lhs, acr::RecSortkey& rhs) {
     return RecSortkey_Cmp(lhs,rhs) < 0;
 }
 
-// --- acr.RecSortkey..Cmp
-inline i32 acr::RecSortkey_Cmp(acr::RecSortkey& lhs, acr::RecSortkey& rhs) {
-    i32 retval = 0;
-    retval = double_Cmp(lhs.num, rhs.num);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = algo::cstring_Cmp(lhs.str, rhs.str);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = float_Cmp(lhs.rowid, rhs.rowid);
-    return retval;
-}
-
 // --- acr.RecSortkey..Init
 // Set all fields to initial values.
 inline void acr::RecSortkey_Init(acr::RecSortkey& parent) {
     parent.num = double(0.0);
     parent.rowid = float(0.f);
-}
-
-// --- acr.RecSortkey..Eq
-inline bool acr::RecSortkey_Eq(const acr::RecSortkey& lhs, const acr::RecSortkey& rhs) {
-    bool retval = true;
-    retval = double_Eq(lhs.num, rhs.num);
-    if (!retval) {
-        return false;
-    }
-    retval = algo::cstring_Eq(lhs.str, rhs.str);
-    if (!retval) {
-        return false;
-    }
-    retval = float_Eq(lhs.rowid, rhs.rowid);
-    return retval;
 }
 
 // --- acr.RecSortkey..Update
@@ -3650,6 +3700,21 @@ inline void acr::FSmallstr_Init(acr::FSmallstr& smallstr) {
     smallstr.length = i32(0);
     smallstr.strict = bool(false);
 }
+inline acr::FSortkey::FSortkey() {
+    acr::FSortkey_Init(*this);
+}
+
+inline acr::FSortkey::~FSortkey() {
+    acr::FSortkey_Uninit(*this);
+}
+
+
+// --- acr.FSortkey..Init
+// Set all fields to initial values.
+inline void acr::FSortkey_Init(acr::FSortkey& sortkey) {
+    sortkey.next_rowid = double(0);
+    sortkey.ind_sortkey_next = (acr::FSortkey*)-1; // (acr.FDb.ind_sortkey) not-in-hash
+}
 inline acr::FSsimfile::FSsimfile() {
     acr::FSsimfile_Init(*this);
 }
@@ -3952,6 +4017,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::CtypeTopo
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::trace &row) {// cfmt:acr.trace.String
     acr::trace_Print(const_cast<acr::trace&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::RecSortkey &row) {// cfmt:acr.RecSortkey.String
+    acr::RecSortkey_Print(const_cast<acr::RecSortkey&>(row), str);
     return str;
 }
 

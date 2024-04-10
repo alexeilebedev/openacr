@@ -2002,7 +2002,6 @@ inline acr_in::FTargdep& acr_in::c_targdep_child_qLast(acr_in::FTarget& target) 
 // --- acr_in.FTarget..Init
 // Set all fields to initial values.
 inline void acr_in::FTarget_Init(acr_in::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targdep_elems = NULL; // (acr_in.FTarget.c_targdep)
     target.c_targdep_n = 0; // (acr_in.FTarget.c_targdep)
     target.c_targdep_max = 0; // (acr_in.FTarget.c_targdep)

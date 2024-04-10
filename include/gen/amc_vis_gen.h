@@ -191,16 +191,16 @@ bool                 ctype_c_field_InAryQ(amc_vis::FField& row) __attribute__((n
 amc_vis::FField&     c_field_qLast(amc_vis::FCtype& ctype) __attribute__((nothrow));
 
 // func:amc_vis.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FCtype.c_field_curs.Access
-amc_vis::FField&     ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+amc_vis::FField&     ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.FCtype..Init
 void                 FCtype_Init(amc_vis::FCtype& ctype);
@@ -947,75 +947,75 @@ bool                 finput_XrefMaybe(amc_vis::FFinput &row);
 
 // cursor points to valid item
 // func:amc_vis.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, amc_vis::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.ctype_curs.Access
-amc_vis::FCtype&     _db_ctype_curs_Access(_db_ctype_curs &curs);
+amc_vis::FCtype&     _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, amc_vis::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.field_curs.Access
-amc_vis::FField&     _db_field_curs_Access(_db_field_curs &curs);
+amc_vis::FField&     _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.node_curs.Reset
-void                 _db_node_curs_Reset(_db_node_curs &curs, amc_vis::FDb &parent);
+void                 _db_node_curs_Reset(_db_node_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.node_curs.ValidQ
-bool                 _db_node_curs_ValidQ(_db_node_curs &curs);
+bool                 _db_node_curs_ValidQ(_db_node_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.node_curs.Next
-void                 _db_node_curs_Next(_db_node_curs &curs);
+void                 _db_node_curs_Next(_db_node_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.node_curs.Access
-amc_vis::FNode&      _db_node_curs_Access(_db_node_curs &curs);
+amc_vis::FNode&      _db_node_curs_Access(_db_node_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.link_curs.Reset
-void                 _db_link_curs_Reset(_db_link_curs &curs, amc_vis::FDb &parent);
+void                 _db_link_curs_Reset(_db_link_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.link_curs.ValidQ
-bool                 _db_link_curs_ValidQ(_db_link_curs &curs);
+bool                 _db_link_curs_ValidQ(_db_link_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.link_curs.Next
-void                 _db_link_curs_Next(_db_link_curs &curs);
+void                 _db_link_curs_Next(_db_link_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.link_curs.Access
-amc_vis::Link&       _db_link_curs_Access(_db_link_curs &curs);
+amc_vis::Link&       _db_link_curs_Access(_db_link_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.linkdep_curs.Reset
-void                 _db_linkdep_curs_Reset(_db_linkdep_curs &curs, amc_vis::FDb &parent);
+void                 _db_linkdep_curs_Reset(_db_linkdep_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.linkdep_curs.ValidQ
-bool                 _db_linkdep_curs_ValidQ(_db_linkdep_curs &curs);
+bool                 _db_linkdep_curs_ValidQ(_db_linkdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.linkdep_curs.Next
-void                 _db_linkdep_curs_Next(_db_linkdep_curs &curs);
+void                 _db_linkdep_curs_Next(_db_linkdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.linkdep_curs.Access
-amc_vis::Linkdep&    _db_linkdep_curs_Access(_db_linkdep_curs &curs);
+amc_vis::Linkdep&    _db_linkdep_curs_Access(_db_linkdep_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FDb.c_linklist_curs.Reset
-void                 _db_c_linklist_curs_Reset(_db_c_linklist_curs &curs, amc_vis::FDb &parent);
+void                 _db_c_linklist_curs_Reset(_db_c_linklist_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.c_linklist_curs.ValidQ
-bool                 _db_c_linklist_curs_ValidQ(_db_c_linklist_curs &curs);
+bool                 _db_c_linklist_curs_ValidQ(_db_c_linklist_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.c_linklist_curs.Next
-void                 _db_c_linklist_curs_Next(_db_c_linklist_curs &curs);
+void                 _db_c_linklist_curs_Next(_db_c_linklist_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.c_linklist_curs.Access
-amc_vis::Link&       _db_c_linklist_curs_Access(_db_c_linklist_curs &curs);
+amc_vis::Link&       _db_c_linklist_curs_Access(_db_c_linklist_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FDb.bh_node_curs.Reserve
 void                 _db_bh_node_curs_Reserve(_db_bh_node_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -1026,10 +1026,10 @@ void                 _db_bh_node_curs_Reset(_db_bh_node_curs &curs, amc_vis::FDb
 void                 _db_bh_node_curs_Next(_db_bh_node_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:amc_vis.FDb.bh_node_curs.Access
-amc_vis::FNode&      _db_bh_node_curs_Access(_db_bh_node_curs &curs);
+amc_vis::FNode&      _db_bh_node_curs_Access(_db_bh_node_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:amc_vis.FDb.bh_node_curs.ValidQ
-bool                 _db_bh_node_curs_ValidQ(_db_bh_node_curs &curs);
+bool                 _db_bh_node_curs_ValidQ(_db_bh_node_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FDb.bh_link_curs.Reserve
 void                 _db_bh_link_curs_Reserve(_db_bh_link_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -1040,70 +1040,70 @@ void                 _db_bh_link_curs_Reset(_db_bh_link_curs &curs, amc_vis::FDb
 void                 _db_bh_link_curs_Next(_db_bh_link_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:amc_vis.FDb.bh_link_curs.Access
-amc_vis::Link&       _db_bh_link_curs_Access(_db_bh_link_curs &curs);
+amc_vis::Link&       _db_bh_link_curs_Access(_db_bh_link_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:amc_vis.FDb.bh_link_curs.ValidQ
-bool                 _db_bh_link_curs_ValidQ(_db_bh_link_curs &curs);
+bool                 _db_bh_link_curs_ValidQ(_db_bh_link_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.reftype_curs.Reset
-void                 _db_reftype_curs_Reset(_db_reftype_curs &curs, amc_vis::FDb &parent);
+void                 _db_reftype_curs_Reset(_db_reftype_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.reftype_curs.ValidQ
-bool                 _db_reftype_curs_ValidQ(_db_reftype_curs &curs);
+bool                 _db_reftype_curs_ValidQ(_db_reftype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.reftype_curs.Next
-void                 _db_reftype_curs_Next(_db_reftype_curs &curs);
+void                 _db_reftype_curs_Next(_db_reftype_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.reftype_curs.Access
-amc_vis::FReftype&   _db_reftype_curs_Access(_db_reftype_curs &curs);
+amc_vis::FReftype&   _db_reftype_curs_Access(_db_reftype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.nodedep_curs.Reset
-void                 _db_nodedep_curs_Reset(_db_nodedep_curs &curs, amc_vis::FDb &parent);
+void                 _db_nodedep_curs_Reset(_db_nodedep_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.nodedep_curs.ValidQ
-bool                 _db_nodedep_curs_ValidQ(_db_nodedep_curs &curs);
+bool                 _db_nodedep_curs_ValidQ(_db_nodedep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.nodedep_curs.Next
-void                 _db_nodedep_curs_Next(_db_nodedep_curs &curs);
+void                 _db_nodedep_curs_Next(_db_nodedep_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.nodedep_curs.Access
-amc_vis::FNodedep&   _db_nodedep_curs_Access(_db_nodedep_curs &curs);
+amc_vis::FNodedep&   _db_nodedep_curs_Access(_db_nodedep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.outrow_curs.Reset
-void                 _db_outrow_curs_Reset(_db_outrow_curs &curs, amc_vis::FDb &parent);
+void                 _db_outrow_curs_Reset(_db_outrow_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.outrow_curs.ValidQ
-bool                 _db_outrow_curs_ValidQ(_db_outrow_curs &curs);
+bool                 _db_outrow_curs_ValidQ(_db_outrow_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.outrow_curs.Next
-void                 _db_outrow_curs_Next(_db_outrow_curs &curs);
+void                 _db_outrow_curs_Next(_db_outrow_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.outrow_curs.Access
-amc_vis::Outrow&     _db_outrow_curs_Access(_db_outrow_curs &curs);
+amc_vis::Outrow&     _db_outrow_curs_Access(_db_outrow_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.zd_select_curs.Reset
-void                 _db_zd_select_curs_Reset(_db_zd_select_curs &curs, amc_vis::FDb &parent);
+void                 _db_zd_select_curs_Reset(_db_zd_select_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.zd_select_curs.ValidQ
-bool                 _db_zd_select_curs_ValidQ(_db_zd_select_curs &curs);
+bool                 _db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.zd_select_curs.Next
-void                 _db_zd_select_curs_Next(_db_zd_select_curs &curs);
+void                 _db_zd_select_curs_Next(_db_zd_select_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.zd_select_curs.Access
-amc_vis::FCtype&     _db_zd_select_curs_Access(_db_zd_select_curs &curs);
+amc_vis::FCtype&     _db_zd_select_curs_Access(_db_zd_select_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.finput_curs.Reset
-void                 _db_finput_curs_Reset(_db_finput_curs &curs, amc_vis::FDb &parent);
+void                 _db_finput_curs_Reset(_db_finput_curs &curs, amc_vis::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FDb.finput_curs.ValidQ
-bool                 _db_finput_curs_ValidQ(_db_finput_curs &curs);
+bool                 _db_finput_curs_ValidQ(_db_finput_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FDb.finput_curs.Next
-void                 _db_finput_curs_Next(_db_finput_curs &curs);
+void                 _db_finput_curs_Next(_db_finput_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FDb.finput_curs.Access
-amc_vis::FFinput&    _db_finput_curs_Access(_db_finput_curs &curs);
+amc_vis::FFinput&    _db_finput_curs_Access(_db_finput_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.FDb..Init
 void                 FDb_Init();
@@ -1435,52 +1435,52 @@ amc_vis::Link&       zd_link_in_qLast(amc_vis::FNode& node) __attribute__((__war
 void                 FNode_Init(amc_vis::FNode& node);
 // cursor points to valid item
 // func:amc_vis.FNode.zd_nodedep_out_curs.Reset
-void                 node_zd_nodedep_out_curs_Reset(node_zd_nodedep_out_curs &curs, amc_vis::FNode &parent);
+void                 node_zd_nodedep_out_curs_Reset(node_zd_nodedep_out_curs &curs, amc_vis::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_nodedep_out_curs.ValidQ
-bool                 node_zd_nodedep_out_curs_ValidQ(node_zd_nodedep_out_curs &curs);
+bool                 node_zd_nodedep_out_curs_ValidQ(node_zd_nodedep_out_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FNode.zd_nodedep_out_curs.Next
-void                 node_zd_nodedep_out_curs_Next(node_zd_nodedep_out_curs &curs);
+void                 node_zd_nodedep_out_curs_Next(node_zd_nodedep_out_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FNode.zd_nodedep_out_curs.Access
-amc_vis::FNodedep&   node_zd_nodedep_out_curs_Access(node_zd_nodedep_out_curs &curs);
+amc_vis::FNodedep&   node_zd_nodedep_out_curs_Access(node_zd_nodedep_out_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_nodedep_in_curs.Reset
-void                 node_zd_nodedep_in_curs_Reset(node_zd_nodedep_in_curs &curs, amc_vis::FNode &parent);
+void                 node_zd_nodedep_in_curs_Reset(node_zd_nodedep_in_curs &curs, amc_vis::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_nodedep_in_curs.ValidQ
-bool                 node_zd_nodedep_in_curs_ValidQ(node_zd_nodedep_in_curs &curs);
+bool                 node_zd_nodedep_in_curs_ValidQ(node_zd_nodedep_in_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FNode.zd_nodedep_in_curs.Next
-void                 node_zd_nodedep_in_curs_Next(node_zd_nodedep_in_curs &curs);
+void                 node_zd_nodedep_in_curs_Next(node_zd_nodedep_in_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FNode.zd_nodedep_in_curs.Access
-amc_vis::FNodedep&   node_zd_nodedep_in_curs_Access(node_zd_nodedep_in_curs &curs);
+amc_vis::FNodedep&   node_zd_nodedep_in_curs_Access(node_zd_nodedep_in_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_link_out_curs.Reset
-void                 node_zd_link_out_curs_Reset(node_zd_link_out_curs &curs, amc_vis::FNode &parent);
+void                 node_zd_link_out_curs_Reset(node_zd_link_out_curs &curs, amc_vis::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_link_out_curs.ValidQ
-bool                 node_zd_link_out_curs_ValidQ(node_zd_link_out_curs &curs);
+bool                 node_zd_link_out_curs_ValidQ(node_zd_link_out_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FNode.zd_link_out_curs.Next
-void                 node_zd_link_out_curs_Next(node_zd_link_out_curs &curs);
+void                 node_zd_link_out_curs_Next(node_zd_link_out_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FNode.zd_link_out_curs.Access
-amc_vis::Link&       node_zd_link_out_curs_Access(node_zd_link_out_curs &curs);
+amc_vis::Link&       node_zd_link_out_curs_Access(node_zd_link_out_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_link_in_curs.Reset
-void                 node_zd_link_in_curs_Reset(node_zd_link_in_curs &curs, amc_vis::FNode &parent);
+void                 node_zd_link_in_curs_Reset(node_zd_link_in_curs &curs, amc_vis::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.FNode.zd_link_in_curs.ValidQ
-bool                 node_zd_link_in_curs_ValidQ(node_zd_link_in_curs &curs);
+bool                 node_zd_link_in_curs_ValidQ(node_zd_link_in_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.FNode.zd_link_in_curs.Next
-void                 node_zd_link_in_curs_Next(node_zd_link_in_curs &curs);
+void                 node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.FNode.zd_link_in_curs.Access
-amc_vis::Link&       node_zd_link_in_curs_Access(node_zd_link_in_curs &curs);
+amc_vis::Link&       node_zd_link_in_curs_Access(node_zd_link_in_curs &curs) __attribute__((nothrow));
 // func:amc_vis.FNode..Uninit
 void                 FNode_Uninit(amc_vis::FNode& node) __attribute__((nothrow));
 
@@ -1777,28 +1777,28 @@ amc_vis::Linkdep&    zd_linkdep_in_qLast(amc_vis::Link& link) __attribute__((__w
 void                 Link_Init(amc_vis::Link& link);
 // cursor points to valid item
 // func:amc_vis.Link.zd_linkdep_out_curs.Reset
-void                 link_zd_linkdep_out_curs_Reset(link_zd_linkdep_out_curs &curs, amc_vis::Link &parent);
+void                 link_zd_linkdep_out_curs_Reset(link_zd_linkdep_out_curs &curs, amc_vis::Link &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.Link.zd_linkdep_out_curs.ValidQ
-bool                 link_zd_linkdep_out_curs_ValidQ(link_zd_linkdep_out_curs &curs);
+bool                 link_zd_linkdep_out_curs_ValidQ(link_zd_linkdep_out_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.Link.zd_linkdep_out_curs.Next
-void                 link_zd_linkdep_out_curs_Next(link_zd_linkdep_out_curs &curs);
+void                 link_zd_linkdep_out_curs_Next(link_zd_linkdep_out_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.Link.zd_linkdep_out_curs.Access
-amc_vis::Linkdep&    link_zd_linkdep_out_curs_Access(link_zd_linkdep_out_curs &curs);
+amc_vis::Linkdep&    link_zd_linkdep_out_curs_Access(link_zd_linkdep_out_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.Link.zd_linkdep_in_curs.Reset
-void                 link_zd_linkdep_in_curs_Reset(link_zd_linkdep_in_curs &curs, amc_vis::Link &parent);
+void                 link_zd_linkdep_in_curs_Reset(link_zd_linkdep_in_curs &curs, amc_vis::Link &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.Link.zd_linkdep_in_curs.ValidQ
-bool                 link_zd_linkdep_in_curs_ValidQ(link_zd_linkdep_in_curs &curs);
+bool                 link_zd_linkdep_in_curs_ValidQ(link_zd_linkdep_in_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:amc_vis.Link.zd_linkdep_in_curs.Next
-void                 link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs);
+void                 link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.Link.zd_linkdep_in_curs.Access
-amc_vis::Linkdep&    link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs);
+amc_vis::Linkdep&    link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs) __attribute__((nothrow));
 // func:amc_vis.Link..Uninit
 void                 Link_Uninit(amc_vis::Link& link) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -1928,15 +1928,15 @@ algo::aryptr<u8>     text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const 
 
 // proceed to next item
 // func:amc_vis.Outrow.text_curs.Next
-void                 outrow_text_curs_Next(outrow_text_curs &curs);
+void                 outrow_text_curs_Next(outrow_text_curs &curs) __attribute__((nothrow));
 // func:amc_vis.Outrow.text_curs.Reset
-void                 outrow_text_curs_Reset(outrow_text_curs &curs, amc_vis::Outrow &parent);
+void                 outrow_text_curs_Reset(outrow_text_curs &curs, amc_vis::Outrow &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc_vis.Outrow.text_curs.ValidQ
-bool                 outrow_text_curs_ValidQ(outrow_text_curs &curs);
+bool                 outrow_text_curs_ValidQ(outrow_text_curs &curs) __attribute__((nothrow));
 // item access
 // func:amc_vis.Outrow.text_curs.Access
-u8&                  outrow_text_curs_Access(outrow_text_curs &curs);
+u8&                  outrow_text_curs_Access(outrow_text_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.Outrow..Init
 void                 Outrow_Init(amc_vis::Outrow& outrow);

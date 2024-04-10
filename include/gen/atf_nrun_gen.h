@@ -247,28 +247,28 @@ void                 zd_todo_SetDelay(algo::SchedTime delay) __attribute__((noth
 
 // cursor points to valid item
 // func:atf_nrun.FDb.fentry_curs.Reset
-void                 _db_fentry_curs_Reset(_db_fentry_curs &curs, atf_nrun::FDb &parent);
+void                 _db_fentry_curs_Reset(_db_fentry_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.fentry_curs.ValidQ
-bool                 _db_fentry_curs_ValidQ(_db_fentry_curs &curs);
+bool                 _db_fentry_curs_ValidQ(_db_fentry_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_nrun.FDb.fentry_curs.Next
-void                 _db_fentry_curs_Next(_db_fentry_curs &curs);
+void                 _db_fentry_curs_Next(_db_fentry_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_nrun.FDb.fentry_curs.Access
-atf_nrun::FEntry&    _db_fentry_curs_Access(_db_fentry_curs &curs);
+atf_nrun::FEntry&    _db_fentry_curs_Access(_db_fentry_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.zd_todo_curs.Reset
-void                 _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, atf_nrun::FDb &parent);
+void                 _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.zd_todo_curs.ValidQ
-bool                 _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs);
+bool                 _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_nrun.FDb.zd_todo_curs.Next
-void                 _db_zd_todo_curs_Next(_db_zd_todo_curs &curs);
+void                 _db_zd_todo_curs_Next(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_nrun.FDb.zd_todo_curs.Access
-atf_nrun::FEntry&    _db_zd_todo_curs_Access(_db_zd_todo_curs &curs);
+atf_nrun::FEntry&    _db_zd_todo_curs_Access(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_nrun.FDb..Init
 void                 FDb_Init();

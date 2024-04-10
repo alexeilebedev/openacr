@@ -465,63 +465,63 @@ void                 ind_bltin_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:sv2ssim.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.field_curs.Access
-sv2ssim::FField&     _db_field_curs_Access(_db_field_curs &curs);
+sv2ssim::FField&     _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.linetok_curs.Next
-void                 _db_linetok_curs_Next(_db_linetok_curs &curs);
+void                 _db_linetok_curs_Next(_db_linetok_curs &curs) __attribute__((nothrow));
 // func:sv2ssim.FDb.linetok_curs.Reset
-void                 _db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent);
+void                 _db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.linetok_curs.ValidQ
-bool                 _db_linetok_curs_ValidQ(_db_linetok_curs &curs);
+bool                 _db_linetok_curs_ValidQ(_db_linetok_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.linetok_curs.Access
-algo::cstring&       _db_linetok_curs_Access(_db_linetok_curs &curs);
+algo::cstring&       _db_linetok_curs_Access(_db_linetok_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.svtype_curs.Reset
-void                 _db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent);
+void                 _db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.svtype_curs.ValidQ
-bool                 _db_svtype_curs_ValidQ(_db_svtype_curs &curs);
+bool                 _db_svtype_curs_ValidQ(_db_svtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.svtype_curs.Next
-void                 _db_svtype_curs_Next(_db_svtype_curs &curs);
+void                 _db_svtype_curs_Next(_db_svtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.svtype_curs.Access
-sv2ssim::FSvtype&    _db_svtype_curs_Access(_db_svtype_curs &curs);
+sv2ssim::FSvtype&    _db_svtype_curs_Access(_db_svtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.zd_selfield_curs.Reset
-void                 _db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent);
+void                 _db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.zd_selfield_curs.ValidQ
-bool                 _db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs);
+bool                 _db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.zd_selfield_curs.Next
-void                 _db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs);
+void                 _db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.zd_selfield_curs.Access
-sv2ssim::FField&     _db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs);
+sv2ssim::FField&     _db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.bltin_curs.Reset
-void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent);
+void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.bltin_curs.ValidQ
-bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs);
+bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.bltin_curs.Next
-void                 _db_bltin_curs_Next(_db_bltin_curs &curs);
+void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.bltin_curs.Access
-sv2ssim::FBltin&     _db_bltin_curs_Access(_db_bltin_curs &curs);
+sv2ssim::FBltin&     _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.FDb..Init
 void                 FDb_Init();

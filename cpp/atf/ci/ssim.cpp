@@ -29,6 +29,7 @@
 void atf_ci::citest_normalize_acr() {
     command::acr_proc acr;
     acr.cmd.check = true;
+    acr.cmd.x     = true;
     acr.cmd.write = true;
     acr.cmd.query = "%";
     acr.cmd.print = false;

@@ -41,21 +41,23 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
     for (int i=0; i<n; i++) {
         command::apm_proc apm;
         apm.path=DirFileJoin(algo::GetCurDir(),"bin/apm");
+        if (_db.cmdline.l) { // use local package definitions
+            apm.cmd.pkgdata = DirFileJoin(algo::GetCurDir(),_db.pkgdata_recfile);
+        }
         algo_lib::FFildes read;
-        bool has_apm = FileQ(DirFileJoin(dirs[i],"data/dev/package.ssim"));
-        bool push = has_apm && dirs[i] != "";
+        bool push = dirs[i] != "";
         if (push) {
             algo_lib::PushDir(dirs[i]);
         }
         apm.cmd.package.expr=regx_package;
         apm.cmd.showfile=true;
-        apm.cmd.nosort=true;
         apm.cmd.t=true;// include dependencies
         apm_StartRead(apm,read);
         if (push) {
             algo_lib::PopDir();
         }
         ind_beg(algo::FileLine_curs,line,read.fd) {
+            //verblog("mergefiles: "<<dirs[i]<<": "<<line);
             dev::Gitfile gitfile;
             if (Gitfile_ReadStrptrMaybe(gitfile,line)) {
                 apm::FMergefile &mergefile = ind_mergefile_GetOrCreate(gitfile.gitfile);
@@ -66,6 +68,9 @@ void apm::CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, alg
             }
         }ind_end;
     }
+    ind_beg(_db_mergefile_curs,mergefile,_db) {
+        verblog(mergefile);
+    }ind_end;
 }
 
 // Scan mergefile table and perform per-file 3-way non-history-aware merge
@@ -95,7 +100,7 @@ void apm::MergeFiles(apm::FPackage &package) {
             // -p = preserve mode,ownership,timestamps
             // -d = don't dereference (preseve symbolic link)
             _db.script << "cp -p -d "<<strptr_ToBash(mergefile.theirs_file)<<" "<<strptr_ToBash(mergefile.mergefile) << eol;
-            _db.script << "git add "<<strptr_ToBash(mergefile.mergefile) << eol;
+            _db.script << "git add -f "<<strptr_ToBash(mergefile.mergefile) << eol;
         }
         if (mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {
             // merge
@@ -109,7 +114,7 @@ void apm::MergeFiles(apm::FPackage &package) {
         }
         if (mergefile.ours_mode != 0 && mergefile.base_mode != 0 && mergefile.theirs_mode == 0) {
             // delete
-            _db.script << "git rm --force "<<strptr_ToBash(mergefile.mergefile)<<eol;
+            _db.script << "git rm -f -q "<<strptr_ToBash(mergefile.mergefile)<<eol;
         }
     }ind_end;
 }
@@ -197,30 +202,21 @@ void apm::Main_Update() {
         arg_Alloc(acr_dm.cmd)=_db.ours_recfile;
         arg_Alloc(acr_dm.cmd)=_db.theirs_recfile;
         acr_dm.fstdout << ">"<<merged_recfile;
-        // acr_dm will return non-zero exit code on conflict
-        // the merged records are now in `merged_recfile`
-        // the file may contain conflict markers
-        // TODO: there isn't sufficient information in the file to place new records into the original set,
-        // because the context information is missing.
-        // the package record files would have to contain acr rowid's, and these id's would
-        // have to be respected by acr_dm during merge process.
-        // this is not implemented yet.
         acr_dm_Exec(acr_dm);
         // delete original package records
         ind_beg(algo::FileLine_curs,line,_db.base_recfile) {
-            acrtxn << "acr.delete "<<line << eol;
+            if (Trimmed(line)!="") {
+                acrtxn << "acr.delete "<<line << eol;
+            }
         }ind_end;
         // insert updated package records
         ind_beg(algo::FileLine_curs,line,merged_recfile) {
+            acrtxn << "acr.replace "<<line << eol;
             if (StartsWithQ(line,"<<<<<") || StartsWithQ(line,">>>>>") || StartsWithQ(line,"=====")) {
-                acrtxn << line << eol;
                 has_conflict=true;
-            } else {
-                acrtxn << "acr.replace "<<line<<eol;
             }
         }ind_end;
 
-        DeleteFile(merged_recfile);
         CreateMergeFiles(package.package,algo_lib::SandboxDir(_db.base_sandbox),algo_lib::SandboxDir(_db.theirs_sandbox));
         // log the entries
         ind_beg(_db_mergefile_curs,mergefile,_db) {
@@ -229,10 +225,6 @@ void apm::Main_Update() {
         MergeFiles(package);
         _db.script << "echo "<<strptr_ToBash(tempstr()<<"package "<<package.package<<" updated to "<<new_package_gitref)<<eol;
     }ind_end;
-
-    // re-generate code after updating package
-    _db.script << "update-gitfile" << eol;
-    _db.script << "amc" << eol;
 
     // save acr transaction records to acrtxn_recfile
     // if the file has conflicts, let user finish
@@ -245,19 +237,26 @@ void apm::Main_Update() {
         command::acr_proc acr;
         acr.cmd.replace=true;
         acr.cmd.write=true;
+        acr.cmd.print=false;
+        acr.cmd.report=false;
         acr.fstdin << "<"<<acrtxn_recfile;
         if (has_conflict) {
-            prlog("apm: NOTICE: Conflicts found when updating package.");
-            prlog("apm: Please edit file "<<acrtxn_recfile<<" and call");
-            prlog("    "<<acr_ToCmdline(acr));
+            _db.script << "echo "<<algo::strptr_ToBash("apm: NOTICE: Conflicts found when updating package.") << eol;
+            _db.script << "echo "<<algo::strptr_ToBash(tempstr()<<"apm: Please edit file "<<acrtxn_recfile<<" and call") << eol;
+            _db.script << "echo "<<algo::strptr_ToBash(tempstr()<<"    "<<acr_ToCmdline(acr)) << eol;
         } else {
-            if (_db.cmdline.dry_run) {
-                prlog(acr_ToCmdline(acr));
-            } else {
-                rc=acr_Exec(acr);
-            }
+            // run the insert command TWICE
+            // because on the first run, the meta-data for new tuples is missing
+            _db.script << acr_ToCmdline(acr) << eol;
+            _db.script << acr_ToCmdline(acr) << eol;
         }
     }
+    // re-generate code after updating package
+    _db.script << "acr ssimfile -cmd 'mkdir -p data/$ns; touch data/$ns/$name.ssim' | bash"<<eol;
+    _db.script << "amc -report:N" << eol;
+    // create empty ssimfiles since they are required
+    _db.script << "git add data"<<eol;// add new ssimfiles
+    _db.script << "update-gitfile" << eol;
     if (rc!=0) {
         algo_lib::_db.exit_code=1;
     }

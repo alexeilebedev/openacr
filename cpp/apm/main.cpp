@@ -131,13 +131,10 @@ void apm::Main_Transaction() {
     command::bash_proc bash;
     bash.cmd.c=_db.scriptfile;
     int rc=0;
-    bool showscript = _db.cmdline.dry_run || algo_lib::_db.cmdline.verbose;
-    if (showscript) {
-        prlog("# script saved to "<<_db.scriptfile);
-        prlog("#===\n"<<_db.script<<"\n#===");
-    }
     if (!_db.cmdline.dry_run) {
         rc=bash_Exec(bash);
+    } else {
+        prlog(_db.script);
     }
     _db.script="";
     if (rc!=0) {
@@ -207,7 +204,52 @@ void apm::Main_Edit() {
     _db.script << acr_ToCmdline(acr);
 }
 
+// Definte fake packages based on 'ns' regx
+void apm::DefPackages() {
+    if (_db.cmdline.ns.expr != "") {
+        ind_beg(apm::_db_ns_curs,ns,_db) {
+            if (Regx_Match(_db.cmdline.ns,ns.ns)) {
+                dev::Package package;
+                package.package=ns.ns;
+                package.baseref="HEAD";
+                package.origin=".";
+                package.comment.value=tempstr()<<"package for namespace "<<ns.ns;
+                if (package_InsertMaybe(package)) {
+                    dev::Pkgdep pkgdep;
+                    pkgdep.pkgdep=dev::Pkgdep_Concat_package_parent(ns.ns,"openacr");
+                    pkgdep.soft=true;
+                    pkgdep_InsertMaybe(pkgdep);
+
+                    dev::Pkgkey pkgkey;
+                    pkgkey.pkgkey=tempstr()<<package.package<<"/dev.package:"<<package.package;
+                    pkgkey_InsertMaybe(pkgkey);
+                    pkgkey.pkgkey=tempstr()<<package.package<<"/dmmeta.ns:"<<package.package;
+                    pkgkey_InsertMaybe(pkgkey);
+                }
+            }
+        }ind_end;
+        Regx_ReadSql(_db.cmdline.package,_db.cmdline.ns.expr,true);
+    }
+}
+
 void apm::Main() {
+    // load additional file (with package definitions presumably)
+    if (_db.cmdline.pkgdata != "") {
+        pkgdep_RemoveAll();
+        pkgkey_RemoveAll();
+        package_RemoveAll();
+        bool ok = apm::LoadTuplesFile(_db.cmdline.pkgdata,true);
+        vrfy(ok, tempstr()<<"apm.load_error"
+             <<Keyval("pkgdata",_db.cmdline.pkgdata)
+             <<Keyval("comment",algo_lib::DetachBadTags()));
+    }
+    // if a namespace was specified, force use of local package definition
+    if (_db.cmdline.ns.expr != "") {
+        _db.cmdline.l=true;
+    }
+    // convert -ns to a package definition
+    DefPackages();
+    // topologically sort packages
     SortPackages();
     Main_SelectPackage();
     ind_beg(_db_ssimreq_curs,ssimreq,_db) {
@@ -218,8 +260,12 @@ void apm::Main() {
     _db.base_recfile << "temp/apm.base.ssim";
     _db.theirs_recfile << "temp/apm.theirs.ssim";
     _db.merged_recfile << "temp/apm.merged.ssim";
+    _db.pkgdata_recfile << "temp/apm.pkgdata.ssim";// output
     _db.base_sandbox="apm-base";
     _db.theirs_sandbox="apm-theirs";
+    if (_db.cmdline.l) {
+        SavePackageDefs(_db.pkgdata_recfile);
+    }
     ind_beg(_db_ssimreq_curs,ssimreq,_db) {
         ssimreq.exclude=StartsWithQ(ssimreq.ssimreq,"dev.gitfile:data/");
     }ind_end;

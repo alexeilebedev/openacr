@@ -1818,9 +1818,6 @@ inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ob::ob() {
-}
-
 inline command::orgfile::orgfile() {
     command::orgfile_Init(*this);
 }

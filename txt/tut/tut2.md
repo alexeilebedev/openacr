@@ -447,7 +447,7 @@ Let's briefly consider some such systems.
 
 * The most famous one is the LISP interpreter as expressed in LISP itself,
 described by the famous self-referential expression `(loop (print (eval (read))))`. 
-* Another example is the [self-compiling compiler](#https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
+* Another example is the [self-compiling compiler](https://en.wikipedia.org/wiki/Bootstrapping_(compilers)).
 All compiled languages have one (and *no* interpreted language has one).
 * And a third example is the template meta-programming sublanguage of C++,
 using which you can manipulate, using substitution, the very types from which the underlying

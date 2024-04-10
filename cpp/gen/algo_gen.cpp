@@ -513,14 +513,6 @@ void algo::Charset_ch_bitcurs_Next(Charset_ch_bitcurs &curs) {
     curs.bit = index * 64 + offset;
 }
 
-// --- algo.Charset.ch_bitcurs.Reset
-void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) {
-    curs.elems = &ch_qFind(parent,0);
-    curs.n_elems = ch_N(parent);
-    curs.bit = -1;
-    Charset_ch_bitcurs_Next(curs);
-}
-
 // --- algo.Smallstr150.ch.Print
 void algo::ch_Print(algo::Smallstr150& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));

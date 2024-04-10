@@ -199,6 +199,7 @@ void atf_ci::cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) {
     out.package = row.package;
     out.remove = row.remove;
     out.build = row.build;
+    out.reinstall = row.reinstall;
     out.comment = row.comment;
 }
 
@@ -208,6 +209,7 @@ void atf_ci::cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) {
     row.package = in.package;
     row.remove = in.remove;
     row.build = in.build;
+    row.reinstall = in.reinstall;
     row.comment = in.comment;
 }
 
@@ -377,6 +379,13 @@ void atf_ci::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:atf_ci.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!atf_ci::LoadTuplesMaybe(cmd.in,true)) {
+            err << "atf_ci.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -389,8 +398,6 @@ void atf_ci::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_ci::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- atf_ci.FDb._db.MainLoop
@@ -426,7 +433,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'b1001d7ce322b244ea159ae81c887a34d693dd65'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'7a8e5cb51bc025925f1aa7f6a12998146ebda21c'");
 }
 
 // --- atf_ci.FDb._db.StaticCheck
@@ -736,10 +743,10 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:atf_comp_cov  cijob:comp  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
         ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
         ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
-        ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
-        ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
+        ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
         ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
+        ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
         ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
         ,{NULL, NULL}

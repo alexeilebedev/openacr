@@ -1054,6 +1054,13 @@ void atf_unit::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:atf_unit.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!atf_unit::LoadTuplesMaybe(cmd.data_dir,true)) {
+            err << "atf_unit.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -1066,8 +1073,6 @@ void atf_unit::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_unit::LoadTuplesMaybe(cmd.data_dir,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- atf_unit.FDb._db.MainLoop

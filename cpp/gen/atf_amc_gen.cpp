@@ -748,14 +748,6 @@ void atf_amc::Bitset_fld1_bitcurs_Next(Bitset_fld1_bitcurs &curs) {
     curs.bit = index * 16 + offset;
 }
 
-// --- atf_amc.Bitset.fld1_bitcurs.Reset
-void atf_amc::Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent) {
-    curs.elems = &fld1_qFind(parent,0);
-    curs.n_elems = fld1_N(parent);
-    curs.bit = -1;
-    Bitset_fld1_bitcurs_Next(curs);
-}
-
 // --- atf_amc.Bitset.fld8_bitcurs.Next
 // proceed to next item
 void atf_amc::Bitset_fld8_bitcurs_Next(Bitset_fld8_bitcurs &curs) {
@@ -772,14 +764,6 @@ void atf_amc::Bitset_fld8_bitcurs_Next(Bitset_fld8_bitcurs &curs) {
     curs.bit = index * 8 + offset;
 }
 
-// --- atf_amc.Bitset.fld8_bitcurs.Reset
-void atf_amc::Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent) {
-    curs.elems = &fld8_qFind(parent,0);
-    curs.n_elems = fld8_N(parent);
-    curs.bit = -1;
-    Bitset_fld8_bitcurs_Next(curs);
-}
-
 // --- atf_amc.Bitset.fld64_bitcurs.Next
 // proceed to next item
 void atf_amc::Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs) {
@@ -794,14 +778,6 @@ void atf_amc::Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs) {
         }
     }
     curs.bit = index * 64 + offset;
-}
-
-// --- atf_amc.Bitset.fld64_bitcurs.Reset
-void atf_amc::Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent) {
-    curs.elems = &fld64_qFind(parent,0);
-    curs.n_elems = fld64_N(parent);
-    curs.bit = -1;
-    Bitset_fld64_bitcurs_Next(curs);
 }
 
 // --- atf_amc.Bytebuf.in.GetMsg
@@ -1370,14 +1346,6 @@ void atf_amc::DispFilter_pmask_bitcurs_Next(DispFilter_pmask_bitcurs &curs) {
         }
     }
     curs.bit = index * 64 + offset;
-}
-
-// --- atf_amc.DispFilter.pmask_bitcurs.Reset
-void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    DispFilter_pmask_bitcurs_Next(curs);
 }
 
 // --- atf_amc.DispFilter..ReadFieldMaybe
@@ -4752,6 +4720,13 @@ void atf_amc::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:atf_amc.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!atf_amc::LoadTuplesMaybe(cmd.in,true)) {
+            err << "atf_amc.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -4764,8 +4739,6 @@ void atf_amc::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_amc::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- atf_amc.FDb._db.MainLoop
@@ -12255,14 +12228,6 @@ void atf_amc::PmaskMultiple_present_bitcurs_Next(PmaskMultiple_present_bitcurs &
     curs.bit = index * 32 + offset;
 }
 
-// --- atf_amc.PmaskMultiple.present_bitcurs.Reset
-void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &present_qFind(parent,0);
-    curs.n_elems = present_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_present_bitcurs_Next(curs);
-}
-
 // --- atf_amc.PmaskMultiple.assigned_bitcurs.Next
 // proceed to next item
 void atf_amc::PmaskMultiple_assigned_bitcurs_Next(PmaskMultiple_assigned_bitcurs &curs) {
@@ -12279,14 +12244,6 @@ void atf_amc::PmaskMultiple_assigned_bitcurs_Next(PmaskMultiple_assigned_bitcurs
     curs.bit = index * 32 + offset;
 }
 
-// --- atf_amc.PmaskMultiple.assigned_bitcurs.Reset
-void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &assigned_qFind(parent,0);
-    curs.n_elems = assigned_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_assigned_bitcurs_Next(curs);
-}
-
 // --- atf_amc.PmaskMultiple.nullable_bitcurs.Next
 // proceed to next item
 void atf_amc::PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs &curs) {
@@ -12301,14 +12258,6 @@ void atf_amc::PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs
         }
     }
     curs.bit = index * 32 + offset;
-}
-
-// --- atf_amc.PmaskMultiple.nullable_bitcurs.Reset
-void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &nullable_qFind(parent,0);
-    curs.n_elems = nullable_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_nullable_bitcurs_Next(curs);
 }
 
 // --- atf_amc.PmaskMultiple..ReadFieldMaybe
@@ -13907,14 +13856,6 @@ void atf_amc::PmaskU32_pmask_bitcurs_Next(PmaskU32_pmask_bitcurs &curs) {
     curs.bit = index * 32 + offset;
 }
 
-// --- atf_amc.PmaskU32.pmask_bitcurs.Reset
-void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    PmaskU32_pmask_bitcurs_Next(curs);
-}
-
 // --- atf_amc.PmaskU32..ReadFieldMaybe
 bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -14017,14 +13958,6 @@ void atf_amc::PmaskU555_pmask_bitcurs_Next(PmaskU555_pmask_bitcurs &curs) {
         }
     }
     curs.bit = index * 64 + offset;
-}
-
-// --- atf_amc.PmaskU555.pmask_bitcurs.Reset
-void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    PmaskU555_pmask_bitcurs_Next(curs);
 }
 
 // --- atf_amc.PooledBE64.value.ToCstr

@@ -229,6 +229,13 @@ void atf_fuzz::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:atf_fuzz.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!atf_fuzz::LoadTuplesMaybe(cmd.in,true)) {
+            err << "atf_fuzz.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -241,8 +248,6 @@ void atf_fuzz::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_fuzz::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- atf_fuzz.FDb._db.MainLoop
@@ -278,7 +283,7 @@ static void atf_fuzz::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_fuzz.Input'  signature:'247c584a89bfb9a3d8684c502b42e49ece421791'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_fuzz.Input'  signature:'9ba6a4d39f12eb6e4056fa626a272e08de588888'");
 }
 
 // --- atf_fuzz.FDb._db.StaticCheck
@@ -815,14 +820,12 @@ void atf_fuzz::fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &in)
 // Copy fields out of row
 void atf_fuzz::target_CopyOut(atf_fuzz::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- atf_fuzz.FTarget.base.CopyIn
 // Copy fields in to row
 void atf_fuzz::target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- atf_fuzz.FTarget..Uninit

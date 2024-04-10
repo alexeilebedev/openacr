@@ -112,6 +112,8 @@ namespace acr_ed { // gen:ns_gsymbol
     const char* atfdb_cijob_normalize("normalize");
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_gsymbol
+    const algo::strptr dev_package_amc("amc");
+    const algo::strptr dev_package_apm("apm");
     const algo::strptr dev_package_openacr("openacr");
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_print_proto
@@ -830,6 +832,13 @@ void acr_ed::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:acr_ed.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!acr_ed::LoadTuplesMaybe(cmd.in,true)) {
+            err << "acr_ed.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -842,8 +851,6 @@ void acr_ed::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr_ed::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- acr_ed.FDb._db.MainLoop
@@ -879,7 +886,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'92355dac29ccd1d641699881cd8aba742bb5987d'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'042948d5ec028115be9d280cd8fe64e20bae7485'");
 }
 
 // --- acr_ed.FDb._db.StaticCheck
@@ -1114,7 +1121,6 @@ acr_ed::FField* acr_ed::field_AllocMaybe() {
     acr_ed::FField *row = (acr_ed::FField*)field_AllocMem();
     if (row) {
         new (row) acr_ed::FField; // call constructor
-        row->rowid = u32(field_N() - 1);
     }
     return row;
 }
@@ -1165,7 +1171,7 @@ void acr_ed::field_RemoveLast() {
     u64 n = _db.field_n;
     if (n > 0) {
         n -= 1;
-        field_qFind(u32(n)).~FField();
+        field_qFind(u64(n)).~FField();
         _db.field_n = i32(n);
     }
 }
@@ -4535,7 +4541,6 @@ algo::Smallstr50 acr_ed::name_Get(acr_ed::FField& field) {
 void acr_ed::FField_Init(acr_ed::FField& field) {
     field.reftype = algo::strptr("Val");
     field.p_ctype = NULL;
-    field.rowid = u32(0);
     field.p_arg = NULL;
     field.p_ns = NULL;
     field.ctype_c_field_in_ary = bool(false);
@@ -4745,14 +4750,12 @@ void acr_ed::FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) {
 // Copy fields out of row
 void acr_ed::target_CopyOut(acr_ed::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- acr_ed.FTarget.base.CopyIn
 // Copy fields in to row
 void acr_ed::target_CopyIn(acr_ed::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.Insert

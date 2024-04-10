@@ -321,6 +321,13 @@ void acr_dm::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:acr_dm.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!acr_dm::LoadTuplesMaybe(cmd.in,true)) {
+            err << "acr_dm.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -333,8 +340,6 @@ void acr_dm::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(acr_dm::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- acr_dm.FDb._db.MainLoop
@@ -1260,14 +1265,6 @@ void acr_dm::Source_source_bitcurs_Next(Source_source_bitcurs &curs) {
         }
     }
     curs.bit = index * 8 + offset;
-}
-
-// --- acr_dm.Source.source_bitcurs.Reset
-void acr_dm::Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent) {
-    curs.elems = &source_qFind(parent,0);
-    curs.n_elems = source_N(parent);
-    curs.bit = -1;
-    Source_source_bitcurs_Next(curs);
 }
 
 // --- acr_dm.FTuple.zs_attr.Insert

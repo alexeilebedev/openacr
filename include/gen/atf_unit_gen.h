@@ -412,28 +412,28 @@ algo::tempstr        acr_ed_ToCmdline() __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.Reset
-void                 _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& );
+void                 _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.ValidQ
-bool                 _db_tr_number_curs_ValidQ(_db_tr_number_curs &curs);
+bool                 _db_tr_number_curs_ValidQ(_db_tr_number_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FDb.tr_number_curs.Next
-void                 _db_tr_number_curs_Next(_db_tr_number_curs &curs);
+void                 _db_tr_number_curs_Next(_db_tr_number_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FDb.tr_number_curs.Access
-atf_unit::FNumber&   _db_tr_number_curs_Access(_db_tr_number_curs &curs);
+atf_unit::FNumber&   _db_tr_number_curs_Access(_db_tr_number_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.unittest_curs.Reset
-void                 _db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent);
+void                 _db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.unittest_curs.ValidQ
-bool                 _db_unittest_curs_ValidQ(_db_unittest_curs &curs);
+bool                 _db_unittest_curs_ValidQ(_db_unittest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FDb.unittest_curs.Next
-void                 _db_unittest_curs_Next(_db_unittest_curs &curs);
+void                 _db_unittest_curs_Next(_db_unittest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FDb.unittest_curs.Access
-atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs);
+atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FDb..Init
 void                 FDb_Init();
@@ -692,37 +692,37 @@ algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, c
 
 // proceed to next item
 // func:atf_unit.FPerfSort.orig_curs.Next
-void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs);
+void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.orig_curs.Reset
-void                 FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent);
+void                 FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.orig_curs.ValidQ
-bool                 FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs);
+bool                 FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.orig_curs.Access
-atf_unit::Dbl&       FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs);
+atf_unit::Dbl&       FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FPerfSort.sorted_curs.Next
-void                 FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs);
+void                 FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.sorted_curs.Reset
-void                 FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent);
+void                 FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.sorted_curs.ValidQ
-bool                 FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs);
+bool                 FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.sorted_curs.Access
-atf_unit::Dbl&       FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs);
+atf_unit::Dbl&       FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FPerfSort.index_curs.Next
-void                 FPerfSort_index_curs_Next(FPerfSort_index_curs &curs);
+void                 FPerfSort_index_curs_Next(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.index_curs.Reset
-void                 FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent);
+void                 FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.index_curs.ValidQ
-bool                 FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs);
+bool                 FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.index_curs.Access
-i32&                 FPerfSort_index_curs_Access(FPerfSort_index_curs &curs);
+i32&                 FPerfSort_index_curs_Access(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FPerfSort..Init
 void                 FPerfSort_Init(atf_unit::FPerfSort& parent);

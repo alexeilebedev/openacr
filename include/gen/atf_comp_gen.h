@@ -212,16 +212,16 @@ atf_comp::FTmsg&     zd_tmsg_qLast(atf_comp::FComptest& comptest) __attribute__(
 
 // cursor points to valid item
 // func:atf_comp.FComptest.zd_tmsg_curs.Reset
-void                 comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent);
+void                 comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FComptest.zd_tmsg_curs.ValidQ
-bool                 comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs);
+bool                 comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FComptest.zd_tmsg_curs.Next
-void                 comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs);
+void                 comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FComptest.zd_tmsg_curs.Access
-atf_comp::FTmsg&     comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs);
+atf_comp::FTmsg&     comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FComptest..Init
 void                 FComptest_Init(atf_comp::FComptest& comptest);
@@ -750,88 +750,88 @@ bool                 zd_out_targs_SaveSsimfile(algo::strptr fname) __attribute__
 
 // cursor points to valid item
 // func:atf_comp.FDb.comptest_curs.Reset
-void                 _db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent);
+void                 _db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.comptest_curs.ValidQ
-bool                 _db_comptest_curs_ValidQ(_db_comptest_curs &curs);
+bool                 _db_comptest_curs_ValidQ(_db_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.comptest_curs.Next
-void                 _db_comptest_curs_Next(_db_comptest_curs &curs);
+void                 _db_comptest_curs_Next(_db_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.comptest_curs.Access
-atf_comp::FComptest& _db_comptest_curs_Access(_db_comptest_curs &curs);
+atf_comp::FComptest& _db_comptest_curs_Access(_db_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_sel_comptest_curs.Reset
-void                 _db_zd_sel_comptest_curs_Reset(_db_zd_sel_comptest_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_sel_comptest_curs_Reset(_db_zd_sel_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_sel_comptest_curs.ValidQ
-bool                 _db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &curs);
+bool                 _db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_sel_comptest_curs.Next
-void                 _db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs);
+void                 _db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_sel_comptest_curs.Access
-atf_comp::FComptest& _db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs);
+atf_comp::FComptest& _db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_run_comptest_curs.Reset
-void                 _db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_run_comptest_curs.ValidQ
-bool                 _db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs);
+bool                 _db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_run_comptest_curs.Next
-void                 _db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs);
+void                 _db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_run_comptest_curs.Access
-atf_comp::FComptest& _db_zd_run_comptest_curs_Access(_db_zd_run_comptest_curs &curs);
+atf_comp::FComptest& _db_zd_run_comptest_curs_Access(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_tmsg_curs.Reset
-void                 _db_zd_out_tmsg_curs_Reset(_db_zd_out_tmsg_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_out_tmsg_curs_Reset(_db_zd_out_tmsg_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_tmsg_curs.ValidQ
-bool                 _db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs);
+bool                 _db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_out_tmsg_curs.Next
-void                 _db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs);
+void                 _db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_out_tmsg_curs.Access
-atf_comp::FTmsg&     _db_zd_out_tmsg_curs_Access(_db_zd_out_tmsg_curs &curs);
+atf_comp::FTmsg&     _db_zd_out_tmsg_curs_Access(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_comptest_curs.Reset
-void                 _db_zd_out_comptest_curs_Reset(_db_zd_out_comptest_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_out_comptest_curs_Reset(_db_zd_out_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_comptest_curs.ValidQ
-bool                 _db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &curs);
+bool                 _db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_out_comptest_curs.Next
-void                 _db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs);
+void                 _db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_out_comptest_curs.Access
-atf_comp::FComptest& _db_zd_out_comptest_curs_Access(_db_zd_out_comptest_curs &curs);
+atf_comp::FComptest& _db_zd_out_comptest_curs_Access(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_tfilt_curs.Reset
-void                 _db_zd_out_tfilt_curs_Reset(_db_zd_out_tfilt_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_out_tfilt_curs_Reset(_db_zd_out_tfilt_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_tfilt_curs.ValidQ
-bool                 _db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs);
+bool                 _db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_out_tfilt_curs.Next
-void                 _db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs);
+void                 _db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_out_tfilt_curs.Access
-atf_comp::FTfilt&    _db_zd_out_tfilt_curs_Access(_db_zd_out_tfilt_curs &curs);
+atf_comp::FTfilt&    _db_zd_out_tfilt_curs_Access(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_targs_curs.Reset
-void                 _db_zd_out_targs_curs_Reset(_db_zd_out_targs_curs &curs, atf_comp::FDb &parent);
+void                 _db_zd_out_targs_curs_Reset(_db_zd_out_targs_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_comp.FDb.zd_out_targs_curs.ValidQ
-bool                 _db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs);
+bool                 _db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_comp.FDb.zd_out_targs_curs.Next
-void                 _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs);
+void                 _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_comp.FDb.zd_out_targs_curs.Access
-atf_comp::FTargs&    _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs);
+atf_comp::FTargs&    _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FDb..Init
 void                 FDb_Init();

@@ -54,7 +54,8 @@ These ssimfiles reference dmmeta.ns
 ### Used In Commands
 <a href="#used-in-commands"></a>
 * [abt_md -ns](/txt/exe/abt_md/README.md) - (overrides -readme) Process readmes for this namespace 
-* [acr_in -ns](/txt/exe/acr_in/README.md) - Regx of matching namespace
+* [acr_in -ns](/txt/exe/acr_in/README.md) - Regx of matching namespace 
+* [apm -ns](/txt/exe/apm/README.md) - Operate on specified namespace only
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
@@ -64,6 +65,7 @@ These ssimfiles reference dmmeta.ns
 * [acr_ed](/txt/exe/acr_ed/README.md) as acr_ed.FNs
 * [acr_in](/txt/exe/acr_in/README.md) as acr_in.FNs
 * [amc](/txt/exe/amc/README.md) as amc.FNs
+* [apm](/txt/exe/apm/README.md) as apm.FNs
 * [atf_ci](/txt/exe/atf_ci/README.md) as atf_ci.FNs
 * [src_hdr](/txt/exe/src_hdr/README.md) as src_hdr.FNs
 * [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FNs

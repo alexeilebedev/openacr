@@ -939,6 +939,14 @@ inline void atf_amc::fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs
     }
 }
 
+// --- atf_amc.Bitset.fld1_bitcurs.Reset
+inline void atf_amc::Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent) {
+    curs.elems = &fld1_qFind(parent,0);
+    curs.n_elems = fld1_N(parent);
+    curs.bit = -1;
+    Bitset_fld1_bitcurs_Next(curs);
+}
+
 // --- atf_amc.Bitset.fld1_bitcurs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs) {
@@ -976,6 +984,14 @@ inline u16& atf_amc::Bitset_fld1_curs_Access(Bitset_fld1_curs &curs) {
     return fld1_qFind((*curs.parent), u64(curs.index));
 }
 
+// --- atf_amc.Bitset.fld8_bitcurs.Reset
+inline void atf_amc::Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent) {
+    curs.elems = &fld8_qFind(parent,0);
+    curs.n_elems = fld8_N(parent);
+    curs.bit = -1;
+    Bitset_fld8_bitcurs_Next(curs);
+}
+
 // --- atf_amc.Bitset.fld8_bitcurs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs) {
@@ -986,6 +1002,14 @@ inline bool atf_amc::Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs) {
 // item access
 inline int& atf_amc::Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs) {
     return curs.bit;
+}
+
+// --- atf_amc.Bitset.fld64_bitcurs.Reset
+inline void atf_amc::Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent) {
+    curs.elems = &fld64_qFind(parent,0);
+    curs.n_elems = fld64_N(parent);
+    curs.bit = -1;
+    Bitset_fld64_bitcurs_Next(curs);
 }
 
 // --- atf_amc.Bitset.fld64_bitcurs.ValidQ
@@ -1778,6 +1802,14 @@ inline int atf_amc::intval_Present_GetBit(atf_amc::DispFilter& parent) {
     int retval = 9;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
+}
+
+// --- atf_amc.DispFilter.pmask_bitcurs.Reset
+inline void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) {
+    curs.elems = &pmask_qFind(parent,0);
+    curs.n_elems = pmask_N(parent);
+    curs.bit = -1;
+    DispFilter_pmask_bitcurs_Next(curs);
 }
 
 // --- atf_amc.DispFilter.pmask_bitcurs.ValidQ
@@ -7539,6 +7571,14 @@ inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskMultiple& parent) {
     return retval;
 }
 
+// --- atf_amc.PmaskMultiple.present_bitcurs.Reset
+inline void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &present_qFind(parent,0);
+    curs.n_elems = present_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_present_bitcurs_Next(curs);
+}
+
 // --- atf_amc.PmaskMultiple.present_bitcurs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) {
@@ -7551,6 +7591,14 @@ inline int& atf_amc::PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_
     return curs.bit;
 }
 
+// --- atf_amc.PmaskMultiple.assigned_bitcurs.Reset
+inline void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &assigned_qFind(parent,0);
+    curs.n_elems = assigned_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_assigned_bitcurs_Next(curs);
+}
+
 // --- atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) {
@@ -7561,6 +7609,14 @@ inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigne
 // item access
 inline int& atf_amc::PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) {
     return curs.bit;
+}
+
+// --- atf_amc.PmaskMultiple.nullable_bitcurs.Reset
+inline void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+    curs.elems = &nullable_qFind(parent,0);
+    curs.n_elems = nullable_N(parent);
+    curs.bit = -1;
+    PmaskMultiple_nullable_bitcurs_Next(curs);
 }
 
 // --- atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
@@ -9431,6 +9487,14 @@ inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU32& parent) {
     return retval;
 }
 
+// --- atf_amc.PmaskU32.pmask_bitcurs.Reset
+inline void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) {
+    curs.elems = &pmask_qFind(parent,0);
+    curs.n_elems = pmask_N(parent);
+    curs.bit = -1;
+    PmaskU32_pmask_bitcurs_Next(curs);
+}
+
 // --- atf_amc.PmaskU32.pmask_bitcurs.ValidQ
 // cursor points to valid item
 inline bool atf_amc::PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs) {
@@ -9686,6 +9750,14 @@ inline void atf_amc::pmask_Setary(atf_amc::PmaskU555& parent, const algo::aryptr
 // 'quick' Access row by row id. No bounds checking in release.
 inline u64& atf_amc::pmask_qFind(atf_amc::PmaskU555& parent, u64 t) {
     return parent.pmask_elems[t];
+}
+
+// --- atf_amc.PmaskU555.pmask_bitcurs.Reset
+inline void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) {
+    curs.elems = &pmask_qFind(parent,0);
+    curs.n_elems = pmask_N(parent);
+    curs.bit = -1;
+    PmaskU555_pmask_bitcurs_Next(curs);
 }
 
 // --- atf_amc.PmaskU555.pmask_bitcurs.ValidQ

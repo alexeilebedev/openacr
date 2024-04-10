@@ -483,40 +483,40 @@ template<class T> void h_alarm_Set2(T& ctx, void (*fcn)(T&, lib_fm::FAlarm& arg)
 
 // cursor points to valid item
 // func:lib_fm.FDb.alarm_curs.Reset
-void                 _db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent);
+void                 _db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alarm_curs.ValidQ
-bool                 _db_alarm_curs_ValidQ(_db_alarm_curs &curs);
+bool                 _db_alarm_curs_ValidQ(_db_alarm_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alarm_curs.Next
-void                 _db_alarm_curs_Next(_db_alarm_curs &curs);
+void                 _db_alarm_curs_Next(_db_alarm_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alarm_curs.Access
-lib_fm::FAlarm&      _db_alarm_curs_Access(_db_alarm_curs &curs);
+lib_fm::FAlarm&      _db_alarm_curs_Access(_db_alarm_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_code_curs.Reset
-void                 _db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent);
+void                 _db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_code_curs.ValidQ
-bool                 _db_alm_code_curs_ValidQ(_db_alm_code_curs &curs);
+bool                 _db_alm_code_curs_ValidQ(_db_alm_code_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alm_code_curs.Next
-void                 _db_alm_code_curs_Next(_db_alm_code_curs &curs);
+void                 _db_alm_code_curs_Next(_db_alm_code_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alm_code_curs.Access
-lib_fm::FAlmCode&    _db_alm_code_curs_Access(_db_alm_code_curs &curs);
+lib_fm::FAlmCode&    _db_alm_code_curs_Access(_db_alm_code_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_objtype_curs.Reset
-void                 _db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent);
+void                 _db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_objtype_curs.ValidQ
-bool                 _db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs);
+bool                 _db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alm_objtype_curs.Next
-void                 _db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs);
+void                 _db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alm_objtype_curs.Access
-lib_fm::FAlmObjtype& _db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs);
+lib_fm::FAlmObjtype& _db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.FDb..Init
 void                 FDb_Init();

@@ -246,6 +246,13 @@ void atf_cmdline::ReadArgv() {
             doexit = true;
         }
     }
+    // dmmeta.floadtuples:atf_cmdline.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!atf_cmdline::LoadTuplesMaybe(cmd.in,true)) {
+            err << "atf_cmdline.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -258,8 +265,6 @@ void atf_cmdline::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(atf_cmdline::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- atf_cmdline.FDb._db.MainLoop

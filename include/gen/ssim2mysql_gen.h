@@ -255,16 +255,16 @@ bool                 c_ssimfile_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysq
 void                 c_ssimfile_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FSsimfile& row) __attribute__((nothrow));
 
 // func:ssim2mysql.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, ssim2mysql::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, ssim2mysql::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FCtype.c_field_curs.Access
-ssim2mysql::FField&  ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+ssim2mysql::FField&  ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2mysql.FCtype..Init
 void                 FCtype_Init(ssim2mysql::FCtype& ctype);
@@ -946,124 +946,124 @@ void                 cd_input_line_Step() __attribute__((nothrow));
 
 // cursor points to valid item
 // func:ssim2mysql.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs);
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.ns_curs.Access
-ssim2mysql::FNs&     _db_ns_curs_Access(_db_ns_curs &curs);
+ssim2mysql::FNs&     _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.ctype_curs.Access
-ssim2mysql::FCtype&  _db_ctype_curs_Access(_db_ctype_curs &curs);
+ssim2mysql::FCtype&  _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.field_curs.Access
-ssim2mysql::FField&  _db_field_curs_Access(_db_field_curs &curs);
+ssim2mysql::FField&  _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.sqltype_curs.Reset
-void                 _db_sqltype_curs_Reset(_db_sqltype_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_sqltype_curs_Reset(_db_sqltype_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.sqltype_curs.ValidQ
-bool                 _db_sqltype_curs_ValidQ(_db_sqltype_curs &curs);
+bool                 _db_sqltype_curs_ValidQ(_db_sqltype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.sqltype_curs.Next
-void                 _db_sqltype_curs_Next(_db_sqltype_curs &curs);
+void                 _db_sqltype_curs_Next(_db_sqltype_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.sqltype_curs.Access
-ssim2mysql::FSqltype& _db_sqltype_curs_Access(_db_sqltype_curs &curs);
+ssim2mysql::FSqltype& _db_sqltype_curs_Access(_db_sqltype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.column_curs.Reset
-void                 _db_column_curs_Reset(_db_column_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_column_curs_Reset(_db_column_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.column_curs.ValidQ
-bool                 _db_column_curs_ValidQ(_db_column_curs &curs);
+bool                 _db_column_curs_ValidQ(_db_column_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.column_curs.Next
-void                 _db_column_curs_Next(_db_column_curs &curs);
+void                 _db_column_curs_Next(_db_column_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.column_curs.Access
-ssim2mysql::FColumn& _db_column_curs_Access(_db_column_curs &curs);
+ssim2mysql::FColumn& _db_column_curs_Access(_db_column_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.substr_curs.Access
-ssim2mysql::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs);
+ssim2mysql::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.ssimfile_curs.Access
-ssim2mysql::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+ssim2mysql::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.zs_cmd_curs.Reset
-void                 _db_zs_cmd_curs_Reset(_db_zs_cmd_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_zs_cmd_curs_Reset(_db_zs_cmd_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.zs_cmd_curs.ValidQ
-bool                 _db_zs_cmd_curs_ValidQ(_db_zs_cmd_curs &curs);
+bool                 _db_zs_cmd_curs_ValidQ(_db_zs_cmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.zs_cmd_curs.Next
-void                 _db_zs_cmd_curs_Next(_db_zs_cmd_curs &curs);
+void                 _db_zs_cmd_curs_Next(_db_zs_cmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.zs_cmd_curs.Access
-ssim2mysql::FCmd&    _db_zs_cmd_curs_Access(_db_zs_cmd_curs &curs);
+ssim2mysql::FCmd&    _db_zs_cmd_curs_Access(_db_zs_cmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.zd_ssimfile_curs.Reset
-void                 _db_zd_ssimfile_curs_Reset(_db_zd_ssimfile_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_zd_ssimfile_curs_Reset(_db_zd_ssimfile_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.zd_ssimfile_curs.ValidQ
-bool                 _db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs);
+bool                 _db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.zd_ssimfile_curs.Next
-void                 _db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs);
+void                 _db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.zd_ssimfile_curs.Access
-ssim2mysql::FSsimfile& _db_zd_ssimfile_curs_Access(_db_zd_ssimfile_curs &curs);
+ssim2mysql::FSsimfile& _db_zd_ssimfile_curs_Access(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.cd_input_line_curs.Reset
-void                 _db_cd_input_line_curs_Reset(_db_cd_input_line_curs &curs, ssim2mysql::FDb &parent);
+void                 _db_cd_input_line_curs_Reset(_db_cd_input_line_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FDb.cd_input_line_curs.ValidQ
-bool                 _db_cd_input_line_curs_ValidQ(_db_cd_input_line_curs &curs);
+bool                 _db_cd_input_line_curs_ValidQ(_db_cd_input_line_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FDb.cd_input_line_curs.Next
-void                 _db_cd_input_line_curs_Next(_db_cd_input_line_curs &curs);
+void                 _db_cd_input_line_curs_Next(_db_cd_input_line_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FDb.cd_input_line_curs.Access
-ssim2mysql::FInput&  _db_cd_input_line_curs_Access(_db_cd_input_line_curs &curs);
+ssim2mysql::FInput&  _db_cd_input_line_curs_Access(_db_cd_input_line_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2mysql.FDb..Init
 void                 FDb_Init();
@@ -1297,16 +1297,16 @@ ssim2mysql::FSsimfile& c_ssimfile_qLast(ssim2mysql::FNs& ns) __attribute__((noth
 // func:ssim2mysql.FNs..Init
 void                 FNs_Init(ssim2mysql::FNs& ns);
 // func:ssim2mysql.FNs.c_ssimfile_curs.Reset
-void                 ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, ssim2mysql::FNs &parent);
+void                 ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, ssim2mysql::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FNs.c_ssimfile_curs.ValidQ
-bool                 ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs);
+bool                 ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FNs.c_ssimfile_curs.Next
-void                 ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs);
+void                 ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FNs.c_ssimfile_curs.Access
-ssim2mysql::FSsimfile& ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs);
+ssim2mysql::FSsimfile& ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
 // func:ssim2mysql.FNs..Uninit
 void                 FNs_Uninit(ssim2mysql::FNs& ns) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -1435,16 +1435,16 @@ ssim2mysql::FColumn& c_column_qLast(ssim2mysql::FSsimfile& ssimfile) __attribute
 // func:ssim2mysql.FSsimfile..Init
 void                 FSsimfile_Init(ssim2mysql::FSsimfile& ssimfile);
 // func:ssim2mysql.FSsimfile.c_column_curs.Reset
-void                 ssimfile_c_column_curs_Reset(ssimfile_c_column_curs &curs, ssim2mysql::FSsimfile &parent);
+void                 ssimfile_c_column_curs_Reset(ssimfile_c_column_curs &curs, ssim2mysql::FSsimfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2mysql.FSsimfile.c_column_curs.ValidQ
-bool                 ssimfile_c_column_curs_ValidQ(ssimfile_c_column_curs &curs);
+bool                 ssimfile_c_column_curs_ValidQ(ssimfile_c_column_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2mysql.FSsimfile.c_column_curs.Next
-void                 ssimfile_c_column_curs_Next(ssimfile_c_column_curs &curs);
+void                 ssimfile_c_column_curs_Next(ssimfile_c_column_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2mysql.FSsimfile.c_column_curs.Access
-ssim2mysql::FColumn& ssimfile_c_column_curs_Access(ssimfile_c_column_curs &curs);
+ssim2mysql::FColumn& ssimfile_c_column_curs_Access(ssimfile_c_column_curs &curs) __attribute__((nothrow));
 // func:ssim2mysql.FSsimfile..Uninit
 void                 FSsimfile_Uninit(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
 // print string representation of ROW to string STR

@@ -251,28 +251,28 @@ void                 ind_target_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_fuzz.FDb.fuzzstrat_curs.Reset
-void                 _db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent);
+void                 _db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.fuzzstrat_curs.ValidQ
-bool                 _db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs);
+bool                 _db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_fuzz.FDb.fuzzstrat_curs.Next
-void                 _db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs);
+void                 _db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_fuzz.FDb.fuzzstrat_curs.Access
-atf_fuzz::FFuzzstrat& _db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs);
+atf_fuzz::FFuzzstrat& _db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent);
+void                 _db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
+bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_fuzz.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs);
+void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_fuzz.FDb.target_curs.Access
-atf_fuzz::FTarget&   _db_target_curs_Access(_db_target_curs &curs);
+atf_fuzz::FTarget&   _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.FDb..Init
 void                 FDb_Init();
@@ -318,7 +318,6 @@ void                 FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat);
 struct FTarget { // atf_fuzz.FTarget
     atf_fuzz::FTarget*   ind_target_next;   // hash next
     algo::Smallstr16     target;            // Primary key - name of target
-    algo::Smallstr50     compat;            //   "Linux-%.%-%"  Compatibility (regx of builddir)
 private:
     friend atf_fuzz::FTarget&   target_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_fuzz::FTarget*   target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));

@@ -175,135 +175,135 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_msgsize_max                = 142
     ,command_FieldId_bufsize                    = 143
     ,command_FieldId_recvdelay                  = 144
-    ,command_FieldId_diff                       = 145
-    ,command_FieldId_push                       = 146
-    ,command_FieldId_remove                     = 147
-    ,command_FieldId_origin                     = 148
-    ,command_FieldId_ref                        = 149
-    ,command_FieldId_showrec                    = 150
-    ,command_FieldId_showfile                   = 151
-    ,command_FieldId_R                          = 152
-    ,command_FieldId_reset                      = 153
-    ,command_FieldId_checkclean                 = 154
-    ,command_FieldId_stat                       = 155
-    ,command_FieldId_annotate                   = 156
-    ,command_FieldId_gen                        = 157
+    ,command_FieldId_pkgdata                    = 145
+    ,command_FieldId_diff                       = 146
+    ,command_FieldId_push                       = 147
+    ,command_FieldId_remove                     = 148
+    ,command_FieldId_origin                     = 149
+    ,command_FieldId_ref                        = 150
+    ,command_FieldId_showrec                    = 151
+    ,command_FieldId_showfile                   = 152
+    ,command_FieldId_R                          = 153
+    ,command_FieldId_reset                      = 154
+    ,command_FieldId_checkclean                 = 155
+    ,command_FieldId_stat                       = 156
+    ,command_FieldId_annotate                   = 157
     ,command_FieldId_data_in                    = 158
     ,command_FieldId_binpath                    = 159
-    ,command_FieldId_nosort                     = 160
-    ,command_FieldId_amctest                    = 161
-    ,command_FieldId_dofork                     = 162
-    ,command_FieldId_q                          = 163
-    ,command_FieldId_cijob                      = 164
-    ,command_FieldId_capture                    = 165
-    ,command_FieldId_exec                       = 166
-    ,command_FieldId_astr                       = 167
-    ,command_FieldId_anum                       = 168
-    ,command_FieldId_adbl                       = 169
-    ,command_FieldId_aflag                      = 170
-    ,command_FieldId_str                        = 171
-    ,command_FieldId_num                        = 172
-    ,command_FieldId_dbl                        = 173
-    ,command_FieldId_flag                       = 174
-    ,command_FieldId_dstr                       = 175
-    ,command_FieldId_dnum                       = 176
-    ,command_FieldId_ddbl                       = 177
-    ,command_FieldId_dflag                      = 178
-    ,command_FieldId_mstr                       = 179
-    ,command_FieldId_mnum                       = 180
-    ,command_FieldId_mdbl                       = 181
-    ,command_FieldId_amnum                      = 182
-    ,command_FieldId_fconst                     = 183
-    ,command_FieldId_cconst                     = 184
-    ,command_FieldId_dregx                      = 185
-    ,command_FieldId_dpkey                      = 186
-    ,command_FieldId_comptest                   = 187
-    ,command_FieldId_mdbg                       = 188
-    ,command_FieldId_run                        = 189
-    ,command_FieldId_printinput                 = 190
-    ,command_FieldId_normalize                  = 191
-    ,command_FieldId_covcapture                 = 192
-    ,command_FieldId_covcheck                   = 193
-    ,command_FieldId_compdir                    = 194
-    ,command_FieldId_check_untracked            = 195
-    ,command_FieldId_memcheck                   = 196
-    ,command_FieldId_callgrind                  = 197
-    ,command_FieldId_stream                     = 198
-    ,command_FieldId_i                          = 199
-    ,command_FieldId_b                          = 200
-    ,command_FieldId_covdir                     = 201
-    ,command_FieldId_logfile                    = 202
-    ,command_FieldId_runcmd                     = 203
-    ,command_FieldId_exclude                    = 204
-    ,command_FieldId_mergepath                  = 205
-    ,command_FieldId_gcov                       = 206
-    ,command_FieldId_ssim                       = 207
-    ,command_FieldId_xmlpretty                  = 208
-    ,command_FieldId_summary                    = 209
-    ,command_FieldId_reprofile                  = 210
-    ,command_FieldId_args                       = 211
-    ,command_FieldId_inputfile                  = 212
-    ,command_FieldId_fuzzstrat                  = 213
-    ,command_FieldId_seed                       = 214
-    ,command_FieldId_testprob                   = 215
-    ,command_FieldId_gtblacttst                 = 216
-    ,command_FieldId_mr                         = 217
-    ,command_FieldId_note                       = 218
-    ,command_FieldId_skip_init                  = 219
-    ,command_FieldId_skip_git_init              = 220
-    ,command_FieldId_ncmd                       = 221
-    ,command_FieldId_nofork                     = 222
-    ,command_FieldId_perf_secs                  = 223
-    ,command_FieldId_pertest_timeout            = 224
-    ,command_FieldId_stats                      = 225
-    ,command_FieldId_enable                     = 226
-    ,command_FieldId_disable                    = 227
-    ,command_FieldId_gc                         = 228
-    ,command_FieldId_dir                        = 229
-    ,command_FieldId_hitrate                    = 230
-    ,command_FieldId_after                      = 231
-    ,command_FieldId_selector                   = 232
-    ,command_FieldId_fields                     = 233
-    ,command_FieldId_accept                     = 234
-    ,command_FieldId_approve                    = 235
-    ,command_FieldId_needs_work                 = 236
-    ,command_FieldId_authdir                    = 237
-    ,command_FieldId_gitdir                     = 238
-    ,command_FieldId_show_gitlab_system_notes   = 239
-    ,command_FieldId_attach                     = 240
-    ,command_FieldId_catchthrow                 = 241
-    ,command_FieldId_tui                        = 242
-    ,command_FieldId_bcmd                       = 243
-    ,command_FieldId_emacs                      = 244
-    ,command_FieldId_manywin                    = 245
-    ,command_FieldId_follow_child               = 246
-    ,command_FieldId_py                         = 247
-    ,command_FieldId_writessimfile              = 248
-    ,command_FieldId_url                        = 249
-    ,command_FieldId_tables                     = 250
-    ,command_FieldId_nologo                     = 251
-    ,command_FieldId_baddbok                    = 252
-    ,command_FieldId_move                       = 253
-    ,command_FieldId_dedup                      = 254
-    ,command_FieldId_commit                     = 255
-    ,command_FieldId_undo                       = 256
-    ,command_FieldId_hash                       = 257
-    ,command_FieldId_expr                       = 258
-    ,command_FieldId_style                      = 259
-    ,command_FieldId_match                      = 260
-    ,command_FieldId_string                     = 261
-    ,command_FieldId_show                       = 262
-    ,command_FieldId_name                       = 263
-    ,command_FieldId_files                      = 264
-    ,command_FieldId_refs                       = 265
-    ,command_FieldId_body                       = 266
-    ,command_FieldId_targsrc                    = 267
-    ,command_FieldId_func                       = 268
-    ,command_FieldId_nextfile                   = 269
-    ,command_FieldId_other                      = 270
-    ,command_FieldId_updateproto                = 271
-    ,command_FieldId_listfunc                   = 272
-    ,command_FieldId_iffy                       = 273
+    ,command_FieldId_amctest                    = 160
+    ,command_FieldId_dofork                     = 161
+    ,command_FieldId_q                          = 162
+    ,command_FieldId_cijob                      = 163
+    ,command_FieldId_capture                    = 164
+    ,command_FieldId_exec                       = 165
+    ,command_FieldId_astr                       = 166
+    ,command_FieldId_anum                       = 167
+    ,command_FieldId_adbl                       = 168
+    ,command_FieldId_aflag                      = 169
+    ,command_FieldId_str                        = 170
+    ,command_FieldId_num                        = 171
+    ,command_FieldId_dbl                        = 172
+    ,command_FieldId_flag                       = 173
+    ,command_FieldId_dstr                       = 174
+    ,command_FieldId_dnum                       = 175
+    ,command_FieldId_ddbl                       = 176
+    ,command_FieldId_dflag                      = 177
+    ,command_FieldId_mstr                       = 178
+    ,command_FieldId_mnum                       = 179
+    ,command_FieldId_mdbl                       = 180
+    ,command_FieldId_amnum                      = 181
+    ,command_FieldId_fconst                     = 182
+    ,command_FieldId_cconst                     = 183
+    ,command_FieldId_dregx                      = 184
+    ,command_FieldId_dpkey                      = 185
+    ,command_FieldId_comptest                   = 186
+    ,command_FieldId_mdbg                       = 187
+    ,command_FieldId_run                        = 188
+    ,command_FieldId_printinput                 = 189
+    ,command_FieldId_normalize                  = 190
+    ,command_FieldId_covcapture                 = 191
+    ,command_FieldId_covcheck                   = 192
+    ,command_FieldId_compdir                    = 193
+    ,command_FieldId_check_untracked            = 194
+    ,command_FieldId_memcheck                   = 195
+    ,command_FieldId_callgrind                  = 196
+    ,command_FieldId_stream                     = 197
+    ,command_FieldId_i                          = 198
+    ,command_FieldId_b                          = 199
+    ,command_FieldId_covdir                     = 200
+    ,command_FieldId_logfile                    = 201
+    ,command_FieldId_runcmd                     = 202
+    ,command_FieldId_exclude                    = 203
+    ,command_FieldId_mergepath                  = 204
+    ,command_FieldId_gcov                       = 205
+    ,command_FieldId_ssim                       = 206
+    ,command_FieldId_xmlpretty                  = 207
+    ,command_FieldId_summary                    = 208
+    ,command_FieldId_reprofile                  = 209
+    ,command_FieldId_args                       = 210
+    ,command_FieldId_inputfile                  = 211
+    ,command_FieldId_fuzzstrat                  = 212
+    ,command_FieldId_seed                       = 213
+    ,command_FieldId_testprob                   = 214
+    ,command_FieldId_gtblacttst                 = 215
+    ,command_FieldId_mr                         = 216
+    ,command_FieldId_note                       = 217
+    ,command_FieldId_skip_init                  = 218
+    ,command_FieldId_skip_git_init              = 219
+    ,command_FieldId_ncmd                       = 220
+    ,command_FieldId_nofork                     = 221
+    ,command_FieldId_perf_secs                  = 222
+    ,command_FieldId_pertest_timeout            = 223
+    ,command_FieldId_stats                      = 224
+    ,command_FieldId_enable                     = 225
+    ,command_FieldId_disable                    = 226
+    ,command_FieldId_gc                         = 227
+    ,command_FieldId_dir                        = 228
+    ,command_FieldId_hitrate                    = 229
+    ,command_FieldId_after                      = 230
+    ,command_FieldId_selector                   = 231
+    ,command_FieldId_fields                     = 232
+    ,command_FieldId_accept                     = 233
+    ,command_FieldId_approve                    = 234
+    ,command_FieldId_needs_work                 = 235
+    ,command_FieldId_authdir                    = 236
+    ,command_FieldId_gitdir                     = 237
+    ,command_FieldId_show_gitlab_system_notes   = 238
+    ,command_FieldId_attach                     = 239
+    ,command_FieldId_catchthrow                 = 240
+    ,command_FieldId_tui                        = 241
+    ,command_FieldId_bcmd                       = 242
+    ,command_FieldId_emacs                      = 243
+    ,command_FieldId_manywin                    = 244
+    ,command_FieldId_follow_child               = 245
+    ,command_FieldId_py                         = 246
+    ,command_FieldId_writessimfile              = 247
+    ,command_FieldId_url                        = 248
+    ,command_FieldId_tables                     = 249
+    ,command_FieldId_nologo                     = 250
+    ,command_FieldId_baddbok                    = 251
+    ,command_FieldId_move                       = 252
+    ,command_FieldId_dedup                      = 253
+    ,command_FieldId_commit                     = 254
+    ,command_FieldId_undo                       = 255
+    ,command_FieldId_hash                       = 256
+    ,command_FieldId_expr                       = 257
+    ,command_FieldId_style                      = 258
+    ,command_FieldId_match                      = 259
+    ,command_FieldId_string                     = 260
+    ,command_FieldId_show                       = 261
+    ,command_FieldId_name                       = 262
+    ,command_FieldId_files                      = 263
+    ,command_FieldId_refs                       = 264
+    ,command_FieldId_body                       = 265
+    ,command_FieldId_targsrc                    = 266
+    ,command_FieldId_func                       = 267
+    ,command_FieldId_nextfile                   = 268
+    ,command_FieldId_other                      = 269
+    ,command_FieldId_updateproto                = 270
+    ,command_FieldId_listfunc                   = 271
+    ,command_FieldId_iffy                       = 272
+    ,command_FieldId_gen                        = 273
     ,command_FieldId_showloc                    = 274
     ,command_FieldId_showstatic                 = 275
     ,command_FieldId_showsortkey                = 276
@@ -465,7 +465,6 @@ namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
 namespace command { struct mysql2ssim_proc; }
-namespace command { struct ob; }
 namespace command { struct orgfile; }
 namespace command { struct orgfile_proc; }
 namespace command { struct samp_regx; }
@@ -1011,26 +1010,26 @@ bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in
 
 // proceed to next item
 // func:command.acr.where_curs.Next
-void                 acr_where_curs_Next(acr_where_curs &curs);
+void                 acr_where_curs_Next(acr_where_curs &curs) __attribute__((nothrow));
 // func:command.acr.where_curs.Reset
-void                 acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent);
+void                 acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr.where_curs.ValidQ
-bool                 acr_where_curs_ValidQ(acr_where_curs &curs);
+bool                 acr_where_curs_ValidQ(acr_where_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr.where_curs.Access
-algo::cstring&       acr_where_curs_Access(acr_where_curs &curs);
+algo::cstring&       acr_where_curs_Access(acr_where_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.acr.field_curs.Next
-void                 acr_field_curs_Next(acr_field_curs &curs);
+void                 acr_field_curs_Next(acr_field_curs &curs) __attribute__((nothrow));
 // func:command.acr.field_curs.Reset
-void                 acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent);
+void                 acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr.field_curs.ValidQ
-bool                 acr_field_curs_ValidQ(acr_field_curs &curs);
+bool                 acr_field_curs_ValidQ(acr_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr.field_curs.Access
-algo::cstring&       acr_field_curs_Access(acr_field_curs &curs);
+algo::cstring&       acr_field_curs_Access(acr_field_curs &curs) __attribute__((nothrow));
 // func:command.acr..ReadFieldMaybe
 bool                 acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr from attributes of ascii tuple TUPLE
@@ -1232,15 +1231,15 @@ bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr i
 
 // proceed to next item
 // func:command.acr_dm.arg_curs.Next
-void                 acr_dm_arg_curs_Next(acr_dm_arg_curs &curs);
+void                 acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // func:command.acr_dm.arg_curs.Reset
-void                 acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent);
+void                 acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr_dm.arg_curs.ValidQ
-bool                 acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs);
+bool                 acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr_dm.arg_curs.Access
-algo::cstring&       acr_dm_arg_curs_Access(acr_dm_arg_curs &curs);
+algo::cstring&       acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // func:command.acr_dm..ReadFieldMaybe
 bool                 acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_dm from attributes of ascii tuple TUPLE
@@ -2223,9 +2222,11 @@ void                 ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent
 // access: command.apm_proc.apm (Exec)
 struct apm { // command.apm
     algo::cstring       in;           //   "data"  Input directory or filename, - for stdin
+    algo::cstring       pkgdata;      //   ""  Load package definitions from here
     algo_lib::Regx      package;      //   ""  Sql Regx of dev::Package
+    algo_lib::Regx      ns;           //   ""  Sql Regx of dmmeta::Ns
     bool                install;      //   false  Install new package (specify -origin)
-    bool                update;       //   false  Update new package (-origin)
+    bool                update;       //   false  Update package (-origin)
     bool                list;         //   false  List installed packages
     bool                diff;         //   false  Diff package with respect to installed version
     bool                push;         //   false  Evaluate package diff and push it to origin
@@ -2237,19 +2238,19 @@ struct apm { // command.apm
     bool                showrec;      //   false  Show records belonging to package
     bool                showfile;     //   false  List package files (gitfile records)
     bool                R;            //   false  reverse the diff direction
+    bool                l;            //   false  Use local package definition on the remote side
     bool                reset;        //   false  Reset package baseref/origin to those provided by the command line
     bool                checkclean;   //   true  Ensure that changes are applied to a clean directory
-    bool                t;            //   false  Select dependent packages for operation
+    bool                t;            //   false  Select parent packages for operation
     bool                stat;         //   false  (with -diff) show stats
     algo::cstring       annotate;     //   ""  Read file and annotate each input tuple with package(s) it belongs to
-    bool                gen;          //   true  Show differences in generated files
     algo::cstring       data_in;      //   "data"  Dataset from which package records are loaded
     bool                e;            //   false  Open selected records in editor
     algo::cstring       binpath;      //   "bin"  (internal use)
-    bool                nosort;       //   false  (with -showrec) don't sort resulting records
     apm();
 private:
     // reftype Regx of command.apm.package prohibits copy
+    // reftype Regx of command.apm.ns prohibits copy
     apm(const apm&){ /*disallow copy constructor */}
     void operator =(const apm&){ /*disallow direct assignment */}
 };
@@ -2261,6 +2262,14 @@ void                 package_Print(command::apm& parent, algo::cstring &out) __a
 // Convert string to field. Return success value
 // func:command.apm.package.ReadStrptrMaybe
 bool                 package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+// func:command.apm.ns.Print
+void                 ns_Print(command::apm& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.apm.ns.ReadStrptrMaybe
+bool                 ns_ReadStrptrMaybe(command::apm& parent, algo::strptr in) __attribute__((nothrow));
 
 // func:command.apm..ReadFieldMaybe
 bool                 apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -2873,48 +2882,48 @@ bool                 dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::s
 
 // proceed to next item
 // func:command.atf_cmdline.mstr_curs.Next
-void                 atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs);
+void                 atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mstr_curs.Reset
-void                 atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent);
+void                 atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mstr_curs.ValidQ
-bool                 atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs);
+bool                 atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mstr_curs.Access
-algo::cstring&       atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs);
+algo::cstring&       atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.mnum_curs.Next
-void                 atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs);
+void                 atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mnum_curs.Reset
-void                 atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent);
+void                 atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mnum_curs.ValidQ
-bool                 atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs);
+bool                 atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mnum_curs.Access
-i32&                 atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs);
+i32&                 atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.mdbl_curs.Next
-void                 atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs);
+void                 atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mdbl_curs.Reset
-void                 atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent);
+void                 atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mdbl_curs.ValidQ
-bool                 atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs);
+bool                 atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mdbl_curs.Access
-double&              atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs);
+double&              atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.amnum_curs.Next
-void                 atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs);
+void                 atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.amnum_curs.Reset
-void                 atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent);
+void                 atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.amnum_curs.ValidQ
-bool                 atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs);
+bool                 atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.amnum_curs.Access
-i32&                 atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs);
+i32&                 atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline..ReadFieldMaybe
 bool                 atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_cmdline from attributes of ascii tuple TUPLE
@@ -3846,15 +3855,15 @@ bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr i
 
 // proceed to next item
 // func:command.gcache.cmd_curs.Next
-void                 gcache_cmd_curs_Next(gcache_cmd_curs &curs);
+void                 gcache_cmd_curs_Next(gcache_cmd_curs &curs) __attribute__((nothrow));
 // func:command.gcache.cmd_curs.Reset
-void                 gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent);
+void                 gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.gcache.cmd_curs.ValidQ
-bool                 gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs);
+bool                 gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.gcache.cmd_curs.Access
-algo::cstring&       gcache_cmd_curs_Access(gcache_cmd_curs &curs);
+algo::cstring&       gcache_cmd_curs_Access(gcache_cmd_curs &curs) __attribute__((nothrow));
 // func:command.gcache..ReadFieldMaybe
 bool                 gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcache from attributes of ascii tuple TUPLE
@@ -4031,15 +4040,15 @@ bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr 
 
 // proceed to next item
 // func:command.gcli.fields_curs.Next
-void                 gcli_fields_curs_Next(gcli_fields_curs &curs);
+void                 gcli_fields_curs_Next(gcli_fields_curs &curs) __attribute__((nothrow));
 // func:command.gcli.fields_curs.Reset
-void                 gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent);
+void                 gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.gcli.fields_curs.ValidQ
-bool                 gcli_fields_curs_ValidQ(gcli_fields_curs &curs);
+bool                 gcli_fields_curs_ValidQ(gcli_fields_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.gcli.fields_curs.Access
-algo::cstring&       gcli_fields_curs_Access(gcli_fields_curs &curs);
+algo::cstring&       gcli_fields_curs_Access(gcli_fields_curs &curs) __attribute__((nothrow));
 // func:command.gcli..ReadFieldMaybe
 bool                 gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcli from attributes of ascii tuple TUPLE
@@ -4275,26 +4284,26 @@ bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_st
 
 // proceed to next item
 // func:command.mdbg.args_curs.Next
-void                 mdbg_args_curs_Next(mdbg_args_curs &curs);
+void                 mdbg_args_curs_Next(mdbg_args_curs &curs) __attribute__((nothrow));
 // func:command.mdbg.args_curs.Reset
-void                 mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent);
+void                 mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.mdbg.args_curs.ValidQ
-bool                 mdbg_args_curs_ValidQ(mdbg_args_curs &curs);
+bool                 mdbg_args_curs_ValidQ(mdbg_args_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.mdbg.args_curs.Access
-algo::cstring&       mdbg_args_curs_Access(mdbg_args_curs &curs);
+algo::cstring&       mdbg_args_curs_Access(mdbg_args_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.mdbg.b_curs.Next
-void                 mdbg_b_curs_Next(mdbg_b_curs &curs);
+void                 mdbg_b_curs_Next(mdbg_b_curs &curs) __attribute__((nothrow));
 // func:command.mdbg.b_curs.Reset
-void                 mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent);
+void                 mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.mdbg.b_curs.ValidQ
-bool                 mdbg_b_curs_ValidQ(mdbg_b_curs &curs);
+bool                 mdbg_b_curs_ValidQ(mdbg_b_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.mdbg.b_curs.Access
-algo::cstring&       mdbg_b_curs_Access(mdbg_b_curs &curs);
+algo::cstring&       mdbg_b_curs_Access(mdbg_b_curs &curs) __attribute__((nothrow));
 // func:command.mdbg..ReadFieldMaybe
 bool                 mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::mdbg from attributes of ascii tuple TUPLE
@@ -4461,29 +4470,6 @@ algo::tempstr        mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) __at
 void                 mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
 // func:command.mysql2ssim_proc..Uninit
 void                 mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) __attribute__((nothrow));
-
-// --- command.ob
-struct ob { // command.ob
-    ob();
-};
-
-// func:command.ob..ReadFieldMaybe
-bool                 ob_ReadFieldMaybe(command::ob& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::ob from attributes of ascii tuple TUPLE
-// func:command.ob..ReadTupleMaybe
-bool                 ob_ReadTupleMaybe(command::ob &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// print command-line args of command::ob to string  -- cprint:command.ob.Argv
-// func:command.ob..PrintArgv
-void                 ob_PrintArgv(command::ob& row, algo::cstring &str) __attribute__((nothrow));
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-// func:command.ob..ToCmdline
-tempstr              ob_ToCmdline(command::ob& row) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-// func:command.ob..NArgs
-i32                  ob_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.orgfile
 // access: command.orgfile_proc.orgfile (Exec)
@@ -4863,26 +4849,26 @@ bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strpt
 
 // proceed to next item
 // func:command.sandbox.cmd_curs.Next
-void                 sandbox_cmd_curs_Next(sandbox_cmd_curs &curs);
+void                 sandbox_cmd_curs_Next(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // func:command.sandbox.cmd_curs.Reset
-void                 sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent);
+void                 sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.sandbox.cmd_curs.ValidQ
-bool                 sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs);
+bool                 sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.sandbox.cmd_curs.Access
-algo::cstring&       sandbox_cmd_curs_Access(sandbox_cmd_curs &curs);
+algo::cstring&       sandbox_cmd_curs_Access(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.sandbox.files_curs.Next
-void                 sandbox_files_curs_Next(sandbox_files_curs &curs);
+void                 sandbox_files_curs_Next(sandbox_files_curs &curs) __attribute__((nothrow));
 // func:command.sandbox.files_curs.Reset
-void                 sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent);
+void                 sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.sandbox.files_curs.ValidQ
-bool                 sandbox_files_curs_ValidQ(sandbox_files_curs &curs);
+bool                 sandbox_files_curs_ValidQ(sandbox_files_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.sandbox.files_curs.Access
-algo::cstring&       sandbox_files_curs_Access(sandbox_files_curs &curs);
+algo::cstring&       sandbox_files_curs_Access(sandbox_files_curs &curs) __attribute__((nothrow));
 // func:command.sandbox..ReadFieldMaybe
 bool                 sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::sandbox from attributes of ascii tuple TUPLE
@@ -5692,26 +5678,26 @@ bool                 format_ReadStrptrMaybe(command::ssimfilt& parent, algo::str
 
 // proceed to next item
 // func:command.ssimfilt.match_curs.Next
-void                 ssimfilt_match_curs_Next(ssimfilt_match_curs &curs);
+void                 ssimfilt_match_curs_Next(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt.match_curs.Reset
-void                 ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent);
+void                 ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.ssimfilt.match_curs.ValidQ
-bool                 ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs);
+bool                 ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.ssimfilt.match_curs.Access
-algo::cstring&       ssimfilt_match_curs_Access(ssimfilt_match_curs &curs);
+algo::cstring&       ssimfilt_match_curs_Access(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.ssimfilt.field_curs.Next
-void                 ssimfilt_field_curs_Next(ssimfilt_field_curs &curs);
+void                 ssimfilt_field_curs_Next(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt.field_curs.Reset
-void                 ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent);
+void                 ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.ssimfilt.field_curs.ValidQ
-bool                 ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs);
+bool                 ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.ssimfilt.field_curs.Access
-algo::cstring&       ssimfilt_field_curs_Access(ssimfilt_field_curs &curs);
+algo::cstring&       ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt..ReadFieldMaybe
 bool                 ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ssimfilt from attributes of ascii tuple TUPLE

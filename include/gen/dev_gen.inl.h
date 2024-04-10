@@ -273,9 +273,27 @@ inline dev::OptType::OptType(const algo::strptr&            in_opt_type
 inline dev::OptType::OptType() {
 }
 
+inline dev::Package::Package(const algo::strptr&            in_package
+        ,const algo::strptr&            in_baseref
+        ,const algo::strptr&            in_origin
+        ,const algo::Comment&           in_comment)
+    : package(in_package)
+    , baseref(in_baseref)
+    , origin(in_origin)
+    , comment(in_comment)
+{
+}
 inline dev::Package::Package() {
 }
 
+inline dev::Pkgdep::Pkgdep(const algo::strptr&            in_pkgdep
+        ,bool                           in_soft
+        ,const algo::Comment&           in_comment)
+    : pkgdep(in_pkgdep)
+    , soft(in_soft)
+    , comment(in_comment)
+{
+}
 inline dev::Pkgdep::Pkgdep() {
     dev::Pkgdep_Init(*this);
 }
@@ -285,6 +303,12 @@ inline dev::Pkgdep::Pkgdep() {
 // Set all fields to initial values.
 inline void dev::Pkgdep_Init(dev::Pkgdep& parent) {
     parent.soft = bool(false);
+}
+inline dev::Pkgkey::Pkgkey(const algo::strptr&            in_pkgkey
+        ,const algo::Comment&           in_comment)
+    : pkgkey(in_pkgkey)
+    , comment(in_comment)
+{
 }
 inline dev::Pkgkey::Pkgkey() {
 }
@@ -387,22 +411,13 @@ inline dev::Targdep::Targdep(const algo::strptr&            in_targdep
 inline dev::Targdep::Targdep() {
 }
 
-inline dev::Target::Target(const algo::strptr&            in_target
-        ,const algo::strptr&            in_compat)
+inline dev::Target::Target(const algo::strptr&            in_target)
     : target(in_target)
-    , compat(in_compat)
 {
 }
 inline dev::Target::Target() {
-    dev::Target_Init(*this);
 }
 
-
-// --- dev.Target..Init
-// Set all fields to initial values.
-inline void dev::Target_Init(dev::Target& parent) {
-    parent.compat = algo::strptr("Linux-%.%-%");
-}
 inline dev::Targsrc::Targsrc(const algo::strptr&            in_targsrc
         ,const algo::Comment&           in_comment)
     : targsrc(in_targsrc)

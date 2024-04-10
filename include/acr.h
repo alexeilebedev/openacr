@@ -68,7 +68,7 @@ namespace acr { // update-hdr
     acr::FRec* ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mode);
 
     // Calculate record's SORTKEY which is a combination
-    // of the value of its SSIMSORT attribute and rowid.
+    // of the value of its SSIMSORT attribute and the newly provided ROWID.
     void UpdateSortkey(acr::FRec &rec, float rowid);
 
     // Create a new record from tuple TUPLE, having primary key PKEY_ATTR and type

@@ -617,6 +617,7 @@ namespace algo { // update-hdr
     // Example: "Abcd" -> "abcd"
     // Example: "BBOPrice" -> "bboprice"
     // Example: "SymbolID" -> "symbol_id"
+    // Example: "A_B" -> "a_b"
     void strptr_PrintLowerUnder(algo::strptr str, algo::cstring &out);
 
     // Output string STR to OUT changing all characters to uppercase.

@@ -189,16 +189,16 @@ void                 ind_attr_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:lib_sql.FDb.attr_curs.Reset
-void                 _db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent);
+void                 _db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_sql.FDb.attr_curs.ValidQ
-bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs);
+bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_sql.FDb.attr_curs.Next
-void                 _db_attr_curs_Next(_db_attr_curs &curs);
+void                 _db_attr_curs_Next(_db_attr_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_sql.FDb.attr_curs.Access
-lib_sql::FAttr&      _db_attr_curs_Access(_db_attr_curs &curs);
+lib_sql::FAttr&      _db_attr_curs_Access(_db_attr_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sql.FDb..Init
 void                 FDb_Init();

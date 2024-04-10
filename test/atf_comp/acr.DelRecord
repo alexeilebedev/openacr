@@ -1,4 +1,4 @@
-acr.delete  dev.target  target:samp  compat:%-%g%.%-%
+acr.delete  dev.target  target:samp
 
 acr.delete  dev.targdep  targdep:samp.algo_lib  comment:""
 

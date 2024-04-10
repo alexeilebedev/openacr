@@ -578,6 +578,7 @@ void algo::strptr_PrintCamel(algo::strptr str, algo::cstring& out) {
 // Example: "Abcd" -> "abcd"
 // Example: "BBOPrice" -> "bboprice"
 // Example: "SymbolID" -> "symbol_id"
+// Example: "A_B" -> "a_b"
 void algo::strptr_PrintLowerUnder(algo::strptr str, algo::cstring &out) {
     int prevlc = false;
     frep_(i,str.n_elems) {
@@ -588,7 +589,7 @@ void algo::strptr_PrintLowerUnder(algo::strptr str, algo::cstring &out) {
             }
         }
         int lower = ToLower(c);
-        prevlc = c==lower;
+        prevlc = c==lower && c!='_';
         out << char(lower);
     }
 }

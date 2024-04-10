@@ -193,7 +193,7 @@ other Unix tools it needs to.
 inline-command: acr a:a1 -cmd 'echo ==== $a ===='
 acr_tuple=$'dev.a  a:a1  comment:""'
 acr_head=dev.a
-acr_rowid=1
+acr_rowid=0
 a=a1
 comment=''
 echo ==== $a ====

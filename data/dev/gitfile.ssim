@@ -38,7 +38,6 @@ dev.gitfile  gitfile:bin/bootstrap/FreeBSD-clang++.release-amd64
 dev.gitfile  gitfile:bin/bootstrap/Linux-g++-9.release-x86_64
 dev.gitfile  gitfile:bin/bootstrap/Linux-g++.release-x86_64
 dev.gitfile  gitfile:bin/break-long-lines
-dev.gitfile  gitfile:bin/ccache-clean
 dev.gitfile  gitfile:bin/ci-show-log
 dev.gitfile  gitfile:bin/cpp-indent
 dev.gitfile  gitfile:bin/delete-duplicate-lines
@@ -900,6 +899,7 @@ dev.gitfile  gitfile:test/atf_comp/acr.NullTrunc
 dev.gitfile  gitfile:test/atf_comp/acr.QueryCtype
 dev.gitfile  gitfile:test/atf_comp/acr.RenameCollision
 dev.gitfile  gitfile:test/atf_comp/acr.RenameCollisionMultiple
+dev.gitfile  gitfile:test/atf_comp/acr.RenameField
 dev.gitfile  gitfile:test/atf_comp/acr.RenameRecord
 dev.gitfile  gitfile:test/atf_comp/acr.Replace
 dev.gitfile  gitfile:test/atf_comp/acr.Select
@@ -1149,7 +1149,6 @@ dev.gitfile  gitfile:txt/lib/lib_json/README.md
 dev.gitfile  gitfile:txt/lib/lib_mysql/README.md
 dev.gitfile  gitfile:txt/lib/lib_prot/README.md
 dev.gitfile  gitfile:txt/lib/lib_sql/README.md
-dev.gitfile  gitfile:txt/protocol/.md
 dev.gitfile  gitfile:txt/protocol/README.md
 dev.gitfile  gitfile:txt/protocol/algo/Attr.md
 dev.gitfile  gitfile:txt/protocol/algo/Bool.md

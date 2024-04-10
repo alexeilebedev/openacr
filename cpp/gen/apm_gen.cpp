@@ -61,9 +61,11 @@ const char *apm_help =
 "Usage: apm [[-package:]<regx>] [options]\n"
 "    OPTION       TYPE    DFLT    COMMENT\n"
 "    -in          string  \"data\"  Input directory or filename, - for stdin\n"
+"    -pkgdata     string  \"\"      Load package definitions from here\n"
 "    [package]    regx    \"\"      Regx of package\n"
+"    -ns          regx    \"\"      Operate on specified namespace only\n"
 "    -install                     Install new package (specify -origin)\n"
-"    -update                      Update new package (-origin)\n"
+"    -update                      Update package (-origin)\n"
 "    -list                        List installed packages\n"
 "    -diff                        Diff package with respect to installed version\n"
 "    -push                        Evaluate package diff and push it to origin\n"
@@ -75,16 +77,15 @@ const char *apm_help =
 "    -showrec                     Show records belonging to package\n"
 "    -showfile                    List package files (gitfile records)\n"
 "    -R                           reverse the diff direction\n"
+"    -l                           Use local package definition on the remote side\n"
 "    -reset                       Reset package baseref/origin to those provided by the command line\n"
 "    -checkclean          Y       Ensure that changes are applied to a clean directory\n"
-"    -t                           Select dependent packages for operation\n"
+"    -t                           Select parent packages for operation\n"
 "    -stat                        (with -diff) show stats\n"
 "    -annotate    string  \"\"      Read file and annotate each input tuple with package(s) it belongs to\n"
-"    -gen                 Y       Show differences in generated files\n"
 "    -data_in     string  \"data\"  Dataset from which package records are loaded\n"
 "    -e                           Open selected records in editor\n"
 "    -binpath     string  \"bin\"   (internal use)\n"
-"    -nosort                      (with -showrec) don't sort resulting records\n"
 "    -verbose     int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug       int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                        Print help and exit; alias -h\n"
@@ -95,6 +96,8 @@ const char *apm_help =
 
 } // namespace apm
 namespace apm { // gen:ns_gsymbol
+    const algo::strptr dev_package_amc("amc");
+    const algo::strptr dev_package_apm("apm");
     const algo::strptr dev_package_openacr("openacr");
 } // gen:ns_gsymbol
 namespace apm { // gen:ns_print_proto
@@ -117,6 +120,8 @@ namespace apm { // gen:ns_print_proto
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
     // func:apm.FDb.ssimreq.InputMaybe
     static bool          ssimreq_InputMaybe(dmmeta::Ssimreq &elem) __attribute__((nothrow));
+    // func:apm.FDb.ns.InputMaybe
+    static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:apm.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -435,6 +440,13 @@ void apm::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:apm.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!apm::LoadTuplesMaybe(cmd.in,true)) {
+            err << "apm.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -447,8 +459,6 @@ void apm::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(apm::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- apm.FDb._db.MainLoop
@@ -484,7 +494,7 @@ static void apm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'7adc2da801e099e023656d6d0d401b4555887f7e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'6cd9ce149ee2dcf2150fc77eec6ace0504e98b5a'");
 }
 
 // --- apm.FDb._db.StaticCheck
@@ -556,6 +566,13 @@ bool apm::InsertStrptrMaybe(algo::strptr str) {
             retval = true; // finput strict:N
             break;
         }
+        case apm_TableId_dmmeta_Ns: { // finput:apm.FDb.ns
+            dmmeta::Ns elem;
+            retval = dmmeta::Ns_ReadStrptrMaybe(elem, str);
+            retval = retval && ns_InputMaybe(elem);
+            retval = true; // finput strict:N
+            break;
+        }
         default:
         break;
     } //switch
@@ -574,6 +591,7 @@ bool apm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = apm::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
@@ -3298,6 +3316,104 @@ void apm::ind_mkdir_Reserve(int n) {
     }
 }
 
+// --- apm.FDb.ns.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+apm::FNs& apm::ns_Alloc() {
+    apm::FNs* row = ns_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("apm.out_of_mem  field:apm.FDb.ns  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- apm.FDb.ns.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+apm::FNs* apm::ns_AllocMaybe() {
+    apm::FNs *row = (apm::FNs*)ns_AllocMem();
+    if (row) {
+        new (row) apm::FNs; // call constructor
+    }
+    return row;
+}
+
+// --- apm.FDb.ns.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+apm::FNs* apm::ns_InsertMaybe(const dmmeta::Ns &value) {
+    apm::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
+    bool ok = ns_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- apm.FDb.ns.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* apm::ns_AllocMem() {
+    u64 new_nelems     = _db.ns_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    apm::FNs*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ns_lary[bsr];
+        if (!lev) {
+            lev=(apm::FNs*)algo_lib::malloc_AllocMem(sizeof(apm::FNs) * (u64(1)<<bsr));
+            _db.ns_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ns_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- apm.FDb.ns.RemoveAll
+// Remove all elements from Lary
+void apm::ns_RemoveAll() {
+    for (u64 n = _db.ns_n; n>0; ) {
+        n--;
+        ns_qFind(u64(n)).~FNs(); // destroy last element
+        _db.ns_n = i32(n);
+    }
+}
+
+// --- apm.FDb.ns.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void apm::ns_RemoveLast() {
+    u64 n = _db.ns_n;
+    if (n > 0) {
+        n -= 1;
+        ns_qFind(u64(n)).~FNs();
+        _db.ns_n = i32(n);
+    }
+}
+
+// --- apm.FDb.ns.InputMaybe
+static bool apm::ns_InputMaybe(dmmeta::Ns &elem) {
+    bool retval = true;
+    retval = ns_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- apm.FDb.ns.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool apm::ns_XrefMaybe(apm::FNs &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- apm.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr apm::trace_RowidFind(int t) {
@@ -3508,6 +3624,17 @@ void apm::FDb_Init() {
         FatalErrorExit("out of memory"); // (apm.FDb.ind_mkdir)
     }
     memset(_db.ind_mkdir_buckets_elems, 0, sizeof(apm::FMkdir*)*_db.ind_mkdir_buckets_n); // (apm.FDb.ind_mkdir)
+    // initialize LAry ns (apm.FDb.ns)
+    _db.ns_n = 0;
+    memset(_db.ns_lary, 0, sizeof(_db.ns_lary)); // zero out all level pointers
+    apm::FNs* ns_first = (apm::FNs*)algo_lib::malloc_AllocMem(sizeof(apm::FNs) * (u64(1)<<4));
+    if (!ns_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ns_lary[i]  = ns_first;
+        ns_first    += 1ULL<<i;
+    }
 
     apm::InitReflection();
 }
@@ -3515,6 +3642,9 @@ void apm::FDb_Init() {
 // --- apm.FDb..Uninit
 void apm::FDb_Uninit() {
     apm::FDb &row = _db; (void)row;
+
+    // apm.FDb.ns.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // apm.FDb.ind_mkdir.Uninit (Thash)  //
     // skip destruction of ind_mkdir in global scope
@@ -3669,6 +3799,24 @@ void apm::FMergefile_Print(apm::FMergefile& row, algo::cstring& str) {
 void apm::FMkdir_Uninit(apm::FMkdir& mkdir) {
     apm::FMkdir &row = mkdir; (void)row;
     ind_mkdir_Remove(row); // remove mkdir from index ind_mkdir
+}
+
+// --- apm.FNs.base.CopyOut
+// Copy fields out of row
+void apm::ns_CopyOut(apm::FNs &row, dmmeta::Ns &out) {
+    out.ns = row.ns;
+    out.nstype = row.nstype;
+    out.license = row.license;
+    out.comment = row.comment;
+}
+
+// --- apm.FNs.base.CopyIn
+// Copy fields in to row
+void apm::ns_CopyIn(apm::FNs &row, dmmeta::Ns &in) {
+    row.ns = in.ns;
+    row.nstype = in.nstype;
+    row.license = in.license;
+    row.comment = in.comment;
 }
 
 // --- apm.FPackage.base.CopyOut
@@ -4600,6 +4748,7 @@ const char* apm::value_ToCstr(const apm::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case apm_TableId_dmmeta_Ctype      : ret = "dmmeta.Ctype";  break;
         case apm_TableId_dmmeta_Field      : ret = "dmmeta.Field";  break;
+        case apm_TableId_dmmeta_Ns         : ret = "dmmeta.Ns";  break;
         case apm_TableId_dev_Package       : ret = "dev.Package";  break;
         case apm_TableId_dev_Pkgdep        : ret = "dev.Pkgdep";  break;
         case apm_TableId_dev_Pkgkey        : ret = "dev.Pkgkey";  break;
@@ -4629,6 +4778,19 @@ void apm::value_Print(const apm::TableId& parent, algo::cstring &lhs) {
 bool apm::value_SetStrptrMaybe(apm::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','N'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,apm_TableId_dmmeta_Ns); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','n'): {
+                    if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,apm_TableId_dmmeta_ns); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','e','v','.','P','k','g','d'): {

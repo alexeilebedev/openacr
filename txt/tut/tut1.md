@@ -33,7 +33,7 @@ acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut1/README.md
   acr.insert  dev.readme  gitfile:txt/exe/samp_tut1/README.md      inl:N   sandbox:N   filter:""  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut1  nstype:exe  license:GPL  comment:""
-  acr.insert  dev.target  target:samp_tut1  compat:Linux-%.%-%
+  acr.insert  dev.target  target:samp_tut1
     acr.insert  dev.targdep  targdep:samp_tut1.algo_lib  comment:""
     acr.insert  dev.targdep  targdep:samp_tut1.lib_prot  comment:""
     acr.insert  dev.targsrc  targsrc:samp_tut1/cpp/gen/samp_tut1_gen.cpp        comment:""

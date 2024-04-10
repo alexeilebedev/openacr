@@ -1,4 +1,4 @@
-acr.update  dev.target  target:xyz  compat:%-%g%.%-%
+acr.update  dev.target  target:xyz
 
 acr.update  dev.targdep  targdep:xyz.algo_lib  comment:""
 

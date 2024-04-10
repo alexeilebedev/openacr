@@ -721,88 +721,88 @@ void                 ind_tgtcov_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.Reset
-void                 _db_covline_curs_Reset(_db_covline_curs &curs, atf_cov::FDb &parent);
+void                 _db_covline_curs_Reset(_db_covline_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.ValidQ
-bool                 _db_covline_curs_ValidQ(_db_covline_curs &curs);
+bool                 _db_covline_curs_ValidQ(_db_covline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covline_curs.Next
-void                 _db_covline_curs_Next(_db_covline_curs &curs);
+void                 _db_covline_curs_Next(_db_covline_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covline_curs.Access
-atf_cov::FCovline&   _db_covline_curs_Access(_db_covline_curs &curs);
+atf_cov::FCovline&   _db_covline_curs_Access(_db_covline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, atf_cov::FDb &parent);
+void                 _db_target_curs_Reset(_db_target_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
+bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs);
+void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.target_curs.Access
-atf_cov::FTarget&    _db_target_curs_Access(_db_target_curs &curs);
+atf_cov::FTarget&    _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_cov::FDb &parent);
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.targsrc_curs.Access
-atf_cov::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+atf_cov::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.gitfile_curs.Reset
-void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_cov::FDb &parent);
+void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.gitfile_curs.ValidQ
-bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
+bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.gitfile_curs.Next
-void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
+void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.gitfile_curs.Access
-atf_cov::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs);
+atf_cov::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covtarget_curs.Reset
-void                 _db_covtarget_curs_Reset(_db_covtarget_curs &curs, atf_cov::FDb &parent);
+void                 _db_covtarget_curs_Reset(_db_covtarget_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covtarget_curs.ValidQ
-bool                 _db_covtarget_curs_ValidQ(_db_covtarget_curs &curs);
+bool                 _db_covtarget_curs_ValidQ(_db_covtarget_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covtarget_curs.Next
-void                 _db_covtarget_curs_Next(_db_covtarget_curs &curs);
+void                 _db_covtarget_curs_Next(_db_covtarget_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covtarget_curs.Access
-atf_cov::FCovtarget& _db_covtarget_curs_Access(_db_covtarget_curs &curs);
+atf_cov::FCovtarget& _db_covtarget_curs_Access(_db_covtarget_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covfile_curs.Reset
-void                 _db_covfile_curs_Reset(_db_covfile_curs &curs, atf_cov::FDb &parent);
+void                 _db_covfile_curs_Reset(_db_covfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covfile_curs.ValidQ
-bool                 _db_covfile_curs_ValidQ(_db_covfile_curs &curs);
+bool                 _db_covfile_curs_ValidQ(_db_covfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covfile_curs.Next
-void                 _db_covfile_curs_Next(_db_covfile_curs &curs);
+void                 _db_covfile_curs_Next(_db_covfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covfile_curs.Access
-atf_cov::FCovfile&   _db_covfile_curs_Access(_db_covfile_curs &curs);
+atf_cov::FCovfile&   _db_covfile_curs_Access(_db_covfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.tgtcov_curs.Reset
-void                 _db_tgtcov_curs_Reset(_db_tgtcov_curs &curs, atf_cov::FDb &parent);
+void                 _db_tgtcov_curs_Reset(_db_tgtcov_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.tgtcov_curs.ValidQ
-bool                 _db_tgtcov_curs_ValidQ(_db_tgtcov_curs &curs);
+bool                 _db_tgtcov_curs_ValidQ(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.tgtcov_curs.Next
-void                 _db_tgtcov_curs_Next(_db_tgtcov_curs &curs);
+void                 _db_tgtcov_curs_Next(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.tgtcov_curs.Access
-atf_cov::FTgtcov&    _db_tgtcov_curs_Access(_db_tgtcov_curs &curs);
+atf_cov::FTgtcov&    _db_tgtcov_curs_Access(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.FDb..Init
 void                 FDb_Init();
@@ -901,16 +901,16 @@ void                 c_covfile_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovf
 // func:atf_cov.FGitfile..Init
 void                 FGitfile_Init(atf_cov::FGitfile& gitfile);
 // func:atf_cov.FGitfile.c_covline_curs.Reset
-void                 gitfile_c_covline_curs_Reset(gitfile_c_covline_curs &curs, atf_cov::FGitfile &parent);
+void                 gitfile_c_covline_curs_Reset(gitfile_c_covline_curs &curs, atf_cov::FGitfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FGitfile.c_covline_curs.ValidQ
-bool                 gitfile_c_covline_curs_ValidQ(gitfile_c_covline_curs &curs);
+bool                 gitfile_c_covline_curs_ValidQ(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FGitfile.c_covline_curs.Next
-void                 gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs);
+void                 gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FGitfile.c_covline_curs.Access
-atf_cov::FCovline&   gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs);
+atf_cov::FCovline&   gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FGitfile..Uninit
 void                 FGitfile_Uninit(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 
@@ -921,7 +921,6 @@ void                 FGitfile_Uninit(atf_cov::FGitfile& gitfile) __attribute__((
 struct FTarget { // atf_cov.FTarget
     atf_cov::FTarget*      ind_target_next;   // hash next
     algo::Smallstr16       target;            // Primary key - name of target
-    algo::Smallstr50       compat;            //   "Linux-%.%-%"  Compatibility (regx of builddir)
     atf_cov::FTargsrc**    c_targsrc_elems;   // array of pointers
     u32                    c_targsrc_n;       // array of pointers
     u32                    c_targsrc_max;     // capacity of allocated array
@@ -1003,16 +1002,16 @@ void                 c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov&
 // func:atf_cov.FTarget..Init
 void                 FTarget_Init(atf_cov::FTarget& target);
 // func:atf_cov.FTarget.c_targsrc_curs.Reset
-void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, atf_cov::FTarget &parent);
+void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, atf_cov::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FTarget.c_targsrc_curs.ValidQ
-bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs);
+bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FTarget.c_targsrc_curs.Next
-void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs);
+void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FTarget.c_targsrc_curs.Access
-atf_cov::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs);
+atf_cov::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FTarget..Uninit
 void                 FTarget_Uninit(atf_cov::FTarget& target) __attribute__((nothrow));
 

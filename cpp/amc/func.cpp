@@ -430,3 +430,13 @@ amc::Funcarg* amc::FindArg(amc::FFunc &func, strptr name) {
     }ind_end;
     return ret;
 }
+
+// -----------------------------------------------------------------------------
+
+// Create function marked as inline,nothrow,ret.
+amc::FFunc &amc::CreateInlineFunc(algo::strptr name) {
+    amc::FFunc &ret = ind_func_GetOrCreate(name);
+    ret.inl = true;
+    ret.nothrow=true;
+    return ret;
+}
