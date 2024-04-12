@@ -1,6 +1,6 @@
-// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -432,6 +432,7 @@ namespace atf_amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void amctest_Lpool();
+    // void amctest_LpoolLockMem();
 
     // -------------------------------------------------------------------
     // cpp/atf_amc/main.cpp
@@ -469,6 +470,7 @@ namespace atf_amc { // update-hdr
     // Check that gconst field within tuple is printed as raw
     // void amctest_PrintRawGconst();
     // void amctest_MsgLength();
+    void Phase(algo::strptr phase);
     void Main();
 
     // -------------------------------------------------------------------
@@ -510,6 +512,7 @@ namespace atf_amc { // update-hdr
     // void amctest_OptOptG8();
     // void amctest_OptG9();
     // void amctest_OptOptG9();
+    // void amctest_OptOptG10();
     // void amctest_OptAlloc();
 
     // -------------------------------------------------------------------

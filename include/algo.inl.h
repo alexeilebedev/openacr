@@ -1,7 +1,6 @@
-// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2021 Astra
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -493,12 +492,22 @@ inline algo::UnixTime operator -  (const algo::UnixTime &a, algo::UnixDiff d) {
     return algo::UnixTime(a.value - d.value);
 }
 
-inline algo::UnixDiff operator -  (const algo::UnixTime &a, algo::UnixTime b) {
+inline algo::UnixDiff operator - (const algo::UnixTime &a, algo::UnixTime b) {
     return algo::UnixDiff(a.value - b.value);
 }
 
-inline algo::UnTime operator +    (algo::UnTime a, algo::UnDiff d) {
+inline algo::UnTime operator + (algo::UnTime a, algo::UnDiff d) {
     return algo::UnTime(a.value + d.value);
+}
+
+inline algo::UnTime operator += (algo::UnTime &a, const algo::UnDiff d) {
+    a.value += d.value;
+    return a;
+}
+
+inline algo::UnDiff operator += (algo::UnDiff &a, const algo::UnDiff d) {
+    a.value += d.value;
+    return a;
 }
 
 inline algo::UnTime operator -    (algo::UnTime a, algo::UnDiff d) {
@@ -509,7 +518,19 @@ inline algo::UnDiff operator -    (algo::UnTime a, algo::UnTime b) {
     return algo::UnDiff(a.value - b.value);
 }
 
+inline algo::UnDiff operator -    (const algo::UnDiff a) {
+    return algo::UnDiff{-a.value};
+}
+
 // -----------------------------------------------------------------------------
+
+inline algo::UnixDiff operator *  (const algo::UnixDiff &a, i64 d) {
+    return algo::UnixDiff(a.value *d);
+}
+
+inline algo::UnixDiff operator /  (const algo::UnixDiff &a, i64 d) {
+    return algo::UnixDiff(a.value /d);
+}
 
 inline algo::UnixDiff operator +  (const algo::UnixDiff &a, algo::UnixDiff d) {
     return algo::UnixDiff(a.value + d.value);
@@ -526,6 +547,14 @@ inline algo::UnDiff operator +    (const algo::UnDiff &a, algo::UnDiff d) {
 
 inline algo::UnDiff operator -    (const algo::UnDiff &a, algo::UnDiff d) {
     return algo::UnDiff(a.value - d.value);
+}
+
+inline algo::UnDiff operator *  (const algo::UnDiff &a, i64 d) {
+    return algo::UnDiff(a.value *d);
+}
+
+inline algo::UnDiff operator /  (const algo::UnDiff &a, i64 d) {
+    return algo::UnDiff(a.value /d);
 }
 
 inline algo::WTime operator+(const algo::WTime &t, const algo::WDiff &t2) {
@@ -965,6 +994,14 @@ inline algo::UnDiff algo::UnDiffSecs(double d) {
     return algo::UnDiff(i64(d  * UNTIME_PER_SEC));
 }
 
+inline algo::UnDiff algo::UnDiffMsecs(const i64 i) {
+    return algo::UnDiff(i * UNTIME_PER_MSEC);
+}
+
+inline algo::UnDiff algo::UnDiffUsecs(const double d) {
+    return algo::UnDiff(static_cast<i64>(d * UNTIME_PER_USEC));
+}
+
 inline algo::UnTime algo::UnTimeSecs(double d) {
     return algo::UnTime(i64(d  * UNTIME_PER_SEC));
 }
@@ -1139,11 +1176,11 @@ inline int algo::ch_N(const strptr &s) {
     return s.n_elems;
 }
 
-inline int algo::ch_First(const strptr &s, int dflt) {
+inline int algo::ch_First(const strptr &s, int dflt DFLTVAL(0)) {
     return s.n_elems>0 ? s.elems[0] : dflt;
 }
 
-inline int algo::ch_Last(const strptr &s, int dflt) {
+inline int algo::ch_Last(const strptr &s, int dflt DFLTVAL(0)) {
     return s.n_elems>0 ? s.elems[s.n_elems-1] : dflt;
 }
 
@@ -1279,11 +1316,6 @@ inline algo::cstring &algo::operator<<(algo::cstring &out, const ListSep &t) {
     return out;
 }
 
-inline algo::cstring &algo::operator<<(algo::cstring &out, const memptr &t) {
-    memptr_Print (t,out);
-    return out;
-}
-
 inline algo::cstring &algo::operator<<(algo::cstring &out, const strptr &t) {
     strptr_Print (t,out);
     return out;
@@ -1292,6 +1324,11 @@ inline algo::cstring &algo::operator<<(algo::cstring &out, const strptr &t) {
 inline algo::cstring &algo::operator<<(algo::cstring &out, void (*t)(algo::cstring &)) {
     t(out);
     return out;
+}
+
+// SameSign returns false if one of the arguments is zero.
+template<typename T> inline bool algo::SameSignQ(T a, T b) {
+    return (a>0 && b>0) || (a<0 && b<0);
 }
 
 // Compare two strings for equality, case-sensitively
@@ -1314,4 +1351,15 @@ inline u8 algo::u8_ReverseBits(u8 b) {
     b=(b&0x33)<<2 | (b&0xcc)>>2;
     b=(b&0x55)<<1 | (b&0xaa)>>1;
     return b;
+}
+
+// Return unix-epoch time with nanosecond resolution
+// On Linux, this function calls clock_gettime() which takes about
+// 30ns and uses rdtsc() to increase underlying clock resolution
+inline algo::UnTime algo::CurrUnTime() {
+    algo::UnTime ret;
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME,&ts);
+    ret.value = i64(ts.tv_sec) * 1000000000 + ts.tv_nsec;
+    return ret;
 }

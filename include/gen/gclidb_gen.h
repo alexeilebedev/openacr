@@ -387,7 +387,7 @@ bool                 value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr
 // Read fields of gclidb::FieldId from an ascii string.
 // The format of the string is the format of the gclidb::FieldId's only field
 // func:gclidb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.FieldId..Init
 void                 FieldId_Init(gclidb::FieldId& parent);
@@ -408,7 +408,7 @@ bool                 Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr fiel
 // Read fields of gclidb::Gact from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gact..ReadStrptrMaybe
-bool                 Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str);
+bool                 Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gact.String  printfmt:Tuple
 // func:gclidb.Gact..Print
@@ -426,7 +426,7 @@ bool                 Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr fiel
 // Read fields of gclidb::Gatv from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gatv..ReadStrptrMaybe
-bool                 Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str);
+bool                 Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gatv.String  printfmt:Tuple
 // func:gclidb.Gatv..Print
@@ -445,7 +445,7 @@ bool                 Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strpt
 // Read fields of gclidb::Gclicmd from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclicmd..ReadStrptrMaybe
-bool                 Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_str);
+bool                 Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmd.String  printfmt:Tuple
 // func:gclidb.Gclicmd..Print
@@ -486,7 +486,7 @@ bool                 Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo:
 // Read fields of gclidb::Gclicmdf2j from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclicmdf2j..ReadStrptrMaybe
-bool                 Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str);
+bool                 Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclicmdf2j..Init
 void                 Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent);
@@ -521,7 +521,7 @@ bool                 Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::str
 // Read fields of gclidb::Gclicmdt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclicmdt..ReadStrptrMaybe
-bool                 Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str);
+bool                 Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclicmdt..Init
 void                 Gclicmdt_Init(gclidb::Gclicmdt& parent);
@@ -543,7 +543,7 @@ bool                 Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strpt
 // Read fields of gclidb::Gclienv from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclienv..ReadStrptrMaybe
-bool                 Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str);
+bool                 Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclienv.String  printfmt:Tuple
 // func:gclidb.Gclienv..Print
@@ -575,7 +575,7 @@ bool                 Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo:
 // Read fields of gclidb::Gclienvsub from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclienvsub..ReadStrptrMaybe
-bool                 Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str);
+bool                 Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclienvsub..Init
 void                 Gclienvsub_Init(gclidb::Gclienvsub& parent);
@@ -596,7 +596,7 @@ bool                 Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strpt
 // Read fields of gclidb::Gclisub from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gclisub..ReadStrptrMaybe
-bool                 Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str);
+bool                 Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclisub.String  printfmt:Tuple
 // func:gclidb.Gclisub..Print
@@ -614,7 +614,7 @@ bool                 Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr fiel
 // Read fields of gclidb::Gfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gfld..ReadStrptrMaybe
-bool                 Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str);
+bool                 Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gfld.String  printfmt:Tuple
 // func:gclidb.Gfld..Print
@@ -657,7 +657,7 @@ bool                 Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strpt
 // Read fields of gclidb::Gmethod from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gmethod..ReadStrptrMaybe
-bool                 Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str);
+bool                 Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gmethod..Init
 void                 Gmethod_Init(gclidb::Gmethod& parent);
@@ -698,7 +698,7 @@ bool                 Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr fi
 // Read fields of gclidb::Grepo from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Grepo..ReadStrptrMaybe
-bool                 Grepo_ReadStrptrMaybe(gclidb::Grepo &parent, algo::strptr in_str);
+bool                 Grepo_ReadStrptrMaybe(gclidb::Grepo &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Grepo..Init
 void                 Grepo_Init(gclidb::Grepo& parent);
@@ -720,7 +720,7 @@ bool                 Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, a
 // Read fields of gclidb::Grepogitport from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Grepogitport..ReadStrptrMaybe
-bool                 Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str);
+bool                 Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Grepogitport.String  printfmt:Tuple
 // func:gclidb.Grepogitport..Print
@@ -744,7 +744,7 @@ bool                 Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::str
 // Read fields of gclidb::Grepossh from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Grepossh..ReadStrptrMaybe
-bool                 Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str);
+bool                 Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Grepossh.String  printfmt:Tuple
 // func:gclidb.Grepossh..Print
@@ -774,7 +774,7 @@ bool                 Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr 
 // Read fields of gclidb::Gstate from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gstate..ReadStrptrMaybe
-bool                 Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str);
+bool                 Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gstate.String  printfmt:Tuple
 // func:gclidb.Gstate..Print
@@ -804,7 +804,7 @@ bool                 Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strpt
 // Read fields of gclidb::Gstatet from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gstatet..ReadStrptrMaybe
-bool                 Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_str);
+bool                 Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gstatet.String  printfmt:Tuple
 // func:gclidb.Gstatet..Print
@@ -822,7 +822,7 @@ bool                 Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr fiel
 // Read fields of gclidb::Gtbl from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtbl..ReadStrptrMaybe
-bool                 Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str);
+bool                 Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtbl.String  printfmt:Tuple
 // func:gclidb.Gtbl..Print
@@ -854,7 +854,7 @@ bool                 Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strpt
 // Read fields of gclidb::Gtblact from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtblact..ReadStrptrMaybe
-bool                 Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str);
+bool                 Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblact..Init
 void                 Gtblact_Init(gclidb::Gtblact& parent);
@@ -891,7 +891,7 @@ bool                 Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo:
 // Read fields of gclidb::Gtblactfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtblactfld..ReadStrptrMaybe
-bool                 Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str);
+bool                 Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblactfld..Init
 void                 Gtblactfld_Init(gclidb::Gtblactfld& parent);
@@ -929,7 +929,7 @@ bool                 Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo:
 // Read fields of gclidb::Gtblacttst from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtblacttst..ReadStrptrMaybe
-bool                 Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str);
+bool                 Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblacttst..Init
 void                 Gtblacttst_Init(gclidb::Gtblacttst& parent);
@@ -962,7 +962,7 @@ bool                 Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent,
 // Read fields of gclidb::Gtblacttstout from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtblacttstout..ReadStrptrMaybe
-bool                 Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str);
+bool                 Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
 // func:gclidb.Gtblacttstout..Print
@@ -981,7 +981,7 @@ bool                 Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr fi
 // Read fields of gclidb::Gtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtype..ReadStrptrMaybe
-bool                 Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str);
+bool                 Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtype.String  printfmt:Tuple
 // func:gclidb.Gtype..Print
@@ -1011,7 +1011,7 @@ bool                 Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr 
 // Read fields of gclidb::Gtypeh from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtypeh..ReadStrptrMaybe
-bool                 Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str);
+bool                 Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtypeh.String  printfmt:Tuple
 // func:gclidb.Gtypeh..Print
@@ -1041,7 +1041,7 @@ bool                 Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, alg
 // Read fields of gclidb::Gtypeprefix from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Gtypeprefix..ReadStrptrMaybe
-bool                 Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strptr in_str);
+bool                 Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtypeprefix.String  printfmt:Tuple
 // func:gclidb.Gtypeprefix..Print
@@ -1080,7 +1080,7 @@ bool                 Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr fi
 // Read fields of gclidb::Issue from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Issue..ReadStrptrMaybe
-bool                 Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str);
+bool                 Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issue.String  printfmt:Tuple
 // func:gclidb.Issue..Print
@@ -1112,7 +1112,7 @@ bool                 Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::s
 // Read fields of gclidb::Issuenote from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Issuenote..ReadStrptrMaybe
-bool                 Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str);
+bool                 Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issuenote.String  printfmt:Tuple
 // func:gclidb.Issuenote..Print
@@ -1143,7 +1143,7 @@ bool                 Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent,
 // Read fields of gclidb::Issuepipeline from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Issuepipeline..ReadStrptrMaybe
-bool                 Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str);
+bool                 Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issuepipeline.String  printfmt:Tuple
 // func:gclidb.Issuepipeline..Print
@@ -1161,7 +1161,7 @@ bool                 Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr fi
 // Read fields of gclidb::Label from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Label..ReadStrptrMaybe
-bool                 Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str);
+bool                 Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Label.String  printfmt:Tuple
 // func:gclidb.Label..Print
@@ -1192,7 +1192,7 @@ bool                 Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::s
 // Read fields of gclidb::Milestone from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Milestone..ReadStrptrMaybe
-bool                 Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str);
+bool                 Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Milestone.String  printfmt:Tuple
 // func:gclidb.Milestone..Print
@@ -1232,7 +1232,7 @@ bool                 Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, a
 // Read fields of gclidb::Mr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Mr..ReadStrptrMaybe
-bool                 Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str);
+bool                 Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mr.String  printfmt:Tuple
 // func:gclidb.Mr..Print
@@ -1267,7 +1267,7 @@ bool                 Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr fi
 // Read fields of gclidb::Mrjob from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Mrjob..ReadStrptrMaybe
-bool                 Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str);
+bool                 Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mrjob.String  printfmt:Tuple
 // func:gclidb.Mrjob..Print
@@ -1299,7 +1299,7 @@ bool                 Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr 
 // Read fields of gclidb::Mrnote from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.Mrnote..ReadStrptrMaybe
-bool                 Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str);
+bool                 Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mrnote.String  printfmt:Tuple
 // func:gclidb.Mrnote..Print
@@ -1325,7 +1325,7 @@ bool                 User_ReadFieldMaybe(gclidb::User& parent, algo::strptr fiel
 // Read fields of gclidb::User from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gclidb.User..ReadStrptrMaybe
-bool                 User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str);
+bool                 User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.User..Init
 void                 User_Init(gclidb::User& parent);

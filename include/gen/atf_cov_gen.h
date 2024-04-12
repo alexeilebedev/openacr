@@ -1135,7 +1135,7 @@ bool                 value_ReadStrptrMaybe(atf_cov::FieldId& parent, algo::strpt
 // Read fields of atf_cov::FieldId from an ascii string.
 // The format of the string is the format of the atf_cov::FieldId's only field
 // func:atf_cov.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.FieldId..Init
 void                 FieldId_Init(atf_cov::FieldId& parent);
@@ -1187,7 +1187,7 @@ bool                 value_ReadStrptrMaybe(atf_cov::Phase& parent, algo::strptr 
 // Read fields of atf_cov::Phase from an ascii string.
 // The format of the string is the format of the atf_cov::Phase's only field
 // func:atf_cov.Phase..ReadStrptrMaybe
-bool                 Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str);
+bool                 Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_cov.Phase..Lt
 bool                 Phase_Lt(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // func:atf_cov.Phase..Cmp
@@ -1259,7 +1259,7 @@ bool                 value_ReadStrptrMaybe(atf_cov::TableId& parent, algo::strpt
 // Read fields of atf_cov::TableId from an ascii string.
 // The format of the string is the format of the atf_cov::TableId's only field
 // func:atf_cov.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.TableId..Init
 void                 TableId_Init(atf_cov::TableId& parent);

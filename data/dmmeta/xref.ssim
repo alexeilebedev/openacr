@@ -676,6 +676,7 @@ dmmeta.xref  field:src_hdr.FScriptfile.p_license  inscond:true  via:src_hdr.FDb.
 dmmeta.xref  field:src_hdr.FDb.ind_fcopyline  inscond:true  via:""
 dmmeta.xref  field:src_hdr.FDb.c_dflt_copyright  inscond:"row.dflt==true"  via:""
 dmmeta.xref  field:src_hdr.FDb.ind_copyright  inscond:true  via:""
+dmmeta.xref  field:src_hdr.FDb.bh_copyright  inscond:true  via:""
 dmmeta.xref  field:src_lim.FGitfile.zd_include  inscond:false  via:src_lim.FDb.ind_gitfile/dev.Include.srcfile
 dmmeta.xref  field:src_lim.FGitfile.c_linelim  inscond:true  via:src_lim.FDb.ind_gitfile/dev.Linelim.gitfile
 dmmeta.xref  field:src_lim.FDb.ind_gitfile  inscond:true  via:""

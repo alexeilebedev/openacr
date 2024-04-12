@@ -1,6 +1,6 @@
-// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 //
 
 #include "include/atf_amc.h"
+#include "include/lib_exec.h"
 
 // -----------------------------------------------------------------------------
 
@@ -361,15 +362,25 @@ void atf_amc::amctest_MsgLength() {
     for (int i=0; i<100; i++) {
         temp << char(i+1);
         atf_amc::Text *msg = atf_amc::Text_FmtByteAry(buf, temp);
-        vrfy_(Text_GetMsgLength(*msg) == msg->length);
-        vrfy_(memptr_ToStrptr(Text_GetMsgMemptr(*msg)) == strptr((char*)msg,msg->length));
+        vrfy_(GetMsgLength(*msg) == msg->length);
+        vrfy_(memptr_ToStrptr(GetMsgMemptr(*msg)) == strptr((char*)msg,msg->length));
         vrfy_(text_Getary(*msg) == temp);
     }
 }
 
 // -----------------------------------------------------------------------------
 
+void atf_amc::Phase(algo::strptr phase) {
+    verblog("--- step: "<<phase);
+}
+// -----------------------------------------------------------------------------
+
 void atf_amc::Main() {
+    lib_exec::_db.cmdline.maxjobs = i32_Max(4,sysconf(_SC_NPROCESSORS_ONLN));
+    lib_exec::_db.cmdline.q=true;
+    lib_exec::_db.cmdline.complooo=false;
+    lib_exec::_db.cmdline.merge_output=true;
+
     int nmatch=0;
     ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) {
         amctest.select = Regx_Match(atf_amc::_db.cmdline.amctest, amctest.amctest);
@@ -382,18 +393,25 @@ void atf_amc::Main() {
               <<Keyval("nmatch",nmatch)
               <<Keyval("dofork",Bool(_db.dofork)));
     }
+    lib_exec::FSyscmd *start=NULL,*end=NULL;
+    if (_db.dofork) {
+        start=&lib_exec::NewCmd(NULL,NULL);
+        end=&lib_exec::NewCmd(start,NULL);
+    }
     ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) if (amctest.select) {
         try {
             if (_db.dofork) {
                 command::atf_amc_proc child;
                 child.cmd.amctest.expr = amctest.amctest;// will match just 1
                 child.cmd.dofork = false;
-                child.cmd.q = true;// quiet mode
                 child.timeout = 900;
-                amctest.success = atf_amc_Exec(child)==0;
+                lib_exec::FSyscmd &syscmd = lib_exec::NewCmd(start,end);
+                syscmd.redir_out          = true;
+                syscmd.show_out           = true;
+                atf_amc_ToArgv(child,syscmd.args);
+                amctest.c_syscmd=&syscmd;
             } else {
                 algo_lib::DetachBadTags();
-                verblog(amctest.amctest);
                 (*amctest.step)();// run test
                 amctest.success=true;// didn't throw
             }
@@ -403,14 +421,22 @@ void atf_amc::Main() {
                   <<Keyval("comment",x.str));
             amctest.success=false;
         }
-        // make process exit with error code if any test failed
-        algo_lib::_db.exit_code += !amctest.success;
-        if (!_db.cmdline.q) {
+        if (!_db.dofork) {
             prlog("atf_amc.run"
                   <<Keyval("amctest",amctest.amctest)
                   <<Keyval("success",Bool(amctest.success))
                   <<Keyval("comment",amctest.comment));
         }
+    }ind_end;
+    // parallel version
+    if (_db.dofork) {
+        lib_exec::SyscmdExecute();
+        ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) if (amctest.select) {
+            amctest.success=CompletedOKQ(*amctest.c_syscmd);
+        }ind_end;
+    }
+    ind_beg(atf_amc::_db_amctest_curs,amctest, atf_amc::_db) if (amctest.select) {
+        algo_lib::_db.exit_code += !amctest.success;
     }ind_end;
 
     if (!_db.cmdline.q) {

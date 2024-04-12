@@ -142,7 +142,7 @@ bool                 value_ReadStrptrMaybe(report::FieldId& parent, algo::strptr
 // Read fields of report::FieldId from an ascii string.
 // The format of the string is the format of the report::FieldId's only field
 // func:report.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.FieldId..Init
 void                 FieldId_Init(report::FieldId& parent);
@@ -187,7 +187,7 @@ bool                 abt_ReadFieldMaybe(report::abt& parent, algo::strptr field,
 // Read fields of report::abt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.abt..ReadStrptrMaybe
-bool                 abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str);
+bool                 abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.abt..Init
 void                 abt_Init(report::abt& parent);
@@ -212,7 +212,7 @@ bool                 acr_ReadFieldMaybe(report::acr& parent, algo::strptr field,
 // Read fields of report::acr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.acr..ReadStrptrMaybe
-bool                 acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str);
+bool                 acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.acr..Init
 void                 acr_Init(report::acr& parent);
@@ -235,7 +235,7 @@ bool                 acr_check_ReadFieldMaybe(report::acr_check& parent, algo::s
 // Read fields of report::acr_check from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.acr_check..ReadStrptrMaybe
-bool                 acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr in_str);
+bool                 acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.acr_check..Init
 void                 acr_check_Init(report::acr_check& parent);
@@ -260,7 +260,7 @@ bool                 amc_ReadFieldMaybe(report::amc& parent, algo::strptr field,
 // Read fields of report::amc from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.amc..ReadStrptrMaybe
-bool                 amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str);
+bool                 amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.amc..Init
 void                 amc_Init(report::amc& parent);
@@ -288,7 +288,7 @@ bool                 atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::str
 // Read fields of report::atf_comp from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.atf_comp..ReadStrptrMaybe
-bool                 atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str);
+bool                 atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.atf_comp..Init
 void                 atf_comp_Init(report::atf_comp& parent);
@@ -311,7 +311,7 @@ bool                 atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::str
 // Read fields of report::atf_unit from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.atf_unit..ReadStrptrMaybe
-bool                 atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_str);
+bool                 atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.atf_unit..Init
 void                 atf_unit_Init(report::atf_unit& parent);
@@ -350,7 +350,7 @@ bool                 gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr 
 // Read fields of report::gcache from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.gcache..ReadStrptrMaybe
-bool                 gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str);
+bool                 gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.gcache..Init
 void                 gcache_Init(report::gcache& parent);
@@ -373,7 +373,7 @@ bool                 gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& paren
 // Read fields of report::gcache_hitrate from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.gcache_hitrate..ReadStrptrMaybe
-bool                 gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str);
+bool                 gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:report.gcache_hitrate.String  printfmt:Tuple
 // func:report.gcache_hitrate..Print
@@ -397,7 +397,7 @@ bool                 src_func_ReadFieldMaybe(report::src_func& parent, algo::str
 // Read fields of report::src_func from an ascii string.
 // The format of the string is an ssim Tuple
 // func:report.src_func..ReadStrptrMaybe
-bool                 src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_str);
+bool                 src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.src_func..Init
 void                 src_func_Init(report::src_func& parent);

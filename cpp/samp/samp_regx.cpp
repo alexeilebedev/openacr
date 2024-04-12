@@ -1,4 +1,4 @@
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ void samp_regx::Main() {
         prlog("literal: "<<regx.literal);
         ind_beg(algo_lib::regx_state_curs,state,regx) {
             prlog("state #"<<ind_curs(state).index);
-            ind_beg(algo_lib::state_ch_class_curs,ch_class,state) {
+            ind_beg(algo_lib::RegxState_ch_class_curs,ch_class,state) {
                 prlog("  "<<ch_class.beg<<".."<<ch_class.end);
             }ind_end;
             tempstr out;

@@ -200,7 +200,6 @@ dev.gitfile  gitfile:cpp/amc/hook.cpp
 dev.gitfile  gitfile:cpp/amc/include.cpp
 dev.gitfile  gitfile:cpp/amc/inlary.cpp
 dev.gitfile  gitfile:cpp/amc/io.cpp
-dev.gitfile  gitfile:cpp/amc/json.cpp
 dev.gitfile  gitfile:cpp/amc/lary.cpp
 dev.gitfile  gitfile:cpp/amc/llist.cpp
 dev.gitfile  gitfile:cpp/amc/lpool.cpp

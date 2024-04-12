@@ -214,8 +214,7 @@ void                 trace_Print(mdbg::trace& row, algo::cstring& str) __attribu
 // --- mdbg.FDb
 // create: mdbg.FDb._db (Global)
 struct FDb { // mdbg.FDb: In-memory database for mdbg
-    lpool_Lpblock*     lpool_free[31];          // Lpool levels
-    u32                lpool_lock;              // Lpool lock
+    lpool_Lpblock*     lpool_free[36];          // Lpool levels
     command::mdbg      cmdline;                 //
     algo::cstring      script;                  // Output script
     algo::cstring      gdbscript;               // GDB script
@@ -233,20 +232,33 @@ struct FDb { // mdbg.FDb: In-memory database for mdbg
 
 // Free block of memory previously returned by Lpool.
 // func:mdbg.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:mdbg.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:mdbg.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:mdbg.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:mdbg.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:mdbg.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:mdbg.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
@@ -468,7 +480,7 @@ bool                 value_ReadStrptrMaybe(mdbg::FieldId& parent, algo::strptr r
 // Read fields of mdbg::FieldId from an ascii string.
 // The format of the string is the format of the mdbg::FieldId's only field
 // func:mdbg.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FieldId..Init
 void                 FieldId_Init(mdbg::FieldId& parent);
@@ -516,7 +528,7 @@ bool                 value_ReadStrptrMaybe(mdbg::TableId& parent, algo::strptr r
 // Read fields of mdbg::TableId from an ascii string.
 // The format of the string is the format of the mdbg::TableId's only field
 // func:mdbg.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.TableId..Init
 void                 TableId_Init(mdbg::TableId& parent);

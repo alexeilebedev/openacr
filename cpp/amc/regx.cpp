@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2013 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -67,23 +67,21 @@ void amc::tfunc_Regx_ReadStrptrMaybe() {
     amc::FFregx *fregx = field.c_fregx;
     if (HasReadQ(*field.p_ctype)) {
         Set(R, "$full", (fregx && fregx->partial ? "false" : "true"));
-        amc::FFunc& read = amc::CreateCurFunc();
+        amc::FFunc& read = amc::CreateCurFunc(true);
         Ins(&R, read.comment, "Convert string to field. Return success value");
-        Ins(&R, read.ret  , "bool", false);
-        Ins(&R, read.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in)", false);
+        AddProtoArg(read, "algo::strptr", "in");
+        AddRetval(read, "bool", "retval", "true");
         Ins(&R, read.body, "Regx_Read$Regxtype($parname.$name, in, $full);");
-        Ins(&R, read.body, "bool retval = true;// !$parname.$name.parseerror; -- TODO: uncomment");
         SetPresent(read,Subst(R,"$parname"),field);
-        Ins(&R, read.body, "return retval;");
     }
 }
 
 void amc::tfunc_Regx_Print() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
 
-    amc::FFunc& print = amc::CreateCurFunc();
-    Ins(&R, print.ret  , "void", false);
-    Ins(&R, print.proto, "$name_Print($Parent, algo::cstring &out)", false);
+    amc::FFunc& print = amc::CreateCurFunc(true);
+    AddRetval(print, "void", "", "");
+    AddProtoArg(print, "algo::cstring &", "out");
     Ins(&R, print.body, "Regx_Print($parname.$name, out);");
 }
 

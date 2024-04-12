@@ -124,7 +124,7 @@ bool                 Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr fiel
 // Read fields of fmdb::Alarm from an ascii string.
 // The format of the string is an ssim Tuple
 // func:fmdb.Alarm..ReadStrptrMaybe
-bool                 Alarm_ReadStrptrMaybe(fmdb::Alarm &parent, algo::strptr in_str);
+bool                 Alarm_ReadStrptrMaybe(fmdb::Alarm &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fmdb.Alarm..Init
 void                 Alarm_Init(fmdb::Alarm& parent);
@@ -147,7 +147,7 @@ bool                 AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr 
 // Read fields of fmdb::AlmCode from an ascii string.
 // The format of the string is an ssim Tuple
 // func:fmdb.AlmCode..ReadStrptrMaybe
-bool                 AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str);
+bool                 AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmCode.String  printfmt:Tuple
 // func:fmdb.AlmCode..Print
@@ -165,7 +165,7 @@ bool                 AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::s
 // Read fields of fmdb::AlmObjtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:fmdb.AlmObjtype..ReadStrptrMaybe
-bool                 AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_str);
+bool                 AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmObjtype.String  printfmt:Tuple
 // func:fmdb.AlmObjtype..Print
@@ -183,7 +183,7 @@ bool                 AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::str
 // Read fields of fmdb::AlmSource from an ascii string.
 // The format of the string is an ssim Tuple
 // func:fmdb.AlmSource..ReadStrptrMaybe
-bool                 AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_str);
+bool                 AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmSource.String  printfmt:Tuple
 // func:fmdb.AlmSource..Print
@@ -230,7 +230,7 @@ bool                 value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr r
 // Read fields of fmdb::FieldId from an ascii string.
 // The format of the string is the format of the fmdb::FieldId's only field
 // func:fmdb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fmdb.FieldId..Init
 void                 FieldId_Init(fmdb::FieldId& parent);

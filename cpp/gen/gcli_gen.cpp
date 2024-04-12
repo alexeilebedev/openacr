@@ -9010,6 +9010,25 @@ void gcli::request_method_SetStrptr(gcli::FHttp& parent, algo::strptr rhs, gcli_
     if (!request_method_SetStrptrMaybe(parent,rhs)) request_method_SetEnum(parent,dflt);
 }
 
+// --- gcli.FHttp.response_header.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> gcli::response_header_Addary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.response_header_elems && rhs.elems < parent.response_header_elems + parent.response_header_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("gcli.tary_alias  field:gcli.FHttp.response_header  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    response_header_Reserve(parent, nnew); // reserve space
+    int at = parent.response_header_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.response_header_elems + at + i) algo::cstring(rhs[i]);
+        parent.response_header_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.response_header_elems + at, nnew);
+}
+
 // --- gcli.FHttp.response_header.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -9113,6 +9132,14 @@ void gcli::response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rhs) {
     }
 }
 
+// --- gcli.FHttp.response_header.Setary2
+// Copy specified array into response_header, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void gcli::response_header_Setary(gcli::FHttp& parent, const algo::aryptr<algo::cstring> &rhs) {
+    response_header_RemoveAll(parent);
+    response_header_Addary(parent, rhs);
+}
+
 // --- gcli.FHttp.response_header.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> gcli::response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) {
@@ -9125,6 +9152,20 @@ algo::aryptr<algo::cstring> gcli::response_header_AllocNVal(gcli::FHttp& parent,
     }
     parent.response_header_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- gcli.FHttp.response_header.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool gcli::response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = response_header_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        response_header_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- gcli.FHttp..Init
@@ -9177,6 +9218,14 @@ void gcli::FHttp_Print(gcli::FHttp& row, algo::cstring& str) {
 
     algo::cstring_Print(row.response_reason_phrase, temp);
     PrintAttrSpaceReset(str,"response_reason_phrase", temp);
+
+    ind_beg(FHttp_response_header_curs,response_header,row) {
+        algo::cstring_Print(response_header, temp);
+        tempstr name;
+        name << "response_header.";
+        name << ind_curs(response_header).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
 
     algo::cstring_Print(row.response_content_type, temp);
     PrintAttrSpaceReset(str,"response_content_type", temp);

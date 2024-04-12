@@ -288,7 +288,7 @@ bool                 Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, 
 // Read fields of dev::Arch from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Arch..ReadStrptrMaybe
-bool                 Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str);
+bool                 Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Arch.String  printfmt:Tuple
 // func:dev.Arch..Print
@@ -308,7 +308,7 @@ bool                 Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr f
 // Read fields of dev::Badline from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Badline..ReadStrptrMaybe
-bool                 Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str);
+bool                 Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Badline.String  printfmt:Tuple
 // func:dev.Badline..Print
@@ -348,7 +348,7 @@ bool                 Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr
 // Read fields of dev::Builddir from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Builddir..ReadStrptrMaybe
-bool                 Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str);
+bool                 Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Builddir.String  printfmt:Tuple
 // func:dev.Builddir..Print
@@ -370,7 +370,7 @@ bool                 Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, al
 // Read fields of dev::Cfg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Cfg..ReadStrptrMaybe
-bool                 Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str);
+bool                 Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Cfg.String  printfmt:Tuple
 // func:dev.Cfg..Print
@@ -406,7 +406,7 @@ bool                 Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr
 // Read fields of dev::Compiler from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Compiler..ReadStrptrMaybe
-bool                 Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str);
+bool                 Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Compiler.String  printfmt:Tuple
 // func:dev.Compiler..Print
@@ -425,7 +425,7 @@ bool                 Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strp
 // Read fields of dev::Copyright from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Copyright..ReadStrptrMaybe
-bool                 Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str);
+bool                 Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Copyright..Init
 void                 Copyright_Init(dev::Copyright& parent);
@@ -451,7 +451,7 @@ bool                 Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr f
 // Read fields of dev::Covfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Covfile..ReadStrptrMaybe
-bool                 Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str);
+bool                 Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Covfile..Init
 void                 Covfile_Init(dev::Covfile& parent);
@@ -513,7 +513,7 @@ bool                 Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr f
 // Read fields of dev::Covline from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Covline..ReadStrptrMaybe
-bool                 Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str);
+bool                 Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Covline..Init
 void                 Covline_Init(dev::Covline& parent);
@@ -539,7 +539,7 @@ bool                 Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strp
 // Read fields of dev::Covtarget from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Covtarget..ReadStrptrMaybe
-bool                 Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str);
+bool                 Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Covtarget..Init
 void                 Covtarget_Init(dev::Covtarget& parent);
@@ -573,7 +573,7 @@ bool                 Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr
 // Read fields of dev::Edaction from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Edaction..ReadStrptrMaybe
-bool                 Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str);
+bool                 Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Edaction..Init
 void                 Edaction_Init(dev::Edaction& parent);
@@ -594,7 +594,7 @@ bool                 Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strp
 // Read fields of dev::Edacttype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Edacttype..ReadStrptrMaybe
-bool                 Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str);
+bool                 Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Edacttype.String  printfmt:Tuple
 // func:dev.Edacttype..Print
@@ -641,7 +641,7 @@ bool                 value_ReadStrptrMaybe(dev::FieldId& parent, algo::strptr rh
 // Read fields of dev::FieldId from an ascii string.
 // The format of the string is the format of the dev::FieldId's only field
 // func:dev.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.FieldId..Init
 void                 FieldId_Init(dev::FieldId& parent);
@@ -667,7 +667,7 @@ bool                 Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr f
 // Read fields of dev::Gitfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Gitfile..ReadStrptrMaybe
-bool                 Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str);
+bool                 Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Gitfile.String  printfmt:Tuple
 // func:dev.Gitfile..Print
@@ -695,7 +695,7 @@ bool                 Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr f
 // Read fields of dev::Gitinfo from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Gitinfo..ReadStrptrMaybe
-bool                 Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str);
+bool                 Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Gitinfo.String  printfmt:Tuple
 // func:dev.Gitinfo..Print
@@ -714,7 +714,7 @@ bool                 Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr fie
 // Read fields of dev::Hilite from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Hilite..ReadStrptrMaybe
-bool                 Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str);
+bool                 Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Hilite.String  printfmt:Tuple
 // func:dev.Hilite..Print
@@ -733,7 +733,7 @@ bool                 Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::st
 // Read fields of dev::Htmlentity from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Htmlentity..ReadStrptrMaybe
-bool                 Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_str);
+bool                 Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Htmlentity..Init
 void                 Htmlentity_Init(dev::Htmlentity& parent);
@@ -767,7 +767,7 @@ bool                 Include_ReadFieldMaybe(dev::Include& parent, algo::strptr f
 // Read fields of dev::Include from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Include..ReadStrptrMaybe
-bool                 Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str);
+bool                 Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Include..Init
 void                 Include_Init(dev::Include& parent);
@@ -788,7 +788,7 @@ bool                 License_ReadFieldMaybe(dev::License& parent, algo::strptr f
 // Read fields of dev::License from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.License..ReadStrptrMaybe
-bool                 License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str);
+bool                 License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.License.String  printfmt:Tuple
 // func:dev.License..Print
@@ -813,7 +813,7 @@ bool                 Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr f
 // Read fields of dev::Linelim from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Linelim..ReadStrptrMaybe
-bool                 Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str);
+bool                 Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Linelim..Init
 void                 Linelim_Init(dev::Linelim& parent);
@@ -837,7 +837,7 @@ bool                 Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strp
 // Read fields of dev::Mdsection from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Mdsection..ReadStrptrMaybe
-bool                 Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str);
+bool                 Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Mdsection.String  printfmt:Tuple
 // func:dev.Mdsection..Print
@@ -856,7 +856,7 @@ bool                 Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr f
 // Read fields of dev::Msgfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Msgfile..ReadStrptrMaybe
-bool                 Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str);
+bool                 Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Msgfile..Init
 void                 Msgfile_Init(dev::Msgfile& parent);
@@ -877,7 +877,7 @@ bool                 Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr
 // Read fields of dev::Noindent from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Noindent..ReadStrptrMaybe
-bool                 Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str);
+bool                 Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Noindent.String  printfmt:Tuple
 // func:dev.Noindent..Print
@@ -899,7 +899,7 @@ bool                 OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr f
 // Read fields of dev::OptType from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.OptType..ReadStrptrMaybe
-bool                 OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str);
+bool                 OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.OptType.String  printfmt:Tuple
 // func:dev.OptType..Print
@@ -923,7 +923,7 @@ bool                 Package_ReadFieldMaybe(dev::Package& parent, algo::strptr f
 // Read fields of dev::Package from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Package..ReadStrptrMaybe
-bool                 Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str);
+bool                 Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Package.String  printfmt:Tuple
 // func:dev.Package..Print
@@ -957,7 +957,7 @@ bool                 Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr fie
 // Read fields of dev::Pkgdep from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Pkgdep..ReadStrptrMaybe
-bool                 Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str);
+bool                 Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Pkgdep..Init
 void                 Pkgdep_Init(dev::Pkgdep& parent);
@@ -992,7 +992,7 @@ bool                 Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr fie
 // Read fields of dev::Pkgkey from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Pkgkey..ReadStrptrMaybe
-bool                 Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str);
+bool                 Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Pkgkey.String  printfmt:Tuple
 // func:dev.Pkgkey..Print
@@ -1018,7 +1018,7 @@ bool                 Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr fie
 // Read fields of dev::Readme from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Readme..ReadStrptrMaybe
-bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str);
+bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Readme..Init
 void                 Readme_Init(dev::Readme& parent);
@@ -1039,7 +1039,7 @@ bool                 Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr f
 // Read fields of dev::Sandbox from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Sandbox..ReadStrptrMaybe
-bool                 Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str);
+bool                 Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Sandbox.String  printfmt:Tuple
 // func:dev.Sandbox..Print
@@ -1057,7 +1057,7 @@ bool                 Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr fie
 // Read fields of dev::Sbpath from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Sbpath..ReadStrptrMaybe
-bool                 Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str);
+bool                 Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Sbpath.String  printfmt:Tuple
 // func:dev.Sbpath..Print
@@ -1081,7 +1081,7 @@ bool                 Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::st
 // Read fields of dev::Scriptfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Scriptfile..ReadStrptrMaybe
-bool                 Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_str);
+bool                 Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Scriptfile.String  printfmt:Tuple
 // func:dev.Scriptfile..Print
@@ -1103,7 +1103,7 @@ bool                 Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr f
 // Read fields of dev::Srcfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Srcfile..ReadStrptrMaybe
-bool                 Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str);
+bool                 Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Srcfile.String  printfmt:Tuple
 // func:dev.Srcfile..Print
@@ -1139,7 +1139,7 @@ bool                 Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr fie
 // Read fields of dev::Syscmd from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Syscmd..ReadStrptrMaybe
-bool                 Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str);
+bool                 Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Syscmd..Init
 void                 Syscmd_Init(dev::Syscmd& parent);
@@ -1166,7 +1166,7 @@ bool                 Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strp
 // Read fields of dev::Syscmddep from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Syscmddep..ReadStrptrMaybe
-bool                 Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str);
+bool                 Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Syscmddep..Init
 void                 Syscmddep_Init(dev::Syscmddep& parent);
@@ -1187,7 +1187,7 @@ bool                 Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr fie
 // Read fields of dev::Syslib from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Syslib..ReadStrptrMaybe
-bool                 Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str);
+bool                 Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Syslib.String  printfmt:Tuple
 // func:dev.Syslib..Print
@@ -1219,7 +1219,7 @@ bool                 Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr f
 // Read fields of dev::Targdep from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Targdep..ReadStrptrMaybe
-bool                 Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str);
+bool                 Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Targdep.String  printfmt:Tuple
 // func:dev.Targdep..Print
@@ -1237,7 +1237,7 @@ bool                 Target_ReadFieldMaybe(dev::Target& parent, algo::strptr fie
 // Read fields of dev::Target from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Target..ReadStrptrMaybe
-bool                 Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str);
+bool                 Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Target.String  printfmt:Tuple
 // func:dev.Target..Print
@@ -1274,7 +1274,7 @@ bool                 Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr f
 // Read fields of dev::Targsrc from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Targsrc..ReadStrptrMaybe
-bool                 Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str);
+bool                 Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Targsrc.String  printfmt:Tuple
 // func:dev.Targsrc..Print
@@ -1309,7 +1309,7 @@ bool                 Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::st
 // Read fields of dev::Targsyslib from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Targsyslib..ReadStrptrMaybe
-bool                 Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str);
+bool                 Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Targsyslib.String  printfmt:Tuple
 // func:dev.Targsyslib..Print
@@ -1329,7 +1329,7 @@ bool                 Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr fie
 // Read fields of dev::Tgtcov from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Tgtcov..ReadStrptrMaybe
-bool                 Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str);
+bool                 Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Tgtcov.String  printfmt:Tuple
 // func:dev.Tgtcov..Print
@@ -1348,7 +1348,7 @@ bool                 Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr f
 // Read fields of dev::Timefmt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Timefmt..ReadStrptrMaybe
-bool                 Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str);
+bool                 Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dev.Timefmt..Init
 void                 Timefmt_Init(dev::Timefmt& parent);
@@ -1413,7 +1413,7 @@ bool                 ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr f
 // Read fields of dev::ToolOpt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.ToolOpt..ReadStrptrMaybe
-bool                 ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str);
+bool                 ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.ToolOpt.String  printfmt:Tuple
 // func:dev.ToolOpt..Print
@@ -1433,7 +1433,7 @@ bool                 Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field
 // Read fields of dev::Uname from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Uname..ReadStrptrMaybe
-bool                 Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str);
+bool                 Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Uname.String  printfmt:Tuple
 // func:dev.Uname..Print
@@ -1451,7 +1451,7 @@ bool                 Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::
 // Read fields of dev::Unstablefld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dev.Unstablefld..ReadStrptrMaybe
-bool                 Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str);
+bool                 Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dev.Unstablefld.String  printfmt:Tuple
 // func:dev.Unstablefld..Print

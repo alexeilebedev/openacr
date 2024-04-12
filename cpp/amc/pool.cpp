@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -28,12 +28,6 @@
 #include "include/amc.h"
 
 // -----------------------------------------------------------------------------
-
-// Avoid generating single-element alloc/delete functions for things
-// like 'char', 'u8'.
-static bool NeedAllocQ(amc::FField &field) {
-    return !(field.arg == "u8" || field.arg == "char");
-}
 
 // Check if we need to generate a variable-length alloc function
 // This is true if the arg is a varlen type
@@ -110,7 +104,7 @@ static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &
 void amc::tfunc_Pool_AllocMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (NeedAllocQ(field) && !field.p_arg->c_optfld) {
+    if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddProtoArg(func,"i32","n_varfld",fldtype.c_varlenfld);
@@ -130,7 +124,7 @@ void amc::tfunc_Pool_AllocMaybe() {
 void amc::tfunc_Pool_Alloc() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (NeedAllocQ(field) && !field.p_arg->c_optfld) {
+    if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddProtoArg(func, "i32", "n_varfld", fldtype.c_varlenfld);
@@ -281,42 +275,72 @@ amc::FField *amc::FindFieldByName(amc::FCtype &ctype, algo::strptr name) {
 
 void amc::tfunc_Pool_UpdateMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    bool can_copy = CanCopyQ(*field.p_arg);
+    amc::FField &pool = *amc::_db.genfield.p_field;
+    amc::FCtype &ctype = *pool.p_arg;
+    bool can_copy = CanCopyQ(*pool.p_arg);
 
-    if (can_copy && field.c_finput && field.c_finput->update) {
-        amc::FThash *idx=amc::PrimaryIndex(*field.p_arg);
-        if (idx) {
-            amc::FFunc& update = amc::CreateCurFunc();
-            Set(R, "$Basetype", GetBaseType(*field.p_arg,NULL)->cpp_type);
-            Set(R,"$idxname",name_Get(*idx->p_field));
-            Set(R,"$hashfldget",FieldvalExpr(field.p_arg,*idx->p_hashfld,"value"));
-            Ins(&R, update.ret  , "$Cpptype*", false);
-            Ins(&R, update.proto, "$name_UpdateMaybe($Parent, $Basetype &value)", false);
-            Ins(&R, update.body, "$Cpptype *row = NULL;");
-            Ins(&R, update.body, "row = $ns::$idxname_Find($hashfldget);");
-            Ins(&R, update.body, "if (row) {");
-            // loop over fields of base type
-            amc::FCtype *base = GetBaseType(*field.p_arg,field.p_arg);
-            ind_beg(amc::ctype_c_field_curs,basefield,*base) {
-                Set(R, "$cppname", name_Get(basefield));
-                if (!amc::FindFieldByName(*field.p_arg, name_Get(basefield))) {// make sure it wasn't stripped
-                } else if (basefield.c_xref) {
+    amc::FThash *primary_idx = NULL;
+    if (can_copy && pool.c_finput && pool.c_finput->update) {
+        primary_idx=amc::PrimaryIndex(ctype);
+    }
+    if (primary_idx) {
+        amc::FFunc& update = amc::CreateCurFunc();
+        Set(R, "$Basetype", GetBaseType(ctype,NULL)->cpp_type);
+        Set(R,"$idxname",name_Get(*primary_idx->p_field));
+        Set(R,"$hashfldget",FieldvalExpr(pool.p_arg,*primary_idx->p_hashfld,"value"));
+        Ins(&R, update.ret  , "$Cpptype*", false);
+        Ins(&R, update.proto, "$name_UpdateMaybe($Parent, $Basetype &value)", false);
+        Ins(&R, update.body, "$Cpptype *row = NULL;");
+        Ins(&R, update.body, "row = $ns::$idxname_Find($hashfldget);");
+        Ins(&R, update.body, "if (row) {");
+        // scan access paths for the record being updated
+        // remove from any access path other than the primary index
+        //
+        // NOTE: An xref field (Ptr) might exist which is looked up through the primary index
+        // but the condition references a field that might be changed via 'update'
+        // Inscond is not a "membership condition" but an "insert condition" so we don't
+        // consider them here
+        ind_beg(amc::ctype_zd_access_curs,access,ctype) {
+            Set(R, "$accessname", name_Get(access));
+            bool removable=(access.reftype == dmmeta_Reftype_reftype_Thash && &access != primary_idx->p_field)
+                || (access.reftype == dmmeta_Reftype_reftype_Bheap)
+                || (access.reftype == dmmeta_Reftype_reftype_Atree);
+            if (removable) {
+                if (GlobalQ(*access.p_ctype)) {
+                    Ins(&R, update.body, "$accessname_Remove(*row);");
+                } else {
+                    prerr("amc.update"
+                          <<Keyval("ctype",ctype.ctype)
+                          <<Keyval("access_path",access.field)
+                          <<Keyval("comment","Don't know how to update access path during update (not implemented)"));
+                    algo_lib::_db.exit_code=1;
+                }
+            }
+        }ind_end;
+        // loop over fields of basetype
+        // skip cppfunc, substr, alias, lenfld, typefld, and any field with xref
+        amc::FCtype *base = GetBaseType(ctype,pool.p_arg);
+        ind_beg(amc::ctype_c_field_curs,field,ctype) {
+            if (amc::FField *basefield = amc::FindFieldByName(*base, name_Get(field))) {
+                (void)basefield;
+                Set(R, "$cppname", name_Get(field));
+                if (field.c_xref) {
                     Ins(&R, update.body, "    // $cppname: xref exists, not updating");
-                } else if (amc::FXref *xref = FindChildXref(basefield)) {
+                } else if (amc::FXref *xref = FindChildXref(field)) {
                     Set(R, "$childxref", xref->field);
                     Ins(&R, update.body, "    // $cppname: target of xreffld ($childxref), not updating");
                 } else if (FldfuncQ(field)) {// cppfunc, substr, alias
                 } else if (ComputedFieldQ(field)) {// lenfld, typefld
+                    Ins(&R, update.body, "    // $cppname: computed, not updating");
                 } else if (ValQ(field)) {
                     Ins(&R, update.body, "    row->$cppname = value.$cppname;");
                 }
-            }ind_end;
-            Ins(&R, update.body, "} else {");
-            Ins(&R, update.body, "    row = $name_InsertMaybe(value);");
-            Ins(&R, update.body, "}");
-            Ins(&R, update.body, "return row;");
-        }
+            }
+        }ind_end;
+        Ins(&R, update.body, "} else {");
+        Ins(&R, update.body, "    row = $name_InsertMaybe(value);");
+        Ins(&R, update.body, "}");
+        Ins(&R, update.body, "return row;");
     }
 }
 
@@ -342,7 +366,7 @@ static tempstr TotlenExpr(algo_lib::Replscope &R, amc::FCtype *ctype, strptr nam
 void amc::tfunc_Pool_Delete() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (NeedAllocQ(field) && field.p_reftype->del) {
+    if (field.p_reftype->del) {
         amc::FFunc& fdel = amc::CreateCurFunc(true);
         AddRetval(fdel,"void","","");
         AddProtoArg(fdel, Subst(R,"$Cpptype &"), "row");

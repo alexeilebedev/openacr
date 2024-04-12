@@ -991,7 +991,7 @@ bool                 value_ReadStrptrMaybe(atf_comp::FieldId& parent, algo::strp
 // Read fields of atf_comp::FieldId from an ascii string.
 // The format of the string is the format of the atf_comp::FieldId's only field
 // func:atf_comp.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FieldId..Init
 void                 FieldId_Init(atf_comp::FieldId& parent);
@@ -1039,7 +1039,7 @@ bool                 value_ReadStrptrMaybe(atf_comp::TableId& parent, algo::strp
 // Read fields of atf_comp::TableId from an ascii string.
 // The format of the string is the format of the atf_comp::TableId's only field
 // func:atf_comp.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.TableId..Init
 void                 TableId_Init(atf_comp::TableId& parent);

@@ -296,10 +296,10 @@ void ssim2mysql::FCtype_Print(ssim2mysql::FCtype& row, algo::cstring& str) {
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
-    u64_PrintHex(u64((const ssim2mysql::FSqltype*)row.c_sqltype), temp, 8, true);
+    u64_PrintHex(u64(row.c_sqltype), temp, 8, true);
     PrintAttrSpaceReset(str,"c_sqltype", temp);
 
-    u64_PrintHex(u64((const ssim2mysql::FSsimfile*)row.c_ssimfile), temp, 8, true);
+    u64_PrintHex(u64(row.c_ssimfile), temp, 8, true);
     PrintAttrSpaceReset(str,"c_ssimfile", temp);
 }
 
@@ -2763,7 +2763,7 @@ void ssim2mysql::FField_Print(ssim2mysql::FField& row, algo::cstring& str) {
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
-    u64_PrintHex(u64((const ssim2mysql::FSubstr*)row.c_substr), temp, 8, true);
+    u64_PrintHex(u64(row.c_substr), temp, 8, true);
     PrintAttrSpaceReset(str,"c_substr", temp);
 
     bool_Print(row.select, temp);

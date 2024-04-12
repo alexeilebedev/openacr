@@ -214,7 +214,7 @@ inline u64* algo_lib::ary_Find(algo_lib::Bitset& parent, u64 t) {
 
 // --- algo_lib.Bitset.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u64> algo_lib::ary_Getary(algo_lib::Bitset& parent) {
+inline algo::aryptr<u64> algo_lib::ary_Getary(const algo_lib::Bitset& parent) {
     return algo::aryptr<u64>(parent.ary_elems, parent.ary_n);
 }
 
@@ -398,7 +398,7 @@ inline algo::cstring* algo_lib::ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t
 
 // --- algo_lib.CsvParse.ary_tok.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> algo_lib::ary_tok_Getary(algo_lib::CsvParse& csvparse) {
+inline algo::aryptr<algo::cstring> algo_lib::ary_tok_Getary(const algo_lib::CsvParse& csvparse) {
     return algo::aryptr<algo::cstring>(csvparse.ary_tok_elems, csvparse.ary_tok_n);
 }
 
@@ -652,7 +652,7 @@ inline void algo_lib::temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs
 // --- algo_lib.FDb.temp_strings.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline algo::cstring& algo_lib::temp_strings_qFind(u64 t) {
-    return _db.temp_strings_elems[t];
+    return _db.temp_strings_elems[u64(t)];
 }
 
 // --- algo_lib.FDb.ArgvIdent.Match
@@ -875,8 +875,7 @@ inline i32 algo_lib::imdb_N() {
 // --- algo_lib.FDb.imdb.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline algo_lib::FImdb& algo_lib::imdb_qFind(u64 t) {
-    u64 idx = t;
-    return reinterpret_cast<algo_lib::FImdb*>(_db.imdb_data)[idx];
+    return reinterpret_cast<algo_lib::FImdb*>(_db.imdb_data)[u64(t)];
 }
 
 // --- algo_lib.FDb.imdb.rowid_Get
@@ -1109,8 +1108,7 @@ inline i32 algo_lib::logcat_N() {
 // --- algo_lib.FDb.logcat.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline algo_lib::FLogcat& algo_lib::logcat_qFind(u64 t) {
-    u64 idx = t;
-    return reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[idx];
+    return reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data)[u64(t)];
 }
 
 // --- algo_lib.FDb.logcat.rowid_Get
@@ -1893,8 +1891,7 @@ inline i32 algo_lib::temp_buf_N(const algo_lib::InTextFile& parent) {
 // --- algo_lib.InTextFile.temp_buf.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline u8& algo_lib::temp_buf_qFind(algo_lib::InTextFile& parent, u64 t) {
-    u64 idx = t;
-    return reinterpret_cast<u8*>(parent.temp_buf_data)[idx];
+    return reinterpret_cast<u8*>(parent.temp_buf_data)[u64(t)];
 }
 
 // --- algo_lib.InTextFile.temp_buf.rowid_Get
@@ -1964,7 +1961,7 @@ inline algo_lib::RegxState* algo_lib::state_Find(algo_lib::Regx& regx, u64 t) {
 
 // --- algo_lib.Regx.state.Getary
 // Return array pointer by value
-inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(algo_lib::Regx& regx) {
+inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(const algo_lib::Regx& regx) {
     return algo::aryptr<algo_lib::RegxState>(regx.state_elems, regx.state_n);
 }
 
@@ -2090,8 +2087,8 @@ inline algo_lib::RegxExpr::RegxExpr() {
 
 // --- algo_lib.RegxExpr..Init
 // Set all fields to initial values.
-inline void algo_lib::RegxExpr_Init(algo_lib::RegxExpr& ary_expr) {
-    ary_expr.in = i32(0);
+inline void algo_lib::RegxExpr_Init(algo_lib::RegxExpr& parent) {
+    parent.in = i32(0);
 }
 inline algo_lib::RegxParse::RegxParse() {
     algo_lib::RegxParse_Init(*this);
@@ -2119,7 +2116,7 @@ inline algo_lib::RegxExpr* algo_lib::ary_expr_Find(algo_lib::RegxParse& regxpars
 
 // --- algo_lib.RegxParse.ary_expr.Getary
 // Return array pointer by value
-inline algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Getary(algo_lib::RegxParse& regxparse) {
+inline algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Getary(const algo_lib::RegxParse& regxparse) {
     return algo::aryptr<algo_lib::RegxExpr>(regxparse.ary_expr_elems, regxparse.ary_expr_n);
 }
 
@@ -2214,85 +2211,85 @@ inline algo_lib::RegxState::~RegxState() {
 
 // --- algo_lib.RegxState.ch_class.EmptyQ
 // Return true if index is empty
-inline bool algo_lib::ch_class_EmptyQ(algo_lib::RegxState& state) {
-    return state.ch_class_n == 0;
+inline bool algo_lib::ch_class_EmptyQ(algo_lib::RegxState& parent) {
+    return parent.ch_class_n == 0;
 }
 
 // --- algo_lib.RegxState.ch_class.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::i32_Range* algo_lib::ch_class_Find(algo_lib::RegxState& state, u64 t) {
+inline algo::i32_Range* algo_lib::ch_class_Find(algo_lib::RegxState& parent, u64 t) {
     u64 idx = t;
-    u64 lim = state.ch_class_n;
+    u64 lim = parent.ch_class_n;
     if (idx >= lim) return NULL;
-    return state.ch_class_elems + idx;
+    return parent.ch_class_elems + idx;
 }
 
 // --- algo_lib.RegxState.ch_class.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::i32_Range> algo_lib::ch_class_Getary(algo_lib::RegxState& state) {
-    return algo::aryptr<algo::i32_Range>(state.ch_class_elems, state.ch_class_n);
+inline algo::aryptr<algo::i32_Range> algo_lib::ch_class_Getary(const algo_lib::RegxState& parent) {
+    return algo::aryptr<algo::i32_Range>(parent.ch_class_elems, parent.ch_class_n);
 }
 
 // --- algo_lib.RegxState.ch_class.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::i32_Range* algo_lib::ch_class_Last(algo_lib::RegxState& state) {
-    return ch_class_Find(state, u64(state.ch_class_n-1));
+inline algo::i32_Range* algo_lib::ch_class_Last(algo_lib::RegxState& parent) {
+    return ch_class_Find(parent, u64(parent.ch_class_n-1));
 }
 
 // --- algo_lib.RegxState.ch_class.Max
 // Return max. number of items in the array
-inline i32 algo_lib::ch_class_Max(algo_lib::RegxState& state) {
-    (void)state;
-    return state.ch_class_max;
+inline i32 algo_lib::ch_class_Max(algo_lib::RegxState& parent) {
+    (void)parent;
+    return parent.ch_class_max;
 }
 
 // --- algo_lib.RegxState.ch_class.N
 // Return number of items in the array
-inline i32 algo_lib::ch_class_N(const algo_lib::RegxState& state) {
-    return state.ch_class_n;
+inline i32 algo_lib::ch_class_N(const algo_lib::RegxState& parent) {
+    return parent.ch_class_n;
 }
 
 // --- algo_lib.RegxState.ch_class.RemoveAll
-inline void algo_lib::ch_class_RemoveAll(algo_lib::RegxState& state) {
-    state.ch_class_n = 0;
+inline void algo_lib::ch_class_RemoveAll(algo_lib::RegxState& parent) {
+    parent.ch_class_n = 0;
 }
 
 // --- algo_lib.RegxState.ch_class.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ch_class_Reserve(algo_lib::RegxState& state, int n) {
-    u32 new_n = state.ch_class_n + n;
-    if (UNLIKELY(new_n > state.ch_class_max)) {
-        ch_class_AbsReserve(state, new_n);
+inline void algo_lib::ch_class_Reserve(algo_lib::RegxState& parent, int n) {
+    u32 new_n = parent.ch_class_n + n;
+    if (UNLIKELY(new_n > parent.ch_class_max)) {
+        ch_class_AbsReserve(parent, new_n);
     }
 }
 
 // --- algo_lib.RegxState.ch_class.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::i32_Range& algo_lib::ch_class_qFind(algo_lib::RegxState& state, u64 t) {
-    return state.ch_class_elems[t];
+inline algo::i32_Range& algo_lib::ch_class_qFind(algo_lib::RegxState& parent, u64 t) {
+    return parent.ch_class_elems[t];
 }
 
 // --- algo_lib.RegxState.ch_class.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::i32_Range& algo_lib::ch_class_qLast(algo_lib::RegxState& state) {
-    return ch_class_qFind(state, u64(state.ch_class_n-1));
+inline algo::i32_Range& algo_lib::ch_class_qLast(algo_lib::RegxState& parent) {
+    return ch_class_qFind(parent, u64(parent.ch_class_n-1));
 }
 
 // --- algo_lib.RegxState.ch_class.rowid_Get
 // Return row id of specified element
-inline u64 algo_lib::ch_class_rowid_Get(algo_lib::RegxState& state, algo::i32_Range &elem) {
-    u64 id = &elem - state.ch_class_elems;
+inline u64 algo_lib::ch_class_rowid_Get(algo_lib::RegxState& parent, algo::i32_Range &elem) {
+    u64 id = &elem - parent.ch_class_elems;
     return u64(id);
 }
 
 // --- algo_lib.RegxState.ch_class_curs.Next
 // proceed to next item
-inline void algo_lib::state_ch_class_curs_Next(state_ch_class_curs &curs) {
+inline void algo_lib::RegxState_ch_class_curs_Next(RegxState_ch_class_curs &curs) {
     curs.index++;
 }
 
 // --- algo_lib.RegxState.ch_class_curs.Reset
-inline void algo_lib::state_ch_class_curs_Reset(state_ch_class_curs &curs, algo_lib::RegxState &parent) {
+inline void algo_lib::RegxState_ch_class_curs_Reset(RegxState_ch_class_curs &curs, algo_lib::RegxState &parent) {
     curs.elems = parent.ch_class_elems;
     curs.n_elems = parent.ch_class_n;
     curs.index = 0;
@@ -2300,23 +2297,23 @@ inline void algo_lib::state_ch_class_curs_Reset(state_ch_class_curs &curs, algo_
 
 // --- algo_lib.RegxState.ch_class_curs.ValidQ
 // cursor points to valid item
-inline bool algo_lib::state_ch_class_curs_ValidQ(state_ch_class_curs &curs) {
+inline bool algo_lib::RegxState_ch_class_curs_ValidQ(RegxState_ch_class_curs &curs) {
     return curs.index < curs.n_elems;
 }
 
 // --- algo_lib.RegxState.ch_class_curs.Access
 // item access
-inline algo::i32_Range& algo_lib::state_ch_class_curs_Access(state_ch_class_curs &curs) {
+inline algo::i32_Range& algo_lib::RegxState_ch_class_curs_Access(RegxState_ch_class_curs &curs) {
     return curs.elems[curs.index];
 }
 
 // --- algo_lib.RegxState..Init
 // Set all fields to initial values.
-inline void algo_lib::RegxState_Init(algo_lib::RegxState& state) {
-    state.ch_class_elems 	= 0; // (algo_lib.RegxState.ch_class)
-    state.ch_class_n     	= 0; // (algo_lib.RegxState.ch_class)
-    state.ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
-    state.accept_all = bool(false);
+inline void algo_lib::RegxState_Init(algo_lib::RegxState& parent) {
+    parent.ch_class_elems 	= 0; // (algo_lib.RegxState.ch_class)
+    parent.ch_class_n     	= 0; // (algo_lib.RegxState.ch_class)
+    parent.ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
+    parent.accept_all = bool(false);
 }
 inline algo_lib::Replscope::Replscope() {
     algo_lib::Replscope_Init(*this);
@@ -2445,7 +2442,7 @@ inline i32* algo_lib::width_Find(algo_lib::Tabulate& tabulate, u64 t) {
 
 // --- algo_lib.Tabulate.width.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> algo_lib::width_Getary(algo_lib::Tabulate& tabulate) {
+inline algo::aryptr<i32> algo_lib::width_Getary(const algo_lib::Tabulate& tabulate) {
     return algo::aryptr<i32>(tabulate.width_elems, tabulate.width_n);
 }
 
@@ -2534,6 +2531,11 @@ inline void algo_lib::Tabulate_Init(algo_lib::Tabulate& tabulate) {
     tabulate.width_max   	= 0; // (algo_lib.Tabulate.width)
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Bitset &row) {// cfmt:algo_lib.Bitset.String
+    algo_lib::Bitset_Print(const_cast<algo_lib::Bitset&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::CsvParse &row) {// cfmt:algo_lib.CsvParse.String
     algo_lib::CsvParse_Print(const_cast<algo_lib::CsvParse&>(row), str);
     return str;
@@ -2546,6 +2548,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Erro
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::FFildes &row) {// cfmt:algo_lib.FFildes.String
     algo_lib::FFildes_Print(const_cast<algo_lib::FFildes&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::FTimehook &row) {// cfmt:algo_lib.FTimehook.String
+    algo_lib::FTimehook_Print(const_cast<algo_lib::FTimehook&>(row), str);
     return str;
 }
 
@@ -2571,6 +2578,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Fiel
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Regx &row) {// cfmt:algo_lib.Regx.String
     algo_lib::Regx_Print(const_cast<algo_lib::Regx&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxToken &row) {// cfmt:algo_lib.RegxToken.String
+    algo_lib::RegxToken_Print(const_cast<algo_lib::RegxToken&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxExpr &row) {// cfmt:algo_lib.RegxExpr.String
+    algo_lib::RegxExpr_Print(const_cast<algo_lib::RegxExpr&>(row), str);
     return str;
 }
 

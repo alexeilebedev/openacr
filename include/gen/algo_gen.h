@@ -101,19 +101,20 @@ enum algo_FieldIdEnum {                    // algo.FieldId.value
     ,algo_FieldId_overflow           = 21
     ,algo_FieldId_hex                = 22
     ,algo_FieldId_sha1sig            = 23
-    ,algo_FieldId_attrs              = 24
-    ,algo_FieldId_head               = 25
-    ,algo_FieldId_protocol           = 26
-    ,algo_FieldId_username           = 27
-    ,algo_FieldId_password           = 28
-    ,algo_FieldId_server             = 29
-    ,algo_FieldId_dir                = 30
-    ,algo_FieldId_port               = 31
-    ,algo_FieldId_source_addr_host   = 32
-    ,algo_FieldId_host               = 33
+    ,algo_FieldId_ary                = 24
+    ,algo_FieldId_attrs              = 25
+    ,algo_FieldId_head               = 26
+    ,algo_FieldId_protocol           = 27
+    ,algo_FieldId_username           = 28
+    ,algo_FieldId_password           = 29
+    ,algo_FieldId_server             = 30
+    ,algo_FieldId_dir                = 31
+    ,algo_FieldId_port               = 32
+    ,algo_FieldId_source_addr_host   = 33
+    ,algo_FieldId_host               = 34
 };
 
-enum { algo_FieldIdEnum_N = 34 };
+enum { algo_FieldIdEnum_N = 35 };
 
 
 // --- algo_FileFlagsEnum
@@ -213,6 +214,7 @@ namespace algo { struct Charset_ch_curs; }
 namespace algo { struct LineBuf_buf_curs; }
 namespace algo { struct Md5Digest_value_curs; }
 namespace algo { struct Sha1sig_sha1sig_curs; }
+namespace algo { struct StringAry_ary_curs; }
 namespace algo { struct Tuple_attrs_curs; }
 namespace algo { struct U64Ary_ary_curs; }
 namespace lib_json { struct FNode; }
@@ -227,6 +229,7 @@ namespace algo { struct Smallstr250; }
 namespace algo { struct CppExpr; }
 namespace algo { struct UnTime; }
 namespace algo { struct DateCache; }
+namespace algo { struct DayRange; }
 namespace algo { struct Decimal; }
 namespace algo { struct DirEntry; }
 namespace algo { struct DryrunQ; }
@@ -394,6 +397,7 @@ namespace algo { struct Smallstr32; }
 namespace algo { struct Smallstr4; }
 namespace algo { struct Smallstr40; }
 namespace algo { struct Smallstr5; }
+namespace algo { struct StringAry; }
 namespace algo { struct TermStyle; }
 namespace algo { struct TextJust; }
 namespace algo { struct TstampCache; }
@@ -423,18 +427,17 @@ namespace algo { struct i32_Range; }
 namespace algo { // gen:ns_print_struct
 
 // --- algo.cstring
+// create: algo.StringAry.ary (Tary)
 struct cstring { // algo.cstring
     char*   ch_elems;   // pointer to elements
     u32     ch_n;       // number of elements in array
     u32     ch_max;     // max. capacity of array before realloc
+    inline operator algo::strptr() const;
     cstring& operator =(const algo::strptr &t);
     cstring(const cstring &t);
     cstring& operator =(const cstring &s);
     explicit cstring(const algo::strptr &s);
     cstring(const tempstr &rhs);
-    operator algo::strptr() const {
-        return algo::strptr(const_cast<char*>(ch_elems),ch_n);
-    }
     bool operator ==(const algo::cstring &rhs) const;
     bool operator !=(const algo::cstring &rhs) const;
     bool operator <(const algo::cstring &rhs) const;
@@ -473,7 +476,7 @@ bool                 ch_EmptyQ(algo::cstring& parent) __attribute__((nothrow));
 char*                ch_Find(algo::cstring& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.cstring.ch.Getary
-algo::aryptr<char>   ch_Getary(algo::cstring& parent) __attribute__((nothrow));
+algo::aryptr<char>   ch_Getary(const algo::cstring& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.cstring.ch.Last
 char*                ch_Last(algo::cstring& parent) __attribute__((nothrow, pure));
@@ -497,6 +500,10 @@ void                 ch_Reserve(algo::cstring& parent, int n) __attribute__((not
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo.cstring.ch.AbsReserve
 void                 ch_AbsReserve(algo::cstring& parent, int n) __attribute__((nothrow));
+// Convert ch to a string.
+// Array is printed as a regular string.
+// func:algo.cstring.ch.Print
+void                 ch_Print(algo::cstring& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo.cstring.ch.Setary
 void                 ch_Setary(algo::cstring& parent, algo::cstring &rhs) __attribute__((nothrow));
@@ -516,6 +523,9 @@ u64                  ch_rowid_Get(algo::cstring& parent, char &elem) __attribute
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.cstring.ch.AllocNVal
 algo::aryptr<char>   ch_AllocNVal(algo::cstring& parent, int n_elems, const char& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:algo.cstring.ch.ReadStrptrMaybe
+bool                 ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo.cstring.ch_curs.Next
@@ -532,10 +542,9 @@ char&                cstring_ch_curs_Access(cstring_ch_curs &curs) __attribute__
 // this function is 'extrn' and implemented by user
 u32                  cstring_Hash(u32 prev, const algo::cstring & rhs) __attribute__((nothrow));
 // Read fields of algo::cstring from an ascii string.
-// The function is implemented externally.
 // func:algo.cstring..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 cstring_ReadStrptrMaybe(algo::cstring &parent, algo::strptr in_str);
+bool                 cstring_ReadStrptrMaybe(algo::cstring &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.cstring..Lt
 bool                 cstring_Lt(algo::cstring& lhs, algo::cstring& rhs) __attribute__((nothrow));
 // func:algo.cstring..Cmp
@@ -546,19 +555,20 @@ void                 cstring_Init(algo::cstring& parent);
 // func:algo.cstring..Uninit
 void                 cstring_Uninit(algo::cstring& parent) __attribute__((nothrow));
 // func:algo.cstring..Eq
-bool                 cstring_Eq(const algo::cstring& lhs, const algo::cstring& rhs) __attribute__((nothrow));
+bool                 cstring_Eq(algo::cstring& lhs, algo::cstring& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.cstring..Update
 bool                 cstring_Update(algo::cstring &lhs, algo::cstring& rhs) __attribute__((nothrow));
+// Create JSON representation of algo::cstring under PARENT node
+// cfmt:algo.cstring.Json  printfmt:Extern
+// func:algo.cstring..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    cstring_FmtJson(algo::cstring& row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.cstring.String  printfmt:Extern
 // func:algo.cstring..Print
 // this function is 'extrn' and implemented by user
 void                 cstring_Print(algo::cstring& row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of algo::cstring under PARENT node -- implemented externally
-// func:algo.cstring..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    cstring_FmtJson(algo::cstring& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- algo.Attr
 // create: algo.Tuple.attrs (Tary)
@@ -573,14 +583,13 @@ struct Attr { // algo.Attr
 };
 
 // Read fields of algo::Attr from an ascii string.
-// The function is implemented externally.
 // func:algo.Attr..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str);
+bool                 Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Attr..Cmp
 i32                  Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) __attribute__((nothrow));
 // func:algo.Attr..Eq
-bool                 Attr_Eq(const algo::Attr& lhs, const algo::Attr& rhs) __attribute__((nothrow));
+bool                 Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.Attr.String  printfmt:Extern
 // func:algo.Attr..Print
@@ -634,6 +643,7 @@ struct ByteAry { // algo.ByteAry
     u8*   ary_elems;   // pointer to elements
     u32   ary_n;       // number of elements in array
     u32   ary_max;     // max. capacity of array before realloc
+    inline operator algo::memptr() const;
     ByteAry();
     ~ByteAry();
 private:
@@ -666,7 +676,7 @@ bool                 ary_EmptyQ(algo::ByteAry& parent) __attribute__((nothrow));
 u8*                  ary_Find(algo::ByteAry& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.ByteAry.ary.Getary
-algo::aryptr<u8>     ary_Getary(algo::ByteAry& parent) __attribute__((nothrow));
+algo::aryptr<u8>     ary_Getary(const algo::ByteAry& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.ByteAry.ary.Last
 u8*                  ary_Last(algo::ByteAry& parent) __attribute__((nothrow, pure));
@@ -690,6 +700,10 @@ void                 ary_Reserve(algo::ByteAry& parent, int n) __attribute__((no
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo.ByteAry.ary.AbsReserve
 void                 ary_AbsReserve(algo::ByteAry& parent, int n) __attribute__((nothrow));
+// Convert ary to a string.
+// Array is printed as a regular string.
+// func:algo.ByteAry.ary.Print
+void                 ary_Print(algo::ByteAry& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo.ByteAry.ary.Setary
 void                 ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) __attribute__((nothrow));
@@ -709,6 +723,9 @@ u64                  ary_rowid_Get(algo::ByteAry& parent, u8 &elem) __attribute_
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.ByteAry.ary.AllocNVal
 algo::aryptr<u8>     ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:algo.ByteAry.ary.ReadStrptrMaybe
+bool                 ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo.ByteAry.ary_curs.Next
@@ -801,9 +818,10 @@ void                 ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &r
 // 'quick' Access row by row id. No bounds checking in release.
 // func:algo.Charset.ch.qFind
 u64&                 ch_qFind(algo::Charset& parent, u64 t) __attribute__((nothrow));
-// Convert ch to a string. Parent's separator is used.
+// Convert ch to a string.
+// The separator character is ','.
 // func:algo.Charset.ch.Print
-void                 ch_Print(algo::Charset& parent, algo::cstring &lhs) __attribute__((nothrow));
+void                 ch_Print(algo::Charset& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
 // func:algo.Charset.ch.ReadStrptrMaybe
@@ -833,10 +851,9 @@ void                 Charset_ch_curs_Next(Charset_ch_curs &curs) __attribute__((
 // func:algo.Charset.ch_curs.Access
 u64&                 Charset_ch_curs_Access(Charset_ch_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Charset from an ascii string.
-// The function is implemented externally.
 // func:algo.Charset..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Charset_ReadStrptrMaybe(algo::Charset &parent, algo::strptr in_str);
+bool                 Charset_ReadStrptrMaybe(algo::Charset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Charset..Init
 void                 Charset_Init(algo::Charset& parent);
@@ -902,14 +919,14 @@ u32                  Smallstr150_Hash(u32 prev, const algo::Smallstr150 & rhs) _
 // Read fields of algo::Smallstr150 from an ascii string.
 // The format of the string is the format of the algo::Smallstr150's only field
 // func:algo.Smallstr150..ReadStrptrMaybe
-bool                 Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr in_str);
+bool                 Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr150..Cmp
 i32                  Smallstr150_Cmp(algo::Smallstr150& lhs, algo::Smallstr150& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr150..Init
 void                 Smallstr150_Init(algo::Smallstr150& parent);
 // func:algo.Smallstr150..Eq
-bool                 Smallstr150_Eq(const algo::Smallstr150& lhs, const algo::Smallstr150& rhs) __attribute__((nothrow));
+bool                 Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& rhs) __attribute__((nothrow));
 // func:algo.Smallstr150..EqStrptr
 bool                 Smallstr150_EqStrptr(const algo::Smallstr150& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -928,11 +945,11 @@ struct Comment { // algo.Comment
 // Read fields of algo::Comment from an ascii string.
 // The format of the string is the format of the algo::Comment's only field
 // func:algo.Comment..ReadStrptrMaybe
-bool                 Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str);
+bool                 Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Comment..Cmp
 i32                  Comment_Cmp(algo::Comment& lhs, algo::Comment& rhs) __attribute__((nothrow));
 // func:algo.Comment..Eq
-bool                 Comment_Eq(const algo::Comment& lhs, const algo::Comment& rhs) __attribute__((nothrow));
+bool                 Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.Comment.String  printfmt:Raw
 // func:algo.Comment..Print
@@ -999,14 +1016,14 @@ u32                  Smallstr250_Hash(u32 prev, const algo::Smallstr250 & rhs) _
 // Read fields of algo::Smallstr250 from an ascii string.
 // The format of the string is the format of the algo::Smallstr250's only field
 // func:algo.Smallstr250..ReadStrptrMaybe
-bool                 Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str);
+bool                 Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr250..Cmp
 i32                  Smallstr250_Cmp(algo::Smallstr250& lhs, algo::Smallstr250& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr250..Init
 void                 Smallstr250_Init(algo::Smallstr250& parent);
 // func:algo.Smallstr250..Eq
-bool                 Smallstr250_Eq(const algo::Smallstr250& lhs, const algo::Smallstr250& rhs) __attribute__((nothrow));
+bool                 Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& rhs) __attribute__((nothrow));
 // func:algo.Smallstr250..EqStrptr
 bool                 Smallstr250_EqStrptr(const algo::Smallstr250& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -1024,7 +1041,7 @@ struct CppExpr { // algo.CppExpr
 // Read fields of algo::CppExpr from an ascii string.
 // The format of the string is the format of the algo::CppExpr's only field
 // func:algo.CppExpr..ReadStrptrMaybe
-bool                 CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str);
+bool                 CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.CppExpr.String  printfmt:Raw
 // func:algo.CppExpr..Print
@@ -1048,10 +1065,9 @@ struct UnTime { // algo.UnTime: Unix time * 1e9 + nanoseconds
 // func:algo.UnTime..Hash
 u32                  UnTime_Hash(u32 prev, algo::UnTime rhs) __attribute__((nothrow));
 // Read fields of algo::UnTime from an ascii string.
-// The function is implemented externally.
 // func:algo.UnTime..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 UnTime_ReadStrptrMaybe(algo::UnTime &parent, algo::strptr in_str);
+bool                 UnTime_ReadStrptrMaybe(algo::UnTime &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.UnTime..Lt
 bool                 UnTime_Lt(algo::UnTime lhs, algo::UnTime rhs) __attribute__((nothrow));
 // func:algo.UnTime..Cmp
@@ -1090,6 +1106,16 @@ struct DateCache { // algo.DateCache
 };
 
 
+// --- algo.DayRange
+struct DayRange { // algo.DayRange
+    algo::UnTime   start;   //
+    algo::UnTime   end;     //
+    explicit DayRange(algo::UnTime                   in_start
+        ,algo::UnTime                   in_end);
+    DayRange();
+};
+
+
 // --- algo.Decimal
 struct Decimal { // algo.Decimal
     i32   exponent;   //   0  Decimal exponent (power of ten) -  allowed range [-63,63]
@@ -1102,10 +1128,9 @@ struct Decimal { // algo.Decimal
 };
 
 // Read fields of algo::Decimal from an ascii string.
-// The function is implemented externally.
 // func:algo.Decimal..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str);
+bool                 Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Decimal..Cmp
 i32                  Decimal_Cmp(algo::Decimal lhs, algo::Decimal rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -1363,7 +1388,7 @@ bool                 value_ReadStrptrMaybe(algo::FieldId& parent, algo::strptr r
 // Read fields of algo::FieldId from an ascii string.
 // The format of the string is the format of the algo::FieldId's only field
 // func:algo.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.FieldId..Init
 void                 FieldId_Init(algo::FieldId& parent);
@@ -1387,6 +1412,10 @@ struct Fildes { // algo.Fildes: File descriptor primary key
 
 // func:algo.Fildes..Hash
 u32                  Fildes_Hash(u32 prev, const algo::Fildes & rhs) __attribute__((nothrow));
+// Read fields of algo::Fildes from an ascii string.
+// The format of the string is the format of the algo::Fildes's only field
+// func:algo.Fildes..ReadStrptrMaybe
+bool                 Fildes_ReadStrptrMaybe(algo::Fildes &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Fildes..Lt
 bool                 Fildes_Lt(algo::Fildes& lhs, algo::Fildes& rhs) __attribute__((nothrow));
 // func:algo.Fildes..Cmp
@@ -1395,10 +1424,14 @@ i32                  Fildes_Cmp(algo::Fildes& lhs, algo::Fildes& rhs) __attribut
 // func:algo.Fildes..Init
 void                 Fildes_Init(algo::Fildes& parent);
 // func:algo.Fildes..Eq
-bool                 Fildes_Eq(const algo::Fildes& lhs, const algo::Fildes& rhs) __attribute__((nothrow));
+bool                 Fildes_Eq(algo::Fildes& lhs, algo::Fildes& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.Fildes..Update
 bool                 Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo.Fildes.String  printfmt:Raw
+// func:algo.Fildes..Print
+void                 Fildes_Print(algo::Fildes& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.FileFlags
 struct FileFlags { // algo.FileFlags
@@ -1485,7 +1518,7 @@ void                 printerr_Set(algo::FileFlags& parent, bool rhs) __attribute
 bool                 FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::FileFlags from an ascii string.
 // func:algo.FileFlags..ReadStrptrMaybe
-bool                 FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str);
+bool                 FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.FileFlags..Init
 void                 FileFlags_Init(algo::FileFlags& parent);
@@ -1534,7 +1567,7 @@ u32                  I32Dec1_Hash(u32 prev, algo::I32Dec1 rhs) __attribute__((no
 // Read fields of algo::I32Dec1 from an ascii string.
 // The format of the string is the format of the algo::I32Dec1's only field
 // func:algo.I32Dec1..ReadStrptrMaybe
-bool                 I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str);
+bool                 I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I32Dec1..Init
 void                 I32Dec1_Init(algo::I32Dec1& parent);
@@ -1581,7 +1614,7 @@ u32                  I32Dec2_Hash(u32 prev, algo::I32Dec2 rhs) __attribute__((no
 // Read fields of algo::I32Dec2 from an ascii string.
 // The format of the string is the format of the algo::I32Dec2's only field
 // func:algo.I32Dec2..ReadStrptrMaybe
-bool                 I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str);
+bool                 I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I32Dec2..Init
 void                 I32Dec2_Init(algo::I32Dec2& parent);
@@ -1628,7 +1661,7 @@ u32                  I32Dec3_Hash(u32 prev, algo::I32Dec3 rhs) __attribute__((no
 // Read fields of algo::I32Dec3 from an ascii string.
 // The format of the string is the format of the algo::I32Dec3's only field
 // func:algo.I32Dec3..ReadStrptrMaybe
-bool                 I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str);
+bool                 I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I32Dec3..Init
 void                 I32Dec3_Init(algo::I32Dec3& parent);
@@ -1675,7 +1708,7 @@ u32                  I32Dec4_Hash(u32 prev, algo::I32Dec4 rhs) __attribute__((no
 // Read fields of algo::I32Dec4 from an ascii string.
 // The format of the string is the format of the algo::I32Dec4's only field
 // func:algo.I32Dec4..ReadStrptrMaybe
-bool                 I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str);
+bool                 I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I32Dec4..Init
 void                 I32Dec4_Init(algo::I32Dec4& parent);
@@ -1722,7 +1755,7 @@ u32                  I32Dec5_Hash(u32 prev, algo::I32Dec5 rhs) __attribute__((no
 // Read fields of algo::I32Dec5 from an ascii string.
 // The format of the string is the format of the algo::I32Dec5's only field
 // func:algo.I32Dec5..ReadStrptrMaybe
-bool                 I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str);
+bool                 I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I32Dec5..Init
 void                 I32Dec5_Init(algo::I32Dec5& parent);
@@ -1769,7 +1802,7 @@ u32                  I64Dec1_Hash(u32 prev, algo::I64Dec1 rhs) __attribute__((no
 // Read fields of algo::I64Dec1 from an ascii string.
 // The format of the string is the format of the algo::I64Dec1's only field
 // func:algo.I64Dec1..ReadStrptrMaybe
-bool                 I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str);
+bool                 I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec1..Init
 void                 I64Dec1_Init(algo::I64Dec1& parent);
@@ -1816,7 +1849,7 @@ u32                  I64Dec10_Hash(u32 prev, algo::I64Dec10 rhs) __attribute__((
 // Read fields of algo::I64Dec10 from an ascii string.
 // The format of the string is the format of the algo::I64Dec10's only field
 // func:algo.I64Dec10..ReadStrptrMaybe
-bool                 I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str);
+bool                 I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec10..Init
 void                 I64Dec10_Init(algo::I64Dec10& parent);
@@ -1863,7 +1896,7 @@ u32                  I64Dec2_Hash(u32 prev, algo::I64Dec2 rhs) __attribute__((no
 // Read fields of algo::I64Dec2 from an ascii string.
 // The format of the string is the format of the algo::I64Dec2's only field
 // func:algo.I64Dec2..ReadStrptrMaybe
-bool                 I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str);
+bool                 I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec2..Init
 void                 I64Dec2_Init(algo::I64Dec2& parent);
@@ -1910,7 +1943,7 @@ u32                  I64Dec3_Hash(u32 prev, algo::I64Dec3 rhs) __attribute__((no
 // Read fields of algo::I64Dec3 from an ascii string.
 // The format of the string is the format of the algo::I64Dec3's only field
 // func:algo.I64Dec3..ReadStrptrMaybe
-bool                 I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str);
+bool                 I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec3..Init
 void                 I64Dec3_Init(algo::I64Dec3& parent);
@@ -1959,7 +1992,7 @@ u32                  I64Dec4_Hash(u32 prev, algo::I64Dec4 rhs) __attribute__((no
 // Read fields of algo::I64Dec4 from an ascii string.
 // The format of the string is the format of the algo::I64Dec4's only field
 // func:algo.I64Dec4..ReadStrptrMaybe
-bool                 I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str);
+bool                 I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec4..Init
 void                 I64Dec4_Init(algo::I64Dec4& parent);
@@ -2008,7 +2041,7 @@ u32                  I64Dec5_Hash(u32 prev, algo::I64Dec5 rhs) __attribute__((no
 // Read fields of algo::I64Dec5 from an ascii string.
 // The format of the string is the format of the algo::I64Dec5's only field
 // func:algo.I64Dec5..ReadStrptrMaybe
-bool                 I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str);
+bool                 I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec5..Init
 void                 I64Dec5_Init(algo::I64Dec5& parent);
@@ -2055,7 +2088,7 @@ u32                  I64Dec6_Hash(u32 prev, algo::I64Dec6 rhs) __attribute__((no
 // Read fields of algo::I64Dec6 from an ascii string.
 // The format of the string is the format of the algo::I64Dec6's only field
 // func:algo.I64Dec6..ReadStrptrMaybe
-bool                 I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str);
+bool                 I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec6..Init
 void                 I64Dec6_Init(algo::I64Dec6& parent);
@@ -2102,7 +2135,7 @@ u32                  I64Dec7_Hash(u32 prev, algo::I64Dec7 rhs) __attribute__((no
 // Read fields of algo::I64Dec7 from an ascii string.
 // The format of the string is the format of the algo::I64Dec7's only field
 // func:algo.I64Dec7..ReadStrptrMaybe
-bool                 I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str);
+bool                 I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec7..Init
 void                 I64Dec7_Init(algo::I64Dec7& parent);
@@ -2151,7 +2184,7 @@ u32                  I64Dec8_Hash(u32 prev, algo::I64Dec8 rhs) __attribute__((no
 // Read fields of algo::I64Dec8 from an ascii string.
 // The format of the string is the format of the algo::I64Dec8's only field
 // func:algo.I64Dec8..ReadStrptrMaybe
-bool                 I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str);
+bool                 I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec8..Init
 void                 I64Dec8_Init(algo::I64Dec8& parent);
@@ -2198,7 +2231,7 @@ u32                  I64Dec9_Hash(u32 prev, algo::I64Dec9 rhs) __attribute__((no
 // Read fields of algo::I64Dec9 from an ascii string.
 // The format of the string is the format of the algo::I64Dec9's only field
 // func:algo.I64Dec9..ReadStrptrMaybe
-bool                 I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str);
+bool                 I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.I64Dec9..Init
 void                 I64Dec9_Init(algo::I64Dec9& parent);
@@ -2256,7 +2289,7 @@ void                 err_Set(algo::IOEvtFlags& parent, bool rhs) __attribute__((
 bool                 IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::IOEvtFlags from an ascii string.
 // func:algo.IOEvtFlags..ReadStrptrMaybe
-bool                 IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str);
+bool                 IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.IOEvtFlags..Init
 void                 IOEvtFlags_Init(algo::IOEvtFlags& parent);
@@ -2279,7 +2312,7 @@ bool                 IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr fi
 // Read fields of algo::IPoint from an ascii string.
 // The format of the string is a string with separated values
 // func:algo.IPoint..ReadStrptrMaybe
-bool                 IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str);
+bool                 IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.IPoint..Init
 void                 IPoint_Init(algo::IPoint& parent);
@@ -2355,7 +2388,7 @@ u32                  Smallstr50_Hash(u32 prev, const algo::Smallstr50 & rhs) __a
 // Read fields of algo::Smallstr50 from an ascii string.
 // The format of the string is the format of the algo::Smallstr50's only field
 // func:algo.Smallstr50..ReadStrptrMaybe
-bool                 Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_str);
+bool                 Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr50..Lt
 bool                 Smallstr50_Lt(algo::Smallstr50& lhs, algo::Smallstr50& rhs) __attribute__((nothrow));
 // func:algo.Smallstr50..Cmp
@@ -2364,7 +2397,7 @@ i32                  Smallstr50_Cmp(algo::Smallstr50& lhs, algo::Smallstr50& rhs
 // func:algo.Smallstr50..Init
 void                 Smallstr50_Init(algo::Smallstr50& parent);
 // func:algo.Smallstr50..Eq
-bool                 Smallstr50_Eq(const algo::Smallstr50& lhs, const algo::Smallstr50& rhs) __attribute__((nothrow));
+bool                 Smallstr50_Eq(algo::Smallstr50& lhs, algo::Smallstr50& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.Smallstr50..Update
 bool                 Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& rhs) __attribute__((nothrow));
@@ -2476,14 +2509,14 @@ u32                  Smallstr100_Hash(u32 prev, const algo::Smallstr100 & rhs) _
 // Read fields of algo::Smallstr100 from an ascii string.
 // The format of the string is the format of the algo::Smallstr100's only field
 // func:algo.Smallstr100..ReadStrptrMaybe
-bool                 Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str);
+bool                 Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr100..Cmp
 i32                  Smallstr100_Cmp(algo::Smallstr100& lhs, algo::Smallstr100& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr100..Init
 void                 Smallstr100_Init(algo::Smallstr100& parent);
 // func:algo.Smallstr100..Eq
-bool                 Smallstr100_Eq(const algo::Smallstr100& lhs, const algo::Smallstr100& rhs) __attribute__((nothrow));
+bool                 Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs) __attribute__((nothrow));
 // func:algo.Smallstr100..EqStrptr
 bool                 Smallstr100_EqStrptr(const algo::Smallstr100& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -2530,10 +2563,9 @@ struct Ipmask { // algo.Ipmask: Format: 10.0.0.0/16
 };
 
 // Read fields of algo::Ipmask from an ascii string.
-// The function is implemented externally.
 // func:algo.Ipmask..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Ipmask_ReadStrptrMaybe(algo::Ipmask &parent, algo::strptr in_str);
+bool                 Ipmask_ReadStrptrMaybe(algo::Ipmask &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Ipmask..Init
 void                 Ipmask_Init(algo::Ipmask& parent);
@@ -2557,7 +2589,8 @@ bool                 strptr_Eq(algo::strptr lhs, algo::strptr rhs) __attribute__
 // Set value. Return true if new value is different from old value.
 // func:algo.strptr..Update
 bool                 strptr_Update(algo::strptr &lhs, algo::strptr rhs) __attribute__((nothrow));
-// Create JSON representation of algo::strptr under PARENT node -- implemented externally
+// Create JSON representation of algo::strptr under PARENT node
+// cfmt:algo.strptr.Json  printfmt:Extern
 // func:algo.strptr..FmtJson
 // this function is 'extrn' and implemented by user
 lib_json::FNode *    strptr_FmtJson(algo::strptr row, lib_json::FNode *parent) __attribute__((nothrow));
@@ -2602,7 +2635,7 @@ bool                 buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
 char*                buf_Find(algo::LineBuf& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.LineBuf.buf.Getary
-algo::aryptr<char>   buf_Getary(algo::LineBuf& parent) __attribute__((nothrow));
+algo::aryptr<char>   buf_Getary(const algo::LineBuf& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.LineBuf.buf.Last
 char*                buf_Last(algo::LineBuf& parent) __attribute__((nothrow, pure));
@@ -2626,6 +2659,10 @@ void                 buf_Reserve(algo::LineBuf& parent, int n) __attribute__((no
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo.LineBuf.buf.AbsReserve
 void                 buf_AbsReserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
+// Convert buf to a string.
+// Array is printed as a regular string.
+// func:algo.LineBuf.buf.Print
+void                 buf_Print(algo::LineBuf& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo.LineBuf.buf.Setary
 void                 buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) __attribute__((nothrow));
@@ -2645,6 +2682,9 @@ u64                  buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribut
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.LineBuf.buf.AllocNVal
 algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:algo.LineBuf.buf.ReadStrptrMaybe
+bool                 buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo.LineBuf.buf_curs.Next
@@ -2735,14 +2775,14 @@ u32                  LnumStr10_U64_Hash(u32 prev, const algo::LnumStr10_U64 & rh
 // Read fields of algo::LnumStr10_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr10_U64's only field
 // func:algo.LnumStr10_U64..ReadStrptrMaybe
-bool                 LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strptr in_str);
+bool                 LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr10_U64..Cmp
 i32                  LnumStr10_U64_Cmp(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr10_U64..Init
 void                 LnumStr10_U64_Init(algo::LnumStr10_U64& parent);
 // func:algo.LnumStr10_U64..Eq
-bool                 LnumStr10_U64_Eq(const algo::LnumStr10_U64& lhs, const algo::LnumStr10_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr10_U64..EqStrptr
 bool                 LnumStr10_U64_EqStrptr(const algo::LnumStr10_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -2822,14 +2862,14 @@ u32                  LnumStr11_U64_Hash(u32 prev, const algo::LnumStr11_U64 & rh
 // Read fields of algo::LnumStr11_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr11_U64's only field
 // func:algo.LnumStr11_U64..ReadStrptrMaybe
-bool                 LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strptr in_str);
+bool                 LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr11_U64..Cmp
 i32                  LnumStr11_U64_Cmp(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr11_U64..Init
 void                 LnumStr11_U64_Init(algo::LnumStr11_U64& parent);
 // func:algo.LnumStr11_U64..Eq
-bool                 LnumStr11_U64_Eq(const algo::LnumStr11_U64& lhs, const algo::LnumStr11_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr11_U64..EqStrptr
 bool                 LnumStr11_U64_EqStrptr(const algo::LnumStr11_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -2909,14 +2949,14 @@ u32                  LnumStr12_U64_Hash(u32 prev, const algo::LnumStr12_U64 & rh
 // Read fields of algo::LnumStr12_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr12_U64's only field
 // func:algo.LnumStr12_U64..ReadStrptrMaybe
-bool                 LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strptr in_str);
+bool                 LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr12_U64..Cmp
 i32                  LnumStr12_U64_Cmp(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr12_U64..Init
 void                 LnumStr12_U64_Init(algo::LnumStr12_U64& parent);
 // func:algo.LnumStr12_U64..Eq
-bool                 LnumStr12_U64_Eq(const algo::LnumStr12_U64& lhs, const algo::LnumStr12_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr12_U64..EqStrptr
 bool                 LnumStr12_U64_EqStrptr(const algo::LnumStr12_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -2996,14 +3036,14 @@ u32                  LnumStr13_U64_Base36_Hash(u32 prev, const algo::LnumStr13_U
 // Read fields of algo::LnumStr13_U64_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr13_U64_Base36's only field
 // func:algo.LnumStr13_U64_Base36..ReadStrptrMaybe
-bool                 LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &parent, algo::strptr in_str);
+bool                 LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr13_U64_Base36..Cmp
 i32                  LnumStr13_U64_Base36_Cmp(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr13_U64_Base36..Init
 void                 LnumStr13_U64_Base36_Init(algo::LnumStr13_U64_Base36& parent);
 // func:algo.LnumStr13_U64_Base36..Eq
-bool                 LnumStr13_U64_Base36_Eq(const algo::LnumStr13_U64_Base36& lhs, const algo::LnumStr13_U64_Base36& rhs) __attribute__((nothrow));
+bool                 LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) __attribute__((nothrow));
 // func:algo.LnumStr13_U64_Base36..EqStrptr
 bool                 LnumStr13_U64_Base36_EqStrptr(const algo::LnumStr13_U64_Base36& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3083,14 +3123,14 @@ u32                  LnumStr16_U64_Base16_Hash(u32 prev, const algo::LnumStr16_U
 // Read fields of algo::LnumStr16_U64_Base16 from an ascii string.
 // The format of the string is the format of the algo::LnumStr16_U64_Base16's only field
 // func:algo.LnumStr16_U64_Base16..ReadStrptrMaybe
-bool                 LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &parent, algo::strptr in_str);
+bool                 LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr16_U64_Base16..Cmp
 i32                  LnumStr16_U64_Base16_Cmp(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr16_U64_Base16..Init
 void                 LnumStr16_U64_Base16_Init(algo::LnumStr16_U64_Base16& parent);
 // func:algo.LnumStr16_U64_Base16..Eq
-bool                 LnumStr16_U64_Base16_Eq(const algo::LnumStr16_U64_Base16& lhs, const algo::LnumStr16_U64_Base16& rhs) __attribute__((nothrow));
+bool                 LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) __attribute__((nothrow));
 // func:algo.LnumStr16_U64_Base16..EqStrptr
 bool                 LnumStr16_U64_Base16_EqStrptr(const algo::LnumStr16_U64_Base16& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3170,14 +3210,14 @@ u32                  LnumStr1_U32_Hash(u32 prev, const algo::LnumStr1_U32 & rhs)
 // Read fields of algo::LnumStr1_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr1_U32's only field
 // func:algo.LnumStr1_U32..ReadStrptrMaybe
-bool                 LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr in_str);
+bool                 LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr1_U32..Cmp
 i32                  LnumStr1_U32_Cmp(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr1_U32..Init
 void                 LnumStr1_U32_Init(algo::LnumStr1_U32& parent);
 // func:algo.LnumStr1_U32..Eq
-bool                 LnumStr1_U32_Eq(const algo::LnumStr1_U32& lhs, const algo::LnumStr1_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr1_U32..EqStrptr
 bool                 LnumStr1_U32_EqStrptr(const algo::LnumStr1_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3257,14 +3297,14 @@ u32                  LnumStr20_U64_Hash(u32 prev, const algo::LnumStr20_U64 & rh
 // Read fields of algo::LnumStr20_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr20_U64's only field
 // func:algo.LnumStr20_U64..ReadStrptrMaybe
-bool                 LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strptr in_str);
+bool                 LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr20_U64..Cmp
 i32                  LnumStr20_U64_Cmp(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr20_U64..Init
 void                 LnumStr20_U64_Init(algo::LnumStr20_U64& parent);
 // func:algo.LnumStr20_U64..Eq
-bool                 LnumStr20_U64_Eq(const algo::LnumStr20_U64& lhs, const algo::LnumStr20_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr20_U64..EqStrptr
 bool                 LnumStr20_U64_EqStrptr(const algo::LnumStr20_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3344,14 +3384,14 @@ u32                  LnumStr22_U64_Hash(u32 prev, const algo::LnumStr22_U64 & rh
 // Read fields of algo::LnumStr22_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr22_U64's only field
 // func:algo.LnumStr22_U64..ReadStrptrMaybe
-bool                 LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strptr in_str);
+bool                 LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr22_U64..Cmp
 i32                  LnumStr22_U64_Cmp(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr22_U64..Init
 void                 LnumStr22_U64_Init(algo::LnumStr22_U64& parent);
 // func:algo.LnumStr22_U64..Eq
-bool                 LnumStr22_U64_Eq(const algo::LnumStr22_U64& lhs, const algo::LnumStr22_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr22_U64..EqStrptr
 bool                 LnumStr22_U64_EqStrptr(const algo::LnumStr22_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3431,14 +3471,14 @@ u32                  LnumStr2_U32_Hash(u32 prev, const algo::LnumStr2_U32 & rhs)
 // Read fields of algo::LnumStr2_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr2_U32's only field
 // func:algo.LnumStr2_U32..ReadStrptrMaybe
-bool                 LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr in_str);
+bool                 LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr2_U32..Cmp
 i32                  LnumStr2_U32_Cmp(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr2_U32..Init
 void                 LnumStr2_U32_Init(algo::LnumStr2_U32& parent);
 // func:algo.LnumStr2_U32..Eq
-bool                 LnumStr2_U32_Eq(const algo::LnumStr2_U32& lhs, const algo::LnumStr2_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr2_U32..EqStrptr
 bool                 LnumStr2_U32_EqStrptr(const algo::LnumStr2_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3518,14 +3558,14 @@ u32                  LnumStr3_U32_Hash(u32 prev, const algo::LnumStr3_U32 & rhs)
 // Read fields of algo::LnumStr3_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr3_U32's only field
 // func:algo.LnumStr3_U32..ReadStrptrMaybe
-bool                 LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr in_str);
+bool                 LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr3_U32..Cmp
 i32                  LnumStr3_U32_Cmp(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr3_U32..Init
 void                 LnumStr3_U32_Init(algo::LnumStr3_U32& parent);
 // func:algo.LnumStr3_U32..Eq
-bool                 LnumStr3_U32_Eq(const algo::LnumStr3_U32& lhs, const algo::LnumStr3_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr3_U32..EqStrptr
 bool                 LnumStr3_U32_EqStrptr(const algo::LnumStr3_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3605,14 +3645,14 @@ u32                  LnumStr4_U32_Hash(u32 prev, const algo::LnumStr4_U32 & rhs)
 // Read fields of algo::LnumStr4_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr4_U32's only field
 // func:algo.LnumStr4_U32..ReadStrptrMaybe
-bool                 LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr in_str);
+bool                 LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr4_U32..Cmp
 i32                  LnumStr4_U32_Cmp(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr4_U32..Init
 void                 LnumStr4_U32_Init(algo::LnumStr4_U32& parent);
 // func:algo.LnumStr4_U32..Eq
-bool                 LnumStr4_U32_Eq(const algo::LnumStr4_U32& lhs, const algo::LnumStr4_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr4_U32..EqStrptr
 bool                 LnumStr4_U32_EqStrptr(const algo::LnumStr4_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3692,14 +3732,14 @@ u32                  LnumStr5_U32_Hash(u32 prev, const algo::LnumStr5_U32 & rhs)
 // Read fields of algo::LnumStr5_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr5_U32's only field
 // func:algo.LnumStr5_U32..ReadStrptrMaybe
-bool                 LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr in_str);
+bool                 LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr5_U32..Cmp
 i32                  LnumStr5_U32_Cmp(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr5_U32..Init
 void                 LnumStr5_U32_Init(algo::LnumStr5_U32& parent);
 // func:algo.LnumStr5_U32..Eq
-bool                 LnumStr5_U32_Eq(const algo::LnumStr5_U32& lhs, const algo::LnumStr5_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr5_U32..EqStrptr
 bool                 LnumStr5_U32_EqStrptr(const algo::LnumStr5_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3779,14 +3819,14 @@ u32                  LnumStr5_U32_Base36_Hash(u32 prev, const algo::LnumStr5_U32
 // Read fields of algo::LnumStr5_U32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr5_U32_Base36's only field
 // func:algo.LnumStr5_U32_Base36..ReadStrptrMaybe
-bool                 LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent, algo::strptr in_str);
+bool                 LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr5_U32_Base36..Cmp
 i32                  LnumStr5_U32_Base36_Cmp(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr5_U32_Base36..Init
 void                 LnumStr5_U32_Base36_Init(algo::LnumStr5_U32_Base36& parent);
 // func:algo.LnumStr5_U32_Base36..Eq
-bool                 LnumStr5_U32_Base36_Eq(const algo::LnumStr5_U32_Base36& lhs, const algo::LnumStr5_U32_Base36& rhs) __attribute__((nothrow));
+bool                 LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) __attribute__((nothrow));
 // func:algo.LnumStr5_U32_Base36..EqStrptr
 bool                 LnumStr5_U32_Base36_EqStrptr(const algo::LnumStr5_U32_Base36& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3866,14 +3906,14 @@ u32                  LnumStr6_U32_Hash(u32 prev, const algo::LnumStr6_U32 & rhs)
 // Read fields of algo::LnumStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr6_U32's only field
 // func:algo.LnumStr6_U32..ReadStrptrMaybe
-bool                 LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr in_str);
+bool                 LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr6_U32..Cmp
 i32                  LnumStr6_U32_Cmp(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr6_U32..Init
 void                 LnumStr6_U32_Init(algo::LnumStr6_U32& parent);
 // func:algo.LnumStr6_U32..Eq
-bool                 LnumStr6_U32_Eq(const algo::LnumStr6_U32& lhs, const algo::LnumStr6_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr6_U32..EqStrptr
 bool                 LnumStr6_U32_EqStrptr(const algo::LnumStr6_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3953,14 +3993,14 @@ u32                  LnumStr7_U32_Hash(u32 prev, const algo::LnumStr7_U32 & rhs)
 // Read fields of algo::LnumStr7_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr7_U32's only field
 // func:algo.LnumStr7_U32..ReadStrptrMaybe
-bool                 LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr in_str);
+bool                 LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr7_U32..Cmp
 i32                  LnumStr7_U32_Cmp(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr7_U32..Init
 void                 LnumStr7_U32_Init(algo::LnumStr7_U32& parent);
 // func:algo.LnumStr7_U32..Eq
-bool                 LnumStr7_U32_Eq(const algo::LnumStr7_U32& lhs, const algo::LnumStr7_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr7_U32..EqStrptr
 bool                 LnumStr7_U32_EqStrptr(const algo::LnumStr7_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4040,14 +4080,14 @@ u32                  LnumStr7_U32_Base36_Hash(u32 prev, const algo::LnumStr7_U32
 // Read fields of algo::LnumStr7_U32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr7_U32_Base36's only field
 // func:algo.LnumStr7_U32_Base36..ReadStrptrMaybe
-bool                 LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent, algo::strptr in_str);
+bool                 LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr7_U32_Base36..Cmp
 i32                  LnumStr7_U32_Base36_Cmp(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr7_U32_Base36..Init
 void                 LnumStr7_U32_Base36_Init(algo::LnumStr7_U32_Base36& parent);
 // func:algo.LnumStr7_U32_Base36..Eq
-bool                 LnumStr7_U32_Base36_Eq(const algo::LnumStr7_U32_Base36& lhs, const algo::LnumStr7_U32_Base36& rhs) __attribute__((nothrow));
+bool                 LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) __attribute__((nothrow));
 // func:algo.LnumStr7_U32_Base36..EqStrptr
 bool                 LnumStr7_U32_Base36_EqStrptr(const algo::LnumStr7_U32_Base36& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4127,14 +4167,14 @@ u32                  LnumStr8_U32_Hash(u32 prev, const algo::LnumStr8_U32 & rhs)
 // Read fields of algo::LnumStr8_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U32's only field
 // func:algo.LnumStr8_U32..ReadStrptrMaybe
-bool                 LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr in_str);
+bool                 LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr8_U32..Cmp
 i32                  LnumStr8_U32_Cmp(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr8_U32..Init
 void                 LnumStr8_U32_Init(algo::LnumStr8_U32& parent);
 // func:algo.LnumStr8_U32..Eq
-bool                 LnumStr8_U32_Eq(const algo::LnumStr8_U32& lhs, const algo::LnumStr8_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr8_U32..EqStrptr
 bool                 LnumStr8_U32_EqStrptr(const algo::LnumStr8_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4214,14 +4254,14 @@ u32                  LnumStr8_U32_Base16_Hash(u32 prev, const algo::LnumStr8_U32
 // Read fields of algo::LnumStr8_U32_Base16 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U32_Base16's only field
 // func:algo.LnumStr8_U32_Base16..ReadStrptrMaybe
-bool                 LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent, algo::strptr in_str);
+bool                 LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr8_U32_Base16..Cmp
 i32                  LnumStr8_U32_Base16_Cmp(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr8_U32_Base16..Init
 void                 LnumStr8_U32_Base16_Init(algo::LnumStr8_U32_Base16& parent);
 // func:algo.LnumStr8_U32_Base16..Eq
-bool                 LnumStr8_U32_Base16_Eq(const algo::LnumStr8_U32_Base16& lhs, const algo::LnumStr8_U32_Base16& rhs) __attribute__((nothrow));
+bool                 LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) __attribute__((nothrow));
 // func:algo.LnumStr8_U32_Base16..EqStrptr
 bool                 LnumStr8_U32_Base16_EqStrptr(const algo::LnumStr8_U32_Base16& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4301,14 +4341,14 @@ u32                  LnumStr8_U64_Hash(u32 prev, const algo::LnumStr8_U64 & rhs)
 // Read fields of algo::LnumStr8_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U64's only field
 // func:algo.LnumStr8_U64..ReadStrptrMaybe
-bool                 LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr in_str);
+bool                 LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr8_U64..Cmp
 i32                  LnumStr8_U64_Cmp(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr8_U64..Init
 void                 LnumStr8_U64_Init(algo::LnumStr8_U64& parent);
 // func:algo.LnumStr8_U64..Eq
-bool                 LnumStr8_U64_Eq(const algo::LnumStr8_U64& lhs, const algo::LnumStr8_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr8_U64..EqStrptr
 bool                 LnumStr8_U64_EqStrptr(const algo::LnumStr8_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4388,14 +4428,14 @@ u32                  LnumStr9_U32_Hash(u32 prev, const algo::LnumStr9_U32 & rhs)
 // Read fields of algo::LnumStr9_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr9_U32's only field
 // func:algo.LnumStr9_U32..ReadStrptrMaybe
-bool                 LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr in_str);
+bool                 LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr9_U32..Cmp
 i32                  LnumStr9_U32_Cmp(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr9_U32..Init
 void                 LnumStr9_U32_Init(algo::LnumStr9_U32& parent);
 // func:algo.LnumStr9_U32..Eq
-bool                 LnumStr9_U32_Eq(const algo::LnumStr9_U32& lhs, const algo::LnumStr9_U32& rhs) __attribute__((nothrow));
+bool                 LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) __attribute__((nothrow));
 // func:algo.LnumStr9_U32..EqStrptr
 bool                 LnumStr9_U32_EqStrptr(const algo::LnumStr9_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4473,14 +4513,14 @@ u32                  LnumStr9_U64_Hash(u32 prev, const algo::LnumStr9_U64 & rhs)
 // Read fields of algo::LnumStr9_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr9_U64's only field
 // func:algo.LnumStr9_U64..ReadStrptrMaybe
-bool                 LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr in_str);
+bool                 LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LnumStr9_U64..Cmp
 i32                  LnumStr9_U64_Cmp(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LnumStr9_U64..Init
 void                 LnumStr9_U64_Init(algo::LnumStr9_U64& parent);
 // func:algo.LnumStr9_U64..Eq
-bool                 LnumStr9_U64_Eq(const algo::LnumStr9_U64& lhs, const algo::LnumStr9_U64& rhs) __attribute__((nothrow));
+bool                 LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) __attribute__((nothrow));
 // func:algo.LnumStr9_U64..EqStrptr
 bool                 LnumStr9_U64_EqStrptr(const algo::LnumStr9_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4540,14 +4580,14 @@ u32                  LspaceStr10_Hash(u32 prev, const algo::LspaceStr10 & rhs) _
 // Read fields of algo::LspaceStr10 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr10's only field
 // func:algo.LspaceStr10..ReadStrptrMaybe
-bool                 LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr in_str);
+bool                 LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr10..Cmp
 i32                  LspaceStr10_Cmp(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr10..Init
 void                 LspaceStr10_Init(algo::LspaceStr10& parent);
 // func:algo.LspaceStr10..Eq
-bool                 LspaceStr10_Eq(const algo::LspaceStr10& lhs, const algo::LspaceStr10& rhs) __attribute__((nothrow));
+bool                 LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr10..EqStrptr
 bool                 LspaceStr10_EqStrptr(const algo::LspaceStr10& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4607,14 +4647,14 @@ u32                  LspaceStr12_Hash(u32 prev, const algo::LspaceStr12 & rhs) _
 // Read fields of algo::LspaceStr12 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr12's only field
 // func:algo.LspaceStr12..ReadStrptrMaybe
-bool                 LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr in_str);
+bool                 LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr12..Cmp
 i32                  LspaceStr12_Cmp(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr12..Init
 void                 LspaceStr12_Init(algo::LspaceStr12& parent);
 // func:algo.LspaceStr12..Eq
-bool                 LspaceStr12_Eq(const algo::LspaceStr12& lhs, const algo::LspaceStr12& rhs) __attribute__((nothrow));
+bool                 LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr12..EqStrptr
 bool                 LspaceStr12_EqStrptr(const algo::LspaceStr12& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4674,14 +4714,14 @@ u32                  LspaceStr14_Hash(u32 prev, const algo::LspaceStr14 & rhs) _
 // Read fields of algo::LspaceStr14 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr14's only field
 // func:algo.LspaceStr14..ReadStrptrMaybe
-bool                 LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr in_str);
+bool                 LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr14..Cmp
 i32                  LspaceStr14_Cmp(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr14..Init
 void                 LspaceStr14_Init(algo::LspaceStr14& parent);
 // func:algo.LspaceStr14..Eq
-bool                 LspaceStr14_Eq(const algo::LspaceStr14& lhs, const algo::LspaceStr14& rhs) __attribute__((nothrow));
+bool                 LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr14..EqStrptr
 bool                 LspaceStr14_EqStrptr(const algo::LspaceStr14& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4741,14 +4781,14 @@ u32                  LspaceStr15_Hash(u32 prev, const algo::LspaceStr15 & rhs) _
 // Read fields of algo::LspaceStr15 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr15's only field
 // func:algo.LspaceStr15..ReadStrptrMaybe
-bool                 LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr in_str);
+bool                 LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr15..Cmp
 i32                  LspaceStr15_Cmp(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr15..Init
 void                 LspaceStr15_Init(algo::LspaceStr15& parent);
 // func:algo.LspaceStr15..Eq
-bool                 LspaceStr15_Eq(const algo::LspaceStr15& lhs, const algo::LspaceStr15& rhs) __attribute__((nothrow));
+bool                 LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr15..EqStrptr
 bool                 LspaceStr15_EqStrptr(const algo::LspaceStr15& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4826,14 +4866,14 @@ u32                  LspaceStr20_I64_Hash(u32 prev, const algo::LspaceStr20_I64 
 // Read fields of algo::LspaceStr20_I64 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr20_I64's only field
 // func:algo.LspaceStr20_I64..ReadStrptrMaybe
-bool                 LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::strptr in_str);
+bool                 LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr20_I64..Cmp
 i32                  LspaceStr20_I64_Cmp(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr20_I64..Init
 void                 LspaceStr20_I64_Init(algo::LspaceStr20_I64& parent);
 // func:algo.LspaceStr20_I64..Eq
-bool                 LspaceStr20_I64_Eq(const algo::LspaceStr20_I64& lhs, const algo::LspaceStr20_I64& rhs) __attribute__((nothrow));
+bool                 LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr20_I64..EqStrptr
 bool                 LspaceStr20_I64_EqStrptr(const algo::LspaceStr20_I64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4913,14 +4953,14 @@ u32                  LspaceStr20_U64_Hash(u32 prev, const algo::LspaceStr20_U64 
 // Read fields of algo::LspaceStr20_U64 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr20_U64's only field
 // func:algo.LspaceStr20_U64..ReadStrptrMaybe
-bool                 LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::strptr in_str);
+bool                 LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr20_U64..Cmp
 i32                  LspaceStr20_U64_Cmp(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr20_U64..Init
 void                 LspaceStr20_U64_Init(algo::LspaceStr20_U64& parent);
 // func:algo.LspaceStr20_U64..Eq
-bool                 LspaceStr20_U64_Eq(const algo::LspaceStr20_U64& lhs, const algo::LspaceStr20_U64& rhs) __attribute__((nothrow));
+bool                 LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr20_U64..EqStrptr
 bool                 LspaceStr20_U64_EqStrptr(const algo::LspaceStr20_U64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4980,14 +5020,14 @@ u32                  LspaceStr3_Hash(u32 prev, const algo::LspaceStr3 & rhs) __a
 // Read fields of algo::LspaceStr3 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr3's only field
 // func:algo.LspaceStr3..ReadStrptrMaybe
-bool                 LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_str);
+bool                 LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr3..Cmp
 i32                  LspaceStr3_Cmp(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr3..Init
 void                 LspaceStr3_Init(algo::LspaceStr3& parent);
 // func:algo.LspaceStr3..Eq
-bool                 LspaceStr3_Eq(const algo::LspaceStr3& lhs, const algo::LspaceStr3& rhs) __attribute__((nothrow));
+bool                 LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr3..EqStrptr
 bool                 LspaceStr3_EqStrptr(const algo::LspaceStr3& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5067,14 +5107,14 @@ u32                  LspaceStr3_I16_Hash(u32 prev, const algo::LspaceStr3_I16 & 
 // Read fields of algo::LspaceStr3_I16 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr3_I16's only field
 // func:algo.LspaceStr3_I16..ReadStrptrMaybe
-bool                 LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::strptr in_str);
+bool                 LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr3_I16..Cmp
 i32                  LspaceStr3_I16_Cmp(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr3_I16..Init
 void                 LspaceStr3_I16_Init(algo::LspaceStr3_I16& parent);
 // func:algo.LspaceStr3_I16..Eq
-bool                 LspaceStr3_I16_Eq(const algo::LspaceStr3_I16& lhs, const algo::LspaceStr3_I16& rhs) __attribute__((nothrow));
+bool                 LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr3_I16..EqStrptr
 bool                 LspaceStr3_I16_EqStrptr(const algo::LspaceStr3_I16& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5134,14 +5174,14 @@ u32                  LspaceStr4_Hash(u32 prev, const algo::LspaceStr4 & rhs) __a
 // Read fields of algo::LspaceStr4 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr4's only field
 // func:algo.LspaceStr4..ReadStrptrMaybe
-bool                 LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_str);
+bool                 LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr4..Cmp
 i32                  LspaceStr4_Cmp(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr4..Init
 void                 LspaceStr4_Init(algo::LspaceStr4& parent);
 // func:algo.LspaceStr4..Eq
-bool                 LspaceStr4_Eq(const algo::LspaceStr4& lhs, const algo::LspaceStr4& rhs) __attribute__((nothrow));
+bool                 LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr4..EqStrptr
 bool                 LspaceStr4_EqStrptr(const algo::LspaceStr4& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5201,14 +5241,14 @@ u32                  LspaceStr5_Hash(u32 prev, const algo::LspaceStr5 & rhs) __a
 // Read fields of algo::LspaceStr5 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr5's only field
 // func:algo.LspaceStr5..ReadStrptrMaybe
-bool                 LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_str);
+bool                 LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr5..Cmp
 i32                  LspaceStr5_Cmp(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr5..Init
 void                 LspaceStr5_Init(algo::LspaceStr5& parent);
 // func:algo.LspaceStr5..Eq
-bool                 LspaceStr5_Eq(const algo::LspaceStr5& lhs, const algo::LspaceStr5& rhs) __attribute__((nothrow));
+bool                 LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr5..EqStrptr
 bool                 LspaceStr5_EqStrptr(const algo::LspaceStr5& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5288,14 +5328,14 @@ u32                  LspaceStr5_I16_Hash(u32 prev, const algo::LspaceStr5_I16 & 
 // Read fields of algo::LspaceStr5_I16 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr5_I16's only field
 // func:algo.LspaceStr5_I16..ReadStrptrMaybe
-bool                 LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::strptr in_str);
+bool                 LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16..Cmp
 i32                  LspaceStr5_I16_Cmp(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr5_I16..Init
 void                 LspaceStr5_I16_Init(algo::LspaceStr5_I16& parent);
 // func:algo.LspaceStr5_I16..Eq
-bool                 LspaceStr5_I16_Eq(const algo::LspaceStr5_I16& lhs, const algo::LspaceStr5_I16& rhs) __attribute__((nothrow));
+bool                 LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16..EqStrptr
 bool                 LspaceStr5_I16_EqStrptr(const algo::LspaceStr5_I16& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5355,14 +5395,14 @@ u32                  LspaceStr6_Hash(u32 prev, const algo::LspaceStr6 & rhs) __a
 // Read fields of algo::LspaceStr6 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr6's only field
 // func:algo.LspaceStr6..ReadStrptrMaybe
-bool                 LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_str);
+bool                 LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr6..Cmp
 i32                  LspaceStr6_Cmp(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr6..Init
 void                 LspaceStr6_Init(algo::LspaceStr6& parent);
 // func:algo.LspaceStr6..Eq
-bool                 LspaceStr6_Eq(const algo::LspaceStr6& lhs, const algo::LspaceStr6& rhs) __attribute__((nothrow));
+bool                 LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr6..EqStrptr
 bool                 LspaceStr6_EqStrptr(const algo::LspaceStr6& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5440,14 +5480,14 @@ u32                  LspaceStr6_U32_Hash(u32 prev, const algo::LspaceStr6_U32 & 
 // Read fields of algo::LspaceStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr6_U32's only field
 // func:algo.LspaceStr6_U32..ReadStrptrMaybe
-bool                 LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::strptr in_str);
+bool                 LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr6_U32..Cmp
 i32                  LspaceStr6_U32_Cmp(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr6_U32..Init
 void                 LspaceStr6_U32_Init(algo::LspaceStr6_U32& parent);
 // func:algo.LspaceStr6_U32..Eq
-bool                 LspaceStr6_U32_Eq(const algo::LspaceStr6_U32& lhs, const algo::LspaceStr6_U32& rhs) __attribute__((nothrow));
+bool                 LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr6_U32..EqStrptr
 bool                 LspaceStr6_U32_EqStrptr(const algo::LspaceStr6_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5525,14 +5565,14 @@ u32                  LspaceStr7_I32_Base36_Hash(u32 prev, const algo::LspaceStr7
 // Read fields of algo::LspaceStr7_I32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr7_I32_Base36's only field
 // func:algo.LspaceStr7_I32_Base36..ReadStrptrMaybe
-bool                 LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &parent, algo::strptr in_str);
+bool                 LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr7_I32_Base36..Cmp
 i32                  LspaceStr7_I32_Base36_Cmp(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr7_I32_Base36..Init
 void                 LspaceStr7_I32_Base36_Init(algo::LspaceStr7_I32_Base36& parent);
 // func:algo.LspaceStr7_I32_Base36..Eq
-bool                 LspaceStr7_I32_Base36_Eq(const algo::LspaceStr7_I32_Base36& lhs, const algo::LspaceStr7_I32_Base36& rhs) __attribute__((nothrow));
+bool                 LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr7_I32_Base36..EqStrptr
 bool                 LspaceStr7_I32_Base36_EqStrptr(const algo::LspaceStr7_I32_Base36& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5592,14 +5632,14 @@ u32                  LspaceStr8_Hash(u32 prev, const algo::LspaceStr8 & rhs) __a
 // Read fields of algo::LspaceStr8 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr8's only field
 // func:algo.LspaceStr8..ReadStrptrMaybe
-bool                 LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_str);
+bool                 LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr8..Cmp
 i32                  LspaceStr8_Cmp(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr8..Init
 void                 LspaceStr8_Init(algo::LspaceStr8& parent);
 // func:algo.LspaceStr8..Eq
-bool                 LspaceStr8_Eq(const algo::LspaceStr8& lhs, const algo::LspaceStr8& rhs) __attribute__((nothrow));
+bool                 LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr8..EqStrptr
 bool                 LspaceStr8_EqStrptr(const algo::LspaceStr8& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5659,14 +5699,14 @@ u32                  LspaceStr9_Hash(u32 prev, const algo::LspaceStr9 & rhs) __a
 // Read fields of algo::LspaceStr9 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr9's only field
 // func:algo.LspaceStr9..ReadStrptrMaybe
-bool                 LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_str);
+bool                 LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.LspaceStr9..Cmp
 i32                  LspaceStr9_Cmp(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.LspaceStr9..Init
 void                 LspaceStr9_Init(algo::LspaceStr9& parent);
 // func:algo.LspaceStr9..Eq
-bool                 LspaceStr9_Eq(const algo::LspaceStr9& lhs, const algo::LspaceStr9& rhs) __attribute__((nothrow));
+bool                 LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) __attribute__((nothrow));
 // func:algo.LspaceStr9..EqStrptr
 bool                 LspaceStr9_EqStrptr(const algo::LspaceStr9& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5702,9 +5742,10 @@ void                 value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8
 // 'quick' Access row by row id. No bounds checking in release.
 // func:algo.Md5Digest.value.qFind
 u8&                  value_qFind(algo::Md5Digest& parent, u64 t) __attribute__((nothrow));
-// Convert value to a string. Parent's separator is used.
+// Convert value to a string.
+// Array is printed as a regular string.
 // func:algo.Md5Digest.value.Print
-void                 value_Print(algo::Md5Digest& parent, algo::cstring &lhs) __attribute__((nothrow));
+void                 value_Print(algo::Md5Digest& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
 // func:algo.Md5Digest.value.ReadStrptrMaybe
@@ -5725,7 +5766,7 @@ u8&                  Md5Digest_value_curs_Access(Md5Digest_value_curs &curs) __a
 // Read fields of algo::Md5Digest from an ascii string.
 // The format of the string is the format of the algo::Md5Digest's only field
 // func:algo.Md5Digest..ReadStrptrMaybe
-bool                 Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_str);
+bool                 Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Md5Digest..Init
 void                 Md5Digest_Init(algo::Md5Digest& parent);
@@ -5773,7 +5814,7 @@ bool                 value_ReadStrptrMaybe(algo::Month& parent, algo::strptr rhs
 // Read fields of algo::Month from an ascii string.
 // The format of the string is the format of the algo::Month's only field
 // func:algo.Month..ReadStrptrMaybe
-bool                 Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str);
+bool                 Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Month..Init
 void                 Month_Init(algo::Month& parent);
@@ -5840,7 +5881,7 @@ void                 hex_Set(algo::NumParseFlags& parent, bool rhs) __attribute_
 bool                 NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of algo::NumParseFlags from an ascii string.
 // func:algo.NumParseFlags..ReadStrptrMaybe
-bool                 NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str);
+bool                 NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.NumParseFlags..Init
 void                 NumParseFlags_Init(algo::NumParseFlags& parent);
@@ -5919,7 +5960,7 @@ u32                  RnullStr1_Hash(u32 prev, algo::RnullStr1 rhs) __attribute__
 // Read fields of algo::RnullStr1 from an ascii string.
 // The format of the string is the format of the algo::RnullStr1's only field
 // func:algo.RnullStr1..ReadStrptrMaybe
-bool                 RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_str);
+bool                 RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr1..Lt
 bool                 RnullStr1_Lt(algo::RnullStr1 lhs, algo::RnullStr1 rhs) __attribute__((nothrow));
 // func:algo.RnullStr1..Cmp
@@ -5995,7 +6036,7 @@ u32                  RnullStr10_Hash(u32 prev, algo::RnullStr10 rhs) __attribute
 // Read fields of algo::RnullStr10 from an ascii string.
 // The format of the string is the format of the algo::RnullStr10's only field
 // func:algo.RnullStr10..ReadStrptrMaybe
-bool                 RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_str);
+bool                 RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr10..Lt
 bool                 RnullStr10_Lt(algo::RnullStr10 lhs, algo::RnullStr10 rhs) __attribute__((nothrow));
 // func:algo.RnullStr10..Cmp
@@ -6064,7 +6105,7 @@ u32                  RnullStr100_Hash(u32 prev, const algo::RnullStr100 & rhs) _
 // Read fields of algo::RnullStr100 from an ascii string.
 // The format of the string is the format of the algo::RnullStr100's only field
 // func:algo.RnullStr100..ReadStrptrMaybe
-bool                 RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr in_str);
+bool                 RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr100..Lt
 bool                 RnullStr100_Lt(algo::RnullStr100& lhs, algo::RnullStr100& rhs) __attribute__((nothrow));
 // func:algo.RnullStr100..Cmp
@@ -6073,7 +6114,7 @@ i32                  RnullStr100_Cmp(algo::RnullStr100& lhs, algo::RnullStr100& 
 // func:algo.RnullStr100..Init
 void                 RnullStr100_Init(algo::RnullStr100& parent);
 // func:algo.RnullStr100..Eq
-bool                 RnullStr100_Eq(const algo::RnullStr100& lhs, const algo::RnullStr100& rhs) __attribute__((nothrow));
+bool                 RnullStr100_Eq(algo::RnullStr100& lhs, algo::RnullStr100& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr100..Update
 bool                 RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& rhs) __attribute__((nothrow));
@@ -6140,7 +6181,7 @@ u32                  RnullStr1000_Hash(u32 prev, const algo::RnullStr1000 & rhs)
 // Read fields of algo::RnullStr1000 from an ascii string.
 // The format of the string is the format of the algo::RnullStr1000's only field
 // func:algo.RnullStr1000..ReadStrptrMaybe
-bool                 RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr in_str);
+bool                 RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr1000..Lt
 bool                 RnullStr1000_Lt(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) __attribute__((nothrow));
 // func:algo.RnullStr1000..Cmp
@@ -6149,7 +6190,7 @@ i32                  RnullStr1000_Cmp(algo::RnullStr1000& lhs, algo::RnullStr100
 // func:algo.RnullStr1000..Init
 void                 RnullStr1000_Init(algo::RnullStr1000& parent);
 // func:algo.RnullStr1000..Eq
-bool                 RnullStr1000_Eq(const algo::RnullStr1000& lhs, const algo::RnullStr1000& rhs) __attribute__((nothrow));
+bool                 RnullStr1000_Eq(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr1000..Update
 bool                 RnullStr1000_Update(algo::RnullStr1000 &lhs, algo::RnullStr1000& rhs) __attribute__((nothrow));
@@ -6216,7 +6257,7 @@ u32                  RnullStr11_Hash(u32 prev, const algo::RnullStr11 & rhs) __a
 // Read fields of algo::RnullStr11 from an ascii string.
 // The format of the string is the format of the algo::RnullStr11's only field
 // func:algo.RnullStr11..ReadStrptrMaybe
-bool                 RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_str);
+bool                 RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr11..Lt
 bool                 RnullStr11_Lt(algo::RnullStr11& lhs, algo::RnullStr11& rhs) __attribute__((nothrow));
 // func:algo.RnullStr11..Cmp
@@ -6225,7 +6266,7 @@ i32                  RnullStr11_Cmp(algo::RnullStr11& lhs, algo::RnullStr11& rhs
 // func:algo.RnullStr11..Init
 void                 RnullStr11_Init(algo::RnullStr11& parent);
 // func:algo.RnullStr11..Eq
-bool                 RnullStr11_Eq(const algo::RnullStr11& lhs, const algo::RnullStr11& rhs) __attribute__((nothrow));
+bool                 RnullStr11_Eq(algo::RnullStr11& lhs, algo::RnullStr11& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr11..Update
 bool                 RnullStr11_Update(algo::RnullStr11 &lhs, algo::RnullStr11& rhs) __attribute__((nothrow));
@@ -6292,7 +6333,7 @@ u32                  RnullStr12_Hash(u32 prev, const algo::RnullStr12 & rhs) __a
 // Read fields of algo::RnullStr12 from an ascii string.
 // The format of the string is the format of the algo::RnullStr12's only field
 // func:algo.RnullStr12..ReadStrptrMaybe
-bool                 RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_str);
+bool                 RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr12..Lt
 bool                 RnullStr12_Lt(algo::RnullStr12& lhs, algo::RnullStr12& rhs) __attribute__((nothrow));
 // func:algo.RnullStr12..Cmp
@@ -6301,7 +6342,7 @@ i32                  RnullStr12_Cmp(algo::RnullStr12& lhs, algo::RnullStr12& rhs
 // func:algo.RnullStr12..Init
 void                 RnullStr12_Init(algo::RnullStr12& parent);
 // func:algo.RnullStr12..Eq
-bool                 RnullStr12_Eq(const algo::RnullStr12& lhs, const algo::RnullStr12& rhs) __attribute__((nothrow));
+bool                 RnullStr12_Eq(algo::RnullStr12& lhs, algo::RnullStr12& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr12..Update
 bool                 RnullStr12_Update(algo::RnullStr12 &lhs, algo::RnullStr12& rhs) __attribute__((nothrow));
@@ -6368,7 +6409,7 @@ u32                  RnullStr129_Hash(u32 prev, const algo::RnullStr129 & rhs) _
 // Read fields of algo::RnullStr129 from an ascii string.
 // The format of the string is the format of the algo::RnullStr129's only field
 // func:algo.RnullStr129..ReadStrptrMaybe
-bool                 RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr in_str);
+bool                 RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr129..Lt
 bool                 RnullStr129_Lt(algo::RnullStr129& lhs, algo::RnullStr129& rhs) __attribute__((nothrow));
 // func:algo.RnullStr129..Cmp
@@ -6377,7 +6418,7 @@ i32                  RnullStr129_Cmp(algo::RnullStr129& lhs, algo::RnullStr129& 
 // func:algo.RnullStr129..Init
 void                 RnullStr129_Init(algo::RnullStr129& parent);
 // func:algo.RnullStr129..Eq
-bool                 RnullStr129_Eq(const algo::RnullStr129& lhs, const algo::RnullStr129& rhs) __attribute__((nothrow));
+bool                 RnullStr129_Eq(algo::RnullStr129& lhs, algo::RnullStr129& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr129..Update
 bool                 RnullStr129_Update(algo::RnullStr129 &lhs, algo::RnullStr129& rhs) __attribute__((nothrow));
@@ -6444,7 +6485,7 @@ u32                  RnullStr13_Hash(u32 prev, const algo::RnullStr13 & rhs) __a
 // Read fields of algo::RnullStr13 from an ascii string.
 // The format of the string is the format of the algo::RnullStr13's only field
 // func:algo.RnullStr13..ReadStrptrMaybe
-bool                 RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_str);
+bool                 RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr13..Lt
 bool                 RnullStr13_Lt(algo::RnullStr13& lhs, algo::RnullStr13& rhs) __attribute__((nothrow));
 // func:algo.RnullStr13..Cmp
@@ -6453,7 +6494,7 @@ i32                  RnullStr13_Cmp(algo::RnullStr13& lhs, algo::RnullStr13& rhs
 // func:algo.RnullStr13..Init
 void                 RnullStr13_Init(algo::RnullStr13& parent);
 // func:algo.RnullStr13..Eq
-bool                 RnullStr13_Eq(const algo::RnullStr13& lhs, const algo::RnullStr13& rhs) __attribute__((nothrow));
+bool                 RnullStr13_Eq(algo::RnullStr13& lhs, algo::RnullStr13& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr13..Update
 bool                 RnullStr13_Update(algo::RnullStr13 &lhs, algo::RnullStr13& rhs) __attribute__((nothrow));
@@ -6520,7 +6561,7 @@ u32                  RnullStr14_Hash(u32 prev, const algo::RnullStr14 & rhs) __a
 // Read fields of algo::RnullStr14 from an ascii string.
 // The format of the string is the format of the algo::RnullStr14's only field
 // func:algo.RnullStr14..ReadStrptrMaybe
-bool                 RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_str);
+bool                 RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr14..Lt
 bool                 RnullStr14_Lt(algo::RnullStr14& lhs, algo::RnullStr14& rhs) __attribute__((nothrow));
 // func:algo.RnullStr14..Cmp
@@ -6529,7 +6570,7 @@ i32                  RnullStr14_Cmp(algo::RnullStr14& lhs, algo::RnullStr14& rhs
 // func:algo.RnullStr14..Init
 void                 RnullStr14_Init(algo::RnullStr14& parent);
 // func:algo.RnullStr14..Eq
-bool                 RnullStr14_Eq(const algo::RnullStr14& lhs, const algo::RnullStr14& rhs) __attribute__((nothrow));
+bool                 RnullStr14_Eq(algo::RnullStr14& lhs, algo::RnullStr14& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr14..Update
 bool                 RnullStr14_Update(algo::RnullStr14 &lhs, algo::RnullStr14& rhs) __attribute__((nothrow));
@@ -6596,7 +6637,7 @@ u32                  RnullStr15_Hash(u32 prev, const algo::RnullStr15 & rhs) __a
 // Read fields of algo::RnullStr15 from an ascii string.
 // The format of the string is the format of the algo::RnullStr15's only field
 // func:algo.RnullStr15..ReadStrptrMaybe
-bool                 RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_str);
+bool                 RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr15..Lt
 bool                 RnullStr15_Lt(algo::RnullStr15& lhs, algo::RnullStr15& rhs) __attribute__((nothrow));
 // func:algo.RnullStr15..Cmp
@@ -6605,7 +6646,7 @@ i32                  RnullStr15_Cmp(algo::RnullStr15& lhs, algo::RnullStr15& rhs
 // func:algo.RnullStr15..Init
 void                 RnullStr15_Init(algo::RnullStr15& parent);
 // func:algo.RnullStr15..Eq
-bool                 RnullStr15_Eq(const algo::RnullStr15& lhs, const algo::RnullStr15& rhs) __attribute__((nothrow));
+bool                 RnullStr15_Eq(algo::RnullStr15& lhs, algo::RnullStr15& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr15..Update
 bool                 RnullStr15_Update(algo::RnullStr15 &lhs, algo::RnullStr15& rhs) __attribute__((nothrow));
@@ -6672,7 +6713,7 @@ u32                  RnullStr151_Hash(u32 prev, const algo::RnullStr151 & rhs) _
 // Read fields of algo::RnullStr151 from an ascii string.
 // The format of the string is the format of the algo::RnullStr151's only field
 // func:algo.RnullStr151..ReadStrptrMaybe
-bool                 RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr in_str);
+bool                 RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr151..Lt
 bool                 RnullStr151_Lt(algo::RnullStr151& lhs, algo::RnullStr151& rhs) __attribute__((nothrow));
 // func:algo.RnullStr151..Cmp
@@ -6681,7 +6722,7 @@ i32                  RnullStr151_Cmp(algo::RnullStr151& lhs, algo::RnullStr151& 
 // func:algo.RnullStr151..Init
 void                 RnullStr151_Init(algo::RnullStr151& parent);
 // func:algo.RnullStr151..Eq
-bool                 RnullStr151_Eq(const algo::RnullStr151& lhs, const algo::RnullStr151& rhs) __attribute__((nothrow));
+bool                 RnullStr151_Eq(algo::RnullStr151& lhs, algo::RnullStr151& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr151..Update
 bool                 RnullStr151_Update(algo::RnullStr151 &lhs, algo::RnullStr151& rhs) __attribute__((nothrow));
@@ -6741,7 +6782,7 @@ u32                  RnullStr16_Hash(u32 prev, algo::RnullStr16 rhs) __attribute
 // Read fields of algo::RnullStr16 from an ascii string.
 // The format of the string is the format of the algo::RnullStr16's only field
 // func:algo.RnullStr16..ReadStrptrMaybe
-bool                 RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_str);
+bool                 RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr16..Lt
 bool                 RnullStr16_Lt(algo::RnullStr16 lhs, algo::RnullStr16 rhs) __attribute__((nothrow));
 // func:algo.RnullStr16..Cmp
@@ -6817,7 +6858,7 @@ u32                  RnullStr17_Hash(u32 prev, const algo::RnullStr17 & rhs) __a
 // Read fields of algo::RnullStr17 from an ascii string.
 // The format of the string is the format of the algo::RnullStr17's only field
 // func:algo.RnullStr17..ReadStrptrMaybe
-bool                 RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_str);
+bool                 RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr17..Lt
 bool                 RnullStr17_Lt(algo::RnullStr17& lhs, algo::RnullStr17& rhs) __attribute__((nothrow));
 // func:algo.RnullStr17..Cmp
@@ -6826,7 +6867,7 @@ i32                  RnullStr17_Cmp(algo::RnullStr17& lhs, algo::RnullStr17& rhs
 // func:algo.RnullStr17..Init
 void                 RnullStr17_Init(algo::RnullStr17& parent);
 // func:algo.RnullStr17..Eq
-bool                 RnullStr17_Eq(const algo::RnullStr17& lhs, const algo::RnullStr17& rhs) __attribute__((nothrow));
+bool                 RnullStr17_Eq(algo::RnullStr17& lhs, algo::RnullStr17& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr17..Update
 bool                 RnullStr17_Update(algo::RnullStr17 &lhs, algo::RnullStr17& rhs) __attribute__((nothrow));
@@ -6893,7 +6934,7 @@ u32                  RnullStr18_Hash(u32 prev, algo::RnullStr18 rhs) __attribute
 // Read fields of algo::RnullStr18 from an ascii string.
 // The format of the string is the format of the algo::RnullStr18's only field
 // func:algo.RnullStr18..ReadStrptrMaybe
-bool                 RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_str);
+bool                 RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr18..Lt
 bool                 RnullStr18_Lt(algo::RnullStr18 lhs, algo::RnullStr18 rhs) __attribute__((nothrow));
 // func:algo.RnullStr18..Cmp
@@ -6962,7 +7003,7 @@ u32                  RnullStr19_Hash(u32 prev, const algo::RnullStr19 & rhs) __a
 // Read fields of algo::RnullStr19 from an ascii string.
 // The format of the string is the format of the algo::RnullStr19's only field
 // func:algo.RnullStr19..ReadStrptrMaybe
-bool                 RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_str);
+bool                 RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr19..Lt
 bool                 RnullStr19_Lt(algo::RnullStr19& lhs, algo::RnullStr19& rhs) __attribute__((nothrow));
 // func:algo.RnullStr19..Cmp
@@ -6971,7 +7012,7 @@ i32                  RnullStr19_Cmp(algo::RnullStr19& lhs, algo::RnullStr19& rhs
 // func:algo.RnullStr19..Init
 void                 RnullStr19_Init(algo::RnullStr19& parent);
 // func:algo.RnullStr19..Eq
-bool                 RnullStr19_Eq(const algo::RnullStr19& lhs, const algo::RnullStr19& rhs) __attribute__((nothrow));
+bool                 RnullStr19_Eq(algo::RnullStr19& lhs, algo::RnullStr19& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr19..Update
 bool                 RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs) __attribute__((nothrow));
@@ -7038,7 +7079,7 @@ u32                  RnullStr2_Hash(u32 prev, algo::RnullStr2 rhs) __attribute__
 // Read fields of algo::RnullStr2 from an ascii string.
 // The format of the string is the format of the algo::RnullStr2's only field
 // func:algo.RnullStr2..ReadStrptrMaybe
-bool                 RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_str);
+bool                 RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr2..Lt
 bool                 RnullStr2_Lt(algo::RnullStr2 lhs, algo::RnullStr2 rhs) __attribute__((nothrow));
 // func:algo.RnullStr2..Cmp
@@ -7114,7 +7155,7 @@ u32                  RnullStr20_Hash(u32 prev, algo::RnullStr20 rhs) __attribute
 // Read fields of algo::RnullStr20 from an ascii string.
 // The format of the string is the format of the algo::RnullStr20's only field
 // func:algo.RnullStr20..ReadStrptrMaybe
-bool                 RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_str);
+bool                 RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr20..Lt
 bool                 RnullStr20_Lt(algo::RnullStr20 lhs, algo::RnullStr20 rhs) __attribute__((nothrow));
 // func:algo.RnullStr20..Cmp
@@ -7183,7 +7224,7 @@ u32                  RnullStr21_Hash(u32 prev, const algo::RnullStr21 & rhs) __a
 // Read fields of algo::RnullStr21 from an ascii string.
 // The format of the string is the format of the algo::RnullStr21's only field
 // func:algo.RnullStr21..ReadStrptrMaybe
-bool                 RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_str);
+bool                 RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr21..Lt
 bool                 RnullStr21_Lt(algo::RnullStr21& lhs, algo::RnullStr21& rhs) __attribute__((nothrow));
 // func:algo.RnullStr21..Cmp
@@ -7192,7 +7233,7 @@ i32                  RnullStr21_Cmp(algo::RnullStr21& lhs, algo::RnullStr21& rhs
 // func:algo.RnullStr21..Init
 void                 RnullStr21_Init(algo::RnullStr21& parent);
 // func:algo.RnullStr21..Eq
-bool                 RnullStr21_Eq(const algo::RnullStr21& lhs, const algo::RnullStr21& rhs) __attribute__((nothrow));
+bool                 RnullStr21_Eq(algo::RnullStr21& lhs, algo::RnullStr21& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr21..Update
 bool                 RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs) __attribute__((nothrow));
@@ -7259,7 +7300,7 @@ u32                  RnullStr24_Hash(u32 prev, const algo::RnullStr24 & rhs) __a
 // Read fields of algo::RnullStr24 from an ascii string.
 // The format of the string is the format of the algo::RnullStr24's only field
 // func:algo.RnullStr24..ReadStrptrMaybe
-bool                 RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_str);
+bool                 RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr24..Lt
 bool                 RnullStr24_Lt(algo::RnullStr24& lhs, algo::RnullStr24& rhs) __attribute__((nothrow));
 // func:algo.RnullStr24..Cmp
@@ -7268,7 +7309,7 @@ i32                  RnullStr24_Cmp(algo::RnullStr24& lhs, algo::RnullStr24& rhs
 // func:algo.RnullStr24..Init
 void                 RnullStr24_Init(algo::RnullStr24& parent);
 // func:algo.RnullStr24..Eq
-bool                 RnullStr24_Eq(const algo::RnullStr24& lhs, const algo::RnullStr24& rhs) __attribute__((nothrow));
+bool                 RnullStr24_Eq(algo::RnullStr24& lhs, algo::RnullStr24& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr24..Update
 bool                 RnullStr24_Update(algo::RnullStr24 &lhs, algo::RnullStr24& rhs) __attribute__((nothrow));
@@ -7335,7 +7376,7 @@ u32                  RnullStr25_Hash(u32 prev, const algo::RnullStr25 & rhs) __a
 // Read fields of algo::RnullStr25 from an ascii string.
 // The format of the string is the format of the algo::RnullStr25's only field
 // func:algo.RnullStr25..ReadStrptrMaybe
-bool                 RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_str);
+bool                 RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr25..Lt
 bool                 RnullStr25_Lt(algo::RnullStr25& lhs, algo::RnullStr25& rhs) __attribute__((nothrow));
 // func:algo.RnullStr25..Cmp
@@ -7344,7 +7385,7 @@ i32                  RnullStr25_Cmp(algo::RnullStr25& lhs, algo::RnullStr25& rhs
 // func:algo.RnullStr25..Init
 void                 RnullStr25_Init(algo::RnullStr25& parent);
 // func:algo.RnullStr25..Eq
-bool                 RnullStr25_Eq(const algo::RnullStr25& lhs, const algo::RnullStr25& rhs) __attribute__((nothrow));
+bool                 RnullStr25_Eq(algo::RnullStr25& lhs, algo::RnullStr25& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr25..Update
 bool                 RnullStr25_Update(algo::RnullStr25 &lhs, algo::RnullStr25& rhs) __attribute__((nothrow));
@@ -7411,7 +7452,7 @@ u32                  RnullStr28_Hash(u32 prev, const algo::RnullStr28 & rhs) __a
 // Read fields of algo::RnullStr28 from an ascii string.
 // The format of the string is the format of the algo::RnullStr28's only field
 // func:algo.RnullStr28..ReadStrptrMaybe
-bool                 RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_str);
+bool                 RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr28..Lt
 bool                 RnullStr28_Lt(algo::RnullStr28& lhs, algo::RnullStr28& rhs) __attribute__((nothrow));
 // func:algo.RnullStr28..Cmp
@@ -7420,7 +7461,7 @@ i32                  RnullStr28_Cmp(algo::RnullStr28& lhs, algo::RnullStr28& rhs
 // func:algo.RnullStr28..Init
 void                 RnullStr28_Init(algo::RnullStr28& parent);
 // func:algo.RnullStr28..Eq
-bool                 RnullStr28_Eq(const algo::RnullStr28& lhs, const algo::RnullStr28& rhs) __attribute__((nothrow));
+bool                 RnullStr28_Eq(algo::RnullStr28& lhs, algo::RnullStr28& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr28..Update
 bool                 RnullStr28_Update(algo::RnullStr28 &lhs, algo::RnullStr28& rhs) __attribute__((nothrow));
@@ -7487,7 +7528,7 @@ u32                  RnullStr3_Hash(u32 prev, algo::RnullStr3 rhs) __attribute__
 // Read fields of algo::RnullStr3 from an ascii string.
 // The format of the string is the format of the algo::RnullStr3's only field
 // func:algo.RnullStr3..ReadStrptrMaybe
-bool                 RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_str);
+bool                 RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr3..Lt
 bool                 RnullStr3_Lt(algo::RnullStr3 lhs, algo::RnullStr3 rhs) __attribute__((nothrow));
 // func:algo.RnullStr3..Cmp
@@ -7556,7 +7597,7 @@ u32                  RnullStr30_Hash(u32 prev, algo::RnullStr30 rhs) __attribute
 // Read fields of algo::RnullStr30 from an ascii string.
 // The format of the string is the format of the algo::RnullStr30's only field
 // func:algo.RnullStr30..ReadStrptrMaybe
-bool                 RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_str);
+bool                 RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr30..Lt
 bool                 RnullStr30_Lt(algo::RnullStr30 lhs, algo::RnullStr30 rhs) __attribute__((nothrow));
 // func:algo.RnullStr30..Cmp
@@ -7632,7 +7673,7 @@ u32                  RnullStr32_Hash(u32 prev, algo::RnullStr32 rhs) __attribute
 // Read fields of algo::RnullStr32 from an ascii string.
 // The format of the string is the format of the algo::RnullStr32's only field
 // func:algo.RnullStr32..ReadStrptrMaybe
-bool                 RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_str);
+bool                 RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr32..Lt
 bool                 RnullStr32_Lt(algo::RnullStr32 lhs, algo::RnullStr32 rhs) __attribute__((nothrow));
 // func:algo.RnullStr32..Cmp
@@ -7708,7 +7749,7 @@ u32                  RnullStr33_Hash(u32 prev, const algo::RnullStr33 & rhs) __a
 // Read fields of algo::RnullStr33 from an ascii string.
 // The format of the string is the format of the algo::RnullStr33's only field
 // func:algo.RnullStr33..ReadStrptrMaybe
-bool                 RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_str);
+bool                 RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr33..Lt
 bool                 RnullStr33_Lt(algo::RnullStr33& lhs, algo::RnullStr33& rhs) __attribute__((nothrow));
 // func:algo.RnullStr33..Cmp
@@ -7717,7 +7758,7 @@ i32                  RnullStr33_Cmp(algo::RnullStr33& lhs, algo::RnullStr33& rhs
 // func:algo.RnullStr33..Init
 void                 RnullStr33_Init(algo::RnullStr33& parent);
 // func:algo.RnullStr33..Eq
-bool                 RnullStr33_Eq(const algo::RnullStr33& lhs, const algo::RnullStr33& rhs) __attribute__((nothrow));
+bool                 RnullStr33_Eq(algo::RnullStr33& lhs, algo::RnullStr33& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr33..Update
 bool                 RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& rhs) __attribute__((nothrow));
@@ -7782,7 +7823,7 @@ u32                  RnullStr35_Hash(u32 prev, const algo::RnullStr35 & rhs) __a
 // Read fields of algo::RnullStr35 from an ascii string.
 // The format of the string is the format of the algo::RnullStr35's only field
 // func:algo.RnullStr35..ReadStrptrMaybe
-bool                 RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_str);
+bool                 RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr35..Lt
 bool                 RnullStr35_Lt(algo::RnullStr35& lhs, algo::RnullStr35& rhs) __attribute__((nothrow));
 // func:algo.RnullStr35..Cmp
@@ -7791,7 +7832,7 @@ i32                  RnullStr35_Cmp(algo::RnullStr35& lhs, algo::RnullStr35& rhs
 // func:algo.RnullStr35..Init
 void                 RnullStr35_Init(algo::RnullStr35& parent);
 // func:algo.RnullStr35..Eq
-bool                 RnullStr35_Eq(const algo::RnullStr35& lhs, const algo::RnullStr35& rhs) __attribute__((nothrow));
+bool                 RnullStr35_Eq(algo::RnullStr35& lhs, algo::RnullStr35& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr35..Update
 bool                 RnullStr35_Update(algo::RnullStr35 &lhs, algo::RnullStr35& rhs) __attribute__((nothrow));
@@ -7858,7 +7899,7 @@ u32                  RnullStr36_Hash(u32 prev, const algo::RnullStr36 & rhs) __a
 // Read fields of algo::RnullStr36 from an ascii string.
 // The format of the string is the format of the algo::RnullStr36's only field
 // func:algo.RnullStr36..ReadStrptrMaybe
-bool                 RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_str);
+bool                 RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr36..Lt
 bool                 RnullStr36_Lt(algo::RnullStr36& lhs, algo::RnullStr36& rhs) __attribute__((nothrow));
 // func:algo.RnullStr36..Cmp
@@ -7867,7 +7908,7 @@ i32                  RnullStr36_Cmp(algo::RnullStr36& lhs, algo::RnullStr36& rhs
 // func:algo.RnullStr36..Init
 void                 RnullStr36_Init(algo::RnullStr36& parent);
 // func:algo.RnullStr36..Eq
-bool                 RnullStr36_Eq(const algo::RnullStr36& lhs, const algo::RnullStr36& rhs) __attribute__((nothrow));
+bool                 RnullStr36_Eq(algo::RnullStr36& lhs, algo::RnullStr36& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr36..Update
 bool                 RnullStr36_Update(algo::RnullStr36 &lhs, algo::RnullStr36& rhs) __attribute__((nothrow));
@@ -7927,7 +7968,7 @@ u32                  RnullStr4_Hash(u32 prev, algo::RnullStr4 rhs) __attribute__
 // Read fields of algo::RnullStr4 from an ascii string.
 // The format of the string is the format of the algo::RnullStr4's only field
 // func:algo.RnullStr4..ReadStrptrMaybe
-bool                 RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_str);
+bool                 RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr4..Lt
 bool                 RnullStr4_Lt(algo::RnullStr4 lhs, algo::RnullStr4 rhs) __attribute__((nothrow));
 // func:algo.RnullStr4..Cmp
@@ -8003,7 +8044,7 @@ u32                  RnullStr40_Hash(u32 prev, const algo::RnullStr40 & rhs) __a
 // Read fields of algo::RnullStr40 from an ascii string.
 // The format of the string is the format of the algo::RnullStr40's only field
 // func:algo.RnullStr40..ReadStrptrMaybe
-bool                 RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_str);
+bool                 RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr40..Lt
 bool                 RnullStr40_Lt(algo::RnullStr40& lhs, algo::RnullStr40& rhs) __attribute__((nothrow));
 // func:algo.RnullStr40..Cmp
@@ -8012,7 +8053,7 @@ i32                  RnullStr40_Cmp(algo::RnullStr40& lhs, algo::RnullStr40& rhs
 // func:algo.RnullStr40..Init
 void                 RnullStr40_Init(algo::RnullStr40& parent);
 // func:algo.RnullStr40..Eq
-bool                 RnullStr40_Eq(const algo::RnullStr40& lhs, const algo::RnullStr40& rhs) __attribute__((nothrow));
+bool                 RnullStr40_Eq(algo::RnullStr40& lhs, algo::RnullStr40& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr40..Update
 bool                 RnullStr40_Update(algo::RnullStr40 &lhs, algo::RnullStr40& rhs) __attribute__((nothrow));
@@ -8079,7 +8120,7 @@ u32                  RnullStr41_Hash(u32 prev, const algo::RnullStr41 & rhs) __a
 // Read fields of algo::RnullStr41 from an ascii string.
 // The format of the string is the format of the algo::RnullStr41's only field
 // func:algo.RnullStr41..ReadStrptrMaybe
-bool                 RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_str);
+bool                 RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr41..Lt
 bool                 RnullStr41_Lt(algo::RnullStr41& lhs, algo::RnullStr41& rhs) __attribute__((nothrow));
 // func:algo.RnullStr41..Cmp
@@ -8088,7 +8129,7 @@ i32                  RnullStr41_Cmp(algo::RnullStr41& lhs, algo::RnullStr41& rhs
 // func:algo.RnullStr41..Init
 void                 RnullStr41_Init(algo::RnullStr41& parent);
 // func:algo.RnullStr41..Eq
-bool                 RnullStr41_Eq(const algo::RnullStr41& lhs, const algo::RnullStr41& rhs) __attribute__((nothrow));
+bool                 RnullStr41_Eq(algo::RnullStr41& lhs, algo::RnullStr41& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr41..Update
 bool                 RnullStr41_Update(algo::RnullStr41 &lhs, algo::RnullStr41& rhs) __attribute__((nothrow));
@@ -8148,7 +8189,7 @@ u32                  RnullStr43_Hash(u32 prev, const algo::RnullStr43 & rhs) __a
 // Read fields of algo::RnullStr43 from an ascii string.
 // The format of the string is the format of the algo::RnullStr43's only field
 // func:algo.RnullStr43..ReadStrptrMaybe
-bool                 RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_str);
+bool                 RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr43..Lt
 bool                 RnullStr43_Lt(algo::RnullStr43& lhs, algo::RnullStr43& rhs) __attribute__((nothrow));
 // func:algo.RnullStr43..Cmp
@@ -8157,7 +8198,7 @@ i32                  RnullStr43_Cmp(algo::RnullStr43& lhs, algo::RnullStr43& rhs
 // func:algo.RnullStr43..Init
 void                 RnullStr43_Init(algo::RnullStr43& parent);
 // func:algo.RnullStr43..Eq
-bool                 RnullStr43_Eq(const algo::RnullStr43& lhs, const algo::RnullStr43& rhs) __attribute__((nothrow));
+bool                 RnullStr43_Eq(algo::RnullStr43& lhs, algo::RnullStr43& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr43..Update
 bool                 RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs) __attribute__((nothrow));
@@ -8217,7 +8258,7 @@ u32                  RnullStr44_Hash(u32 prev, const algo::RnullStr44 & rhs) __a
 // Read fields of algo::RnullStr44 from an ascii string.
 // The format of the string is the format of the algo::RnullStr44's only field
 // func:algo.RnullStr44..ReadStrptrMaybe
-bool                 RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_str);
+bool                 RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr44..Lt
 bool                 RnullStr44_Lt(algo::RnullStr44& lhs, algo::RnullStr44& rhs) __attribute__((nothrow));
 // func:algo.RnullStr44..Cmp
@@ -8226,7 +8267,7 @@ i32                  RnullStr44_Cmp(algo::RnullStr44& lhs, algo::RnullStr44& rhs
 // func:algo.RnullStr44..Init
 void                 RnullStr44_Init(algo::RnullStr44& parent);
 // func:algo.RnullStr44..Eq
-bool                 RnullStr44_Eq(const algo::RnullStr44& lhs, const algo::RnullStr44& rhs) __attribute__((nothrow));
+bool                 RnullStr44_Eq(algo::RnullStr44& lhs, algo::RnullStr44& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr44..Update
 bool                 RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs) __attribute__((nothrow));
@@ -8286,7 +8327,7 @@ u32                  RnullStr48_Hash(u32 prev, const algo::RnullStr48 & rhs) __a
 // Read fields of algo::RnullStr48 from an ascii string.
 // The format of the string is the format of the algo::RnullStr48's only field
 // func:algo.RnullStr48..ReadStrptrMaybe
-bool                 RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_str);
+bool                 RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr48..Lt
 bool                 RnullStr48_Lt(algo::RnullStr48& lhs, algo::RnullStr48& rhs) __attribute__((nothrow));
 // func:algo.RnullStr48..Cmp
@@ -8295,7 +8336,7 @@ i32                  RnullStr48_Cmp(algo::RnullStr48& lhs, algo::RnullStr48& rhs
 // func:algo.RnullStr48..Init
 void                 RnullStr48_Init(algo::RnullStr48& parent);
 // func:algo.RnullStr48..Eq
-bool                 RnullStr48_Eq(const algo::RnullStr48& lhs, const algo::RnullStr48& rhs) __attribute__((nothrow));
+bool                 RnullStr48_Eq(algo::RnullStr48& lhs, algo::RnullStr48& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr48..Update
 bool                 RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs) __attribute__((nothrow));
@@ -8355,7 +8396,7 @@ u32                  RnullStr5_Hash(u32 prev, algo::RnullStr5 rhs) __attribute__
 // Read fields of algo::RnullStr5 from an ascii string.
 // The format of the string is the format of the algo::RnullStr5's only field
 // func:algo.RnullStr5..ReadStrptrMaybe
-bool                 RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_str);
+bool                 RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr5..Lt
 bool                 RnullStr5_Lt(algo::RnullStr5 lhs, algo::RnullStr5 rhs) __attribute__((nothrow));
 // func:algo.RnullStr5..Cmp
@@ -8424,7 +8465,7 @@ u32                  RnullStr50_Hash(u32 prev, const algo::RnullStr50 & rhs) __a
 // Read fields of algo::RnullStr50 from an ascii string.
 // The format of the string is the format of the algo::RnullStr50's only field
 // func:algo.RnullStr50..ReadStrptrMaybe
-bool                 RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_str);
+bool                 RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr50..Lt
 bool                 RnullStr50_Lt(algo::RnullStr50& lhs, algo::RnullStr50& rhs) __attribute__((nothrow));
 // func:algo.RnullStr50..Cmp
@@ -8433,7 +8474,7 @@ i32                  RnullStr50_Cmp(algo::RnullStr50& lhs, algo::RnullStr50& rhs
 // func:algo.RnullStr50..Init
 void                 RnullStr50_Init(algo::RnullStr50& parent);
 // func:algo.RnullStr50..Eq
-bool                 RnullStr50_Eq(const algo::RnullStr50& lhs, const algo::RnullStr50& rhs) __attribute__((nothrow));
+bool                 RnullStr50_Eq(algo::RnullStr50& lhs, algo::RnullStr50& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr50..Update
 bool                 RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs) __attribute__((nothrow));
@@ -8500,7 +8541,7 @@ u32                  RnullStr54_Hash(u32 prev, const algo::RnullStr54 & rhs) __a
 // Read fields of algo::RnullStr54 from an ascii string.
 // The format of the string is the format of the algo::RnullStr54's only field
 // func:algo.RnullStr54..ReadStrptrMaybe
-bool                 RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_str);
+bool                 RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr54..Lt
 bool                 RnullStr54_Lt(algo::RnullStr54& lhs, algo::RnullStr54& rhs) __attribute__((nothrow));
 // func:algo.RnullStr54..Cmp
@@ -8509,7 +8550,7 @@ i32                  RnullStr54_Cmp(algo::RnullStr54& lhs, algo::RnullStr54& rhs
 // func:algo.RnullStr54..Init
 void                 RnullStr54_Init(algo::RnullStr54& parent);
 // func:algo.RnullStr54..Eq
-bool                 RnullStr54_Eq(const algo::RnullStr54& lhs, const algo::RnullStr54& rhs) __attribute__((nothrow));
+bool                 RnullStr54_Eq(algo::RnullStr54& lhs, algo::RnullStr54& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr54..Update
 bool                 RnullStr54_Update(algo::RnullStr54 &lhs, algo::RnullStr54& rhs) __attribute__((nothrow));
@@ -8569,7 +8610,7 @@ u32                  RnullStr55_Hash(u32 prev, const algo::RnullStr55 & rhs) __a
 // Read fields of algo::RnullStr55 from an ascii string.
 // The format of the string is the format of the algo::RnullStr55's only field
 // func:algo.RnullStr55..ReadStrptrMaybe
-bool                 RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_str);
+bool                 RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr55..Lt
 bool                 RnullStr55_Lt(algo::RnullStr55& lhs, algo::RnullStr55& rhs) __attribute__((nothrow));
 // func:algo.RnullStr55..Cmp
@@ -8578,7 +8619,7 @@ i32                  RnullStr55_Cmp(algo::RnullStr55& lhs, algo::RnullStr55& rhs
 // func:algo.RnullStr55..Init
 void                 RnullStr55_Init(algo::RnullStr55& parent);
 // func:algo.RnullStr55..Eq
-bool                 RnullStr55_Eq(const algo::RnullStr55& lhs, const algo::RnullStr55& rhs) __attribute__((nothrow));
+bool                 RnullStr55_Eq(algo::RnullStr55& lhs, algo::RnullStr55& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr55..Update
 bool                 RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs) __attribute__((nothrow));
@@ -8645,7 +8686,7 @@ u32                  RnullStr6_Hash(u32 prev, algo::RnullStr6 rhs) __attribute__
 // Read fields of algo::RnullStr6 from an ascii string.
 // The format of the string is the format of the algo::RnullStr6's only field
 // func:algo.RnullStr6..ReadStrptrMaybe
-bool                 RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_str);
+bool                 RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr6..Lt
 bool                 RnullStr6_Lt(algo::RnullStr6 lhs, algo::RnullStr6 rhs) __attribute__((nothrow));
 // func:algo.RnullStr6..Cmp
@@ -8721,7 +8762,7 @@ u32                  RnullStr60_Hash(u32 prev, const algo::RnullStr60 & rhs) __a
 // Read fields of algo::RnullStr60 from an ascii string.
 // The format of the string is the format of the algo::RnullStr60's only field
 // func:algo.RnullStr60..ReadStrptrMaybe
-bool                 RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_str);
+bool                 RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr60..Lt
 bool                 RnullStr60_Lt(algo::RnullStr60& lhs, algo::RnullStr60& rhs) __attribute__((nothrow));
 // func:algo.RnullStr60..Cmp
@@ -8730,7 +8771,7 @@ i32                  RnullStr60_Cmp(algo::RnullStr60& lhs, algo::RnullStr60& rhs
 // func:algo.RnullStr60..Init
 void                 RnullStr60_Init(algo::RnullStr60& parent);
 // func:algo.RnullStr60..Eq
-bool                 RnullStr60_Eq(const algo::RnullStr60& lhs, const algo::RnullStr60& rhs) __attribute__((nothrow));
+bool                 RnullStr60_Eq(algo::RnullStr60& lhs, algo::RnullStr60& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr60..Update
 bool                 RnullStr60_Update(algo::RnullStr60 &lhs, algo::RnullStr60& rhs) __attribute__((nothrow));
@@ -8797,7 +8838,7 @@ u32                  RnullStr62_Hash(u32 prev, const algo::RnullStr62 & rhs) __a
 // Read fields of algo::RnullStr62 from an ascii string.
 // The format of the string is the format of the algo::RnullStr62's only field
 // func:algo.RnullStr62..ReadStrptrMaybe
-bool                 RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_str);
+bool                 RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr62..Lt
 bool                 RnullStr62_Lt(algo::RnullStr62& lhs, algo::RnullStr62& rhs) __attribute__((nothrow));
 // func:algo.RnullStr62..Cmp
@@ -8806,7 +8847,7 @@ i32                  RnullStr62_Cmp(algo::RnullStr62& lhs, algo::RnullStr62& rhs
 // func:algo.RnullStr62..Init
 void                 RnullStr62_Init(algo::RnullStr62& parent);
 // func:algo.RnullStr62..Eq
-bool                 RnullStr62_Eq(const algo::RnullStr62& lhs, const algo::RnullStr62& rhs) __attribute__((nothrow));
+bool                 RnullStr62_Eq(algo::RnullStr62& lhs, algo::RnullStr62& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr62..Update
 bool                 RnullStr62_Update(algo::RnullStr62 &lhs, algo::RnullStr62& rhs) __attribute__((nothrow));
@@ -8866,7 +8907,7 @@ u32                  RnullStr66_Hash(u32 prev, const algo::RnullStr66 & rhs) __a
 // Read fields of algo::RnullStr66 from an ascii string.
 // The format of the string is the format of the algo::RnullStr66's only field
 // func:algo.RnullStr66..ReadStrptrMaybe
-bool                 RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_str);
+bool                 RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr66..Lt
 bool                 RnullStr66_Lt(algo::RnullStr66& lhs, algo::RnullStr66& rhs) __attribute__((nothrow));
 // func:algo.RnullStr66..Cmp
@@ -8875,7 +8916,7 @@ i32                  RnullStr66_Cmp(algo::RnullStr66& lhs, algo::RnullStr66& rhs
 // func:algo.RnullStr66..Init
 void                 RnullStr66_Init(algo::RnullStr66& parent);
 // func:algo.RnullStr66..Eq
-bool                 RnullStr66_Eq(const algo::RnullStr66& lhs, const algo::RnullStr66& rhs) __attribute__((nothrow));
+bool                 RnullStr66_Eq(algo::RnullStr66& lhs, algo::RnullStr66& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr66..Update
 bool                 RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs) __attribute__((nothrow));
@@ -8958,14 +8999,14 @@ u32                  RnullStr6_U32_Hash(u32 prev, const algo::RnullStr6_U32 & rh
 // Read fields of algo::RnullStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::RnullStr6_U32's only field
 // func:algo.RnullStr6_U32..ReadStrptrMaybe
-bool                 RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strptr in_str);
+bool                 RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr6_U32..Cmp
 i32                  RnullStr6_U32_Cmp(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RnullStr6_U32..Init
 void                 RnullStr6_U32_Init(algo::RnullStr6_U32& parent);
 // func:algo.RnullStr6_U32..Eq
-bool                 RnullStr6_U32_Eq(const algo::RnullStr6_U32& lhs, const algo::RnullStr6_U32& rhs) __attribute__((nothrow));
+bool                 RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) __attribute__((nothrow));
 // func:algo.RnullStr6_U32..EqStrptr
 bool                 RnullStr6_U32_EqStrptr(const algo::RnullStr6_U32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -9029,7 +9070,7 @@ u32                  RnullStr7_Hash(u32 prev, algo::RnullStr7 rhs) __attribute__
 // Read fields of algo::RnullStr7 from an ascii string.
 // The format of the string is the format of the algo::RnullStr7's only field
 // func:algo.RnullStr7..ReadStrptrMaybe
-bool                 RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_str);
+bool                 RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr7..Lt
 bool                 RnullStr7_Lt(algo::RnullStr7 lhs, algo::RnullStr7 rhs) __attribute__((nothrow));
 // func:algo.RnullStr7..Cmp
@@ -9098,7 +9139,7 @@ u32                  RnullStr8_Hash(u32 prev, algo::RnullStr8 rhs) __attribute__
 // Read fields of algo::RnullStr8 from an ascii string.
 // The format of the string is the format of the algo::RnullStr8's only field
 // func:algo.RnullStr8..ReadStrptrMaybe
-bool                 RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_str);
+bool                 RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr8..Lt
 bool                 RnullStr8_Lt(algo::RnullStr8 lhs, algo::RnullStr8 rhs) __attribute__((nothrow));
 // func:algo.RnullStr8..Cmp
@@ -9167,7 +9208,7 @@ u32                  RnullStr80_Hash(u32 prev, const algo::RnullStr80 & rhs) __a
 // Read fields of algo::RnullStr80 from an ascii string.
 // The format of the string is the format of the algo::RnullStr80's only field
 // func:algo.RnullStr80..ReadStrptrMaybe
-bool                 RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_str);
+bool                 RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr80..Lt
 bool                 RnullStr80_Lt(algo::RnullStr80& lhs, algo::RnullStr80& rhs) __attribute__((nothrow));
 // func:algo.RnullStr80..Cmp
@@ -9176,7 +9217,7 @@ i32                  RnullStr80_Cmp(algo::RnullStr80& lhs, algo::RnullStr80& rhs
 // func:algo.RnullStr80..Init
 void                 RnullStr80_Init(algo::RnullStr80& parent);
 // func:algo.RnullStr80..Eq
-bool                 RnullStr80_Eq(const algo::RnullStr80& lhs, const algo::RnullStr80& rhs) __attribute__((nothrow));
+bool                 RnullStr80_Eq(algo::RnullStr80& lhs, algo::RnullStr80& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr80..Update
 bool                 RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs) __attribute__((nothrow));
@@ -9243,7 +9284,7 @@ u32                  RnullStr9_Hash(u32 prev, const algo::RnullStr9 & rhs) __att
 // Read fields of algo::RnullStr9 from an ascii string.
 // The format of the string is the format of the algo::RnullStr9's only field
 // func:algo.RnullStr9..ReadStrptrMaybe
-bool                 RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_str);
+bool                 RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RnullStr9..Lt
 bool                 RnullStr9_Lt(algo::RnullStr9& lhs, algo::RnullStr9& rhs) __attribute__((nothrow));
 // func:algo.RnullStr9..Cmp
@@ -9252,7 +9293,7 @@ i32                  RnullStr9_Cmp(algo::RnullStr9& lhs, algo::RnullStr9& rhs) _
 // func:algo.RnullStr9..Init
 void                 RnullStr9_Init(algo::RnullStr9& parent);
 // func:algo.RnullStr9..Eq
-bool                 RnullStr9_Eq(const algo::RnullStr9& lhs, const algo::RnullStr9& rhs) __attribute__((nothrow));
+bool                 RnullStr9_Eq(algo::RnullStr9& lhs, algo::RnullStr9& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.RnullStr9..Update
 bool                 RnullStr9_Update(algo::RnullStr9 &lhs, algo::RnullStr9& rhs) __attribute__((nothrow));
@@ -9315,7 +9356,7 @@ u32                  RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) __attribu
 // Read fields of algo::RspaceStr10 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr10's only field
 // func:algo.RspaceStr10..ReadStrptrMaybe
-bool                 RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr in_str);
+bool                 RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr10..Cmp
 i32                  RspaceStr10_Cmp(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9382,14 +9423,14 @@ u32                  RspaceStr100_Hash(u32 prev, const algo::RspaceStr100 & rhs)
 // Read fields of algo::RspaceStr100 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr100's only field
 // func:algo.RspaceStr100..ReadStrptrMaybe
-bool                 RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr in_str);
+bool                 RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr100..Cmp
 i32                  RspaceStr100_Cmp(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr100..Init
 void                 RspaceStr100_Init(algo::RspaceStr100& parent);
 // func:algo.RspaceStr100..Eq
-bool                 RspaceStr100_Eq(const algo::RspaceStr100& lhs, const algo::RspaceStr100& rhs) __attribute__((nothrow));
+bool                 RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr100..EqStrptr
 bool                 RspaceStr100_EqStrptr(const algo::RspaceStr100& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -9449,14 +9490,14 @@ u32                  RspaceStr11_Hash(u32 prev, const algo::RspaceStr11 & rhs) _
 // Read fields of algo::RspaceStr11 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr11's only field
 // func:algo.RspaceStr11..ReadStrptrMaybe
-bool                 RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr in_str);
+bool                 RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr11..Cmp
 i32                  RspaceStr11_Cmp(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr11..Init
 void                 RspaceStr11_Init(algo::RspaceStr11& parent);
 // func:algo.RspaceStr11..Eq
-bool                 RspaceStr11_Eq(const algo::RspaceStr11& lhs, const algo::RspaceStr11& rhs) __attribute__((nothrow));
+bool                 RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr11..EqStrptr
 bool                 RspaceStr11_EqStrptr(const algo::RspaceStr11& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -9516,7 +9557,7 @@ u32                  RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) __attribu
 // Read fields of algo::RspaceStr12 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr12's only field
 // func:algo.RspaceStr12..ReadStrptrMaybe
-bool                 RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str);
+bool                 RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr12..Cmp
 i32                  RspaceStr12_Cmp(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9583,7 +9624,7 @@ u32                  RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) __attri
 // Read fields of algo::RspaceStr128 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr128's only field
 // func:algo.RspaceStr128..ReadStrptrMaybe
-bool                 RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str);
+bool                 RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr128..Cmp
 i32                  RspaceStr128_Cmp(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9650,7 +9691,7 @@ u32                  RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) __attribu
 // Read fields of algo::RspaceStr14 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr14's only field
 // func:algo.RspaceStr14..ReadStrptrMaybe
-bool                 RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str);
+bool                 RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr14..Cmp
 i32                  RspaceStr14_Cmp(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9717,7 +9758,7 @@ u32                  RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) __attribu
 // Read fields of algo::RspaceStr15 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr15's only field
 // func:algo.RspaceStr15..ReadStrptrMaybe
-bool                 RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str);
+bool                 RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr15..Cmp
 i32                  RspaceStr15_Cmp(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9781,7 +9822,7 @@ u32                  RspaceStr16_Hash(u32 prev, algo::RspaceStr16 rhs) __attribu
 // Read fields of algo::RspaceStr16 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr16's only field
 // func:algo.RspaceStr16..ReadStrptrMaybe
-bool                 RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr in_str);
+bool                 RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr16..Lt
 bool                 RspaceStr16_Lt(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) __attribute__((nothrow));
 // func:algo.RspaceStr16..Cmp
@@ -9853,7 +9894,7 @@ u32                  RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) __attribu
 // Read fields of algo::RspaceStr18 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr18's only field
 // func:algo.RspaceStr18..ReadStrptrMaybe
-bool                 RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str);
+bool                 RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr18..Cmp
 i32                  RspaceStr18_Cmp(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9920,7 +9961,7 @@ u32                  RspaceStr2_Hash(u32 prev, algo::RspaceStr2 rhs) __attribute
 // Read fields of algo::RspaceStr2 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr2's only field
 // func:algo.RspaceStr2..ReadStrptrMaybe
-bool                 RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_str);
+bool                 RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr2..Cmp
 i32                  RspaceStr2_Cmp(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -9987,7 +10028,7 @@ u32                  RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) __attribu
 // Read fields of algo::RspaceStr20 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr20's only field
 // func:algo.RspaceStr20..ReadStrptrMaybe
-bool                 RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr in_str);
+bool                 RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr20..Cmp
 i32                  RspaceStr20_Cmp(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10054,14 +10095,14 @@ u32                  RspaceStr200_Hash(u32 prev, const algo::RspaceStr200 & rhs)
 // Read fields of algo::RspaceStr200 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr200's only field
 // func:algo.RspaceStr200..ReadStrptrMaybe
-bool                 RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr in_str);
+bool                 RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr200..Cmp
 i32                  RspaceStr200_Cmp(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr200..Init
 void                 RspaceStr200_Init(algo::RspaceStr200& parent);
 // func:algo.RspaceStr200..Eq
-bool                 RspaceStr200_Eq(const algo::RspaceStr200& lhs, const algo::RspaceStr200& rhs) __attribute__((nothrow));
+bool                 RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr200..EqStrptr
 bool                 RspaceStr200_EqStrptr(const algo::RspaceStr200& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -10121,14 +10162,14 @@ u32                  RspaceStr21_Hash(u32 prev, const algo::RspaceStr21 & rhs) _
 // Read fields of algo::RspaceStr21 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr21's only field
 // func:algo.RspaceStr21..ReadStrptrMaybe
-bool                 RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr in_str);
+bool                 RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr21..Cmp
 i32                  RspaceStr21_Cmp(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr21..Init
 void                 RspaceStr21_Init(algo::RspaceStr21& parent);
 // func:algo.RspaceStr21..Eq
-bool                 RspaceStr21_Eq(const algo::RspaceStr21& lhs, const algo::RspaceStr21& rhs) __attribute__((nothrow));
+bool                 RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr21..EqStrptr
 bool                 RspaceStr21_EqStrptr(const algo::RspaceStr21& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -10185,7 +10226,7 @@ u32                  RspaceStr24_Hash(u32 prev, algo::RspaceStr24 rhs) __attribu
 // Read fields of algo::RspaceStr24 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr24's only field
 // func:algo.RspaceStr24..ReadStrptrMaybe
-bool                 RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr in_str);
+bool                 RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr24..Lt
 bool                 RspaceStr24_Lt(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) __attribute__((nothrow));
 // func:algo.RspaceStr24..Cmp
@@ -10257,14 +10298,14 @@ u32                  RspaceStr240_Hash(u32 prev, const algo::RspaceStr240 & rhs)
 // Read fields of algo::RspaceStr240 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr240's only field
 // func:algo.RspaceStr240..ReadStrptrMaybe
-bool                 RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr in_str);
+bool                 RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr240..Cmp
 i32                  RspaceStr240_Cmp(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr240..Init
 void                 RspaceStr240_Init(algo::RspaceStr240& parent);
 // func:algo.RspaceStr240..Eq
-bool                 RspaceStr240_Eq(const algo::RspaceStr240& lhs, const algo::RspaceStr240& rhs) __attribute__((nothrow));
+bool                 RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr240..EqStrptr
 bool                 RspaceStr240_EqStrptr(const algo::RspaceStr240& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -10321,7 +10362,7 @@ u32                  RspaceStr25_Hash(u32 prev, algo::RspaceStr25 rhs) __attribu
 // Read fields of algo::RspaceStr25 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr25's only field
 // func:algo.RspaceStr25..ReadStrptrMaybe
-bool                 RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr in_str);
+bool                 RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr25..Lt
 bool                 RspaceStr25_Lt(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) __attribute__((nothrow));
 // func:algo.RspaceStr25..Cmp
@@ -10393,14 +10434,14 @@ u32                  RspaceStr26_Hash(u32 prev, const algo::RspaceStr26 & rhs) _
 // Read fields of algo::RspaceStr26 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr26's only field
 // func:algo.RspaceStr26..ReadStrptrMaybe
-bool                 RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr in_str);
+bool                 RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr26..Cmp
 i32                  RspaceStr26_Cmp(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr26..Init
 void                 RspaceStr26_Init(algo::RspaceStr26& parent);
 // func:algo.RspaceStr26..Eq
-bool                 RspaceStr26_Eq(const algo::RspaceStr26& lhs, const algo::RspaceStr26& rhs) __attribute__((nothrow));
+bool                 RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr26..EqStrptr
 bool                 RspaceStr26_EqStrptr(const algo::RspaceStr26& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -10460,7 +10501,7 @@ u32                  RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) __attribute
 // Read fields of algo::RspaceStr3 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr3's only field
 // func:algo.RspaceStr3..ReadStrptrMaybe
-bool                 RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_str);
+bool                 RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr3..Cmp
 i32                  RspaceStr3_Cmp(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10527,14 +10568,14 @@ u32                  RspaceStr31_Hash(u32 prev, const algo::RspaceStr31 & rhs) _
 // Read fields of algo::RspaceStr31 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr31's only field
 // func:algo.RspaceStr31..ReadStrptrMaybe
-bool                 RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr in_str);
+bool                 RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr31..Cmp
 i32                  RspaceStr31_Cmp(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr31..Init
 void                 RspaceStr31_Init(algo::RspaceStr31& parent);
 // func:algo.RspaceStr31..Eq
-bool                 RspaceStr31_Eq(const algo::RspaceStr31& lhs, const algo::RspaceStr31& rhs) __attribute__((nothrow));
+bool                 RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr31..EqStrptr
 bool                 RspaceStr31_EqStrptr(const algo::RspaceStr31& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -10594,7 +10635,7 @@ u32                  RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) __attribu
 // Read fields of algo::RspaceStr32 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr32's only field
 // func:algo.RspaceStr32..ReadStrptrMaybe
-bool                 RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr in_str);
+bool                 RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr32..Cmp
 i32                  RspaceStr32_Cmp(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10661,7 +10702,7 @@ u32                  RspaceStr4_Hash(u32 prev, algo::RspaceStr4 rhs) __attribute
 // Read fields of algo::RspaceStr4 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr4's only field
 // func:algo.RspaceStr4..ReadStrptrMaybe
-bool                 RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_str);
+bool                 RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr4..Cmp
 i32                  RspaceStr4_Cmp(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10725,7 +10766,7 @@ u32                  RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) __attribu
 // Read fields of algo::RspaceStr40 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr40's only field
 // func:algo.RspaceStr40..ReadStrptrMaybe
-bool                 RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr in_str);
+bool                 RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr40..Cmp
 i32                  RspaceStr40_Cmp(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10792,7 +10833,7 @@ u32                  RspaceStr5_Hash(u32 prev, algo::RspaceStr5 rhs) __attribute
 // Read fields of algo::RspaceStr5 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr5's only field
 // func:algo.RspaceStr5..ReadStrptrMaybe
-bool                 RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_str);
+bool                 RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr5..Cmp
 i32                  RspaceStr5_Cmp(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10859,7 +10900,7 @@ u32                  RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) __attribu
 // Read fields of algo::RspaceStr50 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr50's only field
 // func:algo.RspaceStr50..ReadStrptrMaybe
-bool                 RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr in_str);
+bool                 RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr50..Cmp
 i32                  RspaceStr50_Cmp(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -10930,7 +10971,7 @@ u32                  RspaceStr6_Hash(u32 prev, algo::RspaceStr6 rhs) __attribute
 // Read fields of algo::RspaceStr6 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr6's only field
 // func:algo.RspaceStr6..ReadStrptrMaybe
-bool                 RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_str);
+bool                 RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr6..Lt
 bool                 RspaceStr6_Lt(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) __attribute__((nothrow));
 // func:algo.RspaceStr6..Cmp
@@ -11002,14 +11043,14 @@ u32                  RspaceStr64_Hash(u32 prev, const algo::RspaceStr64 & rhs) _
 // Read fields of algo::RspaceStr64 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr64's only field
 // func:algo.RspaceStr64..ReadStrptrMaybe
-bool                 RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr in_str);
+bool                 RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr64..Cmp
 i32                  RspaceStr64_Cmp(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr64..Init
 void                 RspaceStr64_Init(algo::RspaceStr64& parent);
 // func:algo.RspaceStr64..Eq
-bool                 RspaceStr64_Eq(const algo::RspaceStr64& lhs, const algo::RspaceStr64& rhs) __attribute__((nothrow));
+bool                 RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr64..EqStrptr
 bool                 RspaceStr64_EqStrptr(const algo::RspaceStr64& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11067,7 +11108,7 @@ u32                  RspaceStr7_Hash(u32 prev, algo::RspaceStr7 rhs) __attribute
 // Read fields of algo::RspaceStr7 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr7's only field
 // func:algo.RspaceStr7..ReadStrptrMaybe
-bool                 RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_str);
+bool                 RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr7..Cmp
 i32                  RspaceStr7_Cmp(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -11134,7 +11175,7 @@ u32                  RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) __attribu
 // Read fields of algo::RspaceStr75 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr75's only field
 // func:algo.RspaceStr75..ReadStrptrMaybe
-bool                 RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str);
+bool                 RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr75..Cmp
 i32                  RspaceStr75_Cmp(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -11198,7 +11239,7 @@ u32                  RspaceStr8_Hash(u32 prev, algo::RspaceStr8 rhs) __attribute
 // Read fields of algo::RspaceStr8 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr8's only field
 // func:algo.RspaceStr8..ReadStrptrMaybe
-bool                 RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_str);
+bool                 RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr8..Lt
 bool                 RspaceStr8_Lt(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) __attribute__((nothrow));
 // func:algo.RspaceStr8..Cmp
@@ -11270,14 +11311,14 @@ u32                  RspaceStr9_Hash(u32 prev, const algo::RspaceStr9 & rhs) __a
 // Read fields of algo::RspaceStr9 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr9's only field
 // func:algo.RspaceStr9..ReadStrptrMaybe
-bool                 RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_str);
+bool                 RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.RspaceStr9..Cmp
 i32                  RspaceStr9_Cmp(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.RspaceStr9..Init
 void                 RspaceStr9_Init(algo::RspaceStr9& parent);
 // func:algo.RspaceStr9..Eq
-bool                 RspaceStr9_Eq(const algo::RspaceStr9& lhs, const algo::RspaceStr9& rhs) __attribute__((nothrow));
+bool                 RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) __attribute__((nothrow));
 // func:algo.RspaceStr9..EqStrptr
 bool                 RspaceStr9_EqStrptr(const algo::RspaceStr9& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11298,7 +11339,7 @@ struct SchedTime { // algo.SchedTime
 // Read fields of algo::SchedTime from an ascii string.
 // The format of the string is the format of the algo::SchedTime's only field
 // func:algo.SchedTime..ReadStrptrMaybe
-bool                 SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str);
+bool                 SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.SchedTime..Lt
 bool                 SchedTime_Lt(algo::SchedTime lhs, algo::SchedTime rhs) __attribute__((nothrow));
 // func:algo.SchedTime..Cmp
@@ -11331,7 +11372,7 @@ u32                  SeqType_Hash(u32 prev, algo::SeqType rhs) __attribute__((no
 // Read fields of algo::SeqType from an ascii string.
 // The format of the string is the format of the algo::SeqType's only field
 // func:algo.SeqType..ReadStrptrMaybe
-bool                 SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str);
+bool                 SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.SeqType..Lt
 bool                 SeqType_Lt(algo::SeqType lhs, algo::SeqType rhs) __attribute__((nothrow));
 // func:algo.SeqType..Cmp
@@ -11383,12 +11424,13 @@ void                 sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8
 // func:algo.Sha1sig.sha1sig.qFind
 u8&                  sha1sig_qFind(algo::Sha1sig& parent, u64 t) __attribute__((nothrow));
 // func:algo.Sha1sig.sha1sig.Eq
-bool                 sha1sig_Eq(const algo::Sha1sig& parent, const algo::Sha1sig &rhs) __attribute__((nothrow, pure));
+bool                 sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) __attribute__((nothrow, pure));
 // func:algo.Sha1sig.sha1sig.Cmp
 int                  sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) __attribute__((nothrow));
-// Convert sha1sig to a string. Parent's separator is used.
+// Convert sha1sig to a string.
+// Array is printed as a regular string.
 // func:algo.Sha1sig.sha1sig.Print
-void                 sha1sig_Print(algo::Sha1sig& parent, algo::cstring &lhs) __attribute__((nothrow));
+void                 sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
 // func:algo.Sha1sig.sha1sig.ReadStrptrMaybe
@@ -11407,10 +11449,9 @@ void                 Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) __att
 // func:algo.Sha1sig.sha1sig_curs.Access
 u8&                  Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Sha1sig from an ascii string.
-// The function is implemented externally.
 // func:algo.Sha1sig..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Sha1sig_ReadStrptrMaybe(algo::Sha1sig &parent, algo::strptr in_str);
+bool                 Sha1sig_ReadStrptrMaybe(algo::Sha1sig &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Sha1sig..Lt
 bool                 Sha1sig_Lt(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
 // func:algo.Sha1sig..Cmp
@@ -11419,7 +11460,7 @@ i32                  Sha1sig_Cmp(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attri
 // func:algo.Sha1sig..Init
 void                 Sha1sig_Init(algo::Sha1sig& parent);
 // func:algo.Sha1sig..Eq
-bool                 Sha1sig_Eq(const algo::Sha1sig& lhs, const algo::Sha1sig& rhs) __attribute__((nothrow));
+bool                 Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.Sha1sig..Update
 bool                 Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) __attribute__((nothrow));
@@ -11490,14 +11531,14 @@ u32                  Smallstr1_Hash(u32 prev, const algo::Smallstr1 & rhs) __att
 // Read fields of algo::Smallstr1 from an ascii string.
 // The format of the string is the format of the algo::Smallstr1's only field
 // func:algo.Smallstr1..ReadStrptrMaybe
-bool                 Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_str);
+bool                 Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr1..Cmp
 i32                  Smallstr1_Cmp(algo::Smallstr1& lhs, algo::Smallstr1& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr1..Init
 void                 Smallstr1_Init(algo::Smallstr1& parent);
 // func:algo.Smallstr1..Eq
-bool                 Smallstr1_Eq(const algo::Smallstr1& lhs, const algo::Smallstr1& rhs) __attribute__((nothrow));
+bool                 Smallstr1_Eq(algo::Smallstr1& lhs, algo::Smallstr1& rhs) __attribute__((nothrow));
 // func:algo.Smallstr1..EqStrptr
 bool                 Smallstr1_EqStrptr(const algo::Smallstr1& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11568,14 +11609,14 @@ u32                  Smallstr10_Hash(u32 prev, const algo::Smallstr10 & rhs) __a
 // Read fields of algo::Smallstr10 from an ascii string.
 // The format of the string is the format of the algo::Smallstr10's only field
 // func:algo.Smallstr10..ReadStrptrMaybe
-bool                 Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_str);
+bool                 Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr10..Cmp
 i32                  Smallstr10_Cmp(algo::Smallstr10& lhs, algo::Smallstr10& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr10..Init
 void                 Smallstr10_Init(algo::Smallstr10& parent);
 // func:algo.Smallstr10..Eq
-bool                 Smallstr10_Eq(const algo::Smallstr10& lhs, const algo::Smallstr10& rhs) __attribute__((nothrow));
+bool                 Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs) __attribute__((nothrow));
 // func:algo.Smallstr10..EqStrptr
 bool                 Smallstr10_EqStrptr(const algo::Smallstr10& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11644,14 +11685,14 @@ u32                  Smallstr16_Hash(u32 prev, const algo::Smallstr16 & rhs) __a
 // Read fields of algo::Smallstr16 from an ascii string.
 // The format of the string is the format of the algo::Smallstr16's only field
 // func:algo.Smallstr16..ReadStrptrMaybe
-bool                 Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_str);
+bool                 Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr16..Cmp
 i32                  Smallstr16_Cmp(algo::Smallstr16& lhs, algo::Smallstr16& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr16..Init
 void                 Smallstr16_Init(algo::Smallstr16& parent);
 // func:algo.Smallstr16..Eq
-bool                 Smallstr16_Eq(const algo::Smallstr16& lhs, const algo::Smallstr16& rhs) __attribute__((nothrow));
+bool                 Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs) __attribute__((nothrow));
 // func:algo.Smallstr16..EqStrptr
 bool                 Smallstr16_EqStrptr(const algo::Smallstr16& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11720,14 +11761,14 @@ u32                  Smallstr2_Hash(u32 prev, const algo::Smallstr2 & rhs) __att
 // Read fields of algo::Smallstr2 from an ascii string.
 // The format of the string is the format of the algo::Smallstr2's only field
 // func:algo.Smallstr2..ReadStrptrMaybe
-bool                 Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_str);
+bool                 Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr2..Cmp
 i32                  Smallstr2_Cmp(algo::Smallstr2& lhs, algo::Smallstr2& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr2..Init
 void                 Smallstr2_Init(algo::Smallstr2& parent);
 // func:algo.Smallstr2..Eq
-bool                 Smallstr2_Eq(const algo::Smallstr2& lhs, const algo::Smallstr2& rhs) __attribute__((nothrow));
+bool                 Smallstr2_Eq(algo::Smallstr2& lhs, algo::Smallstr2& rhs) __attribute__((nothrow));
 // func:algo.Smallstr2..EqStrptr
 bool                 Smallstr2_EqStrptr(const algo::Smallstr2& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11802,7 +11843,7 @@ u32                  Smallstr20_Hash(u32 prev, const algo::Smallstr20 & rhs) __a
 // Read fields of algo::Smallstr20 from an ascii string.
 // The format of the string is the format of the algo::Smallstr20's only field
 // func:algo.Smallstr20..ReadStrptrMaybe
-bool                 Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_str);
+bool                 Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr20..Lt
 bool                 Smallstr20_Lt(algo::Smallstr20& lhs, algo::Smallstr20& rhs) __attribute__((nothrow));
 // func:algo.Smallstr20..Cmp
@@ -11811,7 +11852,7 @@ i32                  Smallstr20_Cmp(algo::Smallstr20& lhs, algo::Smallstr20& rhs
 // func:algo.Smallstr20..Init
 void                 Smallstr20_Init(algo::Smallstr20& parent);
 // func:algo.Smallstr20..Eq
-bool                 Smallstr20_Eq(const algo::Smallstr20& lhs, const algo::Smallstr20& rhs) __attribute__((nothrow));
+bool                 Smallstr20_Eq(algo::Smallstr20& lhs, algo::Smallstr20& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.Smallstr20..Update
 bool                 Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& rhs) __attribute__((nothrow));
@@ -11883,14 +11924,14 @@ u32                  Smallstr200_Hash(u32 prev, const algo::Smallstr200 & rhs) _
 // Read fields of algo::Smallstr200 from an ascii string.
 // The format of the string is the format of the algo::Smallstr200's only field
 // func:algo.Smallstr200..ReadStrptrMaybe
-bool                 Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str);
+bool                 Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr200..Cmp
 i32                  Smallstr200_Cmp(algo::Smallstr200& lhs, algo::Smallstr200& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr200..Init
 void                 Smallstr200_Init(algo::Smallstr200& parent);
 // func:algo.Smallstr200..Eq
-bool                 Smallstr200_Eq(const algo::Smallstr200& lhs, const algo::Smallstr200& rhs) __attribute__((nothrow));
+bool                 Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& rhs) __attribute__((nothrow));
 // func:algo.Smallstr200..EqStrptr
 bool                 Smallstr200_EqStrptr(const algo::Smallstr200& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -11959,14 +12000,14 @@ u32                  Smallstr25_Hash(u32 prev, const algo::Smallstr25 & rhs) __a
 // Read fields of algo::Smallstr25 from an ascii string.
 // The format of the string is the format of the algo::Smallstr25's only field
 // func:algo.Smallstr25..ReadStrptrMaybe
-bool                 Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_str);
+bool                 Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr25..Cmp
 i32                  Smallstr25_Cmp(algo::Smallstr25& lhs, algo::Smallstr25& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr25..Init
 void                 Smallstr25_Init(algo::Smallstr25& parent);
 // func:algo.Smallstr25..Eq
-bool                 Smallstr25_Eq(const algo::Smallstr25& lhs, const algo::Smallstr25& rhs) __attribute__((nothrow));
+bool                 Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs) __attribute__((nothrow));
 // func:algo.Smallstr25..EqStrptr
 bool                 Smallstr25_EqStrptr(const algo::Smallstr25& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -12035,14 +12076,14 @@ u32                  Smallstr3_Hash(u32 prev, const algo::Smallstr3 & rhs) __att
 // Read fields of algo::Smallstr3 from an ascii string.
 // The format of the string is the format of the algo::Smallstr3's only field
 // func:algo.Smallstr3..ReadStrptrMaybe
-bool                 Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str);
+bool                 Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr3..Cmp
 i32                  Smallstr3_Cmp(algo::Smallstr3& lhs, algo::Smallstr3& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr3..Init
 void                 Smallstr3_Init(algo::Smallstr3& parent);
 // func:algo.Smallstr3..Eq
-bool                 Smallstr3_Eq(const algo::Smallstr3& lhs, const algo::Smallstr3& rhs) __attribute__((nothrow));
+bool                 Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) __attribute__((nothrow));
 // func:algo.Smallstr3..EqStrptr
 bool                 Smallstr3_EqStrptr(const algo::Smallstr3& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -12115,7 +12156,7 @@ u32                  Smallstr30_Hash(u32 prev, const algo::Smallstr30 & rhs) __a
 // Read fields of algo::Smallstr30 from an ascii string.
 // The format of the string is the format of the algo::Smallstr30's only field
 // func:algo.Smallstr30..ReadStrptrMaybe
-bool                 Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_str);
+bool                 Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr30..Lt
 bool                 Smallstr30_Lt(algo::Smallstr30& lhs, algo::Smallstr30& rhs) __attribute__((nothrow));
 // func:algo.Smallstr30..Cmp
@@ -12124,7 +12165,7 @@ i32                  Smallstr30_Cmp(algo::Smallstr30& lhs, algo::Smallstr30& rhs
 // func:algo.Smallstr30..Init
 void                 Smallstr30_Init(algo::Smallstr30& parent);
 // func:algo.Smallstr30..Eq
-bool                 Smallstr30_Eq(const algo::Smallstr30& lhs, const algo::Smallstr30& rhs) __attribute__((nothrow));
+bool                 Smallstr30_Eq(algo::Smallstr30& lhs, algo::Smallstr30& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.Smallstr30..Update
 bool                 Smallstr30_Update(algo::Smallstr30 &lhs, algo::Smallstr30& rhs) __attribute__((nothrow));
@@ -12198,14 +12239,14 @@ u32                  Smallstr32_Hash(u32 prev, const algo::Smallstr32 & rhs) __a
 // Read fields of algo::Smallstr32 from an ascii string.
 // The format of the string is the format of the algo::Smallstr32's only field
 // func:algo.Smallstr32..ReadStrptrMaybe
-bool                 Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str);
+bool                 Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr32..Cmp
 i32                  Smallstr32_Cmp(algo::Smallstr32& lhs, algo::Smallstr32& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr32..Init
 void                 Smallstr32_Init(algo::Smallstr32& parent);
 // func:algo.Smallstr32..Eq
-bool                 Smallstr32_Eq(const algo::Smallstr32& lhs, const algo::Smallstr32& rhs) __attribute__((nothrow));
+bool                 Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs) __attribute__((nothrow));
 // func:algo.Smallstr32..EqStrptr
 bool                 Smallstr32_EqStrptr(const algo::Smallstr32& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -12274,14 +12315,14 @@ u32                  Smallstr4_Hash(u32 prev, const algo::Smallstr4 & rhs) __att
 // Read fields of algo::Smallstr4 from an ascii string.
 // The format of the string is the format of the algo::Smallstr4's only field
 // func:algo.Smallstr4..ReadStrptrMaybe
-bool                 Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_str);
+bool                 Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr4..Cmp
 i32                  Smallstr4_Cmp(algo::Smallstr4& lhs, algo::Smallstr4& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr4..Init
 void                 Smallstr4_Init(algo::Smallstr4& parent);
 // func:algo.Smallstr4..Eq
-bool                 Smallstr4_Eq(const algo::Smallstr4& lhs, const algo::Smallstr4& rhs) __attribute__((nothrow));
+bool                 Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) __attribute__((nothrow));
 // func:algo.Smallstr4..EqStrptr
 bool                 Smallstr4_EqStrptr(const algo::Smallstr4& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -12350,14 +12391,14 @@ u32                  Smallstr40_Hash(u32 prev, const algo::Smallstr40 & rhs) __a
 // Read fields of algo::Smallstr40 from an ascii string.
 // The format of the string is the format of the algo::Smallstr40's only field
 // func:algo.Smallstr40..ReadStrptrMaybe
-bool                 Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_str);
+bool                 Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr40..Cmp
 i32                  Smallstr40_Cmp(algo::Smallstr40& lhs, algo::Smallstr40& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr40..Init
 void                 Smallstr40_Init(algo::Smallstr40& parent);
 // func:algo.Smallstr40..Eq
-bool                 Smallstr40_Eq(const algo::Smallstr40& lhs, const algo::Smallstr40& rhs) __attribute__((nothrow));
+bool                 Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs) __attribute__((nothrow));
 // func:algo.Smallstr40..EqStrptr
 bool                 Smallstr40_EqStrptr(const algo::Smallstr40& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -12426,20 +12467,131 @@ u32                  Smallstr5_Hash(u32 prev, const algo::Smallstr5 & rhs) __att
 // Read fields of algo::Smallstr5 from an ascii string.
 // The format of the string is the format of the algo::Smallstr5's only field
 // func:algo.Smallstr5..ReadStrptrMaybe
-bool                 Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_str);
+bool                 Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.Smallstr5..Cmp
 i32                  Smallstr5_Cmp(algo::Smallstr5& lhs, algo::Smallstr5& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Smallstr5..Init
 void                 Smallstr5_Init(algo::Smallstr5& parent);
 // func:algo.Smallstr5..Eq
-bool                 Smallstr5_Eq(const algo::Smallstr5& lhs, const algo::Smallstr5& rhs) __attribute__((nothrow));
+bool                 Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) __attribute__((nothrow));
 // func:algo.Smallstr5..EqStrptr
 bool                 Smallstr5_EqStrptr(const algo::Smallstr5& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr5.String  printfmt:Raw
 // func:algo.Smallstr5..Print
 void                 Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- algo.StringAry
+struct StringAry { // algo.StringAry
+    algo::cstring*   ary_elems;   // pointer to elements
+    u32              ary_n;       // number of elements in array
+    u32              ary_max;     // max. capacity of array before realloc
+    StringAry();
+    ~StringAry();
+private:
+    // reftype Tary of algo.StringAry.ary prohibits copy
+    StringAry(const StringAry&){ /*disallow copy constructor */}
+    void operator =(const StringAry&){ /*disallow direct assignment */}
+};
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo.StringAry.ary.Addary
+algo::aryptr<algo::cstring> ary_Addary(algo::StringAry& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:algo.StringAry.ary.Alloc
+algo::cstring&       ary_Alloc(algo::StringAry& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo.StringAry.ary.AllocAt
+algo::cstring&       ary_AllocAt(algo::StringAry& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo.StringAry.ary.AllocN
+algo::aryptr<algo::cstring> ary_AllocN(algo::StringAry& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:algo.StringAry.ary.EmptyQ
+bool                 ary_EmptyQ(algo::StringAry& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:algo.StringAry.ary.Find
+algo::cstring*       ary_Find(algo::StringAry& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:algo.StringAry.ary.Getary
+algo::aryptr<algo::cstring> ary_Getary(const algo::StringAry& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:algo.StringAry.ary.Last
+algo::cstring*       ary_Last(algo::StringAry& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:algo.StringAry.ary.Max
+i32                  ary_Max(algo::StringAry& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:algo.StringAry.ary.N
+i32                  ary_N(const algo::StringAry& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:algo.StringAry.ary.Remove
+void                 ary_Remove(algo::StringAry& parent, u32 i) __attribute__((nothrow));
+// func:algo.StringAry.ary.RemoveAll
+void                 ary_RemoveAll(algo::StringAry& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:algo.StringAry.ary.RemoveLast
+void                 ary_RemoveLast(algo::StringAry& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:algo.StringAry.ary.Reserve
+void                 ary_Reserve(algo::StringAry& parent, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:algo.StringAry.ary.AbsReserve
+void                 ary_AbsReserve(algo::StringAry& parent, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:algo.StringAry.ary.Setary
+void                 ary_Setary(algo::StringAry& parent, algo::StringAry &rhs) __attribute__((nothrow));
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo.StringAry.ary.Setary2
+void                 ary_Setary(algo::StringAry& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:algo.StringAry.ary.qFind
+algo::cstring&       ary_qFind(algo::StringAry& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:algo.StringAry.ary.qLast
+algo::cstring&       ary_qLast(algo::StringAry& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:algo.StringAry.ary.rowid_Get
+u64                  ary_rowid_Get(algo::StringAry& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:algo.StringAry.ary.AllocNVal
+algo::aryptr<algo::cstring> ary_AllocNVal(algo::StringAry& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo.StringAry.ary.ReadStrptrMaybe
+bool                 ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// proceed to next item
+// func:algo.StringAry.ary_curs.Next
+void                 StringAry_ary_curs_Next(StringAry_ary_curs &curs) __attribute__((nothrow));
+// func:algo.StringAry.ary_curs.Reset
+void                 StringAry_ary_curs_Reset(StringAry_ary_curs &curs, algo::StringAry &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo.StringAry.ary_curs.ValidQ
+bool                 StringAry_ary_curs_ValidQ(StringAry_ary_curs &curs) __attribute__((nothrow));
+// item access
+// func:algo.StringAry.ary_curs.Access
+algo::cstring&       StringAry_ary_curs_Access(StringAry_ary_curs &curs) __attribute__((nothrow));
+// Read fields of algo::StringAry from an ascii string.
+// The format of the string is the format of the algo::StringAry's only field
+// func:algo.StringAry..ReadStrptrMaybe
+bool                 StringAry_ReadStrptrMaybe(algo::StringAry &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:algo.StringAry..Init
+void                 StringAry_Init(algo::StringAry& parent);
+// func:algo.StringAry..Uninit
+void                 StringAry_Uninit(algo::StringAry& parent) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo.StringAry.String  printfmt:Raw
+// func:algo.StringAry..Print
+void                 StringAry_Print(algo::StringAry& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.TermStyle
 struct TermStyle { // algo.TermStyle
@@ -12480,7 +12632,7 @@ bool                 value_ReadStrptrMaybe(algo::TermStyle& parent, algo::strptr
 // Read fields of algo::TermStyle from an ascii string.
 // The format of the string is the format of the algo::TermStyle's only field
 // func:algo.TermStyle..ReadStrptrMaybe
-bool                 TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_str);
+bool                 TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.TermStyle..Init
 void                 TermStyle_Init(algo::TermStyle& parent);
@@ -12528,7 +12680,7 @@ bool                 value_ReadStrptrMaybe(algo::TextJust& parent, algo::strptr 
 // Read fields of algo::TextJust from an ascii string.
 // The format of the string is the format of the algo::TextJust's only field
 // func:algo.TextJust..ReadStrptrMaybe
-bool                 TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str);
+bool                 TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.TextJust..Init
 void                 TextJust_Init(algo::TextJust& parent);
@@ -12594,7 +12746,7 @@ bool                 attrs_EmptyQ(algo::Tuple& parent) __attribute__((nothrow));
 algo::Attr*          attrs_Find(algo::Tuple& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.Tuple.attrs.Getary
-algo::aryptr<algo::Attr> attrs_Getary(algo::Tuple& parent) __attribute__((nothrow));
+algo::aryptr<algo::Attr> attrs_Getary(const algo::Tuple& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.Tuple.attrs.Last
 algo::Attr*          attrs_Last(algo::Tuple& parent) __attribute__((nothrow, pure));
@@ -12637,6 +12789,11 @@ u64                  attrs_rowid_Get(algo::Tuple& parent, algo::Attr &elem) __at
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.Tuple.attrs.AllocNVal
 algo::aryptr<algo::Attr> attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo.Tuple.attrs.ReadStrptrMaybe
+bool                 attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo.Tuple.attrs_curs.Next
@@ -12650,10 +12807,9 @@ bool                 Tuple_attrs_curs_ValidQ(Tuple_attrs_curs &curs) __attribute
 // func:algo.Tuple.attrs_curs.Access
 algo::Attr&          Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) __attribute__((nothrow));
 // Read fields of algo::Tuple from an ascii string.
-// The function is implemented externally.
 // func:algo.Tuple..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Tuple_ReadStrptrMaybe(algo::Tuple &parent, algo::strptr in_str);
+bool                 Tuple_ReadStrptrMaybe(algo::Tuple &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Tuple..Init
 void                 Tuple_Init(algo::Tuple& parent);
@@ -12705,7 +12861,7 @@ u32                  U16Dec2_Hash(u32 prev, algo::U16Dec2 rhs) __attribute__((no
 // Read fields of algo::U16Dec2 from an ascii string.
 // The format of the string is the format of the algo::U16Dec2's only field
 // func:algo.U16Dec2..ReadStrptrMaybe
-bool                 U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str);
+bool                 U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U16Dec2..Init
 void                 U16Dec2_Init(algo::U16Dec2& parent);
@@ -12754,7 +12910,7 @@ u32                  U32Dec1_Hash(u32 prev, algo::U32Dec1 rhs) __attribute__((no
 // Read fields of algo::U32Dec1 from an ascii string.
 // The format of the string is the format of the algo::U32Dec1's only field
 // func:algo.U32Dec1..ReadStrptrMaybe
-bool                 U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str);
+bool                 U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U32Dec1..Init
 void                 U32Dec1_Init(algo::U32Dec1& parent);
@@ -12801,7 +12957,7 @@ u32                  U32Dec2_Hash(u32 prev, algo::U32Dec2 rhs) __attribute__((no
 // Read fields of algo::U32Dec2 from an ascii string.
 // The format of the string is the format of the algo::U32Dec2's only field
 // func:algo.U32Dec2..ReadStrptrMaybe
-bool                 U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str);
+bool                 U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U32Dec2..Init
 void                 U32Dec2_Init(algo::U32Dec2& parent);
@@ -12848,7 +13004,7 @@ u32                  U32Dec3_Hash(u32 prev, algo::U32Dec3 rhs) __attribute__((no
 // Read fields of algo::U32Dec3 from an ascii string.
 // The format of the string is the format of the algo::U32Dec3's only field
 // func:algo.U32Dec3..ReadStrptrMaybe
-bool                 U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str);
+bool                 U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U32Dec3..Init
 void                 U32Dec3_Init(algo::U32Dec3& parent);
@@ -12895,7 +13051,7 @@ u32                  U32Dec4_Hash(u32 prev, algo::U32Dec4 rhs) __attribute__((no
 // Read fields of algo::U32Dec4 from an ascii string.
 // The format of the string is the format of the algo::U32Dec4's only field
 // func:algo.U32Dec4..ReadStrptrMaybe
-bool                 U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str);
+bool                 U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U32Dec4..Init
 void                 U32Dec4_Init(algo::U32Dec4& parent);
@@ -12942,7 +13098,7 @@ u32                  U32Dec5_Hash(u32 prev, algo::U32Dec5 rhs) __attribute__((no
 // Read fields of algo::U32Dec5 from an ascii string.
 // The format of the string is the format of the algo::U32Dec5's only field
 // func:algo.U32Dec5..ReadStrptrMaybe
-bool                 U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str);
+bool                 U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U32Dec5..Init
 void                 U32Dec5_Init(algo::U32Dec5& parent);
@@ -12988,7 +13144,7 @@ bool                 ary_EmptyQ(algo::U64Ary& parent) __attribute__((nothrow));
 u64*                 ary_Find(algo::U64Ary& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.U64Ary.ary.Getary
-algo::aryptr<u64>    ary_Getary(algo::U64Ary& parent) __attribute__((nothrow));
+algo::aryptr<u64>    ary_Getary(const algo::U64Ary& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.U64Ary.ary.Last
 u64*                 ary_Last(algo::U64Ary& parent) __attribute__((nothrow, pure));
@@ -13031,6 +13187,11 @@ u64                  ary_rowid_Get(algo::U64Ary& parent, u64 &elem) __attribute_
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.U64Ary.ary.AllocNVal
 algo::aryptr<u64>    ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo.U64Ary.ary.ReadStrptrMaybe
+bool                 ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo.U64Ary.ary_curs.Next
@@ -13087,7 +13248,7 @@ u32                  U64Dec10_Hash(u32 prev, algo::U64Dec10 rhs) __attribute__((
 // Read fields of algo::U64Dec10 from an ascii string.
 // The format of the string is the format of the algo::U64Dec10's only field
 // func:algo.U64Dec10..ReadStrptrMaybe
-bool                 U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str);
+bool                 U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec10..Init
 void                 U64Dec10_Init(algo::U64Dec10& parent);
@@ -13136,7 +13297,7 @@ u32                  U64Dec2_Hash(u32 prev, algo::U64Dec2 rhs) __attribute__((no
 // Read fields of algo::U64Dec2 from an ascii string.
 // The format of the string is the format of the algo::U64Dec2's only field
 // func:algo.U64Dec2..ReadStrptrMaybe
-bool                 U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str);
+bool                 U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec2..Init
 void                 U64Dec2_Init(algo::U64Dec2& parent);
@@ -13185,7 +13346,7 @@ u32                  U64Dec4_Hash(u32 prev, algo::U64Dec4 rhs) __attribute__((no
 // Read fields of algo::U64Dec4 from an ascii string.
 // The format of the string is the format of the algo::U64Dec4's only field
 // func:algo.U64Dec4..ReadStrptrMaybe
-bool                 U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str);
+bool                 U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec4..Init
 void                 U64Dec4_Init(algo::U64Dec4& parent);
@@ -13232,7 +13393,7 @@ u32                  U64Dec5_Hash(u32 prev, algo::U64Dec5 rhs) __attribute__((no
 // Read fields of algo::U64Dec5 from an ascii string.
 // The format of the string is the format of the algo::U64Dec5's only field
 // func:algo.U64Dec5..ReadStrptrMaybe
-bool                 U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str);
+bool                 U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec5..Init
 void                 U64Dec5_Init(algo::U64Dec5& parent);
@@ -13279,7 +13440,7 @@ u32                  U64Dec6_Hash(u32 prev, algo::U64Dec6 rhs) __attribute__((no
 // Read fields of algo::U64Dec6 from an ascii string.
 // The format of the string is the format of the algo::U64Dec6's only field
 // func:algo.U64Dec6..ReadStrptrMaybe
-bool                 U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str);
+bool                 U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec6..Init
 void                 U64Dec6_Init(algo::U64Dec6& parent);
@@ -13326,7 +13487,7 @@ u32                  U64Dec7_Hash(u32 prev, algo::U64Dec7 rhs) __attribute__((no
 // Read fields of algo::U64Dec7 from an ascii string.
 // The format of the string is the format of the algo::U64Dec7's only field
 // func:algo.U64Dec7..ReadStrptrMaybe
-bool                 U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str);
+bool                 U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec7..Init
 void                 U64Dec7_Init(algo::U64Dec7& parent);
@@ -13374,7 +13535,7 @@ u32                  U64Dec8_Hash(u32 prev, algo::U64Dec8 rhs) __attribute__((no
 // Read fields of algo::U64Dec8 from an ascii string.
 // The format of the string is the format of the algo::U64Dec8's only field
 // func:algo.U64Dec8..ReadStrptrMaybe
-bool                 U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str);
+bool                 U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec8..Init
 void                 U64Dec8_Init(algo::U64Dec8& parent);
@@ -13421,7 +13582,7 @@ u32                  U64Dec9_Hash(u32 prev, algo::U64Dec9 rhs) __attribute__((no
 // Read fields of algo::U64Dec9 from an ascii string.
 // The format of the string is the format of the algo::U64Dec9's only field
 // func:algo.U64Dec9..ReadStrptrMaybe
-bool                 U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str);
+bool                 U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.U64Dec9..Init
 void                 U64Dec9_Init(algo::U64Dec9& parent);
@@ -13452,10 +13613,9 @@ struct URL { // algo.URL
 };
 
 // Read fields of algo::URL from an ascii string.
-// The function is implemented externally.
 // func:algo.URL..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 URL_ReadStrptrMaybe(algo::URL &parent, algo::strptr in_str);
+bool                 URL_ReadStrptrMaybe(algo::URL &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.URL..Init
 void                 URL_Init(algo::URL& parent);
@@ -13483,10 +13643,9 @@ struct UnDiff { // algo.UnDiff: Unix diff * 1e9 + nanoseconds
 // func:algo.UnDiff..Hash
 u32                  UnDiff_Hash(u32 prev, algo::UnDiff rhs) __attribute__((nothrow));
 // Read fields of algo::UnDiff from an ascii string.
-// The function is implemented externally.
 // func:algo.UnDiff..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 UnDiff_ReadStrptrMaybe(algo::UnDiff &parent, algo::strptr in_str);
+bool                 UnDiff_ReadStrptrMaybe(algo::UnDiff &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.UnDiff..Lt
 bool                 UnDiff_Lt(algo::UnDiff lhs, algo::UnDiff rhs) __attribute__((nothrow));
 // func:algo.UnDiff..Cmp
@@ -13533,10 +13692,9 @@ struct UnixDiff { // algo.UnixDiff: Difference between two UnixTimes; units: sec
 // func:algo.UnixDiff..Hash
 u32                  UnixDiff_Hash(u32 prev, algo::UnixDiff rhs) __attribute__((nothrow));
 // Read fields of algo::UnixDiff from an ascii string.
-// The function is implemented externally.
 // func:algo.UnixDiff..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 UnixDiff_ReadStrptrMaybe(algo::UnixDiff &parent, algo::strptr in_str);
+bool                 UnixDiff_ReadStrptrMaybe(algo::UnixDiff &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.UnixDiff..Lt
 bool                 UnixDiff_Lt(algo::UnixDiff lhs, algo::UnixDiff rhs) __attribute__((nothrow));
 // func:algo.UnixDiff..Cmp
@@ -13585,10 +13743,9 @@ struct UnixTime { // algo.UnixTime: Unix epoch time, in seconds
 // func:algo.UnixTime..Hash
 u32                  UnixTime_Hash(u32 prev, algo::UnixTime rhs) __attribute__((nothrow));
 // Read fields of algo::UnixTime from an ascii string.
-// The function is implemented externally.
 // func:algo.UnixTime..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 UnixTime_ReadStrptrMaybe(algo::UnixTime &parent, algo::strptr in_str);
+bool                 UnixTime_ReadStrptrMaybe(algo::UnixTime &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.UnixTime..Lt
 bool                 UnixTime_Lt(algo::UnixTime lhs, algo::UnixTime rhs) __attribute__((nothrow));
 // func:algo.UnixTime..Cmp
@@ -13637,10 +13794,9 @@ struct WDiff { // algo.WDiff: Difference between two WinTimes
 // func:algo.WDiff..Hash
 u32                  WDiff_Hash(u32 prev, algo::WDiff rhs) __attribute__((nothrow));
 // Read fields of algo::WDiff from an ascii string.
-// The function is implemented externally.
 // func:algo.WDiff..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
+bool                 WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.WDiff..Lt
 bool                 WDiff_Lt(algo::WDiff lhs, algo::WDiff rhs) __attribute__((nothrow));
 // func:algo.WDiff..Cmp
@@ -13689,10 +13845,9 @@ struct WTime { // algo.WTime: Units: 100nsec; Number of units since Jan 1, 1600
 // func:algo.WTime..Hash
 u32                  WTime_Hash(u32 prev, algo::WTime rhs) __attribute__((nothrow));
 // Read fields of algo::WTime from an ascii string.
-// The function is implemented externally.
 // func:algo.WTime..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
+bool                 WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo.WTime..Lt
 bool                 WTime_Lt(algo::WTime lhs, algo::WTime rhs) __attribute__((nothrow));
 // func:algo.WTime..Cmp
@@ -13748,7 +13903,7 @@ i32                  i32_Range_Cmp(algo::i32_Range& lhs, algo::i32_Range& rhs) _
 // func:algo.i32_Range..Init
 void                 i32_Range_Init(algo::i32_Range& parent);
 // func:algo.i32_Range..Eq
-bool                 i32_Range_Eq(const algo::i32_Range& lhs, const algo::i32_Range& rhs) __attribute__((nothrow));
+bool                 i32_Range_Eq(algo::i32_Range& lhs, algo::i32_Range& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:algo.i32_Range..Update
 bool                 i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range& rhs) __attribute__((nothrow));
@@ -13820,6 +13975,15 @@ struct Sha1sig_sha1sig_curs {// cursor
 };
 
 
+struct StringAry_ary_curs {// cursor
+    typedef algo::cstring ChildType;
+    algo::cstring* elems;
+    int n_elems;
+    int index;
+    StringAry_ary_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
 struct Tuple_attrs_curs {// cursor
     typedef algo::Attr ChildType;
     algo::Attr* elems;
@@ -13856,6 +14020,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::EchoQ &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Errcode &row);// cfmt:algo.Errcode.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::FailokQ &row);// cfmt:algo.FailokQ.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::FieldId &row);// cfmt:algo.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::Fildes &row);// cfmt:algo.Fildes.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::FileFlags &row);// cfmt:algo.FileFlags.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::I32Dec1 &row);// cfmt:algo.I32Dec1.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::I32Dec2 &row);// cfmt:algo.I32Dec2.String
@@ -13883,6 +14048,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::NumParseFlags 
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SchedTime &row);// cfmt:algo.SchedTime.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SeqType &row);// cfmt:algo.SeqType.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Sha1sig &row);// cfmt:algo.Sha1sig.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::StringAry &row);// cfmt:algo.StringAry.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TermStyle &row);// cfmt:algo.TermStyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TextJust &row);// cfmt:algo.TextJust.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Tuple &row);// cfmt:algo.Tuple.String

@@ -1114,7 +1114,7 @@ inline u8* lib_ams::buf_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(lib_ams::FReadfile& parent) {
+inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FReadfile& parent) {
     return algo::aryptr<u8>(parent.buf_elems, parent.buf_n);
 }
 
@@ -1187,7 +1187,7 @@ inline u8* lib_ams::cbuf_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.cbuf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(lib_ams::FReadfile& parent) {
+inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FReadfile& parent) {
     return algo::aryptr<u8>(parent.cbuf_elems, parent.cbuf_n);
 }
 
@@ -1260,7 +1260,7 @@ inline u32* lib_ams::offset_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.offset.Getary
 // Return array pointer by value
-inline algo::aryptr<u32> lib_ams::offset_Getary(lib_ams::FReadfile& parent) {
+inline algo::aryptr<u32> lib_ams::offset_Getary(const lib_ams::FReadfile& parent) {
     return algo::aryptr<u32>(parent.offset_elems, parent.offset_n);
 }
 
@@ -1593,7 +1593,7 @@ inline u8* lib_ams::buf_Find(lib_ams::FWritefile& writefile, u64 t) {
 
 // --- lib_ams.FWritefile.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(lib_ams::FWritefile& writefile) {
+inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FWritefile& writefile) {
     return algo::aryptr<u8>(writefile.buf_elems, writefile.buf_n);
 }
 
@@ -1666,7 +1666,7 @@ inline u8* lib_ams::cbuf_Find(lib_ams::FWritefile& writefile, u64 t) {
 
 // --- lib_ams.FWritefile.cbuf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(lib_ams::FWritefile& writefile) {
+inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FWritefile& writefile) {
     return algo::aryptr<u8>(writefile.cbuf_elems, writefile.cbuf_n);
 }
 

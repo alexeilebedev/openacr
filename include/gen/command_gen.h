@@ -530,7 +530,7 @@ bool                 value_ReadStrptrMaybe(command::FieldId& parent, algo::strpt
 // Read fields of command::FieldId from an ascii string.
 // The format of the string is the format of the command::FieldId's only field
 // func:command.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.FieldId..Init
 void                 FieldId_Init(command::FieldId& parent);
@@ -638,13 +638,14 @@ bool                 abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple
 // Set all fields to initial values.
 // func:command.abt..Init
 void                 abt_Init(command::abt& parent);
-// print command-line args of command::abt to string  -- cprint:command.abt.Argv
-// func:command.abt..PrintArgv
-void                 abt_PrintArgv(command::abt& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.abt..ToCmdline
 tempstr              abt_ToCmdline(command::abt& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.abt.Argv  printfmt:Auto
+// func:command.abt..PrintArgv
+void                 abt_PrintArgv(command::abt& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.abt..GetAnon
 algo::strptr         abt_GetAnon(command::abt &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -708,13 +709,14 @@ bool                 abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.abt_md..Init
 void                 abt_md_Init(command::abt_md& parent);
-// print command-line args of command::abt_md to string  -- cprint:command.abt_md.Argv
-// func:command.abt_md..PrintArgv
-void                 abt_md_PrintArgv(command::abt_md& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.abt_md..ToCmdline
 tempstr              abt_md_ToCmdline(command::abt_md& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.abt_md.Argv  printfmt:Tuple
+// func:command.abt_md..PrintArgv
+void                 abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.abt_md..GetAnon
 algo::strptr         abt_md_GetAnon(command::abt_md &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -764,11 +766,14 @@ int                  abt_md_Exec(command::abt_md_proc& parent) __attribute__((no
 // func:command.abt_md_proc.abt_md.ExecX
 void                 abt_md_ExecX(command::abt_md_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:abt_md.Argv
+// Call execv with specified parameters
 // func:command.abt_md_proc.abt_md.Execv
 int                  abt_md_Execv(command::abt_md_proc& parent) __attribute__((nothrow));
 // func:command.abt_md_proc.abt_md.ToCmdline
 algo::tempstr        abt_md_ToCmdline(command::abt_md_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.abt_md_proc.abt_md.ToArgv
+void                 abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.abt_md_proc..Init
@@ -817,11 +822,14 @@ int                  abt_Exec(command::abt_proc& parent) __attribute__((nothrow)
 // func:command.abt_proc.abt.ExecX
 void                 abt_ExecX(command::abt_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:abt.Argv
+// Call execv with specified parameters
 // func:command.abt_proc.abt.Execv
 int                  abt_Execv(command::abt_proc& parent) __attribute__((nothrow));
 // func:command.abt_proc.abt.ToCmdline
 algo::tempstr        abt_ToCmdline(command::abt_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.abt_proc.abt.ToArgv
+void                 abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.abt_proc..Init
@@ -884,6 +892,11 @@ private:
     void operator =(const acr&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr.where.Addary
+algo::aryptr<algo::cstring> where_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.acr.where.Alloc
@@ -903,7 +916,7 @@ bool                 where_EmptyQ(command::acr& parent) __attribute__((nothrow))
 algo::cstring*       where_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr.where.Getary
-algo::aryptr<algo::cstring> where_Getary(command::acr& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> where_Getary(const command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr.where.Last
 algo::cstring*       where_Last(command::acr& parent) __attribute__((nothrow, pure));
@@ -930,6 +943,10 @@ void                 where_AbsReserve(command::acr& parent, int n) __attribute__
 // Copy contents of RHS to PARENT.
 // func:command.acr.where.Setary
 void                 where_Setary(command::acr& parent, command::acr &rhs) __attribute__((nothrow));
+// Copy specified array into where, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.acr.where.Setary2
+void                 where_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr.where.qFind
 algo::cstring&       where_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
@@ -942,10 +959,17 @@ u64                  where_rowid_Get(command::acr& parent, algo::cstring &elem) 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.where.AllocNVal
 algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.acr.where.ReadStrptrMaybe
 bool                 where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr.field.Addary
+algo::aryptr<algo::cstring> field_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.acr.field.Alloc
@@ -965,7 +989,7 @@ bool                 field_EmptyQ(command::acr& parent) __attribute__((nothrow))
 algo::cstring*       field_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr.field.Getary
-algo::aryptr<algo::cstring> field_Getary(command::acr& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> field_Getary(const command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr.field.Last
 algo::cstring*       field_Last(command::acr& parent) __attribute__((nothrow, pure));
@@ -992,6 +1016,10 @@ void                 field_AbsReserve(command::acr& parent, int n) __attribute__
 // Copy contents of RHS to PARENT.
 // func:command.acr.field.Setary
 void                 field_Setary(command::acr& parent, command::acr &rhs) __attribute__((nothrow));
+// Copy specified array into field, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.acr.field.Setary2
+void                 field_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr.field.qFind
 algo::cstring&       field_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
@@ -1004,7 +1032,9 @@ u64                  field_rowid_Get(command::acr& parent, algo::cstring &elem) 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.acr.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -1040,13 +1070,14 @@ bool                 acr_ReadTupleMaybe(command::acr &parent, algo::Tuple &tuple
 void                 acr_Init(command::acr& parent);
 // func:command.acr..Uninit
 void                 acr_Uninit(command::acr& parent) __attribute__((nothrow));
-// print command-line args of command::acr to string  -- cprint:command.acr.Argv
-// func:command.acr..PrintArgv
-void                 acr_PrintArgv(command::acr& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr..ToCmdline
 tempstr              acr_ToCmdline(command::acr& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr.Argv  printfmt:Auto
+// func:command.acr..PrintArgv
+void                 acr_PrintArgv(command::acr& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.acr..GetAnon
 algo::strptr         acr_GetAnon(command::acr &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -1073,20 +1104,21 @@ bool                 acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::
 // Read fields of command::acr_compl from an ascii string.
 // The format of the string is an ssim Tuple
 // func:command.acr_compl..ReadStrptrMaybe
-bool                 acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr in_str);
+bool                 acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr in_str) __attribute__((nothrow));
 // Read fields of command::acr_compl from attributes of ascii tuple TUPLE
 // func:command.acr_compl..ReadTupleMaybe
 bool                 acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.acr_compl..Init
 void                 acr_compl_Init(command::acr_compl& parent);
-// print command-line args of command::acr_compl to string  -- cprint:command.acr_compl.Argv
-// func:command.acr_compl..PrintArgv
-void                 acr_compl_PrintArgv(command::acr_compl& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_compl..ToCmdline
 tempstr              acr_compl_ToCmdline(command::acr_compl& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_compl.Argv  printfmt:Auto
+// func:command.acr_compl..PrintArgv
+void                 acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:command.acr_compl.String  printfmt:Tuple
 // func:command.acr_compl..Print
@@ -1137,11 +1169,14 @@ int                  acr_compl_Exec(command::acr_compl_proc& parent) __attribute
 // func:command.acr_compl_proc.acr_compl.ExecX
 void                 acr_compl_ExecX(command::acr_compl_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_compl.Argv
+// Call execv with specified parameters
 // func:command.acr_compl_proc.acr_compl.Execv
 int                  acr_compl_Execv(command::acr_compl_proc& parent) __attribute__((nothrow));
 // func:command.acr_compl_proc.acr_compl.ToCmdline
 algo::tempstr        acr_compl_ToCmdline(command::acr_compl_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_compl_proc.acr_compl.ToArgv
+void                 acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_compl_proc..Init
@@ -1167,6 +1202,11 @@ private:
     void operator =(const acr_dm&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr_dm.arg.Addary
+algo::aryptr<algo::cstring> arg_Addary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.acr_dm.arg.Alloc
@@ -1186,7 +1226,7 @@ bool                 arg_EmptyQ(command::acr_dm& parent) __attribute__((nothrow)
 algo::cstring*       arg_Find(command::acr_dm& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr_dm.arg.Getary
-algo::aryptr<algo::cstring> arg_Getary(command::acr_dm& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> arg_Getary(const command::acr_dm& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr_dm.arg.Last
 algo::cstring*       arg_Last(command::acr_dm& parent) __attribute__((nothrow, pure));
@@ -1213,6 +1253,10 @@ void                 arg_AbsReserve(command::acr_dm& parent, int n) __attribute_
 // Copy contents of RHS to PARENT.
 // func:command.acr_dm.arg.Setary
 void                 arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) __attribute__((nothrow));
+// Copy specified array into arg, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.acr_dm.arg.Setary2
+void                 arg_Setary(command::acr_dm& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr_dm.arg.qFind
 algo::cstring&       arg_qFind(command::acr_dm& parent, u64 t) __attribute__((nothrow));
@@ -1225,7 +1269,9 @@ u64                  arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem)
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr_dm.arg.AllocNVal
 algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.acr_dm.arg.ReadStrptrMaybe
 bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -1250,13 +1296,14 @@ bool                 acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple 
 void                 acr_dm_Init(command::acr_dm& parent);
 // func:command.acr_dm..Uninit
 void                 acr_dm_Uninit(command::acr_dm& parent) __attribute__((nothrow));
-// print command-line args of command::acr_dm to string  -- cprint:command.acr_dm.Argv
-// func:command.acr_dm..PrintArgv
-void                 acr_dm_PrintArgv(command::acr_dm& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_dm..ToCmdline
 tempstr              acr_dm_ToCmdline(command::acr_dm& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_dm.Argv  printfmt:Tuple
+// func:command.acr_dm..PrintArgv
+void                 acr_dm_PrintArgv(command::acr_dm& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.acr_dm..GetAnon
 algo::strptr         acr_dm_GetAnon(command::acr_dm &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -1306,11 +1353,14 @@ int                  acr_dm_Exec(command::acr_dm_proc& parent) __attribute__((no
 // func:command.acr_dm_proc.acr_dm.ExecX
 void                 acr_dm_ExecX(command::acr_dm_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_dm.Argv
+// Call execv with specified parameters
 // func:command.acr_dm_proc.acr_dm.Execv
 int                  acr_dm_Execv(command::acr_dm_proc& parent) __attribute__((nothrow));
 // func:command.acr_dm_proc.acr_dm.ToCmdline
 algo::tempstr        acr_dm_ToCmdline(command::acr_dm_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_dm_proc.acr_dm.ToArgv
+void                 acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_dm_proc..Init
@@ -1377,13 +1427,14 @@ bool                 acr_ed_ReadTupleMaybe(command::acr_ed &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.acr_ed..Init
 void                 acr_ed_Init(command::acr_ed& parent);
-// print command-line args of command::acr_ed to string  -- cprint:command.acr_ed.Argv
-// func:command.acr_ed..PrintArgv
-void                 acr_ed_PrintArgv(command::acr_ed& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_ed..ToCmdline
 tempstr              acr_ed_ToCmdline(command::acr_ed& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_ed.Argv  printfmt:Auto
+// func:command.acr_ed..PrintArgv
+void                 acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -1430,11 +1481,14 @@ int                  acr_ed_Exec(command::acr_ed_proc& parent) __attribute__((no
 // func:command.acr_ed_proc.acr_ed.ExecX
 void                 acr_ed_ExecX(command::acr_ed_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_ed.Argv
+// Call execv with specified parameters
 // func:command.acr_ed_proc.acr_ed.Execv
 int                  acr_ed_Execv(command::acr_ed_proc& parent) __attribute__((nothrow));
 // func:command.acr_ed_proc.acr_ed.ToCmdline
 algo::tempstr        acr_ed_ToCmdline(command::acr_ed_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_ed_proc.acr_ed.ToArgv
+void                 acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_ed_proc..Init
@@ -1498,13 +1552,14 @@ bool                 acr_in_ReadTupleMaybe(command::acr_in &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.acr_in..Init
 void                 acr_in_Init(command::acr_in& parent);
-// print command-line args of command::acr_in to string  -- cprint:command.acr_in.Argv
-// func:command.acr_in..PrintArgv
-void                 acr_in_PrintArgv(command::acr_in& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_in..ToCmdline
 tempstr              acr_in_ToCmdline(command::acr_in& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_in.Argv  printfmt:Auto
+// func:command.acr_in..PrintArgv
+void                 acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.acr_in..GetAnon
 algo::strptr         acr_in_GetAnon(command::acr_in &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -1554,11 +1609,14 @@ int                  acr_in_Exec(command::acr_in_proc& parent) __attribute__((no
 // func:command.acr_in_proc.acr_in.ExecX
 void                 acr_in_ExecX(command::acr_in_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_in.Argv
+// Call execv with specified parameters
 // func:command.acr_in_proc.acr_in.Execv
 int                  acr_in_Execv(command::acr_in_proc& parent) __attribute__((nothrow));
 // func:command.acr_in_proc.acr_in.ToCmdline
 algo::tempstr        acr_in_ToCmdline(command::acr_in_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_in_proc.acr_in.ToArgv
+void                 acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_in_proc..Init
@@ -1603,13 +1661,14 @@ bool                 acr_my_ReadTupleMaybe(command::acr_my &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.acr_my..Init
 void                 acr_my_Init(command::acr_my& parent);
-// print command-line args of command::acr_my to string  -- cprint:command.acr_my.Argv
-// func:command.acr_my..PrintArgv
-void                 acr_my_PrintArgv(command::acr_my& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_my..ToCmdline
 tempstr              acr_my_ToCmdline(command::acr_my& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_my.Argv  printfmt:Tuple
+// func:command.acr_my..PrintArgv
+void                 acr_my_PrintArgv(command::acr_my& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.acr_my..GetAnon
 algo::strptr         acr_my_GetAnon(command::acr_my &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -1659,11 +1718,14 @@ int                  acr_my_Exec(command::acr_my_proc& parent) __attribute__((no
 // func:command.acr_my_proc.acr_my.ExecX
 void                 acr_my_ExecX(command::acr_my_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_my.Argv
+// Call execv with specified parameters
 // func:command.acr_my_proc.acr_my.Execv
 int                  acr_my_Execv(command::acr_my_proc& parent) __attribute__((nothrow));
 // func:command.acr_my_proc.acr_my.ToCmdline
 algo::tempstr        acr_my_ToCmdline(command::acr_my_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_my_proc.acr_my.ToArgv
+void                 acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_my_proc..Init
@@ -1712,11 +1774,14 @@ int                  acr_Exec(command::acr_proc& parent) __attribute__((nothrow)
 // func:command.acr_proc.acr.ExecX
 void                 acr_ExecX(command::acr_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:acr.Argv
+// Call execv with specified parameters
 // func:command.acr_proc.acr.Execv
 int                  acr_Execv(command::acr_proc& parent) __attribute__((nothrow));
 // func:command.acr_proc.acr.ToCmdline
 algo::tempstr        acr_ToCmdline(command::acr_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_proc.acr.ToArgv
+void                 acr_ToArgv(command::acr_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.acr_proc..Init
@@ -1757,13 +1822,14 @@ bool                 amc_ReadTupleMaybe(command::amc &parent, algo::Tuple &tuple
 // Set all fields to initial values.
 // func:command.amc..Init
 void                 amc_Init(command::amc& parent);
-// print command-line args of command::amc to string  -- cprint:command.amc.Argv
-// func:command.amc..PrintArgv
-void                 amc_PrintArgv(command::amc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.amc..ToCmdline
 tempstr              amc_ToCmdline(command::amc& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.amc.Argv  printfmt:Auto
+// func:command.amc..PrintArgv
+void                 amc_PrintArgv(command::amc& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.amc..GetAnon
 algo::strptr         amc_GetAnon(command::amc &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -1811,13 +1877,14 @@ bool                 amc_gc_ReadTupleMaybe(command::amc_gc &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.amc_gc..Init
 void                 amc_gc_Init(command::amc_gc& parent);
-// print command-line args of command::amc_gc to string  -- cprint:command.amc_gc.Argv
-// func:command.amc_gc..PrintArgv
-void                 amc_gc_PrintArgv(command::amc_gc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.amc_gc..ToCmdline
 tempstr              amc_gc_ToCmdline(command::amc_gc& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.amc_gc.Argv  printfmt:Tuple
+// func:command.amc_gc..PrintArgv
+void                 amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -1865,11 +1932,14 @@ int                  amc_gc_Exec(command::amc_gc_proc& parent) __attribute__((no
 // func:command.amc_gc_proc.amc_gc.ExecX
 void                 amc_gc_ExecX(command::amc_gc_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:amc_gc.Argv
+// Call execv with specified parameters
 // func:command.amc_gc_proc.amc_gc.Execv
 int                  amc_gc_Execv(command::amc_gc_proc& parent) __attribute__((nothrow));
 // func:command.amc_gc_proc.amc_gc.ToCmdline
 algo::tempstr        amc_gc_ToCmdline(command::amc_gc_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.amc_gc_proc.amc_gc.ToArgv
+void                 amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.amc_gc_proc..Init
@@ -1918,11 +1988,14 @@ int                  amc_Exec(command::amc_proc& parent) __attribute__((nothrow)
 // func:command.amc_proc.amc.ExecX
 void                 amc_ExecX(command::amc_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:amc.Argv
+// Call execv with specified parameters
 // func:command.amc_proc.amc.Execv
 int                  amc_Execv(command::amc_proc& parent) __attribute__((nothrow));
 // func:command.amc_proc.amc.ToCmdline
 algo::tempstr        amc_ToCmdline(command::amc_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.amc_proc.amc.ToArgv
+void                 amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.amc_proc..Init
@@ -1964,13 +2037,14 @@ bool                 amc_vis_ReadTupleMaybe(command::amc_vis &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.amc_vis..Init
 void                 amc_vis_Init(command::amc_vis& parent);
-// print command-line args of command::amc_vis to string  -- cprint:command.amc_vis.Argv
-// func:command.amc_vis..PrintArgv
-void                 amc_vis_PrintArgv(command::amc_vis& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.amc_vis..ToCmdline
 tempstr              amc_vis_ToCmdline(command::amc_vis& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.amc_vis.Argv  printfmt:Auto
+// func:command.amc_vis..PrintArgv
+void                 amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.amc_vis..GetAnon
 algo::strptr         amc_vis_GetAnon(command::amc_vis &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -2020,11 +2094,14 @@ int                  amc_vis_Exec(command::amc_vis_proc& parent) __attribute__((
 // func:command.amc_vis_proc.amc_vis.ExecX
 void                 amc_vis_ExecX(command::amc_vis_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:amc_vis.Argv
+// Call execv with specified parameters
 // func:command.amc_vis_proc.amc_vis.Execv
 int                  amc_vis_Execv(command::amc_vis_proc& parent) __attribute__((nothrow));
 // func:command.amc_vis_proc.amc_vis.ToCmdline
 algo::tempstr        amc_vis_ToCmdline(command::amc_vis_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.amc_vis_proc.amc_vis.ToArgv
+void                 amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.amc_vis_proc..Init
@@ -2047,13 +2124,14 @@ bool                 ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.ams_cat..Init
 void                 ams_cat_Init(command::ams_cat& parent);
-// print command-line args of command::ams_cat to string  -- cprint:command.ams_cat.Argv
-// func:command.ams_cat..PrintArgv
-void                 ams_cat_PrintArgv(command::ams_cat& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ams_cat..ToCmdline
 tempstr              ams_cat_ToCmdline(command::ams_cat& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.ams_cat.Argv  printfmt:Tuple
+// func:command.ams_cat..PrintArgv
+void                 ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -2100,11 +2178,14 @@ int                  ams_cat_Exec(command::ams_cat_proc& parent) __attribute__((
 // func:command.ams_cat_proc.ams_cat.ExecX
 void                 ams_cat_ExecX(command::ams_cat_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_cat.Argv
+// Call execv with specified parameters
 // func:command.ams_cat_proc.ams_cat.Execv
 int                  ams_cat_Execv(command::ams_cat_proc& parent) __attribute__((nothrow));
 // func:command.ams_cat_proc.ams_cat.ToCmdline
 algo::tempstr        ams_cat_ToCmdline(command::ams_cat_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.ams_cat_proc.ams_cat.ToArgv
+void                 ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.ams_cat_proc..Init
@@ -2152,13 +2233,14 @@ bool                 ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, 
 // Set all fields to initial values.
 // func:command.ams_sendtest..Init
 void                 ams_sendtest_Init(command::ams_sendtest& parent);
-// print command-line args of command::ams_sendtest to string  -- cprint:command.ams_sendtest.Argv
-// func:command.ams_sendtest..PrintArgv
-void                 ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ams_sendtest..ToCmdline
 tempstr              ams_sendtest_ToCmdline(command::ams_sendtest& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.ams_sendtest.Argv  printfmt:Tuple
+// func:command.ams_sendtest..PrintArgv
+void                 ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -2206,11 +2288,14 @@ int                  ams_sendtest_Exec(command::ams_sendtest_proc& parent) __att
 // func:command.ams_sendtest_proc.ams_sendtest.ExecX
 void                 ams_sendtest_ExecX(command::ams_sendtest_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// Call execv with specified parameters
 // func:command.ams_sendtest_proc.ams_sendtest.Execv
 int                  ams_sendtest_Execv(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 // func:command.ams_sendtest_proc.ams_sendtest.ToCmdline
 algo::tempstr        ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.ams_sendtest_proc.ams_sendtest.ToArgv
+void                 ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.ams_sendtest_proc..Init
@@ -2279,13 +2364,14 @@ bool                 apm_ReadTupleMaybe(command::apm &parent, algo::Tuple &tuple
 // Set all fields to initial values.
 // func:command.apm..Init
 void                 apm_Init(command::apm& parent);
-// print command-line args of command::apm to string  -- cprint:command.apm.Argv
-// func:command.apm..PrintArgv
-void                 apm_PrintArgv(command::apm& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.apm..ToCmdline
 tempstr              apm_ToCmdline(command::apm& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.apm.Argv  printfmt:Tuple
+// func:command.apm..PrintArgv
+void                 apm_PrintArgv(command::apm& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.apm..GetAnon
 algo::strptr         apm_GetAnon(command::apm &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -2335,11 +2421,14 @@ int                  apm_Exec(command::apm_proc& parent) __attribute__((nothrow)
 // func:command.apm_proc.apm.ExecX
 void                 apm_ExecX(command::apm_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:apm.Argv
+// Call execv with specified parameters
 // func:command.apm_proc.apm.Execv
 int                  apm_Execv(command::apm_proc& parent) __attribute__((nothrow));
 // func:command.apm_proc.apm.ToCmdline
 algo::tempstr        apm_ToCmdline(command::apm_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.apm_proc.apm.ToArgv
+void                 apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.apm_proc..Init
@@ -2377,13 +2466,14 @@ bool                 atf_amc_ReadTupleMaybe(command::atf_amc &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.atf_amc..Init
 void                 atf_amc_Init(command::atf_amc& parent);
-// print command-line args of command::atf_amc to string  -- cprint:command.atf_amc.Argv
-// func:command.atf_amc..PrintArgv
-void                 atf_amc_PrintArgv(command::atf_amc& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_amc..ToCmdline
 tempstr              atf_amc_ToCmdline(command::atf_amc& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_amc.Argv  printfmt:Tuple
+// func:command.atf_amc..PrintArgv
+void                 atf_amc_PrintArgv(command::atf_amc& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_amc..GetAnon
 algo::strptr         atf_amc_GetAnon(command::atf_amc &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -2433,11 +2523,14 @@ int                  atf_amc_Exec(command::atf_amc_proc& parent) __attribute__((
 // func:command.atf_amc_proc.atf_amc.ExecX
 void                 atf_amc_ExecX(command::atf_amc_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_amc.Argv
+// Call execv with specified parameters
 // func:command.atf_amc_proc.atf_amc.Execv
 int                  atf_amc_Execv(command::atf_amc_proc& parent) __attribute__((nothrow));
 // func:command.atf_amc_proc.atf_amc.ToCmdline
 algo::tempstr        atf_amc_ToCmdline(command::atf_amc_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_amc_proc.atf_amc.ToArgv
+void                 atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_amc_proc..Init
@@ -2485,13 +2578,14 @@ bool                 atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple 
 // Set all fields to initial values.
 // func:command.atf_ci..Init
 void                 atf_ci_Init(command::atf_ci& parent);
-// print command-line args of command::atf_ci to string  -- cprint:command.atf_ci.Argv
-// func:command.atf_ci..PrintArgv
-void                 atf_ci_PrintArgv(command::atf_ci& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_ci..ToCmdline
 tempstr              atf_ci_ToCmdline(command::atf_ci& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_ci.Argv  printfmt:Tuple
+// func:command.atf_ci..PrintArgv
+void                 atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_ci..GetAnon
 algo::strptr         atf_ci_GetAnon(command::atf_ci &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -2541,11 +2635,14 @@ int                  atf_ci_Exec(command::atf_ci_proc& parent) __attribute__((no
 // func:command.atf_ci_proc.atf_ci.ExecX
 void                 atf_ci_ExecX(command::atf_ci_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_ci.Argv
+// Call execv with specified parameters
 // func:command.atf_ci_proc.atf_ci.Execv
 int                  atf_ci_Execv(command::atf_ci_proc& parent) __attribute__((nothrow));
 // func:command.atf_ci_proc.atf_ci.ToCmdline
 algo::tempstr        atf_ci_ToCmdline(command::atf_ci_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_ci_proc.atf_ci.ToArgv
+void                 atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_ci_proc..Init
@@ -2597,6 +2694,11 @@ private:
     void operator =(const atf_cmdline&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mstr.Addary
+algo::aryptr<algo::cstring> mstr_Addary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.atf_cmdline.mstr.Alloc
@@ -2616,7 +2718,7 @@ bool                 mstr_EmptyQ(command::atf_cmdline& parent) __attribute__((no
 algo::cstring*       mstr_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mstr.Getary
-algo::aryptr<algo::cstring> mstr_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> mstr_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mstr.Last
 algo::cstring*       mstr_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
@@ -2643,6 +2745,10 @@ void                 mstr_AbsReserve(command::atf_cmdline& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:command.atf_cmdline.mstr.Setary
 void                 mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
+// Copy specified array into mstr, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.atf_cmdline.mstr.Setary2
+void                 mstr_Setary(command::atf_cmdline& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mstr.qFind
 algo::cstring&       mstr_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
@@ -2655,10 +2761,17 @@ u64                  mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mstr.AllocNVal
 algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.atf_cmdline.mstr.ReadStrptrMaybe
 bool                 mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mnum.Addary
+algo::aryptr<i32>    mnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.atf_cmdline.mnum.Alloc
@@ -2678,7 +2791,7 @@ bool                 mnum_EmptyQ(command::atf_cmdline& parent) __attribute__((no
 i32*                 mnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mnum.Getary
-algo::aryptr<i32>    mnum_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
+algo::aryptr<i32>    mnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mnum.Last
 i32*                 mnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
@@ -2705,6 +2818,10 @@ void                 mnum_AbsReserve(command::atf_cmdline& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:command.atf_cmdline.mnum.Setary
 void                 mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
+// Copy specified array into mnum, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.atf_cmdline.mnum.Setary2
+void                 mnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mnum.qFind
 i32&                 mnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
@@ -2717,10 +2834,17 @@ u64                  mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mnum.AllocNVal
 algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.atf_cmdline.mnum.ReadStrptrMaybe
 bool                 mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mdbl.Addary
+algo::aryptr<double> mdbl_Addary(command::atf_cmdline& parent, algo::aryptr<double> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.atf_cmdline.mdbl.Alloc
@@ -2740,7 +2864,7 @@ bool                 mdbl_EmptyQ(command::atf_cmdline& parent) __attribute__((no
 double*              mdbl_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mdbl.Getary
-algo::aryptr<double> mdbl_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
+algo::aryptr<double> mdbl_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mdbl.Last
 double*              mdbl_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
@@ -2767,6 +2891,10 @@ void                 mdbl_AbsReserve(command::atf_cmdline& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:command.atf_cmdline.mdbl.Setary
 void                 mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
+// Copy specified array into mdbl, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.atf_cmdline.mdbl.Setary2
+void                 mdbl_Setary(command::atf_cmdline& parent, const algo::aryptr<double> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mdbl.qFind
 double&              mdbl_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
@@ -2779,10 +2907,17 @@ u64                  mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mdbl.AllocNVal
 algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.atf_cmdline.mdbl.ReadStrptrMaybe
 bool                 mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.amnum.Addary
+algo::aryptr<i32>    amnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.atf_cmdline.amnum.Alloc
@@ -2802,7 +2937,7 @@ bool                 amnum_EmptyQ(command::atf_cmdline& parent) __attribute__((n
 i32*                 amnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.amnum.Getary
-algo::aryptr<i32>    amnum_Getary(command::atf_cmdline& parent) __attribute__((nothrow));
+algo::aryptr<i32>    amnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.amnum.Last
 i32*                 amnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
@@ -2829,6 +2964,10 @@ void                 amnum_AbsReserve(command::atf_cmdline& parent, int n) __att
 // Copy contents of RHS to PARENT.
 // func:command.atf_cmdline.amnum.Setary
 void                 amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) __attribute__((nothrow));
+// Copy specified array into amnum, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.atf_cmdline.amnum.Setary2
+void                 amnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.amnum.qFind
 i32&                 amnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
@@ -2841,7 +2980,9 @@ u64                  amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.amnum.AllocNVal
 algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.atf_cmdline.amnum.ReadStrptrMaybe
 bool                 amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -2934,13 +3075,14 @@ bool                 atf_cmdline_ReadTupleMaybe(command::atf_cmdline &parent, al
 void                 atf_cmdline_Init(command::atf_cmdline& parent);
 // func:command.atf_cmdline..Uninit
 void                 atf_cmdline_Uninit(command::atf_cmdline& parent) __attribute__((nothrow));
-// print command-line args of command::atf_cmdline to string  -- cprint:command.atf_cmdline.Argv
-// func:command.atf_cmdline..PrintArgv
-void                 atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_cmdline..ToCmdline
 tempstr              atf_cmdline_ToCmdline(command::atf_cmdline& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_cmdline.Argv  printfmt:Tuple
+// func:command.atf_cmdline..PrintArgv
+void                 atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_cmdline..GetAnon
 algo::strptr         atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -2990,11 +3132,14 @@ int                  atf_cmdline_Exec(command::atf_cmdline_proc& parent) __attri
 // func:command.atf_cmdline_proc.atf_cmdline.ExecX
 void                 atf_cmdline_ExecX(command::atf_cmdline_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_cmdline.Argv
+// Call execv with specified parameters
 // func:command.atf_cmdline_proc.atf_cmdline.Execv
 int                  atf_cmdline_Execv(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 // func:command.atf_cmdline_proc.atf_cmdline.ToCmdline
 algo::tempstr        atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_cmdline_proc.atf_cmdline.ToArgv
+void                 atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_cmdline_proc..Init
@@ -3054,13 +3199,14 @@ bool                 atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.atf_comp..Init
 void                 atf_comp_Init(command::atf_comp& parent);
-// print command-line args of command::atf_comp to string  -- cprint:command.atf_comp.Argv
-// func:command.atf_comp..PrintArgv
-void                 atf_comp_PrintArgv(command::atf_comp& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_comp..ToCmdline
 tempstr              atf_comp_ToCmdline(command::atf_comp& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_comp.Argv  printfmt:Tuple
+// func:command.atf_comp..PrintArgv
+void                 atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_comp..GetAnon
 algo::strptr         atf_comp_GetAnon(command::atf_comp &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -3110,11 +3256,14 @@ int                  atf_comp_Exec(command::atf_comp_proc& parent) __attribute__
 // func:command.atf_comp_proc.atf_comp.ExecX
 void                 atf_comp_ExecX(command::atf_comp_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_comp.Argv
+// Call execv with specified parameters
 // func:command.atf_comp_proc.atf_comp.Execv
 int                  atf_comp_Execv(command::atf_comp_proc& parent) __attribute__((nothrow));
 // func:command.atf_comp_proc.atf_comp.ToCmdline
 algo::tempstr        atf_comp_ToCmdline(command::atf_comp_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_comp_proc.atf_comp.ToArgv
+void                 atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_comp_proc..Init
@@ -3161,13 +3310,14 @@ bool                 atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.atf_cov..Init
 void                 atf_cov_Init(command::atf_cov& parent);
-// print command-line args of command::atf_cov to string  -- cprint:command.atf_cov.Argv
-// func:command.atf_cov..PrintArgv
-void                 atf_cov_PrintArgv(command::atf_cov& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_cov..ToCmdline
 tempstr              atf_cov_ToCmdline(command::atf_cov& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_cov.Argv  printfmt:Tuple
+// func:command.atf_cov..PrintArgv
+void                 atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -3215,11 +3365,14 @@ int                  atf_cov_Exec(command::atf_cov_proc& parent) __attribute__((
 // func:command.atf_cov_proc.atf_cov.ExecX
 void                 atf_cov_ExecX(command::atf_cov_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_cov.Argv
+// Call execv with specified parameters
 // func:command.atf_cov_proc.atf_cov.Execv
 int                  atf_cov_Execv(command::atf_cov_proc& parent) __attribute__((nothrow));
 // func:command.atf_cov_proc.atf_cov.ToCmdline
 algo::tempstr        atf_cov_ToCmdline(command::atf_cov_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_cov_proc.atf_cov.ToArgv
+void                 atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_cov_proc..Init
@@ -3261,13 +3414,14 @@ bool                 atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.atf_fuzz..Init
 void                 atf_fuzz_Init(command::atf_fuzz& parent);
-// print command-line args of command::atf_fuzz to string  -- cprint:command.atf_fuzz.Argv
-// func:command.atf_fuzz..PrintArgv
-void                 atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_fuzz..ToCmdline
 tempstr              atf_fuzz_ToCmdline(command::atf_fuzz& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_fuzz.Argv  printfmt:Tuple
+// func:command.atf_fuzz..PrintArgv
+void                 atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_fuzz..GetAnon
 algo::strptr         atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -3317,11 +3471,14 @@ int                  atf_fuzz_Exec(command::atf_fuzz_proc& parent) __attribute__
 // func:command.atf_fuzz_proc.atf_fuzz.ExecX
 void                 atf_fuzz_ExecX(command::atf_fuzz_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_fuzz.Argv
+// Call execv with specified parameters
 // func:command.atf_fuzz_proc.atf_fuzz.Execv
 int                  atf_fuzz_Execv(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 // func:command.atf_fuzz_proc.atf_fuzz.ToCmdline
 algo::tempstr        atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_fuzz_proc.atf_fuzz.ToArgv
+void                 atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_fuzz_proc..Init
@@ -3364,13 +3521,14 @@ bool                 atf_gcli_ReadTupleMaybe(command::atf_gcli &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.atf_gcli..Init
 void                 atf_gcli_Init(command::atf_gcli& parent);
-// print command-line args of command::atf_gcli to string  -- cprint:command.atf_gcli.Argv
-// func:command.atf_gcli..PrintArgv
-void                 atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_gcli..ToCmdline
 tempstr              atf_gcli_ToCmdline(command::atf_gcli& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_gcli.Argv  printfmt:Tuple
+// func:command.atf_gcli..PrintArgv
+void                 atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -3418,11 +3576,14 @@ int                  atf_gcli_Exec(command::atf_gcli_proc& parent) __attribute__
 // func:command.atf_gcli_proc.atf_gcli.ExecX
 void                 atf_gcli_ExecX(command::atf_gcli_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_gcli.Argv
+// Call execv with specified parameters
 // func:command.atf_gcli_proc.atf_gcli.Execv
 int                  atf_gcli_Execv(command::atf_gcli_proc& parent) __attribute__((nothrow));
 // func:command.atf_gcli_proc.atf_gcli.ToCmdline
 algo::tempstr        atf_gcli_ToCmdline(command::atf_gcli_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_gcli_proc.atf_gcli.ToArgv
+void                 atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_gcli_proc..Init
@@ -3447,13 +3608,14 @@ bool                 atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.atf_nrun..Init
 void                 atf_nrun_Init(command::atf_nrun& parent);
-// print command-line args of command::atf_nrun to string  -- cprint:command.atf_nrun.Argv
-// func:command.atf_nrun..PrintArgv
-void                 atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_nrun..ToCmdline
 tempstr              atf_nrun_ToCmdline(command::atf_nrun& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_nrun.Argv  printfmt:Tuple
+// func:command.atf_nrun..PrintArgv
+void                 atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_nrun..GetAnon
 algo::strptr         atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -3502,11 +3664,14 @@ int                  atf_nrun_Exec(command::atf_nrun_proc& parent) __attribute__
 // func:command.atf_nrun_proc.atf_nrun.ExecX
 void                 atf_nrun_ExecX(command::atf_nrun_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_nrun.Argv
+// Call execv with specified parameters
 // func:command.atf_nrun_proc.atf_nrun.Execv
 int                  atf_nrun_Execv(command::atf_nrun_proc& parent) __attribute__((nothrow));
 // func:command.atf_nrun_proc.atf_nrun.ToCmdline
 algo::tempstr        atf_nrun_ToCmdline(command::atf_nrun_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_nrun_proc.atf_nrun.ToArgv
+void                 atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_nrun_proc..Init
@@ -3550,13 +3715,14 @@ bool                 atf_unit_ReadTupleMaybe(command::atf_unit &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.atf_unit..Init
 void                 atf_unit_Init(command::atf_unit& parent);
-// print command-line args of command::atf_unit to string  -- cprint:command.atf_unit.Argv
-// func:command.atf_unit..PrintArgv
-void                 atf_unit_PrintArgv(command::atf_unit& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_unit..ToCmdline
 tempstr              atf_unit_ToCmdline(command::atf_unit& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_unit.Argv  printfmt:Auto
+// func:command.atf_unit..PrintArgv
+void                 atf_unit_PrintArgv(command::atf_unit& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.atf_unit..GetAnon
 algo::strptr         atf_unit_GetAnon(command::atf_unit &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -3606,11 +3772,14 @@ int                  atf_unit_Exec(command::atf_unit_proc& parent) __attribute__
 // func:command.atf_unit_proc.atf_unit.ExecX
 void                 atf_unit_ExecX(command::atf_unit_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_unit.Argv
+// Call execv with specified parameters
 // func:command.atf_unit_proc.atf_unit.Execv
 int                  atf_unit_Execv(command::atf_unit_proc& parent) __attribute__((nothrow));
 // func:command.atf_unit_proc.atf_unit.ToCmdline
 algo::tempstr        atf_unit_ToCmdline(command::atf_unit_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_unit_proc.atf_unit.ToArgv
+void                 atf_unit_ToArgv(command::atf_unit_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.atf_unit_proc..Init
@@ -3628,9 +3797,10 @@ struct bash { // command.bash
 // Set all fields to initial values.
 // func:command.bash..Init
 void                 bash_Init(command::bash& parent);
-// print command-line args of command::bash to string  -- cprint:command.bash.Argv
+// print string representation of ROW to string STR
+// cfmt:command.bash.ArgvGnu  printfmt:Auto
 // func:command.bash..PrintArgv
-void                 bash_PrintArgv(command::bash& row, algo::cstring &str) __attribute__((nothrow));
+void                 bash_PrintArgv(command::bash& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- command.bash2html
 // access: command.bash2html_proc.bash2html (Exec)
@@ -3648,13 +3818,14 @@ bool                 bash2html_ReadTupleMaybe(command::bash2html &parent, algo::
 // Set all fields to initial values.
 // func:command.bash2html..Init
 void                 bash2html_Init(command::bash2html& parent);
-// print command-line args of command::bash2html to string  -- cprint:command.bash2html.Argv
-// func:command.bash2html..PrintArgv
-void                 bash2html_PrintArgv(command::bash2html& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.bash2html..ToCmdline
 tempstr              bash2html_ToCmdline(command::bash2html& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.bash2html.Argv  printfmt:Tuple
+// func:command.bash2html..PrintArgv
+void                 bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -3701,11 +3872,14 @@ int                  bash2html_Exec(command::bash2html_proc& parent) __attribute
 // func:command.bash2html_proc.bash2html.ExecX
 void                 bash2html_ExecX(command::bash2html_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:bash2html.Argv
+// Call execv with specified parameters
 // func:command.bash2html_proc.bash2html.Execv
 int                  bash2html_Execv(command::bash2html_proc& parent) __attribute__((nothrow));
 // func:command.bash2html_proc.bash2html.ToCmdline
 algo::tempstr        bash2html_ToCmdline(command::bash2html_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.bash2html_proc.bash2html.ToArgv
+void                 bash2html_ToArgv(command::bash2html_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.bash2html_proc..Init
@@ -3753,11 +3927,14 @@ int                  bash_Exec(command::bash_proc& parent) __attribute__((nothro
 // func:command.bash_proc.bash.ExecX
 void                 bash_ExecX(command::bash_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:bash.Argv
+// Call execv with specified parameters
 // func:command.bash_proc.bash.Execv
 int                  bash_Execv(command::bash_proc& parent) __attribute__((nothrow));
 // func:command.bash_proc.bash.ToCmdline
 algo::tempstr        bash_ToCmdline(command::bash_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.bash_proc.bash.ToArgv
+void                 bash_ToArgv(command::bash_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.bash_proc..Init
@@ -3791,6 +3968,11 @@ private:
     void operator =(const gcache&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.gcache.cmd.Addary
+algo::aryptr<algo::cstring> cmd_Addary(command::gcache& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.gcache.cmd.Alloc
@@ -3810,7 +3992,7 @@ bool                 cmd_EmptyQ(command::gcache& parent) __attribute__((nothrow)
 algo::cstring*       cmd_Find(command::gcache& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.gcache.cmd.Getary
-algo::aryptr<algo::cstring> cmd_Getary(command::gcache& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> cmd_Getary(const command::gcache& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.gcache.cmd.Last
 algo::cstring*       cmd_Last(command::gcache& parent) __attribute__((nothrow, pure));
@@ -3837,6 +4019,10 @@ void                 cmd_AbsReserve(command::gcache& parent, int n) __attribute_
 // Copy contents of RHS to PARENT.
 // func:command.gcache.cmd.Setary
 void                 cmd_Setary(command::gcache& parent, command::gcache &rhs) __attribute__((nothrow));
+// Copy specified array into cmd, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.gcache.cmd.Setary2
+void                 cmd_Setary(command::gcache& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.gcache.cmd.qFind
 algo::cstring&       cmd_qFind(command::gcache& parent, u64 t) __attribute__((nothrow));
@@ -3849,7 +4035,9 @@ u64                  cmd_rowid_Get(command::gcache& parent, algo::cstring &elem)
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcache.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.gcache.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -3874,13 +4062,14 @@ bool                 gcache_ReadTupleMaybe(command::gcache &parent, algo::Tuple 
 void                 gcache_Init(command::gcache& parent);
 // func:command.gcache..Uninit
 void                 gcache_Uninit(command::gcache& parent) __attribute__((nothrow));
-// print command-line args of command::gcache to string  -- cprint:command.gcache.Argv
-// func:command.gcache..PrintArgv
-void                 gcache_PrintArgv(command::gcache& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.gcache..ToCmdline
 tempstr              gcache_ToCmdline(command::gcache& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.gcache.Argv  printfmt:Tuple
+// func:command.gcache..PrintArgv
+void                 gcache_PrintArgv(command::gcache& row, algo::cstring& str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:command.gcache.String  printfmt:Tuple
 // func:command.gcache..Print
@@ -3934,11 +4123,14 @@ int                  gcache_Exec(command::gcache_proc& parent) __attribute__((no
 // func:command.gcache_proc.gcache.ExecX
 void                 gcache_ExecX(command::gcache_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:gcache.Argv
+// Call execv with specified parameters
 // func:command.gcache_proc.gcache.Execv
 int                  gcache_Execv(command::gcache_proc& parent) __attribute__((nothrow));
 // func:command.gcache_proc.gcache.ToCmdline
 algo::tempstr        gcache_ToCmdline(command::gcache_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.gcache_proc.gcache.ToArgv
+void                 gcache_ToArgv(command::gcache_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.gcache_proc..Init
@@ -3976,6 +4168,11 @@ private:
     void operator =(const gcli&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.gcli.fields.Addary
+algo::aryptr<algo::cstring> fields_Addary(command::gcli& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.gcli.fields.Alloc
@@ -3995,7 +4192,7 @@ bool                 fields_EmptyQ(command::gcli& parent) __attribute__((nothrow
 algo::cstring*       fields_Find(command::gcli& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.gcli.fields.Getary
-algo::aryptr<algo::cstring> fields_Getary(command::gcli& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> fields_Getary(const command::gcli& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.gcli.fields.Last
 algo::cstring*       fields_Last(command::gcli& parent) __attribute__((nothrow, pure));
@@ -4022,6 +4219,10 @@ void                 fields_AbsReserve(command::gcli& parent, int n) __attribute
 // Copy contents of RHS to PARENT.
 // func:command.gcli.fields.Setary
 void                 fields_Setary(command::gcli& parent, command::gcli &rhs) __attribute__((nothrow));
+// Copy specified array into fields, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.gcli.fields.Setary2
+void                 fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.gcli.fields.qFind
 algo::cstring&       fields_qFind(command::gcli& parent, u64 t) __attribute__((nothrow));
@@ -4034,7 +4235,9 @@ u64                  fields_rowid_Get(command::gcli& parent, algo::cstring &elem
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcli.fields.AllocNVal
 algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.gcli.fields.ReadStrptrMaybe
 bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -4059,13 +4262,14 @@ bool                 gcli_ReadTupleMaybe(command::gcli &parent, algo::Tuple &tup
 void                 gcli_Init(command::gcli& parent);
 // func:command.gcli..Uninit
 void                 gcli_Uninit(command::gcli& parent) __attribute__((nothrow));
-// print command-line args of command::gcli to string  -- cprint:command.gcli.Argv
-// func:command.gcli..PrintArgv
-void                 gcli_PrintArgv(command::gcli& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.gcli..ToCmdline
 tempstr              gcli_ToCmdline(command::gcli& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.gcli.Argv  printfmt:Tuple
+// func:command.gcli..PrintArgv
+void                 gcli_PrintArgv(command::gcli& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.gcli..GetAnon
 algo::strptr         gcli_GetAnon(command::gcli &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -4115,11 +4319,14 @@ int                  gcli_Exec(command::gcli_proc& parent) __attribute__((nothro
 // func:command.gcli_proc.gcli.ExecX
 void                 gcli_ExecX(command::gcli_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:gcli.Argv
+// Call execv with specified parameters
 // func:command.gcli_proc.gcli.Execv
 int                  gcli_Execv(command::gcli_proc& parent) __attribute__((nothrow));
 // func:command.gcli_proc.gcli.ToCmdline
 algo::tempstr        gcli_ToCmdline(command::gcli_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.gcli_proc.gcli.ToArgv
+void                 gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.gcli_proc..Init
@@ -4158,6 +4365,11 @@ private:
     void operator =(const mdbg&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.mdbg.args.Addary
+algo::aryptr<algo::cstring> args_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.mdbg.args.Alloc
@@ -4177,7 +4389,7 @@ bool                 args_EmptyQ(command::mdbg& parent) __attribute__((nothrow))
 algo::cstring*       args_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.mdbg.args.Getary
-algo::aryptr<algo::cstring> args_Getary(command::mdbg& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> args_Getary(const command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.mdbg.args.Last
 algo::cstring*       args_Last(command::mdbg& parent) __attribute__((nothrow, pure));
@@ -4204,6 +4416,10 @@ void                 args_AbsReserve(command::mdbg& parent, int n) __attribute__
 // Copy contents of RHS to PARENT.
 // func:command.mdbg.args.Setary
 void                 args_Setary(command::mdbg& parent, command::mdbg &rhs) __attribute__((nothrow));
+// Copy specified array into args, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.mdbg.args.Setary2
+void                 args_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.mdbg.args.qFind
 algo::cstring&       args_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
@@ -4216,10 +4432,17 @@ u64                  args_rowid_Get(command::mdbg& parent, algo::cstring &elem) 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.args.AllocNVal
 algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.mdbg.args.ReadStrptrMaybe
 bool                 args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.mdbg.b.Addary
+algo::aryptr<algo::cstring> b_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.mdbg.b.Alloc
@@ -4239,7 +4462,7 @@ bool                 b_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
 algo::cstring*       b_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.mdbg.b.Getary
-algo::aryptr<algo::cstring> b_Getary(command::mdbg& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> b_Getary(const command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.mdbg.b.Last
 algo::cstring*       b_Last(command::mdbg& parent) __attribute__((nothrow, pure));
@@ -4266,6 +4489,10 @@ void                 b_AbsReserve(command::mdbg& parent, int n) __attribute__((n
 // Copy contents of RHS to PARENT.
 // func:command.mdbg.b.Setary
 void                 b_Setary(command::mdbg& parent, command::mdbg &rhs) __attribute__((nothrow));
+// Copy specified array into b, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.mdbg.b.Setary2
+void                 b_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.mdbg.b.qFind
 algo::cstring&       b_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
@@ -4278,7 +4505,9 @@ u64                  b_rowid_Get(command::mdbg& parent, algo::cstring &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.b.AllocNVal
 algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.mdbg.b.ReadStrptrMaybe
 bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -4314,13 +4543,14 @@ bool                 mdbg_ReadTupleMaybe(command::mdbg &parent, algo::Tuple &tup
 void                 mdbg_Init(command::mdbg& parent);
 // func:command.mdbg..Uninit
 void                 mdbg_Uninit(command::mdbg& parent) __attribute__((nothrow));
-// print command-line args of command::mdbg to string  -- cprint:command.mdbg.Argv
-// func:command.mdbg..PrintArgv
-void                 mdbg_PrintArgv(command::mdbg& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.mdbg..ToCmdline
 tempstr              mdbg_ToCmdline(command::mdbg& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.mdbg.Argv  printfmt:Auto
+// func:command.mdbg..PrintArgv
+void                 mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.mdbg..GetAnon
 algo::strptr         mdbg_GetAnon(command::mdbg &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -4370,11 +4600,14 @@ int                  mdbg_Exec(command::mdbg_proc& parent) __attribute__((nothro
 // func:command.mdbg_proc.mdbg.ExecX
 void                 mdbg_ExecX(command::mdbg_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:mdbg.Argv
+// Call execv with specified parameters
 // func:command.mdbg_proc.mdbg.Execv
 int                  mdbg_Execv(command::mdbg_proc& parent) __attribute__((nothrow));
 // func:command.mdbg_proc.mdbg.ToCmdline
 algo::tempstr        mdbg_ToCmdline(command::mdbg_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.mdbg_proc.mdbg.ToArgv
+void                 mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.mdbg_proc..Init
@@ -4404,13 +4637,14 @@ bool                 mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo
 // Set all fields to initial values.
 // func:command.mysql2ssim..Init
 void                 mysql2ssim_Init(command::mysql2ssim& parent);
-// print command-line args of command::mysql2ssim to string  -- cprint:command.mysql2ssim.Argv
-// func:command.mysql2ssim..PrintArgv
-void                 mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.mysql2ssim..ToCmdline
 tempstr              mysql2ssim_ToCmdline(command::mysql2ssim& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.mysql2ssim.Argv  printfmt:Auto
+// func:command.mysql2ssim..PrintArgv
+void                 mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.mysql2ssim..GetAnon
 algo::strptr         mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -4459,11 +4693,14 @@ int                  mysql2ssim_Exec(command::mysql2ssim_proc& parent) __attribu
 // func:command.mysql2ssim_proc.mysql2ssim.ExecX
 void                 mysql2ssim_ExecX(command::mysql2ssim_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:mysql2ssim.Argv
+// Call execv with specified parameters
 // func:command.mysql2ssim_proc.mysql2ssim.Execv
 int                  mysql2ssim_Execv(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 // func:command.mysql2ssim_proc.mysql2ssim.ToCmdline
 algo::tempstr        mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.mysql2ssim_proc.mysql2ssim.ToArgv
+void                 mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.mysql2ssim_proc..Init
@@ -4503,13 +4740,14 @@ bool                 orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.orgfile..Init
 void                 orgfile_Init(command::orgfile& parent);
-// print command-line args of command::orgfile to string  -- cprint:command.orgfile.Argv
-// func:command.orgfile..PrintArgv
-void                 orgfile_PrintArgv(command::orgfile& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.orgfile..ToCmdline
 tempstr              orgfile_ToCmdline(command::orgfile& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.orgfile.Argv  printfmt:Tuple
+// func:command.orgfile..PrintArgv
+void                 orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -4557,11 +4795,14 @@ int                  orgfile_Exec(command::orgfile_proc& parent) __attribute__((
 // func:command.orgfile_proc.orgfile.ExecX
 void                 orgfile_ExecX(command::orgfile_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:orgfile.Argv
+// Call execv with specified parameters
 // func:command.orgfile_proc.orgfile.Execv
 int                  orgfile_Execv(command::orgfile_proc& parent) __attribute__((nothrow));
 // func:command.orgfile_proc.orgfile.ToCmdline
 algo::tempstr        orgfile_ToCmdline(command::orgfile_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.orgfile_proc.orgfile.ToArgv
+void                 orgfile_ToArgv(command::orgfile_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.orgfile_proc..Init
@@ -4616,13 +4857,14 @@ bool                 samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::
 // Set all fields to initial values.
 // func:command.samp_regx..Init
 void                 samp_regx_Init(command::samp_regx& parent);
-// print command-line args of command::samp_regx to string  -- cprint:command.samp_regx.Argv
-// func:command.samp_regx..PrintArgv
-void                 samp_regx_PrintArgv(command::samp_regx& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.samp_regx..ToCmdline
 tempstr              samp_regx_ToCmdline(command::samp_regx& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.samp_regx.Argv  printfmt:Tuple
+// func:command.samp_regx..PrintArgv
+void                 samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.samp_regx..GetAnon
 algo::strptr         samp_regx_GetAnon(command::samp_regx &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -4671,11 +4913,14 @@ int                  samp_regx_Exec(command::samp_regx_proc& parent) __attribute
 // func:command.samp_regx_proc.samp_regx.ExecX
 void                 samp_regx_ExecX(command::samp_regx_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:samp_regx.Argv
+// Call execv with specified parameters
 // func:command.samp_regx_proc.samp_regx.Execv
 int                  samp_regx_Execv(command::samp_regx_proc& parent) __attribute__((nothrow));
 // func:command.samp_regx_proc.samp_regx.ToCmdline
 algo::tempstr        samp_regx_ToCmdline(command::samp_regx_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.samp_regx_proc.samp_regx.ToArgv
+void                 samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.samp_regx_proc..Init
@@ -4723,6 +4968,11 @@ void                 name_Print(command::sandbox& parent, algo::cstring &out) __
 // func:command.sandbox.name.ReadStrptrMaybe
 bool                 name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.sandbox.cmd.Addary
+algo::aryptr<algo::cstring> cmd_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.sandbox.cmd.Alloc
@@ -4742,7 +4992,7 @@ bool                 cmd_EmptyQ(command::sandbox& parent) __attribute__((nothrow
 algo::cstring*       cmd_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.sandbox.cmd.Getary
-algo::aryptr<algo::cstring> cmd_Getary(command::sandbox& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> cmd_Getary(const command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.sandbox.cmd.Last
 algo::cstring*       cmd_Last(command::sandbox& parent) __attribute__((nothrow, pure));
@@ -4769,6 +5019,10 @@ void                 cmd_AbsReserve(command::sandbox& parent, int n) __attribute
 // Copy contents of RHS to PARENT.
 // func:command.sandbox.cmd.Setary
 void                 cmd_Setary(command::sandbox& parent, command::sandbox &rhs) __attribute__((nothrow));
+// Copy specified array into cmd, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.sandbox.cmd.Setary2
+void                 cmd_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.sandbox.cmd.qFind
 algo::cstring&       cmd_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
@@ -4781,10 +5035,17 @@ u64                  cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.sandbox.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.sandbox.files.Addary
+algo::aryptr<algo::cstring> files_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.sandbox.files.Alloc
@@ -4804,7 +5065,7 @@ bool                 files_EmptyQ(command::sandbox& parent) __attribute__((nothr
 algo::cstring*       files_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.sandbox.files.Getary
-algo::aryptr<algo::cstring> files_Getary(command::sandbox& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> files_Getary(const command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.sandbox.files.Last
 algo::cstring*       files_Last(command::sandbox& parent) __attribute__((nothrow, pure));
@@ -4831,6 +5092,10 @@ void                 files_AbsReserve(command::sandbox& parent, int n) __attribu
 // Copy contents of RHS to PARENT.
 // func:command.sandbox.files.Setary
 void                 files_Setary(command::sandbox& parent, command::sandbox &rhs) __attribute__((nothrow));
+// Copy specified array into files, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.sandbox.files.Setary2
+void                 files_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.sandbox.files.qFind
 algo::cstring&       files_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
@@ -4843,7 +5108,9 @@ u64                  files_rowid_Get(command::sandbox& parent, algo::cstring &el
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.files.AllocNVal
 algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.sandbox.files.ReadStrptrMaybe
 bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -4879,13 +5146,14 @@ bool                 sandbox_ReadTupleMaybe(command::sandbox &parent, algo::Tupl
 void                 sandbox_Init(command::sandbox& parent);
 // func:command.sandbox..Uninit
 void                 sandbox_Uninit(command::sandbox& parent) __attribute__((nothrow));
-// print command-line args of command::sandbox to string  -- cprint:command.sandbox.Argv
-// func:command.sandbox..PrintArgv
-void                 sandbox_PrintArgv(command::sandbox& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.sandbox..ToCmdline
 tempstr              sandbox_ToCmdline(command::sandbox& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.sandbox.Argv  printfmt:Tuple
+// func:command.sandbox..PrintArgv
+void                 sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.sandbox..GetAnon
 algo::strptr         sandbox_GetAnon(command::sandbox &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -4935,11 +5203,14 @@ int                  sandbox_Exec(command::sandbox_proc& parent) __attribute__((
 // func:command.sandbox_proc.sandbox.ExecX
 void                 sandbox_ExecX(command::sandbox_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:sandbox.Argv
+// Call execv with specified parameters
 // func:command.sandbox_proc.sandbox.Execv
 int                  sandbox_Execv(command::sandbox_proc& parent) __attribute__((nothrow));
 // func:command.sandbox_proc.sandbox.ToCmdline
 algo::tempstr        sandbox_ToCmdline(command::sandbox_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.sandbox_proc.sandbox.ToArgv
+void                 sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.sandbox_proc..Init
@@ -5037,13 +5308,14 @@ bool                 src_func_ReadTupleMaybe(command::src_func &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.src_func..Init
 void                 src_func_Init(command::src_func& parent);
-// print command-line args of command::src_func to string  -- cprint:command.src_func.Argv
-// func:command.src_func..PrintArgv
-void                 src_func_PrintArgv(command::src_func& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.src_func..ToCmdline
 tempstr              src_func_ToCmdline(command::src_func& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.src_func.Argv  printfmt:Tuple
+// func:command.src_func..PrintArgv
+void                 src_func_PrintArgv(command::src_func& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.src_func..GetAnon
 algo::strptr         src_func_GetAnon(command::src_func &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -5093,11 +5365,14 @@ int                  src_func_Exec(command::src_func_proc& parent) __attribute__
 // func:command.src_func_proc.src_func.ExecX
 void                 src_func_ExecX(command::src_func_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:src_func.Argv
+// Call execv with specified parameters
 // func:command.src_func_proc.src_func.Execv
 int                  src_func_Execv(command::src_func_proc& parent) __attribute__((nothrow));
 // func:command.src_func_proc.src_func.ToCmdline
 algo::tempstr        src_func_ToCmdline(command::src_func_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.src_func_proc.src_func.ToArgv
+void                 src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.src_func_proc..Init
@@ -5112,7 +5387,7 @@ struct src_hdr { // command.src_hdr
     algo_lib::Regx   targsrc;            //   ""  Sql Regx of dev::Targsrc
     bool             write;              //   false  Update files in-place
     bool             indent;             //   false  Indent source files
-    algo::cstring    update_copyright;   //   ""  Update copyright notice for specified company with current year
+    bool             update_copyright;   //   false  Update copyright year for current company
     algo_lib::Regx   scriptfile;         //   ""  Sql Regx of dev::Scriptfile
     src_hdr();
 private:
@@ -5146,13 +5421,14 @@ bool                 src_hdr_ReadTupleMaybe(command::src_hdr &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.src_hdr..Init
 void                 src_hdr_Init(command::src_hdr& parent);
-// print command-line args of command::src_hdr to string  -- cprint:command.src_hdr.Argv
-// func:command.src_hdr..PrintArgv
-void                 src_hdr_PrintArgv(command::src_hdr& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.src_hdr..ToCmdline
 tempstr              src_hdr_ToCmdline(command::src_hdr& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.src_hdr.Argv  printfmt:Tuple
+// func:command.src_hdr..PrintArgv
+void                 src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -5200,11 +5476,14 @@ int                  src_hdr_Exec(command::src_hdr_proc& parent) __attribute__((
 // func:command.src_hdr_proc.src_hdr.ExecX
 void                 src_hdr_ExecX(command::src_hdr_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:src_hdr.Argv
+// Call execv with specified parameters
 // func:command.src_hdr_proc.src_hdr.Execv
 int                  src_hdr_Execv(command::src_hdr_proc& parent) __attribute__((nothrow));
 // func:command.src_hdr_proc.src_hdr.ToCmdline
 algo::tempstr        src_hdr_ToCmdline(command::src_hdr_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.src_hdr_proc.src_hdr.ToArgv
+void                 src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.src_hdr_proc..Init
@@ -5255,13 +5534,14 @@ bool                 src_lim_ReadTupleMaybe(command::src_lim &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.src_lim..Init
 void                 src_lim_Init(command::src_lim& parent);
-// print command-line args of command::src_lim to string  -- cprint:command.src_lim.Argv
-// func:command.src_lim..PrintArgv
-void                 src_lim_PrintArgv(command::src_lim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.src_lim..ToCmdline
 tempstr              src_lim_ToCmdline(command::src_lim& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.src_lim.Argv  printfmt:Tuple
+// func:command.src_lim..PrintArgv
+void                 src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -5309,11 +5589,14 @@ int                  src_lim_Exec(command::src_lim_proc& parent) __attribute__((
 // func:command.src_lim_proc.src_lim.ExecX
 void                 src_lim_ExecX(command::src_lim_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:src_lim.Argv
+// Call execv with specified parameters
 // func:command.src_lim_proc.src_lim.Execv
 int                  src_lim_Execv(command::src_lim_proc& parent) __attribute__((nothrow));
 // func:command.src_lim_proc.src_lim.ToCmdline
 algo::tempstr        src_lim_ToCmdline(command::src_lim_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.src_lim_proc.src_lim.ToArgv
+void                 src_lim_ToArgv(command::src_lim_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.src_lim_proc..Init
@@ -5337,13 +5620,14 @@ bool                 ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tu
 // Set all fields to initial values.
 // func:command.ssim2csv..Init
 void                 ssim2csv_Init(command::ssim2csv& parent);
-// print command-line args of command::ssim2csv to string  -- cprint:command.ssim2csv.Argv
-// func:command.ssim2csv..PrintArgv
-void                 ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ssim2csv..ToCmdline
 tempstr              ssim2csv_ToCmdline(command::ssim2csv& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.ssim2csv.Argv  printfmt:Auto
+// func:command.ssim2csv..PrintArgv
+void                 ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -5390,11 +5674,14 @@ int                  ssim2csv_Exec(command::ssim2csv_proc& parent) __attribute__
 // func:command.ssim2csv_proc.ssim2csv.ExecX
 void                 ssim2csv_ExecX(command::ssim2csv_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:ssim2csv.Argv
+// Call execv with specified parameters
 // func:command.ssim2csv_proc.ssim2csv.Execv
 int                  ssim2csv_Execv(command::ssim2csv_proc& parent) __attribute__((nothrow));
 // func:command.ssim2csv_proc.ssim2csv.ToCmdline
 algo::tempstr        ssim2csv_ToCmdline(command::ssim2csv_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.ssim2csv_proc.ssim2csv.ToArgv
+void                 ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.ssim2csv_proc..Init
@@ -5427,13 +5714,14 @@ bool                 ssim2mysql_ReadTupleMaybe(command::ssim2mysql &parent, algo
 // Set all fields to initial values.
 // func:command.ssim2mysql..Init
 void                 ssim2mysql_Init(command::ssim2mysql& parent);
-// print command-line args of command::ssim2mysql to string  -- cprint:command.ssim2mysql.Argv
-// func:command.ssim2mysql..PrintArgv
-void                 ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ssim2mysql..ToCmdline
 tempstr              ssim2mysql_ToCmdline(command::ssim2mysql& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.ssim2mysql.Argv  printfmt:Auto
+// func:command.ssim2mysql..PrintArgv
+void                 ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -5480,11 +5768,14 @@ int                  ssim2mysql_Exec(command::ssim2mysql_proc& parent) __attribu
 // func:command.ssim2mysql_proc.ssim2mysql.ExecX
 void                 ssim2mysql_ExecX(command::ssim2mysql_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:ssim2mysql.Argv
+// Call execv with specified parameters
 // func:command.ssim2mysql_proc.ssim2mysql.Execv
 int                  ssim2mysql_Execv(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 // func:command.ssim2mysql_proc.ssim2mysql.ToCmdline
 algo::tempstr        ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.ssim2mysql_proc.ssim2mysql.ToArgv
+void                 ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.ssim2mysql_proc..Init
@@ -5525,6 +5816,11 @@ void                 typetag_Print(command::ssimfilt& parent, algo::cstring &out
 // func:command.ssimfilt.typetag.ReadStrptrMaybe
 bool                 typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.ssimfilt.match.Addary
+algo::aryptr<algo::cstring> match_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.ssimfilt.match.Alloc
@@ -5544,7 +5840,7 @@ bool                 match_EmptyQ(command::ssimfilt& parent) __attribute__((noth
 algo::cstring*       match_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.ssimfilt.match.Getary
-algo::aryptr<algo::cstring> match_Getary(command::ssimfilt& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> match_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.ssimfilt.match.Last
 algo::cstring*       match_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
@@ -5571,6 +5867,10 @@ void                 match_AbsReserve(command::ssimfilt& parent, int n) __attrib
 // Copy contents of RHS to PARENT.
 // func:command.ssimfilt.match.Setary
 void                 match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) __attribute__((nothrow));
+// Copy specified array into match, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.ssimfilt.match.Setary2
+void                 match_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.ssimfilt.match.qFind
 algo::cstring&       match_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
@@ -5583,10 +5883,17 @@ u64                  match_rowid_Get(command::ssimfilt& parent, algo::cstring &e
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.match.AllocNVal
 algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.ssimfilt.match.ReadStrptrMaybe
 bool                 match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.ssimfilt.field.Addary
+algo::aryptr<algo::cstring> field_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:command.ssimfilt.field.Alloc
@@ -5606,7 +5913,7 @@ bool                 field_EmptyQ(command::ssimfilt& parent) __attribute__((noth
 algo::cstring*       field_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.ssimfilt.field.Getary
-algo::aryptr<algo::cstring> field_Getary(command::ssimfilt& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> field_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.ssimfilt.field.Last
 algo::cstring*       field_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
@@ -5633,6 +5940,10 @@ void                 field_AbsReserve(command::ssimfilt& parent, int n) __attrib
 // Copy contents of RHS to PARENT.
 // func:command.ssimfilt.field.Setary
 void                 field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) __attribute__((nothrow));
+// Copy specified array into field, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.ssimfilt.field.Setary2
+void                 field_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.ssimfilt.field.qFind
 algo::cstring&       field_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
@@ -5645,7 +5956,9 @@ u64                  field_rowid_Get(command::ssimfilt& parent, algo::cstring &e
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 // func:command.ssimfilt.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
 
@@ -5708,13 +6021,14 @@ bool                 ssimfilt_ReadTupleMaybe(command::ssimfilt &parent, algo::Tu
 void                 ssimfilt_Init(command::ssimfilt& parent);
 // func:command.ssimfilt..Uninit
 void                 ssimfilt_Uninit(command::ssimfilt& parent) __attribute__((nothrow));
-// print command-line args of command::ssimfilt to string  -- cprint:command.ssimfilt.Argv
-// func:command.ssimfilt..PrintArgv
-void                 ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ssimfilt..ToCmdline
 tempstr              ssimfilt_ToCmdline(command::ssimfilt& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.ssimfilt.Argv  printfmt:Tuple
+// func:command.ssimfilt..PrintArgv
+void                 ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.ssimfilt..GetAnon
 algo::strptr         ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -5764,11 +6078,14 @@ int                  ssimfilt_Exec(command::ssimfilt_proc& parent) __attribute__
 // func:command.ssimfilt_proc.ssimfilt.ExecX
 void                 ssimfilt_ExecX(command::ssimfilt_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:ssimfilt.Argv
+// Call execv with specified parameters
 // func:command.ssimfilt_proc.ssimfilt.Execv
 int                  ssimfilt_Execv(command::ssimfilt_proc& parent) __attribute__((nothrow));
 // func:command.ssimfilt_proc.ssimfilt.ToCmdline
 algo::tempstr        ssimfilt_ToCmdline(command::ssimfilt_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.ssimfilt_proc.ssimfilt.ToArgv
+void                 ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.ssimfilt_proc..Init
@@ -5795,13 +6112,14 @@ bool                 strconv_ReadTupleMaybe(command::strconv &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.strconv..Init
 void                 strconv_Init(command::strconv& parent);
-// print command-line args of command::strconv to string  -- cprint:command.strconv.Argv
-// func:command.strconv..PrintArgv
-void                 strconv_PrintArgv(command::strconv& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.strconv..ToCmdline
 tempstr              strconv_ToCmdline(command::strconv& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.strconv.Argv  printfmt:Tuple
+// func:command.strconv..PrintArgv
+void                 strconv_PrintArgv(command::strconv& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.strconv..GetAnon
 algo::strptr         strconv_GetAnon(command::strconv &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -5850,11 +6168,14 @@ int                  strconv_Exec(command::strconv_proc& parent) __attribute__((
 // func:command.strconv_proc.strconv.ExecX
 void                 strconv_ExecX(command::strconv_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:strconv.Argv
+// Call execv with specified parameters
 // func:command.strconv_proc.strconv.Execv
 int                  strconv_Execv(command::strconv_proc& parent) __attribute__((nothrow));
 // func:command.strconv_proc.strconv.ToCmdline
 algo::tempstr        strconv_ToCmdline(command::strconv_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.strconv_proc.strconv.ToArgv
+void                 strconv_ToArgv(command::strconv_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.strconv_proc..Init
@@ -5900,13 +6221,14 @@ bool                 sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tupl
 // Set all fields to initial values.
 // func:command.sv2ssim..Init
 void                 sv2ssim_Init(command::sv2ssim& parent);
-// print command-line args of command::sv2ssim to string  -- cprint:command.sv2ssim.Argv
-// func:command.sv2ssim..PrintArgv
-void                 sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.sv2ssim..ToCmdline
 tempstr              sv2ssim_ToCmdline(command::sv2ssim& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.sv2ssim.Argv  printfmt:Tuple
+// func:command.sv2ssim..PrintArgv
+void                 sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring& str) __attribute__((nothrow));
 // func:command.sv2ssim..GetAnon
 algo::strptr         sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) __attribute__((nothrow));
 // Used with command lines
@@ -5956,11 +6278,14 @@ int                  sv2ssim_Exec(command::sv2ssim_proc& parent) __attribute__((
 // func:command.sv2ssim_proc.sv2ssim.ExecX
 void                 sv2ssim_ExecX(command::sv2ssim_proc& parent);
 // Call execv()
-// Call execv with specified parameters -- cprint:sv2ssim.Argv
+// Call execv with specified parameters
 // func:command.sv2ssim_proc.sv2ssim.Execv
 int                  sv2ssim_Execv(command::sv2ssim_proc& parent) __attribute__((nothrow));
 // func:command.sv2ssim_proc.sv2ssim.ToCmdline
 algo::tempstr        sv2ssim_ToCmdline(command::sv2ssim_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.sv2ssim_proc.sv2ssim.ToArgv
+void                 sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:command.sv2ssim_proc..Init

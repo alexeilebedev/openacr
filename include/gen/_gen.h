@@ -132,10 +132,9 @@ bool                 u128_ReadStrptrMaybe(u128& result, algo::strptr str);
 // this function is 'extrn' and implemented by user
 u32                  bool_Hash(u32 prev, bool rhs) __attribute__((nothrow));
 // Read fields of bool from an ascii string.
-// The function is implemented externally.
 // func:bool..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 bool_ReadStrptrMaybe(bool &parent, algo::strptr in_str);
+bool                 bool_ReadStrptrMaybe(bool &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:bool..Lt
 // this function is 'extrn' and implemented by user
 bool                 bool_Lt(bool lhs, bool rhs) __attribute__((nothrow));
@@ -148,23 +147,23 @@ bool                 bool_Eq(bool lhs, bool rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:bool..Update
 bool                 bool_Update(bool &lhs, bool rhs) __attribute__((nothrow));
+// Create JSON representation of bool under PARENT node
+// cfmt:bool.Json  printfmt:Extern
+// func:bool..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    bool_FmtJson(bool row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:bool.String  printfmt:Extern
 // func:bool..Print
 // this function is 'extrn' and implemented by user
 void                 bool_Print(bool row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of bool under PARENT node -- implemented externally
-// func:bool..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    bool_FmtJson(bool row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:char..Hash
 // this function is 'extrn' and implemented by user
 u32                  char_Hash(u32 prev, char rhs) __attribute__((nothrow));
 // Read fields of char from an ascii string.
-// The function is implemented externally.
 // func:char..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 char_ReadStrptrMaybe(char &parent, algo::strptr in_str);
+bool                 char_ReadStrptrMaybe(char &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:char..Lt
 // this function is 'extrn' and implemented by user
 bool                 char_Lt(char lhs, char rhs) __attribute__((nothrow));
@@ -177,23 +176,23 @@ bool                 char_Eq(char lhs, char rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:char..Update
 bool                 char_Update(char &lhs, char rhs) __attribute__((nothrow));
+// Create JSON representation of char under PARENT node
+// cfmt:char.Json  printfmt:Extern
+// func:char..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    char_FmtJson(char row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:char.String  printfmt:Extern
 // func:char..Print
 // this function is 'extrn' and implemented by user
 void                 char_Print(char row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of char under PARENT node -- implemented externally
-// func:char..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    char_FmtJson(char row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:double..Hash
 // this function is 'extrn' and implemented by user
 u32                  double_Hash(u32 prev, double rhs) __attribute__((nothrow));
 // Read fields of double from an ascii string.
-// The function is implemented externally.
 // func:double..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 double_ReadStrptrMaybe(double &parent, algo::strptr in_str);
+bool                 double_ReadStrptrMaybe(double &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:double..Lt
 // this function is 'extrn' and implemented by user
 bool                 double_Lt(double lhs, double rhs) __attribute__((nothrow));
@@ -218,23 +217,23 @@ bool                 double_Eq(double lhs, double rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:double..Update
 bool                 double_Update(double &lhs, double rhs) __attribute__((nothrow));
+// Create JSON representation of double under PARENT node
+// cfmt:double.Json  printfmt:Extern
+// func:double..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    double_FmtJson(double row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:double.String  printfmt:Extern
 // func:double..Print
 // this function is 'extrn' and implemented by user
 void                 double_Print(double row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of double under PARENT node -- implemented externally
-// func:double..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    double_FmtJson(double row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:float..Hash
 // this function is 'extrn' and implemented by user
 u32                  float_Hash(u32 prev, float rhs) __attribute__((nothrow));
 // Read fields of float from an ascii string.
-// The function is implemented externally.
 // func:float..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 float_ReadStrptrMaybe(float &parent, algo::strptr in_str);
+bool                 float_ReadStrptrMaybe(float &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:float..Lt
 // this function is 'extrn' and implemented by user
 bool                 float_Lt(float lhs, float rhs) __attribute__((nothrow));
@@ -259,23 +258,23 @@ bool                 float_Eq(float lhs, float rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:float..Update
 bool                 float_Update(float &lhs, float rhs) __attribute__((nothrow));
+// Create JSON representation of float under PARENT node
+// cfmt:float.Json  printfmt:Extern
+// func:float..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    float_FmtJson(float row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:float.String  printfmt:Extern
 // func:float..Print
 // this function is 'extrn' and implemented by user
 void                 float_Print(float row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of float under PARENT node -- implemented externally
-// func:float..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    float_FmtJson(float row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:i16..Hash
 // this function is 'extrn' and implemented by user
 u32                  i16_Hash(u32 prev, i16 rhs) __attribute__((nothrow));
 // Read fields of i16 from an ascii string.
-// The function is implemented externally.
 // func:i16..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str);
+bool                 i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:i16..Lt
 // this function is 'extrn' and implemented by user
 bool                 i16_Lt(i16 lhs, i16 rhs) __attribute__((nothrow));
@@ -300,23 +299,23 @@ bool                 i16_Eq(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i16..Update
 bool                 i16_Update(i16 &lhs, i16 rhs) __attribute__((nothrow));
+// Create JSON representation of i16 under PARENT node
+// cfmt:i16.Json  printfmt:Extern
+// func:i16..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    i16_FmtJson(i16 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:i16.String  printfmt:Extern
 // func:i16..Print
 // this function is 'extrn' and implemented by user
 void                 i16_Print(i16 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of i16 under PARENT node -- implemented externally
-// func:i16..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    i16_FmtJson(i16 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:i32..Hash
 // this function is 'extrn' and implemented by user
 u32                  i32_Hash(u32 prev, i32 rhs) __attribute__((nothrow));
 // Read fields of i32 from an ascii string.
-// The function is implemented externally.
 // func:i32..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str);
+bool                 i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:i32..Lt
 // this function is 'extrn' and implemented by user
 bool                 i32_Lt(i32 lhs, i32 rhs) __attribute__((nothrow));
@@ -341,23 +340,23 @@ bool                 i32_Eq(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i32..Update
 bool                 i32_Update(i32 &lhs, i32 rhs) __attribute__((nothrow));
+// Create JSON representation of i32 under PARENT node
+// cfmt:i32.Json  printfmt:Extern
+// func:i32..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    i32_FmtJson(i32 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:i32.String  printfmt:Extern
 // func:i32..Print
 // this function is 'extrn' and implemented by user
 void                 i32_Print(i32 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of i32 under PARENT node -- implemented externally
-// func:i32..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    i32_FmtJson(i32 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:i64..Hash
 // this function is 'extrn' and implemented by user
 u32                  i64_Hash(u32 prev, i64 rhs) __attribute__((nothrow));
 // Read fields of i64 from an ascii string.
-// The function is implemented externally.
 // func:i64..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str);
+bool                 i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:i64..Lt
 // this function is 'extrn' and implemented by user
 bool                 i64_Lt(i64 lhs, i64 rhs) __attribute__((nothrow));
@@ -382,23 +381,23 @@ bool                 i64_Eq(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i64..Update
 bool                 i64_Update(i64 &lhs, i64 rhs) __attribute__((nothrow));
+// Create JSON representation of i64 under PARENT node
+// cfmt:i64.Json  printfmt:Extern
+// func:i64..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    i64_FmtJson(i64 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:i64.String  printfmt:Extern
 // func:i64..Print
 // this function is 'extrn' and implemented by user
 void                 i64_Print(i64 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of i64 under PARENT node -- implemented externally
-// func:i64..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    i64_FmtJson(i64 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:i8..Hash
 // this function is 'extrn' and implemented by user
 u32                  i8_Hash(u32 prev, i8 rhs) __attribute__((nothrow));
 // Read fields of i8 from an ascii string.
-// The function is implemented externally.
 // func:i8..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str);
+bool                 i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:i8..Lt
 // this function is 'extrn' and implemented by user
 bool                 i8_Lt(i8 lhs, i8 rhs) __attribute__((nothrow));
@@ -423,23 +422,23 @@ bool                 i8_Eq(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i8..Update
 bool                 i8_Update(i8 &lhs, i8 rhs) __attribute__((nothrow));
+// Create JSON representation of i8 under PARENT node
+// cfmt:i8.Json  printfmt:Extern
+// func:i8..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    i8_FmtJson(i8 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:i8.String  printfmt:Extern
 // func:i8..Print
 // this function is 'extrn' and implemented by user
 void                 i8_Print(i8 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of i8 under PARENT node -- implemented externally
-// func:i8..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    i8_FmtJson(i8 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:u8..Hash
 // this function is 'extrn' and implemented by user
 u32                  u8_Hash(u32 prev, u8 rhs) __attribute__((nothrow));
 // Read fields of u8 from an ascii string.
-// The function is implemented externally.
 // func:u8..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str);
+bool                 u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:u8..Lt
 // this function is 'extrn' and implemented by user
 bool                 u8_Lt(u8 lhs, u8 rhs) __attribute__((nothrow));
@@ -464,23 +463,23 @@ bool                 u8_Eq(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u8..Update
 bool                 u8_Update(u8 &lhs, u8 rhs) __attribute__((nothrow));
+// Create JSON representation of u8 under PARENT node
+// cfmt:u8.Json  printfmt:Extern
+// func:u8..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    u8_FmtJson(u8 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:u8.String  printfmt:Extern
 // func:u8..Print
 // this function is 'extrn' and implemented by user
 void                 u8_Print(u8 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of u8 under PARENT node -- implemented externally
-// func:u8..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    u8_FmtJson(u8 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:u128..Hash
 // this function is 'extrn' and implemented by user
 u32                  u128_Hash(u32 prev, u128 rhs) __attribute__((nothrow));
 // Read fields of u128 from an ascii string.
-// The function is implemented externally.
 // func:u128..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str);
+bool                 u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:u128..Lt
 // this function is 'extrn' and implemented by user
 bool                 u128_Lt(u128 lhs, u128 rhs) __attribute__((nothrow));
@@ -514,10 +513,9 @@ void                 u128_Print(u128 row, algo::cstring& str) __attribute__((not
 // this function is 'extrn' and implemented by user
 u32                  u16_Hash(u32 prev, u16 rhs) __attribute__((nothrow));
 // Read fields of u16 from an ascii string.
-// The function is implemented externally.
 // func:u16..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str);
+bool                 u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:u16..Lt
 // this function is 'extrn' and implemented by user
 bool                 u16_Lt(u16 lhs, u16 rhs) __attribute__((nothrow));
@@ -542,23 +540,23 @@ bool                 u16_Eq(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u16..Update
 bool                 u16_Update(u16 &lhs, u16 rhs) __attribute__((nothrow));
+// Create JSON representation of u16 under PARENT node
+// cfmt:u16.Json  printfmt:Extern
+// func:u16..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    u16_FmtJson(u16 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:u16.String  printfmt:Extern
 // func:u16..Print
 // this function is 'extrn' and implemented by user
 void                 u16_Print(u16 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of u16 under PARENT node -- implemented externally
-// func:u16..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    u16_FmtJson(u16 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:u32..Hash
 // this function is 'extrn' and implemented by user
 u32                  u32_Hash(u32 prev, u32 rhs) __attribute__((nothrow));
 // Read fields of u32 from an ascii string.
-// The function is implemented externally.
 // func:u32..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str);
+bool                 u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:u32..Lt
 // this function is 'extrn' and implemented by user
 bool                 u32_Lt(u32 lhs, u32 rhs) __attribute__((nothrow));
@@ -583,23 +581,23 @@ bool                 u32_Eq(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u32..Update
 bool                 u32_Update(u32 &lhs, u32 rhs) __attribute__((nothrow));
+// Create JSON representation of u32 under PARENT node
+// cfmt:u32.Json  printfmt:Extern
+// func:u32..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    u32_FmtJson(u32 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:u32.String  printfmt:Extern
 // func:u32..Print
 // this function is 'extrn' and implemented by user
 void                 u32_Print(u32 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of u32 under PARENT node -- implemented externally
-// func:u32..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    u32_FmtJson(u32 row, lib_json::FNode *parent) __attribute__((nothrow));
 // func:u64..Hash
 // this function is 'extrn' and implemented by user
 u32                  u64_Hash(u32 prev, u64 rhs) __attribute__((nothrow));
 // Read fields of u64 from an ascii string.
-// The function is implemented externally.
 // func:u64..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str);
+bool                 u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:u64..Lt
 // this function is 'extrn' and implemented by user
 bool                 u64_Lt(u64 lhs, u64 rhs) __attribute__((nothrow));
@@ -624,15 +622,16 @@ bool                 u64_Eq(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u64..Update
 bool                 u64_Update(u64 &lhs, u64 rhs) __attribute__((nothrow));
+// Create JSON representation of u64 under PARENT node
+// cfmt:u64.Json  printfmt:Extern
+// func:u64..FmtJson
+// this function is 'extrn' and implemented by user
+lib_json::FNode *    u64_FmtJson(u64 row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:u64.String  printfmt:Extern
 // func:u64..Print
 // this function is 'extrn' and implemented by user
 void                 u64_Print(u64 row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of u64 under PARENT node -- implemented externally
-// func:u64..FmtJson
-// this function is 'extrn' and implemented by user
-lib_json::FNode *    u64_FmtJson(u64 row, lib_json::FNode *parent) __attribute__((nothrow));
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const bool &row);// cfmt:bool.String

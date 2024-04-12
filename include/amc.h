@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2013 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -354,13 +354,12 @@ namespace amc { // update-hdr
     // - for all other fields, c++ operator "==" is used. it better be defined
     // void tfunc_Ctype_Eq();
     // void tfunc_Ctype_EqStrptr();
-    // void tfunc_Ctype_PrintArgv();
     // void tfunc_Ctype_ToCmdline();
 
     // Used with command lines
     // void tfunc_Ctype_NArgs();
     // void tfunc_Ctype_Print();
-    // void tfunc_Ctype_FmtJson();
+    // void tfunc_Ctype_Read();
     // void tfunc_Ctype_EqEnum();
     // void tfunc_Ctype_GetAnon();
     // void tfunc_Ctype_GetMsgLength();
@@ -467,22 +466,11 @@ namespace amc { // update-hdr
     // void tfunc_Exec_Wait();
     // void tfunc_Exec_Kill();
     // void tfunc_Exec_Start();
-
-    // // Should this be generated?
-    // static algo::Fildes bash_StartRead(command::bash_proc &bash, algo_lib::FFildes &read) {
-    // int pipefd[2];
-    // int rc=pipe(pipefd);
-    // (void)rc;
-    // read.fd.value = pipefd[0];
-    // bash.fstdout  << ">&" << pipefd[1];
-    // bash_Start(bash);
-    // (void)close(pipefd[1]);
-    // return read.fd;
-    // }
     // void tfunc_Exec_StartRead();
     // void tfunc_Exec_Exec();
     // void tfunc_Exec_ExecX();
     // void tfunc_Exec_ToCmdline();
+    // void tfunc_Exec_ToArgv();
     // void tfunc_Exec_Execv();
     void NewFieldExec();
 
@@ -921,8 +909,36 @@ namespace amc { // update-hdr
     // void tfunc_Inlary_qFind();
     // void tfunc_Inlary_rowid_Get();
     // void tfunc_Inlary_curs();
-    // void tfunc_Inlary_Print();
+
+    // Read/Accumulate inline array from string.
+    // For fixed arrays:
+    // multiple reads into fixed array will leave old data behind
+    // (e.g. reading 1 element after reading 2 elements will leave the 2nd element from initial read)
+    // we don't clear the tail of the array with default values.
+    //
+    // arg:char or u8
+    // the array is flushed befor reading
+    // input is a string that is copied to the array.
+    // if the input is too large, it is silently truncated
+    // any other type, with separator:
+    // the array is flushed before reading
+    // input string is split on separator character, elements are appended one by one
+    // if the input is too large, it is silently truncated
+    // any other type, without separator:
+    // one element is read from input string and appended to the array without flushing.
+    // if the element doesn't fit, function returns false.
+    // (for fixed array, element #0 is read)
+    //
     // void tfunc_Inlary_ReadStrptrMaybe();
+
+    // Print array to string
+    // char/u8 are printed as-is
+    // pad_byte is ignored
+    // all other types are printed separated by SEP
+    // if none of the above conditions are present, the print function is not generated.
+    // This function is reused by Tary and Varlen, so it cannot really assume
+    // we're dealing with an Inlary
+    // void tfunc_Inlary_Print();
 
     // -------------------------------------------------------------------
     // cpp/amc/io.cpp -- I/O functions
@@ -941,14 +957,6 @@ namespace amc { // update-hdr
     tempstr StaticHookPkey(amc::FField &field, strptr suffix);
     //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Io_LoadStatic();
-
-    // -------------------------------------------------------------------
-    // cpp/amc/json.cpp
-    //
-
-    // Generate a function to convert ctype to Json
-    // Called from amc::tfunc_Ctype_FmtJson
-    void GenFmtJson(amc::FCtype &ctype);
 
     // -------------------------------------------------------------------
     // cpp/amc/lary.cpp
@@ -1019,6 +1027,8 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/main.cpp -- Main driver
     //
+
+    // Return TRUE if field is a padding field with no semantic significance
     bool PadQ(amc::FField &field);
     bool CanDeleteQ(amc::FCtype &ctype);
 
@@ -1074,9 +1084,6 @@ namespace amc { // update-hdr
     // True if ctype is instantiated through a memory pool that has an Alloc function.
     bool PoolHasAllocQ(amc::FCtype &ctype);
     void GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field, strptr strname, strptr parentname);
-
-    // print binary octet string as hex byte array initializer
-    void memptr_PrintOctetsHexArray(algo::memptr ary, cstring &out, bool caps);
     bool FldfuncQ(amc::FField &field);
     bool CanCopyQ(amc::FCtype &ctype);
     bool PoolVarlenQ(amc::FField &field);
@@ -1096,6 +1103,10 @@ namespace amc { // update-hdr
     tempstr VarStringToInteger(strptr name, i32 len);
     void GetMinMax(amc::FCtype& _ctype, u64 &min, u64 &max, bool &issigned);
     bool CheapCopyQ(amc::FField &field);
+
+    // Return c++ type for rowid of FCtype
+    // By default this is a u64, but if the struct has a field marked rowid,
+    // then the type of that field is the row id type.
     tempstr EvalRowid(amc::FCtype &ctype);
 
     // True if given ctype is a global, i.e. it has only a single instance
@@ -1103,11 +1114,16 @@ namespace amc { // update-hdr
     bool GlobalQ(amc::FCtype &ctype);
 
     // Pick a name with which to refer to a record of type CTYPE
-    tempstr Refname(amc::FCtype &ctype);
+    tempstr Refname(amc::FCtype &ctype, algo::strptr dflt = "parent");
 
     // Returns TRUE if the field is an inline value, except for Varlen and Opt
     bool ValQ(amc::FField &field);
     bool ComputedFieldQ(amc::FField &field);
+    tempstr char_ToCppSingleQuote(char c);
+
+    // return separator to be used for array field FIELD
+    // if not found, return 0 (NUL)
+    char GetSep(amc::FField &field);
 
     // Evaluate value of SSIM attribute as described by field FIELD
     // given tuple TUPLE
@@ -1364,8 +1380,9 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/print.cpp -- Print ctype to string
     //
-    tempstr CheckDfltExpr(amc::FField &field, strptr text, bool canskip);
-    void GenPrint(amc::FCtype &ctype, amc::FCfmt &cfmt);
+    tempstr CheckDfltExpr(algo_lib::Replscope &R, amc::FField &field, strptr text, bool canskip);
+    void GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &, amc::FFunc &fmtjson);
+    void GenPrint(amc::FCtype &parent, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
     // cpp/amc/protocol.cpp
@@ -1384,7 +1401,6 @@ namespace amc { // update-hdr
     // void tfunc_Ptr_InsertMaybe();
     // void tfunc_Ptr_Remove();
     // void tfunc_Ptr_Cascdel();
-    // void tfunc_Ptr_Print();
 
     // -------------------------------------------------------------------
     // cpp/amc/ptrary.cpp
@@ -1423,10 +1439,11 @@ namespace amc { // update-hdr
     // -------------------------------------------------------------------
     // cpp/amc/read.cpp -- Read ctype from string
     //
+
+    // Dispatach on field name, and read appropriate field
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tfunc_Ctype_ReadTupleMaybe();
-    // void tfunc_Ctype_ReadStrptrMaybe();
     // void tfunc_Ctype_ReadFieldMaybe();
+    void GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
     // cpp/amc/regx.cpp -- Small strings
@@ -1616,7 +1633,22 @@ namespace amc { // update-hdr
     // void tfunc_Tary_Eq();
     // void tfunc_Tary_Cmp();
     // void tfunc_Tary_curs();
+
+    // Read/Accumulate Tary from string.
+    // arg:char & U8
+    // the array is flushed befor reading
+    // input is a string that is copied to the array.
+    // any other type, with separator:
+    // the array is flushed before reading
+    // input string is split on separator character, elements are appended one by one
+    // if any element cannot be read, function returns false
+    // (but array retains values read so far)
+    // any other type, without separator:
+    // one element is read from input string and appended to the array without flushing.
+    // if the element cannot be read, the array is unchanged
+    //
     // void tfunc_Tary_ReadStrptrMaybe();
+    // void tfunc_Tary_Print();
 
     // -------------------------------------------------------------------
     // cpp/amc/tclass.cpp
@@ -1716,4 +1748,5 @@ namespace amc { // update-hdr
     // void tfunc_Varlen_N();
     // void tfunc_Varlen_ReadStrptrMaybe();
     // void tfunc_Varlen_curs();
+    // void tfunc_Varlen_Print();
 }

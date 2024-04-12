@@ -77,6 +77,7 @@ namespace src_hdr { struct _db_license_curs; }
 namespace src_hdr { struct _db_target_curs; }
 namespace src_hdr { struct _db_scriptfile_curs; }
 namespace src_hdr { struct _db_copyright_curs; }
+namespace src_hdr { struct _db_bh_copyright_curs; }
 namespace src_hdr { struct target_c_targsrc_curs; }
 namespace src_hdr { struct FCopyline; }
 namespace src_hdr { struct FCopyright; }
@@ -117,11 +118,15 @@ void                 FCopyline_Uninit(src_hdr::FCopyline& fcopyline) __attribute
 // create: src_hdr.FDb.copyright (Lary)
 // global access: c_dflt_copyright (Ptr)
 // global access: ind_copyright (Thash)
+// global access: bh_copyright (Bheap)
 struct FCopyright { // src_hdr.FCopyright
     algo::Smallstr50       copyright;            //
     bool                   dflt;                 //   false
     algo::Comment          comment;              //
+    algo::cstring          years;                //
+    i32                    sortkey;              //   0
     src_hdr::FCopyright*   ind_copyright_next;   // hash next
+    i32                    bh_copyright_idx;     // index in heap; -1 means not-in-heap
 private:
     friend src_hdr::FCopyright& copyright_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_hdr::FCopyright* copyright_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -194,6 +199,9 @@ struct FDb { // src_hdr.FDb: In-memory database for src_hdr
     src_hdr::FCopyright**   ind_copyright_buckets_elems;   // pointer to bucket array
     i32                     ind_copyright_buckets_n;       // number of elements in bucket array
     i32                     ind_copyright_n;               // number of elements in the hash table
+    src_hdr::FCopyright**   bh_copyright_elems;            // binary heap by sortkey
+    i32                     bh_copyright_n;                // number of elements in the heap
+    i32                     bh_copyright_max;              // max elements in bh_copyright_elems
     src_hdr::trace          trace;                         //
 };
 
@@ -668,6 +676,48 @@ void                 ind_copyright_Remove(src_hdr::FCopyright& row) __attribute_
 // func:src_hdr.FDb.ind_copyright.Reserve
 void                 ind_copyright_Reserve(int n) __attribute__((nothrow));
 
+// Remove all elements from heap and free memory used by the array.
+// func:src_hdr.FDb.bh_copyright.Dealloc
+void                 bh_copyright_Dealloc() __attribute__((nothrow));
+// Return true if index is empty
+// func:src_hdr.FDb.bh_copyright.EmptyQ
+bool                 bh_copyright_EmptyQ() __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:src_hdr.FDb.bh_copyright.First
+src_hdr::FCopyright* bh_copyright_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in index, false otherwise
+// func:src_hdr.FDb.bh_copyright.InBheapQ
+bool                 bh_copyright_InBheapQ(src_hdr::FCopyright& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:src_hdr.FDb.bh_copyright.Insert
+void                 bh_copyright_Insert(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Return number of items in the heap
+// func:src_hdr.FDb.bh_copyright.N
+i32                  bh_copyright_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+// func:src_hdr.FDb.bh_copyright.Reheap
+i32                  bh_copyright_Reheap(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+// func:src_hdr.FDb.bh_copyright.ReheapFirst
+i32                  bh_copyright_ReheapFirst() __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:src_hdr.FDb.bh_copyright.Remove
+void                 bh_copyright_Remove(src_hdr::FCopyright& row) __attribute__((nothrow));
+// Remove all elements from binary heap
+// func:src_hdr.FDb.bh_copyright.RemoveAll
+void                 bh_copyright_RemoveAll() __attribute__((nothrow));
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+// func:src_hdr.FDb.bh_copyright.RemoveFirst
+src_hdr::FCopyright* bh_copyright_RemoveFirst() __attribute__((nothrow));
+// Reserve space in index for N more elements
+// func:src_hdr.FDb.bh_copyright.Reserve
+void                 bh_copyright_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:src_hdr.FDb.targsrc_curs.Reset
 void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent) __attribute__((nothrow));
@@ -752,6 +802,20 @@ void                 _db_copyright_curs_Next(_db_copyright_curs &curs) __attribu
 // item access
 // func:src_hdr.FDb.copyright_curs.Access
 src_hdr::FCopyright& _db_copyright_curs_Access(_db_copyright_curs &curs) __attribute__((nothrow));
+// func:src_hdr.FDb.bh_copyright_curs.Reserve
+void                 _db_bh_copyright_curs_Reserve(_db_bh_copyright_curs &curs, int n);
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:src_hdr.FDb.bh_copyright_curs.Reset
+void                 _db_bh_copyright_curs_Reset(_db_bh_copyright_curs &curs, src_hdr::FDb &parent);
+// Advance cursor.
+// func:src_hdr.FDb.bh_copyright_curs.Next
+void                 _db_bh_copyright_curs_Next(_db_bh_copyright_curs &curs);
+// Access current element. If not more elements, return NULL
+// func:src_hdr.FDb.bh_copyright_curs.Access
+src_hdr::FCopyright& _db_bh_copyright_curs_Access(_db_bh_copyright_curs &curs) __attribute__((nothrow));
+// Return true if Access() will return non-NULL.
+// func:src_hdr.FDb.bh_copyright_curs.ValidQ
+bool                 _db_bh_copyright_curs_ValidQ(_db_bh_copyright_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_hdr.FDb..Init
 void                 FDb_Init();
@@ -1090,7 +1154,7 @@ bool                 value_ReadStrptrMaybe(src_hdr::FieldId& parent, algo::strpt
 // Read fields of src_hdr::FieldId from an ascii string.
 // The format of the string is the format of the src_hdr::FieldId's only field
 // func:src_hdr.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_hdr.FieldId..Init
 void                 FieldId_Init(src_hdr::FieldId& parent);
@@ -1138,7 +1202,7 @@ bool                 value_ReadStrptrMaybe(src_hdr::TableId& parent, algo::strpt
 // Read fields of src_hdr::TableId from an ascii string.
 // The format of the string is the format of the src_hdr::TableId's only field
 // func:src_hdr.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_hdr.TableId..Init
 void                 TableId_Init(src_hdr::TableId& parent);
@@ -1202,6 +1266,18 @@ struct _db_copyright_curs {// cursor
     src_hdr::FDb *parent;
     i64 index;
     _db_copyright_curs(){ parent=NULL; index=0; }
+};
+
+// Non-destructive heap cursor, returns heap elements in sorted order.
+// A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
+struct _db_bh_copyright_curs {
+    typedef src_hdr::FCopyright ChildType;
+    src_hdr::FDb      *parent;        // parent
+    src_hdr::FCopyright*     *temp_elems;    // helper heap
+    int            temp_n;        // number of elements heaped in the helper heap
+    int            temp_max;      // max number of elements possible in the helper heap
+    _db_bh_copyright_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
+    ~_db_bh_copyright_curs();
 };
 
 

@@ -1,6 +1,6 @@
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -1249,80 +1249,82 @@ void atf_unit::unittest_algo_lib_DirBeg() {
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse() {
-    algo::CreateDirRecurse("temp");
-    algo::StringToFile("test", "temp/RemDirRecurse_unrelated");
-    vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);
+    {
+        algo::CreateDirRecurse("temp");
+        algo::StringToFile("test", "temp/RemDirRecurse_unrelated");
+        vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);
 
-    algo::RemDirRecurse("temp/RemDirRecurse_unrelated", true);//
+        algo::RemDirRecurse("temp/RemDirRecurse_unrelated", true);//
 
-    vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);//file must exist
-    vrfyeq_(unlink("temp/RemDirRecurse_unrelated"), 0);// delete the file
-}
+        vrfyeq_(algo::FileQ("temp/RemDirRecurse_unrelated"), true);//file must exist
+        vrfyeq_(unlink("temp/RemDirRecurse_unrelated"), 0);// delete the file
+    }
 
-void atf_unit::unittest_algo_lib_RemDirRecurse1() {
-    algo::CreateDirRecurse("temp");
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
-    algo::CreateDirRecurse("temp/RemDirRecurse");
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);
+    {
+        algo::CreateDirRecurse("temp");
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
+        algo::CreateDirRecurse("temp/RemDirRecurse");
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);
 
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
-}
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
+    }
 
-void atf_unit::unittest_algo_lib_RemDirRecurse2() {
-    algo::CreateDirRecurse("temp");
-    algo::CreateDirRecurse("temp/RemDirRecurse");
-    algo::StringToFile("test"        , "temp/RemDirRecurse/unrelated");// this file should not get deleted
+    {
+        algo::CreateDirRecurse("temp");
+        algo::CreateDirRecurse("temp/RemDirRecurse");
+        algo::StringToFile("test"        , "temp/RemDirRecurse/unrelated");// this file should not get deleted
 
-    algo::RemDirRecurse("temp/RemDirRecurse", false);// do not remove topmost -- returns true
+        algo::RemDirRecurse("temp/RemDirRecurse", false);// do not remove topmost -- returns true
 
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);// dir must exist
-    vrfyeq_(algo::FileQ("temp/RemDirRecurse/unrelated"), false);// file must not exist
-    vrfyeq_(rmdir("temp/RemDirRecurse"), 0);// wipe the dir
-}
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), true);// dir must exist
+        vrfyeq_(algo::FileQ("temp/RemDirRecurse/unrelated"), false);// file must not exist
+        vrfyeq_(rmdir("temp/RemDirRecurse"), 0);// wipe the dir
+    }
 
-void atf_unit::unittest_algo_lib_RemDirRecurse3() {
-    algo::CreateDirRecurse("temp");
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
-    algo::CreateDirRecurse("temp/RemDirRecurse/");
-    algo::CreateDirRecurse("temp/RemDirRecurse2");
+    {
+        algo::CreateDirRecurse("temp");
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
+        algo::CreateDirRecurse("temp/RemDirRecurse/");
+        algo::CreateDirRecurse("temp/RemDirRecurse2");
 
-    algo::StringToFile("Test 1", "temp/RemDirRecurse/file1");
-    algo::StringToFile("Test 2", "temp/RemDirRecurse2/file2");
-    vrfyeq_(symlink("../RemDirRecurse2", "temp/RemDirRecurse/dir2"), 0);
+        algo::StringToFile("Test 1", "temp/RemDirRecurse/file1");
+        algo::StringToFile("Test 2", "temp/RemDirRecurse2/file2");
+        vrfyeq_(symlink("../RemDirRecurse2", "temp/RemDirRecurse/dir2"), 0);
 
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), true); // must exist!
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), true); // must exist!
 
-    algo::RemDirRecurse("temp/RemDirRecurse2", true); // delete it too
+        algo::RemDirRecurse("temp/RemDirRecurse2", true); // delete it too
 
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), false);// must not exist now
-}
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse2"), false);// must not exist now
+    }
 
-void atf_unit::unittest_algo_lib_RemDirRecurse4() {
-    algo::CreateDirRecurse("temp");
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
-    algo::CreateDirRecurse("temp/RemDirRecurse/subdir/level3");
+    {
+        algo::CreateDirRecurse("temp");
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
+        algo::CreateDirRecurse("temp/RemDirRecurse/subdir/level3");
 
-    algo::StringToFile("Level 1 file", "temp/RemDirRecurse/file1");
-    algo::StringToFile("Level 2 file", "temp/RemDirRecurse/subdir/plain-l2");
-    algo::StringToFile("Level 3 file", "temp/RemDirRecurse/subdir/level3/plain-l3");
-    algo::StringToFile("test"        , "temp/RemDirRecurse_unrelated");// this file should not get deleted
+        algo::StringToFile("Level 1 file", "temp/RemDirRecurse/file1");
+        algo::StringToFile("Level 2 file", "temp/RemDirRecurse/subdir/plain-l2");
+        algo::StringToFile("Level 3 file", "temp/RemDirRecurse/subdir/level3/plain-l3");
+        algo::StringToFile("test"        , "temp/RemDirRecurse_unrelated");// this file should not get deleted
 
-    vrfyeq_(link("temp/RemDirRecurse/subdir/plain-l2", "temp/RemDirRecurse/hardlink1"), 0);
-    vrfyeq_(link("temp/RemDirRecurse/file1"          , "temp/RemDirRecurse/subdir/hardlink2"), 0);
-    vrfyeq_(symlink("../level3/plain-l3"             , "temp/RemDirRecurse/subdir/softlink2"), 0);
-    vrfyeq_(symlink("../subdir/plain-l2"             , "temp/RemDirRecurse/subdir/level3/softlink3"), 0);
+        vrfyeq_(link("temp/RemDirRecurse/subdir/plain-l2", "temp/RemDirRecurse/hardlink1"), 0);
+        vrfyeq_(link("temp/RemDirRecurse/file1"          , "temp/RemDirRecurse/subdir/hardlink2"), 0);
+        vrfyeq_(symlink("../level3/plain-l3"             , "temp/RemDirRecurse/subdir/softlink2"), 0);
+        vrfyeq_(symlink("../subdir/plain-l2"             , "temp/RemDirRecurse/subdir/level3/softlink3"), 0);
 
-    // check that unrelated file was not deleted!
-    algo::RemDirRecurse("temp/RemDirRecurse", true);
+        // check that unrelated file was not deleted!
+        algo::RemDirRecurse("temp/RemDirRecurse", true);
 
-    vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
-    vrfyeq_(algo::FileToString("temp/RemDirRecurse_unrelated"), "test");
-    algo::DeleteFile("temp/RemDirRecurse_unrelated");
+        vrfyeq_(algo::DirectoryQ("temp/RemDirRecurse"), false);
+        vrfyeq_(algo::FileToString("temp/RemDirRecurse_unrelated"), "test");
+        algo::DeleteFile("temp/RemDirRecurse_unrelated");
+    }
 }
 
 // --------------------------------------------------------------------------------
@@ -2537,7 +2539,7 @@ void atf_unit::unittest_algo_lib_PrintMemptr() {
         ary_Alloc(bytes)=i;
     }
     tempstr out;
-    memptr_Print(ary_Getary(bytes),out);
+    algo::strptr_PrintSsim(memptr_ToStrptr(ary_Getary(bytes)), out);
     prlog("out: "<<out);
     cstring in;
     algo::StringIter iter(out);

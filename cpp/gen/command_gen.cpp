@@ -1442,8 +1442,8 @@ void command::target_Print(command::abt& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.target, in, true);
-    bool retval = true;// !parent.target.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -1457,8 +1457,8 @@ void command::disas_Print(command::abt& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.disas, in, false);
-    bool retval = true;// !parent.disas.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -1710,12 +1710,29 @@ void command::abt_Init(command::abt& parent) {
     parent.cache = u8(0);
 }
 
+// --- command.abt..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::abt_ToCmdline(command::abt& row) {
+    tempstr ret;
+    ret << "bin/abt ";
+    abt_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.abt..PrintArgv
-// print command-line args of command::abt to string  -- cprint:command.abt.Argv
-void command::abt_PrintArgv(command::abt& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.abt.Argv  printfmt:Auto
+void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     command::target_Print(const_cast<command::abt&>(row), temp);
@@ -1867,23 +1884,6 @@ void command::abt_PrintArgv(command::abt& row, algo::cstring &str) {
     }
 }
 
-// --- command.abt..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::abt_ToCmdline(command::abt& row) {
-    tempstr ret;
-    ret << "bin/abt ";
-    abt_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
-}
-
 // --- command.abt..GetAnon
 algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
@@ -2015,8 +2015,8 @@ void command::readme_Print(command::abt_md& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.readme, in, true);
-    bool retval = true;// !parent.readme.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -2030,8 +2030,8 @@ void command::ns_Print(command::abt_md& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
-    bool retval = true;// !parent.ns.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -2045,8 +2045,8 @@ void command::section_Print(command::abt_md& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::section_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.section, in, true);
-    bool retval = true;// !parent.section.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -2136,12 +2136,29 @@ void command::abt_md_Init(command::abt_md& parent) {
     parent.dry_run = bool(false);
 }
 
+// --- command.abt_md..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::abt_md_ToCmdline(command::abt_md& row) {
+    tempstr ret;
+    ret << "bin/abt_md ";
+    abt_md_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.abt_md..PrintArgv
-// print command-line args of command::abt_md to string  -- cprint:command.abt_md.Argv
-void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.abt_md.Argv  printfmt:Tuple
+void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -2199,23 +2216,6 @@ void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring &str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.abt_md..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::abt_md_ToCmdline(command::abt_md& row) {
-    tempstr ret;
-    ret << "bin/abt_md ";
-    abt_md_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.abt_md..GetAnon
@@ -2382,80 +2382,20 @@ void command::abt_md_ExecX(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc.abt_md.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:abt_md.Argv
+// Call execv with specified parameters
 int command::abt_md_Execv(command::abt_md_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.readme.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-readme:";
-        command::readme_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.ns.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ns:";
-        command::ns_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.section.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-section:";
-        command::section_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.update != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-update:";
-        bool_Print(parent.cmd.update, *arg);
-    }
-
-    if (parent.cmd.check != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check:";
-        bool_Print(parent.cmd.check, *arg);
-    }
-
-    if (parent.cmd.link != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-link:";
-        bool_Print(parent.cmd.link, *arg);
-    }
-
-    if (parent.cmd.anchor != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anchor:";
-        bool_Print(parent.cmd.anchor, *arg);
-    }
-
-    if (parent.cmd.print != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-print:";
-        bool_Print(parent.cmd.print, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    abt_md_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.abt_md_proc.abt_md.ToCmdline
@@ -2473,6 +2413,76 @@ algo::tempstr command::abt_md_ToCmdline(command::abt_md_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.abt_md_proc.abt_md.ToArgv
+// Form array from the command line
+void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.readme.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-readme:";
+        command::readme_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.section.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-section:";
+        command::section_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.update != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-update:";
+        bool_Print(parent.cmd.update, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
+
+    if (parent.cmd.link != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-link:";
+        bool_Print(parent.cmd.link, *arg);
+    }
+
+    if (parent.cmd.anchor != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anchor:";
+        bool_Print(parent.cmd.anchor, *arg);
+    }
+
+    if (parent.cmd.print != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-print:";
+        bool_Print(parent.cmd.print, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.abt_md_proc..Uninit
@@ -2582,170 +2592,20 @@ void command::abt_ExecX(command::abt_proc& parent) {
 
 // --- command.abt_proc.abt.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:abt.Argv
+// Call execv with specified parameters
 int command::abt_Execv(command::abt_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.target.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        command::target_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.out_dir != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-out_dir:";
-        cstring_Print(parent.cmd.out_dir, *arg);
-    }
-
-    if (parent.cmd.cfg != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cfg:";
-        Smallstr50_Print(parent.cmd.cfg, *arg);
-    }
-
-    if (parent.cmd.compiler != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-compiler:";
-        Smallstr50_Print(parent.cmd.compiler, *arg);
-    }
-
-    if (parent.cmd.uname != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-uname:";
-        Smallstr50_Print(parent.cmd.uname, *arg);
-    }
-
-    if (parent.cmd.arch != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arch:";
-        Smallstr50_Print(parent.cmd.arch, *arg);
-    }
-
-    if (parent.cmd.ood != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ood:";
-        bool_Print(parent.cmd.ood, *arg);
-    }
-
-    if (parent.cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(parent.cmd.list, *arg);
-    }
-
-    if (parent.cmd.listincl != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-listincl:";
-        bool_Print(parent.cmd.listincl, *arg);
-    }
-
-    if (parent.cmd.build != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-build:";
-        bool_Print(parent.cmd.build, *arg);
-    }
-
-    if (parent.cmd.preproc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-preproc:";
-        bool_Print(parent.cmd.preproc, *arg);
-    }
-
-    if (parent.cmd.clean != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-clean:";
-        bool_Print(parent.cmd.clean, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-
-    if (parent.cmd.maxjobs != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxjobs:";
-        i32_Print(parent.cmd.maxjobs, *arg);
-    }
-
-    if (parent.cmd.printcmd != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-printcmd:";
-        bool_Print(parent.cmd.printcmd, *arg);
-    }
-
-    if (parent.cmd.force != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-force:";
-        bool_Print(parent.cmd.force, *arg);
-    }
-
-    if (parent.cmd.install != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-install:";
-        bool_Print(parent.cmd.install, *arg);
-    }
-
-    if (parent.cmd.coverity != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-coverity:";
-        bool_Print(parent.cmd.coverity, *arg);
-    }
-
-    if (parent.cmd.package != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-package:";
-        cstring_Print(parent.cmd.package, *arg);
-    }
-
-    if (parent.cmd.maxerr != 100) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxerr:";
-        u32_Print(parent.cmd.maxerr, *arg);
-    }
-
-    if (parent.cmd.disas.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-disas:";
-        command::disas_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.jcdb != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-jcdb:";
-        cstring_Print(parent.cmd.jcdb, *arg);
-    }
-
-    if (parent.cmd.cache != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cache:";
-        command::cache_Print(parent.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    abt_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.abt_proc.abt.ToCmdline
@@ -2765,12 +2625,191 @@ algo::tempstr command::abt_ToCmdline(command::abt_proc& parent) {
     return retval;
 }
 
+// --- command.abt_proc.abt.ToArgv
+// Form array from the command line
+void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.target.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        command::target_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.out_dir != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-out_dir:";
+        cstring_Print(parent.cmd.out_dir, *arg);
+    }
+
+    if (parent.cmd.cfg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cfg:";
+        Smallstr50_Print(parent.cmd.cfg, *arg);
+    }
+
+    if (parent.cmd.compiler != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-compiler:";
+        Smallstr50_Print(parent.cmd.compiler, *arg);
+    }
+
+    if (parent.cmd.uname != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-uname:";
+        Smallstr50_Print(parent.cmd.uname, *arg);
+    }
+
+    if (parent.cmd.arch != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arch:";
+        Smallstr50_Print(parent.cmd.arch, *arg);
+    }
+
+    if (parent.cmd.ood != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ood:";
+        bool_Print(parent.cmd.ood, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.listincl != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-listincl:";
+        bool_Print(parent.cmd.listincl, *arg);
+    }
+
+    if (parent.cmd.build != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-build:";
+        bool_Print(parent.cmd.build, *arg);
+    }
+
+    if (parent.cmd.preproc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-preproc:";
+        bool_Print(parent.cmd.preproc, *arg);
+    }
+
+    if (parent.cmd.clean != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-clean:";
+        bool_Print(parent.cmd.clean, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+
+    if (parent.cmd.maxjobs != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxjobs:";
+        i32_Print(parent.cmd.maxjobs, *arg);
+    }
+
+    if (parent.cmd.printcmd != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-printcmd:";
+        bool_Print(parent.cmd.printcmd, *arg);
+    }
+
+    if (parent.cmd.force != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-force:";
+        bool_Print(parent.cmd.force, *arg);
+    }
+
+    if (parent.cmd.install != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-install:";
+        bool_Print(parent.cmd.install, *arg);
+    }
+
+    if (parent.cmd.coverity != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-coverity:";
+        bool_Print(parent.cmd.coverity, *arg);
+    }
+
+    if (parent.cmd.package != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-package:";
+        cstring_Print(parent.cmd.package, *arg);
+    }
+
+    if (parent.cmd.maxerr != 100) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxerr:";
+        u32_Print(parent.cmd.maxerr, *arg);
+    }
+
+    if (parent.cmd.disas.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-disas:";
+        command::disas_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.jcdb != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-jcdb:";
+        cstring_Print(parent.cmd.jcdb, *arg);
+    }
+
+    if (parent.cmd.cache != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cache:";
+        command::cache_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.abt_proc..Uninit
 void command::abt_proc_Uninit(command::abt_proc& parent) {
     command::abt_proc &row = parent; (void)row;
 
     // command.abt_proc.abt.Uninit (Exec)  //
     abt_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.acr.where.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::where_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.where_elems && rhs.elems < parent.where_elems + parent.where_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr.where  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    where_Reserve(parent, nnew); // reserve space
+    int at = parent.where_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.where_elems + at + i) algo::cstring(rhs[i]);
+        parent.where_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.where_elems + at, nnew);
 }
 
 // --- command.acr.where.Alloc
@@ -2876,6 +2915,14 @@ void command::where_Setary(command::acr& parent, command::acr &rhs) {
     }
 }
 
+// --- command.acr.where.Setary2
+// Copy specified array into where, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::where_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) {
+    where_RemoveAll(parent);
+    where_Addary(parent, rhs);
+}
+
 // --- command.acr.where.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) {
@@ -2891,11 +2938,36 @@ algo::aryptr<algo::cstring> command::where_AllocNVal(command::acr& parent, int n
 }
 
 // --- command.acr.where.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(where_Alloc(parent), in_str);
+    algo::cstring &elem = where_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        where_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.acr.field.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::field_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr.field  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    field_Reserve(parent, nnew); // reserve space
+    int at = parent.field_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.field_elems + at + i) algo::cstring(rhs[i]);
+        parent.field_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.field_elems + at, nnew);
 }
 
 // --- command.acr.field.Alloc
@@ -3001,6 +3073,14 @@ void command::field_Setary(command::acr& parent, command::acr &rhs) {
     }
 }
 
+// --- command.acr.field.Setary2
+// Copy specified array into field, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::field_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) {
+    field_RemoveAll(parent);
+    field_Addary(parent, rhs);
+}
+
 // --- command.acr.field.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) {
@@ -3016,10 +3096,16 @@ algo::aryptr<algo::cstring> command::field_AllocNVal(command::acr& parent, int n
 }
 
 // --- command.acr.field.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(field_Alloc(parent), in_str);
+    algo::cstring &elem = field_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        field_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -3027,7 +3113,7 @@ bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
 bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_query: {
             retval = algo::cstring_ReadStrptrMaybe(parent.query, strval);
@@ -3275,12 +3361,29 @@ void command::acr_Uninit(command::acr& parent) {
     algo_lib::malloc_FreeMem(parent.where_elems, sizeof(algo::cstring)*parent.where_max); // (command.acr.where)
 }
 
+// --- command.acr..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_ToCmdline(command::acr& row) {
+    tempstr ret;
+    ret << "bin/acr ";
+    acr_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr..PrintArgv
-// print command-line args of command::acr to string  -- cprint:command.acr.Argv
-void command::acr_PrintArgv(command::acr& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr.Argv  printfmt:Auto
+void command::acr_PrintArgv(command::acr& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     cstring_Print(row.query, temp);
@@ -3514,23 +3617,6 @@ void command::acr_PrintArgv(command::acr& row, algo::cstring &str) {
         str << " -meta:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_ToCmdline(command::acr& row) {
-    tempstr ret;
-    ret << "bin/acr ";
-    acr_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr..GetAnon
@@ -3793,12 +3879,29 @@ bool command::acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &
     return retval;
 }
 
+// --- command.acr_compl..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_compl_ToCmdline(command::acr_compl& row) {
+    tempstr ret;
+    ret << "bin/acr_compl ";
+    acr_compl_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr_compl..PrintArgv
-// print command-line args of command::acr_compl to string  -- cprint:command.acr_compl.Argv
-void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr_compl.Argv  printfmt:Auto
+void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.data == "data")) {
         ch_RemoveAll(temp);
@@ -3842,23 +3945,6 @@ void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring &str) {
         str << " -debug_log:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr_compl..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_compl_ToCmdline(command::acr_compl& row) {
-    tempstr ret;
-    ret << "bin/acr_compl ";
-    acr_compl_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr_compl..Print
@@ -4025,62 +4111,20 @@ void command::acr_compl_ExecX(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc.acr_compl.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_compl.Argv
+// Call execv with specified parameters
 int command::acr_compl_Execv(command::acr_compl_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.data != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data:";
-        cstring_Print(parent.cmd.data, *arg);
-    }
-
-    if (parent.cmd.schema != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        cstring_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.line != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-line:";
-        cstring_Print(parent.cmd.line, *arg);
-    }
-
-    if (parent.cmd.point != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-point:";
-        cstring_Print(parent.cmd.point, *arg);
-    }
-
-    if (parent.cmd.type != "9") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-type:";
-        cstring_Print(parent.cmd.type, *arg);
-    }
-
-    if (parent.cmd.install != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-install:";
-        bool_Print(parent.cmd.install, *arg);
-    }
-
-    if (parent.cmd.debug_log != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-debug_log:";
-        cstring_Print(parent.cmd.debug_log, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_compl_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_compl_proc.acr_compl.ToCmdline
@@ -4100,12 +4144,83 @@ algo::tempstr command::acr_compl_ToCmdline(command::acr_compl_proc& parent) {
     return retval;
 }
 
+// --- command.acr_compl_proc.acr_compl.ToArgv
+// Form array from the command line
+void command::acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.data != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data:";
+        cstring_Print(parent.cmd.data, *arg);
+    }
+
+    if (parent.cmd.schema != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        cstring_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.line != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-line:";
+        cstring_Print(parent.cmd.line, *arg);
+    }
+
+    if (parent.cmd.point != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-point:";
+        cstring_Print(parent.cmd.point, *arg);
+    }
+
+    if (parent.cmd.type != "9") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-type:";
+        cstring_Print(parent.cmd.type, *arg);
+    }
+
+    if (parent.cmd.install != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-install:";
+        bool_Print(parent.cmd.install, *arg);
+    }
+
+    if (parent.cmd.debug_log != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-debug_log:";
+        cstring_Print(parent.cmd.debug_log, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.acr_compl_proc..Uninit
 void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
     command::acr_compl_proc &row = parent; (void)row;
 
     // command.acr_compl_proc.acr_compl.Uninit (Exec)  //
     acr_compl_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.acr_dm.arg.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::arg_Addary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.arg_elems && rhs.elems < parent.arg_elems + parent.arg_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr_dm.arg  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    arg_Reserve(parent, nnew); // reserve space
+    int at = parent.arg_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.arg_elems + at + i) algo::cstring(rhs[i]);
+        parent.arg_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.arg_elems + at, nnew);
 }
 
 // --- command.acr_dm.arg.Alloc
@@ -4211,6 +4326,14 @@ void command::arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) {
     }
 }
 
+// --- command.acr_dm.arg.Setary2
+// Copy specified array into arg, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::arg_Setary(command::acr_dm& parent, const algo::aryptr<algo::cstring> &rhs) {
+    arg_RemoveAll(parent);
+    arg_Addary(parent, rhs);
+}
+
 // --- command.acr_dm.arg.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) {
@@ -4226,10 +4349,16 @@ algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int 
 }
 
 // --- command.acr_dm.arg.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(arg_Alloc(parent), in_str);
+    algo::cstring &elem = arg_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        arg_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -4237,7 +4366,7 @@ bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) 
 bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -4295,12 +4424,29 @@ void command::acr_dm_Uninit(command::acr_dm& parent) {
     algo_lib::malloc_FreeMem(parent.arg_elems, sizeof(algo::cstring)*parent.arg_max); // (command.acr_dm.arg)
 }
 
+// --- command.acr_dm..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_dm_ToCmdline(command::acr_dm& row) {
+    tempstr ret;
+    ret << "bin/acr_dm ";
+    acr_dm_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr_dm..PrintArgv
-// print command-line args of command::acr_dm to string  -- cprint:command.acr_dm.Argv
-void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr_dm.Argv  printfmt:Tuple
+void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -4332,23 +4478,6 @@ void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring &str) {
         str << " -rowid:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr_dm..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_dm_ToCmdline(command::acr_dm& row) {
-    tempstr ret;
-    ret << "bin/acr_dm ";
-    acr_dm_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr_dm..GetAnon
@@ -4490,49 +4619,20 @@ void command::acr_dm_ExecX(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc.acr_dm.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_dm.Argv
+// Call execv with specified parameters
 int command::acr_dm_Execv(command::acr_dm_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    ind_beg(command::acr_dm_arg_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arg:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.write_ours != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write_ours:";
-        bool_Print(parent.cmd.write_ours, *arg);
-    }
-
-    if (parent.cmd.msize != 7) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msize:";
-        u8_Print(parent.cmd.msize, *arg);
-    }
-
-    if (parent.cmd.rowid != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-rowid:";
-        bool_Print(parent.cmd.rowid, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_dm_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_dm_proc.acr_dm.ToCmdline
@@ -4550,6 +4650,45 @@ algo::tempstr command::acr_dm_ToCmdline(command::acr_dm_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.acr_dm_proc.acr_dm.ToArgv
+// Form array from the command line
+void command::acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    ind_beg(command::acr_dm_arg_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arg:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.write_ours != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write_ours:";
+        bool_Print(parent.cmd.write_ours, *arg);
+    }
+
+    if (parent.cmd.msize != 7) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msize:";
+        u8_Print(parent.cmd.msize, *arg);
+    }
+
+    if (parent.cmd.rowid != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-rowid:";
+        bool_Print(parent.cmd.rowid, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.acr_dm_proc..Uninit
@@ -4817,12 +4956,29 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.anonfld = bool(false);
 }
 
+// --- command.acr_ed..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_ed_ToCmdline(command::acr_ed& row) {
+    tempstr ret;
+    ret << "bin/acr_ed ";
+    acr_ed_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr_ed..PrintArgv
-// print command-line args of command::acr_ed to string  -- cprint:command.acr_ed.Argv
-void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr_ed.Argv  printfmt:Auto
+void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -5094,23 +5250,6 @@ void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring &str) {
         str << " -anonfld:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr_ed..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_ed_ToCmdline(command::acr_ed& row) {
-    tempstr ret;
-    ret << "bin/acr_ed ";
-    acr_ed_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr_ed..NArgs
@@ -5394,290 +5533,20 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc.acr_ed.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_ed.Argv
+// Call execv with specified parameters
 int command::acr_ed_Execv(command::acr_ed_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.create != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-create:";
-        bool_Print(parent.cmd.create, *arg);
-    }
-
-    if (parent.cmd.del != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-del:";
-        bool_Print(parent.cmd.del, *arg);
-    }
-
-    if (parent.cmd.rename != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-rename:";
-        cstring_Print(parent.cmd.rename, *arg);
-    }
-
-    if (parent.cmd.finput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-finput:";
-        bool_Print(parent.cmd.finput, *arg);
-    }
-
-    if (parent.cmd.foutput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-foutput:";
-        bool_Print(parent.cmd.foutput, *arg);
-    }
-
-    if (parent.cmd.srcfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-srcfile:";
-        cstring_Print(parent.cmd.srcfile, *arg);
-    }
-
-    if (parent.cmd.gstatic != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gstatic:";
-        bool_Print(parent.cmd.gstatic, *arg);
-    }
-
-    if (parent.cmd.indexed != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-indexed:";
-        bool_Print(parent.cmd.indexed, *arg);
-    }
-
-    if (parent.cmd.target != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        Smallstr16_Print(parent.cmd.target, *arg);
-    }
-
-    if (parent.cmd.nstype != "exe") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nstype:";
-        Smallstr50_Print(parent.cmd.nstype, *arg);
-    }
-
-    if (parent.cmd.ctype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ctype:";
-        Smallstr100_Print(parent.cmd.ctype, *arg);
-    }
-
-    if (parent.cmd.pooltype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pooltype:";
-        Smallstr50_Print(parent.cmd.pooltype, *arg);
-    }
-
-    if (parent.cmd.ssimfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ssimfile:";
-        Smallstr50_Print(parent.cmd.ssimfile, *arg);
-    }
-
-    if (parent.cmd.subset != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-subset:";
-        Smallstr100_Print(parent.cmd.subset, *arg);
-    }
-
-    if (parent.cmd.subset2 != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-subset2:";
-        Smallstr100_Print(parent.cmd.subset2, *arg);
-    }
-
-    if (parent.cmd.separator != ".") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-separator:";
-        cstring_Print(parent.cmd.separator, *arg);
-    }
-
-    if (parent.cmd.field != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-field:";
-        Smallstr100_Print(parent.cmd.field, *arg);
-    }
-
-    if (parent.cmd.arg != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arg:";
-        Smallstr100_Print(parent.cmd.arg, *arg);
-    }
-
-    if (parent.cmd.dflt != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dflt:";
-        cstring_Print(parent.cmd.dflt, *arg);
-    }
-
-    if (parent.cmd.anon != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anon:";
-        bool_Print(parent.cmd.anon, *arg);
-    }
-
-    if (parent.cmd.bigend != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-bigend:";
-        bool_Print(parent.cmd.bigend, *arg);
-    }
-
-    if (parent.cmd.cascdel != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cascdel:";
-        bool_Print(parent.cmd.cascdel, *arg);
-    }
-
-    if (parent.cmd.before != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-before:";
-        Smallstr100_Print(parent.cmd.before, *arg);
-    }
-
-    if (parent.cmd.substr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-substr:";
-        Smallstr100_Print(parent.cmd.substr, *arg);
-    }
-
-    if (parent.cmd.alias != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-alias:";
-        bool_Print(parent.cmd.alias, *arg);
-    }
-
-    if (parent.cmd.srcfield != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-srcfield:";
-        Smallstr100_Print(parent.cmd.srcfield, *arg);
-    }
-
-    if (parent.cmd.fstep != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fstep:";
-        Smallstr100_Print(parent.cmd.fstep, *arg);
-    }
-
-    if (parent.cmd.inscond != "true") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-inscond:";
-        cstring_Print(parent.cmd.inscond, *arg);
-    }
-
-    if (parent.cmd.reftype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-reftype:";
-        Smallstr50_Print(parent.cmd.reftype, *arg);
-    }
-
-    if (parent.cmd.hashfld != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-hashfld:";
-        Smallstr100_Print(parent.cmd.hashfld, *arg);
-    }
-
-    if (parent.cmd.sortfld != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sortfld:";
-        Smallstr100_Print(parent.cmd.sortfld, *arg);
-    }
-
-    if (parent.cmd.unittest != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-unittest:";
-        cstring_Print(parent.cmd.unittest, *arg);
-    }
-
-    if (parent.cmd.citest != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-citest:";
-        cstring_Print(parent.cmd.citest, *arg);
-    }
-
-    if (parent.cmd.cppfunc != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cppfunc:";
-        cstring_Print(parent.cmd.cppfunc, *arg);
-    }
-
-    if (parent.cmd.xref != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xref:";
-        bool_Print(parent.cmd.xref, *arg);
-    }
-
-    if (parent.cmd.via != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-via:";
-        cstring_Print(parent.cmd.via, *arg);
-    }
-
-    if (parent.cmd.write != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(parent.cmd.write, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.comment != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-comment:";
-        cstring_Print(parent.cmd.comment, *arg);
-    }
-
-    if (parent.cmd.sandbox != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sandbox:";
-        bool_Print(parent.cmd.sandbox, *arg);
-    }
-
-    if (parent.cmd.test != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-test:";
-        bool_Print(parent.cmd.test, *arg);
-    }
-
-    if (parent.cmd.showcpp != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showcpp:";
-        bool_Print(parent.cmd.showcpp, *arg);
-    }
-
-    if (parent.cmd.msgtype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgtype:";
-        cstring_Print(parent.cmd.msgtype, *arg);
-    }
-
-    if (parent.cmd.anonfld != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anonfld:";
-        bool_Print(parent.cmd.anonfld, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_ed_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_ed_proc.acr_ed.ToCmdline
@@ -5695,6 +5564,286 @@ algo::tempstr command::acr_ed_ToCmdline(command::acr_ed_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.acr_ed_proc.acr_ed.ToArgv
+// Form array from the command line
+void command::acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.create != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-create:";
+        bool_Print(parent.cmd.create, *arg);
+    }
+
+    if (parent.cmd.del != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-del:";
+        bool_Print(parent.cmd.del, *arg);
+    }
+
+    if (parent.cmd.rename != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-rename:";
+        cstring_Print(parent.cmd.rename, *arg);
+    }
+
+    if (parent.cmd.finput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-finput:";
+        bool_Print(parent.cmd.finput, *arg);
+    }
+
+    if (parent.cmd.foutput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-foutput:";
+        bool_Print(parent.cmd.foutput, *arg);
+    }
+
+    if (parent.cmd.srcfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfile:";
+        cstring_Print(parent.cmd.srcfile, *arg);
+    }
+
+    if (parent.cmd.gstatic != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gstatic:";
+        bool_Print(parent.cmd.gstatic, *arg);
+    }
+
+    if (parent.cmd.indexed != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-indexed:";
+        bool_Print(parent.cmd.indexed, *arg);
+    }
+
+    if (parent.cmd.target != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        Smallstr16_Print(parent.cmd.target, *arg);
+    }
+
+    if (parent.cmd.nstype != "exe") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nstype:";
+        Smallstr50_Print(parent.cmd.nstype, *arg);
+    }
+
+    if (parent.cmd.ctype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ctype:";
+        Smallstr100_Print(parent.cmd.ctype, *arg);
+    }
+
+    if (parent.cmd.pooltype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pooltype:";
+        Smallstr50_Print(parent.cmd.pooltype, *arg);
+    }
+
+    if (parent.cmd.ssimfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ssimfile:";
+        Smallstr50_Print(parent.cmd.ssimfile, *arg);
+    }
+
+    if (parent.cmd.subset != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-subset:";
+        Smallstr100_Print(parent.cmd.subset, *arg);
+    }
+
+    if (parent.cmd.subset2 != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-subset2:";
+        Smallstr100_Print(parent.cmd.subset2, *arg);
+    }
+
+    if (parent.cmd.separator != ".") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-separator:";
+        cstring_Print(parent.cmd.separator, *arg);
+    }
+
+    if (parent.cmd.field != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-field:";
+        Smallstr100_Print(parent.cmd.field, *arg);
+    }
+
+    if (parent.cmd.arg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arg:";
+        Smallstr100_Print(parent.cmd.arg, *arg);
+    }
+
+    if (parent.cmd.dflt != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dflt:";
+        cstring_Print(parent.cmd.dflt, *arg);
+    }
+
+    if (parent.cmd.anon != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anon:";
+        bool_Print(parent.cmd.anon, *arg);
+    }
+
+    if (parent.cmd.bigend != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bigend:";
+        bool_Print(parent.cmd.bigend, *arg);
+    }
+
+    if (parent.cmd.cascdel != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cascdel:";
+        bool_Print(parent.cmd.cascdel, *arg);
+    }
+
+    if (parent.cmd.before != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-before:";
+        Smallstr100_Print(parent.cmd.before, *arg);
+    }
+
+    if (parent.cmd.substr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-substr:";
+        Smallstr100_Print(parent.cmd.substr, *arg);
+    }
+
+    if (parent.cmd.alias != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-alias:";
+        bool_Print(parent.cmd.alias, *arg);
+    }
+
+    if (parent.cmd.srcfield != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfield:";
+        Smallstr100_Print(parent.cmd.srcfield, *arg);
+    }
+
+    if (parent.cmd.fstep != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fstep:";
+        Smallstr100_Print(parent.cmd.fstep, *arg);
+    }
+
+    if (parent.cmd.inscond != "true") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-inscond:";
+        cstring_Print(parent.cmd.inscond, *arg);
+    }
+
+    if (parent.cmd.reftype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-reftype:";
+        Smallstr50_Print(parent.cmd.reftype, *arg);
+    }
+
+    if (parent.cmd.hashfld != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-hashfld:";
+        Smallstr100_Print(parent.cmd.hashfld, *arg);
+    }
+
+    if (parent.cmd.sortfld != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sortfld:";
+        Smallstr100_Print(parent.cmd.sortfld, *arg);
+    }
+
+    if (parent.cmd.unittest != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-unittest:";
+        cstring_Print(parent.cmd.unittest, *arg);
+    }
+
+    if (parent.cmd.citest != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-citest:";
+        cstring_Print(parent.cmd.citest, *arg);
+    }
+
+    if (parent.cmd.cppfunc != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cppfunc:";
+        cstring_Print(parent.cmd.cppfunc, *arg);
+    }
+
+    if (parent.cmd.xref != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xref:";
+        bool_Print(parent.cmd.xref, *arg);
+    }
+
+    if (parent.cmd.via != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-via:";
+        cstring_Print(parent.cmd.via, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.comment != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-comment:";
+        cstring_Print(parent.cmd.comment, *arg);
+    }
+
+    if (parent.cmd.sandbox != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sandbox:";
+        bool_Print(parent.cmd.sandbox, *arg);
+    }
+
+    if (parent.cmd.test != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-test:";
+        bool_Print(parent.cmd.test, *arg);
+    }
+
+    if (parent.cmd.showcpp != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showcpp:";
+        bool_Print(parent.cmd.showcpp, *arg);
+    }
+
+    if (parent.cmd.msgtype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgtype:";
+        cstring_Print(parent.cmd.msgtype, *arg);
+    }
+
+    if (parent.cmd.anonfld != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anonfld:";
+        bool_Print(parent.cmd.anonfld, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.acr_ed_proc..Uninit
@@ -5715,8 +5864,8 @@ void command::ns_Print(command::acr_in& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::ns_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
-    bool retval = true;// !parent.ns.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -5730,8 +5879,8 @@ void command::notssimfile_Print(command::acr_in& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.notssimfile, in, true);
-    bool retval = true;// !parent.notssimfile.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -5745,8 +5894,8 @@ void command::r_Print(command::acr_in& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.r, in, true);
-    bool retval = true;// !parent.r.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -5841,12 +5990,29 @@ void command::acr_in_Init(command::acr_in& parent) {
     Regx_ReadSql(parent.r, "", true);
 }
 
+// --- command.acr_in..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_in_ToCmdline(command::acr_in& row) {
+    tempstr ret;
+    ret << "bin/acr_in ";
+    acr_in_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr_in..PrintArgv
-// print command-line args of command::acr_in to string  -- cprint:command.acr_in.Argv
-void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr_in.Argv  printfmt:Auto
+void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     command::ns_Print(const_cast<command::acr_in&>(row), temp);
@@ -5912,23 +6078,6 @@ void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring &str) {
         str << " -r:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr_in..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_in_ToCmdline(command::acr_in& row) {
-    tempstr ret;
-    ret << "bin/acr_in ";
-    acr_in_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr_in..GetAnon
@@ -6095,86 +6244,20 @@ void command::acr_in_ExecX(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc.acr_in.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_in.Argv
+// Call execv with specified parameters
 int command::acr_in_Execv(command::acr_in_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.ns.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ns:";
-        command::ns_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.data != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data:";
-        bool_Print(parent.cmd.data, *arg);
-    }
-
-    if (parent.cmd.sigcheck != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sigcheck:";
-        bool_Print(parent.cmd.sigcheck, *arg);
-    }
-
-    if (parent.cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(parent.cmd.list, *arg);
-    }
-
-    if (parent.cmd.t != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-t:";
-        bool_Print(parent.cmd.t, *arg);
-    }
-
-    if (parent.cmd.data_dir != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data_dir:";
-        cstring_Print(parent.cmd.data_dir, *arg);
-    }
-
-    if (parent.cmd.schema != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        cstring_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.related != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-related:";
-        cstring_Print(parent.cmd.related, *arg);
-    }
-
-    if (parent.cmd.notssimfile.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-notssimfile:";
-        command::notssimfile_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.checkable != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-checkable:";
-        bool_Print(parent.cmd.checkable, *arg);
-    }
-
-    if (parent.cmd.r.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-r:";
-        command::r_Print(parent.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_in_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_in_proc.acr_in.ToCmdline
@@ -6192,6 +6275,82 @@ algo::tempstr command::acr_in_ToCmdline(command::acr_in_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.acr_in_proc.acr_in.ToArgv
+// Form array from the command line
+void command::acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.ns.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.data != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data:";
+        bool_Print(parent.cmd.data, *arg);
+    }
+
+    if (parent.cmd.sigcheck != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sigcheck:";
+        bool_Print(parent.cmd.sigcheck, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
+    }
+
+    if (parent.cmd.data_dir != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data_dir:";
+        cstring_Print(parent.cmd.data_dir, *arg);
+    }
+
+    if (parent.cmd.schema != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        cstring_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.related != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-related:";
+        cstring_Print(parent.cmd.related, *arg);
+    }
+
+    if (parent.cmd.notssimfile.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-notssimfile:";
+        command::notssimfile_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.checkable != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-checkable:";
+        bool_Print(parent.cmd.checkable, *arg);
+    }
+
+    if (parent.cmd.r.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-r:";
+        command::r_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.acr_in_proc..Uninit
@@ -6212,8 +6371,8 @@ void command::nsdb_Print(command::acr_my& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::nsdb_ReadStrptrMaybe(command::acr_my& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.nsdb, in, true);
-    bool retval = true;// !parent.nsdb.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -6308,12 +6467,29 @@ void command::acr_my_Init(command::acr_my& parent) {
     parent.serv = bool(false);
 }
 
+// --- command.acr_my..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_my_ToCmdline(command::acr_my& row) {
+    tempstr ret;
+    ret << "bin/acr_my ";
+    acr_my_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.acr_my..PrintArgv
-// print command-line args of command::acr_my to string  -- cprint:command.acr_my.Argv
-void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.acr_my.Argv  printfmt:Tuple
+void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     command::nsdb_Print(const_cast<command::acr_my&>(row), temp);
@@ -6379,23 +6555,6 @@ void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring &str) {
         str << " -serv:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.acr_my..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::acr_my_ToCmdline(command::acr_my& row) {
-    tempstr ret;
-    ret << "bin/acr_my ";
-    acr_my_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.acr_my..GetAnon
@@ -6568,86 +6727,20 @@ void command::acr_my_ExecX(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc.acr_my.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr_my.Argv
+// Call execv with specified parameters
 int command::acr_my_Execv(command::acr_my_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.nsdb.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nsdb:";
-        command::nsdb_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.schema != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        cstring_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.fldfunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fldfunc:";
-        bool_Print(parent.cmd.fldfunc, *arg);
-    }
-
-    if (parent.cmd.fkey != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fkey:";
-        bool_Print(parent.cmd.fkey, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.start != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-start:";
-        bool_Print(parent.cmd.start, *arg);
-    }
-
-    if (parent.cmd.stop != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-stop:";
-        bool_Print(parent.cmd.stop, *arg);
-    }
-
-    if (parent.cmd.abort != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-abort:";
-        bool_Print(parent.cmd.abort, *arg);
-    }
-
-    if (parent.cmd.shell != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-shell:";
-        bool_Print(parent.cmd.shell, *arg);
-    }
-
-    if (parent.cmd.serv != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-serv:";
-        bool_Print(parent.cmd.serv, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_my_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_my_proc.acr_my.ToCmdline
@@ -6665,6 +6758,82 @@ algo::tempstr command::acr_my_ToCmdline(command::acr_my_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.acr_my_proc.acr_my.ToArgv
+// Form array from the command line
+void command::acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.nsdb.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nsdb:";
+        command::nsdb_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.schema != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        cstring_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.fldfunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fldfunc:";
+        bool_Print(parent.cmd.fldfunc, *arg);
+    }
+
+    if (parent.cmd.fkey != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fkey:";
+        bool_Print(parent.cmd.fkey, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.start != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-start:";
+        bool_Print(parent.cmd.start, *arg);
+    }
+
+    if (parent.cmd.stop != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-stop:";
+        bool_Print(parent.cmd.stop, *arg);
+    }
+
+    if (parent.cmd.abort != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-abort:";
+        bool_Print(parent.cmd.abort, *arg);
+    }
+
+    if (parent.cmd.shell != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-shell:";
+        bool_Print(parent.cmd.shell, *arg);
+    }
+
+    if (parent.cmd.serv != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-serv:";
+        bool_Print(parent.cmd.serv, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.acr_my_proc..Uninit
@@ -6774,252 +6943,20 @@ void command::acr_ExecX(command::acr_proc& parent) {
 
 // --- command.acr_proc.acr.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:acr.Argv
+// Call execv with specified parameters
 int command::acr_Execv(command::acr_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.query != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-query:";
-        cstring_Print(parent.cmd.query, *arg);
-    }
-    ind_beg(command::acr_where_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-where:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.del != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-del:";
-        bool_Print(parent.cmd.del, *arg);
-    }
-
-    if (parent.cmd.sel != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sel:";
-        bool_Print(parent.cmd.sel, *arg);
-    }
-
-    if (parent.cmd.insert != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-insert:";
-        bool_Print(parent.cmd.insert, *arg);
-    }
-
-    if (parent.cmd.replace != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-replace:";
-        bool_Print(parent.cmd.replace, *arg);
-    }
-
-    if (parent.cmd.update != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-update:";
-        bool_Print(parent.cmd.update, *arg);
-    }
-
-    if (parent.cmd.merge != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-merge:";
-        bool_Print(parent.cmd.merge, *arg);
-    }
-
-    if (parent.cmd.unused != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-unused:";
-        bool_Print(parent.cmd.unused, *arg);
-    }
-
-    if (parent.cmd.trunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-trunc:";
-        bool_Print(parent.cmd.trunc, *arg);
-    }
-
-    if (parent.cmd.check != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check:";
-        bool_Print(parent.cmd.check, *arg);
-    }
-
-    if (parent.cmd.selerr != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-selerr:";
-        bool_Print(parent.cmd.selerr, *arg);
-    }
-
-    if (parent.cmd.maxshow != 100) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxshow:";
-        i32_Print(parent.cmd.maxshow, *arg);
-    }
-
-    if (parent.cmd.write != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(parent.cmd.write, *arg);
-    }
-
-    if (parent.cmd.rename != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-rename:";
-        cstring_Print(parent.cmd.rename, *arg);
-    }
-
-    if (parent.cmd.nup != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nup:";
-        i32_Print(parent.cmd.nup, *arg);
-    }
-
-    if (parent.cmd.ndown != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ndown:";
-        i32_Print(parent.cmd.ndown, *arg);
-    }
-
-    if (parent.cmd.l != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-l:";
-        bool_Print(parent.cmd.l, *arg);
-    }
-
-    if (parent.cmd.xref != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xref:";
-        bool_Print(parent.cmd.xref, *arg);
-    }
-
-    if (parent.cmd.fldfunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fldfunc:";
-        bool_Print(parent.cmd.fldfunc, *arg);
-    }
-
-    if (parent.cmd.maxgroup != 25) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxgroup:";
-        i32_Print(parent.cmd.maxgroup, *arg);
-    }
-
-    if (parent.cmd.pretty != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pretty:";
-        bool_Print(parent.cmd.pretty, *arg);
-    }
-
-    if (parent.cmd.tree != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-tree:";
-        bool_Print(parent.cmd.tree, *arg);
-    }
-
-    if (parent.cmd.loose != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-loose:";
-        bool_Print(parent.cmd.loose, *arg);
-    }
-
-    if (parent.cmd.my != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-my:";
-        bool_Print(parent.cmd.my, *arg);
-    }
-
-    if (parent.cmd.schema != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        cstring_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.t != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-t:";
-        bool_Print(parent.cmd.t, *arg);
-    }
-
-    if (parent.cmd.g != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-g:";
-        bool_Print(parent.cmd.g, *arg);
-    }
-
-    if (parent.cmd.x != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-x:";
-        bool_Print(parent.cmd.x, *arg);
-    }
-
-    if (parent.cmd.rowid != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-rowid:";
-        bool_Print(parent.cmd.rowid, *arg);
-    }
-
-    if (parent.cmd.cmt != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cmt:";
-        bool_Print(parent.cmd.cmt, *arg);
-    }
-
-    if (parent.cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.print != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-print:";
-        bool_Print(parent.cmd.print, *arg);
-    }
-
-    if (parent.cmd.cmd != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cmd:";
-        cstring_Print(parent.cmd.cmd, *arg);
-    }
-    ind_beg(command::acr_field_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-field:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.regxof != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-regxof:";
-        cstring_Print(parent.cmd.regxof, *arg);
-    }
-
-    if (parent.cmd.meta != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-meta:";
-        bool_Print(parent.cmd.meta, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.acr_proc.acr.ToCmdline
@@ -7037,6 +6974,248 @@ algo::tempstr command::acr_ToCmdline(command::acr_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.acr_proc.acr.ToArgv
+// Form array from the command line
+void command::acr_ToArgv(command::acr_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.query != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-query:";
+        cstring_Print(parent.cmd.query, *arg);
+    }
+    ind_beg(command::acr_where_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-where:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.del != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-del:";
+        bool_Print(parent.cmd.del, *arg);
+    }
+
+    if (parent.cmd.sel != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sel:";
+        bool_Print(parent.cmd.sel, *arg);
+    }
+
+    if (parent.cmd.insert != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-insert:";
+        bool_Print(parent.cmd.insert, *arg);
+    }
+
+    if (parent.cmd.replace != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-replace:";
+        bool_Print(parent.cmd.replace, *arg);
+    }
+
+    if (parent.cmd.update != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-update:";
+        bool_Print(parent.cmd.update, *arg);
+    }
+
+    if (parent.cmd.merge != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-merge:";
+        bool_Print(parent.cmd.merge, *arg);
+    }
+
+    if (parent.cmd.unused != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-unused:";
+        bool_Print(parent.cmd.unused, *arg);
+    }
+
+    if (parent.cmd.trunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trunc:";
+        bool_Print(parent.cmd.trunc, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
+
+    if (parent.cmd.selerr != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-selerr:";
+        bool_Print(parent.cmd.selerr, *arg);
+    }
+
+    if (parent.cmd.maxshow != 100) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxshow:";
+        i32_Print(parent.cmd.maxshow, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.rename != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-rename:";
+        cstring_Print(parent.cmd.rename, *arg);
+    }
+
+    if (parent.cmd.nup != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nup:";
+        i32_Print(parent.cmd.nup, *arg);
+    }
+
+    if (parent.cmd.ndown != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ndown:";
+        i32_Print(parent.cmd.ndown, *arg);
+    }
+
+    if (parent.cmd.l != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-l:";
+        bool_Print(parent.cmd.l, *arg);
+    }
+
+    if (parent.cmd.xref != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xref:";
+        bool_Print(parent.cmd.xref, *arg);
+    }
+
+    if (parent.cmd.fldfunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fldfunc:";
+        bool_Print(parent.cmd.fldfunc, *arg);
+    }
+
+    if (parent.cmd.maxgroup != 25) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxgroup:";
+        i32_Print(parent.cmd.maxgroup, *arg);
+    }
+
+    if (parent.cmd.pretty != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pretty:";
+        bool_Print(parent.cmd.pretty, *arg);
+    }
+
+    if (parent.cmd.tree != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tree:";
+        bool_Print(parent.cmd.tree, *arg);
+    }
+
+    if (parent.cmd.loose != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-loose:";
+        bool_Print(parent.cmd.loose, *arg);
+    }
+
+    if (parent.cmd.my != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-my:";
+        bool_Print(parent.cmd.my, *arg);
+    }
+
+    if (parent.cmd.schema != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        cstring_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
+    }
+
+    if (parent.cmd.g != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-g:";
+        bool_Print(parent.cmd.g, *arg);
+    }
+
+    if (parent.cmd.x != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-x:";
+        bool_Print(parent.cmd.x, *arg);
+    }
+
+    if (parent.cmd.rowid != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-rowid:";
+        bool_Print(parent.cmd.rowid, *arg);
+    }
+
+    if (parent.cmd.cmt != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmt:";
+        bool_Print(parent.cmd.cmt, *arg);
+    }
+
+    if (parent.cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.print != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-print:";
+        bool_Print(parent.cmd.print, *arg);
+    }
+
+    if (parent.cmd.cmd != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmd:";
+        cstring_Print(parent.cmd.cmd, *arg);
+    }
+    ind_beg(command::acr_field_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-field:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.regxof != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-regxof:";
+        cstring_Print(parent.cmd.regxof, *arg);
+    }
+
+    if (parent.cmd.meta != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-meta:";
+        bool_Print(parent.cmd.meta, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.acr_proc..Uninit
@@ -7057,8 +7236,8 @@ void command::trace_Print(command::amc& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::trace_ReadStrptrMaybe(command::amc& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.trace, in, true);
-    bool retval = true;// !parent.trace.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -7133,12 +7312,29 @@ void command::amc_Init(command::amc& parent) {
     Regx_ReadSql(parent.trace, "", true);
 }
 
+// --- command.amc..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::amc_ToCmdline(command::amc& row) {
+    tempstr ret;
+    ret << "bin/amc ";
+    amc_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.amc..PrintArgv
-// print command-line args of command::amc to string  -- cprint:command.amc.Argv
-void command::amc_PrintArgv(command::amc& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.amc.Argv  printfmt:Auto
+void command::amc_PrintArgv(command::amc& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in_dir == "data")) {
         ch_RemoveAll(temp);
@@ -7180,23 +7376,6 @@ void command::amc_PrintArgv(command::amc& row, algo::cstring &str) {
         str << " -trace:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.amc..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::amc_ToCmdline(command::amc& row) {
-    tempstr ret;
-    ret << "bin/amc ";
-    amc_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.amc..GetAnon
@@ -7258,8 +7437,8 @@ void command::target_Print(command::amc_gc& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::target_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.target, in, true);
-    bool retval = true;// !parent.target.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -7273,8 +7452,8 @@ void command::key_Print(command::amc_gc& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::key_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.key, in, true);
-    bool retval = true;// !parent.key.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -7330,12 +7509,29 @@ void command::amc_gc_Init(command::amc_gc& parent) {
     parent.in = algo::strptr("data");
 }
 
+// --- command.amc_gc..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::amc_gc_ToCmdline(command::amc_gc& row) {
+    tempstr ret;
+    ret << "bin/amc_gc ";
+    amc_gc_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.amc_gc..PrintArgv
-// print command-line args of command::amc_gc to string  -- cprint:command.amc_gc.Argv
-void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.amc_gc.Argv  printfmt:Tuple
+void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.target.expr == "%")) {
         ch_RemoveAll(temp);
@@ -7361,23 +7557,6 @@ void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring &str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.amc_gc..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::amc_gc_ToCmdline(command::amc_gc& row) {
-    tempstr ret;
-    ret << "bin/amc_gc ";
-    amc_gc_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.amc_gc..NArgs
@@ -7506,44 +7685,20 @@ void command::amc_gc_ExecX(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc.amc_gc.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:amc_gc.Argv
+// Call execv with specified parameters
 int command::amc_gc_Execv(command::amc_gc_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.target.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        command::target_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.key.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-key:";
-        command::key_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.include != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-include:";
-        bool_Print(parent.cmd.include, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    amc_gc_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.amc_gc_proc.amc_gc.ToCmdline
@@ -7561,6 +7716,40 @@ algo::tempstr command::amc_gc_ToCmdline(command::amc_gc_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.amc_gc_proc.amc_gc.ToArgv
+// Form array from the command line
+void command::amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.target.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        command::target_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.key.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-key:";
+        command::key_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.include != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-include:";
+        bool_Print(parent.cmd.include, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.amc_gc_proc..Uninit
@@ -7670,62 +7859,20 @@ void command::amc_ExecX(command::amc_proc& parent) {
 
 // --- command.amc_proc.amc.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:amc.Argv
+// Call execv with specified parameters
 int command::amc_Execv(command::amc_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in_dir != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in_dir:";
-        cstring_Print(parent.cmd.in_dir, *arg);
-    }
-
-    if (parent.cmd.query != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-query:";
-        cstring_Print(parent.cmd.query, *arg);
-    }
-
-    if (parent.cmd.out_dir != ".") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-out_dir:";
-        cstring_Print(parent.cmd.out_dir, *arg);
-    }
-
-    if (parent.cmd.proto != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-proto:";
-        bool_Print(parent.cmd.proto, *arg);
-    }
-
-    if (parent.cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.trace.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-trace:";
-        command::trace_Print(parent.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    amc_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.amc_proc.amc.ToCmdline
@@ -7743,6 +7890,58 @@ algo::tempstr command::amc_ToCmdline(command::amc_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.amc_proc.amc.ToArgv
+// Form array from the command line
+void command::amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in_dir != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in_dir:";
+        cstring_Print(parent.cmd.in_dir, *arg);
+    }
+
+    if (parent.cmd.query != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-query:";
+        cstring_Print(parent.cmd.query, *arg);
+    }
+
+    if (parent.cmd.out_dir != ".") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-out_dir:";
+        cstring_Print(parent.cmd.out_dir, *arg);
+    }
+
+    if (parent.cmd.proto != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-proto:";
+        bool_Print(parent.cmd.proto, *arg);
+    }
+
+    if (parent.cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.trace.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trace:";
+        command::trace_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.amc_proc..Uninit
@@ -7763,8 +7962,8 @@ void command::ctype_Print(command::amc_vis& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::ctype_ReadStrptrMaybe(command::amc_vis& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.ctype, in, true);
-    bool retval = true;// !parent.ctype.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -7844,12 +8043,29 @@ void command::amc_vis_Init(command::amc_vis& parent) {
     parent.render = bool(true);
 }
 
+// --- command.amc_vis..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::amc_vis_ToCmdline(command::amc_vis& row) {
+    tempstr ret;
+    ret << "bin/amc_vis ";
+    amc_vis_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.amc_vis..PrintArgv
-// print command-line args of command::amc_vis to string  -- cprint:command.amc_vis.Argv
-void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.amc_vis.Argv  printfmt:Auto
+void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     command::ctype_Print(const_cast<command::amc_vis&>(row), temp);
@@ -7897,23 +8113,6 @@ void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring &str) {
         str << " -render:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.amc_vis..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::amc_vis_ToCmdline(command::amc_vis& row) {
-    tempstr ret;
-    ret << "bin/amc_vis ";
-    amc_vis_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.amc_vis..GetAnon
@@ -8071,68 +8270,20 @@ void command::amc_vis_ExecX(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc.amc_vis.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:amc_vis.Argv
+// Call execv with specified parameters
 int command::amc_vis_Execv(command::amc_vis_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.ctype.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ctype:";
-        command::ctype_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.dot != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dot:";
-        cstring_Print(parent.cmd.dot, *arg);
-    }
-
-    if (parent.cmd.xref != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xref:";
-        bool_Print(parent.cmd.xref, *arg);
-    }
-
-    if (parent.cmd.xns != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xns:";
-        bool_Print(parent.cmd.xns, *arg);
-    }
-
-    if (parent.cmd.noinput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-noinput:";
-        bool_Print(parent.cmd.noinput, *arg);
-    }
-
-    if (parent.cmd.check != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check:";
-        bool_Print(parent.cmd.check, *arg);
-    }
-
-    if (parent.cmd.render != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-render:";
-        bool_Print(parent.cmd.render, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    amc_vis_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.amc_vis_proc.amc_vis.ToCmdline
@@ -8150,6 +8301,64 @@ algo::tempstr command::amc_vis_ToCmdline(command::amc_vis_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.amc_vis_proc.amc_vis.ToArgv
+// Form array from the command line
+void command::amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.ctype.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ctype:";
+        command::ctype_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.dot != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dot:";
+        cstring_Print(parent.cmd.dot, *arg);
+    }
+
+    if (parent.cmd.xref != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xref:";
+        bool_Print(parent.cmd.xref, *arg);
+    }
+
+    if (parent.cmd.xns != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xns:";
+        bool_Print(parent.cmd.xns, *arg);
+    }
+
+    if (parent.cmd.noinput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-noinput:";
+        bool_Print(parent.cmd.noinput, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
+
+    if (parent.cmd.render != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-render:";
+        bool_Print(parent.cmd.render, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.amc_vis_proc..Uninit
@@ -8191,21 +8400,6 @@ bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tupl
     return retval;
 }
 
-// --- command.ams_cat..PrintArgv
-// print command-line args of command::ams_cat to string  -- cprint:command.ams_cat.Argv
-void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-    if (!(row.in == "data")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.in, temp);
-        str << " -in:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
 // --- command.ams_cat..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
@@ -8221,6 +8415,21 @@ tempstr command::ams_cat_ToCmdline(command::ams_cat& row) {
         ret << " -debug";
     }
     return ret;
+}
+
+// --- command.ams_cat..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.ams_cat.Argv  printfmt:Tuple
+void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.ams_cat..NArgs
@@ -8339,26 +8548,20 @@ void command::ams_cat_ExecX(command::ams_cat_proc& parent) {
 
 // --- command.ams_cat_proc.ams_cat.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_cat.Argv
+// Call execv with specified parameters
 int command::ams_cat_Execv(command::ams_cat_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    ams_cat_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.ams_cat_proc.ams_cat.ToCmdline
@@ -8376,6 +8579,22 @@ algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.ams_cat_proc.ams_cat.ToArgv
+// Form array from the command line
+void command::ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.ams_cat_proc..Uninit
@@ -8396,8 +8615,8 @@ void command::trace_Print(command::ams_sendtest& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.trace, in, true);
-    bool retval = true;// !parent.trace.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -8503,12 +8722,29 @@ void command::ams_sendtest_Init(command::ams_sendtest& parent) {
     parent.recvdelay = i64(0);
 }
 
+// --- command.ams_sendtest..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest& row) {
+    tempstr ret;
+    ret << "bin/ams_sendtest ";
+    ams_sendtest_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.ams_sendtest..PrintArgv
-// print command-line args of command::ams_sendtest to string  -- cprint:command.ams_sendtest.Argv
-void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.ams_sendtest.Argv  printfmt:Tuple
+void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -8594,23 +8830,6 @@ void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring &
         str << " -recvdelay:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.ams_sendtest..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest& row) {
-    tempstr ret;
-    ret << "bin/ams_sendtest ";
-    ams_sendtest_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.ams_sendtest..NArgs
@@ -8769,104 +8988,20 @@ void command::ams_sendtest_ExecX(command::ams_sendtest_proc& parent) {
 
 // --- command.ams_sendtest_proc.ams_sendtest.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// Call execv with specified parameters
 int command::ams_sendtest_Execv(command::ams_sendtest_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.id != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-id:";
-        i32_Print(parent.cmd.id, *arg);
-    }
-
-    if (parent.cmd.file_prefix != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-file_prefix:";
-        cstring_Print(parent.cmd.file_prefix, *arg);
-    }
-
-    if (parent.cmd.nchild != 1) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nchild:";
-        i32_Print(parent.cmd.nchild, *arg);
-    }
-
-    if (parent.cmd.blocking != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-blocking:";
-        bool_Print(parent.cmd.blocking, *arg);
-    }
-
-    if (parent.cmd.nmsg != 1000) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nmsg:";
-        i32_Print(parent.cmd.nmsg, *arg);
-    }
-
-    if (parent.cmd.trace.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-trace:";
-        command::trace_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.timeout != 30) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-timeout:";
-        i32_Print(parent.cmd.timeout, *arg);
-    }
-
-    if (parent.cmd.recvdelay_ns != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-recvdelay_ns:";
-        i64_Print(parent.cmd.recvdelay_ns, *arg);
-    }
-
-    if (parent.cmd.senddelay_ns != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-senddelay_ns:";
-        i64_Print(parent.cmd.senddelay_ns, *arg);
-    }
-
-    if (parent.cmd.msgsize_min != 64) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgsize_min:";
-        i32_Print(parent.cmd.msgsize_min, *arg);
-    }
-
-    if (parent.cmd.msgsize_max != 1024) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgsize_max:";
-        i32_Print(parent.cmd.msgsize_max, *arg);
-    }
-
-    if (parent.cmd.bufsize != 32768) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-bufsize:";
-        i32_Print(parent.cmd.bufsize, *arg);
-    }
-
-    if (parent.cmd.recvdelay != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-recvdelay:";
-        i64_Print(parent.cmd.recvdelay, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    ams_sendtest_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.ams_sendtest_proc.ams_sendtest.ToCmdline
@@ -8884,6 +9019,100 @@ algo::tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.ams_sendtest_proc.ams_sendtest.ToArgv
+// Form array from the command line
+void command::ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.id != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-id:";
+        i32_Print(parent.cmd.id, *arg);
+    }
+
+    if (parent.cmd.file_prefix != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-file_prefix:";
+        cstring_Print(parent.cmd.file_prefix, *arg);
+    }
+
+    if (parent.cmd.nchild != 1) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nchild:";
+        i32_Print(parent.cmd.nchild, *arg);
+    }
+
+    if (parent.cmd.blocking != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-blocking:";
+        bool_Print(parent.cmd.blocking, *arg);
+    }
+
+    if (parent.cmd.nmsg != 1000) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nmsg:";
+        i32_Print(parent.cmd.nmsg, *arg);
+    }
+
+    if (parent.cmd.trace.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trace:";
+        command::trace_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.timeout != 30) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-timeout:";
+        i32_Print(parent.cmd.timeout, *arg);
+    }
+
+    if (parent.cmd.recvdelay_ns != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-recvdelay_ns:";
+        i64_Print(parent.cmd.recvdelay_ns, *arg);
+    }
+
+    if (parent.cmd.senddelay_ns != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-senddelay_ns:";
+        i64_Print(parent.cmd.senddelay_ns, *arg);
+    }
+
+    if (parent.cmd.msgsize_min != 64) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgsize_min:";
+        i32_Print(parent.cmd.msgsize_min, *arg);
+    }
+
+    if (parent.cmd.msgsize_max != 1024) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgsize_max:";
+        i32_Print(parent.cmd.msgsize_max, *arg);
+    }
+
+    if (parent.cmd.bufsize != 32768) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bufsize:";
+        i32_Print(parent.cmd.bufsize, *arg);
+    }
+
+    if (parent.cmd.recvdelay != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-recvdelay:";
+        i64_Print(parent.cmd.recvdelay, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.ams_sendtest_proc..Uninit
@@ -8904,8 +9133,8 @@ void command::package_Print(command::apm& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.package, in, true);
-    bool retval = true;// !parent.package.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -8919,8 +9148,8 @@ void command::ns_Print(command::apm& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::ns_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
-    bool retval = true;// !parent.ns.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -9090,12 +9319,29 @@ void command::apm_Init(command::apm& parent) {
     parent.binpath = algo::strptr("bin");
 }
 
+// --- command.apm..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::apm_ToCmdline(command::apm& row) {
+    tempstr ret;
+    ret << "bin/apm ";
+    apm_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.apm..PrintArgv
-// print command-line args of command::apm to string  -- cprint:command.apm.Argv
-void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.apm.Argv  printfmt:Tuple
+void command::apm_PrintArgv(command::apm& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -9251,23 +9497,6 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
         str << " -binpath:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.apm..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::apm_ToCmdline(command::apm& row) {
-    tempstr ret;
-    ret << "bin/apm ";
-    apm_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.apm..GetAnon
@@ -9503,176 +9732,20 @@ void command::apm_ExecX(command::apm_proc& parent) {
 
 // --- command.apm_proc.apm.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:apm.Argv
+// Call execv with specified parameters
 int command::apm_Execv(command::apm_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.pkgdata != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pkgdata:";
-        cstring_Print(parent.cmd.pkgdata, *arg);
-    }
-
-    if (parent.cmd.package.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-package:";
-        command::package_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.ns.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ns:";
-        command::ns_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.install != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-install:";
-        bool_Print(parent.cmd.install, *arg);
-    }
-
-    if (parent.cmd.update != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-update:";
-        bool_Print(parent.cmd.update, *arg);
-    }
-
-    if (parent.cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(parent.cmd.list, *arg);
-    }
-
-    if (parent.cmd.diff != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-diff:";
-        bool_Print(parent.cmd.diff, *arg);
-    }
-
-    if (parent.cmd.push != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-push:";
-        bool_Print(parent.cmd.push, *arg);
-    }
-
-    if (parent.cmd.check != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check:";
-        bool_Print(parent.cmd.check, *arg);
-    }
-
-    if (parent.cmd.remove != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-remove:";
-        bool_Print(parent.cmd.remove, *arg);
-    }
-
-    if (parent.cmd.origin != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-origin:";
-        Smallstr200_Print(parent.cmd.origin, *arg);
-    }
-
-    if (parent.cmd.ref != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ref:";
-        Smallstr50_Print(parent.cmd.ref, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-
-    if (parent.cmd.showrec != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showrec:";
-        bool_Print(parent.cmd.showrec, *arg);
-    }
-
-    if (parent.cmd.showfile != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showfile:";
-        bool_Print(parent.cmd.showfile, *arg);
-    }
-
-    if (parent.cmd.R != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-R:";
-        bool_Print(parent.cmd.R, *arg);
-    }
-
-    if (parent.cmd.l != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-l:";
-        bool_Print(parent.cmd.l, *arg);
-    }
-
-    if (parent.cmd.reset != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-reset:";
-        bool_Print(parent.cmd.reset, *arg);
-    }
-
-    if (parent.cmd.checkclean != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-checkclean:";
-        bool_Print(parent.cmd.checkclean, *arg);
-    }
-
-    if (parent.cmd.t != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-t:";
-        bool_Print(parent.cmd.t, *arg);
-    }
-
-    if (parent.cmd.stat != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-stat:";
-        bool_Print(parent.cmd.stat, *arg);
-    }
-
-    if (parent.cmd.annotate != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-annotate:";
-        cstring_Print(parent.cmd.annotate, *arg);
-    }
-
-    if (parent.cmd.data_in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data_in:";
-        cstring_Print(parent.cmd.data_in, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.binpath != "bin") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-binpath:";
-        cstring_Print(parent.cmd.binpath, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    apm_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.apm_proc.apm.ToCmdline
@@ -9690,6 +9763,172 @@ algo::tempstr command::apm_ToCmdline(command::apm_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.apm_proc.apm.ToArgv
+// Form array from the command line
+void command::apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.pkgdata != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pkgdata:";
+        cstring_Print(parent.cmd.pkgdata, *arg);
+    }
+
+    if (parent.cmd.package.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-package:";
+        command::package_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.install != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-install:";
+        bool_Print(parent.cmd.install, *arg);
+    }
+
+    if (parent.cmd.update != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-update:";
+        bool_Print(parent.cmd.update, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.diff != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-diff:";
+        bool_Print(parent.cmd.diff, *arg);
+    }
+
+    if (parent.cmd.push != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-push:";
+        bool_Print(parent.cmd.push, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
+
+    if (parent.cmd.remove != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-remove:";
+        bool_Print(parent.cmd.remove, *arg);
+    }
+
+    if (parent.cmd.origin != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-origin:";
+        Smallstr200_Print(parent.cmd.origin, *arg);
+    }
+
+    if (parent.cmd.ref != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ref:";
+        Smallstr50_Print(parent.cmd.ref, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+
+    if (parent.cmd.showrec != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showrec:";
+        bool_Print(parent.cmd.showrec, *arg);
+    }
+
+    if (parent.cmd.showfile != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showfile:";
+        bool_Print(parent.cmd.showfile, *arg);
+    }
+
+    if (parent.cmd.R != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-R:";
+        bool_Print(parent.cmd.R, *arg);
+    }
+
+    if (parent.cmd.l != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-l:";
+        bool_Print(parent.cmd.l, *arg);
+    }
+
+    if (parent.cmd.reset != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-reset:";
+        bool_Print(parent.cmd.reset, *arg);
+    }
+
+    if (parent.cmd.checkclean != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-checkclean:";
+        bool_Print(parent.cmd.checkclean, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
+    }
+
+    if (parent.cmd.stat != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-stat:";
+        bool_Print(parent.cmd.stat, *arg);
+    }
+
+    if (parent.cmd.annotate != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-annotate:";
+        cstring_Print(parent.cmd.annotate, *arg);
+    }
+
+    if (parent.cmd.data_in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data_in:";
+        cstring_Print(parent.cmd.data_in, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.binpath != "bin") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-binpath:";
+        cstring_Print(parent.cmd.binpath, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.apm_proc..Uninit
@@ -9710,8 +9949,8 @@ void command::amctest_Print(command::atf_amc& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::amctest_ReadStrptrMaybe(command::atf_amc& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.amctest, in, true);
-    bool retval = true;// !parent.amctest.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -9771,12 +10010,29 @@ void command::atf_amc_Init(command::atf_amc& parent) {
     parent.q = bool(false);
 }
 
+// --- command.atf_amc..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_amc_ToCmdline(command::atf_amc& row) {
+    tempstr ret;
+    ret << "bin/atf_amc ";
+    atf_amc_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_amc..PrintArgv
-// print command-line args of command::atf_amc to string  -- cprint:command.atf_amc.Argv
-void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_amc.Argv  printfmt:Tuple
+void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -9800,23 +10056,6 @@ void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring &str) {
         str << " -q:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_amc..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_amc_ToCmdline(command::atf_amc& row) {
-    tempstr ret;
-    ret << "bin/atf_amc ";
-    atf_amc_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_amc..GetAnon
@@ -9956,44 +10195,20 @@ void command::atf_amc_ExecX(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc.atf_amc.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_amc.Argv
+// Call execv with specified parameters
 int command::atf_amc_Execv(command::atf_amc_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.amctest.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-amctest:";
-        command::amctest_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.dofork != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dofork:";
-        bool_Print(parent.cmd.dofork, *arg);
-    }
-
-    if (parent.cmd.q != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-q:";
-        bool_Print(parent.cmd.q, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_amc_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_amc_proc.atf_amc.ToCmdline
@@ -10011,6 +10226,40 @@ algo::tempstr command::atf_amc_ToCmdline(command::atf_amc_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_amc_proc.atf_amc.ToArgv
+// Form array from the command line
+void command::atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.amctest.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-amctest:";
+        command::amctest_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.dofork != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dofork:";
+        bool_Print(parent.cmd.dofork, *arg);
+    }
+
+    if (parent.cmd.q != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-q:";
+        bool_Print(parent.cmd.q, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_amc_proc..Uninit
@@ -10031,8 +10280,8 @@ void command::citest_Print(command::atf_ci& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.citest, in, true);
-    bool retval = true;// !parent.citest.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -10046,8 +10295,8 @@ void command::cijob_Print(command::atf_ci& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.cijob, in, true);
-    bool retval = true;// !parent.cijob.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -10112,12 +10361,29 @@ void command::atf_ci_Init(command::atf_ci& parent) {
     parent.capture = bool(false);
 }
 
+// --- command.atf_ci..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_ci_ToCmdline(command::atf_ci& row) {
+    tempstr ret;
+    ret << "bin/atf_ci ";
+    atf_ci_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_ci..PrintArgv
-// print command-line args of command::atf_ci to string  -- cprint:command.atf_ci.Argv
-void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_ci.Argv  printfmt:Tuple
+void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -10147,23 +10413,6 @@ void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring &str) {
         str << " -capture:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_ci..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_ci_ToCmdline(command::atf_ci& row) {
-    tempstr ret;
-    ret << "bin/atf_ci ";
-    atf_ci_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_ci..GetAnon
@@ -10304,50 +10553,20 @@ void command::atf_ci_ExecX(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc.atf_ci.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_ci.Argv
+// Call execv with specified parameters
 int command::atf_ci_Execv(command::atf_ci_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.citest.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-citest:";
-        command::citest_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.maxerr != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxerr:";
-        i32_Print(parent.cmd.maxerr, *arg);
-    }
-
-    if (parent.cmd.cijob.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cijob:";
-        command::cijob_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_ci_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_ci_proc.atf_ci.ToCmdline
@@ -10367,12 +10586,71 @@ algo::tempstr command::atf_ci_ToCmdline(command::atf_ci_proc& parent) {
     return retval;
 }
 
+// --- command.atf_ci_proc.atf_ci.ToArgv
+// Form array from the command line
+void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.citest.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-citest:";
+        command::citest_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.maxerr != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxerr:";
+        i32_Print(parent.cmd.maxerr, *arg);
+    }
+
+    if (parent.cmd.cijob.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cijob:";
+        command::cijob_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.atf_ci_proc..Uninit
 void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
     command::atf_ci_proc &row = parent; (void)row;
 
     // command.atf_ci_proc.atf_ci.Uninit (Exec)  //
     atf_ci_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_cmdline.mstr.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::mstr_Addary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mstr_elems && rhs.elems < parent.mstr_elems + parent.mstr_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mstr  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    mstr_Reserve(parent, nnew); // reserve space
+    int at = parent.mstr_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.mstr_elems + at + i) algo::cstring(rhs[i]);
+        parent.mstr_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.mstr_elems + at, nnew);
 }
 
 // --- command.atf_cmdline.mstr.Alloc
@@ -10478,6 +10756,14 @@ void command::mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
     }
 }
 
+// --- command.atf_cmdline.mstr.Setary2
+// Copy specified array into mstr, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::mstr_Setary(command::atf_cmdline& parent, const algo::aryptr<algo::cstring> &rhs) {
+    mstr_RemoveAll(parent);
+    mstr_Addary(parent, rhs);
+}
+
 // --- command.atf_cmdline.mstr.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) {
@@ -10493,11 +10779,34 @@ algo::aryptr<algo::cstring> command::mstr_AllocNVal(command::atf_cmdline& parent
 }
 
 // --- command.atf_cmdline.mstr.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(mstr_Alloc(parent), in_str);
+    algo::cstring &elem = mstr_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        mstr_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.atf_cmdline.mnum.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<i32> command::mnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mnum_elems && rhs.elems < parent.mnum_elems + parent.mnum_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mnum  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    mnum_Reserve(parent, nnew); // reserve space
+    int at = parent.mnum_n;
+    memcpy(parent.mnum_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.mnum_n += nnew;
+    return algo::aryptr<i32>(parent.mnum_elems + at, nnew);
 }
 
 // --- command.atf_cmdline.mnum.Alloc
@@ -10591,6 +10900,14 @@ void command::mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
     }
 }
 
+// --- command.atf_cmdline.mnum.Setary2
+// Copy specified array into mnum, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::mnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) {
+    mnum_RemoveAll(parent);
+    mnum_Addary(parent, rhs);
+}
+
 // --- command.atf_cmdline.mnum.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<i32> command::mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) {
@@ -10606,11 +10923,34 @@ algo::aryptr<i32> command::mnum_AllocNVal(command::atf_cmdline& parent, int n_el
 }
 
 // --- command.atf_cmdline.mnum.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = i32_ReadStrptrMaybe(mnum_Alloc(parent), in_str);
+    i32 &elem = mnum_Alloc(parent);
+    retval = i32_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        mnum_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.atf_cmdline.mdbl.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<double> command::mdbl_Addary(command::atf_cmdline& parent, algo::aryptr<double> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mdbl_elems && rhs.elems < parent.mdbl_elems + parent.mdbl_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mdbl  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    mdbl_Reserve(parent, nnew); // reserve space
+    int at = parent.mdbl_n;
+    memcpy(parent.mdbl_elems + at, rhs.elems, nnew * sizeof(double));
+    parent.mdbl_n += nnew;
+    return algo::aryptr<double>(parent.mdbl_elems + at, nnew);
 }
 
 // --- command.atf_cmdline.mdbl.Alloc
@@ -10704,6 +11044,14 @@ void command::mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
     }
 }
 
+// --- command.atf_cmdline.mdbl.Setary2
+// Copy specified array into mdbl, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::mdbl_Setary(command::atf_cmdline& parent, const algo::aryptr<double> &rhs) {
+    mdbl_RemoveAll(parent);
+    mdbl_Addary(parent, rhs);
+}
+
 // --- command.atf_cmdline.mdbl.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<double> command::mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) {
@@ -10719,11 +11067,34 @@ algo::aryptr<double> command::mdbl_AllocNVal(command::atf_cmdline& parent, int n
 }
 
 // --- command.atf_cmdline.mdbl.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = double_ReadStrptrMaybe(mdbl_Alloc(parent), in_str);
+    double &elem = mdbl_Alloc(parent);
+    retval = double_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        mdbl_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.atf_cmdline.amnum.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<i32> command::amnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.amnum_elems && rhs.elems < parent.amnum_elems + parent.amnum_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.amnum  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    amnum_Reserve(parent, nnew); // reserve space
+    int at = parent.amnum_n;
+    memcpy(parent.amnum_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.amnum_n += nnew;
+    return algo::aryptr<i32>(parent.amnum_elems + at, nnew);
 }
 
 // --- command.atf_cmdline.amnum.Alloc
@@ -10817,6 +11188,14 @@ void command::amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &r
     }
 }
 
+// --- command.atf_cmdline.amnum.Setary2
+// Copy specified array into amnum, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::amnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) {
+    amnum_RemoveAll(parent);
+    amnum_Addary(parent, rhs);
+}
+
 // --- command.atf_cmdline.amnum.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<i32> command::amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) {
@@ -10832,10 +11211,16 @@ algo::aryptr<i32> command::amnum_AllocNVal(command::atf_cmdline& parent, int n_e
 }
 
 // --- command.atf_cmdline.amnum.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = i32_ReadStrptrMaybe(amnum_Alloc(parent), in_str);
+    i32 &elem = amnum_Alloc(parent);
+    retval = i32_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        amnum_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -10927,8 +11312,8 @@ void command::dregx_Print(command::atf_cmdline& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.dregx, in, true);
-    bool retval = true;// !parent.dregx.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -10936,7 +11321,7 @@ bool command::dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr i
 bool command::atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -11112,12 +11497,29 @@ void command::atf_cmdline_Uninit(command::atf_cmdline& parent) {
     algo_lib::malloc_FreeMem(parent.mstr_elems, sizeof(algo::cstring)*parent.mstr_max); // (command.atf_cmdline.mstr)
 }
 
+// --- command.atf_cmdline..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline& row) {
+    tempstr ret;
+    ret << "bin/atf_cmdline ";
+    atf_cmdline_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_cmdline..PrintArgv
-// print command-line args of command::atf_cmdline to string  -- cprint:command.atf_cmdline.Argv
-void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_cmdline.Argv  printfmt:Tuple
+void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -11239,23 +11641,6 @@ void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring &st
         str << " -dpkey:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_cmdline..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline& row) {
-    tempstr ret;
-    ret << "bin/atf_cmdline ";
-    atf_cmdline_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_cmdline..GetAnon
@@ -11456,148 +11841,20 @@ void command::atf_cmdline_ExecX(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_cmdline_proc.atf_cmdline.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_cmdline.Argv
+// Call execv with specified parameters
 int command::atf_cmdline_Execv(command::atf_cmdline_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.exec != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-exec:";
-        bool_Print(parent.cmd.exec, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-astr:";
-        cstring_Print(parent.cmd.astr, *arg);
-    }
-
-    if (parent.cmd.anum != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anum:";
-        i32_Print(parent.cmd.anum, *arg);
-    }
-
-    if (parent.cmd.adbl != 0.0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-adbl:";
-        double_Print(parent.cmd.adbl, *arg);
-    }
-
-    if (parent.cmd.aflag != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-aflag:";
-        bool_Print(parent.cmd.aflag, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-str:";
-        cstring_Print(parent.cmd.str, *arg);
-    }
-
-    if (parent.cmd.num != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-num:";
-        i32_Print(parent.cmd.num, *arg);
-    }
-
-    if (parent.cmd.dbl != 0.0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dbl:";
-        double_Print(parent.cmd.dbl, *arg);
-    }
-
-    if (parent.cmd.flag != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-flag:";
-        bool_Print(parent.cmd.flag, *arg);
-    }
-
-    if (parent.cmd.dstr != "blah") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dstr:";
-        cstring_Print(parent.cmd.dstr, *arg);
-    }
-
-    if (parent.cmd.dnum != -33) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dnum:";
-        i32_Print(parent.cmd.dnum, *arg);
-    }
-
-    if (parent.cmd.ddbl != 0.0001) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ddbl:";
-        double_Print(parent.cmd.ddbl, *arg);
-    }
-
-    if (parent.cmd.dflag != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dflag:";
-        bool_Print(parent.cmd.dflag, *arg);
-    }
-    ind_beg(command::atf_cmdline_mstr_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mstr:";
-        cstring_Print(value, *arg);
-    }ind_end;
-    ind_beg(command::atf_cmdline_mnum_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mnum:";
-        i32_Print(value, *arg);
-    }ind_end;
-    ind_beg(command::atf_cmdline_mdbl_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mdbl:";
-        double_Print(value, *arg);
-    }ind_end;
-    ind_beg(command::atf_cmdline_amnum_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-amnum:";
-        i32_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.fconst != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fconst:";
-        command::fconst_Print(parent.cmd, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cconst:";
-        Month_Print(parent.cmd.cconst, *arg);
-    }
-
-    if (parent.cmd.dregx.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dregx:";
-        command::dregx_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.dpkey != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dpkey:";
-        Smallstr100_Print(parent.cmd.dpkey, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_cmdline_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_cmdline_proc.atf_cmdline.ToCmdline
@@ -11615,6 +11872,144 @@ algo::tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) 
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_cmdline_proc.atf_cmdline.ToArgv
+// Form array from the command line
+void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.exec != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-exec:";
+        bool_Print(parent.cmd.exec, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-astr:";
+        cstring_Print(parent.cmd.astr, *arg);
+    }
+
+    if (parent.cmd.anum != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anum:";
+        i32_Print(parent.cmd.anum, *arg);
+    }
+
+    if (parent.cmd.adbl != 0.0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-adbl:";
+        double_Print(parent.cmd.adbl, *arg);
+    }
+
+    if (parent.cmd.aflag != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-aflag:";
+        bool_Print(parent.cmd.aflag, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-str:";
+        cstring_Print(parent.cmd.str, *arg);
+    }
+
+    if (parent.cmd.num != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-num:";
+        i32_Print(parent.cmd.num, *arg);
+    }
+
+    if (parent.cmd.dbl != 0.0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dbl:";
+        double_Print(parent.cmd.dbl, *arg);
+    }
+
+    if (parent.cmd.flag != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-flag:";
+        bool_Print(parent.cmd.flag, *arg);
+    }
+
+    if (parent.cmd.dstr != "blah") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dstr:";
+        cstring_Print(parent.cmd.dstr, *arg);
+    }
+
+    if (parent.cmd.dnum != -33) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dnum:";
+        i32_Print(parent.cmd.dnum, *arg);
+    }
+
+    if (parent.cmd.ddbl != 0.0001) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ddbl:";
+        double_Print(parent.cmd.ddbl, *arg);
+    }
+
+    if (parent.cmd.dflag != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dflag:";
+        bool_Print(parent.cmd.dflag, *arg);
+    }
+    ind_beg(command::atf_cmdline_mstr_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mstr:";
+        cstring_Print(value, *arg);
+    }ind_end;
+    ind_beg(command::atf_cmdline_mnum_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mnum:";
+        i32_Print(value, *arg);
+    }ind_end;
+    ind_beg(command::atf_cmdline_mdbl_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mdbl:";
+        double_Print(value, *arg);
+    }ind_end;
+    ind_beg(command::atf_cmdline_amnum_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-amnum:";
+        i32_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.fconst != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fconst:";
+        command::fconst_Print(parent.cmd, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cconst:";
+        Month_Print(parent.cmd.cconst, *arg);
+    }
+
+    if (parent.cmd.dregx.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dregx:";
+        command::dregx_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.dpkey != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dpkey:";
+        Smallstr100_Print(parent.cmd.dpkey, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_cmdline_proc..Uninit
@@ -11635,8 +12030,8 @@ void command::comptest_Print(command::atf_comp& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.comptest, in, true);
-    bool retval = true;// !parent.comptest.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -11806,12 +12201,29 @@ void command::atf_comp_Init(command::atf_comp& parent) {
     parent.b = algo::strptr("");
 }
 
+// --- command.atf_comp..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_comp_ToCmdline(command::atf_comp& row) {
+    tempstr ret;
+    ret << "bin/atf_comp ";
+    atf_comp_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_comp..PrintArgv
-// print command-line args of command::atf_comp to string  -- cprint:command.atf_comp.Argv
-void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_comp.Argv  printfmt:Tuple
+void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -11967,23 +12379,6 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring &str) {
         str << " -b:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_comp..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_comp_ToCmdline(command::atf_comp& row) {
-    tempstr ret;
-    ret << "bin/atf_comp ";
-    atf_comp_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_comp..GetAnon
@@ -12223,176 +12618,20 @@ void command::atf_comp_ExecX(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc.atf_comp.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_comp.Argv
+// Call execv with specified parameters
 int command::atf_comp_Execv(command::atf_comp_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.comptest.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-comptest:";
-        command::comptest_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.mdbg != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mdbg:";
-        bool_Print(parent.cmd.mdbg, *arg);
-    }
-
-    if (parent.cmd.run != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-run:";
-        bool_Print(parent.cmd.run, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-
-    if (parent.cmd.print != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-print:";
-        bool_Print(parent.cmd.print, *arg);
-    }
-
-    if (parent.cmd.printinput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-printinput:";
-        bool_Print(parent.cmd.printinput, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.normalize != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-normalize:";
-        bool_Print(parent.cmd.normalize, *arg);
-    }
-
-    if (parent.cmd.covcapture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-covcapture:";
-        bool_Print(parent.cmd.covcapture, *arg);
-    }
-
-    if (parent.cmd.covcheck != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-covcheck:";
-        bool_Print(parent.cmd.covcheck, *arg);
-    }
-
-    if (parent.cmd.compdir != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-compdir:";
-        cstring_Print(parent.cmd.compdir, *arg);
-    }
-
-    if (parent.cmd.cfg != "release") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cfg:";
-        Smallstr50_Print(parent.cmd.cfg, *arg);
-    }
-
-    if (parent.cmd.check_untracked != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check_untracked:";
-        bool_Print(parent.cmd.check_untracked, *arg);
-    }
-
-    if (parent.cmd.maxerr != 1) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxerr:";
-        i32_Print(parent.cmd.maxerr, *arg);
-    }
-
-    if (parent.cmd.build != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-build:";
-        bool_Print(parent.cmd.build, *arg);
-    }
-
-    if (parent.cmd.ood != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ood:";
-        bool_Print(parent.cmd.ood, *arg);
-    }
-
-    if (parent.cmd.memcheck != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-memcheck:";
-        bool_Print(parent.cmd.memcheck, *arg);
-    }
-
-    if (parent.cmd.force != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-force:";
-        bool_Print(parent.cmd.force, *arg);
-    }
-
-    if (parent.cmd.callgrind != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-callgrind:";
-        bool_Print(parent.cmd.callgrind, *arg);
-    }
-
-    if (parent.cmd.maxjobs != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxjobs:";
-        i32_Print(parent.cmd.maxjobs, *arg);
-    }
-
-    if (parent.cmd.stream != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-stream:";
-        bool_Print(parent.cmd.stream, *arg);
-    }
-
-    if (parent.cmd.i != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-i:";
-        bool_Print(parent.cmd.i, *arg);
-    }
-
-    if (parent.cmd.write != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(parent.cmd.write, *arg);
-    }
-
-    if (parent.cmd.report != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.b != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-b:";
-        cstring_Print(parent.cmd.b, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_comp_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_comp_proc.atf_comp.ToCmdline
@@ -12410,6 +12649,172 @@ algo::tempstr command::atf_comp_ToCmdline(command::atf_comp_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_comp_proc.atf_comp.ToArgv
+// Form array from the command line
+void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.comptest.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-comptest:";
+        command::comptest_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.mdbg != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mdbg:";
+        bool_Print(parent.cmd.mdbg, *arg);
+    }
+
+    if (parent.cmd.run != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-run:";
+        bool_Print(parent.cmd.run, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.print != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-print:";
+        bool_Print(parent.cmd.print, *arg);
+    }
+
+    if (parent.cmd.printinput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-printinput:";
+        bool_Print(parent.cmd.printinput, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.normalize != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-normalize:";
+        bool_Print(parent.cmd.normalize, *arg);
+    }
+
+    if (parent.cmd.covcapture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-covcapture:";
+        bool_Print(parent.cmd.covcapture, *arg);
+    }
+
+    if (parent.cmd.covcheck != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-covcheck:";
+        bool_Print(parent.cmd.covcheck, *arg);
+    }
+
+    if (parent.cmd.compdir != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-compdir:";
+        cstring_Print(parent.cmd.compdir, *arg);
+    }
+
+    if (parent.cmd.cfg != "release") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cfg:";
+        Smallstr50_Print(parent.cmd.cfg, *arg);
+    }
+
+    if (parent.cmd.check_untracked != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check_untracked:";
+        bool_Print(parent.cmd.check_untracked, *arg);
+    }
+
+    if (parent.cmd.maxerr != 1) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxerr:";
+        i32_Print(parent.cmd.maxerr, *arg);
+    }
+
+    if (parent.cmd.build != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-build:";
+        bool_Print(parent.cmd.build, *arg);
+    }
+
+    if (parent.cmd.ood != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ood:";
+        bool_Print(parent.cmd.ood, *arg);
+    }
+
+    if (parent.cmd.memcheck != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-memcheck:";
+        bool_Print(parent.cmd.memcheck, *arg);
+    }
+
+    if (parent.cmd.force != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-force:";
+        bool_Print(parent.cmd.force, *arg);
+    }
+
+    if (parent.cmd.callgrind != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-callgrind:";
+        bool_Print(parent.cmd.callgrind, *arg);
+    }
+
+    if (parent.cmd.maxjobs != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxjobs:";
+        i32_Print(parent.cmd.maxjobs, *arg);
+    }
+
+    if (parent.cmd.stream != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-stream:";
+        bool_Print(parent.cmd.stream, *arg);
+    }
+
+    if (parent.cmd.i != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-i:";
+        bool_Print(parent.cmd.i, *arg);
+    }
+
+    if (parent.cmd.write != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.report != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.b != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-b:";
+        cstring_Print(parent.cmd.b, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_comp_proc..Uninit
@@ -12430,8 +12835,8 @@ void command::exclude_Print(command::atf_cov& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.exclude, in, true);
-    bool retval = true;// !parent.exclude.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -12532,12 +12937,29 @@ void command::atf_cov_Init(command::atf_cov& parent) {
     parent.check = bool(false);
 }
 
+// --- command.atf_cov..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_cov_ToCmdline(command::atf_cov& row) {
+    tempstr ret;
+    ret << "bin/atf_cov ";
+    atf_cov_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_cov..PrintArgv
-// print command-line args of command::atf_cov to string  -- cprint:command.atf_cov.Argv
-void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_cov.Argv  printfmt:Tuple
+void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -12617,23 +13039,6 @@ void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring &str) {
         str << " -check:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_cov..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_cov_ToCmdline(command::atf_cov& row) {
-    tempstr ret;
-    ret << "bin/atf_cov ";
-    atf_cov_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_cov..NArgs
@@ -12801,98 +13206,20 @@ void command::atf_cov_ExecX(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc.atf_cov.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_cov.Argv
+// Call execv with specified parameters
 int command::atf_cov_Execv(command::atf_cov_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.covdir != "temp/covdata") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-covdir:";
-        cstring_Print(parent.cmd.covdir, *arg);
-    }
-
-    if (parent.cmd.logfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-logfile:";
-        cstring_Print(parent.cmd.logfile, *arg);
-    }
-
-    if (parent.cmd.runcmd != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-runcmd:";
-        cstring_Print(parent.cmd.runcmd, *arg);
-    }
-
-    if (parent.cmd.exclude.expr != "(extern|include/gen|cpp/gen)/%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-exclude:";
-        command::exclude_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.mergepath != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mergepath:";
-        cstring_Print(parent.cmd.mergepath, *arg);
-    }
-
-    if (parent.cmd.gcov != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gcov:";
-        bool_Print(parent.cmd.gcov, *arg);
-    }
-
-    if (parent.cmd.ssim != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ssim:";
-        bool_Print(parent.cmd.ssim, *arg);
-    }
-
-    if (parent.cmd.report != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-
-    if (parent.cmd.xmlpretty != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xmlpretty:";
-        bool_Print(parent.cmd.xmlpretty, *arg);
-    }
-
-    if (parent.cmd.summary != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-summary:";
-        bool_Print(parent.cmd.summary, *arg);
-    }
-
-    if (parent.cmd.check != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check:";
-        bool_Print(parent.cmd.check, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_cov_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_cov_proc.atf_cov.ToCmdline
@@ -12910,6 +13237,94 @@ algo::tempstr command::atf_cov_ToCmdline(command::atf_cov_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_cov_proc.atf_cov.ToArgv
+// Form array from the command line
+void command::atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.covdir != "temp/covdata") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-covdir:";
+        cstring_Print(parent.cmd.covdir, *arg);
+    }
+
+    if (parent.cmd.logfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-logfile:";
+        cstring_Print(parent.cmd.logfile, *arg);
+    }
+
+    if (parent.cmd.runcmd != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-runcmd:";
+        cstring_Print(parent.cmd.runcmd, *arg);
+    }
+
+    if (parent.cmd.exclude.expr != "(extern|include/gen|cpp/gen)/%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-exclude:";
+        command::exclude_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.mergepath != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mergepath:";
+        cstring_Print(parent.cmd.mergepath, *arg);
+    }
+
+    if (parent.cmd.gcov != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gcov:";
+        bool_Print(parent.cmd.gcov, *arg);
+    }
+
+    if (parent.cmd.ssim != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ssim:";
+        bool_Print(parent.cmd.ssim, *arg);
+    }
+
+    if (parent.cmd.report != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.xmlpretty != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xmlpretty:";
+        bool_Print(parent.cmd.xmlpretty, *arg);
+    }
+
+    if (parent.cmd.summary != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-summary:";
+        bool_Print(parent.cmd.summary, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_cov_proc..Uninit
@@ -12930,8 +13345,8 @@ void command::fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.fuzzstrat, in, true);
-    bool retval = true;// !parent.fuzzstrat.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -13011,12 +13426,29 @@ void command::atf_fuzz_Init(command::atf_fuzz& parent) {
     parent.testprob = double(1);
 }
 
+// --- command.atf_fuzz..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz& row) {
+    tempstr ret;
+    ret << "bin/atf_fuzz ";
+    atf_fuzz_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_fuzz..PrintArgv
-// print command-line args of command::atf_fuzz to string  -- cprint:command.atf_fuzz.Argv
-void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_fuzz.Argv  printfmt:Tuple
+void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.reprofile == "temp/atf_fuzz.repro")) {
         ch_RemoveAll(temp);
@@ -13062,23 +13494,6 @@ void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring &str) {
         str << " -testprob:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_fuzz..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz& row) {
-    tempstr ret;
-    ret << "bin/atf_fuzz ";
-    atf_fuzz_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_fuzz..GetAnon
@@ -13228,68 +13643,20 @@ void command::atf_fuzz_ExecX(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc.atf_fuzz.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_fuzz.Argv
+// Call execv with specified parameters
 int command::atf_fuzz_Execv(command::atf_fuzz_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.reprofile != "temp/atf_fuzz.repro") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-reprofile:";
-        cstring_Print(parent.cmd.reprofile, *arg);
-    }
-
-    if (parent.cmd.target != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        Smallstr16_Print(parent.cmd.target, *arg);
-    }
-
-    if (parent.cmd.args != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-args:";
-        cstring_Print(parent.cmd.args, *arg);
-    }
-
-    if (parent.cmd.inputfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-inputfile:";
-        cstring_Print(parent.cmd.inputfile, *arg);
-    }
-
-    if (parent.cmd.fuzzstrat.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fuzzstrat:";
-        command::fuzzstrat_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.seed != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-seed:";
-        i32_Print(parent.cmd.seed, *arg);
-    }
-
-    if (parent.cmd.testprob != 1) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-testprob:";
-        double_Print(parent.cmd.testprob, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_fuzz_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_fuzz_proc.atf_fuzz.ToCmdline
@@ -13307,6 +13674,64 @@ algo::tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_fuzz_proc.atf_fuzz.ToArgv
+// Form array from the command line
+void command::atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.reprofile != "temp/atf_fuzz.repro") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-reprofile:";
+        cstring_Print(parent.cmd.reprofile, *arg);
+    }
+
+    if (parent.cmd.target != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        Smallstr16_Print(parent.cmd.target, *arg);
+    }
+
+    if (parent.cmd.args != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-args:";
+        cstring_Print(parent.cmd.args, *arg);
+    }
+
+    if (parent.cmd.inputfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-inputfile:";
+        cstring_Print(parent.cmd.inputfile, *arg);
+    }
+
+    if (parent.cmd.fuzzstrat.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fuzzstrat:";
+        command::fuzzstrat_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.seed != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-seed:";
+        i32_Print(parent.cmd.seed, *arg);
+    }
+
+    if (parent.cmd.testprob != 1) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-testprob:";
+        double_Print(parent.cmd.testprob, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_fuzz_proc..Uninit
@@ -13327,8 +13752,8 @@ void command::gtblacttst_Print(command::atf_gcli& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::gtblacttst_ReadStrptrMaybe(command::atf_gcli& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.gtblacttst, in, true);
-    bool retval = true;// !parent.gtblacttst.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -13409,12 +13834,29 @@ void command::atf_gcli_Init(command::atf_gcli& parent) {
     parent.dry_run = bool(false);
 }
 
+// --- command.atf_gcli..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_gcli_ToCmdline(command::atf_gcli& row) {
+    tempstr ret;
+    ret << "bin/atf_gcli ";
+    atf_gcli_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_gcli..PrintArgv
-// print command-line args of command::atf_gcli to string  -- cprint:command.atf_gcli.Argv
-void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_gcli.Argv  printfmt:Tuple
+void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -13470,23 +13912,6 @@ void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring &str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_gcli..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_gcli_ToCmdline(command::atf_gcli& row) {
-    tempstr ret;
-    ret << "bin/atf_gcli ";
-    atf_gcli_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_gcli..NArgs
@@ -13636,74 +14061,20 @@ void command::atf_gcli_ExecX(command::atf_gcli_proc& parent) {
 
 // --- command.atf_gcli_proc.atf_gcli.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_gcli.Argv
+// Call execv with specified parameters
 int command::atf_gcli_Execv(command::atf_gcli_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.gtblacttst.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gtblacttst:";
-        command::gtblacttst_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.id != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-id:";
-        cstring_Print(parent.cmd.id, *arg);
-    }
-
-    if (parent.cmd.mr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mr:";
-        cstring_Print(parent.cmd.mr, *arg);
-    }
-
-    if (parent.cmd.note != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-note:";
-        cstring_Print(parent.cmd.note, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-
-    if (parent.cmd.skip_init != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-skip_init:";
-        bool_Print(parent.cmd.skip_init, *arg);
-    }
-
-    if (parent.cmd.skip_git_init != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-skip_git_init:";
-        bool_Print(parent.cmd.skip_git_init, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_gcli_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_gcli_proc.atf_gcli.ToCmdline
@@ -13721,6 +14092,70 @@ algo::tempstr command::atf_gcli_ToCmdline(command::atf_gcli_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_gcli_proc.atf_gcli.ToArgv
+// Form array from the command line
+void command::atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.gtblacttst.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gtblacttst:";
+        command::gtblacttst_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.id != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-id:";
+        cstring_Print(parent.cmd.id, *arg);
+    }
+
+    if (parent.cmd.mr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mr:";
+        cstring_Print(parent.cmd.mr, *arg);
+    }
+
+    if (parent.cmd.note != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-note:";
+        cstring_Print(parent.cmd.note, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.skip_init != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-skip_init:";
+        bool_Print(parent.cmd.skip_init, *arg);
+    }
+
+    if (parent.cmd.skip_git_init != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-skip_git_init:";
+        bool_Print(parent.cmd.skip_git_init, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_gcli_proc..Uninit
@@ -13774,12 +14209,29 @@ bool command::atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tu
     return retval;
 }
 
+// --- command.atf_nrun..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_nrun_ToCmdline(command::atf_nrun& row) {
+    tempstr ret;
+    ret << "bin/atf_nrun ";
+    atf_nrun_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_nrun..PrintArgv
-// print command-line args of command::atf_nrun to string  -- cprint:command.atf_nrun.Argv
-void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_nrun.Argv  printfmt:Tuple
+void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -13797,23 +14249,6 @@ void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring &str) {
     i32_Print(row.ncmd, temp);
     str << " -ncmd:";
     strptr_PrintBash(temp,str);
-}
-
-// --- command.atf_nrun..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_nrun_ToCmdline(command::atf_nrun& row) {
-    tempstr ret;
-    ret << "bin/atf_nrun ";
-    atf_nrun_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_nrun..GetAnon
@@ -13947,38 +14382,20 @@ void command::atf_nrun_ExecX(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc.atf_nrun.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_nrun.Argv
+// Call execv with specified parameters
 int command::atf_nrun_Execv(command::atf_nrun_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.maxjobs != 2) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxjobs:";
-        i32_Print(parent.cmd.maxjobs, *arg);
-    }
-
-    if (parent.cmd.ncmd != 6) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ncmd:";
-        i32_Print(parent.cmd.ncmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_nrun_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_nrun_proc.atf_nrun.ToCmdline
@@ -13996,6 +14413,34 @@ algo::tempstr command::atf_nrun_ToCmdline(command::atf_nrun_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.atf_nrun_proc.atf_nrun.ToArgv
+// Form array from the command line
+void command::atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.maxjobs != 2) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxjobs:";
+        i32_Print(parent.cmd.maxjobs, *arg);
+    }
+
+    if (parent.cmd.ncmd != 6) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ncmd:";
+        i32_Print(parent.cmd.ncmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.atf_nrun_proc..Uninit
@@ -14016,8 +14461,8 @@ void command::unittest_Print(command::atf_unit& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::unittest_ReadStrptrMaybe(command::atf_unit& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.unittest, in, true);
-    bool retval = true;// !parent.unittest.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -14107,12 +14552,29 @@ void command::atf_unit_Init(command::atf_unit& parent) {
     parent.check_untracked = bool(true);
 }
 
+// --- command.atf_unit..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_unit_ToCmdline(command::atf_unit& row) {
+    tempstr ret;
+    ret << "bin/atf_unit ";
+    atf_unit_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.atf_unit..PrintArgv
-// print command-line args of command::atf_unit to string  -- cprint:command.atf_unit.Argv
-void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.atf_unit.Argv  printfmt:Auto
+void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     command::unittest_Print(const_cast<command::atf_unit&>(row), temp);
@@ -14172,23 +14634,6 @@ void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring &str) {
         str << " -check_untracked:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.atf_unit..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_unit_ToCmdline(command::atf_unit& row) {
-    tempstr ret;
-    ret << "bin/atf_unit ";
-    atf_unit_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.atf_unit..GetAnon
@@ -14352,80 +14797,20 @@ void command::atf_unit_ExecX(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc.atf_unit.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:atf_unit.Argv
+// Call execv with specified parameters
 int command::atf_unit_Execv(command::atf_unit_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.unittest.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-unittest:";
-        command::unittest_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.nofork != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nofork:";
-        bool_Print(parent.cmd.nofork, *arg);
-    }
-
-    if (parent.cmd.arg != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arg:";
-        cstring_Print(parent.cmd.arg, *arg);
-    }
-
-    if (parent.cmd.data_dir != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data_dir:";
-        cstring_Print(parent.cmd.data_dir, *arg);
-    }
-
-    if (parent.cmd.mdbg != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-mdbg:";
-        bool_Print(parent.cmd.mdbg, *arg);
-    }
-
-    if (parent.cmd.perf_secs != 1.0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-perf_secs:";
-        double_Print(parent.cmd.perf_secs, *arg);
-    }
-
-    if (parent.cmd.pertest_timeout != 900) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pertest_timeout:";
-        u32_Print(parent.cmd.pertest_timeout, *arg);
-    }
-
-    if (parent.cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-
-    if (parent.cmd.check_untracked != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-check_untracked:";
-        bool_Print(parent.cmd.check_untracked, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_unit_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.atf_unit_proc.atf_unit.ToCmdline
@@ -14445,6 +14830,76 @@ algo::tempstr command::atf_unit_ToCmdline(command::atf_unit_proc& parent) {
     return retval;
 }
 
+// --- command.atf_unit_proc.atf_unit.ToArgv
+// Form array from the command line
+void command::atf_unit_ToArgv(command::atf_unit_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.unittest.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-unittest:";
+        command::unittest_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.nofork != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nofork:";
+        bool_Print(parent.cmd.nofork, *arg);
+    }
+
+    if (parent.cmd.arg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arg:";
+        cstring_Print(parent.cmd.arg, *arg);
+    }
+
+    if (parent.cmd.data_dir != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data_dir:";
+        cstring_Print(parent.cmd.data_dir, *arg);
+    }
+
+    if (parent.cmd.mdbg != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mdbg:";
+        bool_Print(parent.cmd.mdbg, *arg);
+    }
+
+    if (parent.cmd.perf_secs != 1.0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-perf_secs:";
+        double_Print(parent.cmd.perf_secs, *arg);
+    }
+
+    if (parent.cmd.pertest_timeout != 900) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pertest_timeout:";
+        u32_Print(parent.cmd.pertest_timeout, *arg);
+    }
+
+    if (parent.cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.check_untracked != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check_untracked:";
+        bool_Print(parent.cmd.check_untracked, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.atf_unit_proc..Uninit
 void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
     command::atf_unit_proc &row = parent; (void)row;
@@ -14454,11 +14909,11 @@ void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
 }
 
 // --- command.bash..PrintArgv
-// print command-line args of command::bash to string  -- cprint:command.bash.Argv
-void command::bash_PrintArgv(command::bash& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.bash.ArgvGnu  printfmt:Auto
+void command::bash_PrintArgv(command::bash& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.c == "")) {
         ch_RemoveAll(temp);
@@ -14503,27 +14958,6 @@ bool command::bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &
     return retval;
 }
 
-// --- command.bash2html..PrintArgv
-// print command-line args of command::bash2html to string  -- cprint:command.bash2html.Argv
-void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-    if (!(row.in == "data")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.in, temp);
-        str << " -in:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.test == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.test, temp);
-        str << " -test:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
 // --- command.bash2html..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
@@ -14539,6 +14973,27 @@ tempstr command::bash2html_ToCmdline(command::bash2html& row) {
         ret << " -debug";
     }
     return ret;
+}
+
+// --- command.bash2html..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.bash2html.Argv  printfmt:Tuple
+void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.test == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.test, temp);
+        str << " -test:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.bash2html..NArgs
@@ -14661,32 +15116,20 @@ void command::bash2html_ExecX(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc.bash2html.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:bash2html.Argv
+// Call execv with specified parameters
 int command::bash2html_Execv(command::bash2html_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.test != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-test:";
-        bool_Print(parent.cmd.test, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    bash2html_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.bash2html_proc.bash2html.ToCmdline
@@ -14704,6 +15147,28 @@ algo::tempstr command::bash2html_ToCmdline(command::bash2html_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.bash2html_proc.bash2html.ToArgv
+// Form array from the command line
+void command::bash2html_ToArgv(command::bash2html_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.test != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-test:";
+        bool_Print(parent.cmd.test, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.bash2html_proc..Uninit
@@ -14813,23 +15278,20 @@ void command::bash_ExecX(command::bash_proc& parent) {
 
 // --- command.bash_proc.bash.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:bash.Argv
+// Call execv with specified parameters
 int command::bash_Execv(command::bash_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.c != "") {
-        algo_lib::exec_args_Alloc() << "-c";
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        cstring_Print(parent.cmd.c, *arg);
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    bash_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.bash_proc.bash.ToCmdline
@@ -14849,12 +15311,44 @@ algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) {
     return retval;
 }
 
+// --- command.bash_proc.bash.ToArgv
+// Form array from the command line
+void command::bash_ToArgv(command::bash_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.c != "") {
+        ary_Alloc(args) << "-c";
+        cstring *arg = &ary_Alloc(args);
+        cstring_Print(parent.cmd.c, *arg);
+    }
+}
+
 // --- command.bash_proc..Uninit
 void command::bash_proc_Uninit(command::bash_proc& parent) {
     command::bash_proc &row = parent; (void)row;
 
     // command.bash_proc.bash.Uninit (Exec)  //Must be bash to support $'' for string quoting
     bash_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.gcache.cmd.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::cmd_Addary(command::gcache& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.gcache.cmd  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    cmd_Reserve(parent, nnew); // reserve space
+    int at = parent.cmd_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.cmd_elems + at + i) algo::cstring(rhs[i]);
+        parent.cmd_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.cmd_elems + at, nnew);
 }
 
 // --- command.gcache.cmd.Alloc
@@ -14960,6 +15454,14 @@ void command::cmd_Setary(command::gcache& parent, command::gcache &rhs) {
     }
 }
 
+// --- command.gcache.cmd.Setary2
+// Copy specified array into cmd, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::cmd_Setary(command::gcache& parent, const algo::aryptr<algo::cstring> &rhs) {
+    cmd_RemoveAll(parent);
+    cmd_Addary(parent, rhs);
+}
+
 // --- command.gcache.cmd.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) {
@@ -14975,10 +15477,16 @@ algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int 
 }
 
 // --- command.gcache.cmd.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(cmd_Alloc(parent), in_str);
+    algo::cstring &elem = cmd_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        cmd_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -14986,7 +15494,7 @@ bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) 
 bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -15095,12 +15603,29 @@ void command::gcache_Uninit(command::gcache& parent) {
     algo_lib::malloc_FreeMem(parent.cmd_elems, sizeof(algo::cstring)*parent.cmd_max); // (command.gcache.cmd)
 }
 
+// --- command.gcache..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::gcache_ToCmdline(command::gcache& row) {
+    tempstr ret;
+    ret << "bin/gcache ";
+    gcache_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.gcache..PrintArgv
-// print command-line args of command::gcache to string  -- cprint:command.gcache.Argv
-void command::gcache_PrintArgv(command::gcache& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.gcache.Argv  printfmt:Tuple
+void command::gcache_PrintArgv(command::gcache& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -15182,23 +15707,6 @@ void command::gcache_PrintArgv(command::gcache& row, algo::cstring &str) {
     }
 }
 
-// --- command.gcache..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::gcache_ToCmdline(command::gcache& row) {
-    tempstr ret;
-    ret << "bin/gcache ";
-    gcache_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
-}
-
 // --- command.gcache..Print
 // print string representation of ROW to string STR
 // cfmt:command.gcache.String  printfmt:Tuple
@@ -15208,6 +15716,14 @@ void command::gcache_Print(command::gcache& row, algo::cstring& str) {
 
     algo::cstring_Print(row.in, temp);
     PrintAttrSpaceReset(str,"in", temp);
+
+    ind_beg(gcache_cmd_curs,cmd,row) {
+        algo::cstring_Print(cmd, temp);
+        tempstr name;
+        name << "cmd.";
+        name << ind_curs(cmd).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
 
     bool_Print(row.install, temp);
     PrintAttrSpaceReset(str,"install", temp);
@@ -15420,97 +15936,20 @@ void command::gcache_ExecX(command::gcache_proc& parent) {
 
 // --- command.gcache_proc.gcache.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:gcache.Argv
+// Call execv with specified parameters
 int command::gcache_Execv(command::gcache_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    ind_beg(command::gcache_cmd_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cmd:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.install != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-install:";
-        bool_Print(parent.cmd.install, *arg);
-    }
-
-    if (parent.cmd.stats != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-stats:";
-        bool_Print(parent.cmd.stats, *arg);
-    }
-
-    if (parent.cmd.enable != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-enable:";
-        bool_Print(parent.cmd.enable, *arg);
-    }
-
-    if (parent.cmd.disable != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-disable:";
-        bool_Print(parent.cmd.disable, *arg);
-    }
-
-    if (parent.cmd.gc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gc:";
-        bool_Print(parent.cmd.gc, *arg);
-    }
-
-    if (parent.cmd.clean != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-clean:";
-        bool_Print(parent.cmd.clean, *arg);
-    }
-
-    if (parent.cmd.dir != "/tmp/gcache") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dir:";
-        cstring_Print(parent.cmd.dir, *arg);
-    }
-
-    if (parent.cmd.hitrate != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-hitrate:";
-        bool_Print(parent.cmd.hitrate, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-after:";
-        UnTime_Print(parent.cmd.after, *arg);
-    }
-
-    if (parent.cmd.report != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.force != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-force:";
-        bool_Print(parent.cmd.force, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    gcache_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.gcache_proc.gcache.ToCmdline
@@ -15530,12 +15969,118 @@ algo::tempstr command::gcache_ToCmdline(command::gcache_proc& parent) {
     return retval;
 }
 
+// --- command.gcache_proc.gcache.ToArgv
+// Form array from the command line
+void command::gcache_ToArgv(command::gcache_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    ind_beg(command::gcache_cmd_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmd:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.install != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-install:";
+        bool_Print(parent.cmd.install, *arg);
+    }
+
+    if (parent.cmd.stats != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-stats:";
+        bool_Print(parent.cmd.stats, *arg);
+    }
+
+    if (parent.cmd.enable != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-enable:";
+        bool_Print(parent.cmd.enable, *arg);
+    }
+
+    if (parent.cmd.disable != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-disable:";
+        bool_Print(parent.cmd.disable, *arg);
+    }
+
+    if (parent.cmd.gc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gc:";
+        bool_Print(parent.cmd.gc, *arg);
+    }
+
+    if (parent.cmd.clean != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-clean:";
+        bool_Print(parent.cmd.clean, *arg);
+    }
+
+    if (parent.cmd.dir != "/tmp/gcache") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dir:";
+        cstring_Print(parent.cmd.dir, *arg);
+    }
+
+    if (parent.cmd.hitrate != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-hitrate:";
+        bool_Print(parent.cmd.hitrate, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-after:";
+        UnTime_Print(parent.cmd.after, *arg);
+    }
+
+    if (parent.cmd.report != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.force != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-force:";
+        bool_Print(parent.cmd.force, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.gcache_proc..Uninit
 void command::gcache_proc_Uninit(command::gcache_proc& parent) {
     command::gcache_proc &row = parent; (void)row;
 
     // command.gcache_proc.gcache.Uninit (Exec)  //
     gcache_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.gcli.fields.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::fields_Addary(command::gcli& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.fields_elems && rhs.elems < parent.fields_elems + parent.fields_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.gcli.fields  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    fields_Reserve(parent, nnew); // reserve space
+    int at = parent.fields_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.fields_elems + at + i) algo::cstring(rhs[i]);
+        parent.fields_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.fields_elems + at, nnew);
 }
 
 // --- command.gcli.fields.Alloc
@@ -15641,6 +16186,14 @@ void command::fields_Setary(command::gcli& parent, command::gcli &rhs) {
     }
 }
 
+// --- command.gcli.fields.Setary2
+// Copy specified array into fields, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) {
+    fields_RemoveAll(parent);
+    fields_Addary(parent, rhs);
+}
+
 // --- command.gcli.fields.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) {
@@ -15656,10 +16209,16 @@ algo::aryptr<algo::cstring> command::fields_AllocNVal(command::gcli& parent, int
 }
 
 // --- command.gcli.fields.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(fields_Alloc(parent), in_str);
+    algo::cstring &elem = fields_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        fields_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -15667,7 +16226,7 @@ bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str)
 bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -15797,12 +16356,29 @@ void command::gcli_Uninit(command::gcli& parent) {
     algo_lib::malloc_FreeMem(parent.fields_elems, sizeof(algo::cstring)*parent.fields_max); // (command.gcli.fields)
 }
 
+// --- command.gcli..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::gcli_ToCmdline(command::gcli& row) {
+    tempstr ret;
+    ret << "bin/gcli ";
+    gcli_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.gcli..PrintArgv
-// print command-line args of command::gcli to string  -- cprint:command.gcli.Argv
-void command::gcli_PrintArgv(command::gcli& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.gcli.Argv  printfmt:Tuple
+void command::gcli_PrintArgv(command::gcli& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -15904,23 +16480,6 @@ void command::gcli_PrintArgv(command::gcli& row, algo::cstring &str) {
         str << " -show_gitlab_system_notes:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.gcli..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::gcli_ToCmdline(command::gcli& row) {
-    tempstr ret;
-    ret << "bin/gcli ";
-    gcli_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.gcli..GetAnon
@@ -16119,121 +16678,20 @@ void command::gcli_ExecX(command::gcli_proc& parent) {
 
 // --- command.gcli_proc.gcli.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:gcli.Argv
+// Call execv with specified parameters
 int command::gcli_Execv(command::gcli_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.selector != "issue:%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-selector:";
-        Smallstr250_Print(parent.cmd.selector, *arg);
-    }
-    ind_beg(command::gcli_fields_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fields:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.accept != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-accept:";
-        bool_Print(parent.cmd.accept, *arg);
-    }
-
-    if (parent.cmd.start != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-start:";
-        bool_Print(parent.cmd.start, *arg);
-    }
-
-    if (parent.cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(parent.cmd.list, *arg);
-    }
-
-    if (parent.cmd.create != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-create:";
-        bool_Print(parent.cmd.create, *arg);
-    }
-
-    if (parent.cmd.update != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-update:";
-        bool_Print(parent.cmd.update, *arg);
-    }
-
-    if (parent.cmd.approve != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-approve:";
-        bool_Print(parent.cmd.approve, *arg);
-    }
-
-    if (parent.cmd.needs_work != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-needs_work:";
-        bool_Print(parent.cmd.needs_work, *arg);
-    }
-
-    if (parent.cmd.stop != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-stop:";
-        bool_Print(parent.cmd.stop, *arg);
-    }
-
-    if (parent.cmd.t != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-t:";
-        bool_Print(parent.cmd.t, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.authdir != ".ssim") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-authdir:";
-        cstring_Print(parent.cmd.authdir, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-
-    if (parent.cmd.gitdir != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gitdir:";
-        cstring_Print(parent.cmd.gitdir, *arg);
-    }
-
-    if (parent.cmd.show_gitlab_system_notes != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-show_gitlab_system_notes:";
-        bool_Print(parent.cmd.show_gitlab_system_notes, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    gcli_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.gcli_proc.gcli.ToCmdline
@@ -16253,12 +16711,142 @@ algo::tempstr command::gcli_ToCmdline(command::gcli_proc& parent) {
     return retval;
 }
 
+// --- command.gcli_proc.gcli.ToArgv
+// Form array from the command line
+void command::gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.selector != "issue:%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-selector:";
+        Smallstr250_Print(parent.cmd.selector, *arg);
+    }
+    ind_beg(command::gcli_fields_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fields:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.accept != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-accept:";
+        bool_Print(parent.cmd.accept, *arg);
+    }
+
+    if (parent.cmd.start != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-start:";
+        bool_Print(parent.cmd.start, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.create != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-create:";
+        bool_Print(parent.cmd.create, *arg);
+    }
+
+    if (parent.cmd.update != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-update:";
+        bool_Print(parent.cmd.update, *arg);
+    }
+
+    if (parent.cmd.approve != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-approve:";
+        bool_Print(parent.cmd.approve, *arg);
+    }
+
+    if (parent.cmd.needs_work != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-needs_work:";
+        bool_Print(parent.cmd.needs_work, *arg);
+    }
+
+    if (parent.cmd.stop != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-stop:";
+        bool_Print(parent.cmd.stop, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.authdir != ".ssim") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-authdir:";
+        cstring_Print(parent.cmd.authdir, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+
+    if (parent.cmd.gitdir != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gitdir:";
+        cstring_Print(parent.cmd.gitdir, *arg);
+    }
+
+    if (parent.cmd.show_gitlab_system_notes != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-show_gitlab_system_notes:";
+        bool_Print(parent.cmd.show_gitlab_system_notes, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
 // --- command.gcli_proc..Uninit
 void command::gcli_proc_Uninit(command::gcli_proc& parent) {
     command::gcli_proc &row = parent; (void)row;
 
     // command.gcli_proc.gcli.Uninit (Exec)  //
     gcli_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.mdbg.args.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::args_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.args_elems && rhs.elems < parent.args_elems + parent.args_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.mdbg.args  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    args_Reserve(parent, nnew); // reserve space
+    int at = parent.args_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.args_elems + at + i) algo::cstring(rhs[i]);
+        parent.args_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.args_elems + at, nnew);
 }
 
 // --- command.mdbg.args.Alloc
@@ -16364,6 +16952,14 @@ void command::args_Setary(command::mdbg& parent, command::mdbg &rhs) {
     }
 }
 
+// --- command.mdbg.args.Setary2
+// Copy specified array into args, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::args_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) {
+    args_RemoveAll(parent);
+    args_Addary(parent, rhs);
+}
+
 // --- command.mdbg.args.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) {
@@ -16379,11 +16975,36 @@ algo::aryptr<algo::cstring> command::args_AllocNVal(command::mdbg& parent, int n
 }
 
 // --- command.mdbg.args.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(args_Alloc(parent), in_str);
+    algo::cstring &elem = args_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        args_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.mdbg.b.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::b_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.b_elems && rhs.elems < parent.b_elems + parent.b_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.mdbg.b  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    b_Reserve(parent, nnew); // reserve space
+    int at = parent.b_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.b_elems + at + i) algo::cstring(rhs[i]);
+        parent.b_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.b_elems + at, nnew);
 }
 
 // --- command.mdbg.b.Alloc
@@ -16489,6 +17110,14 @@ void command::b_Setary(command::mdbg& parent, command::mdbg &rhs) {
     }
 }
 
+// --- command.mdbg.b.Setary2
+// Copy specified array into b, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::b_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) {
+    b_RemoveAll(parent);
+    b_Addary(parent, rhs);
+}
+
 // --- command.mdbg.b.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) {
@@ -16504,10 +17133,16 @@ algo::aryptr<algo::cstring> command::b_AllocNVal(command::mdbg& parent, int n_el
 }
 
 // --- command.mdbg.b.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(b_Alloc(parent), in_str);
+    algo::cstring &elem = b_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        b_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -16515,7 +17150,7 @@ bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
 bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
@@ -16642,12 +17277,29 @@ void command::mdbg_Uninit(command::mdbg& parent) {
     algo_lib::malloc_FreeMem(parent.args_elems, sizeof(algo::cstring)*parent.args_max); // (command.mdbg.args)
 }
 
+// --- command.mdbg..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::mdbg_ToCmdline(command::mdbg& row) {
+    tempstr ret;
+    ret << "bin/mdbg ";
+    mdbg_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.mdbg..PrintArgv
-// print command-line args of command::mdbg to string  -- cprint:command.mdbg.Argv
-void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.mdbg.Argv  printfmt:Auto
+void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     Smallstr16_Print(row.target, temp);
@@ -16737,23 +17389,6 @@ void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring &str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.mdbg..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::mdbg_ToCmdline(command::mdbg& row) {
-    tempstr ret;
-    ret << "bin/mdbg ";
-    mdbg_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.mdbg..GetAnon
@@ -16940,108 +17575,20 @@ void command::mdbg_ExecX(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc.mdbg.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:mdbg.Argv
+// Call execv with specified parameters
 int command::mdbg_Execv(command::mdbg_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        Smallstr16_Print(parent.cmd.target, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    ind_beg(command::mdbg_args_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-args:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.cfg != "debug") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cfg:";
-        Smallstr50_Print(parent.cmd.cfg, *arg);
-    }
-
-    if (parent.cmd.disas != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-disas:";
-        bool_Print(parent.cmd.disas, *arg);
-    }
-
-    if (parent.cmd.attach != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-attach:";
-        bool_Print(parent.cmd.attach, *arg);
-    }
-    ind_beg(command::mdbg_b_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-b:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.catchthrow != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-catchthrow:";
-        bool_Print(parent.cmd.catchthrow, *arg);
-    }
-
-    if (parent.cmd.tui != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-tui:";
-        bool_Print(parent.cmd.tui, *arg);
-    }
-
-    if (parent.cmd.bcmd != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-bcmd:";
-        cstring_Print(parent.cmd.bcmd, *arg);
-    }
-
-    if (parent.cmd.emacs != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-emacs:";
-        bool_Print(parent.cmd.emacs, *arg);
-    }
-
-    if (parent.cmd.manywin != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-manywin:";
-        bool_Print(parent.cmd.manywin, *arg);
-    }
-
-    if (parent.cmd.follow_child != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-follow_child:";
-        bool_Print(parent.cmd.follow_child, *arg);
-    }
-
-    if (parent.cmd.py != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-py:";
-        bool_Print(parent.cmd.py, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    mdbg_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.mdbg_proc.mdbg.ToCmdline
@@ -17059,6 +17606,104 @@ algo::tempstr command::mdbg_ToCmdline(command::mdbg_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.mdbg_proc.mdbg.ToArgv
+// Form array from the command line
+void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        Smallstr16_Print(parent.cmd.target, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    ind_beg(command::mdbg_args_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-args:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.cfg != "debug") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cfg:";
+        Smallstr50_Print(parent.cmd.cfg, *arg);
+    }
+
+    if (parent.cmd.disas != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-disas:";
+        bool_Print(parent.cmd.disas, *arg);
+    }
+
+    if (parent.cmd.attach != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-attach:";
+        bool_Print(parent.cmd.attach, *arg);
+    }
+    ind_beg(command::mdbg_b_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-b:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.catchthrow != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-catchthrow:";
+        bool_Print(parent.cmd.catchthrow, *arg);
+    }
+
+    if (parent.cmd.tui != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tui:";
+        bool_Print(parent.cmd.tui, *arg);
+    }
+
+    if (parent.cmd.bcmd != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bcmd:";
+        cstring_Print(parent.cmd.bcmd, *arg);
+    }
+
+    if (parent.cmd.emacs != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-emacs:";
+        bool_Print(parent.cmd.emacs, *arg);
+    }
+
+    if (parent.cmd.manywin != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-manywin:";
+        bool_Print(parent.cmd.manywin, *arg);
+    }
+
+    if (parent.cmd.follow_child != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-follow_child:";
+        bool_Print(parent.cmd.follow_child, *arg);
+    }
+
+    if (parent.cmd.py != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-py:";
+        bool_Print(parent.cmd.py, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.mdbg_proc..Uninit
@@ -17132,12 +17777,29 @@ bool command::mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple
     return retval;
 }
 
+// --- command.mysql2ssim..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim& row) {
+    tempstr ret;
+    ret << "bin/mysql2ssim ";
+    mysql2ssim_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.mysql2ssim..PrintArgv
-// print command-line args of command::mysql2ssim to string  -- cprint:command.mysql2ssim.Argv
-void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.mysql2ssim.Argv  printfmt:Auto
+void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.writessimfile == false)) {
         ch_RemoveAll(temp);
@@ -17183,23 +17845,6 @@ void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring &str)
         str << " -baddbok:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.mysql2ssim..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim& row) {
-    tempstr ret;
-    ret << "bin/mysql2ssim ";
-    mysql2ssim_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.mysql2ssim..GetAnon
@@ -17358,68 +18003,20 @@ void command::mysql2ssim_ExecX(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc.mysql2ssim.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:mysql2ssim.Argv
+// Call execv with specified parameters
 int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.writessimfile != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-writessimfile:";
-        bool_Print(parent.cmd.writessimfile, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-url:";
-        cstring_Print(parent.cmd.url, *arg);
-    }
-
-    if (parent.cmd.tables != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-tables:";
-        cstring_Print(parent.cmd.tables, *arg);
-    }
-
-    if (parent.cmd.schema != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        bool_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.pretty != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pretty:";
-        bool_Print(parent.cmd.pretty, *arg);
-    }
-
-    if (parent.cmd.nologo != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nologo:";
-        bool_Print(parent.cmd.nologo, *arg);
-    }
-
-    if (parent.cmd.baddbok != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-baddbok:";
-        bool_Print(parent.cmd.baddbok, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    mysql2ssim_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.mysql2ssim_proc.mysql2ssim.ToCmdline
@@ -17437,6 +18034,64 @@ algo::tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.mysql2ssim_proc.mysql2ssim.ToArgv
+// Form array from the command line
+void command::mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.writessimfile != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-writessimfile:";
+        bool_Print(parent.cmd.writessimfile, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-url:";
+        cstring_Print(parent.cmd.url, *arg);
+    }
+
+    if (parent.cmd.tables != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tables:";
+        cstring_Print(parent.cmd.tables, *arg);
+    }
+
+    if (parent.cmd.schema != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        bool_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.pretty != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pretty:";
+        bool_Print(parent.cmd.pretty, *arg);
+    }
+
+    if (parent.cmd.nologo != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nologo:";
+        bool_Print(parent.cmd.nologo, *arg);
+    }
+
+    if (parent.cmd.baddbok != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-baddbok:";
+        bool_Print(parent.cmd.baddbok, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.mysql2ssim_proc..Uninit
@@ -17457,8 +18112,8 @@ void command::dedup_Print(command::orgfile& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.dedup, in, true);
-    bool retval = true;// !parent.dedup.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -17524,12 +18179,29 @@ void command::orgfile_Init(command::orgfile& parent) {
     parent.hash = algo::strptr("sha1");
 }
 
+// --- command.orgfile..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::orgfile_ToCmdline(command::orgfile& row) {
+    tempstr ret;
+    ret << "bin/orgfile ";
+    orgfile_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.orgfile..PrintArgv
-// print command-line args of command::orgfile to string  -- cprint:command.orgfile.Argv
-void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.orgfile.Argv  printfmt:Tuple
+void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -17567,23 +18239,6 @@ void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring &str) {
         str << " -hash:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.orgfile..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::orgfile_ToCmdline(command::orgfile& row) {
-    tempstr ret;
-    ret << "bin/orgfile ";
-    orgfile_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.orgfile..NArgs
@@ -17720,56 +18375,20 @@ void command::orgfile_ExecX(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc.orgfile.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:orgfile.Argv
+// Call execv with specified parameters
 int command::orgfile_Execv(command::orgfile_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.move != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-move:";
-        cstring_Print(parent.cmd.move, *arg);
-    }
-
-    if (parent.cmd.dedup.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dedup:";
-        command::dedup_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.commit != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-commit:";
-        bool_Print(parent.cmd.commit, *arg);
-    }
-
-    if (parent.cmd.undo != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-undo:";
-        bool_Print(parent.cmd.undo, *arg);
-    }
-
-    if (parent.cmd.hash != "sha1") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-hash:";
-        cstring_Print(parent.cmd.hash, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    orgfile_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.orgfile_proc.orgfile.ToCmdline
@@ -17787,6 +18406,52 @@ algo::tempstr command::orgfile_ToCmdline(command::orgfile_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.orgfile_proc.orgfile.ToArgv
+// Form array from the command line
+void command::orgfile_ToArgv(command::orgfile_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.move != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-move:";
+        cstring_Print(parent.cmd.move, *arg);
+    }
+
+    if (parent.cmd.dedup.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dedup:";
+        command::dedup_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.commit != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-commit:";
+        bool_Print(parent.cmd.commit, *arg);
+    }
+
+    if (parent.cmd.undo != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-undo:";
+        bool_Print(parent.cmd.undo, *arg);
+    }
+
+    if (parent.cmd.hash != "sha1") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-hash:";
+        cstring_Print(parent.cmd.hash, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.orgfile_proc..Uninit
@@ -17934,12 +18599,29 @@ bool command::samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &
     return retval;
 }
 
+// --- command.samp_regx..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::samp_regx_ToCmdline(command::samp_regx& row) {
+    tempstr ret;
+    ret << "bin/samp_regx ";
+    samp_regx_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.samp_regx..PrintArgv
-// print command-line args of command::samp_regx to string  -- cprint:command.samp_regx.Argv
-void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.samp_regx.Argv  printfmt:Tuple
+void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -17973,23 +18655,6 @@ void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring &str) {
         str << " -show:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.samp_regx..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::samp_regx_ToCmdline(command::samp_regx& row) {
-    tempstr ret;
-    ret << "bin/samp_regx ";
-    samp_regx_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.samp_regx..GetAnon
@@ -18136,56 +18801,20 @@ void command::samp_regx_ExecX(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc.samp_regx.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:samp_regx.Argv
+// Call execv with specified parameters
 int command::samp_regx_Execv(command::samp_regx_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-expr:";
-        cstring_Print(parent.cmd.expr, *arg);
-    }
-
-    if (parent.cmd.style != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-style:";
-        command::style_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.match != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-match:";
-        bool_Print(parent.cmd.match, *arg);
-    }
-
-    if (parent.cmd.string != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-string:";
-        cstring_Print(parent.cmd.string, *arg);
-    }
-
-    if (parent.cmd.show != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-show:";
-        bool_Print(parent.cmd.show, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    samp_regx_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.samp_regx_proc.samp_regx.ToCmdline
@@ -18203,6 +18832,52 @@ algo::tempstr command::samp_regx_ToCmdline(command::samp_regx_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.samp_regx_proc.samp_regx.ToArgv
+// Form array from the command line
+void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-expr:";
+        cstring_Print(parent.cmd.expr, *arg);
+    }
+
+    if (parent.cmd.style != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-style:";
+        command::style_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.match != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-match:";
+        bool_Print(parent.cmd.match, *arg);
+    }
+
+    if (parent.cmd.string != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-string:";
+        cstring_Print(parent.cmd.string, *arg);
+    }
+
+    if (parent.cmd.show != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-show:";
+        bool_Print(parent.cmd.show, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.samp_regx_proc..Uninit
@@ -18223,9 +18898,28 @@ void command::name_Print(command::sandbox& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.name, in, true);
-    bool retval = true;// !parent.name.parseerror; -- TODO: uncomment
     return retval;
+}
+
+// --- command.sandbox.cmd.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::cmd_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.sandbox.cmd  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    cmd_Reserve(parent, nnew); // reserve space
+    int at = parent.cmd_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.cmd_elems + at + i) algo::cstring(rhs[i]);
+        parent.cmd_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.cmd_elems + at, nnew);
 }
 
 // --- command.sandbox.cmd.Alloc
@@ -18331,6 +19025,14 @@ void command::cmd_Setary(command::sandbox& parent, command::sandbox &rhs) {
     }
 }
 
+// --- command.sandbox.cmd.Setary2
+// Copy specified array into cmd, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::cmd_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) {
+    cmd_RemoveAll(parent);
+    cmd_Addary(parent, rhs);
+}
+
 // --- command.sandbox.cmd.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) {
@@ -18346,11 +19048,36 @@ algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::sandbox& parent, int
 }
 
 // --- command.sandbox.cmd.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(cmd_Alloc(parent), in_str);
+    algo::cstring &elem = cmd_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        cmd_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.sandbox.files.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::files_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.files_elems && rhs.elems < parent.files_elems + parent.files_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.sandbox.files  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    files_Reserve(parent, nnew); // reserve space
+    int at = parent.files_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.files_elems + at + i) algo::cstring(rhs[i]);
+        parent.files_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.files_elems + at, nnew);
 }
 
 // --- command.sandbox.files.Alloc
@@ -18456,6 +19183,14 @@ void command::files_Setary(command::sandbox& parent, command::sandbox &rhs) {
     }
 }
 
+// --- command.sandbox.files.Setary2
+// Copy specified array into files, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::files_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) {
+    files_RemoveAll(parent);
+    files_Addary(parent, rhs);
+}
+
 // --- command.sandbox.files.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) {
@@ -18471,10 +19206,16 @@ algo::aryptr<algo::cstring> command::files_AllocNVal(command::sandbox& parent, i
 }
 
 // --- command.sandbox.files.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(files_Alloc(parent), in_str);
+    algo::cstring &elem = files_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        files_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -18482,7 +19223,7 @@ bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_st
 bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -18604,12 +19345,29 @@ void command::sandbox_Uninit(command::sandbox& parent) {
     algo_lib::malloc_FreeMem(parent.cmd_elems, sizeof(algo::cstring)*parent.cmd_max); // (command.sandbox.cmd)
 }
 
+// --- command.sandbox..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::sandbox_ToCmdline(command::sandbox& row) {
+    tempstr ret;
+    ret << "bin/sandbox ";
+    sandbox_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.sandbox..PrintArgv
-// print command-line args of command::sandbox to string  -- cprint:command.sandbox.Argv
-void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.sandbox.Argv  printfmt:Tuple
+void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -18693,23 +19451,6 @@ void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring &str) {
         str << " -q:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.sandbox..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::sandbox_ToCmdline(command::sandbox& row) {
-    tempstr ret;
-    ret << "bin/sandbox ";
-    sandbox_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.sandbox..GetAnon
@@ -18893,102 +19634,20 @@ void command::sandbox_ExecX(command::sandbox_proc& parent) {
 
 // --- command.sandbox_proc.sandbox.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:sandbox.Argv
+// Call execv with specified parameters
 int command::sandbox_Execv(command::sandbox_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-name:";
-        command::name_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.create != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-create:";
-        bool_Print(parent.cmd.create, *arg);
-    }
-
-    if (parent.cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(parent.cmd.list, *arg);
-    }
-
-    if (parent.cmd.reset != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-reset:";
-        bool_Print(parent.cmd.reset, *arg);
-    }
-
-    if (parent.cmd.clean != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-clean:";
-        bool_Print(parent.cmd.clean, *arg);
-    }
-
-    if (parent.cmd.shell != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-shell:";
-        bool_Print(parent.cmd.shell, *arg);
-    }
-
-    if (parent.cmd.del != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-del:";
-        bool_Print(parent.cmd.del, *arg);
-    }
-
-    if (parent.cmd.gc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gc:";
-        bool_Print(parent.cmd.gc, *arg);
-    }
-    ind_beg(command::sandbox_cmd_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cmd:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.diff != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-diff:";
-        bool_Print(parent.cmd.diff, *arg);
-    }
-    ind_beg(command::sandbox_files_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-files:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.refs != "HEAD") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-refs:";
-        cstring_Print(parent.cmd.refs, *arg);
-    }
-
-    if (parent.cmd.q != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-q:";
-        bool_Print(parent.cmd.q, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    sandbox_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.sandbox_proc.sandbox.ToCmdline
@@ -19006,6 +19665,98 @@ algo::tempstr command::sandbox_ToCmdline(command::sandbox_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.sandbox_proc.sandbox.ToArgv
+// Form array from the command line
+void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-name:";
+        command::name_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.create != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-create:";
+        bool_Print(parent.cmd.create, *arg);
+    }
+
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
+    if (parent.cmd.reset != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-reset:";
+        bool_Print(parent.cmd.reset, *arg);
+    }
+
+    if (parent.cmd.clean != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-clean:";
+        bool_Print(parent.cmd.clean, *arg);
+    }
+
+    if (parent.cmd.shell != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-shell:";
+        bool_Print(parent.cmd.shell, *arg);
+    }
+
+    if (parent.cmd.del != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-del:";
+        bool_Print(parent.cmd.del, *arg);
+    }
+
+    if (parent.cmd.gc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gc:";
+        bool_Print(parent.cmd.gc, *arg);
+    }
+    ind_beg(command::sandbox_cmd_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmd:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.diff != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-diff:";
+        bool_Print(parent.cmd.diff, *arg);
+    }
+    ind_beg(command::sandbox_files_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-files:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.refs != "HEAD") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-refs:";
+        cstring_Print(parent.cmd.refs, *arg);
+    }
+
+    if (parent.cmd.q != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-q:";
+        bool_Print(parent.cmd.q, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.sandbox_proc..Uninit
@@ -19026,8 +19777,8 @@ void command::target_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.target, in, true);
-    bool retval = true;// !parent.target.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19041,8 +19792,8 @@ void command::name_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.name, in, true);
-    bool retval = true;// !parent.name.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19056,8 +19807,8 @@ void command::body_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.body, in, true);
-    bool retval = true;// !parent.body.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19071,8 +19822,8 @@ void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.targsrc, in, true);
-    bool retval = true;// !parent.targsrc.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19086,8 +19837,8 @@ void command::func_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.func, in, true);
-    bool retval = true;// !parent.func.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19101,8 +19852,8 @@ void command::comment_Print(command::src_func& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.comment, in, true);
-    bool retval = true;// !parent.comment.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19247,12 +19998,29 @@ void command::src_func_Init(command::src_func& parent) {
     parent.report = bool(false);
 }
 
+// --- command.src_func..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::src_func_ToCmdline(command::src_func& row) {
+    tempstr ret;
+    ret << "bin/src_func ";
+    src_func_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.src_func..PrintArgv
-// print command-line args of command::src_func to string  -- cprint:command.src_func.Argv
-void command::src_func_PrintArgv(command::src_func& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.src_func.Argv  printfmt:Tuple
+void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -19374,23 +20142,6 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring &str) {
         str << " -report:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.src_func..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::src_func_ToCmdline(command::src_func& row) {
-    tempstr ret;
-    ret << "bin/src_func ";
-    src_func_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.src_func..GetAnon
@@ -19605,146 +20356,20 @@ void command::src_func_ExecX(command::src_func_proc& parent) {
 
 // --- command.src_func_proc.src_func.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:src_func.Argv
+// Call execv with specified parameters
 int command::src_func_Execv(command::src_func_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.target.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        command::target_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.name.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-name:";
-        command::name_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.body.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-body:";
-        command::body_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.targsrc.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-targsrc:";
-        command::targsrc_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.func.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-func:";
-        command::func_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.comment.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-comment:";
-        command::comment_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.nextfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nextfile:";
-        Smallstr200_Print(parent.cmd.nextfile, *arg);
-    }
-
-    if (parent.cmd.other != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-other:";
-        bool_Print(parent.cmd.other, *arg);
-    }
-
-    if (parent.cmd.updateproto != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-updateproto:";
-        bool_Print(parent.cmd.updateproto, *arg);
-    }
-
-    if (parent.cmd.listfunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-listfunc:";
-        bool_Print(parent.cmd.listfunc, *arg);
-    }
-
-    if (parent.cmd.iffy != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-iffy:";
-        bool_Print(parent.cmd.iffy, *arg);
-    }
-
-    if (parent.cmd.proto != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-proto:";
-        bool_Print(parent.cmd.proto, *arg);
-    }
-
-    if (parent.cmd.gen != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gen:";
-        bool_Print(parent.cmd.gen, *arg);
-    }
-
-    if (parent.cmd.showloc != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showloc:";
-        bool_Print(parent.cmd.showloc, *arg);
-    }
-
-    if (parent.cmd.showstatic != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showstatic:";
-        bool_Print(parent.cmd.showstatic, *arg);
-    }
-
-    if (parent.cmd.showsortkey != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showsortkey:";
-        bool_Print(parent.cmd.showsortkey, *arg);
-    }
-
-    if (parent.cmd.sortname != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sortname:";
-        bool_Print(parent.cmd.sortname, *arg);
-    }
-
-    if (parent.cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
-    }
-
-    if (parent.cmd.baddecl != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-baddecl:";
-        bool_Print(parent.cmd.baddecl, *arg);
-    }
-
-    if (parent.cmd.report != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    src_func_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.src_func_proc.src_func.ToCmdline
@@ -19762,6 +20387,142 @@ algo::tempstr command::src_func_ToCmdline(command::src_func_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.src_func_proc.src_func.ToArgv
+// Form array from the command line
+void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.target.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        command::target_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.name.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-name:";
+        command::name_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.body.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-body:";
+        command::body_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.targsrc.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-targsrc:";
+        command::targsrc_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.func.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-func:";
+        command::func_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.comment.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-comment:";
+        command::comment_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.nextfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nextfile:";
+        Smallstr200_Print(parent.cmd.nextfile, *arg);
+    }
+
+    if (parent.cmd.other != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-other:";
+        bool_Print(parent.cmd.other, *arg);
+    }
+
+    if (parent.cmd.updateproto != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-updateproto:";
+        bool_Print(parent.cmd.updateproto, *arg);
+    }
+
+    if (parent.cmd.listfunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-listfunc:";
+        bool_Print(parent.cmd.listfunc, *arg);
+    }
+
+    if (parent.cmd.iffy != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-iffy:";
+        bool_Print(parent.cmd.iffy, *arg);
+    }
+
+    if (parent.cmd.proto != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-proto:";
+        bool_Print(parent.cmd.proto, *arg);
+    }
+
+    if (parent.cmd.gen != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gen:";
+        bool_Print(parent.cmd.gen, *arg);
+    }
+
+    if (parent.cmd.showloc != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showloc:";
+        bool_Print(parent.cmd.showloc, *arg);
+    }
+
+    if (parent.cmd.showstatic != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showstatic:";
+        bool_Print(parent.cmd.showstatic, *arg);
+    }
+
+    if (parent.cmd.showsortkey != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showsortkey:";
+        bool_Print(parent.cmd.showsortkey, *arg);
+    }
+
+    if (parent.cmd.sortname != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sortname:";
+        bool_Print(parent.cmd.sortname, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
+    if (parent.cmd.baddecl != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-baddecl:";
+        bool_Print(parent.cmd.baddecl, *arg);
+    }
+
+    if (parent.cmd.report != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.src_func_proc..Uninit
@@ -19782,8 +20543,8 @@ void command::targsrc_Print(command::src_hdr& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::targsrc_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.targsrc, in, true);
-    bool retval = true;// !parent.targsrc.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19797,8 +20558,8 @@ void command::scriptfile_Print(command::src_hdr& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::scriptfile_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.scriptfile, in, true);
-    bool retval = true;// !parent.scriptfile.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -19825,7 +20586,7 @@ bool command::src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr fiel
             break;
         }
         case command_FieldId_update_copyright: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.update_copyright, strval);
+            retval = bool_ReadStrptrMaybe(parent.update_copyright, strval);
             break;
         }
         case command_FieldId_scriptfile: {
@@ -19860,16 +20621,33 @@ void command::src_hdr_Init(command::src_hdr& parent) {
     Regx_ReadSql(parent.targsrc, "", true);
     parent.write = bool(false);
     parent.indent = bool(false);
-    parent.update_copyright = algo::strptr("");
+    parent.update_copyright = bool(false);
     Regx_ReadSql(parent.scriptfile, "", true);
 }
 
+// --- command.src_hdr..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::src_hdr_ToCmdline(command::src_hdr& row) {
+    tempstr ret;
+    ret << "bin/src_hdr ";
+    src_hdr_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.src_hdr..PrintArgv
-// print command-line args of command::src_hdr to string  -- cprint:command.src_hdr.Argv
-void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.src_hdr.Argv  printfmt:Tuple
+void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -19895,9 +20673,9 @@ void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring &str) {
         str << " -indent:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.update_copyright == "")) {
+    if (!(row.update_copyright == false)) {
         ch_RemoveAll(temp);
-        cstring_Print(row.update_copyright, temp);
+        bool_Print(row.update_copyright, temp);
         str << " -update_copyright:";
         strptr_PrintBash(temp,str);
     }
@@ -19907,23 +20685,6 @@ void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring &str) {
         str << " -scriptfile:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.src_hdr..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::src_hdr_ToCmdline(command::src_hdr& row) {
-    tempstr ret;
-    ret << "bin/src_hdr ";
-    src_hdr_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.src_hdr..NArgs
@@ -19951,8 +20712,10 @@ i32 command::src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
         } break;
         case command_FieldId_update_copyright: { // bool: no argument required but value may be specified as indent:Y
             *out_anon = false;
+            retval=0;
+            out_dflt="Y";
         } break;
-        case command_FieldId_scriptfile: { // bool: no argument required but value may be specified as indent:Y
+        case command_FieldId_scriptfile: { // bool: no argument required but value may be specified as update_copyright:Y
             *out_anon = false;
         } break;
         default:
@@ -20060,56 +20823,20 @@ void command::src_hdr_ExecX(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc.src_hdr.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:src_hdr.Argv
+// Call execv with specified parameters
 int command::src_hdr_Execv(command::src_hdr_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.targsrc.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-targsrc:";
-        command::targsrc_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.write != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(parent.cmd.write, *arg);
-    }
-
-    if (parent.cmd.indent != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-indent:";
-        bool_Print(parent.cmd.indent, *arg);
-    }
-
-    if (parent.cmd.update_copyright != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-update_copyright:";
-        cstring_Print(parent.cmd.update_copyright, *arg);
-    }
-
-    if (parent.cmd.scriptfile.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-scriptfile:";
-        command::scriptfile_Print(parent.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    src_hdr_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.src_hdr_proc.src_hdr.ToCmdline
@@ -20127,6 +20854,52 @@ algo::tempstr command::src_hdr_ToCmdline(command::src_hdr_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.src_hdr_proc.src_hdr.ToArgv
+// Form array from the command line
+void command::src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.targsrc.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-targsrc:";
+        command::targsrc_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.indent != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-indent:";
+        bool_Print(parent.cmd.indent, *arg);
+    }
+
+    if (parent.cmd.update_copyright != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-update_copyright:";
+        bool_Print(parent.cmd.update_copyright, *arg);
+    }
+
+    if (parent.cmd.scriptfile.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-scriptfile:";
+        command::scriptfile_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.src_hdr_proc..Uninit
@@ -20147,8 +20920,8 @@ void command::srcfile_Print(command::src_lim& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.srcfile, in, true);
-    bool retval = true;// !parent.srcfile.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -20162,8 +20935,8 @@ void command::badline_Print(command::src_lim& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.badline, in, true);
-    bool retval = true;// !parent.badline.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -20239,12 +21012,29 @@ void command::src_lim_Init(command::src_lim& parent) {
     Regx_ReadSql(parent.badline, "", true);
 }
 
+// --- command.src_lim..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::src_lim_ToCmdline(command::src_lim& row) {
+    tempstr ret;
+    ret << "bin/src_lim ";
+    src_lim_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.src_lim..PrintArgv
-// print command-line args of command::src_lim to string  -- cprint:command.src_lim.Argv
-void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.src_lim.Argv  printfmt:Tuple
+void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -20294,23 +21084,6 @@ void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring &str) {
         str << " -badline:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.src_lim..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::src_lim_ToCmdline(command::src_lim& row) {
-    tempstr ret;
-    ret << "bin/src_lim ";
-    src_lim_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.src_lim..NArgs
@@ -20459,68 +21232,20 @@ void command::src_lim_ExecX(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc.src_lim.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:src_lim.Argv
+// Call execv with specified parameters
 int command::src_lim_Execv(command::src_lim_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.linelim != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-linelim:";
-        bool_Print(parent.cmd.linelim, *arg);
-    }
-
-    if (parent.cmd.srcfile.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-srcfile:";
-        command::srcfile_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.strayfile != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-strayfile:";
-        bool_Print(parent.cmd.strayfile, *arg);
-    }
-
-    if (parent.cmd.capture != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-capture:";
-        bool_Print(parent.cmd.capture, *arg);
-    }
-
-    if (parent.cmd.write != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(parent.cmd.write, *arg);
-    }
-
-    if (parent.cmd.badchar != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-badchar:";
-        bool_Print(parent.cmd.badchar, *arg);
-    }
-
-    if (parent.cmd.badline.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-badline:";
-        command::badline_Print(parent.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    src_lim_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.src_lim_proc.src_lim.ToCmdline
@@ -20538,6 +21263,64 @@ algo::tempstr command::src_lim_ToCmdline(command::src_lim_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.src_lim_proc.src_lim.ToArgv
+// Form array from the command line
+void command::src_lim_ToArgv(command::src_lim_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.linelim != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-linelim:";
+        bool_Print(parent.cmd.linelim, *arg);
+    }
+
+    if (parent.cmd.srcfile.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfile:";
+        command::srcfile_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.strayfile != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-strayfile:";
+        bool_Print(parent.cmd.strayfile, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.badchar != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-badchar:";
+        bool_Print(parent.cmd.badchar, *arg);
+    }
+
+    if (parent.cmd.badline.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-badline:";
+        command::badline_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.src_lim_proc..Uninit
@@ -20583,27 +21366,6 @@ bool command::ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tu
     return retval;
 }
 
-// --- command.ssim2csv..PrintArgv
-// print command-line args of command::ssim2csv to string  -- cprint:command.ssim2csv.Argv
-void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-    if (!(row.expand == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.expand, temp);
-        str << " -expand:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.ignoreQuote == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.ignoreQuote, temp);
-        str << " -ignoreQuote:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
 // --- command.ssim2csv..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
@@ -20619,6 +21381,27 @@ tempstr command::ssim2csv_ToCmdline(command::ssim2csv& row) {
         ret << " -debug";
     }
     return ret;
+}
+
+// --- command.ssim2csv..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.ssim2csv.Argv  printfmt:Auto
+void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.expand == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.expand, temp);
+        str << " -expand:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.ignoreQuote == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ignoreQuote, temp);
+        str << " -ignoreQuote:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.ssim2csv..NArgs
@@ -20741,32 +21524,20 @@ void command::ssim2csv_ExecX(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc.ssim2csv.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ssim2csv.Argv
+// Call execv with specified parameters
 int command::ssim2csv_Execv(command::ssim2csv_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.expand != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-expand:";
-        cstring_Print(parent.cmd.expand, *arg);
-    }
-
-    if (parent.cmd.ignoreQuote != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ignoreQuote:";
-        bool_Print(parent.cmd.ignoreQuote, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    ssim2csv_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.ssim2csv_proc.ssim2csv.ToCmdline
@@ -20784,6 +21555,28 @@ algo::tempstr command::ssim2csv_ToCmdline(command::ssim2csv_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.ssim2csv_proc.ssim2csv.ToArgv
+// Form array from the command line
+void command::ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.expand != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-expand:";
+        cstring_Print(parent.cmd.expand, *arg);
+    }
+
+    if (parent.cmd.ignoreQuote != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ignoreQuote:";
+        bool_Print(parent.cmd.ignoreQuote, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.ssim2csv_proc..Uninit
@@ -20881,12 +21674,29 @@ void command::ssim2mysql_Init(command::ssim2mysql& parent) {
     parent.fkey = bool(false);
 }
 
+// --- command.ssim2mysql..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql& row) {
+    tempstr ret;
+    ret << "bin/ssim2mysql ";
+    ssim2mysql_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.ssim2mysql..PrintArgv
-// print command-line args of command::ssim2mysql to string  -- cprint:command.ssim2mysql.Argv
-void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.ssim2mysql.Argv  printfmt:Auto
+void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.url == "")) {
         ch_RemoveAll(temp);
@@ -20954,23 +21764,6 @@ void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring &str)
         str << " -fkey:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.ssim2mysql..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql& row) {
-    tempstr ret;
-    ret << "bin/ssim2mysql ";
-    ssim2mysql_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.ssim2mysql..NArgs
@@ -21130,86 +21923,20 @@ void command::ssim2mysql_ExecX(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc.ssim2mysql.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ssim2mysql.Argv
+// Call execv with specified parameters
 int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.url != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-url:";
-        cstring_Print(parent.cmd.url, *arg);
-    }
-
-    if (parent.cmd.data_dir != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data_dir:";
-        cstring_Print(parent.cmd.data_dir, *arg);
-    }
-
-    if (parent.cmd.maxpacket != 100000) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxpacket:";
-        i32_Print(parent.cmd.maxpacket, *arg);
-    }
-
-    if (parent.cmd.replace != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-replace:";
-        bool_Print(parent.cmd.replace, *arg);
-    }
-
-    if (parent.cmd.trunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-trunc:";
-        bool_Print(parent.cmd.trunc, *arg);
-    }
-
-    if (parent.cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(parent.cmd.dry_run, *arg);
-    }
-
-    if (parent.cmd.fldfunc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fldfunc:";
-        bool_Print(parent.cmd.fldfunc, *arg);
-    }
-
-    if (parent.cmd.in != "-") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.db != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-db:";
-        cstring_Print(parent.cmd.db, *arg);
-    }
-
-    if (parent.cmd.createdb != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-createdb:";
-        bool_Print(parent.cmd.createdb, *arg);
-    }
-
-    if (parent.cmd.fkey != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fkey:";
-        bool_Print(parent.cmd.fkey, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    ssim2mysql_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.ssim2mysql_proc.ssim2mysql.ToCmdline
@@ -21227,6 +21954,82 @@ algo::tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.ssim2mysql_proc.ssim2mysql.ToArgv
+// Form array from the command line
+void command::ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.url != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-url:";
+        cstring_Print(parent.cmd.url, *arg);
+    }
+
+    if (parent.cmd.data_dir != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data_dir:";
+        cstring_Print(parent.cmd.data_dir, *arg);
+    }
+
+    if (parent.cmd.maxpacket != 100000) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxpacket:";
+        i32_Print(parent.cmd.maxpacket, *arg);
+    }
+
+    if (parent.cmd.replace != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-replace:";
+        bool_Print(parent.cmd.replace, *arg);
+    }
+
+    if (parent.cmd.trunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trunc:";
+        bool_Print(parent.cmd.trunc, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
+    }
+
+    if (parent.cmd.fldfunc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fldfunc:";
+        bool_Print(parent.cmd.fldfunc, *arg);
+    }
+
+    if (parent.cmd.in != "-") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.db != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-db:";
+        cstring_Print(parent.cmd.db, *arg);
+    }
+
+    if (parent.cmd.createdb != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-createdb:";
+        bool_Print(parent.cmd.createdb, *arg);
+    }
+
+    if (parent.cmd.fkey != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fkey:";
+        bool_Print(parent.cmd.fkey, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.ssim2mysql_proc..Uninit
@@ -21247,9 +22050,28 @@ void command::typetag_Print(command::ssimfilt& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.typetag, in, true);
-    bool retval = true;// !parent.typetag.parseerror; -- TODO: uncomment
     return retval;
+}
+
+// --- command.ssimfilt.match.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::match_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.match_elems && rhs.elems < parent.match_elems + parent.match_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.ssimfilt.match  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    match_Reserve(parent, nnew); // reserve space
+    int at = parent.match_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.match_elems + at + i) algo::cstring(rhs[i]);
+        parent.match_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.match_elems + at, nnew);
 }
 
 // --- command.ssimfilt.match.Alloc
@@ -21355,6 +22177,14 @@ void command::match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
     }
 }
 
+// --- command.ssimfilt.match.Setary2
+// Copy specified array into match, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::match_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) {
+    match_RemoveAll(parent);
+    match_Addary(parent, rhs);
+}
+
 // --- command.ssimfilt.match.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) {
@@ -21370,11 +22200,36 @@ algo::aryptr<algo::cstring> command::match_AllocNVal(command::ssimfilt& parent, 
 }
 
 // --- command.ssimfilt.match.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(match_Alloc(parent), in_str);
+    algo::cstring &elem = match_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        match_RemoveLast(parent);
+    }
     return retval;
+}
+
+// --- command.ssimfilt.field.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::field_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.ssimfilt.field  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    field_Reserve(parent, nnew); // reserve space
+    int at = parent.field_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.field_elems + at + i) algo::cstring(rhs[i]);
+        parent.field_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.field_elems + at, nnew);
 }
 
 // --- command.ssimfilt.field.Alloc
@@ -21480,6 +22335,14 @@ void command::field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
     }
 }
 
+// --- command.ssimfilt.field.Setary2
+// Copy specified array into field, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::field_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) {
+    field_RemoveAll(parent);
+    field_Addary(parent, rhs);
+}
+
 // --- command.ssimfilt.field.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> command::field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) {
@@ -21495,10 +22358,16 @@ algo::aryptr<algo::cstring> command::field_AllocNVal(command::ssimfilt& parent, 
 }
 
 // --- command.ssimfilt.field.ReadStrptrMaybe
-// Convert string to field. Return success value
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
 bool command::field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::cstring_ReadStrptrMaybe(field_Alloc(parent), in_str);
+    algo::cstring &elem = field_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        field_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -21596,7 +22465,7 @@ bool command::format_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs
 bool command::ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
@@ -21684,12 +22553,29 @@ void command::ssimfilt_Uninit(command::ssimfilt& parent) {
     algo_lib::malloc_FreeMem(parent.match_elems, sizeof(algo::cstring)*parent.match_max); // (command.ssimfilt.match)
 }
 
+// --- command.ssimfilt..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::ssimfilt_ToCmdline(command::ssimfilt& row) {
+    tempstr ret;
+    ret << "bin/ssimfilt ";
+    ssimfilt_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.ssimfilt..PrintArgv
-// print command-line args of command::ssimfilt to string  -- cprint:command.ssimfilt.Argv
-void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.ssimfilt.Argv  printfmt:Tuple
+void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -21731,23 +22617,6 @@ void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring &str) {
         str << " -cmd:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.ssimfilt..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::ssimfilt_ToCmdline(command::ssimfilt& row) {
-    tempstr ret;
-    ret << "bin/ssimfilt ";
-    ssimfilt_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.ssimfilt..GetAnon
@@ -21894,60 +22763,20 @@ void command::ssimfilt_ExecX(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc.ssimfilt.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ssimfilt.Argv
+// Call execv with specified parameters
 int command::ssimfilt_Execv(command::ssimfilt_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.typetag.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-typetag:";
-        command::typetag_Print(parent.cmd, *arg);
-    }
-    ind_beg(command::ssimfilt_match_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-match:";
-        cstring_Print(value, *arg);
-    }ind_end;
-    ind_beg(command::ssimfilt_field_curs,value,parent.cmd) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-field:";
-        cstring_Print(value, *arg);
-    }ind_end;
-
-    if (parent.cmd.format != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-format:";
-        command::format_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.t != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-t:";
-        bool_Print(parent.cmd.t, *arg);
-    }
-
-    if (parent.cmd.cmd != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cmd:";
-        cstring_Print(parent.cmd.cmd, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    ssimfilt_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.ssimfilt_proc.ssimfilt.ToCmdline
@@ -21965,6 +22794,56 @@ algo::tempstr command::ssimfilt_ToCmdline(command::ssimfilt_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.ssimfilt_proc.ssimfilt.ToArgv
+// Form array from the command line
+void command::ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.typetag.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-typetag:";
+        command::typetag_Print(parent.cmd, *arg);
+    }
+    ind_beg(command::ssimfilt_match_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-match:";
+        cstring_Print(value, *arg);
+    }ind_end;
+    ind_beg(command::ssimfilt_field_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-field:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.format != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-format:";
+        command::format_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.t != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-t:";
+        bool_Print(parent.cmd.t, *arg);
+    }
+
+    if (parent.cmd.cmd != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmd:";
+        cstring_Print(parent.cmd.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.ssimfilt_proc..Uninit
@@ -22026,12 +22905,29 @@ bool command::strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tupl
     return retval;
 }
 
+// --- command.strconv..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::strconv_ToCmdline(command::strconv& row) {
+    tempstr ret;
+    ret << "bin/strconv ";
+    strconv_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.strconv..PrintArgv
-// print command-line args of command::strconv to string  -- cprint:command.strconv.Argv
-void command::strconv_PrintArgv(command::strconv& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.strconv.Argv  printfmt:Tuple
+void command::strconv_PrintArgv(command::strconv& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     ch_RemoveAll(temp);
     cstring_Print(row.str, temp);
@@ -22061,23 +22957,6 @@ void command::strconv_PrintArgv(command::strconv& row, algo::cstring &str) {
         str << " -pathcomp:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.strconv..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::strconv_ToCmdline(command::strconv& row) {
-    tempstr ret;
-    ret << "bin/strconv ";
-    strconv_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.strconv..GetAnon
@@ -22220,50 +23099,20 @@ void command::strconv_ExecX(command::strconv_proc& parent) {
 
 // --- command.strconv_proc.strconv.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:strconv.Argv
+// Call execv with specified parameters
 int command::strconv_Execv(command::strconv_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-str:";
-        cstring_Print(parent.cmd.str, *arg);
-    }
-
-    if (parent.cmd.tocamelcase != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-tocamelcase:";
-        bool_Print(parent.cmd.tocamelcase, *arg);
-    }
-
-    if (parent.cmd.tolowerunder != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-tolowerunder:";
-        bool_Print(parent.cmd.tolowerunder, *arg);
-    }
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.pathcomp != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pathcomp:";
-        Smallstr100_Print(parent.cmd.pathcomp, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    strconv_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.strconv_proc.strconv.ToCmdline
@@ -22281,6 +23130,46 @@ algo::tempstr command::strconv_ToCmdline(command::strconv_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.strconv_proc.strconv.ToArgv
+// Form array from the command line
+void command::strconv_ToArgv(command::strconv_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-str:";
+        cstring_Print(parent.cmd.str, *arg);
+    }
+
+    if (parent.cmd.tocamelcase != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tocamelcase:";
+        bool_Print(parent.cmd.tocamelcase, *arg);
+    }
+
+    if (parent.cmd.tolowerunder != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tolowerunder:";
+        bool_Print(parent.cmd.tolowerunder, *arg);
+    }
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.pathcomp != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pathcomp:";
+        Smallstr100_Print(parent.cmd.pathcomp, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.strconv_proc..Uninit
@@ -22301,8 +23190,8 @@ void command::field_Print(command::sv2ssim& parent, algo::cstring &out) {
 // Read Regx from string
 // Convert string to field. Return success value
 bool command::field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) {
+    bool retval = true;
     Regx_ReadSql(parent.field, in, true);
-    bool retval = true;// !parent.field.parseerror; -- TODO: uncomment
     return retval;
 }
 
@@ -22401,12 +23290,29 @@ void command::sv2ssim_Init(command::sv2ssim& parent) {
     parent.prefer_signed = bool(false);
 }
 
+// --- command.sv2ssim..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::sv2ssim_ToCmdline(command::sv2ssim& row) {
+    tempstr ret;
+    ret << "bin/sv2ssim ";
+    sv2ssim_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- command.sv2ssim..PrintArgv
-// print command-line args of command::sv2ssim to string  -- cprint:command.sv2ssim.Argv
-void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:command.sv2ssim.Argv  printfmt:Tuple
+void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
@@ -22478,23 +23384,6 @@ void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring &str) {
         str << " -prefer_signed:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- command.sv2ssim..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::sv2ssim_ToCmdline(command::sv2ssim& row) {
-    tempstr ret;
-    ret << "bin/sv2ssim ";
-    sv2ssim_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- command.sv2ssim..GetAnon
@@ -22664,92 +23553,20 @@ void command::sv2ssim_ExecX(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc.sv2ssim.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:sv2ssim.Argv
+// Call execv with specified parameters
 int command::sv2ssim_Execv(command::sv2ssim_proc& parent) {
-    algo_lib::exec_args_Alloc() << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fname:";
-        cstring_Print(parent.cmd.fname, *arg);
-    }
-
-    if (parent.cmd.separator != ',') {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-separator:";
-        char_Print(parent.cmd.separator, *arg);
-    }
-
-    if (parent.cmd.outseparator != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-outseparator:";
-        cstring_Print(parent.cmd.outseparator, *arg);
-    }
-
-    if (parent.cmd.header != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-header:";
-        bool_Print(parent.cmd.header, *arg);
-    }
-
-    if (parent.cmd.ctype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ctype:";
-        cstring_Print(parent.cmd.ctype, *arg);
-    }
-
-    if (parent.cmd.ssimfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ssimfile:";
-        cstring_Print(parent.cmd.ssimfile, *arg);
-    }
-
-    if (parent.cmd.schema != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-schema:";
-        bool_Print(parent.cmd.schema, *arg);
-    }
-
-    if (parent.cmd.field.expr != "%") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-field:";
-        command::field_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.data != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-data:";
-        bool_Print(parent.cmd.data, *arg);
-    }
-
-    if (parent.cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(parent.cmd.report, *arg);
-    }
-
-    if (parent.cmd.prefer_signed != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-prefer_signed:";
-        bool_Print(parent.cmd.prefer_signed, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    sv2ssim_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if parent.path is relative, search for it in PATH
     algo_lib::ResolveExecFname(parent.path);
-    return execv(Zeroterm(parent.path),argv);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
 }
 
 // --- command.sv2ssim_proc.sv2ssim.ToCmdline
@@ -22767,6 +23584,88 @@ algo::tempstr command::sv2ssim_ToCmdline(command::sv2ssim_proc& parent) {
         retval << " 2" << parent.fstderr;
     }
     return retval;
+}
+
+// --- command.sv2ssim_proc.sv2ssim.ToArgv
+// Form array from the command line
+void command::sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fname:";
+        cstring_Print(parent.cmd.fname, *arg);
+    }
+
+    if (parent.cmd.separator != ',') {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-separator:";
+        char_Print(parent.cmd.separator, *arg);
+    }
+
+    if (parent.cmd.outseparator != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-outseparator:";
+        cstring_Print(parent.cmd.outseparator, *arg);
+    }
+
+    if (parent.cmd.header != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-header:";
+        bool_Print(parent.cmd.header, *arg);
+    }
+
+    if (parent.cmd.ctype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ctype:";
+        cstring_Print(parent.cmd.ctype, *arg);
+    }
+
+    if (parent.cmd.ssimfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ssimfile:";
+        cstring_Print(parent.cmd.ssimfile, *arg);
+    }
+
+    if (parent.cmd.schema != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-schema:";
+        bool_Print(parent.cmd.schema, *arg);
+    }
+
+    if (parent.cmd.field.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-field:";
+        command::field_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.data != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data:";
+        bool_Print(parent.cmd.data, *arg);
+    }
+
+    if (parent.cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(parent.cmd.report, *arg);
+    }
+
+    if (parent.cmd.prefer_signed != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-prefer_signed:";
+        bool_Print(parent.cmd.prefer_signed, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- command.sv2ssim_proc..Uninit

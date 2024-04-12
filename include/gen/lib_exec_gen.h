@@ -31,15 +31,16 @@
 
 // --- lib_exec_FieldIdEnum
 
-enum lib_exec_FieldIdEnum {           // lib_exec.FieldId.value
-     lib_exec_FieldId_dry_run    = 0
-    ,lib_exec_FieldId_q          = 1
-    ,lib_exec_FieldId_maxjobs    = 2
-    ,lib_exec_FieldId_complooo   = 3
-    ,lib_exec_FieldId_value      = 4
+enum lib_exec_FieldIdEnum {               // lib_exec.FieldId.value
+     lib_exec_FieldId_dry_run        = 0
+    ,lib_exec_FieldId_q              = 1
+    ,lib_exec_FieldId_maxjobs        = 2
+    ,lib_exec_FieldId_complooo       = 3
+    ,lib_exec_FieldId_merge_output   = 4
+    ,lib_exec_FieldId_value          = 5
 };
 
-enum { lib_exec_FieldIdEnum_N = 5 };
+enum { lib_exec_FieldIdEnum_N = 6 };
 
 namespace lib_exec { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -63,10 +64,11 @@ namespace lib_exec { // gen:ns_print_struct
 
 // --- lib_exec.Cmdline
 struct Cmdline { // lib_exec.Cmdline
-    bool   dry_run;    //   false
-    bool   q;          //   true  Do not print node name
-    i32    maxjobs;    //   8  Maximum number of parallel jobs
-    bool   complooo;   //   false
+    bool   dry_run;        //   false
+    bool   q;              //   true  Do not print node name
+    i32    maxjobs;        //   8  Maximum number of parallel jobs
+    bool   complooo;       //   false  Allow jobs to complete out-of-order
+    bool   merge_output;   //   false  Merge stderr and stdout from child processes
     Cmdline();
 };
 
@@ -78,13 +80,14 @@ bool                 Cmdline_ReadTupleMaybe(lib_exec::Cmdline &parent, algo::Tup
 // Set all fields to initial values.
 // func:lib_exec.Cmdline..Init
 void                 Cmdline_Init(lib_exec::Cmdline& parent);
-// print command-line args of lib_exec::Cmdline to string  -- cprint:lib_exec.Cmdline.Argv
-// func:lib_exec.Cmdline..PrintArgv
-void                 Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:lib_exec.Cmdline..ToCmdline
 tempstr              Cmdline_ToCmdline(lib_exec::Cmdline& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_exec.Cmdline.Argv  printfmt:Auto
+// func:lib_exec.Cmdline..PrintArgv
+void                 Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -105,7 +108,7 @@ void                 trace_Print(lib_exec::trace& row, algo::cstring& str) __att
 
 // --- lib_exec.FDb
 // create: lib_exec.FDb._db (Global)
-struct FDb { // lib_exec.FDb: In-memory database for lib_exec
+struct FDb { // lib_exec.FDb
     lib_exec::Cmdline       cmdline;                     //
     lib_exec::FSyscmddep*   syscmddep_lary[32];          // level array
     i32                     syscmddep_n;                 // number of elements in array
@@ -425,6 +428,7 @@ struct FSyscmd { // lib_exec.FSyscmd
     algo_lib::FFildes        stdout_fd;          // Temporary file containing stdout of subprocess
     algo_lib::FFildes        stderr_fd;          // Temporary file containing stderr of subprocess
     i32                      signal;             //   0  Signal received by process (if any)
+    algo::StringAry          args;               // Overrides 'command'
 private:
     friend lib_exec::FSyscmd&   syscmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_exec::FSyscmd*   syscmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -643,7 +647,7 @@ bool                 value_ReadStrptrMaybe(lib_exec::FieldId& parent, algo::strp
 // Read fields of lib_exec::FieldId from an ascii string.
 // The format of the string is the format of the lib_exec::FieldId's only field
 // func:lib_exec.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_exec.FieldId..Init
 void                 FieldId_Init(lib_exec::FieldId& parent);

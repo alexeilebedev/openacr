@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -67,17 +67,9 @@ void amc::tfunc_Varlen_Addr() {
 
 void amc::tfunc_Varlen_Getary() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-
-    if (field.p_ctype->c_lenfld) {
-        // withhold defining Getary
-        // because it breaks the print function on message types where length is not known.
-        //
-        amc::FFunc& get = amc::CreateCurFunc();
-        Ins(&R, get.ret  , "algo::aryptr<$rettype>", false);
-        Ins(&R, get.proto, "$name_Getary($Parent)", false);
-        Ins(&R, get.body, "return algo::aryptr<$rettype>($name_Addr($pararg), $name_N($pararg));");
-    }
+    amc::FFunc& get = amc::CreateCurFunc(true);
+    AddRetval(get, Subst(R,"algo::aryptr<$rettype>"), "", "");
+    Ins(&R, get.body, "return algo::aryptr<$rettype>($name_Addr($pararg), $name_N($pararg));");
 }
 
 void amc::tfunc_Varlen_N() {
@@ -188,4 +180,8 @@ void amc::tfunc_Varlen_curs() {
             Ins(&R, curs_access.body, "return *($Cpptype*)curs.ptr;");
         }
     }
+}
+
+void amc::tfunc_Varlen_Print() {
+    tfunc_Inlary_Print();
 }

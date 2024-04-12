@@ -132,7 +132,7 @@ inline void lib_json::FldKey_Init(lib_json::FldKey& parent) {
 }
 
 // --- lib_json.FldKey..Eq
-inline bool lib_json::FldKey_Eq(const lib_json::FldKey& lhs, const lib_json::FldKey& rhs) {
+inline bool lib_json::FldKey_Eq(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
     bool retval = true;
     retval = u64_Eq((u64)(void*)lhs.object, (u64)(void*)rhs.object);
     if (!retval) {

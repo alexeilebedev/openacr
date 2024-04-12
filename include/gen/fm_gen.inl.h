@@ -120,7 +120,7 @@ inline void fm::Code_Init(fm::Code& parent) {
 }
 
 // --- fm.Code..Eq
-inline bool fm::Code_Eq(const fm::Code& lhs, const fm::Code& rhs) {
+inline bool fm::Code_Eq(fm::Code& lhs, fm::Code& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -228,7 +228,7 @@ inline void fm::Objtype_Init(fm::Objtype& parent) {
 }
 
 // --- fm.Objtype..Eq
-inline bool fm::Objtype_Eq(const fm::Objtype& lhs, const fm::Objtype& rhs) {
+inline bool fm::Objtype_Eq(fm::Objtype& lhs, fm::Objtype& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -336,7 +336,7 @@ inline void fm::Objinst_Init(fm::Objinst& parent) {
 }
 
 // --- fm.Objinst..Eq
-inline bool fm::Objinst_Eq(const fm::Objinst& lhs, const fm::Objinst& rhs) {
+inline bool fm::Objinst_Eq(fm::Objinst& lhs, fm::Objinst& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -591,7 +591,7 @@ inline void fm::Summary_Init(fm::Summary& parent) {
 }
 
 // --- fm.Summary..Eq
-inline bool fm::Summary_Eq(const fm::Summary& lhs, const fm::Summary& rhs) {
+inline bool fm::Summary_Eq(fm::Summary& lhs, fm::Summary& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -703,7 +703,7 @@ inline void fm::Description_Init(fm::Description& parent) {
 }
 
 // --- fm.Description..Eq
-inline bool fm::Description_Eq(const fm::Description& lhs, const fm::Description& rhs) {
+inline bool fm::Description_Eq(fm::Description& lhs, fm::Description& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -823,7 +823,7 @@ inline void fm::Source_Init(fm::Source& parent) {
 }
 
 // --- fm.Source..Eq
-inline bool fm::Source_Eq(const fm::Source& lhs, const fm::Source& rhs) {
+inline bool fm::Source_Eq(fm::Source& lhs, fm::Source& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -860,13 +860,13 @@ inline ams::MsgHeader& fm::Castbase(fm::AlarmMsg& parent) {
 
 // --- fm.AlarmMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 fm::AlarmMsg_GetMsgLength(const fm::AlarmMsg& parent) {
+inline i32 fm::GetMsgLength(const fm::AlarmMsg& parent) {
     return i32(const_cast<fm::AlarmMsg&>(parent).length);
 }
 
 // --- fm.AlarmMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr fm::AlarmMsg_GetMsgMemptr(const fm::AlarmMsg& row) {
+inline algo::memptr fm::GetMsgMemptr(const fm::AlarmMsg& row) {
     return algo::memptr((u8*)&row, i32(const_cast<fm::AlarmMsg&>(row).length));
 }
 inline fm::FieldId::FieldId(i32                            in_value)

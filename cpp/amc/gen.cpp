@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -458,8 +458,7 @@ void amc::gen_check_reftype() {
 
 void amc::gen_detectinst() {
     // detect instance fields -- creation access paths
-    // ignore instances from different namespaces -- assume the ctype can
-    // only be created in this namespace.
+    // ignore instances from different namespaces
     ind_beg(amc::_db_field_curs, field, amc::_db) {
         amc::FReftype& reftype = *field.p_reftype;
         bool ispool = reftype.inst || (reftype.isval && field.c_finput);
@@ -477,7 +476,7 @@ void amc::gen_detectinst() {
         }
     }ind_end;
 
-    // a x-referenced field target have be a pool
+    // a x-referenced field target has to be a pool
     ind_beg(amc::_db_xref_curs, xref, amc::_db) {
         amccheck(HasPoolQ(*xref.p_field->p_arg)
                  ,"amc.nopool"

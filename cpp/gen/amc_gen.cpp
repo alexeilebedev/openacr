@@ -3187,10 +3187,10 @@ void amc::trace_Print(amc::trace& row, algo::cstring& str) {
 
 // --- amc.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void amc::lpool_FreeMem(void *mem, u64 size) {
-    if (mem) {
-        size = u64_Max(size,16); // enforce alignment
-        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
+void amc::lpool_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -3200,37 +3200,40 @@ void amc::lpool_FreeMem(void *mem, u64 size) {
 // --- amc.FDb.lpool.AllocMem
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 void* amc::lpool_AllocMem(u64 size) {
-    size     = u64_Max(size,16); // enforce alignment
-    u64 cell = algo::u64_BitScanReverse(size-1)+1;
-    u64 i    = cell;
-    u8 *retval = NULL;
-    // try to find a block that's at least as large as required.
-    // if found, remove from free list
-    for (; i < 31; i++) {
-        lpool_Lpblock *blk = _db.lpool_free[i];
-        if (blk) {
-            _db.lpool_free[i] = blk->next;
-            retval = (u8*)blk;
-            break;
+    void *retval = NULL;
+    size     = u64_Max(size,1<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (cell < 36) {
+        u64 i    = cell;
+        // try to find a block that's at least as large as required.
+        // if found, remove from free list
+        for (; i < 36; i++) {
+            lpool_Lpblock *blk = _db.lpool_free[i];
+            if (blk) {
+                _db.lpool_free[i] = blk->next;
+                retval = blk;
+                break;
+            }
         }
-    }
-    // if suitable size block is not found, create a new one
-    // by requesting a block from the base allocator.
-    if (UNLIKELY(!retval)) {
-        i = u64_Max(cell, 21); // 2MB min -- allow huge page to be used
-        retval = (u8*)algo_lib::sbrk_AllocMem(1<<i);
-    }
-    if (LIKELY(retval)) {
-        // if block is more than 2x as large as needed, return the upper half to the free
-        // list (repeatedly). meanwhile, retval doesn't change.
-        while (i > cell) {
-            i--;
-            int half = 1<<i;
-            lpool_Lpblock *blk = (lpool_Lpblock*)(retval + half);
-            blk->next = _db.lpool_free[i];
-            _db.lpool_free[i] = blk;
+        // if suitable size block is not found, create a new one
+        // by requesting a block from the base allocator.
+        if (UNLIKELY(!retval)) {
+            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
+            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(retval)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, retval doesn't change.
+            while (i > cell) {
+                i--;
+                int half = 1ULL<<(i+4);
+                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
+                blk->next = _db.lpool_free[i];
+                _db.lpool_free[i] = blk;
+            }
         }
     }
     return retval;
@@ -3238,19 +3241,22 @@ void* amc::lpool_AllocMem(u64 size) {
 
 // --- amc.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-bool amc::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+bool amc::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 16);
-    for (int i = 0; i < nbuf; i++) {
-        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
-        u64     size = 1ULL<<cell;
-        lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-        if (temp == NULL) {
-            retval = false;
-            break;// why continue?
-        } else {
-            temp->next = _db.lpool_free[cell];
-            _db.lpool_free[cell] = temp;
+    bufsize = u64_Max(bufsize, 1<<4);
+    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
+    if (cell < 36) {
+        for (u64 i = 0; i < nbuf; i++) {
+            u64 size = 1ULL<<(cell+4);
+            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
+            if (temp == NULL) {
+                retval = false;
+                break;// why continue?
+            } else {
+                temp->next = _db.lpool_free[cell];
+                _db.lpool_free[cell] = temp;
+            }
         }
     }
     return retval;
@@ -3258,10 +3264,11 @@ bool amc::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
 
 // --- amc.FDb.lpool.ReallocMem
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
-void* amc::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
-    void* ret = oldmem;
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* amc::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
         if (ret && oldmem) {
@@ -3270,6 +3277,34 @@ void* amc::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
         }
     }
     return ret;
+}
+
+// --- amc.FDb.lpool.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u8& amc::lpool_Alloc() {
+    u8* row = lpool_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.lpool  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.lpool.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u8* amc::lpool_AllocMaybe() {
+    u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
+    if (row) {
+        new (row) u8; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.lpool.Delete
+// Remove row from all global and cross indices, then deallocate row
+void amc::lpool_Delete(u8 &row) {
+    int length = sizeof(u8);
+    lpool_FreeMem(&row, length);
 }
 
 // --- amc.FDb.fsort.Alloc
@@ -6616,7 +6651,7 @@ static void amc::reftype_LoadStatic() {
         ,{ "dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
+        ,{ "dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Tpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Upptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
@@ -15939,8 +15974,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ctype.XrefMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_XrefMaybe }
         ,{ "amcdb.tfunc  tfunc:Ctype.Unref  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Unref }
         ,{ "amcdb.tfunc  tfunc:Ctype.ReadFieldMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_ReadFieldMaybe }
-        ,{ "amcdb.tfunc  tfunc:Ctype.ReadStrptrMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_ReadStrptrMaybe }
-        ,{ "amcdb.tfunc  tfunc:Ctype.ReadTupleMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_ReadTupleMaybe }
+        ,{ "amcdb.tfunc  tfunc:Ctype.Read  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Read }
         ,{ "amcdb.tfunc  tfunc:Ctype.Lt  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Lt }
         ,{ "amcdb.tfunc  tfunc:Ctype.GetMsgLength  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Message length (uses length field)\"", amc::tfunc_Ctype_GetMsgLength }
         ,{ "amcdb.tfunc  tfunc:Ctype.GetMsgMemptr  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Memptr encompassing the message (uses length field)\"", amc::tfunc_Ctype_GetMsgMemptr }
@@ -15954,10 +15988,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ctype.Eq  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Eq }
         ,{ "amcdb.tfunc  tfunc:Ctype.Update  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Set value. Return true if new value is different from old value.\"", amc::tfunc_Ctype_Update }
         ,{ "amcdb.tfunc  tfunc:Ctype.EqStrptr  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_EqStrptr }
-        ,{ "amcdb.tfunc  tfunc:Ctype.PrintArgv  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_PrintArgv }
         ,{ "amcdb.tfunc  tfunc:Ctype.ToCmdline  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_ToCmdline }
         ,{ "amcdb.tfunc  tfunc:Ctype.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_Print }
-        ,{ "amcdb.tfunc  tfunc:Ctype.FmtJson  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_FmtJson }
         ,{ "amcdb.tfunc  tfunc:Ctype.EqEnum  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_EqEnum }
         ,{ "amcdb.tfunc  tfunc:Ctype.GetAnon  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ctype_GetAnon }
         ,{ "amcdb.tfunc  tfunc:Ctype.NArgs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Used with command lines\"", amc::tfunc_Ctype_NArgs }
@@ -15985,6 +16017,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Exec.ToCmdline  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Exec_ToCmdline }
         ,{ "amcdb.tfunc  tfunc:Exec.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Exec_Init }
         ,{ "amcdb.tfunc  tfunc:Exec.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Exec_Uninit }
+        ,{ "amcdb.tfunc  tfunc:Exec.ToArgv  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Exec_ToArgv }
         ,{ "amcdb.tfunc  tfunc:Fbuf.BeginRead  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Attach fbuf to Iohook for reading\"", amc::tfunc_Fbuf_BeginRead }
         ,{ "amcdb.tfunc  tfunc:Fbuf.EndRead  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Set EOF flag\"", amc::tfunc_Fbuf_EndRead }
         ,{ "amcdb.tfunc  tfunc:Fbuf.EndWrite  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Send zero-byte write\"", amc::tfunc_Fbuf_EndWrite }
@@ -16125,7 +16158,6 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Protocol.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Protocol_StaticCheck }
         ,{ "amcdb.tfunc  tfunc:Ptr.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptr_Cascdel }
         ,{ "amcdb.tfunc  tfunc:Ptr.InsertMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptr_InsertMaybe }
-        ,{ "amcdb.tfunc  tfunc:Ptr.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Ptr_Print }
         ,{ "amcdb.tfunc  tfunc:Ptr.Remove  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Remove element from index. If element is not in index, do nothing.\"", amc::tfunc_Ptr_Remove }
         ,{ "amcdb.tfunc  tfunc:Ptr.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Ptr_Init }
         ,{ "amcdb.tfunc  tfunc:Ptrary.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Delete all elements pointed to by the index.\"", amc::tfunc_Ptrary_Cascdel }
@@ -16206,6 +16238,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Tary.Reserve  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Make sure N *more* elements will fit in array. Process dies if out of memory\"", amc::tfunc_Tary_Reserve }
         ,{ "amcdb.tfunc  tfunc:Tary.AbsReserve  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Make sure N elements fit in array. Process dies if out of memory\"", amc::tfunc_Tary_AbsReserve }
         ,{ "amcdb.tfunc  tfunc:Tary.RowidFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"find row by row id\"", amc::tfunc_Tary_RowidFind }
+        ,{ "amcdb.tfunc  tfunc:Tary.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_Print }
         ,{ "amcdb.tfunc  tfunc:Tary.Setary  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Copy contents of RHS to PARENT.\"", amc::tfunc_Tary_Setary }
         ,{ "amcdb.tfunc  tfunc:Tary.Setary2  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_Setary2 }
         ,{ "amcdb.tfunc  tfunc:Tary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Tary_Uninit }
@@ -16244,6 +16277,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Varlen.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"Return number of elements in varlen field\"", amc::tfunc_Varlen_N }
         ,{ "amcdb.tfunc  tfunc:Varlen.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Varlen.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_curs }
+        ,{ "amcdb.tfunc  tfunc:Varlen.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_Print }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.DestructiveFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_ZSListMT_DestructiveFirst }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.InLlistQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"Return true if row is in index, false otherwise. Row must be non-NULL.\"", amc::tfunc_ZSListMT_InLlistQ }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_ZSListMT_Init }
@@ -23477,7 +23511,6 @@ void amc::_db_bh_enumstr_len_curs_Next(_db_bh_enumstr_len_curs &curs) {
 // --- amc.FDb..Init
 // Set all fields to initial values.
 void amc::FDb_Init() {
-    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry fsort (amc.FDb.fsort)
     _db.fsort_n = 0;
@@ -27974,6 +28007,25 @@ algo::Smallstr16 amc::ns_Get(amc::FFunc& func) {
     return ret;
 }
 
+// --- amc.FFunc.funcarg.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<amc::Funcarg> amc::funcarg_Addary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= func.funcarg_elems && rhs.elems < func.funcarg_elems + func.funcarg_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("amc.tary_alias  field:amc.FFunc.funcarg  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    funcarg_Reserve(func, nnew); // reserve space
+    int at = func.funcarg_n;
+    for (int i = 0; i < nnew; i++) {
+        new (func.funcarg_elems + at + i) amc::Funcarg(rhs[i]);
+        func.funcarg_n++;
+    }
+    return algo::aryptr<amc::Funcarg>(func.funcarg_elems + at, nnew);
+}
+
 // --- amc.FFunc.funcarg.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -28077,6 +28129,14 @@ void amc::funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) {
     }
 }
 
+// --- amc.FFunc.funcarg.Setary2
+// Copy specified array into funcarg, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void amc::funcarg_Setary(amc::FFunc& func, const algo::aryptr<amc::Funcarg> &rhs) {
+    funcarg_RemoveAll(func);
+    funcarg_Addary(func, rhs);
+}
+
 // --- amc.FFunc.funcarg.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<amc::Funcarg> amc::funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) {
@@ -28089,15 +28149,6 @@ algo::aryptr<amc::Funcarg> amc::funcarg_AllocNVal(amc::FFunc& func, int n_elems,
     }
     func.funcarg_n = new_n;
     return algo::aryptr<amc::Funcarg>(elems + old_n, n_elems);
-}
-
-// --- amc.FFunc.funcarg.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool amc::funcarg_XrefMaybe(amc::Funcarg &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
 }
 
 // --- amc.FFunc..Init
@@ -29123,6 +29174,25 @@ void amc::c_gstatic_Reserve(amc::FNs& ns, u32 n) {
     }
 }
 
+// --- amc.FNs.include.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> amc::include_Addary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= ns.include_elems && rhs.elems < ns.include_elems + ns.include_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("amc.tary_alias  field:amc.FNs.include  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    include_Reserve(ns, nnew); // reserve space
+    int at = ns.include_n;
+    for (int i = 0; i < nnew; i++) {
+        new (ns.include_elems + at + i) algo::cstring(rhs[i]);
+        ns.include_n++;
+    }
+    return algo::aryptr<algo::cstring>(ns.include_elems + at, nnew);
+}
+
 // --- amc.FNs.include.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -29226,6 +29296,14 @@ void amc::include_Setary(amc::FNs& ns, amc::FNs &rhs) {
     }
 }
 
+// --- amc.FNs.include.Setary2
+// Copy specified array into include, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void amc::include_Setary(amc::FNs& ns, const algo::aryptr<algo::cstring> &rhs) {
+    include_RemoveAll(ns);
+    include_Addary(ns, rhs);
+}
+
 // --- amc.FNs.include.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) {
@@ -29238,6 +29316,20 @@ algo::aryptr<algo::cstring> amc::include_AllocNVal(amc::FNs& ns, int n_elems, co
     }
     ns.include_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- amc.FNs.include.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool amc::include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = include_Alloc(ns);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        include_RemoveLast(ns);
+    }
+    return retval;
 }
 
 // --- amc.FNs.c_dispsig.Insert

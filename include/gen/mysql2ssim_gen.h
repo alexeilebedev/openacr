@@ -125,6 +125,11 @@ void                 Steps();
 // func:mysql2ssim.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FDb.table_names.Addary
+algo::aryptr<algo::cstring> table_names_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:mysql2ssim.FDb.table_names.Alloc
@@ -180,7 +185,17 @@ u64                  table_names_rowid_Get(algo::cstring &elem) __attribute__((n
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.table_names.AllocNVal
 algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:mysql2ssim.FDb.table_names.ReadStrptrMaybe
+bool                 table_names_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FDb.in_tables.Addary
+algo::aryptr<algo::cstring> in_tables_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:mysql2ssim.FDb.in_tables.Alloc
@@ -236,6 +251,11 @@ u64                  in_tables_rowid_Get(algo::cstring &elem) __attribute__((not
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.in_tables.AllocNVal
 algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:mysql2ssim.FDb.in_tables.ReadStrptrMaybe
+bool                 in_tables_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:mysql2ssim.FDb.table_names_curs.Next
@@ -280,6 +300,11 @@ private:
     void operator =(const FTobltin&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FTobltin.vals.Addary
+algo::aryptr<algo::cstring> vals_Addary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:mysql2ssim.FTobltin.vals.Alloc
@@ -299,7 +324,7 @@ bool                 vals_EmptyQ(mysql2ssim::FTobltin& parent) __attribute__((no
 algo::cstring*       vals_Find(mysql2ssim::FTobltin& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:mysql2ssim.FTobltin.vals.Getary
-algo::aryptr<algo::cstring> vals_Getary(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> vals_Getary(const mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mysql2ssim.FTobltin.vals.Last
 algo::cstring*       vals_Last(mysql2ssim::FTobltin& parent) __attribute__((nothrow, pure));
@@ -326,6 +351,10 @@ void                 vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:mysql2ssim.FTobltin.vals.Setary
 void                 vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin &rhs) __attribute__((nothrow));
+// Copy specified array into vals, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:mysql2ssim.FTobltin.vals.Setary2
+void                 vals_Setary(mysql2ssim::FTobltin& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mysql2ssim.FTobltin.vals.qFind
 algo::cstring&       vals_qFind(mysql2ssim::FTobltin& parent, u64 t) __attribute__((nothrow));
@@ -338,6 +367,11 @@ u64                  vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FTobltin.vals.AllocNVal
 algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:mysql2ssim.FTobltin.vals.ReadStrptrMaybe
+bool                 vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:mysql2ssim.FTobltin.vals_curs.Next
@@ -397,7 +431,7 @@ bool                 value_ReadStrptrMaybe(mysql2ssim::FieldId& parent, algo::st
 // Read fields of mysql2ssim::FieldId from an ascii string.
 // The format of the string is the format of the mysql2ssim::FieldId's only field
 // func:mysql2ssim.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FieldId..Init
 void                 FieldId_Init(mysql2ssim::FieldId& parent);

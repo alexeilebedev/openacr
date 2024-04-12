@@ -41,6 +41,10 @@ void                 temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs)
 // 'quick' Access row by row id. No bounds checking in release.
 // func:algo_lib.FDb.temp_strings.qFind
 algo::cstring&       temp_strings_qFind(u64 t) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:algo_lib.FDb.temp_strings.ReadStrptrMaybe
+bool                 temp_strings_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 ```
 

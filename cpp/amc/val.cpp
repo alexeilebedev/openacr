@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -87,9 +87,10 @@ void amc::tfunc_Val_Get() {
 void amc::tfunc_Val_Set() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    bool need_set = (field.c_fbigend /*|| c_pmaskfld_member_N(field)*/) // conflicts with fldfunc
+    bool need_set = (field.c_fbigend || c_pmaskfld_member_N(field))
         && !PadQ(field)
-        && !(field.arg == "algo_lib.Regx");
+        && !(field.arg == "algo_lib.Regx")
+        && !(field.c_cppfunc && !field.c_cppfunc->set);
     if (need_set) {
         amc::FFunc& set = amc::CreateCurFunc();
         Set(R, "$Fldargtype", Argtype(field));
@@ -101,13 +102,11 @@ void amc::tfunc_Val_Set() {
         } else {
             Ins(&R, set.body, "$parname.$name = rhs;");
         }
-#if 0 // AP I think this needs to be controlled more precisely, currently unneeded
         ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
             Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
             Set(R,"$bit",tempstr()<<pmaskfld_member.bit);
             Ins(&R, set.body, "$pmask_qSetBit($pararg, $bit); // mark presence in pmask");
         }ind_end;
-#endif
     }
 }
 

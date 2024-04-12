@@ -102,7 +102,7 @@ inline void acr_compl::Badness_Init(acr_compl::Badness& parent) {
 }
 
 // --- acr_compl.Badness..Eq
-inline bool acr_compl::Badness_Eq(const acr_compl::Badness& lhs, const acr_compl::Badness& rhs) {
+inline bool acr_compl::Badness_Eq(acr_compl::Badness& lhs, acr_compl::Badness& rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.badness, rhs.badness);
     if (!retval) {
@@ -1826,6 +1826,11 @@ inline acr_compl::TableId::operator acr_compl_TableIdEnum () const {
 // Set all fields to initial values.
 inline void acr_compl::TableId_Init(acr_compl::TableId& parent) {
     parent.value = i32(-1);
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_compl::Badness &row) {// cfmt:acr_compl.Badness.String
+    acr_compl::Badness_Print(const_cast<acr_compl::Badness&>(row), str);
+    return str;
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_compl::trace &row) {// cfmt:acr_compl.trace.String

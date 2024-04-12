@@ -227,6 +227,15 @@ bool acr_compl::Badness_ReadStrptrMaybe(acr_compl::Badness &parent, algo::strptr
     return retval;
 }
 
+// --- acr_compl.Badness..Print
+// print string representation of ROW to string STR
+// cfmt:acr_compl.Badness.String  printfmt:Sep
+void acr_compl::Badness_Print(acr_compl::Badness& row, algo::cstring& str) {
+    acr_compl::badness_Print(row, str);
+    str << '.';
+    algo::cstring_Print(row.strkey, str);
+}
+
 // --- acr_compl.Badness..GetAnon
 algo::strptr acr_compl::Badness_GetAnon(acr_compl::Badness &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
@@ -425,7 +434,10 @@ void acr_compl::FCompletion_Print(acr_compl::FCompletion& row, algo::cstring& st
     bool_Print(row.nospace, temp);
     PrintAttrSpaceReset(str,"nospace", temp);
 
-    u64_PrintHex(u64((const acr_compl::FField*)row.field), temp, 8, true);
+    acr_compl::Badness_Print(row.badness, temp);
+    PrintAttrSpaceReset(str,"badness", temp);
+
+    u64_PrintHex(u64(row.field), temp, 8, true);
     PrintAttrSpaceReset(str,"field", temp);
 }
 
@@ -541,10 +553,10 @@ void acr_compl::FCtype_Print(acr_compl::FCtype& row, algo::cstring& str) {
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
-    u64_PrintHex(u64((const acr_compl::FSsimfile*)row.c_ssimfile), temp, 8, true);
+    u64_PrintHex(u64(row.c_ssimfile), temp, 8, true);
     PrintAttrSpaceReset(str,"c_ssimfile", temp);
 
-    u64_PrintHex(u64((const acr_compl::FArgvtype*)row.c_argvtype), temp, 8, true);
+    u64_PrintHex(u64(row.c_argvtype), temp, 8, true);
     PrintAttrSpaceReset(str,"c_argvtype", temp);
 }
 
@@ -905,6 +917,25 @@ bool acr_compl::_db_XrefMaybe() {
     return retval;
 }
 
+// --- acr_compl.FDb.word.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr_compl::word_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.word_elems && rhs.elems < _db.word_elems + _db.word_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_compl.tary_alias  field:acr_compl.FDb.word  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    word_Reserve(nnew); // reserve space
+    int at = _db.word_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.word_elems + at + i) algo::cstring(rhs[i]);
+        _db.word_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.word_elems + at, nnew);
+}
+
 // --- acr_compl.FDb.word.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1008,6 +1039,20 @@ algo::aryptr<algo::cstring> acr_compl::word_AllocNVal(int n_elems, const algo::c
     }
     _db.word_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_compl.FDb.word.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr_compl::word_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = word_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        word_RemoveLast();
+    }
+    return retval;
 }
 
 // --- acr_compl.FDb.ctype.Alloc
@@ -3790,16 +3835,16 @@ void acr_compl::FField_Print(acr_compl::FField& row, algo::cstring& str) {
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
-    u64_PrintHex(u64((const acr_compl::FAnonfld*)row.c_anonfld), temp, 8, true);
+    u64_PrintHex(u64(row.c_anonfld), temp, 8, true);
     PrintAttrSpaceReset(str,"c_anonfld", temp);
 
     bool_Print(row.seen, temp);
     PrintAttrSpaceReset(str,"seen", temp);
 
-    u64_PrintHex(u64((const acr_compl::FFflag*)row.c_fflag), temp, 8, true);
+    u64_PrintHex(u64(row.c_fflag), temp, 8, true);
     PrintAttrSpaceReset(str,"c_fflag", temp);
 
-    u64_PrintHex(u64((const acr_compl::FFalias*)row.c_falias), temp, 8, true);
+    u64_PrintHex(u64(row.c_falias), temp, 8, true);
     PrintAttrSpaceReset(str,"c_falias", temp);
 
     bool_Print(row.ctype_c_field_in_ary, temp);

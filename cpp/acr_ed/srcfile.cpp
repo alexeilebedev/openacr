@@ -1,6 +1,6 @@
-// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -135,7 +135,7 @@ void acr_ed::edaction_Rename_Srcfile() {
     acr_ed::FTarget *target=acr_ed::ind_target_Find(acr_ed::_db.cmdline.target);
     if (target) {
         Set(R, "$target", target->target);
-        Ins(&R, acr_ed::_db.script, "acr targsrc:%/$srcfile -rename $target/$srcfile -write");
+        Ins(&R, acr_ed::_db.script, "acr targsrc:%/$srcfile -rename $target/$to -write");
     }
 
     vrfy(FileQ(acr_ed::_db.cmdline.srcfile),

@@ -1914,7 +1914,7 @@ inline u8* amc_vis::text_Find(amc_vis::Outrow& outrow, u64 t) {
 
 // --- amc_vis.Outrow.text.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> amc_vis::text_Getary(amc_vis::Outrow& outrow) {
+inline algo::aryptr<u8> amc_vis::text_Getary(const amc_vis::Outrow& outrow) {
     return algo::aryptr<u8>(outrow.text_elems, outrow.text_n);
 }
 

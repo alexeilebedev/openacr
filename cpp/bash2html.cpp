@@ -1,5 +1,5 @@
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify

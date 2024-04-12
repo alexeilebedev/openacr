@@ -110,7 +110,7 @@ bool                 Amctest_ReadFieldMaybe(atfdb::Amctest& parent, algo::strptr
 // Read fields of atfdb::Amctest from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Amctest..ReadStrptrMaybe
-bool                 Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str);
+bool                 Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Amctest.String  printfmt:Tuple
 // func:atfdb.Amctest..Print
@@ -128,7 +128,7 @@ bool                 Cijob_ReadFieldMaybe(atfdb::Cijob& parent, algo::strptr fie
 // Read fields of atfdb::Cijob from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Cijob..ReadStrptrMaybe
-bool                 Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str);
+bool                 Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Cijob.String  printfmt:Tuple
 // func:atfdb.Cijob..Print
@@ -149,7 +149,7 @@ bool                 Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::st
 // Read fields of atfdb::Cipackage from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Cipackage..ReadStrptrMaybe
-bool                 Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_str);
+bool                 Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Cipackage..Init
 void                 Cipackage_Init(atfdb::Cipackage& parent);
@@ -172,7 +172,7 @@ bool                 Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr f
 // Read fields of atfdb::Citest from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Citest..ReadStrptrMaybe
-bool                 Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str);
+bool                 Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Citest..Init
 void                 Citest_Init(atfdb::Citest& parent);
@@ -208,7 +208,7 @@ bool                 Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strp
 // Read fields of atfdb::Comptest from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Comptest..ReadStrptrMaybe
-bool                 Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str);
+bool                 Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Comptest..Init
 void                 Comptest_Init(atfdb::Comptest& parent);
@@ -258,7 +258,7 @@ bool                 value_ReadStrptrMaybe(atfdb::FieldId& parent, algo::strptr 
 // Read fields of atfdb::FieldId from an ascii string.
 // The format of the string is the format of the atfdb::FieldId's only field
 // func:atfdb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.FieldId..Init
 void                 FieldId_Init(atfdb::FieldId& parent);
@@ -279,7 +279,7 @@ bool                 Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat& parent, algo::st
 // Read fields of atfdb::Fuzzstrat from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Fuzzstrat..ReadStrptrMaybe
-bool                 Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str);
+bool                 Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Fuzzstrat.String  printfmt:Tuple
 // func:atfdb.Fuzzstrat..Print
@@ -297,7 +297,7 @@ bool                 Msgdir_ReadFieldMaybe(atfdb::Msgdir& parent, algo::strptr f
 // Read fields of atfdb::Msgdir from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Msgdir..ReadStrptrMaybe
-bool                 Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str);
+bool                 Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Msgdir.String  printfmt:Tuple
 // func:atfdb.Msgdir..Print
@@ -315,7 +315,7 @@ bool                 Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr fie
 // Read fields of atfdb::Targs from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Targs..ReadStrptrMaybe
-bool                 Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str);
+bool                 Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Targs.String  printfmt:Tuple
 // func:atfdb.Targs..Print
@@ -333,7 +333,7 @@ bool                 TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar& pare
 // Read fields of atfdb::TestGsymbolChar from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.TestGsymbolChar..ReadStrptrMaybe
-bool                 TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo::strptr in_str);
+bool                 TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolChar.String  printfmt:Tuple
 // func:atfdb.TestGsymbolChar..Print
@@ -351,7 +351,7 @@ bool                 TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey& pare
 // Read fields of atfdb::TestGsymbolPkey from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.TestGsymbolPkey..ReadStrptrMaybe
-bool                 TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr in_str);
+bool                 TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolPkey.String  printfmt:Tuple
 // func:atfdb.TestGsymbolPkey..Print
@@ -369,7 +369,7 @@ bool                 TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr& 
 // Read fields of atfdb::TestGsymbolStrptr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.TestGsymbolStrptr..ReadStrptrMaybe
-bool                 TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr in_str);
+bool                 TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolStrptr.String  printfmt:Tuple
 // func:atfdb.TestGsymbolStrptr..Print
@@ -388,7 +388,7 @@ bool                 Tfilt_ReadFieldMaybe(atfdb::Tfilt& parent, algo::strptr fie
 // Read fields of atfdb::Tfilt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Tfilt..ReadStrptrMaybe
-bool                 Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str);
+bool                 Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atfdb.Tfilt.String  printfmt:Tuple
 // func:atfdb.Tfilt..Print
@@ -424,7 +424,7 @@ bool                 Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field
 // Read fields of atfdb::Tmsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Tmsg..ReadStrptrMaybe
-bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str);
+bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Tmsg..Init
 void                 Tmsg_Init(atfdb::Tmsg& parent);
@@ -457,7 +457,7 @@ bool                 Unittest_ReadFieldMaybe(atfdb::Unittest& parent, algo::strp
 // Read fields of atfdb::Unittest from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atfdb.Unittest..ReadStrptrMaybe
-bool                 Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::strptr in_str);
+bool                 Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Read fields of atfdb::Unittest from attributes of ascii tuple TUPLE
 // func:atfdb.Unittest..ReadTupleMaybe
 bool                 Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tuple &tuple) __attribute__((nothrow));

@@ -222,8 +222,7 @@ void                 trace_Print(amc_vis::trace& row, algo::cstring& str) __attr
 // --- amc_vis.FDb
 // create: amc_vis.FDb._db (Global)
 struct FDb { // amc_vis.FDb: In-memory database for amc_vis
-    lpool_Lpblock*        lpool_free[31];              // Lpool levels
-    u32                   lpool_lock;                  // Lpool lock
+    lpool_Lpblock*        lpool_free[36];              // Lpool levels
     command::amc_vis      cmdline;                     //
     amc_vis::FCtype*      ctype_lary[32];              // level array
     i32                   ctype_n;                     // number of elements in array
@@ -275,20 +274,33 @@ struct FDb { // amc_vis.FDb: In-memory database for amc_vis
 
 // Free block of memory previously returned by Lpool.
 // func:amc_vis.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:amc_vis.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:amc_vis.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:amc_vis.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc_vis.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc_vis.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:amc_vis.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1608,7 +1620,7 @@ bool                 value_ReadStrptrMaybe(amc_vis::FieldId& parent, algo::strpt
 // Read fields of amc_vis::FieldId from an ascii string.
 // The format of the string is the format of the amc_vis::FieldId's only field
 // func:amc_vis.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.FieldId..Init
 void                 FieldId_Init(amc_vis::FieldId& parent);
@@ -1867,6 +1879,11 @@ private:
     void operator =(const Outrow&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:amc_vis.Outrow.text.Addary
+algo::aryptr<u8>     text_Addary(amc_vis::Outrow& outrow, algo::aryptr<u8> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc_vis.Outrow.text.Alloc
@@ -1886,7 +1903,7 @@ bool                 text_EmptyQ(amc_vis::Outrow& outrow) __attribute__((nothrow
 u8*                  text_Find(amc_vis::Outrow& outrow, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc_vis.Outrow.text.Getary
-algo::aryptr<u8>     text_Getary(amc_vis::Outrow& outrow) __attribute__((nothrow));
+algo::aryptr<u8>     text_Getary(const amc_vis::Outrow& outrow) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc_vis.Outrow.text.Last
 u8*                  text_Last(amc_vis::Outrow& outrow) __attribute__((nothrow, pure));
@@ -1910,9 +1927,17 @@ void                 text_Reserve(amc_vis::Outrow& outrow, int n) __attribute__(
 // Make sure N elements fit in array. Process dies if out of memory
 // func:amc_vis.Outrow.text.AbsReserve
 void                 text_AbsReserve(amc_vis::Outrow& outrow, int n) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:amc_vis.Outrow.text.Print
+void                 text_Print(amc_vis::Outrow& outrow, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:amc_vis.Outrow.text.Setary
 void                 text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) __attribute__((nothrow));
+// Copy specified array into text, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:amc_vis.Outrow.text.Setary2
+void                 text_Setary(amc_vis::Outrow& outrow, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc_vis.Outrow.text.qFind
 u8&                  text_qFind(amc_vis::Outrow& outrow, u64 t) __attribute__((nothrow));
@@ -1925,6 +1950,9 @@ u64                  text_rowid_Get(amc_vis::Outrow& outrow, u8 &elem) __attribu
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc_vis.Outrow.text.AllocNVal
 algo::aryptr<u8>     text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:amc_vis.Outrow.text.ReadStrptrMaybe
+bool                 text_ReadStrptrMaybe(amc_vis::Outrow& outrow, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:amc_vis.Outrow.text_curs.Next
@@ -1986,7 +2014,7 @@ bool                 value_ReadStrptrMaybe(amc_vis::TableId& parent, algo::strpt
 // Read fields of amc_vis::TableId from an ascii string.
 // The format of the string is the format of the amc_vis::TableId's only field
 // func:amc_vis.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_vis.TableId..Init
 void                 TableId_Init(amc_vis::TableId& parent);

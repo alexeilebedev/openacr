@@ -57,7 +57,7 @@ const char *src_hdr_help =
 "    -targsrc           regx    \"\"      Regx of targsrc to update\n"
 "    -write                             Update files in-place\n"
 "    -indent                            Indent source files\n"
-"    -update_copyright  string  \"\"      Update copyright notice for specified company with current year\n"
+"    -update_copyright                  Update copyright year for current company\n"
 "    -scriptfile        regx    \"\"      Regx of scripts to update header\n"
 "    -verbose           int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug             int             Debug level (0..255); alias -d; cumulative\n"
@@ -68,6 +68,11 @@ const char *src_hdr_help =
 
 
 } // namespace src_hdr
+src_hdr::_db_bh_copyright_curs::~_db_bh_copyright_curs() {
+    algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
+
+}
+
 namespace src_hdr { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:src_hdr.FDb._db.InitReflection
@@ -86,6 +91,18 @@ namespace src_hdr { // gen:ns_print_proto
     static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
     // func:src_hdr.FDb.copyright.InputMaybe
     static bool          copyright_InputMaybe(dev::Copyright &elem) __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:src_hdr.FDb.bh_copyright.Downheap
+    static int           bh_copyright_Downheap(src_hdr::FCopyright& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    // func:src_hdr.FDb.bh_copyright.Upheap
+    static int           bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) __attribute__((nothrow));
+    // func:src_hdr.FDb.bh_copyright.ElemLt
+    static bool          bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) __attribute__((nothrow));
+    // func:src_hdr.FDb.bh_copyright_curs.Add
+    static void          _db_bh_copyright_curs_Add(_db_bh_copyright_curs &curs, src_hdr::FCopyright& row);
     // find trace by row id (used to implement reflection)
     // func:src_hdr.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -123,6 +140,7 @@ void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) {
     src_hdr::FCopyright &row = copyright; (void)row;
     c_dflt_copyright_Remove(row); // remove copyright from index c_dflt_copyright
     ind_copyright_Remove(row); // remove copyright from index ind_copyright
+    bh_copyright_Remove(row); // remove copyright from index bh_copyright
 }
 
 // --- src_hdr.trace..Print
@@ -304,7 +322,7 @@ static void src_hdr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'75d7aed238629cf14dd7cdb7e480666e8a15ba85'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'eedf70958929d3625b0910fd6de7b646dce50d54'");
 }
 
 // --- src_hdr.FDb._db.StaticCheck
@@ -1768,6 +1786,10 @@ bool src_hdr::copyright_XrefMaybe(src_hdr::FCopyright &row) {
             return false;
         }
     }
+    // insert copyright into index bh_copyright
+    if (true) { // user-defined insert condition
+        bh_copyright_Insert(row);
+    }
     return retval;
 }
 
@@ -1876,6 +1898,181 @@ void src_hdr::ind_copyright_Reserve(int n) {
     }
 }
 
+// --- src_hdr.FDb.bh_copyright.Dealloc
+// Remove all elements from heap and free memory used by the array.
+void src_hdr::bh_copyright_Dealloc() {
+    bh_copyright_RemoveAll();
+    algo_lib::malloc_FreeMem(_db.bh_copyright_elems, sizeof(src_hdr::FCopyright*)*_db.bh_copyright_max);
+    _db.bh_copyright_max   = 0;
+    _db.bh_copyright_elems = NULL;
+}
+
+// --- src_hdr.FDb.bh_copyright.Downheap
+// Find new location for ROW starting at IDX
+// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+static int src_hdr::bh_copyright_Downheap(src_hdr::FCopyright& row, int idx) {
+    src_hdr::FCopyright* *elems = _db.bh_copyright_elems;
+    int n = _db.bh_copyright_n;
+    int child = idx*2+1;
+    while (child < n) {
+        src_hdr::FCopyright* p = elems[child]; // left child
+        int rchild = child+1;
+        if (rchild < n) {
+            src_hdr::FCopyright* q = elems[rchild]; // right child
+            if (bh_copyright_ElemLt(*q,*p)) {
+                child = rchild;
+                p     = q;
+            }
+        }
+        if (!bh_copyright_ElemLt(*p,row)) {
+            break;
+        }
+        p->bh_copyright_idx   = idx;
+        elems[idx]     = p;
+        idx            = child;
+        child          = idx*2+1;
+    }
+    return idx;
+}
+
+// --- src_hdr.FDb.bh_copyright.Insert
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void src_hdr::bh_copyright_Insert(src_hdr::FCopyright& row) {
+    if (LIKELY(row.bh_copyright_idx == -1)) {
+        bh_copyright_Reserve(1);
+        int n = _db.bh_copyright_n;
+        _db.bh_copyright_n = n + 1;
+        int new_idx = bh_copyright_Upheap(row, n);
+        row.bh_copyright_idx = new_idx;
+        _db.bh_copyright_elems[new_idx] = &row;
+    }
+}
+
+// --- src_hdr.FDb.bh_copyright.Reheap
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+i32 src_hdr::bh_copyright_Reheap(src_hdr::FCopyright& row) {
+    int old_idx = row.bh_copyright_idx;
+    bool isnew = old_idx == -1;
+    if (isnew) {
+        bh_copyright_Reserve(1);
+        old_idx = _db.bh_copyright_n++;
+    }
+    int new_idx = bh_copyright_Upheap(row, old_idx);
+    if (!isnew && new_idx == old_idx) {
+        new_idx = bh_copyright_Downheap(row, old_idx);
+    }
+    row.bh_copyright_idx = new_idx;
+    _db.bh_copyright_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- src_hdr.FDb.bh_copyright.ReheapFirst
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+i32 src_hdr::bh_copyright_ReheapFirst() {
+    src_hdr::FCopyright &row = *_db.bh_copyright_elems[0];
+    i32 new_idx = bh_copyright_Downheap(row, 0);
+    row.bh_copyright_idx = new_idx;
+    _db.bh_copyright_elems[new_idx] = &row;
+    return new_idx;
+}
+
+// --- src_hdr.FDb.bh_copyright.Remove
+// Remove element from index. If element is not in index, do nothing.
+void src_hdr::bh_copyright_Remove(src_hdr::FCopyright& row) {
+    if (bh_copyright_InBheapQ(row)) {
+        int old_idx = row.bh_copyright_idx;
+        if (_db.bh_copyright_elems[old_idx] == &row) { // sanity check: heap points back to row
+            row.bh_copyright_idx = -1;           // mark not in heap
+            i32 n = _db.bh_copyright_n - 1; // index of last element in heap
+            _db.bh_copyright_n = n;         // decrease count
+            if (old_idx != n) {
+                src_hdr::FCopyright *elem = _db.bh_copyright_elems[n];
+                int new_idx = bh_copyright_Upheap(*elem, old_idx);
+                if (new_idx == old_idx) {
+                    new_idx = bh_copyright_Downheap(*elem, old_idx);
+                }
+                elem->bh_copyright_idx = new_idx;
+                _db.bh_copyright_elems[new_idx] = elem;
+            }
+        }
+    }
+}
+
+// --- src_hdr.FDb.bh_copyright.RemoveAll
+// Remove all elements from binary heap
+void src_hdr::bh_copyright_RemoveAll() {
+    int n = _db.bh_copyright_n;
+    for (int i = n - 1; i>=0; i--) {
+        _db.bh_copyright_elems[i]->bh_copyright_idx = -1; // mark not-in-heap
+    }
+    _db.bh_copyright_n = 0;
+}
+
+// --- src_hdr.FDb.bh_copyright.RemoveFirst
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+src_hdr::FCopyright* src_hdr::bh_copyright_RemoveFirst() {
+    src_hdr::FCopyright *row = NULL;
+    if (_db.bh_copyright_n > 0) {
+        row = _db.bh_copyright_elems[0];
+        row->bh_copyright_idx = -1;           // mark not in heap
+        i32 n = _db.bh_copyright_n - 1; // index of last element in heap
+        _db.bh_copyright_n = n;         // decrease count
+        if (n) {
+            src_hdr::FCopyright &elem = *_db.bh_copyright_elems[n];
+            int new_idx = bh_copyright_Downheap(elem, 0);
+            elem.bh_copyright_idx = new_idx;
+            _db.bh_copyright_elems[new_idx] = &elem;
+        }
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.bh_copyright.Reserve
+// Reserve space in index for N more elements
+void src_hdr::bh_copyright_Reserve(int n) {
+    i32 old_max = _db.bh_copyright_max;
+    if (UNLIKELY(_db.bh_copyright_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(src_hdr::FCopyright*);
+        u32 new_size = new_max * sizeof(src_hdr::FCopyright*);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.bh_copyright_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("src_hdr.out_of_memory  field:src_hdr.FDb.bh_copyright");
+        }
+        _db.bh_copyright_elems = (src_hdr::FCopyright**)new_mem;
+        _db.bh_copyright_max = new_max;
+    }
+}
+
+// --- src_hdr.FDb.bh_copyright.Upheap
+// Find and return index of new location for element ROW in the heap, starting at index IDX.
+// Move any elements along the way but do not modify ROW.
+static int src_hdr::bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) {
+    src_hdr::FCopyright* *elems = _db.bh_copyright_elems;
+    while (idx>0) {
+        int j = (idx-1)/2;
+        src_hdr::FCopyright* p = elems[j];
+        if (!bh_copyright_ElemLt(row, *p)) {
+            break;
+        }
+        p->bh_copyright_idx = idx;
+        elems[idx] = p;
+        idx = j;
+    }
+    return idx;
+}
+
+// --- src_hdr.FDb.bh_copyright.ElemLt
+inline static bool src_hdr::bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) {
+    (void)_db;
+    return a.sortkey < b.sortkey;
+}
+
 // --- src_hdr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr src_hdr::trace_RowidFind(int t) {
@@ -1886,6 +2083,94 @@ static algo::ImrowPtr src_hdr::trace_RowidFind(int t) {
 // Function return 1
 inline static i32 src_hdr::trace_N() {
     return 1;
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.Add
+static void src_hdr::_db_bh_copyright_curs_Add(_db_bh_copyright_curs &curs, src_hdr::FCopyright& row) {
+    u32 n = curs.temp_n;
+    int i = n;
+    curs.temp_n = n+1;
+    src_hdr::FCopyright* *elems = curs.temp_elems;
+    while (i>0) {
+        int j = (i-1)/2;
+        src_hdr::FCopyright* p = elems[j];
+        if (!bh_copyright_ElemLt(row,*p)) {
+            break;
+        }
+        elems[i]=p;
+        i=j;
+    }
+    elems[i]=&row;
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.Reserve
+void src_hdr::_db_bh_copyright_curs_Reserve(_db_bh_copyright_curs &curs, int n) {
+    if (n > curs.temp_max) {
+        size_t old_size   = sizeof(void*) * curs.temp_max;
+        size_t new_size   = sizeof(void*) * bh_copyright_N();
+        curs.temp_elems   = (src_hdr::FCopyright**)algo_lib::malloc_ReallocMem(curs.temp_elems, old_size, new_size);
+        if (!curs.temp_elems) {
+            algo::FatalErrorExit("src_hdr.cursor_out_of_memory  func:src_hdr.FDb.bh_copyright_curs.Reserve");
+        }
+        curs.temp_max       = bh_copyright_N();
+    }
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.Reset
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void src_hdr::_db_bh_copyright_curs_Reset(_db_bh_copyright_curs &curs, src_hdr::FDb &parent) {
+    curs.parent       = &parent;
+    _db_bh_copyright_curs_Reserve(curs, bh_copyright_N());
+    curs.temp_n = 0;
+    if (parent.bh_copyright_n > 0) {
+        src_hdr::FCopyright &first = *parent.bh_copyright_elems[0];
+        curs.temp_elems[0] = &first; // insert first element in heap
+        curs.temp_n = 1;
+    }
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.Next
+// Advance cursor.
+void src_hdr::_db_bh_copyright_curs_Next(_db_bh_copyright_curs &curs) {
+    src_hdr::FCopyright* *elems = curs.temp_elems;
+    int n = curs.temp_n;
+    if (n > 0) {
+        // remove top element from heap
+        src_hdr::FCopyright* dead = elems[0];
+        int i       = 0;
+        src_hdr::FCopyright* last = curs.temp_elems[n-1];
+        // downheap last elem
+        do {
+            src_hdr::FCopyright* choose = last;
+            int l         = i*2+1;
+            if (l<n) {
+                src_hdr::FCopyright* el = elems[l];
+                int r     = l+1;
+                r        -= r==n;
+                src_hdr::FCopyright* er = elems[r];
+                if (bh_copyright_ElemLt(*er,*el)) {
+                    el  = er;
+                    l   = r;
+                }
+                bool b = bh_copyright_ElemLt(*el,*last);
+                if (b) choose = el;
+                if (!b) l = n;
+            }
+            elems[i] = choose;
+            i = l;
+        } while (i < n);
+        curs.temp_n = n-1;
+        int index = dead->bh_copyright_idx;
+        i = (index*2+1);
+        if (i < bh_copyright_N()) {
+            src_hdr::FCopyright &elem = *curs.parent->bh_copyright_elems[i];
+            _db_bh_copyright_curs_Add(curs, elem);
+        }
+        if (i+1 < bh_copyright_N()) {
+            src_hdr::FCopyright &elem = *curs.parent->bh_copyright_elems[i + 1];
+            _db_bh_copyright_curs_Add(curs, elem);
+        }
+    }
 }
 
 // --- src_hdr.FDb..Init
@@ -2012,6 +2297,9 @@ void src_hdr::FDb_Init() {
         FatalErrorExit("out of memory"); // (src_hdr.FDb.ind_copyright)
     }
     memset(_db.ind_copyright_buckets_elems, 0, sizeof(src_hdr::FCopyright*)*_db.ind_copyright_buckets_n); // (src_hdr.FDb.ind_copyright)
+    _db.bh_copyright_max   	= 0; // (src_hdr.FDb.bh_copyright)
+    _db.bh_copyright_n     	= 0; // (src_hdr.FDb.bh_copyright)
+    _db.bh_copyright_elems 	= NULL; // (src_hdr.FDb.bh_copyright)
 
     src_hdr::InitReflection();
 }
@@ -2019,6 +2307,9 @@ void src_hdr::FDb_Init() {
 // --- src_hdr.FDb..Uninit
 void src_hdr::FDb_Uninit() {
     src_hdr::FDb &row = _db; (void)row;
+
+    // src_hdr.FDb.bh_copyright.Uninit (Bheap)  //
+    // skip destruction in global scope
 
     // src_hdr.FDb.ind_copyright.Uninit (Thash)  //
     // skip destruction of ind_copyright in global scope

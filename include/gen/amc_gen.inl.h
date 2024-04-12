@@ -215,7 +215,7 @@ inline void amc::Enumstr_Init(amc::Enumstr& parent) {
 }
 
 // --- amc.Enumstr..Eq
-inline bool amc::Enumstr_Eq(const amc::Enumstr& lhs, const amc::Enumstr& rhs) {
+inline bool amc::Enumstr_Eq(amc::Enumstr& lhs, amc::Enumstr& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.len, rhs.len);
     if (!retval) {
@@ -5595,8 +5595,7 @@ inline i32 amc::tclass_N() {
 // --- amc.FDb.tclass.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline amc::FTclass& amc::tclass_qFind(u64 t) {
-    u64 idx = t;
-    return reinterpret_cast<amc::FTclass*>(_db.tclass_data)[idx];
+    return reinterpret_cast<amc::FTclass*>(_db.tclass_data)[u64(t)];
 }
 
 // --- amc.FDb.tclass.rowid_Get
@@ -13293,7 +13292,7 @@ inline amc::Funcarg* amc::funcarg_Find(amc::FFunc& func, u64 t) {
 
 // --- amc.FFunc.funcarg.Getary
 // Return array pointer by value
-inline algo::aryptr<amc::Funcarg> amc::funcarg_Getary(amc::FFunc& func) {
+inline algo::aryptr<amc::Funcarg> amc::funcarg_Getary(const amc::FFunc& func) {
     return algo::aryptr<amc::Funcarg>(func.funcarg_elems, func.funcarg_n);
 }
 
@@ -14008,7 +14007,7 @@ inline algo::cstring* amc::include_Find(amc::FNs& ns, u64 t) {
 
 // --- amc.FNs.include.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> amc::include_Getary(amc::FNs& ns) {
+inline algo::aryptr<algo::cstring> amc::include_Getary(const amc::FNs& ns) {
     return algo::aryptr<algo::cstring>(ns.include_elems, ns.include_n);
 }
 
@@ -15956,11 +15955,11 @@ inline amc::Funcarg::Funcarg() {
 
 // --- amc.Funcarg..Init
 // Set all fields to initial values.
-inline void amc::Funcarg_Init(amc::Funcarg& funcarg) {
-    funcarg.retval = bool(false);
-    funcarg.initialized = bool(false);
-    funcarg.indent = bool(false);
-    funcarg.typearg = bool(false);
+inline void amc::Funcarg_Init(amc::Funcarg& parent) {
+    parent.retval = bool(false);
+    parent.initialized = bool(false);
+    parent.indent = bool(false);
+    parent.typearg = bool(false);
 }
 inline amc::Genpnew::Genpnew() {
     amc::Genpnew_Init(*this);

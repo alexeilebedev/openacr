@@ -107,8 +107,7 @@ void                 trace_Print(lib_json::trace& row, algo::cstring& str) __att
 // --- lib_json.FDb
 // create: lib_json.FDb._db (Global)
 struct FDb { // lib_json.FDb: In-memory database for lib_json
-    lpool_Lpblock*      lpool_free[31];             // Lpool levels
-    u32                 lpool_lock;                 // Lpool lock
+    lpool_Lpblock*      lpool_free[36];             // Lpool levels
     u64                 node_blocksize;             // # bytes per block
     lib_json::FNode*    node_free;                  //
     lib_json::FNode**   ind_objfld_buckets_elems;   // pointer to bucket array
@@ -119,20 +118,33 @@ struct FDb { // lib_json.FDb: In-memory database for lib_json
 
 // Free block of memory previously returned by Lpool.
 // func:lib_json.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:lib_json.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:lib_json.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:lib_json.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_json.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_json.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:lib_json.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // func:lib_json.FDb._db.StaticCheck
 void                 StaticCheck();
@@ -251,7 +263,7 @@ i32                  FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __
 // func:lib_json.FldKey..Init
 void                 FldKey_Init(lib_json::FldKey& parent);
 // func:lib_json.FldKey..Eq
-bool                 FldKey_Eq(const lib_json::FldKey& lhs, const lib_json::FldKey& rhs) __attribute__((nothrow));
+bool                 FldKey_Eq(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:lib_json.FldKey..Update
 bool                 FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
@@ -485,7 +497,7 @@ bool                 value_ReadStrptrMaybe(lib_json::FieldId& parent, algo::strp
 // Read fields of lib_json::FieldId from an ascii string.
 // The format of the string is the format of the lib_json::FieldId's only field
 // func:lib_json.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_json.FieldId..Init
 void                 FieldId_Init(lib_json::FieldId& parent);

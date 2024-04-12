@@ -326,11 +326,14 @@ int                  job_Exec(atf_nrun::FEntry& fentry) __attribute__((nothrow))
 // func:atf_nrun.FEntry.job.ExecX
 void                 job_ExecX(atf_nrun::FEntry& fentry);
 // Call execv()
-// Call execv with specified parameters -- cprint:bash.Argv
+// Call execv with specified parameters
 // func:atf_nrun.FEntry.job.Execv
 int                  job_Execv(atf_nrun::FEntry& fentry) __attribute__((nothrow));
 // func:atf_nrun.FEntry.job.ToCmdline
 algo::tempstr        job_ToCmdline(atf_nrun::FEntry& fentry) __attribute__((nothrow));
+// Form array from the command line
+// func:atf_nrun.FEntry.job.ToArgv
+void                 job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_nrun.FEntry..Init
@@ -379,7 +382,7 @@ bool                 value_ReadStrptrMaybe(atf_nrun::FieldId& parent, algo::strp
 // Read fields of atf_nrun::FieldId from an ascii string.
 // The format of the string is the format of the atf_nrun::FieldId's only field
 // func:atf_nrun.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_nrun.FieldId..Init
 void                 FieldId_Init(atf_nrun::FieldId& parent);

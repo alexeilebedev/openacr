@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -704,8 +704,8 @@ void amc::tfunc_Ctype_Eq() {
         Set(R, "$Ctype", ctype.ctype);
         amc::FFunc& opeq = amc::CreateCurFunc(true);
         AddRetval(opeq,"bool","retval","true");
-        AddProtoArg(opeq, ByvalArgtype(ctype,true), "lhs");
-        AddProtoArg(opeq, ByvalArgtype(ctype,true), "rhs");
+        AddProtoArg(opeq, ByvalArgtype(ctype,false), "lhs");
+        AddProtoArg(opeq, ByvalArgtype(ctype,false), "rhs");
         opeq.extrn = ctype.c_ccmp->extrn;
         opeq.inl = c_datafld_N(ctype) < 4;
         bool need_test = false;
@@ -769,90 +769,6 @@ void amc::tfunc_Ctype_EqStrptr() {
                 Ins(&R, func.body, "return algo::strptr_Eq($name_Getary(lhs), rhs);");
             } else {
                 vrfy(0,"error");
-            }
-        }ind_end;
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-void amc::tfunc_Ctype_PrintArgv() {
-    algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
-
-    bool has_print = HasArgvPrintQ(ctype);
-    bool gnu = false;
-    ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
-        if (cfmt.print && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_ArgvGnu) {
-            gnu=true;
-        }
-    }ind_end;
-
-    if (has_print) {
-        Set(R, "$Cpptype",    ctype.cpp_type);
-        Set(R, "$Ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
-        Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-    }
-
-    if (has_print) {
-        ind_beg(amc::ctype_c_field_curs, field,ctype) {
-            vrfy(field.reftype == dmmeta_Reftype_reftype_Val
-                 || field.reftype == dmmeta_Reftype_reftype_Regx
-                 || field.reftype == dmmeta_Reftype_reftype_Tary
-                 ,Subst(R,"Only field reftype:Val,Pkey,RegxSql,Tary are supported for $Ctype.PrintArgv"));
-            vrfy(!field.c_fbigend,Subst(R,"Big-endian is not supported for $Ctype.PrintArgv"));
-        }ind_end;
-    }
-
-    if (has_print) {
-        amc::FFunc& prnargv = amc::CreateCurFunc();
-        Ins(&R, prnargv.ret    , "void",false);
-        Ins(&R, prnargv.proto  , "$Name_PrintArgv($ByvalArgtype row, algo::cstring &str)",false);
-        Ins(&R, prnargv.comment, "print command-line args of $Cpptype to string  -- cprint:$Ctype.Argv");
-        Ins(&R, prnargv.body   , "algo::tempstr temp;");
-        Ins(&R, prnargv.body   , "(void)temp;");
-        Ins(&R, prnargv.body   , "(void)row;");
-        Ins(&R, prnargv.body   , "(void)str;");
-        ind_beg(amc::ctype_c_field_curs, field,ctype) if (!FldfuncQ(field)) {
-            amc::FCtype& valtype = *(field).p_arg;
-            if (gnu) {
-                if (ch_N(name_Get(field)) > 1) {
-                    Set(R, "$Attr", tempstr() << "--" << name_Get(field) << " ");
-                } else {
-                    Set(R, "$Attr", tempstr() << "-" << name_Get(field) << " ");
-                }
-            } else {
-                Set(R, "$Attr", tempstr()<<"-"<<name_Get(field)<<":");
-            }
-            Set(R, "$name", name_Get(field));
-            if (field.reftype == dmmeta_Reftype_reftype_Tary) {
-                Set(R, "$Ftype", name_Get(valtype));
-                Ins(&R, prnargv.body, "ind_beg($Name_$name_curs,value,row) {");
-                Ins(&R, prnargv.body, "    ch_RemoveAll(temp);");
-                Ins(&R, prnargv.body, "    $Ftype_Print(value, temp);");
-                Ins(&R, prnargv.body, "    str << \" $Attr\";");
-                Ins(&R, prnargv.body, "    strptr_PrintBash(temp,str);");
-                Ins(&R, prnargv.body, "}ind_end;");
-            } else {
-                tempstr text;
-                Ins(&R, text,"ch_RemoveAll(temp);");
-                // TODO: this function must be shared with the Tuple version!
-                if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
-                    if (func->ismacro) {// inline the function!
-                        Ins(&R, text, func->body, false);
-                    } else {
-                        Set(R, "$fns", ns_Get(*field.p_ctype));
-                        Ins(&R, text, "$fns::$name_Print(const_cast<$Cpptype&>(row), temp);");
-                    }
-                } else {
-                    Set(R, "$Ftype", name_Get(valtype));
-                    Ins(&R, text,"$Ftype_Print(row.$name, temp);");
-                }
-                Ins(&R, text,"str << \" $Attr\";");
-                Ins(&R, text,"strptr_PrintBash(temp,str);");
-                bool canskip = !field.c_anonfld; // anonymous fields must be printed or meaning of command can change
-                prnargv.body << CheckDfltExpr(field,text,canskip);
             }
         }ind_end;
     }
@@ -951,7 +867,7 @@ void amc::tfunc_Ctype_NArgs() {
 void amc::tfunc_Ctype_Print() {
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
     ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
-        if (cfmt.print && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_String) {
+        if (cfmt.print) {
             GenPrint(ctype,cfmt);
         }
     }ind_end;
@@ -959,9 +875,13 @@ void amc::tfunc_Ctype_Print() {
 
 // -----------------------------------------------------------------------------
 
-void amc::tfunc_Ctype_FmtJson() {
+void amc::tfunc_Ctype_Read() {
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
-    GenFmtJson(ctype);
+    ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) {
+        if (cfmt.read) {
+            GenRead(ctype,cfmt);
+        }
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -1045,7 +965,7 @@ void amc::tfunc_Ctype_GetMsgLength() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
     if (ctype.c_lenfld) {
-        amc::FFunc& func = amc::CreateCurFunc(true);
+        amc::FFunc& func = amc::CreateCurFunc(true, "GetMsgLength");
         AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "parent");
         AddRetval(func, "i32", "", "");
         func.glob = true;
@@ -1061,7 +981,7 @@ void amc::tfunc_Ctype_GetMsgMemptr() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
     if (ctype.c_lenfld) {
-        amc::FFunc& func = amc::CreateCurFunc(true); {
+        amc::FFunc& func = amc::CreateCurFunc(true, "GetMsgMemptr"); {
             AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "row");
             AddRetval(func, "algo::memptr", "", "");
             func.glob = true;

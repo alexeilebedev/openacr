@@ -100,6 +100,11 @@ struct FDb { // acr_my.FDb: In-memory database for acr_my
     acr_my::trace         trace;               //
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_my.FDb.ary_ns.Addary
+algo::aryptr<algo::cstring> ary_ns_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr_my.FDb.ary_ns.Alloc
@@ -155,6 +160,11 @@ u64                  ary_ns_rowid_Get(algo::cstring &elem) __attribute__((nothro
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_my.FDb.ary_ns.AllocNVal
 algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:acr_my.FDb.ary_ns.ReadStrptrMaybe
+bool                 ary_ns_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
@@ -412,7 +422,7 @@ bool                 value_ReadStrptrMaybe(acr_my::FieldId& parent, algo::strptr
 // Read fields of acr_my::FieldId from an ascii string.
 // The format of the string is the format of the acr_my::FieldId's only field
 // func:acr_my.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_my.FieldId..Init
 void                 FieldId_Init(acr_my::FieldId& parent);
@@ -460,7 +470,7 @@ bool                 value_ReadStrptrMaybe(acr_my::TableId& parent, algo::strptr
 // Read fields of acr_my::TableId from an ascii string.
 // The format of the string is the format of the acr_my::TableId's only field
 // func:acr_my.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_my.TableId..Init
 void                 TableId_Init(acr_my::TableId& parent);

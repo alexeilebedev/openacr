@@ -1,6 +1,6 @@
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -304,6 +304,10 @@ const algo::UnTime algo::LocalDate(UnTime in) {
     return ToUnTime(t);
 }
 
+algo::UnDiff algo::StripDate(UnTime t) {
+    return t - LocalDate(t);
+}
+
 // -----------------------------------------------------------------------------
 
 algo::TimeStruct algo::GetGMTimeStruct(algo::UnTime U) {
@@ -409,16 +413,6 @@ const algo::UnTime algo::DateCache_LocalDate(algo::DateCache &dc, UnTime in) {
 
 // -----------------------------------------------------------------------------
 
-// Todo: test on windows
-algo::UnTime algo::CurrUnTime() {
-    UnTime ret;
-    struct timeval tv;
-    ZeroBytes(tv);
-    gettimeofday(&tv,NULL);
-    ret.value = (i64(tv.tv_sec) * 1000000 + tv.tv_usec) * 1000;
-    return ret;
-}
-
 // -----------------------------------------------------------------------------
 
 algo::UnTime algo::ToUnTime(WTime s) {
@@ -432,6 +426,21 @@ algo::UnTime algo::ToUnTime(WTime s) {
         result = (s.value - WTIME_OFFSET) * multiplier;
     }
     return UnTime(result);
+}
+
+// -----------------------------------------------------------------------------
+
+algo::UnTime algo::ParseUnTime(StringIter &s, const algo::strptr spec) {
+    TimeStruct ts;
+    const bool ok = algo::TimeStruct_Read(ts, s, spec);
+    if(ok == false) {
+        return {};
+    }
+    return ToUnTime(ts);
+}
+algo::UnTime algo::ParseUnTime(const algo::strptr& s, const algo::strptr spec) {
+    StringIter si(s);
+    return ParseUnTime(si, spec);
 }
 
 // -----------------------------------------------------------------------------

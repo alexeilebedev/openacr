@@ -196,14 +196,14 @@ namespace acr { // gen:ns_print_proto
 
 // --- acr.AttrRegx.name.Print
 // Print back to string
-void acr::name_Print(acr::AttrRegx& where, algo::cstring &out) {
-    Regx_Print(where.name, out);
+void acr::name_Print(acr::AttrRegx& parent, algo::cstring &out) {
+    Regx_Print(parent.name, out);
 }
 
 // --- acr.AttrRegx.value.Print
 // Print back to string
-void acr::value_Print(acr::AttrRegx& where, algo::cstring &out) {
-    Regx_Print(where.value, out);
+void acr::value_Print(acr::AttrRegx& parent, algo::cstring &out) {
+    Regx_Print(parent.value, out);
 }
 
 // --- acr.AttrRegx..Print
@@ -236,7 +236,7 @@ void acr::Err_Print(acr::Err& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "acr.Err";
 
-    u64_PrintHex(u64((const acr::FCtype*)row.ctype), temp, 8, true);
+    u64_PrintHex(u64(row.ctype), temp, 8, true);
     PrintAttrSpaceReset(str,"ctype", temp);
 
     u32_Print(row.id, temp);
@@ -245,10 +245,10 @@ void acr::Err_Print(acr::Err& row, algo::cstring& str) {
     algo::cstring_Print(row.text, temp);
     PrintAttrSpaceReset(str,"text", temp);
 
-    u64_PrintHex(u64((const acr::FRec*)row.rec), temp, 8, true);
+    u64_PrintHex(u64(row.rec), temp, 8, true);
     PrintAttrSpaceReset(str,"rec", temp);
 
-    u64_PrintHex(u64((const acr::FField*)row.fld), temp, 8, true);
+    u64_PrintHex(u64(row.fld), temp, 8, true);
     PrintAttrSpaceReset(str,"fld", temp);
 }
 
@@ -399,6 +399,25 @@ void acr::c_bad_rec_Reserve(acr::FCheck& check, u32 n) {
     }
 }
 
+// --- acr.FCheck.ary_name.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr::ary_name_Addary(acr::FCheck& check, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= check.ary_name_elems && rhs.elems < check.ary_name_elems + check.ary_name_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr.tary_alias  field:acr.FCheck.ary_name  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_name_Reserve(check, nnew); // reserve space
+    int at = check.ary_name_n;
+    for (int i = 0; i < nnew; i++) {
+        new (check.ary_name_elems + at + i) algo::cstring(rhs[i]);
+        check.ary_name_n++;
+    }
+    return algo::aryptr<algo::cstring>(check.ary_name_elems + at, nnew);
+}
+
 // --- acr.FCheck.ary_name.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -502,6 +521,14 @@ void acr::ary_name_Setary(acr::FCheck& check, acr::FCheck &rhs) {
     }
 }
 
+// --- acr.FCheck.ary_name.Setary2
+// Copy specified array into ary_name, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void acr::ary_name_Setary(acr::FCheck& check, const algo::aryptr<algo::cstring> &rhs) {
+    ary_name_RemoveAll(check);
+    ary_name_Addary(check, rhs);
+}
+
 // --- acr.FCheck.ary_name.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> acr::ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) {
@@ -514,6 +541,20 @@ algo::aryptr<algo::cstring> acr::ary_name_AllocNVal(acr::FCheck& check, int n_el
     }
     check.ary_name_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr.FCheck.ary_name.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr::ary_name_ReadStrptrMaybe(acr::FCheck& check, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = ary_name_Alloc(check);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_name_RemoveLast(check);
+    }
+    return retval;
 }
 
 // --- acr.FCheck..Uninit
@@ -6365,7 +6406,7 @@ i32 acr::RecSortkey_Cmp(acr::RecSortkey& lhs, acr::RecSortkey& rhs) {
 }
 
 // --- acr.RecSortkey..Eq
-bool acr::RecSortkey_Eq(const acr::RecSortkey& lhs, const acr::RecSortkey& rhs) {
+bool acr::RecSortkey_Eq(acr::RecSortkey& lhs, acr::RecSortkey& rhs) {
     bool retval = true;
     retval = algo::Smallstr100_Eq(lhs.ctype, rhs.ctype);
     if (!retval) {
@@ -6423,7 +6464,7 @@ i32 acr::PlineKey_Cmp(acr::PlineKey& lhs, acr::PlineKey& rhs) {
 }
 
 // --- acr.PlineKey..Eq
-bool acr::PlineKey_Eq(const acr::PlineKey& lhs, const acr::PlineKey& rhs) {
+bool acr::PlineKey_Eq(acr::PlineKey& lhs, acr::PlineKey& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.alldep, rhs.alldep);
     if (!retval) {
@@ -6973,15 +7014,6 @@ void acr::where_AbsReserve(acr::FQuery& query, int n) {
     }
 }
 
-// --- acr.FQuery.where.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool acr::where_XrefMaybe(acr::AttrRegx &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
-}
-
 // --- acr.FQuery.ssimfile.Print
 // Print back to string
 void acr::ssimfile_Print(acr::FQuery& query, algo::cstring &out) {
@@ -7267,6 +7299,14 @@ void acr::FQuery_Print(acr::FQuery& row, algo::cstring& str) {
     acr::AttrRegx_Print(row.query, temp);
     PrintAttrSpaceReset(str,"query", temp);
 
+    ind_beg(query_where_curs,where,row) {
+        acr::AttrRegx_Print(where, temp);
+        tempstr name;
+        name << "where.";
+        name << ind_curs(where).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+
     algo::cstring_Print(row.new_val, temp);
     PrintAttrSpaceReset(str,"new_val", temp);
 
@@ -7396,7 +7436,7 @@ void acr::FRec_Print(acr::FRec& row, algo::cstring& str) {
     acr::RecSortkey_Print(row.sortkey, temp);
     PrintAttrSpaceReset(str,"sortkey", temp);
 
-    u64_PrintHex(u64((const acr::FPline*)row.c_pline), temp, 8, true);
+    u64_PrintHex(u64(row.c_pline), temp, 8, true);
     PrintAttrSpaceReset(str,"c_pline", temp);
 
     i32_Print(row.lineno, temp);

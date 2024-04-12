@@ -232,10 +232,10 @@ void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) {
 
 // --- amc_vis.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void amc_vis::lpool_FreeMem(void *mem, u64 size) {
-    if (mem) {
-        size = u64_Max(size,16); // enforce alignment
-        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
+void amc_vis::lpool_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -245,37 +245,40 @@ void amc_vis::lpool_FreeMem(void *mem, u64 size) {
 // --- amc_vis.FDb.lpool.AllocMem
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 void* amc_vis::lpool_AllocMem(u64 size) {
-    size     = u64_Max(size,16); // enforce alignment
-    u64 cell = algo::u64_BitScanReverse(size-1)+1;
-    u64 i    = cell;
-    u8 *retval = NULL;
-    // try to find a block that's at least as large as required.
-    // if found, remove from free list
-    for (; i < 31; i++) {
-        lpool_Lpblock *blk = _db.lpool_free[i];
-        if (blk) {
-            _db.lpool_free[i] = blk->next;
-            retval = (u8*)blk;
-            break;
+    void *retval = NULL;
+    size     = u64_Max(size,1<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (cell < 36) {
+        u64 i    = cell;
+        // try to find a block that's at least as large as required.
+        // if found, remove from free list
+        for (; i < 36; i++) {
+            lpool_Lpblock *blk = _db.lpool_free[i];
+            if (blk) {
+                _db.lpool_free[i] = blk->next;
+                retval = blk;
+                break;
+            }
         }
-    }
-    // if suitable size block is not found, create a new one
-    // by requesting a block from the base allocator.
-    if (UNLIKELY(!retval)) {
-        i = u64_Max(cell, 21); // 2MB min -- allow huge page to be used
-        retval = (u8*)algo_lib::sbrk_AllocMem(1<<i);
-    }
-    if (LIKELY(retval)) {
-        // if block is more than 2x as large as needed, return the upper half to the free
-        // list (repeatedly). meanwhile, retval doesn't change.
-        while (i > cell) {
-            i--;
-            int half = 1<<i;
-            lpool_Lpblock *blk = (lpool_Lpblock*)(retval + half);
-            blk->next = _db.lpool_free[i];
-            _db.lpool_free[i] = blk;
+        // if suitable size block is not found, create a new one
+        // by requesting a block from the base allocator.
+        if (UNLIKELY(!retval)) {
+            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
+            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(retval)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, retval doesn't change.
+            while (i > cell) {
+                i--;
+                int half = 1ULL<<(i+4);
+                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
+                blk->next = _db.lpool_free[i];
+                _db.lpool_free[i] = blk;
+            }
         }
     }
     return retval;
@@ -283,19 +286,22 @@ void* amc_vis::lpool_AllocMem(u64 size) {
 
 // --- amc_vis.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-bool amc_vis::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+bool amc_vis::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 16);
-    for (int i = 0; i < nbuf; i++) {
-        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
-        u64     size = 1ULL<<cell;
-        lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-        if (temp == NULL) {
-            retval = false;
-            break;// why continue?
-        } else {
-            temp->next = _db.lpool_free[cell];
-            _db.lpool_free[cell] = temp;
+    bufsize = u64_Max(bufsize, 1<<4);
+    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
+    if (cell < 36) {
+        for (u64 i = 0; i < nbuf; i++) {
+            u64 size = 1ULL<<(cell+4);
+            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
+            if (temp == NULL) {
+                retval = false;
+                break;// why continue?
+            } else {
+                temp->next = _db.lpool_free[cell];
+                _db.lpool_free[cell] = temp;
+            }
         }
     }
     return retval;
@@ -303,10 +309,11 @@ bool amc_vis::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
 
 // --- amc_vis.FDb.lpool.ReallocMem
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
-void* amc_vis::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
-    void* ret = oldmem;
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* amc_vis::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
         if (ret && oldmem) {
@@ -315,6 +322,34 @@ void* amc_vis::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
         }
     }
     return ret;
+}
+
+// --- amc_vis.FDb.lpool.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u8& amc_vis::lpool_Alloc() {
+    u8* row = lpool_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.lpool  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc_vis.FDb.lpool.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u8* amc_vis::lpool_AllocMaybe() {
+    u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
+    if (row) {
+        new (row) u8; // call constructor
+    }
+    return row;
+}
+
+// --- amc_vis.FDb.lpool.Delete
+// Remove row from all global and cross indices, then deallocate row
+void amc_vis::lpool_Delete(u8 &row) {
+    int length = sizeof(u8);
+    lpool_FreeMem(&row, length);
 }
 
 // --- amc_vis.FDb.ctype.Alloc
@@ -2775,7 +2810,6 @@ void amc_vis::_db_bh_link_curs_Next(_db_bh_link_curs &curs) {
 // --- amc_vis.FDb..Init
 // Set all fields to initial values.
 void amc_vis::FDb_Init() {
-    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry ctype (amc_vis.FDb.ctype)
     _db.ctype_n = 0;
@@ -3847,6 +3881,23 @@ void amc_vis::Linkdep_Print(amc_vis::Linkdep& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"inst", temp);
 }
 
+// --- amc_vis.Outrow.text.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u8> amc_vis::text_Addary(amc_vis::Outrow& outrow, algo::aryptr<u8> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= outrow.text_elems && rhs.elems < outrow.text_elems + outrow.text_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("amc_vis.tary_alias  field:amc_vis.Outrow.text  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    text_Reserve(outrow, nnew); // reserve space
+    int at = outrow.text_n;
+    memcpy(outrow.text_elems + at, rhs.elems, nnew * sizeof(u8));
+    outrow.text_n += nnew;
+    return algo::aryptr<u8>(outrow.text_elems + at, nnew);
+}
+
 // --- amc_vis.Outrow.text.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -3924,6 +3975,13 @@ void amc_vis::text_AbsReserve(amc_vis::Outrow& outrow, int n) {
     }
 }
 
+// --- amc_vis.Outrow.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void amc_vis::text_Print(amc_vis::Outrow& outrow, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(text_Getary(outrow));
+}
+
 // --- amc_vis.Outrow.text.Setary
 // Copy contents of RHS to PARENT.
 void amc_vis::text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) {
@@ -3932,6 +3990,14 @@ void amc_vis::text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) {
     text_Reserve(outrow, nnew); // reserve space
     memcpy(outrow.text_elems, rhs.text_elems, nnew * sizeof(u8));
     outrow.text_n = nnew;
+}
+
+// --- amc_vis.Outrow.text.Setary2
+// Copy specified array into text, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void amc_vis::text_Setary(amc_vis::Outrow& outrow, const algo::aryptr<u8> &rhs) {
+    text_RemoveAll(outrow);
+    text_Addary(outrow, rhs);
 }
 
 // --- amc_vis.Outrow.text.AllocNVal
@@ -3944,6 +4010,15 @@ algo::aryptr<u8> amc_vis::text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, c
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     outrow.text_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- amc_vis.Outrow.text.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool amc_vis::text_ReadStrptrMaybe(amc_vis::Outrow& outrow, algo::strptr in_str) {
+    bool retval = true;
+    text_RemoveAll(outrow);
+    text_Addary(outrow,algo::strptr_ToMemptr(in_str));
+    return retval;
 }
 
 // --- amc_vis.Outrow..Uninit
@@ -3966,6 +4041,9 @@ void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) {
 
     i32_Print(row.rowid, temp);
     PrintAttrSpaceReset(str,"rowid", temp);
+
+    amc_vis::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
 }
 
 // --- amc_vis.TableId.value.ToCstr

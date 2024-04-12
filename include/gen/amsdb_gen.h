@@ -93,7 +93,7 @@ bool                 value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr 
 // Read fields of amsdb::FieldId from an ascii string.
 // The format of the string is the format of the amsdb::FieldId's only field
 // func:amsdb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.FieldId..Init
 void                 FieldId_Init(amsdb::FieldId& parent);
@@ -115,7 +115,7 @@ bool                 ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strp
 // Read fields of amsdb::ProcType from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amsdb.ProcType..ReadStrptrMaybe
-bool                 ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str);
+bool                 ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.ProcType..Init
 void                 ProcType_Init(amsdb::ProcType& parent);
@@ -137,7 +137,7 @@ bool                 StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::
 // Read fields of amsdb::StreamType from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amsdb.StreamType..ReadStrptrMaybe
-bool                 StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str);
+bool                 StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amsdb.StreamType.String  printfmt:Tuple
 // func:amsdb.StreamType..Print

@@ -368,6 +368,25 @@ bool mysql2ssim::_db_XrefMaybe() {
     return retval;
 }
 
+// --- mysql2ssim.FDb.table_names.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> mysql2ssim::table_names_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.table_names_elems && rhs.elems < _db.table_names_elems + _db.table_names_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.table_names  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    table_names_Reserve(nnew); // reserve space
+    int at = _db.table_names_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.table_names_elems + at + i) algo::cstring(rhs[i]);
+        _db.table_names_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.table_names_elems + at, nnew);
+}
+
 // --- mysql2ssim.FDb.table_names.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -471,6 +490,39 @@ algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNVal(int n_elems, const
     }
     _db.table_names_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- mysql2ssim.FDb.table_names.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool mysql2ssim::table_names_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = table_names_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        table_names_RemoveLast();
+    }
+    return retval;
+}
+
+// --- mysql2ssim.FDb.in_tables.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.in_tables_elems && rhs.elems < _db.in_tables_elems + _db.in_tables_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.in_tables  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    in_tables_Reserve(nnew); // reserve space
+    int at = _db.in_tables_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.in_tables_elems + at + i) algo::cstring(rhs[i]);
+        _db.in_tables_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.in_tables_elems + at, nnew);
 }
 
 // --- mysql2ssim.FDb.in_tables.Alloc
@@ -578,6 +630,20 @@ algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNVal(int n_elems, const a
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- mysql2ssim.FDb.in_tables.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool mysql2ssim::in_tables_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = in_tables_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        in_tables_RemoveLast();
+    }
+    return retval;
+}
+
 // --- mysql2ssim.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr mysql2ssim::trace_RowidFind(int t) {
@@ -618,6 +684,25 @@ void mysql2ssim::FDb_Uninit() {
     table_names_RemoveAll();
     // free memory for Tary mysql2ssim.FDb.table_names
     algo_lib::malloc_FreeMem(_db.table_names_elems, sizeof(algo::cstring)*_db.table_names_max); // (mysql2ssim.FDb.table_names)
+}
+
+// --- mysql2ssim.FTobltin.vals.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> mysql2ssim::vals_Addary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.vals_elems && rhs.elems < parent.vals_elems + parent.vals_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FTobltin.vals  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    vals_Reserve(parent, nnew); // reserve space
+    int at = parent.vals_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.vals_elems + at + i) algo::cstring(rhs[i]);
+        parent.vals_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.vals_elems + at, nnew);
 }
 
 // --- mysql2ssim.FTobltin.vals.Alloc
@@ -723,6 +808,14 @@ void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin 
     }
 }
 
+// --- mysql2ssim.FTobltin.vals.Setary2
+// Copy specified array into vals, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, const algo::aryptr<algo::cstring> &rhs) {
+    vals_RemoveAll(parent);
+    vals_Addary(parent, rhs);
+}
+
 // --- mysql2ssim.FTobltin.vals.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) {
@@ -735,6 +828,20 @@ algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& par
     }
     parent.vals_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- mysql2ssim.FTobltin.vals.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool mysql2ssim::vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = vals_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        vals_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- mysql2ssim.FTobltin..Uninit

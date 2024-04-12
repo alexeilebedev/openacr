@@ -576,7 +576,7 @@ void gcache::FHeader_Print(gcache::FHeader& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "gcache.FHeader";
 
-    u64_PrintHex(u64((const gcache::FHeader*)row.parent), temp, 8, true);
+    u64_PrintHex(u64(row.parent), temp, 8, true);
     PrintAttrSpaceReset(str,"parent", temp);
 
     algo::cstring_Print(row.name, temp);

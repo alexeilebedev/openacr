@@ -58,10 +58,10 @@ void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
 
 // --- lib_json.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void lib_json::lpool_FreeMem(void *mem, u64 size) {
-    if (mem) {
-        size = u64_Max(size,16); // enforce alignment
-        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
+void lib_json::lpool_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -71,37 +71,40 @@ void lib_json::lpool_FreeMem(void *mem, u64 size) {
 // --- lib_json.FDb.lpool.AllocMem
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 void* lib_json::lpool_AllocMem(u64 size) {
-    size     = u64_Max(size,16); // enforce alignment
-    u64 cell = algo::u64_BitScanReverse(size-1)+1;
-    u64 i    = cell;
-    u8 *retval = NULL;
-    // try to find a block that's at least as large as required.
-    // if found, remove from free list
-    for (; i < 31; i++) {
-        lpool_Lpblock *blk = _db.lpool_free[i];
-        if (blk) {
-            _db.lpool_free[i] = blk->next;
-            retval = (u8*)blk;
-            break;
+    void *retval = NULL;
+    size     = u64_Max(size,1<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (cell < 36) {
+        u64 i    = cell;
+        // try to find a block that's at least as large as required.
+        // if found, remove from free list
+        for (; i < 36; i++) {
+            lpool_Lpblock *blk = _db.lpool_free[i];
+            if (blk) {
+                _db.lpool_free[i] = blk->next;
+                retval = blk;
+                break;
+            }
         }
-    }
-    // if suitable size block is not found, create a new one
-    // by requesting a block from the base allocator.
-    if (UNLIKELY(!retval)) {
-        i = u64_Max(cell, 21); // 2MB min -- allow huge page to be used
-        retval = (u8*)algo_lib::sbrk_AllocMem(1<<i);
-    }
-    if (LIKELY(retval)) {
-        // if block is more than 2x as large as needed, return the upper half to the free
-        // list (repeatedly). meanwhile, retval doesn't change.
-        while (i > cell) {
-            i--;
-            int half = 1<<i;
-            lpool_Lpblock *blk = (lpool_Lpblock*)(retval + half);
-            blk->next = _db.lpool_free[i];
-            _db.lpool_free[i] = blk;
+        // if suitable size block is not found, create a new one
+        // by requesting a block from the base allocator.
+        if (UNLIKELY(!retval)) {
+            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
+            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(retval)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, retval doesn't change.
+            while (i > cell) {
+                i--;
+                int half = 1ULL<<(i+4);
+                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
+                blk->next = _db.lpool_free[i];
+                _db.lpool_free[i] = blk;
+            }
         }
     }
     return retval;
@@ -109,19 +112,22 @@ void* lib_json::lpool_AllocMem(u64 size) {
 
 // --- lib_json.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-bool lib_json::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+bool lib_json::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 16);
-    for (int i = 0; i < nbuf; i++) {
-        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
-        u64     size = 1ULL<<cell;
-        lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-        if (temp == NULL) {
-            retval = false;
-            break;// why continue?
-        } else {
-            temp->next = _db.lpool_free[cell];
-            _db.lpool_free[cell] = temp;
+    bufsize = u64_Max(bufsize, 1<<4);
+    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
+    if (cell < 36) {
+        for (u64 i = 0; i < nbuf; i++) {
+            u64 size = 1ULL<<(cell+4);
+            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
+            if (temp == NULL) {
+                retval = false;
+                break;// why continue?
+            } else {
+                temp->next = _db.lpool_free[cell];
+                _db.lpool_free[cell] = temp;
+            }
         }
     }
     return retval;
@@ -129,10 +135,11 @@ bool lib_json::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
 
 // --- lib_json.FDb.lpool.ReallocMem
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
-void* lib_json::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
-    void* ret = oldmem;
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* lib_json::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
         if (ret && oldmem) {
@@ -141,6 +148,34 @@ void* lib_json::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
         }
     }
     return ret;
+}
+
+// --- lib_json.FDb.lpool.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u8& lib_json::lpool_Alloc() {
+    u8* row = lpool_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_json.out_of_mem  field:lib_json.FDb.lpool  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_json.FDb.lpool.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u8* lib_json::lpool_AllocMaybe() {
+    u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
+    if (row) {
+        new (row) u8; // call constructor
+    }
+    return row;
+}
+
+// --- lib_json.FDb.lpool.Delete
+// Remove row from all global and cross indices, then deallocate row
+void lib_json::lpool_Delete(u8 &row) {
+    int length = sizeof(u8);
+    lpool_FreeMem(&row, length);
 }
 
 // --- lib_json.FDb._db.InitReflection
@@ -480,7 +515,6 @@ inline static i32 lib_json::trace_N() {
 // --- lib_json.FDb..Init
 // Set all fields to initial values.
 void lib_json::FDb_Init() {
-    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // node: initialize Tpool
     _db.node_free      = NULL;
@@ -512,7 +546,7 @@ void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.FldKey";
 
-    u64_PrintHex(u64((const lib_json::FNode*)row.object), temp, 8, true);
+    u64_PrintHex(u64(row.object), temp, 8, true);
     PrintAttrSpaceReset(str,"object", temp);
 
     algo::strptr_Print(row.field, temp);
@@ -869,10 +903,10 @@ void lib_json::FParser_Print(lib_json::FParser& row, algo::cstring& str) {
     i32_Print(row.ind, temp);
     PrintAttrSpaceReset(str,"ind", temp);
 
-    u64_PrintHex(u64((const lib_json::FNode*)row.node), temp, 8, true);
+    u64_PrintHex(u64(row.node), temp, 8, true);
     PrintAttrSpaceReset(str,"node", temp);
 
-    u64_PrintHex(u64((const lib_json::FNode*)row.root_node), temp, 8, true);
+    u64_PrintHex(u64(row.root_node), temp, 8, true);
     PrintAttrSpaceReset(str,"root_node", temp);
 
     lib_json::state_Print(row, temp);

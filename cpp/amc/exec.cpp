@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -148,17 +148,6 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body , "return retval;");
 }
 
-// // Should this be generated?
-// static algo::Fildes bash_StartRead(command::bash_proc &bash, algo_lib::FFildes &read) {
-//     int pipefd[2];
-//     int rc=pipe(pipefd);
-//     (void)rc;
-//     read.fd.value = pipefd[0];
-//     bash.fstdout  << ">&" << pipefd[1];
-//     bash_Start(bash);
-//     (void)close(pipefd[1]);
-//     return read.fd;
-// }
 void amc::tfunc_Exec_StartRead() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FFunc& exec = amc::CreateCurFunc(true);
@@ -224,35 +213,36 @@ void amc::tfunc_Exec_ToCmdline() {
     Ins(&R, tocmdline.body, "return retval;");
 }
 
-void amc::tfunc_Exec_Execv() {
+void amc::tfunc_Exec_ToArgv() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &execfield = *amc::_db.genfield.p_field;
     bool amc_command = ind_ns_Find(name_Get(*execfield.p_arg)) != NULL;
 
     amc::FCtype &cmdtype=*amc::_db.genfield.p_field->p_arg;
-    amc::FFunc& execv = CreateCurFunc();
+    amc::FFunc& func = CreateCurFunc(true);
+    AddRetval(func, "void", "", "");
+    AddProtoArg(func, "algo::StringAry&", "args", "");
     Set(R,"$cmdtypens",ns_Get(cmdtype));
-    Ins(&R, execv.ret    , "int",false);
-    Ins(&R, execv.proto  , "$name_Execv($Parent)",false);
-    Ins(&R, execv.comment, "Call execv with specified parameters -- cprint:$Ctype.Argv");
-    Ins(&R, execv.body, "algo_lib::exec_args_Alloc() << $_path;");
+    Ins(&R, func.comment, "Form array from the command line");
+    Ins(&R, func.body, "ary_RemoveAll(args);");
+    Ins(&R, func.body, "ary_Alloc(args) << $_path;");
     ind_beg(amc::ctype_c_field_curs, field, cmdtype) if (!FldfuncQ(field)) {
         Set(R, "$fldname", name_Get(field));
         if (field.reftype == dmmeta_Reftype_reftype_Tary) {
             Set(R, "$Ftype", name_Get(*field.p_arg));
-            Ins(&R, execv.body, "ind_beg($cmdtypens::$name_$fldname_curs,value,$_cmd) {");
+            Ins(&R, func.body, "ind_beg($cmdtypens::$name_$fldname_curs,value,$_cmd) {");
             if (amc_command) {
                 // amc command -- single argument contains key & value
-                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
-                Ins(&R, execv.body,"    *arg << \"-$fldname:\";");
+                Ins(&R, func.body,"    cstring *arg = &ary_Alloc(args);");
+                Ins(&R, func.body,"    *arg << \"-$fldname:\";");
             } else {
                 // non-amc command -- can't use key-value format. 2 arguments needed
-                Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-$fldname\";");
-                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+                Ins(&R, func.body,"    ary_Alloc(args) << \"-$fldname\";");
+                Ins(&R, func.body,"    cstring *arg = &ary_Alloc(args);");
             }
             Set(R, "$Ftype", name_Get(*field.p_arg));
-            Ins(&R, execv.body,"    $Ftype_Print(value, *arg);");
-            Ins(&R, execv.body, "}ind_end;");
+            Ins(&R, func.body,"    $Ftype_Print(value, *arg);");
+            Ins(&R, func.body, "}ind_end;");
         } else {
             if (ch_N(field.dflt.value) > 0) {
                 Set(R, "$dflt", field.dflt.value);
@@ -264,49 +254,58 @@ void amc::tfunc_Exec_Execv() {
             } else {
                 Set(R, "$chkdflt", "true");
             }
-            Ins(&R, execv.body, "");
-            Ins(&R, execv.body, "if ($chkdflt) {");
+            Ins(&R, func.body, "");
+            Ins(&R, func.body, "if ($chkdflt) {");
             if (amc_command) {
                 // amc command -- single argument contains key & value
-                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
-                Ins(&R, execv.body,"    *arg << \"-$fldname:\";");
+                Ins(&R, func.body,"    cstring *arg = &ary_Alloc(args);");
+                Ins(&R, func.body,"    *arg << \"-$fldname:\";");
             } else {
                 // non-amc command -- can't use key-value format. 2 arguments needed
-                Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-$fldname\";");
-                Ins(&R, execv.body,"    cstring *arg = &algo_lib::exec_args_Alloc();");
+                Ins(&R, func.body,"    ary_Alloc(args) << \"-$fldname\";");
+                Ins(&R, func.body,"    cstring *arg = &ary_Alloc(args);");
             }
             // #AL# this is a hack -- need a field print function here.
-            amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"));
-            bool has_field_print = func != NULL;
+            amc::FFunc* field_print = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"));
+            bool has_field_print = field_print != NULL;
             has_field_print |= field.reftype == dmmeta_Reftype_reftype_Regx;
             if (has_field_print) {
                 Set(R, "$fns", ns_Get(*field.p_ctype));
-                Ins(&R, execv.body, "    $fns::$fldname_Print($_cmd, *arg);");
+                Ins(&R, func.body, "    $fns::$fldname_Print($_cmd, *arg);");
             } else {
                 Set(R, "$Ftype", name_Get(*field.p_arg));
-                Ins(&R, execv.body,"    $Ftype_Print($_cmd.$fldname, *arg);");
+                Ins(&R, func.body,"    $Ftype_Print($_cmd.$fldname, *arg);");
             }
-            Ins(&R, execv.body,"}");
+            Ins(&R, func.body,"}");
         }
     }ind_end;
 
     if (amc_command) {
         // add verbose flags -- one fewer than current process
-        Ins(&R, execv.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
-        Ins(&R, execv.body,"    algo_lib::exec_args_Alloc() << \"-verbose\";");
-        Ins(&R, execv.body,"}");
+        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
+        Ins(&R, func.body,"    ary_Alloc(args) << \"-verbose\";");
+        Ins(&R, func.body,"}");
     }
+}
 
+void amc::tfunc_Exec_Execv() {
     // form args array
-    Ins(&R, execv.body,"char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));");
-    Ins(&R, execv.body,"ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {");
+    amc::FFunc& execv = CreateCurFunc(true);
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    AddRetval(execv, "int", "ret", "0");
+    Ins(&R, execv.comment, "Call execv with specified parameters");
+    Ins(&R, execv.body,"algo::StringAry args;");
+    Ins(&R, execv.body,"$name_ToArgv($pararg, args);");
+    // form argv
+    Ins(&R, execv.body,"char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));");
+    Ins(&R, execv.body,"ind_beg(algo::StringAry_ary_curs,arg,args) {");
     Ins(&R, execv.body,"    argv[ind_curs(arg).index] = Zeroterm(arg);");
     Ins(&R, execv.body,"}ind_end;");
-    Ins(&R, execv.body,"argv[algo_lib::exec_args_N()] = NULL;");
+    Ins(&R, execv.body,"argv[ary_N(args)] = NULL;");
 
     Ins(&R, execv.body,"// if $_path is relative, search for it in PATH");
     Ins(&R, execv.body,"algo_lib::ResolveExecFname($_path);");
-    Ins(&R, execv.body,"return execv(Zeroterm($_path),argv);");
+    Ins(&R, execv.body,"ret = execv(Zeroterm($_path),argv);");
 }
 
 // -----------------------------------------------------------------------------

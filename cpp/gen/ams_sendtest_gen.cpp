@@ -109,6 +109,9 @@ void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstri
     u64_Print(row.n_msg_limit, temp);
     PrintAttrSpaceReset(str,"n_msg_limit", temp);
 
+    algo_lib::FTimehook_Print(row.h_write, temp);
+    PrintAttrSpaceReset(str,"h_write", temp);
+
     u64_Print(row.sum_recv_latency, temp);
     PrintAttrSpaceReset(str,"sum_recv_latency", temp);
 }
@@ -212,104 +215,20 @@ void ams_sendtest::child_ExecX(ams_sendtest::FChild& child) {
 
 // --- ams_sendtest.FChild.child.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// Call execv with specified parameters
 int ams_sendtest::child_Execv(ams_sendtest::FChild& child) {
-    algo_lib::exec_args_Alloc() << child.child_path;
-
-    if (child.child_cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(child.child_cmd.in, *arg);
-    }
-
-    if (child.child_cmd.id != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-id:";
-        i32_Print(child.child_cmd.id, *arg);
-    }
-
-    if (child.child_cmd.file_prefix != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-file_prefix:";
-        cstring_Print(child.child_cmd.file_prefix, *arg);
-    }
-
-    if (child.child_cmd.nchild != 1) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nchild:";
-        i32_Print(child.child_cmd.nchild, *arg);
-    }
-
-    if (child.child_cmd.blocking != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-blocking:";
-        bool_Print(child.child_cmd.blocking, *arg);
-    }
-
-    if (child.child_cmd.nmsg != 1000) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nmsg:";
-        i32_Print(child.child_cmd.nmsg, *arg);
-    }
-
-    if (child.child_cmd.trace.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-trace:";
-        command::trace_Print(child.child_cmd, *arg);
-    }
-
-    if (child.child_cmd.timeout != 30) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-timeout:";
-        i32_Print(child.child_cmd.timeout, *arg);
-    }
-
-    if (child.child_cmd.recvdelay_ns != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-recvdelay_ns:";
-        i64_Print(child.child_cmd.recvdelay_ns, *arg);
-    }
-
-    if (child.child_cmd.senddelay_ns != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-senddelay_ns:";
-        i64_Print(child.child_cmd.senddelay_ns, *arg);
-    }
-
-    if (child.child_cmd.msgsize_min != 64) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgsize_min:";
-        i32_Print(child.child_cmd.msgsize_min, *arg);
-    }
-
-    if (child.child_cmd.msgsize_max != 1024) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgsize_max:";
-        i32_Print(child.child_cmd.msgsize_max, *arg);
-    }
-
-    if (child.child_cmd.bufsize != 32768) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-bufsize:";
-        i32_Print(child.child_cmd.bufsize, *arg);
-    }
-
-    if (child.child_cmd.recvdelay != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-recvdelay:";
-        i64_Print(child.child_cmd.recvdelay, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    child_ToArgv(child, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if child.child_path is relative, search for it in PATH
     algo_lib::ResolveExecFname(child.child_path);
-    return execv(Zeroterm(child.child_path),argv);
+    ret = execv(Zeroterm(child.child_path),argv);
+    return ret;
 }
 
 // --- ams_sendtest.FChild.child.ToCmdline
@@ -327,6 +246,100 @@ algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) {
         retval << " 2" << child.child_fstderr;
     }
     return retval;
+}
+
+// --- ams_sendtest.FChild.child.ToArgv
+// Form array from the command line
+void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << child.child_path;
+
+    if (child.child_cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(child.child_cmd.in, *arg);
+    }
+
+    if (child.child_cmd.id != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-id:";
+        i32_Print(child.child_cmd.id, *arg);
+    }
+
+    if (child.child_cmd.file_prefix != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-file_prefix:";
+        cstring_Print(child.child_cmd.file_prefix, *arg);
+    }
+
+    if (child.child_cmd.nchild != 1) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nchild:";
+        i32_Print(child.child_cmd.nchild, *arg);
+    }
+
+    if (child.child_cmd.blocking != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-blocking:";
+        bool_Print(child.child_cmd.blocking, *arg);
+    }
+
+    if (child.child_cmd.nmsg != 1000) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nmsg:";
+        i32_Print(child.child_cmd.nmsg, *arg);
+    }
+
+    if (child.child_cmd.trace.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trace:";
+        command::trace_Print(child.child_cmd, *arg);
+    }
+
+    if (child.child_cmd.timeout != 30) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-timeout:";
+        i32_Print(child.child_cmd.timeout, *arg);
+    }
+
+    if (child.child_cmd.recvdelay_ns != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-recvdelay_ns:";
+        i64_Print(child.child_cmd.recvdelay_ns, *arg);
+    }
+
+    if (child.child_cmd.senddelay_ns != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-senddelay_ns:";
+        i64_Print(child.child_cmd.senddelay_ns, *arg);
+    }
+
+    if (child.child_cmd.msgsize_min != 64) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgsize_min:";
+        i32_Print(child.child_cmd.msgsize_min, *arg);
+    }
+
+    if (child.child_cmd.msgsize_max != 1024) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgsize_max:";
+        i32_Print(child.child_cmd.msgsize_max, *arg);
+    }
+
+    if (child.child_cmd.bufsize != 32768) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bufsize:";
+        i32_Print(child.child_cmd.bufsize, *arg);
+    }
+
+    if (child.child_cmd.recvdelay != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-recvdelay:";
+        i64_Print(child.child_cmd.recvdelay, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- ams_sendtest.FChild..Init

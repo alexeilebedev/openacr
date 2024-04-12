@@ -383,7 +383,7 @@ bool                 value_ReadStrptrMaybe(atf_fuzz::FieldId& parent, algo::strp
 // Read fields of atf_fuzz::FieldId from an ascii string.
 // The format of the string is the format of the atf_fuzz::FieldId's only field
 // func:atf_fuzz.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.FieldId..Init
 void                 FieldId_Init(atf_fuzz::FieldId& parent);
@@ -431,7 +431,7 @@ bool                 value_ReadStrptrMaybe(atf_fuzz::TableId& parent, algo::strp
 // Read fields of atf_fuzz::TableId from an ascii string.
 // The format of the string is the format of the atf_fuzz::TableId's only field
 // func:atf_fuzz.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.TableId..Init
 void                 TableId_Init(atf_fuzz::TableId& parent);

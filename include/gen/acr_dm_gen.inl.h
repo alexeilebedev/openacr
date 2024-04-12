@@ -443,7 +443,7 @@ inline void acr_dm::Rowid_Init(acr_dm::Rowid& parent) {
 }
 
 // --- acr_dm.Rowid..Eq
-inline bool acr_dm::Rowid_Eq(const acr_dm::Rowid& lhs, const acr_dm::Rowid& rhs) {
+inline bool acr_dm::Rowid_Eq(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.f1, rhs.f1);
     if (!retval) {

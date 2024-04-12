@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -190,10 +190,6 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_PerfParseNum();
     // void unittest_algo_lib_DirBeg();
     // void unittest_algo_lib_RemDirRecurse();
-    // void unittest_algo_lib_RemDirRecurse1();
-    // void unittest_algo_lib_RemDirRecurse2();
-    // void unittest_algo_lib_RemDirRecurse3();
-    // void unittest_algo_lib_RemDirRecurse4();
     // void unittest_algo_lib_ReadModuleId();
     // void unittest_algo_lib_Tempfile();
     // void unittest_algo_lib_NextSep();
@@ -426,7 +422,7 @@ namespace atf_unit { // update-hdr
     void CompareOutput(strptr outfname);
 
     // Run specified test (called both with -nofork and without)
-    void Main_Test(atf_unit::FUnittest &test);
+    void Main_StartTest(atf_unit::FUnittest &test, lib_exec::FSyscmd *start, lib_exec::FSyscmd *end);
     //     (user-implemented function, prototype is in amc-generated header)
     // void unittest_amc_Unit();
 

@@ -33,6 +33,8 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/atfdb_gen.h"
 #include "include/gen/atfdb_gen.inl.h"
+#include "include/gen/lib_exec_gen.h"
+#include "include/gen/lib_exec_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -41,8 +43,6 @@
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
 #include "include/gen/lib_ams_gen.inl.h"
-#include "include/gen/lib_exec_gen.h"
-#include "include/gen/lib_exec_gen.inl.h"
 #include "include/gen/lib_fm_gen.h"
 #include "include/gen/lib_fm_gen.inl.h"
 #include "include/gen/lib_sql_gen.h"
@@ -148,10 +148,27 @@ inline static int atf_unit::val_Nextchar(const atf_unit::Cstr& parent, algo::str
     return ch;
 }
 
+// --- atf_unit.Cstr..ReadStrptrMaybe
+// Read fields of atf_unit::Cstr from an ascii string.
+// The format of the string is the format of the atf_unit::Cstr's only field
+bool atf_unit::Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::cstring_ReadStrptrMaybe(parent.val, in_str);
+    return retval;
+}
+
 // --- atf_unit.Cstr..FmtJson
-// Create JSON representation of atf_unit::Cstr under PARENT node -- cprint:atf_unit.Cstr.Json
+// Create JSON representation of atf_unit::Cstr under PARENT node
+// cfmt:atf_unit.Cstr.Json  printfmt:Auto
 lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) {
     return algo::cstring_FmtJson(const_cast<atf_unit::Cstr&>(row).val,parent);;
+}
+
+// --- atf_unit.Cstr..Print
+// print string representation of ROW to string STR
+// cfmt:atf_unit.Cstr.String  printfmt:Raw
+void atf_unit::Cstr_Print(atf_unit::Cstr& row, algo::cstring& str) {
+    algo::cstring_Print(row.val, str);
 }
 
 // --- atf_unit.Dbl..ReadStrptrMaybe
@@ -163,17 +180,18 @@ bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- atf_unit.Dbl..FmtJson
+// Create JSON representation of atf_unit::Dbl under PARENT node
+// cfmt:atf_unit.Dbl.Json  printfmt:Auto
+lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) {
+    return double_FmtJson(const_cast<atf_unit::Dbl&>(row).val,parent);;
+}
+
 // --- atf_unit.Dbl..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.Dbl.String  printfmt:Raw
 void atf_unit::Dbl_Print(atf_unit::Dbl row, algo::cstring& str) {
     double_Print(row.val, str);
-}
-
-// --- atf_unit.Dbl..FmtJson
-// Create JSON representation of atf_unit::Dbl under PARENT node -- cprint:atf_unit.Dbl.Json
-lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) {
-    return double_FmtJson(const_cast<atf_unit::Dbl&>(row).val,parent);;
 }
 
 // --- atf_unit.trace..Print
@@ -183,6 +201,418 @@ void atf_unit::trace_Print(atf_unit::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_unit.trace";
     (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_unit.FDb.acr_ed.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int atf_unit::acr_ed_Start() {
+    int retval = 0;
+    if (_db.acr_ed_pid == 0) {
+        verblog(acr_ed_ToCmdline()); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(_db.acr_ed_path);
+        tempstr cmdline(acr_ed_ToCmdline());
+        _db.acr_ed_pid = dospawn(Zeroterm(_db.acr_ed_path),Zeroterm(cmdline),_db.acr_ed_timeout,_db.acr_ed_fstdin,_db.acr_ed_fstdout,_db.acr_ed_fstderr);
+#else
+        _db.acr_ed_pid = fork();
+        if (_db.acr_ed_pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (_db.acr_ed_timeout > 0) {
+                alarm(_db.acr_ed_timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstderr, 2);
+            if (retval==0) retval= acr_ed_Execv();
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("atf_unit.acr_ed_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (_db.acr_ed_pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    _db.acr_ed_status = _db.acr_ed_pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- atf_unit.FDb.acr_ed.StartRead
+// Start subprocess & Read output
+algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    _db.acr_ed_fstdout  << ">&" << pipefd[1];
+    acr_ed_Start();
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- atf_unit.FDb.acr_ed.Kill
+// Kill subprocess and wait
+void atf_unit::acr_ed_Kill() {
+    if (_db.acr_ed_pid != 0) {
+        kill(_db.acr_ed_pid,9);
+        acr_ed_Wait();
+    }
+}
+
+// --- atf_unit.FDb.acr_ed.Wait
+// Wait for subprocess to return
+void atf_unit::acr_ed_Wait() {
+    if (_db.acr_ed_pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(_db.acr_ed_pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == _db.acr_ed_pid) {
+            _db.acr_ed_status = wait_status;
+            _db.acr_ed_pid = 0;
+        }
+    }
+}
+
+// --- atf_unit.FDb.acr_ed.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int atf_unit::acr_ed_Exec() {
+    acr_ed_Start();
+    acr_ed_Wait();
+    return _db.acr_ed_status;
+}
+
+// --- atf_unit.FDb.acr_ed.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void atf_unit::acr_ed_ExecX() {
+    int rc = acr_ed_Exec();
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",acr_ed_ToCmdline())
+    << Keyval("comment",algo::DescribeWaitStatus(_db.acr_ed_status)));
+}
+
+// --- atf_unit.FDb.acr_ed.Execv
+// Call execv()
+// Call execv with specified parameters
+int atf_unit::acr_ed_Execv() {
+    int ret = 0;
+    algo::StringAry args;
+    acr_ed_ToArgv(args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if _db.acr_ed_path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(_db.acr_ed_path);
+    ret = execv(Zeroterm(_db.acr_ed_path),argv);
+    return ret;
+}
+
+// --- atf_unit.FDb.acr_ed.ToCmdline
+algo::tempstr atf_unit::acr_ed_ToCmdline() {
+    algo::tempstr retval;
+    retval << _db.acr_ed_path << " ";
+    command::acr_ed_PrintArgv(_db.acr_ed_cmd,retval);
+    if (ch_N(_db.acr_ed_fstdin)) {
+        retval << " " << _db.acr_ed_fstdin;
+    }
+    if (ch_N(_db.acr_ed_fstdout)) {
+        retval << " " << _db.acr_ed_fstdout;
+    }
+    if (ch_N(_db.acr_ed_fstderr)) {
+        retval << " 2" << _db.acr_ed_fstderr;
+    }
+    return retval;
+}
+
+// --- atf_unit.FDb.acr_ed.ToArgv
+// Form array from the command line
+void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << _db.acr_ed_path;
+
+    if (_db.acr_ed_cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(_db.acr_ed_cmd.in, *arg);
+    }
+
+    if (_db.acr_ed_cmd.create != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-create:";
+        bool_Print(_db.acr_ed_cmd.create, *arg);
+    }
+
+    if (_db.acr_ed_cmd.del != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-del:";
+        bool_Print(_db.acr_ed_cmd.del, *arg);
+    }
+
+    if (_db.acr_ed_cmd.rename != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-rename:";
+        cstring_Print(_db.acr_ed_cmd.rename, *arg);
+    }
+
+    if (_db.acr_ed_cmd.finput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-finput:";
+        bool_Print(_db.acr_ed_cmd.finput, *arg);
+    }
+
+    if (_db.acr_ed_cmd.foutput != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-foutput:";
+        bool_Print(_db.acr_ed_cmd.foutput, *arg);
+    }
+
+    if (_db.acr_ed_cmd.srcfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfile:";
+        cstring_Print(_db.acr_ed_cmd.srcfile, *arg);
+    }
+
+    if (_db.acr_ed_cmd.gstatic != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-gstatic:";
+        bool_Print(_db.acr_ed_cmd.gstatic, *arg);
+    }
+
+    if (_db.acr_ed_cmd.indexed != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-indexed:";
+        bool_Print(_db.acr_ed_cmd.indexed, *arg);
+    }
+
+    if (_db.acr_ed_cmd.target != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        Smallstr16_Print(_db.acr_ed_cmd.target, *arg);
+    }
+
+    if (_db.acr_ed_cmd.nstype != "exe") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-nstype:";
+        Smallstr50_Print(_db.acr_ed_cmd.nstype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.ctype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ctype:";
+        Smallstr100_Print(_db.acr_ed_cmd.ctype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.pooltype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pooltype:";
+        Smallstr50_Print(_db.acr_ed_cmd.pooltype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.ssimfile != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ssimfile:";
+        Smallstr50_Print(_db.acr_ed_cmd.ssimfile, *arg);
+    }
+
+    if (_db.acr_ed_cmd.subset != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-subset:";
+        Smallstr100_Print(_db.acr_ed_cmd.subset, *arg);
+    }
+
+    if (_db.acr_ed_cmd.subset2 != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-subset2:";
+        Smallstr100_Print(_db.acr_ed_cmd.subset2, *arg);
+    }
+
+    if (_db.acr_ed_cmd.separator != ".") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-separator:";
+        cstring_Print(_db.acr_ed_cmd.separator, *arg);
+    }
+
+    if (_db.acr_ed_cmd.field != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-field:";
+        Smallstr100_Print(_db.acr_ed_cmd.field, *arg);
+    }
+
+    if (_db.acr_ed_cmd.arg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arg:";
+        Smallstr100_Print(_db.acr_ed_cmd.arg, *arg);
+    }
+
+    if (_db.acr_ed_cmd.dflt != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dflt:";
+        cstring_Print(_db.acr_ed_cmd.dflt, *arg);
+    }
+
+    if (_db.acr_ed_cmd.anon != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anon:";
+        bool_Print(_db.acr_ed_cmd.anon, *arg);
+    }
+
+    if (_db.acr_ed_cmd.bigend != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bigend:";
+        bool_Print(_db.acr_ed_cmd.bigend, *arg);
+    }
+
+    if (_db.acr_ed_cmd.cascdel != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cascdel:";
+        bool_Print(_db.acr_ed_cmd.cascdel, *arg);
+    }
+
+    if (_db.acr_ed_cmd.before != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-before:";
+        Smallstr100_Print(_db.acr_ed_cmd.before, *arg);
+    }
+
+    if (_db.acr_ed_cmd.substr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-substr:";
+        Smallstr100_Print(_db.acr_ed_cmd.substr, *arg);
+    }
+
+    if (_db.acr_ed_cmd.alias != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-alias:";
+        bool_Print(_db.acr_ed_cmd.alias, *arg);
+    }
+
+    if (_db.acr_ed_cmd.srcfield != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfield:";
+        Smallstr100_Print(_db.acr_ed_cmd.srcfield, *arg);
+    }
+
+    if (_db.acr_ed_cmd.fstep != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-fstep:";
+        Smallstr100_Print(_db.acr_ed_cmd.fstep, *arg);
+    }
+
+    if (_db.acr_ed_cmd.inscond != "true") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-inscond:";
+        cstring_Print(_db.acr_ed_cmd.inscond, *arg);
+    }
+
+    if (_db.acr_ed_cmd.reftype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-reftype:";
+        Smallstr50_Print(_db.acr_ed_cmd.reftype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.hashfld != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-hashfld:";
+        Smallstr100_Print(_db.acr_ed_cmd.hashfld, *arg);
+    }
+
+    if (_db.acr_ed_cmd.sortfld != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sortfld:";
+        Smallstr100_Print(_db.acr_ed_cmd.sortfld, *arg);
+    }
+
+    if (_db.acr_ed_cmd.unittest != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-unittest:";
+        cstring_Print(_db.acr_ed_cmd.unittest, *arg);
+    }
+
+    if (_db.acr_ed_cmd.citest != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-citest:";
+        cstring_Print(_db.acr_ed_cmd.citest, *arg);
+    }
+
+    if (_db.acr_ed_cmd.cppfunc != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cppfunc:";
+        cstring_Print(_db.acr_ed_cmd.cppfunc, *arg);
+    }
+
+    if (_db.acr_ed_cmd.xref != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-xref:";
+        bool_Print(_db.acr_ed_cmd.xref, *arg);
+    }
+
+    if (_db.acr_ed_cmd.via != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-via:";
+        cstring_Print(_db.acr_ed_cmd.via, *arg);
+    }
+
+    if (_db.acr_ed_cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(_db.acr_ed_cmd.write, *arg);
+    }
+
+    if (_db.acr_ed_cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(_db.acr_ed_cmd.e, *arg);
+    }
+
+    if (_db.acr_ed_cmd.comment != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-comment:";
+        cstring_Print(_db.acr_ed_cmd.comment, *arg);
+    }
+
+    if (_db.acr_ed_cmd.sandbox != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-sandbox:";
+        bool_Print(_db.acr_ed_cmd.sandbox, *arg);
+    }
+
+    if (_db.acr_ed_cmd.test != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-test:";
+        bool_Print(_db.acr_ed_cmd.test, *arg);
+    }
+
+    if (_db.acr_ed_cmd.showcpp != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showcpp:";
+        bool_Print(_db.acr_ed_cmd.showcpp, *arg);
+    }
+
+    if (_db.acr_ed_cmd.msgtype != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-msgtype:";
+        cstring_Print(_db.acr_ed_cmd.msgtype, *arg);
+    }
+
+    if (_db.acr_ed_cmd.anonfld != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-anonfld:";
+        bool_Print(_db.acr_ed_cmd.anonfld, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- atf_unit.FDb.number.Alloc
@@ -732,11 +1162,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice2  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice2 }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxShortCircuit  comment:\"\"", atf_unit::unittest_algo_lib_RegxShortCircuit }
-        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse  comment:,", atf_unit::unittest_algo_lib_RemDirRecurse }
-        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse1  comment:\"\"", atf_unit::unittest_algo_lib_RemDirRecurse1 }
-        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse2  comment:\"File in directory, remove without top-level\"", atf_unit::unittest_algo_lib_RemDirRecurse2 }
-        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse3  comment:\"Do not follow symlinks\"", atf_unit::unittest_algo_lib_RemDirRecurse3 }
-        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse4  comment:\"Three levels deep\"", atf_unit::unittest_algo_lib_RemDirRecurse4 }
+        ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse  comment:\"Test RemDirRecurse functions\"", atf_unit::unittest_algo_lib_RemDirRecurse }
         ,{ "atfdb.unittest  unittest:algo_lib.Replscope  comment:\"\"", atf_unit::unittest_algo_lib_Replscope }
         ,{ "atfdb.unittest  unittest:algo_lib.ReverseBits  comment:\"\"", atf_unit::unittest_algo_lib_ReverseBits }
         ,{ "atfdb.unittest  unittest:algo_lib.SchedTime  comment:\"\"", atf_unit::unittest_algo_lib_SchedTime }
@@ -1330,408 +1756,6 @@ void atf_unit::ind_unittest_Reserve(int n) {
     }
 }
 
-// --- atf_unit.FDb.acr_ed.Start
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-int atf_unit::acr_ed_Start() {
-    int retval = 0;
-    if (_db.acr_ed_pid == 0) {
-        verblog(acr_ed_ToCmdline()); // maybe print command
-#ifdef WIN32
-        algo_lib::ResolveExecFname(_db.acr_ed_path);
-        tempstr cmdline(acr_ed_ToCmdline());
-        _db.acr_ed_pid = dospawn(Zeroterm(_db.acr_ed_path),Zeroterm(cmdline),_db.acr_ed_timeout,_db.acr_ed_fstdin,_db.acr_ed_fstdout,_db.acr_ed_fstderr);
-#else
-        _db.acr_ed_pid = fork();
-        if (_db.acr_ed_pid == 0) { // child
-            algo_lib::DieWithParent();
-            if (_db.acr_ed_timeout > 0) {
-                alarm(_db.acr_ed_timeout);
-            }
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(_db.acr_ed_fstderr, 2);
-            if (retval==0) retval= acr_ed_Execv();
-            if (retval != 0) { // if start fails, print error
-                int err=errno;
-                prerr("atf_unit.acr_ed_execv"
-                <<Keyval("errno",err)
-                <<Keyval("errstr",strerror(err))
-                <<Keyval("comment","Execv failed"));
-            }
-            _exit(127); // if failed to start, exit anyway
-        } else if (_db.acr_ed_pid == -1) {
-            retval = errno; // failed to fork
-        }
-#endif
-    }
-    _db.acr_ed_status = _db.acr_ed_pid > 0 ? 0 : -1; // if didn't start, set error status
-    return retval;
-}
-
-// --- atf_unit.FDb.acr_ed.StartRead
-// Start subprocess & Read output
-algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    _db.acr_ed_fstdout  << ">&" << pipefd[1];
-    acr_ed_Start();
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
-// --- atf_unit.FDb.acr_ed.Kill
-// Kill subprocess and wait
-void atf_unit::acr_ed_Kill() {
-    if (_db.acr_ed_pid != 0) {
-        kill(_db.acr_ed_pid,9);
-        acr_ed_Wait();
-    }
-}
-
-// --- atf_unit.FDb.acr_ed.Wait
-// Wait for subprocess to return
-void atf_unit::acr_ed_Wait() {
-    if (_db.acr_ed_pid > 0) {
-        int wait_flags = 0;
-        int wait_status = 0;
-        int rc = -1;
-        do {
-            // really wait for subprocess to exit
-            rc = waitpid(_db.acr_ed_pid,&wait_status,wait_flags);
-        } while (rc==-1 && errno==EINTR);
-        if (rc == _db.acr_ed_pid) {
-            _db.acr_ed_status = wait_status;
-            _db.acr_ed_pid = 0;
-        }
-    }
-}
-
-// --- atf_unit.FDb.acr_ed.Exec
-// Start + Wait
-// Execute subprocess and return exit code
-int atf_unit::acr_ed_Exec() {
-    acr_ed_Start();
-    acr_ed_Wait();
-    return _db.acr_ed_status;
-}
-
-// --- atf_unit.FDb.acr_ed.ExecX
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-void atf_unit::acr_ed_ExecX() {
-    int rc = acr_ed_Exec();
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",acr_ed_ToCmdline())
-    << Keyval("comment",algo::DescribeWaitStatus(_db.acr_ed_status)));
-}
-
-// --- atf_unit.FDb.acr_ed.Execv
-// Call execv()
-// Call execv with specified parameters -- cprint:acr_ed.Argv
-int atf_unit::acr_ed_Execv() {
-    algo_lib::exec_args_Alloc() << _db.acr_ed_path;
-
-    if (_db.acr_ed_cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(_db.acr_ed_cmd.in, *arg);
-    }
-
-    if (_db.acr_ed_cmd.create != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-create:";
-        bool_Print(_db.acr_ed_cmd.create, *arg);
-    }
-
-    if (_db.acr_ed_cmd.del != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-del:";
-        bool_Print(_db.acr_ed_cmd.del, *arg);
-    }
-
-    if (_db.acr_ed_cmd.rename != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-rename:";
-        cstring_Print(_db.acr_ed_cmd.rename, *arg);
-    }
-
-    if (_db.acr_ed_cmd.finput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-finput:";
-        bool_Print(_db.acr_ed_cmd.finput, *arg);
-    }
-
-    if (_db.acr_ed_cmd.foutput != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-foutput:";
-        bool_Print(_db.acr_ed_cmd.foutput, *arg);
-    }
-
-    if (_db.acr_ed_cmd.srcfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-srcfile:";
-        cstring_Print(_db.acr_ed_cmd.srcfile, *arg);
-    }
-
-    if (_db.acr_ed_cmd.gstatic != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gstatic:";
-        bool_Print(_db.acr_ed_cmd.gstatic, *arg);
-    }
-
-    if (_db.acr_ed_cmd.indexed != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-indexed:";
-        bool_Print(_db.acr_ed_cmd.indexed, *arg);
-    }
-
-    if (_db.acr_ed_cmd.target != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        Smallstr16_Print(_db.acr_ed_cmd.target, *arg);
-    }
-
-    if (_db.acr_ed_cmd.nstype != "exe") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nstype:";
-        Smallstr50_Print(_db.acr_ed_cmd.nstype, *arg);
-    }
-
-    if (_db.acr_ed_cmd.ctype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ctype:";
-        Smallstr100_Print(_db.acr_ed_cmd.ctype, *arg);
-    }
-
-    if (_db.acr_ed_cmd.pooltype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-pooltype:";
-        Smallstr50_Print(_db.acr_ed_cmd.pooltype, *arg);
-    }
-
-    if (_db.acr_ed_cmd.ssimfile != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ssimfile:";
-        Smallstr50_Print(_db.acr_ed_cmd.ssimfile, *arg);
-    }
-
-    if (_db.acr_ed_cmd.subset != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-subset:";
-        Smallstr100_Print(_db.acr_ed_cmd.subset, *arg);
-    }
-
-    if (_db.acr_ed_cmd.subset2 != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-subset2:";
-        Smallstr100_Print(_db.acr_ed_cmd.subset2, *arg);
-    }
-
-    if (_db.acr_ed_cmd.separator != ".") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-separator:";
-        cstring_Print(_db.acr_ed_cmd.separator, *arg);
-    }
-
-    if (_db.acr_ed_cmd.field != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-field:";
-        Smallstr100_Print(_db.acr_ed_cmd.field, *arg);
-    }
-
-    if (_db.acr_ed_cmd.arg != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arg:";
-        Smallstr100_Print(_db.acr_ed_cmd.arg, *arg);
-    }
-
-    if (_db.acr_ed_cmd.dflt != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dflt:";
-        cstring_Print(_db.acr_ed_cmd.dflt, *arg);
-    }
-
-    if (_db.acr_ed_cmd.anon != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anon:";
-        bool_Print(_db.acr_ed_cmd.anon, *arg);
-    }
-
-    if (_db.acr_ed_cmd.bigend != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-bigend:";
-        bool_Print(_db.acr_ed_cmd.bigend, *arg);
-    }
-
-    if (_db.acr_ed_cmd.cascdel != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cascdel:";
-        bool_Print(_db.acr_ed_cmd.cascdel, *arg);
-    }
-
-    if (_db.acr_ed_cmd.before != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-before:";
-        Smallstr100_Print(_db.acr_ed_cmd.before, *arg);
-    }
-
-    if (_db.acr_ed_cmd.substr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-substr:";
-        Smallstr100_Print(_db.acr_ed_cmd.substr, *arg);
-    }
-
-    if (_db.acr_ed_cmd.alias != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-alias:";
-        bool_Print(_db.acr_ed_cmd.alias, *arg);
-    }
-
-    if (_db.acr_ed_cmd.srcfield != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-srcfield:";
-        Smallstr100_Print(_db.acr_ed_cmd.srcfield, *arg);
-    }
-
-    if (_db.acr_ed_cmd.fstep != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-fstep:";
-        Smallstr100_Print(_db.acr_ed_cmd.fstep, *arg);
-    }
-
-    if (_db.acr_ed_cmd.inscond != "true") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-inscond:";
-        cstring_Print(_db.acr_ed_cmd.inscond, *arg);
-    }
-
-    if (_db.acr_ed_cmd.reftype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-reftype:";
-        Smallstr50_Print(_db.acr_ed_cmd.reftype, *arg);
-    }
-
-    if (_db.acr_ed_cmd.hashfld != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-hashfld:";
-        Smallstr100_Print(_db.acr_ed_cmd.hashfld, *arg);
-    }
-
-    if (_db.acr_ed_cmd.sortfld != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sortfld:";
-        Smallstr100_Print(_db.acr_ed_cmd.sortfld, *arg);
-    }
-
-    if (_db.acr_ed_cmd.unittest != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-unittest:";
-        cstring_Print(_db.acr_ed_cmd.unittest, *arg);
-    }
-
-    if (_db.acr_ed_cmd.citest != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-citest:";
-        cstring_Print(_db.acr_ed_cmd.citest, *arg);
-    }
-
-    if (_db.acr_ed_cmd.cppfunc != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cppfunc:";
-        cstring_Print(_db.acr_ed_cmd.cppfunc, *arg);
-    }
-
-    if (_db.acr_ed_cmd.xref != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-xref:";
-        bool_Print(_db.acr_ed_cmd.xref, *arg);
-    }
-
-    if (_db.acr_ed_cmd.via != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-via:";
-        cstring_Print(_db.acr_ed_cmd.via, *arg);
-    }
-
-    if (_db.acr_ed_cmd.write != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-write:";
-        bool_Print(_db.acr_ed_cmd.write, *arg);
-    }
-
-    if (_db.acr_ed_cmd.e != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-e:";
-        bool_Print(_db.acr_ed_cmd.e, *arg);
-    }
-
-    if (_db.acr_ed_cmd.comment != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-comment:";
-        cstring_Print(_db.acr_ed_cmd.comment, *arg);
-    }
-
-    if (_db.acr_ed_cmd.sandbox != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-sandbox:";
-        bool_Print(_db.acr_ed_cmd.sandbox, *arg);
-    }
-
-    if (_db.acr_ed_cmd.test != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-test:";
-        bool_Print(_db.acr_ed_cmd.test, *arg);
-    }
-
-    if (_db.acr_ed_cmd.showcpp != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-showcpp:";
-        bool_Print(_db.acr_ed_cmd.showcpp, *arg);
-    }
-
-    if (_db.acr_ed_cmd.msgtype != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-msgtype:";
-        cstring_Print(_db.acr_ed_cmd.msgtype, *arg);
-    }
-
-    if (_db.acr_ed_cmd.anonfld != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-anonfld:";
-        bool_Print(_db.acr_ed_cmd.anonfld, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
-        argv[ind_curs(arg).index] = Zeroterm(arg);
-    }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
-    // if _db.acr_ed_path is relative, search for it in PATH
-    algo_lib::ResolveExecFname(_db.acr_ed_path);
-    return execv(Zeroterm(_db.acr_ed_path),argv);
-}
-
-// --- atf_unit.FDb.acr_ed.ToCmdline
-algo::tempstr atf_unit::acr_ed_ToCmdline() {
-    algo::tempstr retval;
-    retval << _db.acr_ed_path << " ";
-    command::acr_ed_PrintArgv(_db.acr_ed_cmd,retval);
-    if (ch_N(_db.acr_ed_fstdin)) {
-        retval << " " << _db.acr_ed_fstdin;
-    }
-    if (ch_N(_db.acr_ed_fstdout)) {
-        retval << " " << _db.acr_ed_fstdout;
-    }
-    if (ch_N(_db.acr_ed_fstderr)) {
-        retval << " 2" << _db.acr_ed_fstderr;
-    }
-    return retval;
-}
-
 // --- atf_unit.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_unit::trace_RowidFind(int t) {
@@ -1747,6 +1771,10 @@ inline static i32 atf_unit::trace_N() {
 // --- atf_unit.FDb..Init
 // Set all fields to initial values.
 void atf_unit::FDb_Init() {
+    _db.acr_ed_path = algo::strptr("bin/acr_ed");
+    _db.acr_ed_pid = pid_t(0);
+    _db.acr_ed_timeout = i32(0);
+    _db.acr_ed_status = i32(0);
     // number: initialize Tpool
     _db.number_free      = NULL;
     _db.number_blocksize = algo::BumpToPow2(64 * sizeof(atf_unit::FNumber)); // allocate 64-127 elements at a time
@@ -1773,10 +1801,6 @@ void atf_unit::FDb_Init() {
     memset(_db.ind_unittest_buckets_elems, 0, sizeof(atf_unit::FUnittest*)*_db.ind_unittest_buckets_n); // (atf_unit.FDb.ind_unittest)
     _db.c_curtest = NULL;
     _db.perf_cycle_budget = u64(0);
-    _db.acr_ed_path = algo::strptr("bin/acr_ed");
-    _db.acr_ed_pid = pid_t(0);
-    _db.acr_ed_timeout = i32(0);
-    _db.acr_ed_status = i32(0);
 
     atf_unit::InitReflection();
     unittest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_unit.FDb.unittest  load atf_unit.FUnittest records
@@ -1786,20 +1810,39 @@ void atf_unit::FDb_Init() {
 void atf_unit::FDb_Uninit() {
     atf_unit::FDb &row = _db; (void)row;
 
-    // atf_unit.FDb.acr_ed.Uninit (Exec)  //
-    acr_ed_Kill(); // kill child, ensure forward progress
-
     // atf_unit.FDb.ind_unittest.Uninit (Thash)  //
     // skip destruction of ind_unittest in global scope
 
     // atf_unit.FDb.unittest.Uninit (Lary)  //
     // skip destruction in global scope
+
+    // atf_unit.FDb.acr_ed.Uninit (Exec)  //
+    acr_ed_Kill(); // kill child, ensure forward progress
 }
 
 // --- atf_unit.FNumber..Uninit
 void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) {
     atf_unit::FNumber &row = number; (void)row;
     tr_number_Remove(row); // remove number from index tr_number
+}
+
+// --- atf_unit.FPerfSort.orig.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.orig  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    orig_Reserve(parent, nnew); // reserve space
+    int at = parent.orig_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.orig_elems + at + i) atf_unit::Dbl(rhs[i]);
+        parent.orig_n++;
+    }
+    return algo::aryptr<atf_unit::Dbl>(parent.orig_elems + at, nnew);
 }
 
 // --- atf_unit.FPerfSort.orig.Alloc
@@ -1893,6 +1936,14 @@ void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs
     }
 }
 
+// --- atf_unit.FPerfSort.orig.Setary2
+// Copy specified array into orig, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) {
+    orig_RemoveAll(parent);
+    orig_Addary(parent, rhs);
+}
+
 // --- atf_unit.FPerfSort.orig.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) {
@@ -1907,12 +1958,17 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent
     return algo::aryptr<atf_unit::Dbl>(elems + old_n, n_elems);
 }
 
-// --- atf_unit.FPerfSort.orig.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_unit::orig_XrefMaybe(atf_unit::Dbl &row) {
+// --- atf_unit.FPerfSort.orig.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
     bool retval = true;
-    (void)row;
+    atf_unit::Dbl &elem = orig_Alloc(parent);
+    retval = atf_unit::Dbl_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        orig_RemoveLast(parent);
+    }
     return retval;
 }
 
@@ -2046,6 +2102,20 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& pare
     }
     parent.sorted_n = new_n;
     return algo::aryptr<atf_unit::Dbl>(elems + old_n, n_elems);
+}
+
+// --- atf_unit.FPerfSort.sorted.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
+    bool retval = true;
+    atf_unit::Dbl &elem = sorted_Alloc(parent);
+    retval = atf_unit::Dbl_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        sorted_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- atf_unit.FPerfSort.sorted.Swap
@@ -2214,6 +2284,23 @@ void atf_unit::sorted_QuickSort(atf_unit::FPerfSort& parent) {
     sorted_IntQuickSort(elems, n, max_depth);
 }
 
+// --- atf_unit.FPerfSort.index.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.index_elems && rhs.elems < parent.index_elems + parent.index_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.index  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    index_Reserve(parent, nnew); // reserve space
+    int at = parent.index_n;
+    memcpy(parent.index_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.index_n += nnew;
+    return algo::aryptr<i32>(parent.index_elems + at, nnew);
+}
+
 // --- atf_unit.FPerfSort.index.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -2305,6 +2392,14 @@ void atf_unit::index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rh
     }
 }
 
+// --- atf_unit.FPerfSort.index.Setary2
+// Copy specified array into index, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void atf_unit::index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32> &rhs) {
+    index_RemoveAll(parent);
+    index_Addary(parent, rhs);
+}
+
 // --- atf_unit.FPerfSort.index.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) {
@@ -2317,6 +2412,20 @@ algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_e
     }
     parent.index_n = new_n;
     return algo::aryptr<i32>(elems + old_n, n_elems);
+}
+
+// --- atf_unit.FPerfSort.index.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
+    bool retval = true;
+    i32 &elem = index_Alloc(parent);
+    retval = i32_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        index_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- atf_unit.FPerfSort..Uninit
@@ -2392,6 +2501,12 @@ void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) {
 
     bool_Print(row.success, temp);
     PrintAttrSpaceReset(str,"success", temp);
+
+    algo::cstring_Print(row.error, temp);
+    PrintAttrSpaceReset(str,"error", temp);
+
+    u64_PrintHex(u64(row.c_syscmd), temp, 8, true);
+    PrintAttrSpaceReset(str,"c_syscmd", temp);
 }
 
 // --- atf_unit.FieldId.value.ToCstr
@@ -2501,17 +2616,18 @@ bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_st
     return retval;
 }
 
+// --- atf_unit.TypeA..FmtJson
+// Create JSON representation of atf_unit::TypeA under PARENT node
+// cfmt:atf_unit.TypeA.Json  printfmt:Auto
+lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) {
+    return i32_FmtJson(const_cast<atf_unit::TypeA&>(row).typea,parent);;
+}
+
 // --- atf_unit.TypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeA.String  printfmt:Raw
 void atf_unit::TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) {
     i32_Print(row.typea, str);
-}
-
-// --- atf_unit.TypeA..FmtJson
-// Create JSON representation of atf_unit::TypeA under PARENT node -- cprint:atf_unit.TypeA.Json
-lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) {
-    return i32_FmtJson(const_cast<atf_unit::TypeA&>(row).typea,parent);;
 }
 
 // --- atf_unit.TypeB..ReadFieldMaybe
@@ -2548,22 +2664,9 @@ bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_st
     return retval;
 }
 
-// --- atf_unit.TypeB..Print
-// print string representation of ROW to string STR
-// cfmt:atf_unit.TypeB.String  printfmt:Tuple
-void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atf_unit.TypeB";
-
-    i32_Print(row.typea, temp);
-    PrintAttrSpaceReset(str,"typea", temp);
-
-    i32_Print(row.j, temp);
-    PrintAttrSpaceReset(str,"j", temp);
-}
-
 // --- atf_unit.TypeB..FmtJson
-// Create JSON representation of atf_unit::TypeB under PARENT node -- cprint:atf_unit.TypeB.Json
+// Create JSON representation of atf_unit::TypeB under PARENT node
+// cfmt:atf_unit.TypeB.Json  printfmt:Auto
 lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
@@ -2586,6 +2689,20 @@ lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode 
     return object_node;
 }
 
+// --- atf_unit.TypeB..Print
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TypeB.String  printfmt:Tuple
+void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_unit.TypeB";
+
+    i32_Print(row.typea, temp);
+    PrintAttrSpaceReset(str,"typea", temp);
+
+    i32_Print(row.j, temp);
+    PrintAttrSpaceReset(str,"j", temp);
+}
+
 // --- atf_unit.TestJson..Init
 // Set all fields to initial values.
 void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
@@ -2603,67 +2720,9 @@ void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
     parent.fld_char = char(0);
 }
 
-// --- atf_unit.TestJson..Print
-// print string representation of ROW to string STR
-// cfmt:atf_unit.TestJson.String  printfmt:Tuple
-void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atf_unit.TestJson";
-
-    bool_Print(row.fld_bool, temp);
-    PrintAttrSpaceReset(str,"fld_bool", temp);
-
-    u8_Print(row.fld_u8, temp);
-    PrintAttrSpaceReset(str,"fld_u8", temp);
-
-    i8_Print(row.fld_i8, temp);
-    PrintAttrSpaceReset(str,"fld_i8", temp);
-
-    u16_Print(row.fld_u16, temp);
-    PrintAttrSpaceReset(str,"fld_u16", temp);
-
-    i16_Print(row.fld_i16, temp);
-    PrintAttrSpaceReset(str,"fld_i16", temp);
-
-    u32_Print(row.fld_u32, temp);
-    PrintAttrSpaceReset(str,"fld_u32", temp);
-
-    i32_Print(row.fld_i32, temp);
-    PrintAttrSpaceReset(str,"fld_i32", temp);
-
-    u64_Print(row.fld_u64, temp);
-    PrintAttrSpaceReset(str,"fld_u64", temp);
-
-    i64_Print(row.fld_i64, temp);
-    PrintAttrSpaceReset(str,"fld_i64", temp);
-
-    float_Print(row.fld_float, temp);
-    PrintAttrSpaceReset(str,"fld_float", temp);
-
-    double_Print(row.fld_double, temp);
-    PrintAttrSpaceReset(str,"fld_double", temp);
-
-    char_Print(row.fld_char, temp);
-    PrintAttrSpaceReset(str,"fld_char", temp);
-
-    algo::strptr_Print(row.fld_strptr, temp);
-    PrintAttrSpaceReset(str,"fld_strptr", temp);
-
-    algo::cstring_Print(row.fld_cstring, temp);
-    PrintAttrSpaceReset(str,"fld_cstring", temp);
-
-    atf_unit::TypeA_Print(row.fld_atftypea, temp);
-    PrintAttrSpaceReset(str,"fld_atftypea", temp);
-
-    atf_unit::Dbl_Print(row.fld_atfdbl, temp);
-    PrintAttrSpaceReset(str,"fld_atfdbl", temp);
-
-    atf_unit::TypeB_Print(row.fld_atftypeb, temp);
-    PrintAttrSpaceReset(str,"fld_atftypeb", temp);
-}
-
 // --- atf_unit.TestJson..FmtJson
-// Create JSON representation of atf_unit::TestJson under PARENT node -- cprint:atf_unit.TestJson.Json
+// Create JSON representation of atf_unit::TestJson under PARENT node
+// cfmt:atf_unit.TestJson.Json  printfmt:Auto
 lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
@@ -2796,6 +2855,68 @@ lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::
     node_XrefMaybe(*fld_atftypeb_field_node);
     atf_unit::TypeB_FmtJson(const_cast<atf_unit::TestJson&>(row).fld_atftypeb,fld_atftypeb_field_node);
     return object_node;
+}
+
+// --- atf_unit.TestJson..Print
+// print string representation of ROW to string STR
+// cfmt:atf_unit.TestJson.String  printfmt:Tuple
+void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_unit.TestJson";
+
+    bool_Print(row.fld_bool, temp);
+    PrintAttrSpaceReset(str,"fld_bool", temp);
+
+    u8_Print(row.fld_u8, temp);
+    PrintAttrSpaceReset(str,"fld_u8", temp);
+
+    i8_Print(row.fld_i8, temp);
+    PrintAttrSpaceReset(str,"fld_i8", temp);
+
+    u16_Print(row.fld_u16, temp);
+    PrintAttrSpaceReset(str,"fld_u16", temp);
+
+    i16_Print(row.fld_i16, temp);
+    PrintAttrSpaceReset(str,"fld_i16", temp);
+
+    u32_Print(row.fld_u32, temp);
+    PrintAttrSpaceReset(str,"fld_u32", temp);
+
+    i32_Print(row.fld_i32, temp);
+    PrintAttrSpaceReset(str,"fld_i32", temp);
+
+    u64_Print(row.fld_u64, temp);
+    PrintAttrSpaceReset(str,"fld_u64", temp);
+
+    i64_Print(row.fld_i64, temp);
+    PrintAttrSpaceReset(str,"fld_i64", temp);
+
+    float_Print(row.fld_float, temp);
+    PrintAttrSpaceReset(str,"fld_float", temp);
+
+    double_Print(row.fld_double, temp);
+    PrintAttrSpaceReset(str,"fld_double", temp);
+
+    char_Print(row.fld_char, temp);
+    PrintAttrSpaceReset(str,"fld_char", temp);
+
+    algo::strptr_Print(row.fld_strptr, temp);
+    PrintAttrSpaceReset(str,"fld_strptr", temp);
+
+    algo::cstring_Print(row.fld_cstring, temp);
+    PrintAttrSpaceReset(str,"fld_cstring", temp);
+
+    atf_unit::TypeA_Print(row.fld_atftypea, temp);
+    PrintAttrSpaceReset(str,"fld_atftypea", temp);
+
+    atf_unit::Cstr_Print(row.fld_atfcstr, temp);
+    PrintAttrSpaceReset(str,"fld_atfcstr", temp);
+
+    atf_unit::Dbl_Print(row.fld_atfdbl, temp);
+    PrintAttrSpaceReset(str,"fld_atfdbl", temp);
+
+    atf_unit::TypeB_Print(row.fld_atftypeb, temp);
+    PrintAttrSpaceReset(str,"fld_atftypeb", temp);
 }
 
 // --- atf_unit...SizeCheck

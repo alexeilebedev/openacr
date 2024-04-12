@@ -469,7 +469,7 @@ bool                 Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr fi
 // Read fields of acr_dm::Rowid from an ascii string.
 // The format of the string is a string with separated values
 // func:acr_dm.Rowid..ReadStrptrMaybe
-bool                 Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str);
+bool                 Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:acr_dm.Rowid..Lt
 bool                 Rowid_Lt(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) __attribute__((nothrow));
 // func:acr_dm.Rowid..Cmp
@@ -478,7 +478,7 @@ i32                  Rowid_Cmp(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) __attribu
 // func:acr_dm.Rowid..Init
 void                 Rowid_Init(acr_dm::Rowid& parent);
 // func:acr_dm.Rowid..Eq
-bool                 Rowid_Eq(const acr_dm::Rowid& lhs, const acr_dm::Rowid& rhs) __attribute__((nothrow));
+bool                 Rowid_Eq(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr_dm.Rowid..Update
 bool                 Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid& rhs) __attribute__((nothrow));
@@ -713,7 +713,7 @@ bool                 value_ReadStrptrMaybe(acr_dm::FieldId& parent, algo::strptr
 // Read fields of acr_dm::FieldId from an ascii string.
 // The format of the string is the format of the acr_dm::FieldId's only field
 // func:acr_dm.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.FieldId..Init
 void                 FieldId_Init(acr_dm::FieldId& parent);

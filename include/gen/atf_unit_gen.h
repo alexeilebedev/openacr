@@ -27,6 +27,7 @@
 #include "include/gen/command_gen.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/atfdb_gen.h"
+#include "include/gen/lib_exec_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -88,18 +89,27 @@ i32                  val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attr
 
 // func:atf_unit.Cstr..Hash
 u32                  Cstr_Hash(u32 prev, const atf_unit::Cstr & rhs) __attribute__((nothrow));
+// Read fields of atf_unit::Cstr from an ascii string.
+// The format of the string is the format of the atf_unit::Cstr's only field
+// func:atf_unit.Cstr..ReadStrptrMaybe
+bool                 Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.Cstr..Lt
 bool                 Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // func:atf_unit.Cstr..Cmp
 i32                  Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // func:atf_unit.Cstr..Eq
-bool                 Cstr_Eq(const atf_unit::Cstr& lhs, const atf_unit::Cstr& rhs) __attribute__((nothrow));
+bool                 Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.Cstr..Update
 bool                 Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
-// Create JSON representation of atf_unit::Cstr under PARENT node -- cprint:atf_unit.Cstr.Json
+// Create JSON representation of atf_unit::Cstr under PARENT node
+// cfmt:atf_unit.Cstr.Json  printfmt:Auto
 // func:atf_unit.Cstr..FmtJson
 lib_json::FNode *    Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atf_unit.Cstr.String  printfmt:Raw
+// func:atf_unit.Cstr..Print
+void                 Cstr_Print(atf_unit::Cstr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_unit.Dbl
 // create: atf_unit.FPerfSort.orig (Tary)
@@ -122,26 +132,27 @@ u32                  Dbl_Hash(u32 prev, atf_unit::Dbl rhs) __attribute__((nothro
 // Read fields of atf_unit::Dbl from an ascii string.
 // The format of the string is the format of the atf_unit::Dbl's only field
 // func:atf_unit.Dbl..ReadStrptrMaybe
-bool                 Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str);
+bool                 Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.Dbl..Lt
 bool                 Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // func:atf_unit.Dbl..Cmp
 i32                  Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.Dbl..Init
-void                 Dbl_Init(atf_unit::Dbl& orig);
+void                 Dbl_Init(atf_unit::Dbl& parent);
 // func:atf_unit.Dbl..Eq
 bool                 Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.Dbl..Update
 bool                 Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+// Create JSON representation of atf_unit::Dbl under PARENT node
+// cfmt:atf_unit.Dbl.Json  printfmt:Auto
+// func:atf_unit.Dbl..FmtJson
+lib_json::FNode *    Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_unit.Dbl.String  printfmt:Raw
 // func:atf_unit.Dbl..Print
 void                 Dbl_Print(atf_unit::Dbl row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of atf_unit::Dbl under PARENT node -- cprint:atf_unit.Dbl.Json
-// func:atf_unit.Dbl..FmtJson
-lib_json::FNode *    Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.trace
 #pragma pack(push,1)
@@ -158,6 +169,14 @@ void                 trace_Print(atf_unit::trace& row, algo::cstring& str) __att
 // --- atf_unit.FDb
 // create: atf_unit.FDb._db (Global)
 struct FDb { // atf_unit.FDb: In-memory database for atf_unit
+    algo::cstring           acr_ed_path;                  //   "bin/acr_ed"  path for executable
+    command::acr_ed         acr_ed_cmd;                   // command line for child process
+    algo::cstring           acr_ed_fstdin;                // redirect for stdin
+    algo::cstring           acr_ed_fstdout;               // redirect for stdout
+    algo::cstring           acr_ed_fstderr;               // redirect for stderr
+    pid_t                   acr_ed_pid;                   //   0  pid of running child process
+    i32                     acr_ed_timeout;               //   0  optional timeout for child process
+    i32                     acr_ed_status;                //   0  last exit status of child process
     u64                     number_blocksize;             // # bytes per block
     atf_unit::FNumber*      number_free;                  //
     atf_unit::FNumber*      tr_number_root;               // Root of the tree
@@ -171,18 +190,42 @@ struct FDb { // atf_unit.FDb: In-memory database for atf_unit
     algo::cstring           curdir;                       //
     atf_unit::FUnittest*    c_curtest;                    // Currently running test. optional pointer
     algo::Smallstr100       cur_teststep;                 //
-    report::atf_unit        report;                       // Final report
+    report::atf_unit        report;                       //
     u64                     perf_cycle_budget;            //   0
-    algo::cstring           acr_ed_path;                  //   "bin/acr_ed"  path for executable
-    command::acr_ed         acr_ed_cmd;                   // command line for child process
-    algo::cstring           acr_ed_fstdin;                // redirect for stdin
-    algo::cstring           acr_ed_fstdout;               // redirect for stdout
-    algo::cstring           acr_ed_fstderr;               // redirect for stderr
-    pid_t                   acr_ed_pid;                   //   0  pid of running child process
-    i32                     acr_ed_timeout;               //   0  optional timeout for child process
-    i32                     acr_ed_status;                //   0  last exit status of child process
+    algo::cstring           tempdir;                      //
     atf_unit::trace         trace;                        //
 };
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:atf_unit.FDb.acr_ed.Start
+int                  acr_ed_Start() __attribute__((nothrow));
+// Start subprocess & Read output
+// func:atf_unit.FDb.acr_ed.StartRead
+algo::Fildes         acr_ed_StartRead(algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:atf_unit.FDb.acr_ed.Kill
+void                 acr_ed_Kill();
+// Wait for subprocess to return
+// func:atf_unit.FDb.acr_ed.Wait
+void                 acr_ed_Wait() __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:atf_unit.FDb.acr_ed.Exec
+int                  acr_ed_Exec() __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:atf_unit.FDb.acr_ed.ExecX
+void                 acr_ed_ExecX();
+// Call execv()
+// Call execv with specified parameters
+// func:atf_unit.FDb.acr_ed.Execv
+int                  acr_ed_Execv() __attribute__((nothrow));
+// func:atf_unit.FDb.acr_ed.ToCmdline
+algo::tempstr        acr_ed_ToCmdline() __attribute__((nothrow));
+// Form array from the command line
+// func:atf_unit.FDb.acr_ed.ToArgv
+void                 acr_ed_ToArgv(algo::StringAry& args) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -382,34 +425,6 @@ void                 ind_unittest_Remove(atf_unit::FUnittest& row) __attribute__
 // func:atf_unit.FDb.ind_unittest.Reserve
 void                 ind_unittest_Reserve(int n) __attribute__((nothrow));
 
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-// func:atf_unit.FDb.acr_ed.Start
-int                  acr_ed_Start() __attribute__((nothrow));
-// Start subprocess & Read output
-// func:atf_unit.FDb.acr_ed.StartRead
-algo::Fildes         acr_ed_StartRead(algo_lib::FFildes &read) __attribute__((nothrow));
-// Kill subprocess and wait
-// func:atf_unit.FDb.acr_ed.Kill
-void                 acr_ed_Kill();
-// Wait for subprocess to return
-// func:atf_unit.FDb.acr_ed.Wait
-void                 acr_ed_Wait() __attribute__((nothrow));
-// Start + Wait
-// Execute subprocess and return exit code
-// func:atf_unit.FDb.acr_ed.Exec
-int                  acr_ed_Exec() __attribute__((nothrow));
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-// func:atf_unit.FDb.acr_ed.ExecX
-void                 acr_ed_ExecX();
-// Call execv()
-// Call execv with specified parameters -- cprint:acr_ed.Argv
-// func:atf_unit.FDb.acr_ed.Execv
-int                  acr_ed_Execv() __attribute__((nothrow));
-// func:atf_unit.FDb.acr_ed.ToCmdline
-algo::tempstr        acr_ed_ToCmdline() __attribute__((nothrow));
-
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.Reset
 void                 _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) __attribute__((nothrow));
@@ -488,6 +503,11 @@ private:
     void operator =(const FPerfSort&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.orig.Addary
+algo::aryptr<atf_unit::Dbl> orig_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:atf_unit.FPerfSort.orig.Alloc
@@ -507,7 +527,7 @@ bool                 orig_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((not
 atf_unit::Dbl*       orig_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.orig.Getary
-algo::aryptr<atf_unit::Dbl> orig_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+algo::aryptr<atf_unit::Dbl> orig_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.orig.Last
 atf_unit::Dbl*       orig_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
@@ -534,6 +554,10 @@ void                 orig_AbsReserve(atf_unit::FPerfSort& parent, int n) __attri
 // Copy contents of RHS to PARENT.
 // func:atf_unit.FPerfSort.orig.Setary
 void                 orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) __attribute__((nothrow));
+// Copy specified array into orig, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:atf_unit.FPerfSort.orig.Setary2
+void                 orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FPerfSort.orig.qFind
 atf_unit::Dbl&       orig_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
@@ -546,10 +570,11 @@ u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.orig.AllocNVal
 algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_unit.FPerfSort.orig.XrefMaybe
-bool                 orig_XrefMaybe(atf_unit::Dbl &row);
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:atf_unit.FPerfSort.orig.ReadStrptrMaybe
+bool                 orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -575,7 +600,7 @@ bool                 sorted_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((n
 atf_unit::Dbl*       sorted_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.sorted.Getary
-algo::aryptr<atf_unit::Dbl> sorted_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+algo::aryptr<atf_unit::Dbl> sorted_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.sorted.Last
 atf_unit::Dbl*       sorted_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
@@ -618,6 +643,11 @@ u64                  sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.sorted.AllocNVal
 algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:atf_unit.FPerfSort.sorted.ReadStrptrMaybe
+bool                 sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:atf_unit.FPerfSort.sorted.SortedQ
 bool                 sorted_SortedQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
@@ -631,6 +661,11 @@ void                 sorted_HeapSort(atf_unit::FPerfSort& parent) __attribute__(
 // func:atf_unit.FPerfSort.sorted.QuickSort
 void                 sorted_QuickSort(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.index.Addary
+algo::aryptr<i32>    index_Addary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:atf_unit.FPerfSort.index.Alloc
@@ -650,7 +685,7 @@ bool                 index_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((no
 i32*                 index_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.index.Getary
-algo::aryptr<i32>    index_Getary(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+algo::aryptr<i32>    index_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.index.Last
 i32*                 index_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
@@ -677,6 +712,10 @@ void                 index_AbsReserve(atf_unit::FPerfSort& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:atf_unit.FPerfSort.index.Setary
 void                 index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) __attribute__((nothrow));
+// Copy specified array into index, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:atf_unit.FPerfSort.index.Setary2
+void                 index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FPerfSort.index.qFind
 i32&                 index_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
@@ -689,6 +728,11 @@ u64                  index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.index.AllocNVal
 algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:atf_unit.FPerfSort.index.ReadStrptrMaybe
+bool                 index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:atf_unit.FPerfSort.orig_curs.Next
@@ -740,6 +784,8 @@ struct FUnittest { // atf_unit.FUnittest: Test function
     bool                           select;              //   false  Select test for running?
     atf_unit::unittest_step_hook   step;                //   NULL  Pointer to a function
     bool                           success;             //   false
+    algo::cstring                  error;               //
+    lib_exec::FSyscmd*             c_syscmd;            // optional pointer
 private:
     friend atf_unit::FUnittest& unittest_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_unit::FUnittest* unittest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -819,7 +865,7 @@ bool                 value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strp
 // Read fields of atf_unit::FieldId from an ascii string.
 // The format of the string is the format of the atf_unit::FieldId's only field
 // func:atf_unit.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FieldId..Init
 void                 FieldId_Init(atf_unit::FieldId& parent);
@@ -845,7 +891,7 @@ u32                  TypeA_Hash(u32 prev, const atf_unit::TypeA & rhs) __attribu
 // Read fields of atf_unit::TypeA from an ascii string.
 // The format of the string is the format of the atf_unit::TypeA's only field
 // func:atf_unit.TypeA..ReadStrptrMaybe
-bool                 TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str);
+bool                 TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.TypeA..Lt
 bool                 TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // func:atf_unit.TypeA..Cmp
@@ -854,17 +900,18 @@ i32                  TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __att
 // func:atf_unit.TypeA..Init
 void                 TypeA_Init(atf_unit::TypeA& parent);
 // func:atf_unit.TypeA..Eq
-bool                 TypeA_Eq(const atf_unit::TypeA& lhs, const atf_unit::TypeA& rhs) __attribute__((nothrow));
+bool                 TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.TypeA..Update
 bool                 TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+// Create JSON representation of atf_unit::TypeA under PARENT node
+// cfmt:atf_unit.TypeA.Json  printfmt:Auto
+// func:atf_unit.TypeA..FmtJson
+lib_json::FNode *    TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeA.String  printfmt:Raw
 // func:atf_unit.TypeA..Print
 void                 TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of atf_unit::TypeA under PARENT node -- cprint:atf_unit.TypeA.Json
-// func:atf_unit.TypeA..FmtJson
-lib_json::FNode *    TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.TypeB
 struct TypeB { // atf_unit.TypeB
@@ -886,7 +933,7 @@ bool                 TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr 
 // Read fields of atf_unit::TypeB from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atf_unit.TypeB..ReadStrptrMaybe
-bool                 TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str);
+bool                 TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.TypeB..Lt
 bool                 TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // func:atf_unit.TypeB..Cmp
@@ -895,17 +942,18 @@ i32                  TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __att
 // func:atf_unit.TypeB..Init
 void                 TypeB_Init(atf_unit::TypeB& parent);
 // func:atf_unit.TypeB..Eq
-bool                 TypeB_Eq(const atf_unit::TypeB& lhs, const atf_unit::TypeB& rhs) __attribute__((nothrow));
+bool                 TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.TypeB..Update
 bool                 TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+// Create JSON representation of atf_unit::TypeB under PARENT node
+// cfmt:atf_unit.TypeB.Json  printfmt:Auto
+// func:atf_unit.TypeB..FmtJson
+lib_json::FNode *    TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeB.String  printfmt:Tuple
 // func:atf_unit.TypeB..Print
 void                 TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of atf_unit::TypeB under PARENT node -- cprint:atf_unit.TypeB.Json
-// func:atf_unit.TypeB..FmtJson
-lib_json::FNode *    TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- atf_unit.TestJson
 struct TestJson { // atf_unit.TestJson
@@ -933,13 +981,14 @@ struct TestJson { // atf_unit.TestJson
 // Set all fields to initial values.
 // func:atf_unit.TestJson..Init
 void                 TestJson_Init(atf_unit::TestJson& parent);
+// Create JSON representation of atf_unit::TestJson under PARENT node
+// cfmt:atf_unit.TestJson.Json  printfmt:Auto
+// func:atf_unit.TestJson..FmtJson
+lib_json::FNode *    TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TestJson.String  printfmt:Tuple
 // func:atf_unit.TestJson..Print
 void                 TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) __attribute__((nothrow));
-// Create JSON representation of atf_unit::TestJson under PARENT node -- cprint:atf_unit.TestJson.Json
-// func:atf_unit.TestJson..FmtJson
-lib_json::FNode *    TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_unit { // gen:ns_curstext
 
@@ -1348,22 +1397,6 @@ void                 unittest_algo_lib_RegxShortCircuit();
 // func:atf_unit...unittest_algo_lib_RemDirRecurse
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_RemDirRecurse();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-// func:atf_unit...unittest_algo_lib_RemDirRecurse1
-// this function is 'extrn' and implemented by user
-void                 unittest_algo_lib_RemDirRecurse1();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-// func:atf_unit...unittest_algo_lib_RemDirRecurse2
-// this function is 'extrn' and implemented by user
-void                 unittest_algo_lib_RemDirRecurse2();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-// func:atf_unit...unittest_algo_lib_RemDirRecurse3
-// this function is 'extrn' and implemented by user
-void                 unittest_algo_lib_RemDirRecurse3();
-// User-implemented function from gstatic:atf_unit.FDb.unittest
-// func:atf_unit...unittest_algo_lib_RemDirRecurse4
-// this function is 'extrn' and implemented by user
-void                 unittest_algo_lib_RemDirRecurse4();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_Replscope
 // this function is 'extrn' and implemented by user
@@ -1981,6 +2014,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Cstr &row);// cfmt:atf_unit.Cstr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::Dbl &row);// cfmt:atf_unit.Dbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::trace &row);// cfmt:atf_unit.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_unit::FUnittest &row);// cfmt:atf_unit.FUnittest.String

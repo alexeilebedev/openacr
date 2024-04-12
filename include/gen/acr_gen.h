@@ -216,11 +216,11 @@ private:
 
 // Print back to string
 // func:acr.AttrRegx.name.Print
-void                 name_Print(acr::AttrRegx& where, algo::cstring &out) __attribute__((nothrow));
+void                 name_Print(acr::AttrRegx& parent, algo::cstring &out) __attribute__((nothrow));
 
 // Print back to string
 // func:acr.AttrRegx.value.Print
-void                 value_Print(acr::AttrRegx& where, algo::cstring &out) __attribute__((nothrow));
+void                 value_Print(acr::AttrRegx& parent, algo::cstring &out) __attribute__((nothrow));
 
 // print string representation of ROW to string STR
 // cfmt:acr.AttrRegx.String  printfmt:Sep
@@ -250,7 +250,7 @@ i32                  CtypeTopoKey_Cmp(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey&
 // func:acr.CtypeTopoKey..Init
 void                 CtypeTopoKey_Init(acr::CtypeTopoKey& parent);
 // func:acr.CtypeTopoKey..Eq
-bool                 CtypeTopoKey_Eq(const acr::CtypeTopoKey& lhs, const acr::CtypeTopoKey& rhs) __attribute__((nothrow));
+bool                 CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.CtypeTopoKey..Update
 bool                 CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
@@ -415,6 +415,11 @@ acr::FRec&           c_bad_rec_qFind(acr::FCheck& check, u32 idx) __attribute__(
 // func:acr.FCheck.c_bad_rec.qLast
 acr::FRec&           c_bad_rec_qLast(acr::FCheck& check) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr.FCheck.ary_name.Addary
+algo::aryptr<algo::cstring> ary_name_Addary(acr::FCheck& check, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr.FCheck.ary_name.Alloc
@@ -434,7 +439,7 @@ bool                 ary_name_EmptyQ(acr::FCheck& check) __attribute__((nothrow)
 algo::cstring*       ary_name_Find(acr::FCheck& check, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:acr.FCheck.ary_name.Getary
-algo::aryptr<algo::cstring> ary_name_Getary(acr::FCheck& check) __attribute__((nothrow));
+algo::aryptr<algo::cstring> ary_name_Getary(const acr::FCheck& check) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FCheck.ary_name.Last
 algo::cstring*       ary_name_Last(acr::FCheck& check) __attribute__((nothrow, pure));
@@ -461,6 +466,10 @@ void                 ary_name_AbsReserve(acr::FCheck& check, int n) __attribute_
 // Copy contents of RHS to PARENT.
 // func:acr.FCheck.ary_name.Setary
 void                 ary_name_Setary(acr::FCheck& check, acr::FCheck &rhs) __attribute__((nothrow));
+// Copy specified array into ary_name, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:acr.FCheck.ary_name.Setary2
+void                 ary_name_Setary(acr::FCheck& check, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FCheck.ary_name.qFind
 algo::cstring&       ary_name_qFind(acr::FCheck& check, u64 t) __attribute__((nothrow));
@@ -473,6 +482,11 @@ u64                  ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem)
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr.FCheck.ary_name.AllocNVal
 algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:acr.FCheck.ary_name.ReadStrptrMaybe
+bool                 ary_name_ReadStrptrMaybe(acr::FCheck& check, algo::strptr in_str) __attribute__((nothrow));
 
 // func:acr.FCheck.c_bad_rec_curs.Reset
 void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
@@ -3050,7 +3064,7 @@ i32                  RecSortkey_Cmp(acr::RecSortkey& lhs, acr::RecSortkey& rhs) 
 // func:acr.RecSortkey..Init
 void                 RecSortkey_Init(acr::RecSortkey& parent);
 // func:acr.RecSortkey..Eq
-bool                 RecSortkey_Eq(const acr::RecSortkey& lhs, const acr::RecSortkey& rhs) __attribute__((nothrow));
+bool                 RecSortkey_Eq(acr::RecSortkey& lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.RecSortkey..Update
 bool                 RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
@@ -3084,7 +3098,7 @@ i32                  PlineKey_Cmp(acr::PlineKey& lhs, acr::PlineKey& rhs) __attr
 // func:acr.PlineKey..Init
 void                 PlineKey_Init(acr::PlineKey& parent);
 // func:acr.PlineKey..Eq
-bool                 PlineKey_Eq(const acr::PlineKey& lhs, const acr::PlineKey& rhs) __attribute__((nothrow));
+bool                 PlineKey_Eq(acr::PlineKey& lhs, acr::PlineKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.PlineKey..Update
 bool                 PlineKey_Update(acr::PlineKey &lhs, acr::PlineKey& rhs) __attribute__((nothrow));
@@ -3409,7 +3423,7 @@ bool                 where_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
 acr::AttrRegx*       where_Find(acr::FQuery& query, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:acr.FQuery.where.Getary
-algo::aryptr<acr::AttrRegx> where_Getary(acr::FQuery& query) __attribute__((nothrow));
+algo::aryptr<acr::AttrRegx> where_Getary(const acr::FQuery& query) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FQuery.where.Last
 acr::AttrRegx*       where_Last(acr::FQuery& query) __attribute__((nothrow, pure));
@@ -3442,10 +3456,6 @@ acr::AttrRegx&       where_qLast(acr::FQuery& query) __attribute__((nothrow));
 // Return row id of specified element
 // func:acr.FQuery.where.rowid_Get
 u64                  where_rowid_Get(acr::FQuery& query, acr::AttrRegx &elem) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:acr.FQuery.where.XrefMaybe
-bool                 where_XrefMaybe(acr::AttrRegx &row);
 
 // Print back to string
 // func:acr.FQuery.ssimfile.Print
@@ -4081,7 +4091,7 @@ bool                 value_ReadStrptrMaybe(acr::FieldId& parent, algo::strptr rh
 // Read fields of acr::FieldId from an ascii string.
 // The format of the string is the format of the acr::FieldId's only field
 // func:acr.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FieldId..Init
 void                 FieldId_Init(acr::FieldId& parent);
@@ -4129,7 +4139,7 @@ i32                  ReadMode_Cmp(acr::ReadMode& lhs, acr::ReadMode& rhs) __attr
 // func:acr.ReadMode..Init
 void                 ReadMode_Init(acr::ReadMode& parent);
 // func:acr.ReadMode..Eq
-bool                 ReadMode_Eq(const acr::ReadMode& lhs, const acr::ReadMode& rhs) __attribute__((nothrow));
+bool                 ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr.ReadMode.String  printfmt:Raw
 // func:acr.ReadMode..Print
@@ -4174,7 +4184,7 @@ bool                 value_ReadStrptrMaybe(acr::TableId& parent, algo::strptr rh
 // Read fields of acr::TableId from an ascii string.
 // The format of the string is the format of the acr::TableId's only field
 // func:acr.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(acr::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(acr::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.TableId..Init
 void                 TableId_Init(acr::TableId& parent);

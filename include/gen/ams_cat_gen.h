@@ -160,7 +160,7 @@ bool                 value_ReadStrptrMaybe(ams_cat::FieldId& parent, algo::strpt
 // Read fields of ams_cat::FieldId from an ascii string.
 // The format of the string is the format of the ams_cat::FieldId's only field
 // func:ams_cat.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams_cat.FieldId..Init
 void                 FieldId_Init(ams_cat::FieldId& parent);

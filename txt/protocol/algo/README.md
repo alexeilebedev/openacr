@@ -94,6 +94,14 @@ Other ctypes in this namespace which don't have own readme files
 |---|---|---|---|---|
 |ary|u8|Tary|
 
+#### algo.DayRange - 
+<a href="#algo-dayrange"></a>
+
+|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|start|algo.UnTime|Val|
+|end|algo.UnTime|Val|
+
 #### algo.DryrunQ - Symbolic bool
 <a href="#algo-dryrunq"></a>
 
@@ -1172,6 +1180,13 @@ Other ctypes in this namespace which don't have own readme files
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |ch|char|Smallstr|
+
+#### algo.StringAry - 
+<a href="#algo-stringary"></a>
+
+|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|ary|algo.cstring|Tary|
 
 #### algo.U16Dec2 - 
 <a href="#algo-u16dec2"></a>

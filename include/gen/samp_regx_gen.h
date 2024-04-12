@@ -160,7 +160,7 @@ bool                 value_ReadStrptrMaybe(samp_regx::FieldId& parent, algo::str
 // Read fields of samp_regx::FieldId from an ascii string.
 // The format of the string is the format of the samp_regx::FieldId's only field
 // func:samp_regx.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:samp_regx.FieldId..Init
 void                 FieldId_Init(samp_regx::FieldId& parent);

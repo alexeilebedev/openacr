@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -167,6 +167,37 @@ namespace algo {
             invalid   // invalid token
         } state;
         inline Sep_curs();
+    };
+
+    // -----------------------------------------------------------------------------
+    // Unsigned integer ranges cursor
+    // Usage:
+    // ind_beg(u64_Ranges_curs,i,"1,5,8-10,14-16") {
+    //     // u64 &i iterates over 1, 5, 8, 9, 10, 14, 15, 16
+    // }ind_end;
+    // Note:
+    // - iteration is done exactly as it is written - no sorting or de-duplication happens;
+    // - values or ranges are comma-separated;
+    // - ranges are inclusive, syntax: begin value, minus sign, end value;
+    // - range where end value is less than begin one is ignored (no swap);
+    // - except whitespace, extra characters are not allowed (double comma is error);
+    // - iteration stops on first syntax error.
+    struct u64_Ranges_curs {
+        typedef u64 ChildType;
+        algo::StringIter iter;
+        u64              cur;
+        u64              end;
+        bool             valid;
+        u64_Ranges_curs();
+    };
+
+    // -----------------------------------------------------------------------------
+    // Day range cursor from start to end
+    struct DayRange_curs {
+        typedef algo::UnTime ChildType;
+        algo::UnTime         cur;
+        algo::UnTime         end;
+        DayRange_curs() : cur(), end() {};
     };
 
     // -----------------------------------------------------------------------------
@@ -638,16 +669,6 @@ namespace algo { // update-hdr
     // print character as c++ character, surrounded by single quotes
     // and properly escaped according to c++ rules
     void char_PrintCppSingleQuote(int c, algo::cstring &out);
-
-    // Print contents of memptr as a double-quoted C++ string
-    // Bytes with codes 32-126, escept " (ASCII 34) and \ (ascii 92) are printed as-is.
-    // All other characters are printed as \xHH where H is a hex digit.
-    // NOTE: Compare with strptr_PrintCppQuoted, which \-escapes
-    // more characters and uses octal sequences for non-printable characters.
-    void memptr_Print(memptr ary, algo::cstring &out);
-
-    // print 64 bytes per line
-    void memptr_PrintHex(memptr bytes, algo::cstring &str);
 
     // prints a character suitable for appearance inside an XML string.
     // character is either printed as-is, or is escaped so that its meaning does not change.
@@ -1266,6 +1287,14 @@ namespace algo { // update-hdr
 
     // compatibility
     void reset(algo::cstring &lhs);
+    void DayRange_curs_Reset(algo::DayRange_curs &curs, const algo::DayRange& range);
+    void DayRange_curs_Next(algo::DayRange_curs &curs);
+    bool DayRange_curs_ValidQ(algo::DayRange_curs &curs);
+    algo::UnTime& DayRange_curs_Access(algo::DayRange_curs &curs);
+    void u64_Ranges_curs_Reset(algo::u64_Ranges_curs &curs, strptr str);
+    void u64_Ranges_curs_Next(algo::u64_Ranges_curs &curs);
+    bool u64_Ranges_curs_ValidQ(algo::u64_Ranges_curs &curs);
+    u64 &u64_Ranges_curs_Access(algo::u64_Ranges_curs &curs);
     void Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep);
     void Sep_curs_Next(algo::Sep_curs &curs);
 
@@ -1281,6 +1310,7 @@ namespace algo { // update-hdr
     TimeStruct GetLocalTimeStruct(UnixTime U);
     TimeStruct GetLocalTimeStruct(UnTime U);
     const algo::UnTime LocalDate(UnTime in);
+    algo::UnDiff StripDate(UnTime t);
     algo::TimeStruct GetGMTimeStruct(algo::UnTime U);
     algo::UnixTime ToUnixTime(const TimeStruct &S);
     algo::UnTime ToUnTime(const TimeStruct &S);
@@ -1300,10 +1330,9 @@ namespace algo { // update-hdr
 
     // DateCache -- Roughly 200x faster LocalDate
     const algo::UnTime DateCache_LocalDate(algo::DateCache &dc, UnTime in);
-
-    // Todo: test on windows
-    algo::UnTime CurrUnTime();
     algo::UnTime ToUnTime(WTime s);
+    algo::UnTime ParseUnTime(StringIter &s, const algo::strptr spec);
+    algo::UnTime ParseUnTime(const algo::strptr& s, const algo::strptr spec);
 
     // Change TZ environment variable to specified value
     // and notify C runtime lib of the change
@@ -1472,6 +1501,8 @@ namespace algo { // update-hdr
     inline u64 rdtscp();
     inline algo::UnixDiff UnixDiffHMS(i64 h, int m, int s);
     inline algo::UnDiff UnDiffSecs(double d);
+    inline algo::UnDiff UnDiffMsecs(const i64 i);
+    inline algo::UnDiff UnDiffUsecs(const double d);
     inline algo::UnTime UnTimeSecs(double d);
     inline algo::UnDiff UnDiffSecs(i64 i);
     inline algo::UnDiff UnDiffSecs(i32 i);
@@ -1511,8 +1542,8 @@ namespace algo { // update-hdr
     inline int ImpliedLength(char *, const char *c);
     inline int ImpliedLength(const char *, const char *c);
     inline int ch_N(const strptr &s);
-    inline int ch_First(const strptr &s, int dflt);
-    inline int ch_Last(const strptr &s, int dflt);
+    inline int ch_First(const strptr &s, int dflt = 0);
+    inline int ch_Last(const strptr &s, int dflt = 0);
     inline int ch_N(const tempstr &str);
     inline int range_N(const i32_Range &rhs);
     inline algo::aryptr<u8> strptr_ToMemptr(algo::aryptr<char> rhs);
@@ -1547,9 +1578,11 @@ namespace algo { // update-hdr
     inline u32 u16_FmtBuf(u32 value, u8 *buf);
     inline algo::cstring &operator<<(algo::cstring &out, const char* t);
     inline algo::cstring &operator<<(algo::cstring &out, const ListSep &t);
-    inline algo::cstring &operator<<(algo::cstring &out, const memptr &t);
     inline algo::cstring &operator<<(algo::cstring &out, const strptr &t);
     inline algo::cstring &operator<<(algo::cstring &out, void (*t)(algo::cstring &));
+
+    // SameSign returns false if one of the arguments is zero.
+    template<typename T> inline bool SameSignQ(T a, T b);
 
     // Compare two strings for equality, case-sensitively
     inline bool strptr_Eq(algo::strptr a, algo::strptr b);
@@ -1559,6 +1592,11 @@ namespace algo { // update-hdr
 
     // reverse bit order in a byte
     inline u8 u8_ReverseBits(u8 b);
+
+    // Return unix-epoch time with nanosecond resolution
+    // On Linux, this function calls clock_gettime() which takes about
+    // 30ns and uses rdtsc() to increase underlying clock resolution
+    inline algo::UnTime CurrUnTime();
 }
 
 // -----------------------------------------------------------------------------

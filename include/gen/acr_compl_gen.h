@@ -198,7 +198,7 @@ bool                 Badness_ReadFieldMaybe(acr_compl::Badness& parent, algo::st
 // Read fields of acr_compl::Badness from an ascii string.
 // The format of the string is a string with separated values
 // func:acr_compl.Badness..ReadStrptrMaybe
-bool                 Badness_ReadStrptrMaybe(acr_compl::Badness &parent, algo::strptr in_str);
+bool                 Badness_ReadStrptrMaybe(acr_compl::Badness &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:acr_compl.Badness..Lt
 bool                 Badness_Lt(acr_compl::Badness& lhs, acr_compl::Badness& rhs) __attribute__((nothrow));
 // func:acr_compl.Badness..Cmp
@@ -207,10 +207,14 @@ i32                  Badness_Cmp(acr_compl::Badness& lhs, acr_compl::Badness& rh
 // func:acr_compl.Badness..Init
 void                 Badness_Init(acr_compl::Badness& parent);
 // func:acr_compl.Badness..Eq
-bool                 Badness_Eq(const acr_compl::Badness& lhs, const acr_compl::Badness& rhs) __attribute__((nothrow));
+bool                 Badness_Eq(acr_compl::Badness& lhs, acr_compl::Badness& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr_compl.Badness..Update
 bool                 Badness_Update(acr_compl::Badness &lhs, acr_compl::Badness& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:acr_compl.Badness.String  printfmt:Sep
+// func:acr_compl.Badness..Print
+void                 Badness_Print(acr_compl::Badness& row, algo::cstring& str) __attribute__((nothrow));
 // func:acr_compl.Badness..GetAnon
 algo::strptr         Badness_GetAnon(acr_compl::Badness &parent, i32 idx) __attribute__((nothrow));
 
@@ -227,7 +231,7 @@ bool                 Completion_ReadFieldMaybe(acr_compl::Completion& parent, al
 // Read fields of acr_compl::Completion from an ascii string.
 // The format of the string is an ssim Tuple
 // func:acr_compl.Completion..ReadStrptrMaybe
-bool                 Completion_ReadStrptrMaybe(acr_compl::Completion &parent, algo::strptr in_str);
+bool                 Completion_ReadStrptrMaybe(acr_compl::Completion &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.Completion..Init
 void                 Completion_Init(acr_compl::Completion& parent);
@@ -336,7 +340,7 @@ bool                 FCompletion_ReadFieldMaybe(acr_compl::FCompletion& parent, 
 // Read fields of acr_compl::FCompletion from an ascii string.
 // The format of the string is an ssim Tuple
 // func:acr_compl.FCompletion..ReadStrptrMaybe
-bool                 FCompletion_ReadStrptrMaybe(acr_compl::FCompletion &parent, algo::strptr in_str);
+bool                 FCompletion_ReadStrptrMaybe(acr_compl::FCompletion &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:acr_compl.FCompletion..Uninit
 void                 FCompletion_Uninit(acr_compl::FCompletion& completion) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -596,6 +600,11 @@ void                 Steps();
 // func:acr_compl.FDb._db.XrefMaybe
 bool                 _db_XrefMaybe();
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_compl.FDb.word.Addary
+algo::aryptr<algo::cstring> word_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr_compl.FDb.word.Alloc
@@ -651,6 +660,11 @@ u64                  word_rowid_Get(algo::cstring &elem) __attribute__((nothrow)
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_compl.FDb.word.AllocNVal
 algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:acr_compl.FDb.word.ReadStrptrMaybe
+bool                 word_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1942,7 +1956,7 @@ bool                 value_ReadStrptrMaybe(acr_compl::FieldId& parent, algo::str
 // Read fields of acr_compl::FieldId from an ascii string.
 // The format of the string is the format of the acr_compl::FieldId's only field
 // func:acr_compl.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(acr_compl::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(acr_compl::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.FieldId..Init
 void                 FieldId_Init(acr_compl::FieldId& parent);
@@ -1989,7 +2003,7 @@ bool                 type_ReadStrptrMaybe(acr_compl::Shellqtype& parent, algo::s
 // Read fields of acr_compl::Shellqtype from an ascii string.
 // The format of the string is the format of the acr_compl::Shellqtype's only field
 // func:acr_compl.Shellqtype..ReadStrptrMaybe
-bool                 Shellqtype_ReadStrptrMaybe(acr_compl::Shellqtype &parent, algo::strptr in_str);
+bool                 Shellqtype_ReadStrptrMaybe(acr_compl::Shellqtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.Shellqtype..Init
 void                 Shellqtype_Init(acr_compl::Shellqtype& parent);
@@ -2037,7 +2051,7 @@ bool                 value_ReadStrptrMaybe(acr_compl::TableId& parent, algo::str
 // Read fields of acr_compl::TableId from an ascii string.
 // The format of the string is the format of the acr_compl::TableId's only field
 // func:acr_compl.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(acr_compl::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(acr_compl::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_compl.TableId..Init
 void                 TableId_Init(acr_compl::TableId& parent);
@@ -2211,6 +2225,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::Badness &row);// cfmt:acr_compl.Badness.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::trace &row);// cfmt:acr_compl.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FField &row);// cfmt:acr_compl.FField.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_compl::FieldId &row);// cfmt:acr_compl.FieldId.String

@@ -1,6 +1,6 @@
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -1030,6 +1030,22 @@ bool algo::TryParseDouble(algo::StringIter &iter, double &result) {
             iter.index = old_index;
             return false;
         }
+    } else if ((c=='n' || c=='N') && elems_N(iter.expr) >= 2) { // nan
+        bool ok = false;
+        iter.index++;
+        c = iter.expr[iter.index];
+        if (c == 'a' || c =='A') {
+            iter.index++;
+            c = iter.expr[iter.index];
+            if (c == 'n' || c == 'N') {
+                ok = true;
+                result = isneg ? -NAN : NAN;
+            }
+        }
+        if (!ok) {
+            iter.index = old_index;
+        }
+        return ok;
     } else {
         iter.index=old_index;    // error
         return false;
@@ -1167,7 +1183,7 @@ void algo_lib::RunCsvParse(algo_lib::CsvParse &csvparse) {
         // START READING TOKEN
         // if quotes are enabled, skip leading whitespace
         if (allowquote) {
-            for (; i<lim && WhiteCharQ(chars[i]); i++) {
+            for (; i<lim && (chars[i] != csvparse.sep && WhiteCharQ(chars[i])); i++) {
             }
         }
         // SCAN QUOTES
@@ -1188,7 +1204,7 @@ void algo_lib::RunCsvParse(algo_lib::CsvParse &csvparse) {
                     }
                 }
                 // skip trailing whitespace after quote
-                for (; i<lim && WhiteCharQ(chars[i]); i++) {
+                for (; i<lim && (chars[i] != csvparse.sep && WhiteCharQ(chars[i])); i++) {
                 }
             }
         }
@@ -1546,6 +1562,69 @@ void algo::reset(algo::cstring &lhs) {
 }
 
 // -----------------------------------------------------------------------------
+
+void algo::DayRange_curs_Reset(algo::DayRange_curs &curs, const algo::DayRange& range) {
+    curs.cur = range.start;
+    curs.end = range.end;
+}
+
+void algo::DayRange_curs_Next(algo::DayRange_curs &curs) {
+    auto t_cur = algo::GetLocalTimeStruct(curs.cur);
+    t_cur.tm_mday++;
+    t_cur.tm_isdst  = -1;
+    curs.cur = ToUnTime(t_cur);
+}
+
+bool algo::DayRange_curs_ValidQ(algo::DayRange_curs &curs) {
+    return curs.cur <= curs.end;
+}
+
+algo::UnTime& algo::DayRange_curs_Access(algo::DayRange_curs &curs) {
+    return curs.cur;
+}
+
+// -----------------------------------------------------------------------------
+
+algo::u64_Ranges_curs::u64_Ranges_curs() : cur(0), end(0), valid(false) {
+}
+
+void algo::u64_Ranges_curs_Reset(algo::u64_Ranges_curs &curs, strptr str) {
+    curs.iter.expr = str;
+    curs.iter.index = 0;
+    curs.cur = 0;
+    curs.end = 0;
+    u64_Ranges_curs_Next(curs);
+}
+
+void algo::u64_Ranges_curs_Next(algo::u64_Ranges_curs &curs) {
+    if (curs.cur++ >= curs.end) {
+        curs.valid = !curs.iter.EofQ()
+            && algo_lib::DigitCharQ(curs.iter.Ws().Peek()) // disallow negatives
+            && TryParseU64(curs.iter,curs.cur);
+        curs.end = curs.cur;
+        if (curs.valid) {
+            char c = curs.iter.Ws().Peek();
+            if (c== '-') {
+                curs.iter.GetChar();
+                curs.valid = TryParseU64(curs.iter,curs.end);
+                c = curs.iter.Ws().Peek();
+            }
+            if (c==',') {
+                curs.iter.GetChar();
+            }
+
+        }
+    }
+    curs.valid &= curs.cur <= curs.end;
+}
+
+bool algo::u64_Ranges_curs_ValidQ(algo::u64_Ranges_curs &curs) {
+    return curs.valid;
+}
+
+u64 &algo::u64_Ranges_curs_Access(algo::u64_Ranges_curs &curs) {
+    return curs.cur;
+}
 
 void algo::Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep) {
     curs.rest  = line;

@@ -27,6 +27,7 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/atfdb_gen.inl.h"
+#include "include/gen/lib_exec_gen.inl.h"
 //#pragma endinclude
 inline atf_unit::Cstr::Cstr(const algo::strptr&            in_val)
     : val(in_val)
@@ -74,7 +75,7 @@ inline i32 atf_unit::Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
 }
 
 // --- atf_unit.Cstr..Eq
-inline bool atf_unit::Cstr_Eq(const atf_unit::Cstr& lhs, const atf_unit::Cstr& rhs) {
+inline bool atf_unit::Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.val, rhs.val);
     return retval;
@@ -147,8 +148,8 @@ inline i32 atf_unit::Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) {
 
 // --- atf_unit.Dbl..Init
 // Set all fields to initial values.
-inline void atf_unit::Dbl_Init(atf_unit::Dbl& orig) {
-    orig.val = double(0.0);
+inline void atf_unit::Dbl_Init(atf_unit::Dbl& parent) {
+    parent.val = double(0.0);
 }
 
 // --- atf_unit.Dbl..Eq
@@ -338,7 +339,7 @@ inline atf_unit::Dbl* atf_unit::orig_Find(atf_unit::FPerfSort& parent, u64 t) {
 
 // --- atf_unit.FPerfSort.orig.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_unit::Dbl> atf_unit::orig_Getary(atf_unit::FPerfSort& parent) {
+inline algo::aryptr<atf_unit::Dbl> atf_unit::orig_Getary(const atf_unit::FPerfSort& parent) {
     return algo::aryptr<atf_unit::Dbl>(parent.orig_elems, parent.orig_n);
 }
 
@@ -411,7 +412,7 @@ inline atf_unit::Dbl* atf_unit::sorted_Find(atf_unit::FPerfSort& parent, u64 t) 
 
 // --- atf_unit.FPerfSort.sorted.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Getary(atf_unit::FPerfSort& parent) {
+inline algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Getary(const atf_unit::FPerfSort& parent) {
     return algo::aryptr<atf_unit::Dbl>(parent.sorted_elems, parent.sorted_n);
 }
 
@@ -484,7 +485,7 @@ inline i32* atf_unit::index_Find(atf_unit::FPerfSort& parent, u64 t) {
 
 // --- atf_unit.FPerfSort.index.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> atf_unit::index_Getary(atf_unit::FPerfSort& parent) {
+inline algo::aryptr<i32> atf_unit::index_Getary(const atf_unit::FPerfSort& parent) {
     return algo::aryptr<i32>(parent.index_elems, parent.index_n);
 }
 
@@ -650,6 +651,7 @@ inline void atf_unit::step_Call(atf_unit::FUnittest& unittest) {
 inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
     unittest.select = bool(false);
     unittest.success = bool(false);
+    unittest.c_syscmd = NULL;
     unittest.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
     unittest.step = NULL;
 }
@@ -739,7 +741,7 @@ inline void atf_unit::TypeA_Init(atf_unit::TypeA& parent) {
 }
 
 // --- atf_unit.TypeA..Eq
-inline bool atf_unit::TypeA_Eq(const atf_unit::TypeA& lhs, const atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -814,7 +816,7 @@ inline void atf_unit::TypeB_Init(atf_unit::TypeB& parent) {
 }
 
 // --- atf_unit.TypeB..Eq
-inline bool atf_unit::TypeB_Eq(const atf_unit::TypeB& lhs, const atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -837,6 +839,11 @@ inline atf_unit::TestJson::TestJson() {
     atf_unit::TestJson_Init(*this);
 }
 
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::Cstr &row) {// cfmt:atf_unit.Cstr.String
+    atf_unit::Cstr_Print(const_cast<atf_unit::Cstr&>(row), str);
+    return str;
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::Dbl &row) {// cfmt:atf_unit.Dbl.String
     atf_unit::Dbl_Print(const_cast<atf_unit::Dbl&>(row), str);

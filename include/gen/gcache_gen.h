@@ -81,7 +81,7 @@ bool                 cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, alg
 // Read fields of gcache::cleanreport from an ascii string.
 // The format of the string is an ssim Tuple
 // func:gcache.cleanreport..ReadStrptrMaybe
-bool                 cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strptr in_str);
+bool                 cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.cleanreport..Init
 void                 cleanreport_Init(gcache::cleanreport& parent);
@@ -291,7 +291,7 @@ bool                 value_ReadStrptrMaybe(gcache::FieldId& parent, algo::strptr
 // Read fields of gcache::FieldId from an ascii string.
 // The format of the string is the format of the gcache::FieldId's only field
 // func:gcache.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.FieldId..Init
 void                 FieldId_Init(gcache::FieldId& parent);

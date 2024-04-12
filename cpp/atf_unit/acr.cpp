@@ -1,5 +1,5 @@
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -29,15 +29,18 @@
 // -----------------------------------------------------------------------------
 
 static void _CheckQuery(const char *file, int line, strptr source, strptr query, strptr extraargs, strptr expect) {
-    const char *fname = "temp/x";
-    StringToFile(source, fname);
+    algo_lib::FTempfile tempfile;
+    algo_lib::TempfileInitX(tempfile,"acr_query");
+    StringToFile(source, tempfile.filename);
     command::acr acr;
     acr.report = false;
-    acr.in = fname;
+    acr.in = tempfile.filename;
     acr.pretty = false;
     acr.query = query;
     acr.report = false;
-    tempstr cmd = tempstr() << acr_ToCmdline(acr) << " " << extraargs;
+    tempstr extra(extraargs);
+    Replace(extra,"temp/x",tempfile.filename);
+    tempstr cmd = tempstr() << acr_ToCmdline(acr) << " " << extra;
     tempstr value(Trimmed(SysEval(cmd,FailokQ(true),1024*100)));
     expect=Trimmed(expect);
     bool ok = expect==value;

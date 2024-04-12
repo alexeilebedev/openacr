@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -27,18 +27,6 @@
 
 // -----------------------------------------------------------------------------
 
-// return separator to be used for array field FIELD
-static char GetSep(amc::FField &field) {
-    char ret = 0;
-    amc::FCfmt *cfmt = FindStringRead(*field.p_ctype);
-    if (cfmt && cfmt->sep != "") {
-        ret = cfmt->sep.ch[0];
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
 // It is possible to run into formatting problems
 // with Inlary separators.
 // If the child element being printed uses the same chars as the separator,
@@ -47,7 +35,7 @@ static char GetSep(amc::FField &field) {
 static void CheckSep(amc::FField &field) {
     char sep = GetSep(field);
     amc::FCfmt *cfmt = FindStringRead(*field.p_ctype);
-    if (cfmt && !sep) {
+    if (cfmt && !sep && field.arg != "char" && field.arg != "u8") {
         prerr("amc.inlary_not_printed"
               <<Keyval("inlary",field.field)
               <<Keyval("cfmt",cfmt->cfmt)
@@ -57,17 +45,14 @@ static void CheckSep(amc::FField &field) {
     if (sep) {
         amc::FCfmt *childfmt = FindStringRead(*field.p_arg);
         if (childfmt) {
-            if ((sep == ' ' || sep == ':')
-                && (childfmt->printfmt == dmmeta_Printfmt_printfmt_Tuple)) {
+            if ((sep == ' ' || sep == ':') && (childfmt->printfmt == dmmeta_Printfmt_printfmt_Tuple)) {
                 prerr("amc.bad_inlary_print"
                       <<Keyval("inlary",field.field)
                       <<Keyval("elem_type",field.arg)
                       <<Keyval("comment","Inlary element separator incompatible with Tuple format of child elements"));
                 algo_lib::_db.exit_code=1;
             }
-            if ((tempstr()<<sep) == (tempstr()<<childfmt->sep)
-                && (childfmt->printfmt  == dmmeta_Printfmt_printfmt_Sep
-                    || childfmt->printfmt  == dmmeta_Printfmt_printfmt_CompactSep)) {
+            if ((tempstr()<<sep) == (tempstr()<<childfmt->sep) && (childfmt->printfmt  == dmmeta_Printfmt_printfmt_Sep)) {
                 prerr("amc.bad_inlary_print2"
                       <<Keyval("inlary",field.field)
                       <<Keyval("elem_type",field.arg)
@@ -98,11 +83,9 @@ void amc::tclass_Inlary() {
     CheckSep(field);
 
     Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
-    i64 pool_max  = inlary.max;
-    pool_max = i64_Max(c_static_N(*field.p_arg), pool_max);
-    Set(R, "$max_pool_items", tempstr() << pool_max);
-    // max_pool_items may have been set by the statics phase.
-    vrfy(pool_max > 0, "unknown size of inline array: set width or add gstatic");
+    inlary.max = i64_Max(inlary.max, c_static_N(*field.p_arg));
+    vrfy(inlary.max > 0, "unknown size of inline array: set width or add gstatic");
+    Set(R, "$max_pool_items", tempstr() << inlary.max);
 
     Set(R, "$lenexpr", fixed ? strptr(tempstr() << inlary.max) : "$parname.$name_n");
 
@@ -258,7 +241,7 @@ void amc::tfunc_Inlary_Eq() {
     if (field.p_ctype->c_ccmp && field.arg != "pad_byte") {
         amc::FFunc& opeq = amc::CreateCurFunc();
         opeq.inl = WidthMax(field)<6;
-        Ins(&R, opeq.proto, "$name_Eq(const $Parent, const $Partype &rhs)", false);
+        Ins(&R, opeq.proto, "$name_Eq($Parent, $Partype &rhs)", false);
         Ins(&R, opeq.ret, "bool", false);
         Ins(&R, opeq.body, "int len = $lenexpr;");
         if (amc::FixaryQ(field)) {
@@ -268,7 +251,7 @@ void amc::tfunc_Inlary_Eq() {
             Ins(&R, opeq.body, "}");
         }
         Ins(&R, opeq.body    , "for (int i = 0; i < len; i++) {");
-        Ins(&R, opeq.body    , "    if (!($parelems[i] == rhs.$name_elems[i])) {");
+        Ins(&R, opeq.body    , "    if (!($parelems[i] == $name_qFind(rhs,i))) {");
         Ins(&R, opeq.body    , "        return false;");
         Ins(&R, opeq.body    , "    }");
         Ins(&R, opeq.body    , "}");
@@ -295,7 +278,7 @@ void amc::tfunc_Inlary_Cmp() {
         }
         Ins(&R, opeq.body    , "int retval = 0;");
         Ins(&R, opeq.body    , "for (int i = 0; i < len; i++) {");
-        Ins(&R, opeq.body    , "    retval = $Fldtype_Cmp($parelems[i], rhs.$name_elems[i]);");
+        Ins(&R, opeq.body    , "    retval = $Fldtype_Cmp($parelems[i], $name_qFind(rhs,i));");
         Ins(&R, opeq.body    , "    if (retval != 0) {");
         Ins(&R, opeq.body    , "        return retval;");
         Ins(&R, opeq.body    , "    }");
@@ -468,24 +451,12 @@ void amc::tfunc_Inlary_Uninit() {
 void amc::tfunc_Inlary_qFind() {
     algo_lib::Replscope &R          = amc::_db.genfield.R;
     amc::FField         &field      = *amc::_db.genfield.p_field;
-    amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
-
-    if (!fixed) {
+    if (!PadQ(field)) {
         amc::FFunc& qfind = amc::CreateCurFunc();
         qfind.inl = true;
         Ins(&R, qfind.ret  , "$Cpptype&", false);
         Ins(&R, qfind.proto, "$name_qFind($Parent, $Rowid t)", false);
-        Ins(&R, qfind.body, "u64 idx = t;");
-        Ins(&R, qfind.body, "return $parelems[idx];");
-    }
-
-    if (fixed && !PadQ(field)) {
-        amc::FFunc& qat = amc::CreateCurFunc();
-        qat.inl = true;
-        Ins(&R, qat.ret  , "$Cpptype&", false);
-        Ins(&R, qat.proto, "$name_qFind($Parent, $Rowid t)", false);
-        Ins(&R, qat.body, "return $parelems[t];");
+        Ins(&R, qfind.body, "return $parelems[u64(t)];");
     }
 }
 
@@ -517,9 +488,8 @@ void amc::tfunc_Inlary_curs() {
     bool glob = GlobalQ(*field.p_ctype);
     bool fixed = inlary.max == inlary.min;
 
-    Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
-
     if (!PadQ(field)) {
+        Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
         // generate cursor
         Set(R, "$curspar", (glob ? "" : "(*curs.parent)"));
 
@@ -573,81 +543,50 @@ void amc::tfunc_Inlary_curs() {
 
 // -----------------------------------------------------------------------------
 
-static tempstr ToCppChar(char c) {
-    tempstr out;
-    char_PrintCppSingleQuote(c,out);
-    return out;
-}
-
-// -----------------------------------------------------------------------------
-
-static bool StringlikeQ(amc::FField &field) {
-    return field.arg == "char";
-}
-
-// -----------------------------------------------------------------------------
-
-void amc::tfunc_Inlary_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    char sep = GetSep(field);
-    if (!PadQ(field) && sep) {
-        Set(R, "$sep", ToCppChar(sep));
-        Set(R, "$getexpr", amc::FieldvalExpr(field.p_ctype,field,"$parname"));
-        amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.comment, "Convert $name to a string. Parent's separator is used.");
-        Ins(&R, func.ret  , "void", false);
-        Ins(&R, func.proto, "$name_Print($Parent, algo::cstring &lhs)", false);
-        if (StringlikeQ(field)) {
-            Ins(&R, func.body, "lhs << $name_Getary($pararg);");
-        } else {
-            Ins(&R, func.body, "int len = $lenexpr;");
-            Ins(&R, func.body, "for (int i = 0; i < len; i++) {");
-            Ins(&R, func.body, "    if (i > 0) {");
-            Ins(&R, func.body, "        lhs << $sep;");
-            Ins(&R, func.body, "    }");
-            Ins(&R, func.body, "    $Cpptype_Print($parelems[i], lhs);");
-            Ins(&R, func.body, "}");
-        }
-        MaybeUnused(func,Subst(R,"$parname"));
-    }
-}
-
-// -----------------------------------------------------------------------------
-
+// Read/Accumulate inline array from string.
+// For fixed arrays:
+//   multiple reads into fixed array will leave old data behind
+//   (e.g. reading 1 element after reading 2 elements will leave the 2nd element from initial read)
+//   we don't clear the tail of the array with default values.
+//
+// arg:char or u8
+//    the array is flushed befor reading
+//    input is a string that is copied to the array.
+//    if the input is too large, it is silently truncated
+// any other type, with separator:
+//    the array is flushed before reading
+//    input string is split on separator character, elements are appended one by one
+//    if the input is too large, it is silently truncated
+// any other type, without separator:
+//    one element is read from input string and appended to the array without flushing.
+//    if the element doesn't fit, function returns false.
+//    (for fixed array, element #0 is read)
+//
 void amc::tfunc_Inlary_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     char sep = GetSep(field);
-    if (!PadQ(field) && sep) {
-        Set(R, "$sep", ToCppChar(sep));
+    if (!PadQ(field) && (field.arg=="char" || field.arg=="u8" || HasStringReadQ(*field.p_arg))) {
+        Set(R, "$sep", char_ToCppSingleQuote(sep));
         Set(R, "$min", tempstr() << field.c_inlary->min);
-        amc::FFunc& func = amc::CreateCurFunc();
+        amc::FFunc& func = amc::CreateCurFunc(true);
         Ins(&R, func.comment, "Convert string to field. Return success value");
-        Ins(&R, func.ret  , "bool", false);
-        Ins(&R, func.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in_str)", false);
-        Ins(&R, func.body, "bool retval = true;");
-        if (!FixedQ(field)) {
-            Ins(&R, func.body, "$name_RemoveAll($pararg);");
-        }
-        if (StringlikeQ(field)) {
-            // read string/byte array
-            // multiple reads into fixed array will leave old data behind
-            // (e.g. reading 1 byte after reading 2 bytes will leave the 2nd byte from initial read)
-            // we don't clear the tail of the array with default values.
-            // this is intentional.
-            // main reason is that it's impractical to clear the entire fixed array before reading,
-            // because it could be large (128k for instance).
-            Ins(&R, func.body , "i32 newlen = i32_Min(in_str.n_elems, $name_Max($pararg));");
+        AddRetval(func, "bool", "retval", "true");
+        AddProtoArg(func, "algo::strptr", "in_str");
+        if (field.arg == "char" || field.arg == "u8") {
+            Ins(&R, func.body , "i32 newlen = i32_Min(in_str.n_elems, $max_pool_items);");
             Ins(&R, func.body , "memcpy($parelems, in_str.elems, newlen);");
             if (!FixedQ(field)) {
                 Ins(&R, func.body , "$pararg.$name_n = newlen;");
             }
             // retval is true
             // always succeed -- even if clipping of input string took place.
-        } else {
+        } else if (sep) {
             Set(R, "$Fldcpptype", field.p_arg->cpp_type);
-            Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $name_Max($pararg); i++) {");
+            if (!FixedQ(field)) {
+                Ins(&R, func.body, "$name_RemoveAll($pararg);");
+            }
+            Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $max_pool_items; i++) {");
             Ins(&R, func.body , "    algo::strptr token;");
             Ins(&R, func.body , "    algo::NextSep(in_str, $sep, token);");
             if (!FixedQ(field)) {
@@ -664,9 +603,56 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
             Ins(&R, func.body , "        break;");
             Ins(&R, func.body , "    }");
             Ins(&R, func.body , "}");
+        } else if (FixedQ(field)) {
+            Ins(&R, func.body , "if ($max_pool_items>0) {");
+            Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe($parelems[0], in_str);");
+            Ins(&R, func.body , "}");
+        } else {
+            Ins(&R, func.body , "retval = $name_N($pararg) < $max_pool_items;");
+            Ins(&R, func.body , "if (retval) {");
+            Ins(&R, func.body , "    $Cpptype &elem = $name_Alloc($pararg);");
+            Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe(elem, in_str);");
+            Ins(&R, func.body , "    if (!retval) {");
+            Ins(&R, func.body , "        $name_RemoveLast($pararg);");
+            Ins(&R, func.body , "    }");
+            Ins(&R, func.body , "}");
         }
-        MaybeUnused(func, Subst(R,"$parname"));
-        MaybeUnused(func, "in_str");
-        Ins(&R, func.body, "return retval;");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Print array to string
+// char/u8 are printed as-is
+// pad_byte is ignored
+// all other types are printed separated by SEP
+// if none of the above conditions are present, the print function is not generated.
+// This function is reused by Tary and Varlen, so it cannot really assume
+// we're dealing with an Inlary
+void amc::tfunc_Inlary_Print() {
+    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FField &field = *amc::_db.genfield.p_field;
+    char sep = GetSep(field);
+    if (!PadQ(field) && (field.arg=="char" || field.arg=="u8" || sep)) {// ignore pad_byte
+        Set(R, "$sep", char_ToCppSingleQuote(sep));
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        Ins(&R, func.comment, "Convert $name to a string.");
+        AddRetval(func, "void", "", "");
+        AddProtoArg(func, "algo::cstring &", "rhs");
+        if (field.arg == "char") {// print array of chars as a string
+            Ins(&R, func.comment, "Array is printed as a regular string.");
+            Ins(&R, func.body, "rhs << $name_Getary($pararg);");
+        } else if (field.arg == "u8") {// contiguous array of u8 as hex chars
+            Ins(&R, func.comment, "Array is printed as a regular string.");
+            Ins(&R, func.body, "rhs << algo::memptr_ToStrptr($name_Getary($pararg));");
+        } else if (sep) {
+            Ins(&R, func.comment, "The separator character is $sep.");
+            Ins(&R, func.body, "ind_beg($Parname_$name_curs,$name_elem,$parname) {");
+            Ins(&R, func.body, "    if (ind_curs($name_elem).index > 0) {");
+            Ins(&R, func.body, "        rhs << $sep;");
+            Ins(&R, func.body, "    }");
+            Ins(&R, func.body, "    $Cpptype_Print($name_elem, rhs);");
+            Ins(&R, func.body, "}ind_end;");
+        }
     }
 }

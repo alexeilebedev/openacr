@@ -754,6 +754,25 @@ void ssim2csv::ind_outfile_Reserve(int n) {
     }
 }
 
+// --- ssim2csv.FDb.name.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> ssim2csv::name_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.name_elems && rhs.elems < _db.name_elems + _db.name_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.name  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    name_Reserve(nnew); // reserve space
+    int at = _db.name_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.name_elems + at + i) algo::cstring(rhs[i]);
+        _db.name_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.name_elems + at, nnew);
+}
+
 // --- ssim2csv.FDb.name.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -857,6 +876,39 @@ algo::aryptr<algo::cstring> ssim2csv::name_AllocNVal(int n_elems, const algo::cs
     }
     _db.name_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- ssim2csv.FDb.name.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool ssim2csv::name_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = name_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        name_RemoveLast();
+    }
+    return retval;
+}
+
+// --- ssim2csv.FDb.value.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> ssim2csv::value_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.value_elems && rhs.elems < _db.value_elems + _db.value_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.value  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    value_Reserve(nnew); // reserve space
+    int at = _db.value_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.value_elems + at + i) algo::cstring(rhs[i]);
+        _db.value_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.value_elems + at, nnew);
 }
 
 // --- ssim2csv.FDb.value.Alloc
@@ -964,6 +1016,39 @@ algo::aryptr<algo::cstring> ssim2csv::value_AllocNVal(int n_elems, const algo::c
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- ssim2csv.FDb.value.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool ssim2csv::value_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = value_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        value_RemoveLast();
+    }
+    return retval;
+}
+
+// --- ssim2csv.FDb.flatten.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Addary(algo::aryptr<ssim2csv::FFlatten> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.flatten_elems && rhs.elems < _db.flatten_elems + _db.flatten_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.flatten  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    flatten_Reserve(nnew); // reserve space
+    int at = _db.flatten_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.flatten_elems + at + i) ssim2csv::FFlatten(rhs[i]);
+        _db.flatten_n++;
+    }
+    return algo::aryptr<ssim2csv::FFlatten>(_db.flatten_elems + at, nnew);
+}
+
 // --- ssim2csv.FDb.flatten.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1067,15 +1152,6 @@ algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocNVal(int n_elems, const 
     }
     _db.flatten_n = new_n;
     return algo::aryptr<ssim2csv::FFlatten>(elems + old_n, n_elems);
-}
-
-// --- ssim2csv.FDb.flatten.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool ssim2csv::flatten_XrefMaybe(ssim2csv::FFlatten &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
 }
 
 // --- ssim2csv.FDb.trace.RowidFind

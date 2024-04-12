@@ -107,21 +107,6 @@ bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &
     return retval;
 }
 
-// --- lib_ctype.Cmdline..PrintArgv
-// print command-line args of lib_ctype::Cmdline to string  -- cprint:lib_ctype.Cmdline.Argv
-void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-    if (!(row.in == "data")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.in, temp);
-        str << " -in:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
 // --- lib_ctype.Cmdline..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
@@ -137,6 +122,21 @@ tempstr lib_ctype::Cmdline_ToCmdline(lib_ctype::Cmdline& row) {
         ret << " -debug";
     }
     return ret;
+}
+
+// --- lib_ctype.Cmdline..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
+void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- lib_ctype.Cmdline..NArgs
@@ -3087,7 +3087,7 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     bool_Print(row.istuple_computed, temp);
     PrintAttrSpaceReset(str,"istuple_computed", temp);
 
-    u64_PrintHex(u64((const lib_ctype::FFtuple*)row.c_ftuple), temp, 8, true);
+    u64_PrintHex(u64(row.c_ftuple), temp, 8, true);
     PrintAttrSpaceReset(str,"c_ftuple", temp);
 
     bool_Print(row.has_fconst, temp);
@@ -3096,13 +3096,13 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     bool_Print(row.istuple, temp);
     PrintAttrSpaceReset(str,"istuple", temp);
 
-    u64_PrintHex(u64((const lib_ctype::FCppfunc*)row.c_cppfunc), temp, 8, true);
+    u64_PrintHex(u64(row.c_cppfunc), temp, 8, true);
     PrintAttrSpaceReset(str,"c_cppfunc", temp);
 
-    u64_PrintHex(u64((const lib_ctype::FSubstr*)row.c_substr), temp, 8, true);
+    u64_PrintHex(u64(row.c_substr), temp, 8, true);
     PrintAttrSpaceReset(str,"c_substr", temp);
 
-    u64_PrintHex(u64((const lib_ctype::FUnstablefld*)row.c_unstablefld), temp, 8, true);
+    u64_PrintHex(u64(row.c_unstablefld), temp, 8, true);
     PrintAttrSpaceReset(str,"c_unstablefld", temp);
 
     bool_Print(row.ctype_c_field_in_ary, temp);

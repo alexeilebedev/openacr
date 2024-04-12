@@ -642,7 +642,7 @@ Other ctypes in this namespace which don't have own readme files
 |targsrc|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|RegxSql|""|Regx of targsrc to update|
 |write|bool|Val||Update files in-place|
 |indent|bool|Val||Indent source files|
-|update_copyright|algo.cstring|Val|""|Update copyright notice for specified company with current year|
+|update_copyright|bool|Val||Update copyright year for current company|
 |scriptfile|[dev.Scriptfile](/txt/ssimdb/dev/scriptfile.md)|RegxSql|""|Regx of scripts to update header|
 
 #### command.src_lim - Command line for [src_lim](/txt/exe/src_lim/README.md)

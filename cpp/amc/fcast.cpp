@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -45,22 +45,20 @@ void amc::tfunc_Fcast_Cast() {
     } else {
         casttype = valtype.cpp_type;
     }
-    // #AL# todo: fix me!
-    bool docast = !(field.field == "algo.cstring.ch");
 
-    if (docast) {
-        Set(R, "$casttype", casttype);
-        Set(R, "$Get", FieldvalExpr(field.p_ctype, field, "(*this)"));
-        amc::FFunc& get = amc::CreateCurFunc();
-        get.oper = true;
-        get.inl = true;
-        get.ret = casttype;
-        Ins(&R, get.proto, "() const", false);
-        if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
-            Ins(&R, get.body, "return $name_Getary(*this);");
-        } else {
-            Ins(&R, get.body, "return $casttype($Get);");
-        }
-        InsStruct(R, field.p_ctype, "inline operator $casttype() const;");// hack?
+    Set(R, "$casttype", casttype);
+    Set(R, "$Get", FieldvalExpr(field.p_ctype, field, "(*this)"));
+    amc::FFunc& get = amc::CreateCurFunc();
+    get.oper = true;
+    get.inl = true;
+    get.ret = casttype;
+    Ins(&R, get.proto, "() const", false);
+    if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
+        Ins(&R, get.body, "return $name_Getary(*this);");
+    } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+        Ins(&R, get.body, "return $name_Getary(*this);");
+    } else {
+        Ins(&R, get.body, "return $casttype($Get);");
     }
+    InsStruct(R, field.p_ctype, "inline operator $casttype() const;");// hack?
 }

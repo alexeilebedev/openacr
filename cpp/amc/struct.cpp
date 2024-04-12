@@ -1,6 +1,6 @@
-// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -112,9 +112,6 @@ static void GenStruct_Cstring(algo_lib::Replscope &R, amc::FCtype &ctype) {
     Ins(&R, *ns.hdr, "    cstring& operator =(const cstring &s);");
     Ins(&R, *ns.hdr, "    explicit cstring(const algo::strptr &s);");
     Ins(&R, *ns.hdr, "    cstring(const tempstr &rhs);");
-    Ins(&R, *ns.hdr, "    operator algo::strptr() const {");
-    Ins(&R, *ns.hdr, "        return algo::strptr(const_cast<char*>(ch_elems),ch_n);");
-    Ins(&R, *ns.hdr, "    }");
 
     Ins(&R, *ns.cpp, "algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {");
     Ins(&R, *ns.cpp, "    algo::ch_Setary(*this, rhs);");

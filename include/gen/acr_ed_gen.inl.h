@@ -1221,8 +1221,7 @@ inline i32 acr_ed::edaction_N() {
 // --- acr_ed.FDb.edaction.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline acr_ed::FEdaction& acr_ed::edaction_qFind(u64 t) {
-    u64 idx = t;
-    return reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[idx];
+    return reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data)[u64(t)];
 }
 
 // --- acr_ed.FDb.edaction.rowid_Get

@@ -56,7 +56,9 @@ inline src_hdr::FCopyright::~FCopyright() {
 // Set all fields to initial values.
 inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& copyright) {
     copyright.dflt = bool(false);
+    copyright.sortkey = i32(0);
     copyright.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
+    copyright.bh_copyright_idx = -1; // (src_hdr.FDb.bh_copyright) not-in-heap
 }
 inline src_hdr::trace::trace() {
 }
@@ -436,6 +438,36 @@ inline i32 src_hdr::ind_copyright_N() {
     return _db.ind_copyright_n;
 }
 
+// --- src_hdr.FDb.bh_copyright.EmptyQ
+// Return true if index is empty
+inline bool src_hdr::bh_copyright_EmptyQ() {
+    return _db.bh_copyright_n == 0;
+}
+
+// --- src_hdr.FDb.bh_copyright.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline src_hdr::FCopyright* src_hdr::bh_copyright_First() {
+    src_hdr::FCopyright *row = NULL;
+    if (_db.bh_copyright_n > 0) {
+        row = _db.bh_copyright_elems[0];
+    }
+    return row;
+}
+
+// --- src_hdr.FDb.bh_copyright.InBheapQ
+// Return true if row is in index, false otherwise
+inline bool src_hdr::bh_copyright_InBheapQ(src_hdr::FCopyright& row) {
+    bool result = false;
+    result = row.bh_copyright_idx != -1;
+    return result;
+}
+
+// --- src_hdr.FDb.bh_copyright.N
+// Return number of items in the heap
+inline i32 src_hdr::bh_copyright_N() {
+    return _db.bh_copyright_n;
+}
+
 // --- src_hdr.FDb.targsrc_curs.Reset
 // cursor points to valid item
 inline void src_hdr::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_hdr::FDb &parent) {
@@ -609,6 +641,18 @@ inline void src_hdr::_db_copyright_curs_Next(_db_copyright_curs &curs) {
 // item access
 inline src_hdr::FCopyright& src_hdr::_db_copyright_curs_Access(_db_copyright_curs &curs) {
     return copyright_qFind(u64(curs.index));
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.Access
+// Access current element. If not more elements, return NULL
+inline src_hdr::FCopyright& src_hdr::_db_bh_copyright_curs_Access(_db_bh_copyright_curs &curs) {
+    return *curs.temp_elems[0];
+}
+
+// --- src_hdr.FDb.bh_copyright_curs.ValidQ
+// Return true if Access() will return non-NULL.
+inline bool src_hdr::_db_bh_copyright_curs_ValidQ(_db_bh_copyright_curs &curs) {
+    return curs.temp_n > 0;
 }
 inline src_hdr::FLicense::FLicense() {
     src_hdr::FLicense_Init(*this);

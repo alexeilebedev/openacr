@@ -561,6 +561,13 @@ bool ams::text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- ams.ExpectMsg.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void ams::text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
+}
+
 // --- ams.ExpectMsg..ReadFieldMaybe
 bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -611,8 +618,8 @@ void ams::ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams.ExpectMsg";
 
-    algo::aryptr<char> text_ary = text_Getary(row);
-    PrintAttrSpace(str, "text", text_ary); // print field ams.ExpectMsg.text
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
 }
 
 // --- ams.FieldId.value.ToCstr
@@ -975,6 +982,13 @@ bool ams::payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str
     return retval;
 }
 
+// --- ams.InputLineMsg.payload.Print
+// Convert payload to a string.
+// Array is printed as a regular string.
+void ams::payload_Print(ams::InputLineMsg& parent, algo::cstring &rhs) {
+    rhs << payload_Getary(parent);
+}
+
 // --- ams.InputLineMsg..ReadFieldMaybe
 bool ams::InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1025,8 +1039,8 @@ void ams::InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams.InputLineMsg";
 
-    algo::aryptr<char> payload_ary = payload_Getary(row);
-    PrintAttrSpace(str, "payload", payload_ary); // print field ams.InputLineMsg.payload
+    ams::payload_Print(row, temp);
+    PrintAttrSpaceReset(str,"payload", temp);
 }
 
 // --- ams.LogMsg.base.CopyOut
@@ -1058,6 +1072,13 @@ bool ams::text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) {
     }
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
+}
+
+// --- ams.LogMsg.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void ams::text_Print(ams::LogMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
 }
 
 // --- ams.LogMsg..ReadFieldMaybe
@@ -1124,8 +1145,8 @@ void ams::LogMsg_Print(ams::LogMsg& row, algo::cstring& str) {
     algo::SchedTime_Print(row.tstamp, temp);
     PrintAttrSpaceReset(str,"tstamp", temp);
 
-    algo::aryptr<char> text_ary = text_Getary(row);
-    PrintAttrSpace(str, "text", text_ary); // print field ams.LogMsg.text
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
 }
 
 // --- ams.Member.mode.ToCstr
@@ -1267,6 +1288,13 @@ u8* ams::messages_Addr(ams::MsgBlock& parent) {
     return (u8*)((u8*)&parent + sizeof(ams::MsgBlock)); // address of varlen portion
 }
 
+// --- ams.MsgBlock.messages.Print
+// Convert messages to a string.
+// Array is printed as a regular string.
+void ams::messages_Print(ams::MsgBlock& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(messages_Getary(parent));
+}
+
 // --- ams.MsgBlock..Print
 // print string representation of ROW to string STR
 // cfmt:ams.MsgBlock.String  printfmt:Tuple
@@ -1283,8 +1311,8 @@ void ams::MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) {
     u32_Print(row.original_length, temp);
     PrintAttrSpaceReset(str,"original_length", temp);
 
-    algo::aryptr<u8> messages_ary = messages_Getary(row);
-    PrintAttrSpace(str, "messages", algo::strptr((char*)messages_ary.elems, messages_ary.n_elems)); // print field ams.MsgBlock.messages
+    ams::messages_Print(row, temp);
+    PrintAttrSpaceReset(str,"messages", temp);
 }
 
 // --- ams.MsgHeader.type.ToCstr
@@ -1968,7 +1996,7 @@ void ams::PrlogMsg_Print(ams::PrlogMsg& row, algo::cstring& str) {
     algo::SchedTime_Print(row.tstamp, temp);
     PrintAttrSpaceReset(str,"tstamp", temp);
 
-    if (data_Get(row) != NULL) {
+    if (data_Get(row)) {
         ams::data_Print(row, temp);
         PrintAttrSpaceReset(str,"data", temp);
     }
@@ -2281,7 +2309,7 @@ void ams::Seqmsg_Print(ams::Seqmsg& row, algo::cstring& str) {
     u64_Print(row.tsc, temp);
     PrintAttrSpaceReset(str,"tsc", temp);
 
-    if (payload_Get(row) != NULL) {
+    if (payload_Get(row)) {
         ams::payload_Print(row, temp);
         PrintAttrSpaceReset(str,"payload", temp);
     }
@@ -2467,7 +2495,7 @@ void ams::SeqmsgTrace_Print(ams::SeqmsgTrace& row, algo::cstring& str) {
     u64_Print(row.tsc, temp);
     PrintAttrSpaceReset(str,"tsc", temp);
 
-    if (payload_Get(row) != NULL) {
+    if (payload_Get(row)) {
         ams::payload_Print(row, temp);
         PrintAttrSpaceReset(str,"payload", temp);
     }
@@ -2965,6 +2993,13 @@ bool ams::data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) 
     return retval;
 }
 
+// --- ams.TraceInfo2Msg.data.Print
+// Convert data to a string.
+// Array is printed as a regular string.
+void ams::data_Print(ams::TraceInfo2Msg& parent, algo::cstring &rhs) {
+    rhs << data_Getary(parent);
+}
+
 // --- ams.TraceInfo2Msg..ReadFieldMaybe
 bool ams::TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3043,8 +3078,8 @@ void ams::TraceInfo2Msg_Print(ams::TraceInfo2Msg& row, algo::cstring& str) {
     u8_Print(row.part, temp);
     PrintAttrSpaceReset(str,"part", temp);
 
-    algo::aryptr<char> data_ary = data_Getary(row);
-    PrintAttrSpace(str, "data", data_ary); // print field ams.TraceInfo2Msg.data
+    ams::data_Print(row, temp);
+    PrintAttrSpaceReset(str,"data", temp);
 }
 
 // --- ams.TraceInfoMsg.base.CopyOut
@@ -3076,6 +3111,13 @@ bool ams::data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) {
     }
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
+}
+
+// --- ams.TraceInfoMsg.data.Print
+// Convert data to a string.
+// Array is printed as a regular string.
+void ams::data_Print(ams::TraceInfoMsg& parent, algo::cstring &rhs) {
+    rhs << data_Getary(parent);
 }
 
 // --- ams.TraceInfoMsg..ReadFieldMaybe
@@ -3149,8 +3191,8 @@ void ams::TraceInfoMsg_Print(ams::TraceInfoMsg& row, algo::cstring& str) {
     u8_Print(row.part, temp);
     PrintAttrSpaceReset(str,"part", temp);
 
-    algo::aryptr<char> data_ary = data_Getary(row);
-    PrintAttrSpace(str, "data", data_ary); // print field ams.TraceInfoMsg.data
+    ams::data_Print(row, temp);
+    PrintAttrSpaceReset(str,"data", temp);
 }
 
 // --- ams.TraceMsg.base.CopyOut
@@ -3278,6 +3320,13 @@ u8* ams::payload_Addr(ams::UdpFrame& parent) {
     return (u8*)((u8*)&parent + sizeof(ams::UdpFrame)); // address of varlen portion
 }
 
+// --- ams.UdpFrame.payload.Print
+// Convert payload to a string.
+// Array is printed as a regular string.
+void ams::payload_Print(ams::UdpFrame& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(payload_Getary(parent));
+}
+
 // --- ams.UdpFrame..Print
 // print string representation of ROW to string STR
 // cfmt:ams.UdpFrame.String  printfmt:Tuple
@@ -3300,8 +3349,8 @@ void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) {
     u16_Print(row.dst_port, temp);
     PrintAttrSpaceReset(str,"dst_port", temp);
 
-    algo::aryptr<u8> payload_ary = payload_Getary(row);
-    PrintAttrSpace(str, "payload", algo::strptr((char*)payload_ary.elems, payload_ary.n_elems)); // print field ams.UdpFrame.payload
+    ams::payload_Print(row, temp);
+    PrintAttrSpaceReset(str,"payload", temp);
 }
 
 // --- ams...SizeCheck

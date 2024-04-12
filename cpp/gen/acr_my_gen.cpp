@@ -95,6 +95,25 @@ void acr_my::trace_Print(acr_my::trace& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
 }
 
+// --- acr_my.FDb.ary_ns.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.ary_ns_elems && rhs.elems < _db.ary_ns_elems + _db.ary_ns_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_my.tary_alias  field:acr_my.FDb.ary_ns  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_ns_Reserve(nnew); // reserve space
+    int at = _db.ary_ns_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.ary_ns_elems + at + i) algo::cstring(rhs[i]);
+        _db.ary_ns_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.ary_ns_elems + at, nnew);
+}
+
 // --- acr_my.FDb.ary_ns.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -198,6 +217,20 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cs
     }
     _db.ary_ns_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_my.FDb.ary_ns.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = ary_ns_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_ns_RemoveLast();
+    }
+    return retval;
 }
 
 // --- acr_my.FDb._db.ReadArgv

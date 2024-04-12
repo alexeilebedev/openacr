@@ -488,8 +488,7 @@ inline i32 abt_md::mdsection_N() {
 // --- abt_md.FDb.mdsection.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline abt_md::FMdsection& abt_md::mdsection_qFind(i32 t) {
-    u64 idx = t;
-    return reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[idx];
+    return reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[u64(t)];
 }
 
 // --- abt_md.FDb.mdsection.rowid_Get

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2023 AlgoRND
+// Copyright (C) 2023-2024 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -146,79 +146,81 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
 
 // -----------------------------------------------------------------------------
 
-// if none, put default copyright with current year
-static void CheckCopyright(src_hdr::FSrc &src) {
-    tempstr new_copyright;
-    u32 year = GetLocalTimeStruct(algo::CurrUnTime()).tm_year + 1900;
-    if (!ch_N(src.copyright)) {
-        if (!src_hdr::_db.c_dflt_copyright) {
-            prerr("Please define default copyright holder with dev.copyright.dflt=Y");
-        } else {
-            new_copyright << "Copyright (C) " << year << " " << src_hdr::_db.c_dflt_copyright->copyright;
+// YEARS: a string like
+//    2023
+//    2021-2023
+//    1998,2001,2014-2016
+//
+static void UpdateCopyrightYear(algo::cstring &years, int year) {
+    strptr prior_ranges = Pathcomp(years,",RL");
+    strptr last_range = Pathcomp(years,",RR");
+    strptr first_year = Pathcomp(last_range,"-RL");
+    strptr last_year = Pathcomp(last_range,"-RR");
+    i32 last_year_num = ParseU32(last_year,0);
+    if (last_year_num < year) {
+        tempstr new_years;
+        if (ch_N(prior_ranges)) {
+            new_years << prior_ranges << ",";
         }
-    } else {
-        bool ok(false);
-        ind_beg(Line_curs,line,src.copyright) {
-            algo::StringIter it(line);
-            /* strptr copyright =*/ GetWordCharf(it);
-            /*strptr parenc =*/ GetWordCharf(it);
-            /*strptr years =*/ GetWordCharf(it);
-            strptr company = Trimmed(it.Rest());
-            ok = src_hdr::ind_copyright_Find(company);
-            if (!ok) {
-                prerr(src.src << ": removed unknown copyright (if needed, define in dev.copyright): " << company);
-            } else {
-                new_copyright << line << eol;
-            }
-        }ind_end;
+        if (last_year_num+1 == year) {
+            new_years << (ch_N(first_year)? first_year: last_year)<< "-";
+        } else {
+            new_years << last_range << ",";
+        }
+        new_years << year;
+        years = new_years;
     }
-    src.copyright = new_copyright;
+}
+
+// -----------------------------------------------------------------------------
+
+// detect lines in the following format:
+// Copyright (C) Company Name 2021-2013
+// Copyright (C) 2021-2013 Company Name
+static void ParseCopyright(algo::strptr text, algo::strptr &years, algo::strptr &company) {
+    if (text != "" && algo_lib::DigitCharQ(text.elems[0])) {
+        years=Trimmed(Pathcomp(text, " LL"));
+        company=Trimmed(Pathcomp(text, " LR"));
+    } else {
+        years=Trimmed(Pathcomp(text, " RR"));
+        company=Trimmed(Pathcomp(text, " RL"));
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 // put current year copyright of company specified as -update_copyright arg
 static void UpdateCopyright(src_hdr::FSrc &src) {
-    strptr our_company = src_hdr::_db.cmdline.update_copyright;
     u32 year = GetLocalTimeStruct(algo::CurrUnTime()).tm_year + 1900;
-    bool ok(false);
-    tempstr new_copyright;
+    ind_beg(src_hdr::_db_copyright_curs,copyright,src_hdr::_db) {
+        copyright.years="";
+    }ind_end;
+    src_hdr::bh_copyright_RemoveAll();
     ind_beg(Line_curs,line,src.copyright) {
-        algo::StringIter it(line);
-        strptr copyright = GetWordCharf(it);
-        strptr parenc = GetWordCharf(it);
-        strptr years = GetWordCharf(it);
-        strptr company = Trimmed(it.Rest());
-        if (company == our_company) {
-            ok = true;
-            strptr prior_ranges = Pathcomp(years,",RL");
-            strptr last_range = Pathcomp(years,",RR");
-            strptr first_year = Pathcomp(last_range,"-RL");
-            u32    last_year = ParseU32(Pathcomp(last_range,"-RR"),0);
-            if (last_year < year) {
-                new_copyright << copyright << " " << parenc << " ";
-                if (ch_N(prior_ranges)) {
-                    new_copyright << prior_ranges << ",";
-                }
-                if (last_year+1 == year) {
-                    new_copyright << (ch_N(first_year)
-                                      ? first_year
-                                      : tempstr()<<last_year)
-                                  << "-" << year;
-                } else {
-                    new_copyright << last_range << "," << year;
-                }
-                new_copyright << " " << our_company << eol;
-            } else {
-                new_copyright << line << eol;
-            }
-        } else {
-            new_copyright << line << eol;
+        algo::strptr text=Pathcomp(line, ")LR LR");// skip copyright part
+        algo::strptr years, company;
+        ParseCopyright(text,years,company);
+        src_hdr::FCopyright *copyright=src_hdr::ind_copyright_Find(company);
+        if (copyright) {
+            copyright->years = years;
         }
     }ind_end;
-    if (!ok) {
-        new_copyright << "Copyright (C) " << year << " " << our_company;
+    // insert default copyright
+    if (src_hdr::_db.cmdline.update_copyright && src_hdr::_db.c_dflt_copyright) {
+        UpdateCopyrightYear(src_hdr::_db.c_dflt_copyright->years, year);
     }
+    // sort copyrights by last year
+    ind_beg(src_hdr::_db_copyright_curs,copyright,src_hdr::_db) {
+        copyright.sortkey = -ParseI32(Pathcomp(copyright.years,",RR-RR"),0);
+        bh_copyright_Insert(copyright);
+    }ind_end;
+    tempstr new_copyright;
+    // print copyrights back, print by descending year
+    ind_beg(src_hdr::_db_bh_copyright_curs,copyright,src_hdr::_db) {
+        if (copyright.years != "") {
+            new_copyright << "Copyright (C) " << copyright.years << " "<< copyright.copyright << eol;
+        }
+    }ind_end;
     src.copyright = new_copyright;
 }
 
@@ -238,10 +240,7 @@ static void RebuildHeader(src_hdr::FSrc &src) {
                 src.body<<line<<eol;
             }
         }ind_end;
-        CheckCopyright(src);
-        if (ch_N(src_hdr::_db.cmdline.update_copyright)) {
-            UpdateCopyright(src);
-        }
+        UpdateCopyright(src);
         if (src_hdr::_db.cmdline.indent) {
             tempstr out;
             algo::InsertIndent(out, src.body,0);
@@ -272,6 +271,8 @@ static void LoadLicense() {
 void src_hdr::Main() {
     algo_lib::Regx exclude;
     LoadLicense();
+    vrfy (!src_hdr::_db.cmdline.update_copyright || src_hdr::_db.c_dflt_copyright,
+          "src_hdr: default copyright not defined (please update dev.copyright table");
     (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%|bin/bootstrap/%)");
     ind_beg(src_hdr::_db_targsrc_curs,targsrc,src_hdr::_db) {
         if (Regx_Match(_db.cmdline.targsrc,targsrc.targsrc) && !Regx_Match(exclude,src_Get(targsrc))) {

@@ -843,7 +843,7 @@ bool                 value_ReadStrptrMaybe(amc::BltinId& parent, algo::strptr rh
 // Read fields of amc::BltinId from an ascii string.
 // The format of the string is the format of the amc::BltinId's only field
 // func:amc.BltinId..ReadStrptrMaybe
-bool                 BltinId_ReadStrptrMaybe(amc::BltinId &parent, algo::strptr in_str);
+bool                 BltinId_ReadStrptrMaybe(amc::BltinId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.BltinId..Init
 void                 BltinId_Init(amc::BltinId& parent);
@@ -915,7 +915,7 @@ bool                 Enumstr_ReadFieldMaybe(amc::Enumstr& parent, algo::strptr f
 // Read fields of amc::Enumstr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amc.Enumstr..ReadStrptrMaybe
-bool                 Enumstr_ReadStrptrMaybe(amc::Enumstr &parent, algo::strptr in_str);
+bool                 Enumstr_ReadStrptrMaybe(amc::Enumstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:amc.Enumstr..Lt
 bool                 Enumstr_Lt(amc::Enumstr& lhs, amc::Enumstr& rhs) __attribute__((nothrow));
 // func:amc.Enumstr..Cmp
@@ -924,7 +924,7 @@ i32                  Enumstr_Cmp(amc::Enumstr& lhs, amc::Enumstr& rhs) __attribu
 // func:amc.Enumstr..Init
 void                 Enumstr_Init(amc::Enumstr& parent);
 // func:amc.Enumstr..Eq
-bool                 Enumstr_Eq(const amc::Enumstr& lhs, const amc::Enumstr& rhs) __attribute__((nothrow));
+bool                 Enumstr_Eq(amc::Enumstr& lhs, amc::Enumstr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:amc.Enumstr..Update
 bool                 Enumstr_Update(amc::Enumstr &lhs, amc::Enumstr& rhs) __attribute__((nothrow));
@@ -2643,8 +2643,7 @@ void                 trace_Print(amc::trace& row, algo::cstring& str) __attribut
 // --- amc.FDb
 // create: amc.FDb._db (Global)
 struct FDb { // amc.FDb: In-memory database for amc
-    lpool_Lpblock*          lpool_free[31];                           // Lpool levels
-    u32                     lpool_lock;                               // Lpool lock
+    lpool_Lpblock*          lpool_free[36];                           // Lpool levels
     amc::FFsort*            fsort_lary[32];                           // level array
     i32                     fsort_n;                                  // number of elements in array
     amc::FCfmt**            ind_cfmt_buckets_elems;                   // pointer to bucket array
@@ -3042,20 +3041,33 @@ struct FDb { // amc.FDb: In-memory database for amc
 
 // Free block of memory previously returned by Lpool.
 // func:amc.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:amc.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:amc.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:amc.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:amc.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -12616,6 +12628,11 @@ algo::Smallstr100    ctype_Get(amc::FFunc& func) __attribute__((__warn_unused_re
 // func:amc.FFunc.ns.Get
 algo::Smallstr16     ns_Get(amc::FFunc& func) __attribute__((__warn_unused_result__, nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:amc.FFunc.funcarg.Addary
+algo::aryptr<amc::Funcarg> funcarg_Addary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc.FFunc.funcarg.Alloc
@@ -12635,7 +12652,7 @@ bool                 funcarg_EmptyQ(amc::FFunc& func) __attribute__((nothrow));
 amc::Funcarg*        funcarg_Find(amc::FFunc& func, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc.FFunc.funcarg.Getary
-algo::aryptr<amc::Funcarg> funcarg_Getary(amc::FFunc& func) __attribute__((nothrow));
+algo::aryptr<amc::Funcarg> funcarg_Getary(const amc::FFunc& func) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc.FFunc.funcarg.Last
 amc::Funcarg*        funcarg_Last(amc::FFunc& func) __attribute__((nothrow, pure));
@@ -12662,6 +12679,10 @@ void                 funcarg_AbsReserve(amc::FFunc& func, int n) __attribute__((
 // Copy contents of RHS to PARENT.
 // func:amc.FFunc.funcarg.Setary
 void                 funcarg_Setary(amc::FFunc& func, amc::FFunc &rhs) __attribute__((nothrow));
+// Copy specified array into funcarg, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:amc.FFunc.funcarg.Setary2
+void                 funcarg_Setary(amc::FFunc& func, const algo::aryptr<amc::Funcarg> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FFunc.funcarg.qFind
 amc::Funcarg&        funcarg_qFind(amc::FFunc& func, u64 t) __attribute__((nothrow));
@@ -12674,10 +12695,6 @@ u64                  funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FFunc.funcarg.AllocNVal
 algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:amc.FFunc.funcarg.XrefMaybe
-bool                 funcarg_XrefMaybe(amc::Funcarg &row);
 
 // Set all fields to initial values.
 // func:amc.FFunc..Init
@@ -13661,6 +13678,11 @@ bool                 c_main_InsertMaybe(amc::FNs& ns, amc::FMain& row) __attribu
 // func:amc.FNs.c_main.Remove
 void                 c_main_Remove(amc::FNs& ns, amc::FMain& row) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:amc.FNs.include.Addary
+algo::aryptr<algo::cstring> include_Addary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:amc.FNs.include.Alloc
@@ -13680,7 +13702,7 @@ bool                 include_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
 algo::cstring*       include_Find(amc::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:amc.FNs.include.Getary
-algo::aryptr<algo::cstring> include_Getary(amc::FNs& ns) __attribute__((nothrow));
+algo::aryptr<algo::cstring> include_Getary(const amc::FNs& ns) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:amc.FNs.include.Last
 algo::cstring*       include_Last(amc::FNs& ns) __attribute__((nothrow, pure));
@@ -13707,6 +13729,10 @@ void                 include_AbsReserve(amc::FNs& ns, int n) __attribute__((noth
 // Copy contents of RHS to PARENT.
 // func:amc.FNs.include.Setary
 void                 include_Setary(amc::FNs& ns, amc::FNs &rhs) __attribute__((nothrow));
+// Copy specified array into include, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:amc.FNs.include.Setary2
+void                 include_Setary(amc::FNs& ns, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FNs.include.qFind
 algo::cstring&       include_qFind(amc::FNs& ns, u64 t) __attribute__((nothrow));
@@ -13719,6 +13745,11 @@ u64                  include_rowid_Get(amc::FNs& ns, algo::cstring &elem) __attr
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FNs.include.AllocNVal
 algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:amc.FNs.include.ReadStrptrMaybe
+bool                 include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_dispsig.EmptyQ
@@ -15709,7 +15740,7 @@ bool                 value_ReadStrptrMaybe(amc::FieldId& parent, algo::strptr rh
 // Read fields of amc::FieldId from an ascii string.
 // The format of the string is the format of the amc::FieldId's only field
 // func:amc.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(amc::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(amc::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FieldId..Init
 void                 FieldId_Init(amc::FieldId& parent);
@@ -15733,7 +15764,7 @@ struct Funcarg { // amc.Funcarg
 
 // Set all fields to initial values.
 // func:amc.Funcarg..Init
-void                 Funcarg_Init(amc::Funcarg& funcarg);
+void                 Funcarg_Init(amc::Funcarg& parent);
 
 // --- amc.Genpnew
 struct Genpnew { // amc.Genpnew
@@ -15797,7 +15828,7 @@ bool                 value_ReadStrptrMaybe(amc::Pnewtype& parent, algo::strptr r
 // Read fields of amc::Pnewtype from an ascii string.
 // The format of the string is the format of the amc::Pnewtype's only field
 // func:amc.Pnewtype..ReadStrptrMaybe
-bool                 Pnewtype_ReadStrptrMaybe(amc::Pnewtype &parent, algo::strptr in_str);
+bool                 Pnewtype_ReadStrptrMaybe(amc::Pnewtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.Pnewtype..Init
 void                 Pnewtype_Init(amc::Pnewtype& parent);
@@ -15845,7 +15876,7 @@ bool                 value_ReadStrptrMaybe(amc::TableId& parent, algo::strptr rh
 // Read fields of amc::TableId from an ascii string.
 // The format of the string is the format of the amc::TableId's only field
 // func:amc.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(amc::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(amc::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.TableId..Init
 void                 TableId_Init(amc::TableId& parent);
@@ -17900,13 +17931,9 @@ void                 tfunc_Ctype_Unref();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_ReadFieldMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Ctype_ReadStrptrMaybe
+// func:amc...tfunc_Ctype_Read
 // this function is 'extrn' and implemented by user
-void                 tfunc_Ctype_ReadStrptrMaybe();
-// User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Ctype_ReadTupleMaybe
-// this function is 'extrn' and implemented by user
-void                 tfunc_Ctype_ReadTupleMaybe();
+void                 tfunc_Ctype_Read();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ctype_Lt
 // this function is 'extrn' and implemented by user
@@ -17960,10 +17987,6 @@ void                 tfunc_Ctype_Update();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_EqStrptr();
 // User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Ctype_PrintArgv
-// this function is 'extrn' and implemented by user
-void                 tfunc_Ctype_PrintArgv();
-// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ctype_ToCmdline
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_ToCmdline();
@@ -17971,10 +17994,6 @@ void                 tfunc_Ctype_ToCmdline();
 // func:amc...tfunc_Ctype_Print
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_Print();
-// User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Ctype_FmtJson
-// this function is 'extrn' and implemented by user
-void                 tfunc_Ctype_FmtJson();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ctype_EqEnum
 // this function is 'extrn' and implemented by user
@@ -18083,6 +18102,10 @@ void                 tfunc_Exec_Init();
 // func:amc...tfunc_Exec_Uninit
 // this function is 'extrn' and implemented by user
 void                 tfunc_Exec_Uninit();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Exec_ToArgv
+// this function is 'extrn' and implemented by user
+void                 tfunc_Exec_ToArgv();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Fbuf_BeginRead
 // this function is 'extrn' and implemented by user
@@ -18644,10 +18667,6 @@ void                 tfunc_Ptr_Cascdel();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptr_InsertMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Ptr_Print
-// this function is 'extrn' and implemented by user
-void                 tfunc_Ptr_Print();
-// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ptr_Remove
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptr_Remove();
@@ -18968,6 +18987,10 @@ void                 tfunc_Tary_AbsReserve();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Tary_RowidFind();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Tary_Print
+// this function is 'extrn' and implemented by user
+void                 tfunc_Tary_Print();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Tary_Setary
 // this function is 'extrn' and implemented by user
 void                 tfunc_Tary_Setary();
@@ -19119,6 +19142,10 @@ void                 tfunc_Varlen_ReadStrptrMaybe();
 // func:amc...tfunc_Varlen_curs
 // this function is 'extrn' and implemented by user
 void                 tfunc_Varlen_curs();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Varlen_Print
+// this function is 'extrn' and implemented by user
+void                 tfunc_Varlen_Print();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_ZSListMT_DestructiveFirst
 // this function is 'extrn' and implemented by user

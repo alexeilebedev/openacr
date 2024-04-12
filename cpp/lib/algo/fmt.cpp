@@ -1,6 +1,6 @@
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -149,6 +149,11 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
         iter.index = 0;
         Refurbish(time_struct);
         retval = TimeStruct_Read(time_struct, iter, "%Y/%m/%d");
+    }
+    if (!retval) {
+        iter.index = 0;
+        Refurbish(time_struct);
+        retval = TimeStruct_Read(time_struct, iter, "%Y%m%d");
     }
     if (LIKELY(retval)) {
         row = ToUnTime(time_struct);
@@ -662,49 +667,6 @@ void algo::char_PrintCppSingleQuote(int c, algo::cstring &out) {
         char_PrintCppEsc(char(c), out, '\'');
     }
     out<<'\'';
-}
-
-// -----------------------------------------------------------------------------
-
-// Print contents of memptr as a double-quoted C++ string
-// Bytes with codes 32-126, escept " (ASCII 34) and \ (ascii 92) are printed as-is.
-// All other characters are printed as \xHH where H is a hex digit.
-// NOTE: Compare with strptr_PrintCppQuoted, which \-escapes
-// more characters and uses octal sequences for non-printable characters.
-void algo::memptr_Print(memptr ary, algo::cstring &out) {
-    out << '"';
-    ind_beg_aryptr(u8,c,ary) {
-        if (c >= 32 && c < 127 && !(c == '\\' || c == '"')) {
-            // 0x20 and below: control codes
-            // 127: DEL key
-            out << char(c);
-        } else {
-            out << "\\x";
-            u64_PrintHex(c,out,2,false,true);
-        }
-    }ind_end_aryptr;
-    out << '"';
-}
-
-// -----------------------------------------------------------------------------
-
-// print 64 bytes per line
-void algo::memptr_PrintHex(memptr bytes, algo::cstring &str) {
-    bool non_printable=false;
-    frep_(i,elems_N(bytes)) {
-        if (!isprint(bytes[i])){
-            non_printable=true;
-            break;
-        }
-    }
-    if (non_printable) {
-        frep_(i,elems_N(bytes)) {
-            u64_PrintHex(u32(bytes[i]),str, 2,false,false);
-            str<<(((i % 15) == 14 ) ? "\n" : " ");
-        }
-    } else {
-        str<<ToStrPtr(bytes);
-    }
 }
 
 // -----------------------------------------------------------------------------
