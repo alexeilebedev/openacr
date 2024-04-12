@@ -439,6 +439,8 @@ namespace amc { // gen:ns_print_proto
     static bool          ffast_InputMaybe(dmmeta::Ffast &elem) __attribute__((nothrow));
     // func:amc.FDb.pmaskfld_member.InputMaybe
     static bool          pmaskfld_member_InputMaybe(dmmeta::PmaskfldMember &elem) __attribute__((nothrow));
+    // func:amc.FDb.ssimsort.InputMaybe
+    static bool          ssimsort_InputMaybe(dmmeta::Ssimsort &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -6839,7 +6841,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'a99278c1d678e3a11df6d5515ceede7d2824d8a8'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'469bbf0164731ea4924cd90c0b01213147e7f147'");
 }
 
 // --- amc.FDb._db.StaticCheck
@@ -7446,6 +7448,12 @@ bool amc::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && pmaskfld_member_InputMaybe(elem);
             break;
         }
+        case amc_TableId_dmmeta_Ssimsort: { // finput:amc.FDb.ssimsort
+            dmmeta::Ssimsort elem;
+            retval = dmmeta::Ssimsort_ReadStrptrMaybe(elem, str);
+            retval = retval && ssimsort_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -7477,6 +7485,7 @@ bool amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimvolatile"),recursive);
+        retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimsort"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sortfld"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.smallstr"),recursive);
         retval = retval && amc::LoadTuplesFile(algo::SsimFname(root,"dmmeta.rowid"),recursive);
@@ -15855,7 +15864,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Atree.UpdateDepth  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Atree_UpdateDepth }
         ,{ "amcdb.tfunc  tfunc:Atree.Turn  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"rotates the tree in from->to direction\"", amc::tfunc_Atree_Turn }
         ,{ "amcdb.tfunc  tfunc:Atree.Connect  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Atree_Connect }
-        ,{ "amcdb.tfunc  tfunc:Atree.curs  hasthrow:N  leaf:N  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Atree_curs }
+        ,{ "amcdb.tfunc  tfunc:Atree.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Atree_curs }
         ,{ "amcdb.tfunc  tfunc:Atree.RemoveAllImpl  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Empty the index. (rows may be deleted if cascdel)\"", amc::tfunc_Atree_RemoveAllImpl }
         ,{ "amcdb.tfunc  tfunc:Atree.Reinsert  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reinsert a row with modified key(Reheap semantics)\"", amc::tfunc_Atree_Reinsert }
         ,{ "amcdb.tfunc  tfunc:Atree.FirstGe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Find the first element that is greater or equal to a sortfld value\"", amc::tfunc_Atree_FirstGe }
@@ -15886,8 +15895,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Bheap.Upheap  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_Upheap }
         ,{ "amcdb.tfunc  tfunc:Bheap.ElemLt  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_ElemLt }
         ,{ "amcdb.tfunc  tfunc:Bheap.ElemLtval  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_ElemLtval }
-        ,{ "amcdb.tfunc  tfunc:Bheap.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_curs }
-        ,{ "amcdb.tfunc  tfunc:Bheap.unordcurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_unordcurs }
+        ,{ "amcdb.tfunc  tfunc:Bheap.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_curs }
+        ,{ "amcdb.tfunc  tfunc:Bheap.unordcurs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bheap_unordcurs }
         ,{ "amcdb.tfunc  tfunc:Bitfld.Get  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bitfld_Get }
         ,{ "amcdb.tfunc  tfunc:Bitfld.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Bitfld_Init }
         ,{ "amcdb.tfunc  tfunc:Bitfld.Set  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bitfld_Set }
@@ -15910,7 +15919,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Bitset.ExpandBits  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bitset_ExpandBits }
         ,{ "amcdb.tfunc  tfunc:Bitset.AllocBit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Bitset_AllocBit }
         ,{ "amcdb.tfunc  tfunc:Bitset.Sup  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"Return smallest number N such that indexes of all 1 bits are below N\"", amc::tfunc_Bitset_Sup }
-        ,{ "amcdb.tfunc  tfunc:Bitset.bitcurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Return smallest number N such that indexes of all 1 bits are below N\"", amc::tfunc_Bitset_bitcurs }
+        ,{ "amcdb.tfunc  tfunc:Bitset.bitcurs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Return smallest number N such that indexes of all 1 bits are below N\"", amc::tfunc_Bitset_bitcurs }
         ,{ "amcdb.tfunc  tfunc:Blkpool.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Blkpool_AllocMem }
         ,{ "amcdb.tfunc  tfunc:Blkpool.SetBufferSize  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Blkpool_SetBufferSize }
         ,{ "amcdb.tfunc  tfunc:Blkpool.ReserveBuffers  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve NBUF buffers of specified size\"", amc::tfunc_Blkpool_ReserveBuffers }
@@ -16045,7 +16054,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Inlary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Compute row id of element given element's address\"", amc::tfunc_Inlary_rowid_Get }
         ,{ "amcdb.tfunc  tfunc:Inlary.Eq  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:Y  ismacro:N  comment:\"\"", amc::tfunc_Inlary_Eq }
         ,{ "amcdb.tfunc  tfunc:Inlary.Cmp  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Inlary_Cmp }
-        ,{ "amcdb.tfunc  tfunc:Inlary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Inlary_curs }
+        ,{ "amcdb.tfunc  tfunc:Inlary.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Inlary_curs }
         ,{ "amcdb.tfunc  tfunc:Inlary.Print  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Inlary_Print }
         ,{ "amcdb.tfunc  tfunc:Inlary.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Read array from string\"", amc::tfunc_Inlary_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Io.SaveSsimfile  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Io_SaveSsimfile }
@@ -16064,7 +16073,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Lary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Lary_Uninit }
         ,{ "amcdb.tfunc  tfunc:Lary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:Y  ismacro:N  comment:\"'quick' Access row by row id. No bounds checking.\"", amc::tfunc_Lary_qFind }
         ,{ "amcdb.tfunc  tfunc:Lary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:Y  ismacro:N  comment:\"Return reference to last element of array. No bounds checking\"", amc::tfunc_Lary_qLast }
-        ,{ "amcdb.tfunc  tfunc:Lary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Lary_curs }
+        ,{ "amcdb.tfunc  tfunc:Lary.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Lary_curs }
         ,{ "amcdb.tfunc  tfunc:Llist.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Delete all elements in the linked list.\"", amc::tfunc_Llist_Cascdel }
         ,{ "amcdb.tfunc  tfunc:Llist.DestructiveFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"If index empty, return NULL. Otherwise return pointer to first element in index\"", amc::tfunc_Llist_DestructiveFirst }
         ,{ "amcdb.tfunc  tfunc:Llist.EmptyQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"Return true if index is empty\"", amc::tfunc_Llist_EmptyQ }
@@ -16081,8 +16090,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Llist.RemoveFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.\"", amc::tfunc_Llist_RemoveFirst }
         ,{ "amcdb.tfunc  tfunc:Llist.RotateFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"If linked list is empty, return NULL.\\nOtherwise return head item and advance head to the next item.\"", amc::tfunc_Llist_RotateFirst }
         ,{ "amcdb.tfunc  tfunc:Llist.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"Return reference to last element in the index. No bounds checking.\"", amc::tfunc_Llist_qLast }
-        ,{ "amcdb.tfunc  tfunc:Llist.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_curs }
-        ,{ "amcdb.tfunc  tfunc:Llist.delcurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_delcurs }
+        ,{ "amcdb.tfunc  tfunc:Llist.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_curs }
+        ,{ "amcdb.tfunc  tfunc:Llist.delcurs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Llist_delcurs }
         ,{ "amcdb.tfunc  tfunc:Lpool.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Lpool_Init }
         ,{ "amcdb.tfunc  tfunc:Lpool.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Free block of memory previously returned by Lpool.\"", amc::tfunc_Lpool_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Lpool.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Lpool_AllocMem }
@@ -16132,8 +16141,8 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Ptrary.RemoveAll  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Empty the index. (The rows are not deleted)\"", amc::tfunc_Ptrary_RemoveAll }
         ,{ "amcdb.tfunc  tfunc:Ptrary.Reserve  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve space in index for N more elements;\"", amc::tfunc_Ptrary_Reserve }
         ,{ "amcdb.tfunc  tfunc:Ptrary.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Ptrary_Uninit }
-        ,{ "amcdb.tfunc  tfunc:Ptrary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_curs }
-        ,{ "amcdb.tfunc  tfunc:Ptrary.oncecurs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_oncecurs }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_curs }
+        ,{ "amcdb.tfunc  tfunc:Ptrary.oncecurs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptrary_oncecurs }
         ,{ "amcdb.tfunc  tfunc:Ptrary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return reference without bounds checking\"", amc::tfunc_Ptrary_qFind }
         ,{ "amcdb.tfunc  tfunc:Ptrary.InAryQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"True if row is in any ptrary instance\"", amc::tfunc_Ptrary_InAryQ }
         ,{ "amcdb.tfunc  tfunc:Ptrary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Reference to last element without bounds checking\"", amc::tfunc_Ptrary_qLast }
@@ -16203,7 +16212,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Tary.qFind  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"'quick' Access row by row id. No bounds checking.\"", amc::tfunc_Tary_qFind }
         ,{ "amcdb.tfunc  tfunc:Tary.qLast  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return reference to last element of array. No bounds checking\"", amc::tfunc_Tary_qLast }
         ,{ "amcdb.tfunc  tfunc:Tary.rowid_Get  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Return row id of specified element\"", amc::tfunc_Tary_rowid_Get }
-        ,{ "amcdb.tfunc  tfunc:Tary.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_curs }
+        ,{ "amcdb.tfunc  tfunc:Tary.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_curs }
         ,{ "amcdb.tfunc  tfunc:Tary.AllocNVal  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve space. Insert N elements at the end of the array, return pointer to array\"", amc::tfunc_Tary_AllocNVal }
         ,{ "amcdb.tfunc  tfunc:Tary.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tary_ReadStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Thash.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Delete all rows reachable through the hash index\"", amc::tfunc_Thash_Cascdel }
@@ -16218,7 +16227,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Thash.Reserve  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Reserve enough room in the hash for N more elements. Return success code.\"", amc::tfunc_Thash_Reserve }
         ,{ "amcdb.tfunc  tfunc:Thash.FindRemove  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Thash_FindRemove }
         ,{ "amcdb.tfunc  tfunc:Thash.Uninit  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Thash_Uninit }
-        ,{ "amcdb.tfunc  tfunc:Thash.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Thash_curs }
+        ,{ "amcdb.tfunc  tfunc:Thash.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Thash_curs }
         ,{ "amcdb.tfunc  tfunc:Tpool.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tpool_AllocMem }
         ,{ "amcdb.tfunc  tfunc:Tpool.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Tpool_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Tpool.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_Tpool_Init }
@@ -16234,7 +16243,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Varlen.Addr  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_Addr }
         ,{ "amcdb.tfunc  tfunc:Varlen.N  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:Y  ismacro:N  comment:\"Return number of elements in varlen field\"", amc::tfunc_Varlen_N }
         ,{ "amcdb.tfunc  tfunc:Varlen.ReadStrptrMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_ReadStrptrMaybe }
-        ,{ "amcdb.tfunc  tfunc:Varlen.curs  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_curs }
+        ,{ "amcdb.tfunc  tfunc:Varlen.curs  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Varlen_curs }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.DestructiveFirst  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_ZSListMT_DestructiveFirst }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.InLlistQ  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:Y  pure:N  ismacro:N  comment:\"Return true if row is in index, false otherwise. Row must be non-NULL.\"", amc::tfunc_ZSListMT_InLlistQ }
         ,{ "amcdb.tfunc  tfunc:ZSListMT.Init  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:Y  comment:\"\"", amc::tfunc_ZSListMT_Init }
@@ -16500,6 +16509,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:proc  perns:N  comment:\"Create command::xyz_proc for every executable\"", amc::gen_proc }
         ,{ "amcdb.gen  gen:msgcurs  perns:N  comment:\"Generate message cursors\"", amc::gen_msgcurs }
         ,{ "amcdb.gen  gen:check_basefield  perns:N  comment:\"Check Base usage\"", amc::gen_check_basefield }
+        ,{ "amcdb.gen  gen:check_ssimsort  perns:N  comment:\"Check Ssimsort table\"", amc::gen_check_ssimsort }
         ,{ "amcdb.gen  gen:clonefconst  perns:N  comment:\"Generate numeric fconsts for all string-based fconsts (creates new ctype)\"", amc::gen_clonefconst }
         ,{ "amcdb.gen  gen:parsenum  perns:N  comment:\"Generate functions to parse {i,u}{32,64,128}\"", amc::gen_parsenum }
         ,{ "amcdb.gen  gen:prep_proto  perns:N  comment:\"Detect protocol namespaces\"", amc::gen_prep_proto }
@@ -16529,12 +16539,11 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:xref_parent  perns:N  comment:\"Create p_parent links for xrefs\"", amc::gen_xref_parent }
         ,{ "amcdb.gen  gen:datafld  perns:N  comment:\"Create ctype.c_datafld\"", amc::gen_datafld }
         ,{ "amcdb.gen  gen:ctype_toposort  perns:N  comment:\"Determine ctype graph\"", amc::gen_ctype_toposort }
-        ,{ "amcdb.gen  gen:prep_ctype  perns:N  comment:cpp_type,arg_type,enum_type", amc::gen_prep_ctype }
+        ,{ "amcdb.gen  gen:prep_ctype  perns:N  comment:\"cpp_type,arg_type,enum_type, varname\"", amc::gen_prep_ctype }
         ,{ "amcdb.gen  gen:prep_fconst  perns:N  comment:\"\"", amc::gen_prep_fconst }
         ,{ "amcdb.gen  gen:usedns  perns:N  comment:\"Namespace dependencies\"", amc::gen_usedns }
         ,{ "amcdb.gen  gen:include  perns:N  comment:\"Calculate #includes for dependent namespaces\"", amc::gen_include }
         ,{ "amcdb.gen  gen:load_gstatic  perns:N  comment:\"load static data\"", amc::gen_load_gstatic }
-        ,{ "amcdb.gen  gen:copypriv  perns:N  comment:\"Prevent assignment of certain ctypes\"", amc::gen_copypriv }
         ,{ "amcdb.gen  gen:pmask  perns:N  comment:\"Generate bitsets for pmask (presence mask) fields\"", amc::gen_pmask }
         ,{ "amcdb.gen  gen:ssimdb  perns:N  comment:\"Check nsdb table consistency\"", amc::gen_ssimdb }
         ,{ "amcdb.gen  gen:xref2  perns:N  comment:\"For each ctype, calculate list of xrefs where the ctype is a child\"", amc::gen_xref2 }
@@ -23249,6 +23258,122 @@ void amc::ind_pmaskfld_Reserve(int n) {
     }
 }
 
+// --- amc.FDb.ssimsort.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+amc::FSsimsort& amc::ssimsort_Alloc() {
+    amc::FSsimsort* row = ssimsort_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("amc.out_of_mem  field:amc.FDb.ssimsort  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- amc.FDb.ssimsort.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+amc::FSsimsort* amc::ssimsort_AllocMaybe() {
+    amc::FSsimsort *row = (amc::FSsimsort*)ssimsort_AllocMem();
+    if (row) {
+        new (row) amc::FSsimsort; // call constructor
+    }
+    return row;
+}
+
+// --- amc.FDb.ssimsort.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc::FSsimsort* amc::ssimsort_InsertMaybe(const dmmeta::Ssimsort &value) {
+    amc::FSsimsort *row = &ssimsort_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    ssimsort_CopyIn(*row,const_cast<dmmeta::Ssimsort&>(value));
+    bool ok = ssimsort_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        ssimsort_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- amc.FDb.ssimsort.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* amc::ssimsort_AllocMem() {
+    u64 new_nelems     = _db.ssimsort_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    amc::FSsimsort*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.ssimsort_lary[bsr];
+        if (!lev) {
+            lev=(amc::FSsimsort*)amc::lpool_AllocMem(sizeof(amc::FSsimsort) * (u64(1)<<bsr));
+            _db.ssimsort_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.ssimsort_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- amc.FDb.ssimsort.RemoveAll
+// Remove all elements from Lary
+void amc::ssimsort_RemoveAll() {
+    for (u64 n = _db.ssimsort_n; n>0; ) {
+        n--;
+        ssimsort_qFind(u64(n)).~FSsimsort(); // destroy last element
+        _db.ssimsort_n = i32(n);
+    }
+}
+
+// --- amc.FDb.ssimsort.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void amc::ssimsort_RemoveLast() {
+    u64 n = _db.ssimsort_n;
+    if (n > 0) {
+        n -= 1;
+        ssimsort_qFind(u64(n)).~FSsimsort();
+        _db.ssimsort_n = i32(n);
+    }
+}
+
+// --- amc.FDb.ssimsort.InputMaybe
+static bool amc::ssimsort_InputMaybe(dmmeta::Ssimsort &elem) {
+    bool retval = true;
+    retval = ssimsort_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- amc.FDb.ssimsort.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool amc::ssimsort_XrefMaybe(amc::FSsimsort &row) {
+    bool retval = true;
+    (void)row;
+    amc::FSsimfile* p_ssimfile = amc::ind_ssimfile_Find(row.ssimfile);
+    if (UNLIKELY(!p_ssimfile)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_ssimfile" << Keyval("key", row.ssimfile);
+        return false;
+    }
+    // ssimsort: save pointer to ssimfile
+    if (true) { // user-defined insert condition
+        row.p_ssimfile = p_ssimfile;
+    }
+    amc::FField* p_sortfld = amc::ind_field_Find(row.sortfld);
+    if (UNLIKELY(!p_sortfld)) {
+        algo_lib::ResetErrtext() << "amc.bad_xref  index:amc.FDb.ind_field" << Keyval("key", row.sortfld);
+        return false;
+    }
+    // ssimsort: save pointer to sortfld
+    if (true) { // user-defined insert condition
+        row.p_sortfld = p_sortfld;
+    }
+    return retval;
+}
+
 // --- amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr amc::trace_RowidFind(int t) {
@@ -24904,6 +25029,17 @@ void amc::FDb_Init() {
         FatalErrorExit("out of memory"); // (amc.FDb.ind_pmaskfld)
     }
     memset(_db.ind_pmaskfld_buckets_elems, 0, sizeof(amc::FPmaskfld*)*_db.ind_pmaskfld_buckets_n); // (amc.FDb.ind_pmaskfld)
+    // initialize LAry ssimsort (amc.FDb.ssimsort)
+    _db.ssimsort_n = 0;
+    memset(_db.ssimsort_lary, 0, sizeof(_db.ssimsort_lary)); // zero out all level pointers
+    amc::FSsimsort* ssimsort_first = (amc::FSsimsort*)amc::lpool_AllocMem(sizeof(amc::FSsimsort) * (u64(1)<<4));
+    if (!ssimsort_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.ssimsort_lary[i]  = ssimsort_first;
+        ssimsort_first    += 1ULL<<i;
+    }
 
     amc::InitReflection();
     tclass_LoadStatic(); // gen:ns_gstatic  gstatic:amc.FDb.tclass  load amc.FTclass records
@@ -24915,6 +25051,9 @@ void amc::FDb_Init() {
 // --- amc.FDb..Uninit
 void amc::FDb_Uninit() {
     amc::FDb &row = _db; (void)row;
+
+    // amc.FDb.ssimsort.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // amc.FDb.ind_pmaskfld.Uninit (Thash)  //
     // skip destruction of ind_pmaskfld in global scope
@@ -30664,6 +30803,22 @@ void amc::FSsimfile_Uninit(amc::FSsimfile& ssimfile) {
     zd_ssimfile_todo_Remove(row); // remove ssimfile from index zd_ssimfile_todo
 }
 
+// --- amc.FSsimsort.base.CopyOut
+// Copy fields out of row
+void amc::ssimsort_CopyOut(amc::FSsimsort &row, dmmeta::Ssimsort &out) {
+    out.ssimfile = row.ssimfile;
+    out.sortfld = row.sortfld;
+    out.comment = row.comment;
+}
+
+// --- amc.FSsimsort.base.CopyIn
+// Copy fields in to row
+void amc::ssimsort_CopyIn(amc::FSsimsort &row, dmmeta::Ssimsort &in) {
+    row.ssimfile = in.ssimfile;
+    row.sortfld = in.sortfld;
+    row.comment = in.comment;
+}
+
 // --- amc.FSsimvolatile.base.CopyOut
 // Copy fields out of row
 void amc::ssimvolatile_CopyOut(amc::FSsimvolatile &row, dmmeta::Ssimvolatile &out) {
@@ -30761,14 +30916,12 @@ void amc::FTargdep_Uninit(amc::FTargdep& targdep) {
 // Copy fields out of row
 void amc::target_CopyOut(amc::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- amc.FTarget.msghdr.CopyIn
 // Copy fields in to row
 void amc::target_CopyIn(amc::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- amc.FTarget.c_targdep.Insert
@@ -31473,6 +31626,7 @@ const char* amc::value_ToCstr(const amc::TableId& parent) {
         case amc_TableId_dmmeta_Smallstr   : ret = "dmmeta.Smallstr";  break;
         case amc_TableId_dmmeta_Sortfld    : ret = "dmmeta.Sortfld";  break;
         case amc_TableId_dmmeta_Ssimfile   : ret = "dmmeta.Ssimfile";  break;
+        case amc_TableId_dmmeta_Ssimsort   : ret = "dmmeta.Ssimsort";  break;
         case amc_TableId_dmmeta_Ssimvolatile: ret = "dmmeta.Ssimvolatile";  break;
         case amc_TableId_dmmeta_Substr     : ret = "dmmeta.Substr";  break;
         case amc_TableId_dev_Targdep       : ret = "dev.Targdep";  break;
@@ -31951,6 +32105,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"mallstr",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Smallstr); ret = true; break; }
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Ssimfile); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"simsort",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_Ssimsort); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','a'): {
@@ -31982,6 +32137,7 @@ bool amc::value_SetStrptrMaybe(amc::TableId& parent, algo::strptr rhs) {
                 case LE_STR8('d','m','m','e','t','a','.','s'): {
                     if (memcmp(rhs.elems+8,"mallstr",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_smallstr); ret = true; break; }
                     if (memcmp(rhs.elems+8,"simfile",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_ssimfile); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"simsort",7)==0) { value_SetEnum(parent,amc_TableId_dmmeta_ssimsort); ret = true; break; }
                     break;
                 }
             }

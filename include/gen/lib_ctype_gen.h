@@ -416,27 +416,27 @@ bool                 c_bltin_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FB
 void                 c_bltin_Remove(lib_ctype::FCtype& ctype, lib_ctype::FBltin& row) __attribute__((nothrow));
 
 // func:lib_ctype.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FCtype.c_field_curs.Access
-lib_ctype::FField&   ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+lib_ctype::FField&   ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // func:lib_ctype.FCtype.c_cfmt_curs.Reset
-void                 ctype_c_cfmt_curs_Reset(ctype_c_cfmt_curs &curs, lib_ctype::FCtype &parent);
+void                 ctype_c_cfmt_curs_Reset(ctype_c_cfmt_curs &curs, lib_ctype::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FCtype.c_cfmt_curs.ValidQ
-bool                 ctype_c_cfmt_curs_ValidQ(ctype_c_cfmt_curs &curs);
+bool                 ctype_c_cfmt_curs_ValidQ(ctype_c_cfmt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FCtype.c_cfmt_curs.Next
-void                 ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs);
+void                 ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FCtype.c_cfmt_curs.Access
-lib_ctype::FCfmt&    ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs);
+lib_ctype::FCfmt&    ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.FCtype..Init
 void                 FCtype_Init(lib_ctype::FCtype& ctype);
@@ -1091,136 +1091,136 @@ bool                 bltin_XrefMaybe(lib_ctype::FBltin &row);
 
 // cursor points to valid item
 // func:lib_ctype.FDb.fconst_curs.Reset
-void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent);
+void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.fconst_curs.ValidQ
-bool                 _db_fconst_curs_ValidQ(_db_fconst_curs &curs);
+bool                 _db_fconst_curs_ValidQ(_db_fconst_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.fconst_curs.Next
-void                 _db_fconst_curs_Next(_db_fconst_curs &curs);
+void                 _db_fconst_curs_Next(_db_fconst_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.fconst_curs.Access
-lib_ctype::FFconst&  _db_fconst_curs_Access(_db_fconst_curs &curs);
+lib_ctype::FFconst&  _db_fconst_curs_Access(_db_fconst_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, lib_ctype::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.ssimfile_curs.Access
-lib_ctype::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+lib_ctype::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ftuple_curs.Reset
-void                 _db_ftuple_curs_Reset(_db_ftuple_curs &curs, lib_ctype::FDb &parent);
+void                 _db_ftuple_curs_Reset(_db_ftuple_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ftuple_curs.ValidQ
-bool                 _db_ftuple_curs_ValidQ(_db_ftuple_curs &curs);
+bool                 _db_ftuple_curs_ValidQ(_db_ftuple_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.ftuple_curs.Next
-void                 _db_ftuple_curs_Next(_db_ftuple_curs &curs);
+void                 _db_ftuple_curs_Next(_db_ftuple_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.ftuple_curs.Access
-lib_ctype::FFtuple&  _db_ftuple_curs_Access(_db_ftuple_curs &curs);
+lib_ctype::FFtuple&  _db_ftuple_curs_Access(_db_ftuple_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, lib_ctype::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.ctype_curs.Access
-lib_ctype::FCtype&   _db_ctype_curs_Access(_db_ctype_curs &curs);
+lib_ctype::FCtype&   _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, lib_ctype::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.field_curs.Access
-lib_ctype::FField&   _db_field_curs_Access(_db_field_curs &curs);
+lib_ctype::FField&   _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cdflt_curs.Reset
-void                 _db_cdflt_curs_Reset(_db_cdflt_curs &curs, lib_ctype::FDb &parent);
+void                 _db_cdflt_curs_Reset(_db_cdflt_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cdflt_curs.ValidQ
-bool                 _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs);
+bool                 _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.cdflt_curs.Next
-void                 _db_cdflt_curs_Next(_db_cdflt_curs &curs);
+void                 _db_cdflt_curs_Next(_db_cdflt_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.cdflt_curs.Access
-lib_ctype::FCdflt&   _db_cdflt_curs_Access(_db_cdflt_curs &curs);
+lib_ctype::FCdflt&   _db_cdflt_curs_Access(_db_cdflt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cfmt_curs.Reset
-void                 _db_cfmt_curs_Reset(_db_cfmt_curs &curs, lib_ctype::FDb &parent);
+void                 _db_cfmt_curs_Reset(_db_cfmt_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cfmt_curs.ValidQ
-bool                 _db_cfmt_curs_ValidQ(_db_cfmt_curs &curs);
+bool                 _db_cfmt_curs_ValidQ(_db_cfmt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.cfmt_curs.Next
-void                 _db_cfmt_curs_Next(_db_cfmt_curs &curs);
+void                 _db_cfmt_curs_Next(_db_cfmt_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.cfmt_curs.Access
-lib_ctype::FCfmt&    _db_cfmt_curs_Access(_db_cfmt_curs &curs);
+lib_ctype::FCfmt&    _db_cfmt_curs_Access(_db_cfmt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cppfunc_curs.Reset
-void                 _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, lib_ctype::FDb &parent);
+void                 _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.cppfunc_curs.ValidQ
-bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs);
+bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.cppfunc_curs.Next
-void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs);
+void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.cppfunc_curs.Access
-lib_ctype::FCppfunc& _db_cppfunc_curs_Access(_db_cppfunc_curs &curs);
+lib_ctype::FCppfunc& _db_cppfunc_curs_Access(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, lib_ctype::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.substr_curs.Access
-lib_ctype::FSubstr&  _db_substr_curs_Access(_db_substr_curs &curs);
+lib_ctype::FSubstr&  _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.unstablefld_curs.Reset
-void                 _db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, lib_ctype::FDb &parent);
+void                 _db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.unstablefld_curs.ValidQ
-bool                 _db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs);
+bool                 _db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.unstablefld_curs.Next
-void                 _db_unstablefld_curs_Next(_db_unstablefld_curs &curs);
+void                 _db_unstablefld_curs_Next(_db_unstablefld_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.unstablefld_curs.Access
-lib_ctype::FUnstablefld& _db_unstablefld_curs_Access(_db_unstablefld_curs &curs);
+lib_ctype::FUnstablefld& _db_unstablefld_curs_Access(_db_unstablefld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.bltin_curs.Reset
-void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, lib_ctype::FDb &parent);
+void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FDb.bltin_curs.ValidQ
-bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs);
+bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FDb.bltin_curs.Next
-void                 _db_bltin_curs_Next(_db_bltin_curs &curs);
+void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FDb.bltin_curs.Access
-lib_ctype::FBltin&   _db_bltin_curs_Access(_db_bltin_curs &curs);
+lib_ctype::FBltin&   _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.FDb..Init
 void                 FDb_Init();
@@ -1438,27 +1438,27 @@ lib_ctype::FSubstr&  c_substr_srcfield_qLast(lib_ctype::FField& field) __attribu
 void                 FField_Init(lib_ctype::FField& field);
 // cursor points to valid item
 // func:lib_ctype.FField.zd_fconst_curs.Reset
-void                 field_zd_fconst_curs_Reset(field_zd_fconst_curs &curs, lib_ctype::FField &parent);
+void                 field_zd_fconst_curs_Reset(field_zd_fconst_curs &curs, lib_ctype::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FField.zd_fconst_curs.ValidQ
-bool                 field_zd_fconst_curs_ValidQ(field_zd_fconst_curs &curs);
+bool                 field_zd_fconst_curs_ValidQ(field_zd_fconst_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FField.zd_fconst_curs.Next
-void                 field_zd_fconst_curs_Next(field_zd_fconst_curs &curs);
+void                 field_zd_fconst_curs_Next(field_zd_fconst_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FField.zd_fconst_curs.Access
-lib_ctype::FFconst&  field_zd_fconst_curs_Access(field_zd_fconst_curs &curs);
+lib_ctype::FFconst&  field_zd_fconst_curs_Access(field_zd_fconst_curs &curs) __attribute__((nothrow));
 // func:lib_ctype.FField.c_substr_srcfield_curs.Reset
-void                 field_c_substr_srcfield_curs_Reset(field_c_substr_srcfield_curs &curs, lib_ctype::FField &parent);
+void                 field_c_substr_srcfield_curs_Reset(field_c_substr_srcfield_curs &curs, lib_ctype::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ctype.FField.c_substr_srcfield_curs.ValidQ
-bool                 field_c_substr_srcfield_curs_ValidQ(field_c_substr_srcfield_curs &curs);
+bool                 field_c_substr_srcfield_curs_ValidQ(field_c_substr_srcfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ctype.FField.c_substr_srcfield_curs.Next
-void                 field_c_substr_srcfield_curs_Next(field_c_substr_srcfield_curs &curs);
+void                 field_c_substr_srcfield_curs_Next(field_c_substr_srcfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ctype.FField.c_substr_srcfield_curs.Access
-lib_ctype::FSubstr&  field_c_substr_srcfield_curs_Access(field_c_substr_srcfield_curs &curs);
+lib_ctype::FSubstr&  field_c_substr_srcfield_curs_Access(field_c_substr_srcfield_curs &curs) __attribute__((nothrow));
 // func:lib_ctype.FField..Uninit
 void                 FField_Uninit(lib_ctype::FField& field) __attribute__((nothrow));
 // print string representation of ROW to string STR

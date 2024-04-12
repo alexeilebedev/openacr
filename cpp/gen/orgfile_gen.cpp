@@ -204,6 +204,13 @@ void orgfile::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:orgfile.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!orgfile::LoadTuplesMaybe(cmd.in,true)) {
+            err << "orgfile.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -216,8 +223,6 @@ void orgfile::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(orgfile::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- orgfile.FDb._db.MainLoop

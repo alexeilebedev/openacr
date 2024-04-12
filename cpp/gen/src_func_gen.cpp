@@ -380,6 +380,13 @@ void src_func::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:src_func.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!src_func::LoadTuplesMaybe(cmd.in,true)) {
+            err << "src_func.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -392,8 +399,6 @@ void src_func::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(src_func::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- src_func.FDb._db.MainLoop
@@ -429,7 +434,7 @@ static void src_func::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'b9361395364d32d168c3ee379f9a1b152e31425e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'fcceb1600247efc0d7b15d2ae7a9429c3b809332'");
 }
 
 // --- src_func.FDb._db.StaticCheck
@@ -2388,14 +2393,12 @@ algo::Smallstr16 src_func::ns_Get(src_func::FGstatic& gstatic) {
 // Copy fields out of row
 void src_func::target_CopyOut(src_func::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- src_func.FTarget.base.CopyIn
 // Copy fields in to row
 void src_func::target_CopyIn(src_func::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- src_func.FTarget.cd_targsrc.Insert

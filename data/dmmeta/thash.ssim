@@ -25,6 +25,7 @@ dmmeta.thash  field:acr.FCtype.ind_ctype_rec  hashfld:acr.FRec.pkey  unique:Y  c
 dmmeta.thash  field:acr.FDb.ind_ctype  hashfld:dmmeta.Ctype.ctype  unique:Y  comment:""
 dmmeta.thash  field:acr.FDb.ind_field  hashfld:dmmeta.Field.field  unique:Y  comment:""
 dmmeta.thash  field:acr.FDb.ind_file  hashfld:acr.FFile.file  unique:Y  comment:""
+dmmeta.thash  field:acr.FDb.ind_sortkey  hashfld:acr.FSortkey.sortkey  unique:Y  comment:""
 dmmeta.thash  field:acr.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""
 dmmeta.thash  field:acr.FDb.ind_ssimsort  hashfld:dmmeta.Ssimsort.ssimfile  unique:Y  comment:""
 dmmeta.thash  field:acr.FDb.ind_tempkey  hashfld:acr.FTempkey.tempkey  unique:Y  comment:""

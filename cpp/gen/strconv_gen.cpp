@@ -220,6 +220,13 @@ void strconv::ReadArgv() {
             doexit = true;
         }
     }
+    // dmmeta.floadtuples:strconv.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!strconv::LoadTuplesMaybe(cmd.in,true)) {
+            err << "strconv.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -232,8 +239,6 @@ void strconv::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(strconv::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- strconv.FDb._db.MainLoop

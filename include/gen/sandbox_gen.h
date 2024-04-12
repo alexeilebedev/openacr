@@ -246,28 +246,28 @@ bool                 sbpath_XrefMaybe(sandbox::FSbpath &row);
 
 // cursor points to valid item
 // func:sandbox.FDb.sandbox_curs.Reset
-void                 _db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent);
+void                 _db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sandbox_curs.ValidQ
-bool                 _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs);
+bool                 _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sandbox.FDb.sandbox_curs.Next
-void                 _db_sandbox_curs_Next(_db_sandbox_curs &curs);
+void                 _db_sandbox_curs_Next(_db_sandbox_curs &curs) __attribute__((nothrow));
 // item access
 // func:sandbox.FDb.sandbox_curs.Access
-sandbox::FSandbox&   _db_sandbox_curs_Access(_db_sandbox_curs &curs);
+sandbox::FSandbox&   _db_sandbox_curs_Access(_db_sandbox_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sbpath_curs.Reset
-void                 _db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent);
+void                 _db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sbpath_curs.ValidQ
-bool                 _db_sbpath_curs_ValidQ(_db_sbpath_curs &curs);
+bool                 _db_sbpath_curs_ValidQ(_db_sbpath_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sandbox.FDb.sbpath_curs.Next
-void                 _db_sbpath_curs_Next(_db_sbpath_curs &curs);
+void                 _db_sbpath_curs_Next(_db_sbpath_curs &curs) __attribute__((nothrow));
 // item access
 // func:sandbox.FDb.sbpath_curs.Access
-sandbox::FSbpath&    _db_sbpath_curs_Access(_db_sbpath_curs &curs);
+sandbox::FSbpath&    _db_sbpath_curs_Access(_db_sbpath_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.FDb..Init
 void                 FDb_Init();

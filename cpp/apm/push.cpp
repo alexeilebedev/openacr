@@ -121,12 +121,11 @@ void apm::PushDiff(algo::strptr base_dir) {
         if (mergefile.ours_mode==0) {
             Xargs(git_rm, "git rm -f", mergefile.mergefile, _db.script);
         } else {
-            Xargs(git_add, "git add -f", mergefile.mergefile, _db.script);
+            Xargs(git_add, "git add -f -N", mergefile.mergefile, _db.script);
         }
     }ind_end;
     _db.script <<git_add<<eol;// flush the rest
     _db.script <<git_rm<<eol;
-    _db.script <<algo::DirFileJoin(algo::GetCurDir(),"bin/amc") << eol;// run current amc in new dir
     _db.script <<"popd"<<eol;
 }
 
@@ -149,9 +148,9 @@ void apm::Main_Push() {
     PushDiff(base_dir);
 
     _db.script << "pushd "<<base_dir<<eol;
-    _db.script << "git add data"<<eol;// add new ssimfiles
-    _db.script << "git add -u"<<eol;// add modified files
-    _db.script << "git commit -am 'apm push'" << eol;
+    _db.script << "acr ssimfile -cmd 'mkdir -p data/$ns; touch data/$ns/$name.ssim' | bash"<<eol;
+    _db.script << "git add -N data"<<eol;// add new ssimfiles
+    _db.script << "update-gitfile"<<eol;// rebuild gitfile table
     _db.script << "popd" << eol;
     _db.script << "echo "<<algo::strptr_ToBash(tempstr()<<"changes pushed to "<<base_dir) << eol;
 }

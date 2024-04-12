@@ -239,26 +239,26 @@ algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring
 
 // proceed to next item
 // func:mysql2ssim.FDb.table_names_curs.Next
-void                 _db_table_names_curs_Next(_db_table_names_curs &curs);
+void                 _db_table_names_curs_Next(_db_table_names_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FDb.table_names_curs.Reset
-void                 _db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent);
+void                 _db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FDb.table_names_curs.ValidQ
-bool                 _db_table_names_curs_ValidQ(_db_table_names_curs &curs);
+bool                 _db_table_names_curs_ValidQ(_db_table_names_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FDb.table_names_curs.Access
-algo::cstring&       _db_table_names_curs_Access(_db_table_names_curs &curs);
+algo::cstring&       _db_table_names_curs_Access(_db_table_names_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mysql2ssim.FDb.in_tables_curs.Next
-void                 _db_in_tables_curs_Next(_db_in_tables_curs &curs);
+void                 _db_in_tables_curs_Next(_db_in_tables_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FDb.in_tables_curs.Reset
-void                 _db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent);
+void                 _db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FDb.in_tables_curs.ValidQ
-bool                 _db_in_tables_curs_ValidQ(_db_in_tables_curs &curs);
+bool                 _db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FDb.in_tables_curs.Access
-algo::cstring&       _db_in_tables_curs_Access(_db_in_tables_curs &curs);
+algo::cstring&       _db_in_tables_curs_Access(_db_in_tables_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FDb..Init
 void                 FDb_Init();
@@ -341,15 +341,15 @@ algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_e
 
 // proceed to next item
 // func:mysql2ssim.FTobltin.vals_curs.Next
-void                 FTobltin_vals_curs_Next(FTobltin_vals_curs &curs);
+void                 FTobltin_vals_curs_Next(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FTobltin.vals_curs.Reset
-void                 FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent);
+void                 FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FTobltin.vals_curs.ValidQ
-bool                 FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs);
+bool                 FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FTobltin.vals_curs.Access
-algo::cstring&       FTobltin_vals_curs_Access(FTobltin_vals_curs &curs);
+algo::cstring&       FTobltin_vals_curs_Access(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FTobltin..Init
 void                 FTobltin_Init(mysql2ssim::FTobltin& parent);

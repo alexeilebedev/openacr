@@ -12,6 +12,7 @@
 |package|[dev.Package](/txt/ssimdb/dev/package.md)|Pkey|
 |remove|bool|Val|
 |build|bool|Val|
+|reinstall|algo.Smallstr100|Val|
 |comment|algo.Comment|Val|
 
 ### Used In Executables

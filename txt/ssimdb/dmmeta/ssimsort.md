@@ -23,4 +23,5 @@ in a structure is not lexicographical.
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [acr](/txt/exe/acr/README.md) as acr.FSsimsort
+* [amc](/txt/exe/amc/README.md) as amc.FSsimsort
 

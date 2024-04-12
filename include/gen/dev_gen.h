@@ -165,21 +165,20 @@ enum dev_FieldIdEnum {                 // dev.FieldId.value
     ,dev_FieldId_syslib         = 89
     ,dev_FieldId_targdep        = 90
     ,dev_FieldId_target         = 91
-    ,dev_FieldId_compat         = 92
-    ,dev_FieldId_targsrc        = 93
-    ,dev_FieldId_targsyslib     = 94
-    ,dev_FieldId_cov_min        = 95
-    ,dev_FieldId_maxerr         = 96
-    ,dev_FieldId_timefmt        = 97
-    ,dev_FieldId_dirname        = 98
-    ,dev_FieldId_tool_opt       = 99
-    ,dev_FieldId_opt            = 100
-    ,dev_FieldId_sortfld        = 101
-    ,dev_FieldId_field          = 102
-    ,dev_FieldId_value          = 103
+    ,dev_FieldId_targsrc        = 92
+    ,dev_FieldId_targsyslib     = 93
+    ,dev_FieldId_cov_min        = 94
+    ,dev_FieldId_maxerr         = 95
+    ,dev_FieldId_timefmt        = 96
+    ,dev_FieldId_dirname        = 97
+    ,dev_FieldId_tool_opt       = 98
+    ,dev_FieldId_opt            = 99
+    ,dev_FieldId_sortfld        = 100
+    ,dev_FieldId_field          = 101
+    ,dev_FieldId_value          = 102
 };
 
-enum { dev_FieldIdEnum_N = 104 };
+enum { dev_FieldIdEnum_N = 103 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
@@ -192,58 +191,6 @@ extern const char *  dev_Sandbox_sandbox_apm_theirs;   // apm-theirs    fconst:d
 extern const char *  dev_Sandbox_sandbox_atf_ci;       // atf_ci        fconst:dev.Sandbox.sandbox/atf_ci
 extern const char *  dev_Sandbox_sandbox_atf_ci_apm;   // atf_ci-apm    fconst:dev.Sandbox.sandbox/atf_ci-apm
 extern const char *  dev_Sandbox_sandbox_atf_fuzz;     // atf_fuzz      fconst:dev.Sandbox.sandbox/atf_fuzz
-extern const char *  dev_Target_target_;               //                 fconst:dev.Target.target/
-extern const char *  dev_Target_target_abt;            // abt             fconst:dev.Target.target/abt
-extern const char *  dev_Target_target_abt_md;         // abt_md          fconst:dev.Target.target/abt_md
-extern const char *  dev_Target_target_acr;            // acr             fconst:dev.Target.target/acr
-extern const char *  dev_Target_target_acr_compl;      // acr_compl       fconst:dev.Target.target/acr_compl
-extern const char *  dev_Target_target_acr_dm;         // acr_dm          fconst:dev.Target.target/acr_dm
-extern const char *  dev_Target_target_acr_ed;         // acr_ed          fconst:dev.Target.target/acr_ed
-extern const char *  dev_Target_target_acr_in;         // acr_in          fconst:dev.Target.target/acr_in
-extern const char *  dev_Target_target_acr_my;         // acr_my          fconst:dev.Target.target/acr_my
-extern const char *  dev_Target_target_algo_lib;       // algo_lib        fconst:dev.Target.target/algo_lib
-extern const char *  dev_Target_target_amc;            // amc             fconst:dev.Target.target/amc
-extern const char *  dev_Target_target_amc_gc;         // amc_gc          fconst:dev.Target.target/amc_gc
-extern const char *  dev_Target_target_amc_vis;        // amc_vis         fconst:dev.Target.target/amc_vis
-extern const char *  dev_Target_target_ams_cat;        // ams_cat         fconst:dev.Target.target/ams_cat
-extern const char *  dev_Target_target_ams_sendtest;   // ams_sendtest    fconst:dev.Target.target/ams_sendtest
-extern const char *  dev_Target_target_apm;            // apm             fconst:dev.Target.target/apm
-extern const char *  dev_Target_target_atf_amc;        // atf_amc         fconst:dev.Target.target/atf_amc
-extern const char *  dev_Target_target_atf_ci;         // atf_ci          fconst:dev.Target.target/atf_ci
-extern const char *  dev_Target_target_atf_cmdline;    // atf_cmdline     fconst:dev.Target.target/atf_cmdline
-extern const char *  dev_Target_target_atf_comp;       // atf_comp        fconst:dev.Target.target/atf_comp
-extern const char *  dev_Target_target_atf_cov;        // atf_cov         fconst:dev.Target.target/atf_cov
-extern const char *  dev_Target_target_atf_fuzz;       // atf_fuzz        fconst:dev.Target.target/atf_fuzz
-extern const char *  dev_Target_target_atf_gcli;       // atf_gcli        fconst:dev.Target.target/atf_gcli
-extern const char *  dev_Target_target_atf_nrun;       // atf_nrun        fconst:dev.Target.target/atf_nrun
-extern const char *  dev_Target_target_atf_unit;       // atf_unit        fconst:dev.Target.target/atf_unit
-extern const char *  dev_Target_target_bash2html;      // bash2html       fconst:dev.Target.target/bash2html
-extern const char *  dev_Target_target_gcache;         // gcache          fconst:dev.Target.target/gcache
-extern const char *  dev_Target_target_gcli;           // gcli            fconst:dev.Target.target/gcli
-extern const char *  dev_Target_target_lib_amcdb;      // lib_amcdb       fconst:dev.Target.target/lib_amcdb
-extern const char *  dev_Target_target_lib_ams;        // lib_ams         fconst:dev.Target.target/lib_ams
-extern const char *  dev_Target_target_lib_ctype;      // lib_ctype       fconst:dev.Target.target/lib_ctype
-extern const char *  dev_Target_target_lib_exec;       // lib_exec        fconst:dev.Target.target/lib_exec
-extern const char *  dev_Target_target_lib_fm;         // lib_fm          fconst:dev.Target.target/lib_fm
-extern const char *  dev_Target_target_lib_git;        // lib_git         fconst:dev.Target.target/lib_git
-extern const char *  dev_Target_target_lib_iconv;      // lib_iconv       fconst:dev.Target.target/lib_iconv
-extern const char *  dev_Target_target_lib_json;       // lib_json        fconst:dev.Target.target/lib_json
-extern const char *  dev_Target_target_lib_mysql;      // lib_mysql       fconst:dev.Target.target/lib_mysql
-extern const char *  dev_Target_target_lib_prot;       // lib_prot        fconst:dev.Target.target/lib_prot
-extern const char *  dev_Target_target_lib_sql;        // lib_sql         fconst:dev.Target.target/lib_sql
-extern const char *  dev_Target_target_mdbg;           // mdbg            fconst:dev.Target.target/mdbg
-extern const char *  dev_Target_target_mysql2ssim;     // mysql2ssim      fconst:dev.Target.target/mysql2ssim
-extern const char *  dev_Target_target_orgfile;        // orgfile         fconst:dev.Target.target/orgfile
-extern const char *  dev_Target_target_samp_regx;      // samp_regx       fconst:dev.Target.target/samp_regx
-extern const char *  dev_Target_target_sandbox;        // sandbox         fconst:dev.Target.target/sandbox
-extern const char *  dev_Target_target_src_func;       // src_func        fconst:dev.Target.target/src_func
-extern const char *  dev_Target_target_src_hdr;        // src_hdr         fconst:dev.Target.target/src_hdr
-extern const char *  dev_Target_target_src_lim;        // src_lim         fconst:dev.Target.target/src_lim
-extern const char *  dev_Target_target_ssim2csv;       // ssim2csv        fconst:dev.Target.target/ssim2csv
-extern const char *  dev_Target_target_ssim2mysql;     // ssim2mysql      fconst:dev.Target.target/ssim2mysql
-extern const char *  dev_Target_target_ssimfilt;       // ssimfilt        fconst:dev.Target.target/ssimfilt
-extern const char *  dev_Target_target_strconv;        // strconv         fconst:dev.Target.target/strconv
-extern const char *  dev_Target_target_sv2ssim;        // sv2ssim         fconst:dev.Target.target/sv2ssim
 namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ArchPkey;
     typedef algo::Smallstr50 BadlinePkey;
@@ -964,6 +911,10 @@ struct Package { // dev.Package: OpenACR package
     algo::Smallstr50    baseref;   // Base gitref of installed package
     algo::Smallstr200   origin;    // Source URL for published package
     algo::Comment       comment;   //
+    explicit Package(const algo::strptr&            in_package
+        ,const algo::strptr&            in_baseref
+        ,const algo::strptr&            in_origin
+        ,const algo::Comment&           in_comment);
     Package();
 };
 
@@ -983,6 +934,9 @@ struct Pkgdep { // dev.Pkgdep: OpenACR Package dependency
     algo::Smallstr100   pkgdep;    //
     bool                soft;      //   false  Soft dependency: affects package ordering but not forced update
     algo::Comment       comment;   //
+    explicit Pkgdep(const algo::strptr&            in_pkgdep
+        ,bool                           in_soft
+        ,const algo::Comment&           in_comment);
     Pkgdep();
 };
 
@@ -1016,6 +970,8 @@ void                 Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) __attrib
 struct Pkgkey { // dev.Pkgkey: Keys belonging to the OpenACR package
     algo::Smallstr150   pkgkey;    //
     algo::Comment       comment;   //
+    explicit Pkgkey(const algo::strptr&            in_pkgkey
+        ,const algo::Comment&           in_comment);
     Pkgkey();
 };
 
@@ -1272,9 +1228,7 @@ void                 Targdep_Print(dev::Targdep& row, algo::cstring& str) __attr
 // --- dev.Target
 struct Target { // dev.Target: Build target
     algo::Smallstr16   target;   // Primary key - name of target
-    algo::Smallstr50   compat;   //   "Linux-%.%-%"  Compatibility (regx of builddir)
-    explicit Target(const algo::strptr&            in_target
-        ,const algo::strptr&            in_compat);
+    explicit Target(const algo::strptr&            in_target);
     Target();
 };
 
@@ -1284,9 +1238,6 @@ bool                 Target_ReadFieldMaybe(dev::Target& parent, algo::strptr fie
 // The format of the string is an ssim Tuple
 // func:dev.Target..ReadStrptrMaybe
 bool                 Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str);
-// Set all fields to initial values.
-// func:dev.Target..Init
-void                 Target_Init(dev::Target& parent);
 // print string representation of ROW to string STR
 // cfmt:dev.Target.String  printfmt:Tuple
 // func:dev.Target..Print

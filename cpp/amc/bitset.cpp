@@ -389,7 +389,7 @@ void amc::tfunc_Bitset_bitcurs() {
         Ins(&R, ns.curstext, "");
 
         {
-            amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Reset"));
+            amc::FFunc& curs_reset = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Reset"));
             Ins(&R, curs_reset.ret  , "void", false);
             Ins(&R, curs_reset.proto, "$Parname_$name_bitcurs_Reset($Parname_$name_bitcurs &curs, $Partype &parent)", false);
             Ins(&R, curs_reset.body, "curs.elems = &$name_qFind(parent,0);");
@@ -399,19 +399,19 @@ void amc::tfunc_Bitset_bitcurs() {
         }
 
         {
-            amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.ValidQ"));
-            curs_validq.inl = true;
+            amc::FFunc& curs_validq = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.ValidQ"));
             Ins(&R, curs_validq.comment, "cursor points to valid item");
             Ins(&R, curs_validq.ret  , "bool", false);
             Ins(&R, curs_validq.proto, "$Parname_$name_bitcurs_ValidQ($Parname_$name_bitcurs &curs)", false);
             Ins(&R, curs_validq.body, "return curs.bit < curs.n_elems*$elembits;");
         }
 
-        amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Access"));
-        curs_access.inl = true;
-        Ins(&R, curs_access.comment, "item access");
-        Ins(&R, curs_access.ret  , "int&", false);
-        Ins(&R, curs_access.proto, "$Parname_$name_bitcurs_Access($Parname_$name_bitcurs &curs)", false);
-        Ins(&R, curs_access.body, "return curs.bit;");
+        {
+            amc::FFunc& curs_access = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Access"));
+            Ins(&R, curs_access.comment, "item access");
+            Ins(&R, curs_access.ret  , "int&", false);
+            Ins(&R, curs_access.proto, "$Parname_$name_bitcurs_Access($Parname_$name_bitcurs &curs)", false);
+            Ins(&R, curs_access.body, "return curs.bit;");
+        }
     }
 }

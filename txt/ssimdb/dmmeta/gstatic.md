@@ -69,16 +69,16 @@ check_bitfld     N      Check that bitfields don't overlap
 Select first 10 functions from amc source code:
 ```
 inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
-cpp/amc/gen.cpp:219: void amc::gen_basepool() 
+cpp/amc/gen.cpp:230: void amc::gen_basepool() 
 cpp/amc/cget.cpp:121: void amc::gen_cget()
-cpp/amc/gen.cpp:604: void amc::gen_check_bigend() 
-cpp/amc/gen.cpp:299: void amc::gen_check_bitfld() 
+cpp/amc/gen.cpp:615: void amc::gen_check_bigend() 
+cpp/amc/gen.cpp:310: void amc::gen_check_bitfld() 
 cpp/amc/gen.cpp:110: void amc::gen_check_cascdel() 
-cpp/amc/gen.cpp:486: void amc::gen_check_cpptype() 
-cpp/amc/gen.cpp:1404: void amc::gen_check_fcurs() 
-cpp/amc/gen.cpp:204: void amc::gen_check_prefix() 
-cpp/amc/gen.cpp:421: void amc::gen_check_reftype() 
-cpp/amc/gen.cpp:159: void amc::gen_check_static() 
+cpp/amc/gen.cpp:497: void amc::gen_check_cpptype() 
+cpp/amc/gen.cpp:1412: void amc::gen_check_fcurs() 
+cpp/amc/gen.cpp:215: void amc::gen_check_prefix() 
+cpp/amc/gen.cpp:432: void amc::gen_check_reftype() 
+cpp/amc/gen.cpp:136: void amc::gen_check_ssimsort() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to

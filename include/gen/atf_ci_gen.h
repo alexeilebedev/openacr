@@ -211,10 +211,11 @@ void                 cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) __attribute__((
 // --- atf_ci.FCipackage
 // create: atf_ci.FDb.cipackage (Lary)
 struct FCipackage { // atf_ci.FCipackage
-    algo::Smallstr50   package;   //
-    bool               remove;    //   false
-    bool               build;     //   false
-    algo::Comment      comment;   //
+    algo::Smallstr50    package;     //
+    bool                remove;      //   false
+    bool                build;       //   false
+    algo::Smallstr100   reinstall;   //
+    algo::Comment       comment;     //
 private:
     friend atf_ci::FCipackage&  cipackage_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_ci::FCipackage*  cipackage_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -1076,160 +1077,160 @@ bool                 cipackage_XrefMaybe(atf_ci::FCipackage &row);
 
 // cursor points to valid item
 // func:atf_ci.FDb.citest_curs.Reset
-void                 _db_citest_curs_Reset(_db_citest_curs &curs, atf_ci::FDb &parent);
+void                 _db_citest_curs_Reset(_db_citest_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.citest_curs.ValidQ
-bool                 _db_citest_curs_ValidQ(_db_citest_curs &curs);
+bool                 _db_citest_curs_ValidQ(_db_citest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.citest_curs.Next
-void                 _db_citest_curs_Next(_db_citest_curs &curs);
+void                 _db_citest_curs_Next(_db_citest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.citest_curs.Access
-atf_ci::FCitest&     _db_citest_curs_Access(_db_citest_curs &curs);
+atf_ci::FCitest&     _db_citest_curs_Access(_db_citest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, atf_ci::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.ssimfile_curs.Access
-atf_ci::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+atf_ci::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.scriptfile_curs.Reset
-void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, atf_ci::FDb &parent);
+void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.scriptfile_curs.ValidQ
-bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs);
+bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.scriptfile_curs.Next
-void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs);
+void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.scriptfile_curs.Access
-atf_ci::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs);
+atf_ci::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, atf_ci::FDb &parent);
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs);
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.ns_curs.Access
-atf_ci::FNs&         _db_ns_curs_Access(_db_ns_curs &curs);
+atf_ci::FNs&         _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.readme_curs.Reset
-void                 _db_readme_curs_Reset(_db_readme_curs &curs, atf_ci::FDb &parent);
+void                 _db_readme_curs_Reset(_db_readme_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.readme_curs.ValidQ
-bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs);
+bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.readme_curs.Next
-void                 _db_readme_curs_Next(_db_readme_curs &curs);
+void                 _db_readme_curs_Next(_db_readme_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.readme_curs.Access
-atf_ci::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs);
+atf_ci::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.builddir_curs.Reset
-void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, atf_ci::FDb &parent);
+void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.builddir_curs.ValidQ
-bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs);
+bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.builddir_curs.Next
-void                 _db_builddir_curs_Next(_db_builddir_curs &curs);
+void                 _db_builddir_curs_Next(_db_builddir_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.builddir_curs.Access
-atf_ci::FBuilddir&   _db_builddir_curs_Access(_db_builddir_curs &curs);
+atf_ci::FBuilddir&   _db_builddir_curs_Access(_db_builddir_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.cfg_curs.Reset
-void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, atf_ci::FDb &parent);
+void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.cfg_curs.ValidQ
-bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs);
+bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.cfg_curs.Next
-void                 _db_cfg_curs_Next(_db_cfg_curs &curs);
+void                 _db_cfg_curs_Next(_db_cfg_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.cfg_curs.Access
-atf_ci::FCfg&        _db_cfg_curs_Access(_db_cfg_curs &curs);
+atf_ci::FCfg&        _db_cfg_curs_Access(_db_cfg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.gitfile_curs.Reset
-void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_ci::FDb &parent);
+void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.gitfile_curs.ValidQ
-bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
+bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.gitfile_curs.Next
-void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
+void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.gitfile_curs.Access
-atf_ci::FGitfile&    _db_gitfile_curs_Access(_db_gitfile_curs &curs);
+atf_ci::FGitfile&    _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.noindent_curs.Reset
-void                 _db_noindent_curs_Reset(_db_noindent_curs &curs, atf_ci::FDb &parent);
+void                 _db_noindent_curs_Reset(_db_noindent_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.noindent_curs.ValidQ
-bool                 _db_noindent_curs_ValidQ(_db_noindent_curs &curs);
+bool                 _db_noindent_curs_ValidQ(_db_noindent_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.noindent_curs.Next
-void                 _db_noindent_curs_Next(_db_noindent_curs &curs);
+void                 _db_noindent_curs_Next(_db_noindent_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.noindent_curs.Access
-atf_ci::FNoindent&   _db_noindent_curs_Access(_db_noindent_curs &curs);
+atf_ci::FNoindent&   _db_noindent_curs_Access(_db_noindent_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_ci::FDb &parent);
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.targsrc_curs.Access
-atf_ci::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+atf_ci::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.msgfile_curs.Reset
-void                 _db_msgfile_curs_Reset(_db_msgfile_curs &curs, atf_ci::FDb &parent);
+void                 _db_msgfile_curs_Reset(_db_msgfile_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.msgfile_curs.ValidQ
-bool                 _db_msgfile_curs_ValidQ(_db_msgfile_curs &curs);
+bool                 _db_msgfile_curs_ValidQ(_db_msgfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.msgfile_curs.Next
-void                 _db_msgfile_curs_Next(_db_msgfile_curs &curs);
+void                 _db_msgfile_curs_Next(_db_msgfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.msgfile_curs.Access
-atf_ci::FMsgfile&    _db_msgfile_curs_Access(_db_msgfile_curs &curs);
+atf_ci::FMsgfile&    _db_msgfile_curs_Access(_db_msgfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.file_curs.Reset
-void                 _db_file_curs_Reset(_db_file_curs &curs, atf_ci::FDb &parent);
+void                 _db_file_curs_Reset(_db_file_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.file_curs.ValidQ
-bool                 _db_file_curs_ValidQ(_db_file_curs &curs);
+bool                 _db_file_curs_ValidQ(_db_file_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.file_curs.Next
-void                 _db_file_curs_Next(_db_file_curs &curs);
+void                 _db_file_curs_Next(_db_file_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.file_curs.Access
-atf_ci::File&        _db_file_curs_Access(_db_file_curs &curs);
+atf_ci::File&        _db_file_curs_Access(_db_file_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.cipackage_curs.Reset
-void                 _db_cipackage_curs_Reset(_db_cipackage_curs &curs, atf_ci::FDb &parent);
+void                 _db_cipackage_curs_Reset(_db_cipackage_curs &curs, atf_ci::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_ci.FDb.cipackage_curs.ValidQ
-bool                 _db_cipackage_curs_ValidQ(_db_cipackage_curs &curs);
+bool                 _db_cipackage_curs_ValidQ(_db_cipackage_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_ci.FDb.cipackage_curs.Next
-void                 _db_cipackage_curs_Next(_db_cipackage_curs &curs);
+void                 _db_cipackage_curs_Next(_db_cipackage_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_ci.FDb.cipackage_curs.Access
-atf_ci::FCipackage&  _db_cipackage_curs_Access(_db_cipackage_curs &curs);
+atf_ci::FCipackage&  _db_cipackage_curs_Access(_db_cipackage_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_ci.FDb..Init
 void                 FDb_Init();
@@ -1865,21 +1866,21 @@ void                 citest_atf_comp_mem();
 // this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_acr_ed_ssimdb
-// this function is 'extrn' and implemented by user
-void                 citest_acr_ed_ssimdb();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_acr_ed_target
-// this function is 'extrn' and implemented by user
-void                 citest_acr_ed_target();
-// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_apm_check
 // this function is 'extrn' and implemented by user
 void                 citest_apm_check();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_acr_ed_ssimdb
+// this function is 'extrn' and implemented by user
+void                 citest_acr_ed_ssimdb();
+// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_apm
 // this function is 'extrn' and implemented by user
 void                 citest_apm();
+// User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_acr_ed_target
+// this function is 'extrn' and implemented by user
+void                 citest_acr_ed_target();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_apm_reinstall
 // this function is 'extrn' and implemented by user

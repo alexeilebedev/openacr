@@ -643,6 +643,14 @@ inline i32 acr_dm::source_Sup(acr_dm::Source& parent) {
     return ret;
 }
 
+// --- acr_dm.Source.source_bitcurs.Reset
+inline void acr_dm::Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent) {
+    curs.elems = &source_qFind(parent,0);
+    curs.n_elems = source_N(parent);
+    curs.bit = -1;
+    Source_source_bitcurs_Next(curs);
+}
+
 // --- acr_dm.Source.source_bitcurs.ValidQ
 // cursor points to valid item
 inline bool acr_dm::Source_source_bitcurs_ValidQ(Source_source_bitcurs &curs) {

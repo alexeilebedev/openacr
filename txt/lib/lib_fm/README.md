@@ -21,7 +21,7 @@ Conceptual specification is RFC 8632, which summarizes specifications
 from different institutions and decades of experience.
 
 For theory in deep refer:
-- RFC 8632 https://datatracker.ietf.org/doc/html/rfc8632
+- [RFC 8632](https://datatracker.ietf.org/doc/html/rfc8632)
   - chapter 3 - general concepts
   - appendix G - alarm usability requirements
 - ITU-T G.7710, ITU-T M.3100, ITU-T M.3400, ITU-T X.733 - telecom

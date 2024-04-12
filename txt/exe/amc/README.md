@@ -264,6 +264,7 @@ The following source files are part of this tool:
 |[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.ssimvolatile](/txt/ssimdb/dmmeta/ssimvolatile.md)|Types based on ssim files marked this way cannot be cross-referenced|
+|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
 |[dmmeta.sortfld](/txt/ssimdb/dmmeta/sortfld.md)|Specify what field an index (Bheap,Atree) is sorted on|
 |[dmmeta.smallstr](/txt/ssimdb/dmmeta/smallstr.md)|Generated fixed-length padded or length-delimited string field|
 |[dmmeta.rowid](/txt/ssimdb/dmmeta/rowid.md)|Initialize field to row id of element|

@@ -302,6 +302,13 @@ void gcache::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:gcache.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!gcache::LoadTuplesMaybe(cmd.in,true)) {
+            err << "gcache.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -314,8 +321,6 @@ void gcache::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(gcache::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- gcache.FDb._db.MainLoop

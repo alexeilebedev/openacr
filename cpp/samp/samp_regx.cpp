@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: samp_regx (exe) -- Test tool for regular expressions
-// Exceptions: yes
+// Exceptions: NO
 // Source: cpp/samp/samp_regx.cpp
 //
 

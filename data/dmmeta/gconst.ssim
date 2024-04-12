@@ -12,7 +12,6 @@ dmmeta.gconst  field:dev.Cfg.cfg  namefld:dev.Cfg.cfg  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Compiler.compiler  namefld:dev.Compiler.compiler  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.License.license  namefld:dev.License.license  idfld:""  wantenum:N
 dmmeta.gconst  field:dev.Sandbox.sandbox  namefld:dev.Sandbox.sandbox  idfld:""  wantenum:N
-dmmeta.gconst  field:dev.Target.target  namefld:dev.Target.target  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Buftype.pnewtype  namefld:dmmeta.Buftype.pnewtype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Fastenc.fastenc  namefld:dmmeta.Fastenc.fastenc  idfld:""  wantenum:Y
 dmmeta.gconst  field:dmmeta.Fastinstr.fastinstr  namefld:dmmeta.Fastinstr.fastinstr  idfld:""  wantenum:Y

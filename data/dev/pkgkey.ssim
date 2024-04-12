@@ -1,3 +1,6 @@
+dev.pkgkey  pkgkey:amc/amcdb.%:%  comment:""
+dev.pkgkey  pkgkey:amc/dev.package:amc  comment:""
+dev.pkgkey  pkgkey:amc/dmmeta.ns:amc  comment:""
 dev.pkgkey  pkgkey:ams/dev.package:ams  comment:""
 dev.pkgkey  pkgkey:ams/dmmeta.ns:ams  comment:""
 dev.pkgkey  pkgkey:ams/dmmeta.ns:ams_sendtest  comment:""

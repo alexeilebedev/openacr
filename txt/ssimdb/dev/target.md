@@ -10,7 +10,6 @@
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |target|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|Pkey||Primary key - name of target|
-|compat|algo.Smallstr50|Val|"Linux-%.%-%"|Compatibility (regx of builddir)|
 
 ### Subsets
 <a href="#subsets"></a>

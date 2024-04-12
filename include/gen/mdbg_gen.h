@@ -183,16 +183,16 @@ bool                 cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) __attribute__((
 mdbg::FBuilddir&     c_builddir_qLast(mdbg::FCfg& cfg) __attribute__((nothrow));
 
 // func:mdbg.FCfg.c_builddir_curs.Reset
-void                 cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent);
+void                 cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FCfg.c_builddir_curs.ValidQ
-bool                 cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs);
+bool                 cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FCfg.c_builddir_curs.Next
-void                 cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs);
+void                 cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FCfg.c_builddir_curs.Access
-mdbg::FBuilddir&     cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs);
+mdbg::FBuilddir&     cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FCfg..Init
 void                 FCfg_Init(mdbg::FCfg& cfg);
@@ -399,28 +399,28 @@ bool                 builddir_XrefMaybe(mdbg::FBuilddir &row);
 
 // cursor points to valid item
 // func:mdbg.FDb.cfg_curs.Reset
-void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent);
+void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.cfg_curs.ValidQ
-bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs);
+bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FDb.cfg_curs.Next
-void                 _db_cfg_curs_Next(_db_cfg_curs &curs);
+void                 _db_cfg_curs_Next(_db_cfg_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FDb.cfg_curs.Access
-mdbg::FCfg&          _db_cfg_curs_Access(_db_cfg_curs &curs);
+mdbg::FCfg&          _db_cfg_curs_Access(_db_cfg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.builddir_curs.Reset
-void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent);
+void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.builddir_curs.ValidQ
-bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs);
+bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FDb.builddir_curs.Next
-void                 _db_builddir_curs_Next(_db_builddir_curs &curs);
+void                 _db_builddir_curs_Next(_db_builddir_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FDb.builddir_curs.Access
-mdbg::FBuilddir&     _db_builddir_curs_Access(_db_builddir_curs &curs);
+mdbg::FBuilddir&     _db_builddir_curs_Access(_db_builddir_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FDb..Init
 void                 FDb_Init();

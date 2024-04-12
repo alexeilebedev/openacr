@@ -526,29 +526,25 @@ void amc::tfunc_Atree_curs() {
 
     Set(R, "$CursArg", GlobalQ(*field.p_ctype) ? "" : "parent");
 
-    amc::FFunc& curs_reset = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Reset"));
-    curs_reset.inl = true;
+    amc::FFunc& curs_reset = amc::CreateInlineFunc(Subst(R,"$field_curs.Reset"));
     Ins(&R, curs_reset.comment, "cursor points to valid item");
     Ins(&R, curs_reset.ret  , "void", false);
     Ins(&R, curs_reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype& $CursArg)", false);
     Ins(&R, curs_reset.body, "curs.row = $name_First($CursArg);");
 
-    amc::FFunc& curs_validq = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.ValidQ"));
-    curs_validq.inl = true;
+    amc::FFunc& curs_validq = amc::CreateInlineFunc(Subst(R,"$field_curs.ValidQ"));
     Ins(&R, curs_validq.comment, "cursor points to valid item");
     Ins(&R, curs_validq.ret  , "bool", false);
     Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
     Ins(&R, curs_validq.body, "return curs.row != NULL;");
 
-    amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Next"));
-    curs_next.inl = true;
+    amc::FFunc& curs_next = amc::CreateInlineFunc(Subst(R,"$field_curs.Next"));
     Ins(&R, curs_next.comment, "proceed to next item");
     Ins(&R, curs_next.ret  , "void", false);
     Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
     Ins(&R, curs_next.body, "curs.row = $name_Next(*curs.row);");
 
-    amc::FFunc& curs_access = amc::ind_func_GetOrCreate(Subst(R,"$field_curs.Access"));
-    curs_access.inl = true;
+    amc::FFunc& curs_access = amc::CreateInlineFunc(Subst(R,"$field_curs.Access"));
     Ins(&R, curs_access.comment, "item access");
     Ins(&R, curs_access.ret  , "$Cpptype&", false);
     Ins(&R, curs_access.proto, "$Parname_$name_curs_Access($Parname_$name_curs &curs)", false);

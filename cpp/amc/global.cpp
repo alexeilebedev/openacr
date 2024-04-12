@@ -995,6 +995,20 @@ void amc::tfunc_Global_ReadArgv() {
         }ind_end;
         Ins(&R, func.body, "}");
 
+
+        // post-processing steps:
+        amc::FFloadtuples *floadtuples = fcmdline->p_field->p_arg->c_floadtuples;
+        if (floadtuples) {
+            Ins(&R, func.body, "// dmmeta.floadtuples:$cmdlinefield");
+            Ins(&R, func.body, "if (!dohelp && err==\"\") {");
+            Set(R,"$loadtuplesname",name_Get(*floadtuples->p_field));
+            Ins(&R, func.body, "    algo_lib::ResetErrtext();");
+            Ins(&R, func.body, "    if (!$ns::LoadTuplesMaybe(cmd.$loadtuplesname,true)) {");
+            Ins(&R, func.body, "        err << \"$ns.load_input  \"<<algo_lib::DetachBadTags()<<eol;");
+            Ins(&R, func.body, "    }");
+            Ins(&R, func.body, "}");
+        }
+
         Ins(&R, func.body, "if (err != \"\") {");
         Ins(&R, func.body, "    algo_lib::_db.exit_code=1;");
         Ins(&R, func.body, "    prerr(err);");
@@ -1009,13 +1023,5 @@ void amc::tfunc_Global_ReadArgv() {
         Ins(&R, func.body, "    _exit(algo_lib::_db.exit_code);");
         Ins(&R, func.body, "}");
         Ins(&R, func.body, "algo_lib::ResetErrtext();");
-
-        // post-processing steps:
-        amc::FFloadtuples *floadtuples = fcmdline->p_field->p_arg->c_floadtuples;
-        if (floadtuples) {
-            Set(R,"$loadtuplesname",name_Get(*floadtuples->p_field));
-            Ins(&R, func.body, "vrfy($ns::LoadTuplesMaybe(cmd.$loadtuplesname,true)");
-            Ins(&R, func.body, "    ,tempstr()<<\"where:load_input  \"<<algo_lib::DetachBadTags());");
-        }
     }
 }

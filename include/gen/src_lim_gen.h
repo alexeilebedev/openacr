@@ -408,64 +408,64 @@ bool                 badline_XrefMaybe(src_lim::FBadline &row);
 
 // cursor points to valid item
 // func:src_lim.FDb.include_curs.Reset
-void                 _db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent);
+void                 _db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.include_curs.ValidQ
-bool                 _db_include_curs_ValidQ(_db_include_curs &curs);
+bool                 _db_include_curs_ValidQ(_db_include_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.include_curs.Next
-void                 _db_include_curs_Next(_db_include_curs &curs);
+void                 _db_include_curs_Next(_db_include_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.include_curs.Access
-src_lim::FInclude&   _db_include_curs_Access(_db_include_curs &curs);
+src_lim::FInclude&   _db_include_curs_Access(_db_include_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.linelim_curs.Reset
-void                 _db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent);
+void                 _db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.linelim_curs.ValidQ
-bool                 _db_linelim_curs_ValidQ(_db_linelim_curs &curs);
+bool                 _db_linelim_curs_ValidQ(_db_linelim_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.linelim_curs.Next
-void                 _db_linelim_curs_Next(_db_linelim_curs &curs);
+void                 _db_linelim_curs_Next(_db_linelim_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.linelim_curs.Access
-src_lim::FLinelim&   _db_linelim_curs_Access(_db_linelim_curs &curs);
+src_lim::FLinelim&   _db_linelim_curs_Access(_db_linelim_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent);
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.targsrc_curs.Access
-src_lim::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+src_lim::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.gitfile_curs.Reset
-void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent);
+void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.gitfile_curs.ValidQ
-bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs);
+bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.gitfile_curs.Next
-void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs);
+void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.gitfile_curs.Access
-src_lim::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs);
+src_lim::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.badline_curs.Reset
-void                 _db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent);
+void                 _db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.badline_curs.ValidQ
-bool                 _db_badline_curs_ValidQ(_db_badline_curs &curs);
+bool                 _db_badline_curs_ValidQ(_db_badline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.badline_curs.Next
-void                 _db_badline_curs_Next(_db_badline_curs &curs);
+void                 _db_badline_curs_Next(_db_badline_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.badline_curs.Access
-src_lim::FBadline&   _db_badline_curs_Access(_db_badline_curs &curs);
+src_lim::FBadline&   _db_badline_curs_Access(_db_badline_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.FDb..Init
 void                 FDb_Init();
@@ -560,16 +560,16 @@ void                 c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTarg
 void                 FGitfile_Init(src_lim::FGitfile& gitfile);
 // cursor points to valid item
 // func:src_lim.FGitfile.zd_include_curs.Reset
-void                 gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent);
+void                 gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FGitfile.zd_include_curs.ValidQ
-bool                 gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs);
+bool                 gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FGitfile.zd_include_curs.Next
-void                 gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs);
+void                 gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FGitfile.zd_include_curs.Access
-src_lim::FInclude&   gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs);
+src_lim::FInclude&   gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // func:src_lim.FGitfile..Uninit
 void                 FGitfile_Uninit(src_lim::FGitfile& gitfile) __attribute__((nothrow));
 

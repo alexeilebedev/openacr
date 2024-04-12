@@ -296,7 +296,9 @@ void acr::Main_Check() {
     CheckXrefs(check);
 
     // check constraints specified in ssimreq
-    CheckSsimreq();
+    if (_db.cmdline.x) {
+        CheckSsimreq();
+    }
 
     // select only bad records
     if (_db.cmdline.selerr) {

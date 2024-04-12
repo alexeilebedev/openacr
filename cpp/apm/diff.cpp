@@ -45,11 +45,9 @@ void apm::Main_Diff() {
     cstring base_dir(algo_lib::SandboxDir(_db.base_sandbox));
     PushDiff(base_dir);
 
-    DeleteFile(_db.merged_recfile);
     _db.script << "sandbox "<<_db.base_sandbox<<" -- git diff "
                <<(_db.cmdline.R ? "-R" : "")
                <<(_db.cmdline.stat ? "--stat" : "")
-               <<(_db.cmdline.gen ? "" : " -- ':!*./gen/.*'")
                << eol;
 
     _db.script << "echo "<<algo::strptr_ToBash("use 'sandbox apm-base -shell' to examine changes") << eol;

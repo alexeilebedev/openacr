@@ -24,56 +24,54 @@
 
 // -----------------------------------------------------------------------------
 
-// Rewrite ssim records in RECFILE in topological order
-bool apm::RewriteSsimfile(algo::strptr recfile) {
-    command::acr_proc acr;
-    acr.cmd.in=recfile;
-    acr.cmd.query="%";
-    acr.cmd.write=true;
-    acr.cmd.loose=true;
-    acr.cmd.rowid=true;
-    acr.cmd.print=false;
-    acr.cmd.report=false;
-    return acr_Exec(acr)==0;
-}
-
-// -----------------------------------------------------------------------------
-
 // Topologically sort selected records and save them to file RECFILE
 // Return success code
 bool apm::SaveSelrecToFile(algo::strptr recfile) {
     tempstr recs;
     DeleteFile(recfile);
     ind_beg(_db_zd_selrec_curs,rec,_db) {
-        recs << rec.tuple << Keyval("acr.rowid",rec.rowid) << eol;
+        recs << rec.tuple << eol;
     }ind_end;
     return SafeStringToFile(recs,recfile);
 }
 
 // -----------------------------------------------------------------------------
 
+// Save local package definitions to file
+void apm::SavePackageDefs(algo::strptr filename) {
+    cstring str;
+    ind_beg(_db_package_curs,package,_db) {
+        dev::Package out;
+        package_CopyOut(package,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_pkgdep_curs,pkgdep,_db) {
+        dev::Pkgdep out;
+        pkgdep_CopyOut(pkgdep,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_pkgkey_curs,pkgkey,_db) {
+        dev::Pkgkey out;
+        pkgkey_CopyOut(pkgkey,out);
+        str << out << eol;
+    }ind_end;
+    StringToFile(str,filename);
+}
+
+// -----------------------------------------------------------------------------
+
 // Collect package records from directory DIR into RECFILE
-// If the remote side doesn't have APM, use local package definition to
-// select files & records belonging to the package.
-// On error, throw exception
+// We run our executable in the remote directory to get predictable results
 void apm::CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir) {
-    bool remote_has_apm = FileQ(DirFileJoin(dir,"bin/apm"));
     tempstr full_recfile=DirFileJoin(algo::GetCurDir(),recfile);
     command::apm_proc apm;
-    if (!remote_has_apm) {
-        prlog("# apm doesn't seem to exist in the target package. using local package definition");
-        apm.path = DirFileJoin(algo::GetCurDir(),"bin/apm");
-        apm.cmd.in = DirFileJoin(algo::GetCurDir(),"temp/apm.inputs");
-        command::acr_in_proc acr_in;
-        acr_in.cmd.ns.expr="apm";
-        acr_in.cmd.data=true;
-        acr_in.fstdout << ">"<<apm.cmd.in;
-        acr_in_ExecX(acr_in);
+    apm.path = DirFileJoin(algo::GetCurDir(),"bin/apm");
+    if (_db.cmdline.l) { // use local package definitions
+        apm.cmd.pkgdata = DirFileJoin(algo::GetCurDir(),_db.pkgdata_recfile);
     }
     algo_lib::PushDir(dir);
     apm.cmd.package.expr=package;
     apm.cmd.showrec=true;
-    apm.cmd.nosort=true;
     apm.cmd.t=_db.cmdline.t;
     // make filename absolute because we're now in a different directory
     apm.fstdout << ">"<<full_recfile;
@@ -106,9 +104,6 @@ void apm::Main_Showrec() {
     algo_lib::FTempfile tempfile;
     TempfileInitX(tempfile, "apm.recs");
     vrfy(SaveSelrecToFile(tempfile.filename), "error creating records file");
-    if (!_db.cmdline.nosort) {
-        apm::RewriteSsimfile(tempfile.filename);
-    }
     zd_selrec_RemoveAll();
     prlog(FileToString(tempfile.filename));
 }
@@ -133,7 +128,7 @@ void apm::Main_Showfile() {
     for (apm::FRec *rec=zd_selrec_First(); rec;) {
         apm::FRec *next=zd_selrec_Next(*rec);
         if (rec->p_ssimfile == gitfile && !Regx_Match(regx_exclude,rec->rec)) {
-            prlog(rec->tuple<<Keyval("acr.rowid",rec->rowid));
+            prlog(rec->tuple);
         } else {
             zd_selrec_Remove(*rec);
         }

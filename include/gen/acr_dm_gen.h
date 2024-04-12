@@ -122,16 +122,16 @@ acr_dm::FValue&      zs_value_qLast(acr_dm::FAttr& attr) __attribute__((__warn_u
 
 // cursor points to valid item
 // func:acr_dm.FAttr.zs_value_curs.Reset
-void                 attr_zs_value_curs_Reset(attr_zs_value_curs &curs, acr_dm::FAttr &parent);
+void                 attr_zs_value_curs_Reset(attr_zs_value_curs &curs, acr_dm::FAttr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FAttr.zs_value_curs.ValidQ
-bool                 attr_zs_value_curs_ValidQ(attr_zs_value_curs &curs);
+bool                 attr_zs_value_curs_ValidQ(attr_zs_value_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_dm.FAttr.zs_value_curs.Next
-void                 attr_zs_value_curs_Next(attr_zs_value_curs &curs);
+void                 attr_zs_value_curs_Next(attr_zs_value_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.FAttr.zs_value_curs.Access
-acr_dm::FValue&      attr_zs_value_curs_Access(attr_zs_value_curs &curs);
+acr_dm::FValue&      attr_zs_value_curs_Access(attr_zs_value_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.FAttr..Init
 void                 FAttr_Init(acr_dm::FAttr& attr);
@@ -393,40 +393,40 @@ void                 bh_tuple_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr_dm.FDb.tuple_curs.Reset
-void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, acr_dm::FDb &parent);
+void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, acr_dm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FDb.tuple_curs.ValidQ
-bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs);
+bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_dm.FDb.tuple_curs.Next
-void                 _db_tuple_curs_Next(_db_tuple_curs &curs);
+void                 _db_tuple_curs_Next(_db_tuple_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.FDb.tuple_curs.Access
-acr_dm::FTuple&      _db_tuple_curs_Access(_db_tuple_curs &curs);
+acr_dm::FTuple&      _db_tuple_curs_Access(_db_tuple_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FDb.attr_curs.Reset
-void                 _db_attr_curs_Reset(_db_attr_curs &curs, acr_dm::FDb &parent);
+void                 _db_attr_curs_Reset(_db_attr_curs &curs, acr_dm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FDb.attr_curs.ValidQ
-bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs);
+bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_dm.FDb.attr_curs.Next
-void                 _db_attr_curs_Next(_db_attr_curs &curs);
+void                 _db_attr_curs_Next(_db_attr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.FDb.attr_curs.Access
-acr_dm::FAttr&       _db_attr_curs_Access(_db_attr_curs &curs);
+acr_dm::FAttr&       _db_attr_curs_Access(_db_attr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FDb.value_curs.Reset
-void                 _db_value_curs_Reset(_db_value_curs &curs, acr_dm::FDb &parent);
+void                 _db_value_curs_Reset(_db_value_curs &curs, acr_dm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FDb.value_curs.ValidQ
-bool                 _db_value_curs_ValidQ(_db_value_curs &curs);
+bool                 _db_value_curs_ValidQ(_db_value_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_dm.FDb.value_curs.Next
-void                 _db_value_curs_Next(_db_value_curs &curs);
+void                 _db_value_curs_Next(_db_value_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.FDb.value_curs.Access
-acr_dm::FValue&      _db_value_curs_Access(_db_value_curs &curs);
+acr_dm::FValue&      _db_value_curs_Access(_db_value_curs &curs) __attribute__((nothrow));
 // func:acr_dm.FDb.bh_tuple_curs.Reserve
 void                 _db_bh_tuple_curs_Reserve(_db_bh_tuple_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -437,10 +437,10 @@ void                 _db_bh_tuple_curs_Reset(_db_bh_tuple_curs &curs, acr_dm::FD
 void                 _db_bh_tuple_curs_Next(_db_bh_tuple_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:acr_dm.FDb.bh_tuple_curs.Access
-acr_dm::FTuple&      _db_bh_tuple_curs_Access(_db_bh_tuple_curs &curs);
+acr_dm::FTuple&      _db_bh_tuple_curs_Access(_db_bh_tuple_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:acr_dm.FDb.bh_tuple_curs.ValidQ
-bool                 _db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs);
+bool                 _db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.FDb..Init
 void                 FDb_Init();
@@ -551,13 +551,13 @@ i32                  source_Sup(acr_dm::Source& parent) __attribute__((__warn_un
 // func:acr_dm.Source.source_bitcurs.Next
 void                 Source_source_bitcurs_Next(Source_source_bitcurs &curs);
 // func:acr_dm.Source.source_bitcurs.Reset
-void                 Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent);
+void                 Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.Source.source_bitcurs.ValidQ
-bool                 Source_source_bitcurs_ValidQ(Source_source_bitcurs &curs);
+bool                 Source_source_bitcurs_ValidQ(Source_source_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.Source.source_bitcurs.Access
-int&                 Source_source_bitcurs_Access(Source_source_bitcurs &curs);
+int&                 Source_source_bitcurs_Access(Source_source_bitcurs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.Source..Init
 void                 Source_Init(acr_dm::Source& parent);
@@ -634,16 +634,16 @@ acr_dm::FAttr&       zs_attr_qLast(acr_dm::FTuple& tuple) __attribute__((__warn_
 void                 FTuple_Init(acr_dm::FTuple& tuple);
 // cursor points to valid item
 // func:acr_dm.FTuple.zs_attr_curs.Reset
-void                 tuple_zs_attr_curs_Reset(tuple_zs_attr_curs &curs, acr_dm::FTuple &parent);
+void                 tuple_zs_attr_curs_Reset(tuple_zs_attr_curs &curs, acr_dm::FTuple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_dm.FTuple.zs_attr_curs.ValidQ
-bool                 tuple_zs_attr_curs_ValidQ(tuple_zs_attr_curs &curs);
+bool                 tuple_zs_attr_curs_ValidQ(tuple_zs_attr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_dm.FTuple.zs_attr_curs.Next
-void                 tuple_zs_attr_curs_Next(tuple_zs_attr_curs &curs);
+void                 tuple_zs_attr_curs_Next(tuple_zs_attr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_dm.FTuple.zs_attr_curs.Access
-acr_dm::FAttr&       tuple_zs_attr_curs_Access(tuple_zs_attr_curs &curs);
+acr_dm::FAttr&       tuple_zs_attr_curs_Access(tuple_zs_attr_curs &curs) __attribute__((nothrow));
 // func:acr_dm.FTuple..Uninit
 void                 FTuple_Uninit(acr_dm::FTuple& tuple) __attribute__((nothrow));
 

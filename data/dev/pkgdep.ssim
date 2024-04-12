@@ -1,3 +1,4 @@
+dev.pkgdep  pkgdep:amc.openacr  soft:Y  comment:""
 dev.pkgdep  pkgdep:ams.openacr  soft:Y  comment:""
 dev.pkgdep  pkgdep:apm.openacr  soft:Y  comment:""
 dev.pkgdep  pkgdep:gcli.openacr  soft:Y  comment:""

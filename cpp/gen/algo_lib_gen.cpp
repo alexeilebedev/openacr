@@ -258,14 +258,6 @@ void algo_lib::Bitset_ary_bitcurs_Next(Bitset_ary_bitcurs &curs) {
     curs.bit = index * 64 + offset;
 }
 
-// --- algo_lib.Bitset.ary_bitcurs.Reset
-void algo_lib::Bitset_ary_bitcurs_Reset(Bitset_ary_bitcurs &curs, algo_lib::Bitset &parent) {
-    curs.elems = &ary_qFind(parent,0);
-    curs.n_elems = ary_N(parent);
-    curs.bit = -1;
-    Bitset_ary_bitcurs_Next(curs);
-}
-
 // --- algo_lib.Bitset..Uninit
 void algo_lib::Bitset_Uninit(algo_lib::Bitset& parent) {
     algo_lib::Bitset &row = parent; (void)row;

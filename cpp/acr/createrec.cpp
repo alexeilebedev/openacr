@@ -93,9 +93,9 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
 // -----------------------------------------------------------------------------
 
 // Calculate record's SORTKEY which is a combination
-// of the value of its SSIMSORT attribute and rowid.
+// of the value of its SSIMSORT attribute and the newly provided ROWID.
 void acr::UpdateSortkey(acr::FRec &rec, float rowid) {
-    // initialize string sort field
+    rec.sortkey.ctype=rec.p_ctype->ctype;
     rec.sortkey.num=0;
     ch_RemoveAll(rec.sortkey.str);
     // update sort key for new record.
@@ -110,6 +110,11 @@ void acr::UpdateSortkey(acr::FRec &rec, float rowid) {
             ch_RemoveAll(rec.sortkey.str);
         }
     }
+    acr::FSortkey &sortkey = acr::ind_sortkey_GetOrCreate(rec.sortkey);
+    if (rowid==-1) {
+        rowid = sortkey.next_rowid;
+    }
+    double_Update(sortkey.next_rowid,rowid+1);
     rec.sortkey.rowid = rowid;
 }
 
@@ -140,14 +145,9 @@ static acr::FFile *PickOutfile(acr::FFile &infile, acr::FCtype *ctype) {
 acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tuple, algo::Attr *pkey_attr, acr::ReadMode read_mode) {
     strptr pkey     = pkey_attr->value;
     acr::FRec *ret  = acr::ind_ctype_rec_Find(*ctype, pkey);
-    // determine line of record
-    // each time a record is inserted into a ssimfile, assign it ssimfile's next_rowid,
-    // and increment ssimfile's next_rowid field.
-    // if the cmdline.rowid option is enabled, and the input line contains the
-    // attribute acr.rowid, then allow this attribute to set the line id,
-    // and strip the attribute before saving record.
-    // records are written to disk in rowid order.
-    float rowid   = ret ? ret->sortkey.rowid : ctype->next_rowid;
+    // row id for this tuple
+    // if unspecified, -1 is the default (will be calculated later in UpdateSortkey)
+    float rowid   = ret ? ret->sortkey.rowid : -1;
     if (read_mode == acr_ReadMode_acr_select) {
         if (ret) {
             Rec_Select(*ret);
@@ -159,7 +159,6 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
             _db.report.n_ignore++;
         }
     } else {
-        ctype->next_rowid = float_Max(ctype->next_rowid, rowid + 1);
         // detect acr.rowid attribute and update record rowid
         // (which allows inserting records into the middle of an unsorted file)
         algo::Attr *rowid_attr = attr_Find(tuple, "acr.rowid");

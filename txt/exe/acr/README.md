@@ -479,6 +479,7 @@ These can be executed with `atf_comp <comptest> -v`
 |acr.QueryCtype|Select one record|
 |acr.RenameCollision|Rename with collision|
 |acr.RenameCollisionMultiple|Rename multiple records with collision|
+|acr.RenameField|-rename -field renames affected attributes in dataset|
 |acr.RenameRecord|Rename field and propagate recursively through structured keys|
 |acr.Replace|A record is replaced|
 |acr.Select|A record is selected|

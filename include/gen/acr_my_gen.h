@@ -279,39 +279,39 @@ bool                 ssimfile_XrefMaybe(acr_my::FSsimfile &row);
 
 // proceed to next item
 // func:acr_my.FDb.ary_ns_curs.Next
-void                 _db_ary_ns_curs_Next(_db_ary_ns_curs &curs);
+void                 _db_ary_ns_curs_Next(_db_ary_ns_curs &curs) __attribute__((nothrow));
 // func:acr_my.FDb.ary_ns_curs.Reset
-void                 _db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &parent);
+void                 _db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_my.FDb.ary_ns_curs.ValidQ
-bool                 _db_ary_ns_curs_ValidQ(_db_ary_ns_curs &curs);
+bool                 _db_ary_ns_curs_ValidQ(_db_ary_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_my.FDb.ary_ns_curs.Access
-algo::cstring&       _db_ary_ns_curs_Access(_db_ary_ns_curs &curs);
+algo::cstring&       _db_ary_ns_curs_Access(_db_ary_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_my.FDb.nsdb_curs.Reset
-void                 _db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_my::FDb &parent);
+void                 _db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_my::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_my.FDb.nsdb_curs.ValidQ
-bool                 _db_nsdb_curs_ValidQ(_db_nsdb_curs &curs);
+bool                 _db_nsdb_curs_ValidQ(_db_nsdb_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_my.FDb.nsdb_curs.Next
-void                 _db_nsdb_curs_Next(_db_nsdb_curs &curs);
+void                 _db_nsdb_curs_Next(_db_nsdb_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_my.FDb.nsdb_curs.Access
-acr_my::FNsdb&       _db_nsdb_curs_Access(_db_nsdb_curs &curs);
+acr_my::FNsdb&       _db_nsdb_curs_Access(_db_nsdb_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_my.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_my::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_my::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_my.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_my.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_my.FDb.ssimfile_curs.Access
-acr_my::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+acr_my::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_my.FDb..Init
 void                 FDb_Init();

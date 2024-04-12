@@ -675,6 +675,13 @@ void amc_vis::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:amc_vis.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!amc_vis::LoadTuplesMaybe(cmd.in,true)) {
+            err << "amc_vis.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -687,8 +694,6 @@ void amc_vis::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(amc_vis::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- amc_vis.FDb._db.MainLoop

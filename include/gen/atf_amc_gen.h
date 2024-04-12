@@ -929,47 +929,47 @@ void                 fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs
 // func:atf_amc.Bitset.fld1_bitcurs.Next
 void                 Bitset_fld1_bitcurs_Next(Bitset_fld1_bitcurs &curs);
 // func:atf_amc.Bitset.fld1_bitcurs.Reset
-void                 Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent);
+void                 Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Bitset.fld1_bitcurs.ValidQ
-bool                 Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs);
+bool                 Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Bitset.fld1_bitcurs.Access
-int&                 Bitset_fld1_bitcurs_Access(Bitset_fld1_bitcurs &curs);
+int&                 Bitset_fld1_bitcurs_Access(Bitset_fld1_bitcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Bitset.fld1_curs.Reset
-void                 Bitset_fld1_curs_Reset(Bitset_fld1_curs &curs, atf_amc::Bitset &parent);
+void                 Bitset_fld1_curs_Reset(Bitset_fld1_curs &curs, atf_amc::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Bitset.fld1_curs.ValidQ
-bool                 Bitset_fld1_curs_ValidQ(Bitset_fld1_curs &curs);
+bool                 Bitset_fld1_curs_ValidQ(Bitset_fld1_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.Bitset.fld1_curs.Next
-void                 Bitset_fld1_curs_Next(Bitset_fld1_curs &curs);
+void                 Bitset_fld1_curs_Next(Bitset_fld1_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Bitset.fld1_curs.Access
-u16&                 Bitset_fld1_curs_Access(Bitset_fld1_curs &curs);
+u16&                 Bitset_fld1_curs_Access(Bitset_fld1_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.Bitset.fld8_bitcurs.Next
 void                 Bitset_fld8_bitcurs_Next(Bitset_fld8_bitcurs &curs);
 // func:atf_amc.Bitset.fld8_bitcurs.Reset
-void                 Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent);
+void                 Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Bitset.fld8_bitcurs.ValidQ
-bool                 Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs);
+bool                 Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Bitset.fld8_bitcurs.Access
-int&                 Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs);
+int&                 Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.Bitset.fld64_bitcurs.Next
 void                 Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs);
 // func:atf_amc.Bitset.fld64_bitcurs.Reset
-void                 Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent);
+void                 Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Bitset.fld64_bitcurs.ValidQ
-bool                 Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs);
+bool                 Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Bitset.fld64_bitcurs.Access
-int&                 Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs);
+int&                 Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Bitset..Init
 void                 Bitset_Init(atf_amc::Bitset& parent);
@@ -1511,25 +1511,25 @@ int                  intval_Present_GetBit(atf_amc::DispFilter& parent) __attrib
 // func:atf_amc.DispFilter.pmask_bitcurs.Next
 void                 DispFilter_pmask_bitcurs_Next(DispFilter_pmask_bitcurs &curs);
 // func:atf_amc.DispFilter.pmask_bitcurs.Reset
-void                 DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent);
+void                 DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.DispFilter.pmask_bitcurs.ValidQ
-bool                 DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs);
+bool                 DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.DispFilter.pmask_bitcurs.Access
-int&                 DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs);
+int&                 DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.DispFilter.pmask_curs.Reset
-void                 DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent);
+void                 DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.DispFilter.pmask_curs.ValidQ
-bool                 DispFilter_pmask_curs_ValidQ(DispFilter_pmask_curs &curs);
+bool                 DispFilter_pmask_curs_ValidQ(DispFilter_pmask_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.DispFilter.pmask_curs.Next
-void                 DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs);
+void                 DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.DispFilter.pmask_curs.Access
-u64&                 DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs);
+u64&                 DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs) __attribute__((nothrow));
 // func:atf_amc.DispFilter..ReadFieldMaybe
 bool                 DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::DispFilter from attributes of ascii tuple TUPLE
@@ -1976,16 +1976,16 @@ atf_amc::FCascdel*   tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u3
 atf_amc::FCascdel*   tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) __attribute__((nothrow));
 
 // func:atf_amc.FCascdel.c_child_ptrary_curs.Reset
-void                 cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent);
+void                 cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FCascdel.c_child_ptrary_curs.ValidQ
-bool                 cascdel_c_child_ptrary_curs_ValidQ(cascdel_c_child_ptrary_curs &curs);
+bool                 cascdel_c_child_ptrary_curs_ValidQ(cascdel_c_child_ptrary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FCascdel.c_child_ptrary_curs.Next
-void                 cascdel_c_child_ptrary_curs_Next(cascdel_c_child_ptrary_curs &curs);
+void                 cascdel_c_child_ptrary_curs_Next(cascdel_c_child_ptrary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FCascdel.c_child_ptrary_curs.Access
-atf_amc::FCascdel&   cascdel_c_child_ptrary_curs_Access(cascdel_c_child_ptrary_curs &curs);
+atf_amc::FCascdel&   cascdel_c_child_ptrary_curs_Access(cascdel_c_child_ptrary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.FCascdel..Init
 void                 FCascdel_Init(atf_amc::FCascdel& cascdel);
@@ -1999,34 +1999,34 @@ void                 cascdel_bh_child_bheap_curs_Reset(cascdel_bh_child_bheap_cu
 void                 cascdel_bh_child_bheap_curs_Next(cascdel_bh_child_bheap_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:atf_amc.FCascdel.bh_child_bheap_curs.Access
-atf_amc::FCascdel&   cascdel_bh_child_bheap_curs_Access(cascdel_bh_child_bheap_curs &curs);
+atf_amc::FCascdel&   cascdel_bh_child_bheap_curs_Access(cascdel_bh_child_bheap_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:atf_amc.FCascdel.bh_child_bheap_curs.ValidQ
-bool                 cascdel_bh_child_bheap_curs_ValidQ(cascdel_bh_child_bheap_curs &curs);
+bool                 cascdel_bh_child_bheap_curs_ValidQ(cascdel_bh_child_bheap_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FCascdel.zd_childlist_curs.Reset
-void                 cascdel_zd_childlist_curs_Reset(cascdel_zd_childlist_curs &curs, atf_amc::FCascdel &parent);
+void                 cascdel_zd_childlist_curs_Reset(cascdel_zd_childlist_curs &curs, atf_amc::FCascdel &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FCascdel.zd_childlist_curs.ValidQ
-bool                 cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs &curs);
+bool                 cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FCascdel.zd_childlist_curs.Next
-void                 cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs);
+void                 cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FCascdel.zd_childlist_curs.Access
-atf_amc::FCascdel&   cascdel_zd_childlist_curs_Access(cascdel_zd_childlist_curs &curs);
+atf_amc::FCascdel&   cascdel_zd_childlist_curs_Access(cascdel_zd_childlist_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FCascdel.tr_child_atree_curs.Reset
-void                 cascdel_tr_child_atree_curs_Reset(cascdel_tr_child_atree_curs &curs, atf_amc::FCascdel& parent);
+void                 cascdel_tr_child_atree_curs_Reset(cascdel_tr_child_atree_curs &curs, atf_amc::FCascdel& parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FCascdel.tr_child_atree_curs.ValidQ
-bool                 cascdel_tr_child_atree_curs_ValidQ(cascdel_tr_child_atree_curs &curs);
+bool                 cascdel_tr_child_atree_curs_ValidQ(cascdel_tr_child_atree_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FCascdel.tr_child_atree_curs.Next
-void                 cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_curs &curs);
+void                 cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FCascdel.tr_child_atree_curs.Access
-atf_amc::FCascdel&   cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs);
+atf_amc::FCascdel&   cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FCascdel..Uninit
 void                 FCascdel_Uninit(atf_amc::FCascdel& cascdel) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3728,332 +3728,332 @@ void                 _db_bh_typec_curs_Reset(_db_bh_typec_curs &curs, atf_amc::F
 void                 _db_bh_typec_curs_Next(_db_bh_typec_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:atf_amc.FDb.bh_typec_curs.Access
-atf_amc::FTypeC&     _db_bh_typec_curs_Access(_db_bh_typec_curs &curs);
+atf_amc::FTypeC&     _db_bh_typec_curs_Access(_db_bh_typec_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:atf_amc.FDb.bh_typec_curs.ValidQ
-bool                 _db_bh_typec_curs_ValidQ(_db_bh_typec_curs &curs);
+bool                 _db_bh_typec_curs_ValidQ(_db_bh_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zdl_h_typec_curs.Reset
-void                 _db_zdl_h_typec_curs_Reset(_db_zdl_h_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_zdl_h_typec_curs_Reset(_db_zdl_h_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zdl_h_typec_curs.ValidQ
-bool                 _db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs);
+bool                 _db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zdl_h_typec_curs.Next
-void                 _db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs);
+void                 _db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zdl_h_typec_curs.Access
-atf_amc::FTypeC&     _db_zdl_h_typec_curs_Access(_db_zdl_h_typec_curs &curs);
+atf_amc::FTypeC&     _db_zdl_h_typec_curs_Access(_db_zdl_h_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_t_typec_curs.Reset
-void                 _db_zd_t_typec_curs_Reset(_db_zd_t_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_zd_t_typec_curs_Reset(_db_zd_t_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_t_typec_curs.ValidQ
-bool                 _db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs);
+bool                 _db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zd_t_typec_curs.Next
-void                 _db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs);
+void                 _db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zd_t_typec_curs.Access
-atf_amc::FTypeC&     _db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs);
+atf_amc::FTypeC&     _db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_typed_curs.Reset
-void                 _db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent);
+void                 _db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_typed_curs.ValidQ
-bool                 _db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs);
+bool                 _db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zd_typed_curs.Next
-void                 _db_zd_typed_curs_Next(_db_zd_typed_curs &curs);
+void                 _db_zd_typed_curs_Next(_db_zd_typed_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zd_typed_curs.Access
-atf_amc::FTypeD&     _db_zd_typed_curs_Access(_db_zd_typed_curs &curs);
+atf_amc::FTypeD&     _db_zd_typed_curs_Access(_db_zd_typed_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_typed_delcurs.Reset
-void                 _db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent);
+void                 _db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zd_typed_delcurs.ValidQ
-bool                 _db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs);
+bool                 _db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zd_typed_delcurs.Next
-void                 _db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs);
+void                 _db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zd_typed_delcurs.Access
-atf_amc::FTypeD&     _db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs);
+atf_amc::FTypeD&     _db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typed_curs.Reset
-void                 _db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent);
+void                 _db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typed_curs.ValidQ
-bool                 _db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs);
+bool                 _db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zs_t_typed_curs.Next
-void                 _db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs);
+void                 _db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zs_t_typed_curs.Access
-atf_amc::FTypeD&     _db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs);
+atf_amc::FTypeD&     _db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typed_delcurs.Reset
-void                 _db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent);
+void                 _db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typed_delcurs.ValidQ
-bool                 _db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs);
+bool                 _db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zs_t_typed_delcurs.Next
-void                 _db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs);
+void                 _db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zs_t_typed_delcurs.Access
-atf_amc::FTypeD&     _db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs);
+atf_amc::FTypeD&     _db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_typed_curs.Reset
-void                 _db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent);
+void                 _db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_typed_curs.ValidQ
-bool                 _db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs);
+bool                 _db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cd_typed_curs.Next
-void                 _db_cd_typed_curs_Next(_db_cd_typed_curs &curs);
+void                 _db_cd_typed_curs_Next(_db_cd_typed_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cd_typed_curs.Access
-atf_amc::FTypeD&     _db_cd_typed_curs_Access(_db_cd_typed_curs &curs);
+atf_amc::FTypeD&     _db_cd_typed_curs_Access(_db_cd_typed_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_typed_delcurs.Reset
-void                 _db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent);
+void                 _db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_typed_delcurs.ValidQ
-bool                 _db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs);
+bool                 _db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cd_typed_delcurs.Next
-void                 _db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs);
+void                 _db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cd_typed_delcurs.Access
-atf_amc::FTypeD&     _db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs);
+atf_amc::FTypeD&     _db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zsl_h_typec_curs.Reset
-void                 _db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zsl_h_typec_curs.ValidQ
-bool                 _db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs);
+bool                 _db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zsl_h_typec_curs.Next
-void                 _db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs);
+void                 _db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zsl_h_typec_curs.Access
-atf_amc::FTypeC&     _db_zsl_h_typec_curs_Access(_db_zsl_h_typec_curs &curs);
+atf_amc::FTypeC&     _db_zsl_h_typec_curs_Access(_db_zsl_h_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typec_curs.Reset
-void                 _db_zs_t_typec_curs_Reset(_db_zs_t_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_zs_t_typec_curs_Reset(_db_zs_t_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zs_t_typec_curs.ValidQ
-bool                 _db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs);
+bool                 _db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zs_t_typec_curs.Next
-void                 _db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs);
+void                 _db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zs_t_typec_curs.Access
-atf_amc::FTypeC&     _db_zs_t_typec_curs_Access(_db_zs_t_typec_curs &curs);
+atf_amc::FTypeC&     _db_zs_t_typec_curs_Access(_db_zs_t_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zdl_hnt_typec_curs.Reset
-void                 _db_zdl_hnt_typec_curs_Reset(_db_zdl_hnt_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_zdl_hnt_typec_curs_Reset(_db_zdl_hnt_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.zdl_hnt_typec_curs.ValidQ
-bool                 _db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs);
+bool                 _db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.zdl_hnt_typec_curs.Next
-void                 _db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs);
+void                 _db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.zdl_hnt_typec_curs.Access
-atf_amc::FTypeC&     _db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec_curs &curs);
+atf_amc::FTypeC&     _db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cdl_h_typec_curs.Reset
-void                 _db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cdl_h_typec_curs.ValidQ
-bool                 _db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs);
+bool                 _db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cdl_h_typec_curs.Next
-void                 _db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs);
+void                 _db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cdl_h_typec_curs.Access
-atf_amc::FTypeC&     _db_cdl_h_typec_curs_Access(_db_cdl_h_typec_curs &curs);
+atf_amc::FTypeC&     _db_cdl_h_typec_curs_Access(_db_cdl_h_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_t_typec_curs.Reset
-void                 _db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_t_typec_curs.ValidQ
-bool                 _db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs);
+bool                 _db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cd_t_typec_curs.Next
-void                 _db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs);
+void                 _db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cd_t_typec_curs.Access
-atf_amc::FTypeC&     _db_cd_t_typec_curs_Access(_db_cd_t_typec_curs &curs);
+atf_amc::FTypeC&     _db_cd_t_typec_curs_Access(_db_cd_t_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.csl_h_typec_curs.Reset
-void                 _db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.csl_h_typec_curs.ValidQ
-bool                 _db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs);
+bool                 _db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.csl_h_typec_curs.Next
-void                 _db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs);
+void                 _db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.csl_h_typec_curs.Access
-atf_amc::FTypeC&     _db_csl_h_typec_curs_Access(_db_csl_h_typec_curs &curs);
+atf_amc::FTypeC&     _db_csl_h_typec_curs_Access(_db_csl_h_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cs_t_typec_curs.Reset
-void                 _db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent);
+void                 _db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cs_t_typec_curs.ValidQ
-bool                 _db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs);
+bool                 _db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cs_t_typec_curs.Next
-void                 _db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs);
+void                 _db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cs_t_typec_curs.Access
-atf_amc::FTypeC&     _db_cs_t_typec_curs_Access(_db_cs_t_typec_curs &curs);
+atf_amc::FTypeC&     _db_cs_t_typec_curs_Access(_db_cs_t_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.typea_curs.Reset
-void                 _db_typea_curs_Reset(_db_typea_curs &curs, atf_amc::FDb &parent);
+void                 _db_typea_curs_Reset(_db_typea_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.typea_curs.ValidQ
-bool                 _db_typea_curs_ValidQ(_db_typea_curs &curs);
+bool                 _db_typea_curs_ValidQ(_db_typea_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.typea_curs.Next
-void                 _db_typea_curs_Next(_db_typea_curs &curs);
+void                 _db_typea_curs_Next(_db_typea_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.typea_curs.Access
-atf_amc::FTypeA&     _db_typea_curs_Access(_db_typea_curs &curs);
+atf_amc::FTypeA&     _db_typea_curs_Access(_db_typea_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.types_curs.Reset
-void                 _db_types_curs_Reset(_db_types_curs &curs, atf_amc::FDb &parent);
+void                 _db_types_curs_Reset(_db_types_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.types_curs.ValidQ
-bool                 _db_types_curs_ValidQ(_db_types_curs &curs);
+bool                 _db_types_curs_ValidQ(_db_types_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.types_curs.Next
-void                 _db_types_curs_Next(_db_types_curs &curs);
+void                 _db_types_curs_Next(_db_types_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.types_curs.Access
-atf_amc::FTypeS&     _db_types_curs_Access(_db_types_curs &curs);
+atf_amc::FTypeS&     _db_types_curs_Access(_db_types_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.typet_curs.Reset
-void                 _db_typet_curs_Reset(_db_typet_curs &curs, atf_amc::FDb &parent);
+void                 _db_typet_curs_Reset(_db_typet_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.typet_curs.ValidQ
-bool                 _db_typet_curs_ValidQ(_db_typet_curs &curs);
+bool                 _db_typet_curs_ValidQ(_db_typet_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.typet_curs.Next
-void                 _db_typet_curs_Next(_db_typet_curs &curs);
+void                 _db_typet_curs_Next(_db_typet_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.typet_curs.Access
-atf_amc::FTypeT&     _db_typet_curs_Access(_db_typet_curs &curs);
+atf_amc::FTypeT&     _db_typet_curs_Access(_db_typet_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cstring_curs.Reset
-void                 _db_cstring_curs_Reset(_db_cstring_curs &curs, atf_amc::FDb &parent);
+void                 _db_cstring_curs_Reset(_db_cstring_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cstring_curs.ValidQ
-bool                 _db_cstring_curs_ValidQ(_db_cstring_curs &curs);
+bool                 _db_cstring_curs_ValidQ(_db_cstring_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cstring_curs.Next
-void                 _db_cstring_curs_Next(_db_cstring_curs &curs);
+void                 _db_cstring_curs_Next(_db_cstring_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cstring_curs.Access
-atf_amc::FCstring&   _db_cstring_curs_Access(_db_cstring_curs &curs);
+atf_amc::FCstring&   _db_cstring_curs_Access(_db_cstring_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_in_msg_curs.Reset
-void                 _db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent);
+void                 _db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.cd_in_msg_curs.ValidQ
-bool                 _db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs);
+bool                 _db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.cd_in_msg_curs.Next
-void                 _db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs);
+void                 _db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.cd_in_msg_curs.Access
-atf_amc::Msgbuf&     _db_cd_in_msg_curs_Access(_db_cd_in_msg_curs &curs);
+atf_amc::Msgbuf&     _db_cd_in_msg_curs_Access(_db_cd_in_msg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.amctest_curs.Reset
-void                 _db_amctest_curs_Reset(_db_amctest_curs &curs, atf_amc::FDb &parent);
+void                 _db_amctest_curs_Reset(_db_amctest_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.amctest_curs.ValidQ
-bool                 _db_amctest_curs_ValidQ(_db_amctest_curs &curs);
+bool                 _db_amctest_curs_ValidQ(_db_amctest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.amctest_curs.Next
-void                 _db_amctest_curs_Next(_db_amctest_curs &curs);
+void                 _db_amctest_curs_Next(_db_amctest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.amctest_curs.Access
-atf_amc::FAmctest&   _db_amctest_curs_Access(_db_amctest_curs &curs);
+atf_amc::FAmctest&   _db_amctest_curs_Access(_db_amctest_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FDb.c_typek_curs.Reset
-void                 _db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb &parent);
+void                 _db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.c_typek_curs.ValidQ
-bool                 _db_c_typek_curs_ValidQ(_db_c_typek_curs &curs);
+bool                 _db_c_typek_curs_ValidQ(_db_c_typek_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.c_typek_curs.Next
-void                 _db_c_typek_curs_Next(_db_c_typek_curs &curs);
+void                 _db_c_typek_curs_Next(_db_c_typek_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.c_typek_curs.Access
-atf_amc::FTypeK&     _db_c_typek_curs_Access(_db_c_typek_curs &curs);
+atf_amc::FTypeK&     _db_c_typek_curs_Access(_db_c_typek_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FDb.c_typek_oncecurs.Reset
-void                 _db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent);
+void                 _db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.c_typek_oncecurs.ValidQ
-bool                 _db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs);
+bool                 _db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.c_typek_oncecurs.Next
-void                 _db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs);
+void                 _db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.c_typek_oncecurs.Access
-atf_amc::FTypeK&     _db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs);
+atf_amc::FTypeK&     _db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.avl_curs.Reset
-void                 _db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent);
+void                 _db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.avl_curs.ValidQ
-bool                 _db_avl_curs_ValidQ(_db_avl_curs &curs);
+bool                 _db_avl_curs_ValidQ(_db_avl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.avl_curs.Next
-void                 _db_avl_curs_Next(_db_avl_curs &curs);
+void                 _db_avl_curs_Next(_db_avl_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.avl_curs.Access
-atf_amc::FAvl&       _db_avl_curs_Access(_db_avl_curs &curs);
+atf_amc::FAvl&       _db_avl_curs_Access(_db_avl_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.tr_avl_curs.Reset
-void                 _db_tr_avl_curs_Reset(_db_tr_avl_curs &curs, atf_amc::FDb& );
+void                 _db_tr_avl_curs_Reset(_db_tr_avl_curs &curs, atf_amc::FDb& ) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.tr_avl_curs.ValidQ
-bool                 _db_tr_avl_curs_ValidQ(_db_tr_avl_curs &curs);
+bool                 _db_tr_avl_curs_ValidQ(_db_tr_avl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.tr_avl_curs.Next
-void                 _db_tr_avl_curs_Next(_db_tr_avl_curs &curs);
+void                 _db_tr_avl_curs_Next(_db_tr_avl_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.tr_avl_curs.Access
-atf_amc::FAvl&       _db_tr_avl_curs_Access(_db_tr_avl_curs &curs);
+atf_amc::FAvl&       _db_tr_avl_curs_Access(_db_tr_avl_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.listtype_curs.Reset
-void                 _db_listtype_curs_Reset(_db_listtype_curs &curs, atf_amc::FDb &parent);
+void                 _db_listtype_curs_Reset(_db_listtype_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.listtype_curs.ValidQ
-bool                 _db_listtype_curs_ValidQ(_db_listtype_curs &curs);
+bool                 _db_listtype_curs_ValidQ(_db_listtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.listtype_curs.Next
-void                 _db_listtype_curs_Next(_db_listtype_curs &curs);
+void                 _db_listtype_curs_Next(_db_listtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.listtype_curs.Access
-atf_amc::FListtype&  _db_listtype_curs_Access(_db_listtype_curs &curs);
+atf_amc::FListtype&  _db_listtype_curs_Access(_db_listtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.thash_elem_curs.Reset
-void                 _db_thash_elem_curs_Reset(_db_thash_elem_curs &curs, atf_amc::FDb &parent);
+void                 _db_thash_elem_curs_Reset(_db_thash_elem_curs &curs, atf_amc::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FDb.thash_elem_curs.ValidQ
-bool                 _db_thash_elem_curs_ValidQ(_db_thash_elem_curs &curs);
+bool                 _db_thash_elem_curs_ValidQ(_db_thash_elem_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FDb.thash_elem_curs.Next
-void                 _db_thash_elem_curs_Next(_db_thash_elem_curs &curs);
+void                 _db_thash_elem_curs_Next(_db_thash_elem_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FDb.thash_elem_curs.Access
-atf_amc::FThashElem& _db_thash_elem_curs_Access(_db_thash_elem_curs &curs);
+atf_amc::FThashElem& _db_thash_elem_curs_Access(_db_thash_elem_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.FDb..Init
 void                 FDb_Init();
@@ -4300,26 +4300,26 @@ void                 sorted1_QuickSort(atf_amc::FPerfSortString& parent) __attri
 
 // proceed to next item
 // func:atf_amc.FPerfSortString.orig_curs.Next
-void                 FPerfSortString_orig_curs_Next(FPerfSortString_orig_curs &curs);
+void                 FPerfSortString_orig_curs_Next(FPerfSortString_orig_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FPerfSortString.orig_curs.Reset
-void                 FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &curs, atf_amc::FPerfSortString &parent);
+void                 FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &curs, atf_amc::FPerfSortString &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FPerfSortString.orig_curs.ValidQ
-bool                 FPerfSortString_orig_curs_ValidQ(FPerfSortString_orig_curs &curs);
+bool                 FPerfSortString_orig_curs_ValidQ(FPerfSortString_orig_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FPerfSortString.orig_curs.Access
-atf_amc::Cstr&       FPerfSortString_orig_curs_Access(FPerfSortString_orig_curs &curs);
+atf_amc::Cstr&       FPerfSortString_orig_curs_Access(FPerfSortString_orig_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FPerfSortString.sorted1_curs.Next
-void                 FPerfSortString_sorted1_curs_Next(FPerfSortString_sorted1_curs &curs);
+void                 FPerfSortString_sorted1_curs_Next(FPerfSortString_sorted1_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FPerfSortString.sorted1_curs.Reset
-void                 FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_curs &curs, atf_amc::FPerfSortString &parent);
+void                 FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_curs &curs, atf_amc::FPerfSortString &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FPerfSortString.sorted1_curs.ValidQ
-bool                 FPerfSortString_sorted1_curs_ValidQ(FPerfSortString_sorted1_curs &curs);
+bool                 FPerfSortString_sorted1_curs_ValidQ(FPerfSortString_sorted1_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FPerfSortString.sorted1_curs.Access
-atf_amc::Cstr&       FPerfSortString_sorted1_curs_Access(FPerfSortString_sorted1_curs &curs);
+atf_amc::Cstr&       FPerfSortString_sorted1_curs_Access(FPerfSortString_sorted1_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.FPerfSortString..Init
 void                 FPerfSortString_Init(atf_amc::FPerfSortString& parent);
@@ -4575,28 +4575,28 @@ void                 bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) __attribute
 void                 FTypeA_Init(atf_amc::FTypeA& typea);
 // cursor points to valid item
 // func:atf_amc.FTypeA.typec_curs.Reset
-void                 typea_typec_curs_Reset(typea_typec_curs &curs, atf_amc::FTypeA &parent);
+void                 typea_typec_curs_Reset(typea_typec_curs &curs, atf_amc::FTypeA &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FTypeA.typec_curs.ValidQ
-bool                 typea_typec_curs_ValidQ(typea_typec_curs &curs);
+bool                 typea_typec_curs_ValidQ(typea_typec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FTypeA.typec_curs.Next
-void                 typea_typec_curs_Next(typea_typec_curs &curs);
+void                 typea_typec_curs_Next(typea_typec_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FTypeA.typec_curs.Access
-atf_amc::FTypeC&     typea_typec_curs_Access(typea_typec_curs &curs);
+atf_amc::FTypeC&     typea_typec_curs_Access(typea_typec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FTypeA.zdl_typeb_curs.Reset
-void                 typea_zdl_typeb_curs_Reset(typea_zdl_typeb_curs &curs, atf_amc::FTypeA &parent);
+void                 typea_zdl_typeb_curs_Reset(typea_zdl_typeb_curs &curs, atf_amc::FTypeA &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FTypeA.zdl_typeb_curs.ValidQ
-bool                 typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs);
+bool                 typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FTypeA.zdl_typeb_curs.Next
-void                 typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs);
+void                 typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FTypeA.zdl_typeb_curs.Access
-atf_amc::FTypeB&     typea_zdl_typeb_curs_Access(typea_zdl_typeb_curs &curs);
+atf_amc::FTypeB&     typea_zdl_typeb_curs_Access(typea_zdl_typeb_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FTypeA.bh_typeb_curs.Reserve
 void                 typea_bh_typeb_curs_Reserve(typea_bh_typeb_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -4607,10 +4607,10 @@ void                 typea_bh_typeb_curs_Reset(typea_bh_typeb_curs &curs, atf_am
 void                 typea_bh_typeb_curs_Next(typea_bh_typeb_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:atf_amc.FTypeA.bh_typeb_curs.Access
-atf_amc::FTypeB&     typea_bh_typeb_curs_Access(typea_bh_typeb_curs &curs);
+atf_amc::FTypeB&     typea_bh_typeb_curs_Access(typea_bh_typeb_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:atf_amc.FTypeA.bh_typeb_curs.ValidQ
-bool                 typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs);
+bool                 typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FTypeA..Uninit
 void                 FTypeA_Uninit(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4778,16 +4778,16 @@ atf_amc::FTypeT&     zdl_typet_qLast(atf_amc::FTypeS& types) __attribute__((__wa
 void                 FTypeS_Init(atf_amc::FTypeS& types);
 // cursor points to valid item
 // func:atf_amc.FTypeS.zdl_typet_curs.Reset
-void                 types_zdl_typet_curs_Reset(types_zdl_typet_curs &curs, atf_amc::FTypeS &parent);
+void                 types_zdl_typet_curs_Reset(types_zdl_typet_curs &curs, atf_amc::FTypeS &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FTypeS.zdl_typet_curs.ValidQ
-bool                 types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs);
+bool                 types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FTypeS.zdl_typet_curs.Next
-void                 types_zdl_typet_curs_Next(types_zdl_typet_curs &curs);
+void                 types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FTypeS.zdl_typet_curs.Access
-atf_amc::FTypeT&     types_zdl_typet_curs_Access(types_zdl_typet_curs &curs);
+atf_amc::FTypeT&     types_zdl_typet_curs_Access(types_zdl_typet_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FTypeS..Uninit
 void                 FTypeS_Uninit(atf_amc::FTypeS& types) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -5052,38 +5052,38 @@ void                 fixary_QuickSort(atf_amc::FUnitSort& parent) __attribute__(
 
 // proceed to next item
 // func:atf_amc.FUnitSort.tary_curs.Next
-void                 FUnitSort_tary_curs_Next(FUnitSort_tary_curs &curs);
+void                 FUnitSort_tary_curs_Next(FUnitSort_tary_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FUnitSort.tary_curs.Reset
-void                 FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_amc::FUnitSort &parent);
+void                 FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_amc::FUnitSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FUnitSort.tary_curs.ValidQ
-bool                 FUnitSort_tary_curs_ValidQ(FUnitSort_tary_curs &curs);
+bool                 FUnitSort_tary_curs_ValidQ(FUnitSort_tary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FUnitSort.tary_curs.Access
-atf_amc::TypeA&      FUnitSort_tary_curs_Access(FUnitSort_tary_curs &curs);
+atf_amc::TypeA&      FUnitSort_tary_curs_Access(FUnitSort_tary_curs &curs) __attribute__((nothrow));
 // func:atf_amc.FUnitSort.c_ptrary_curs.Reset
-void                 FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs, atf_amc::FUnitSort &parent);
+void                 FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs, atf_amc::FUnitSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FUnitSort.c_ptrary_curs.ValidQ
-bool                 FUnitSort_c_ptrary_curs_ValidQ(FUnitSort_c_ptrary_curs &curs);
+bool                 FUnitSort_c_ptrary_curs_ValidQ(FUnitSort_c_ptrary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FUnitSort.c_ptrary_curs.Next
-void                 FUnitSort_c_ptrary_curs_Next(FUnitSort_c_ptrary_curs &curs);
+void                 FUnitSort_c_ptrary_curs_Next(FUnitSort_c_ptrary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FUnitSort.c_ptrary_curs.Access
-atf_amc::TypeA&      FUnitSort_c_ptrary_curs_Access(FUnitSort_c_ptrary_curs &curs);
+atf_amc::TypeA&      FUnitSort_c_ptrary_curs_Access(FUnitSort_c_ptrary_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FUnitSort.fixary_curs.Reset
-void                 FUnitSort_fixary_curs_Reset(FUnitSort_fixary_curs &curs, atf_amc::FUnitSort &parent);
+void                 FUnitSort_fixary_curs_Reset(FUnitSort_fixary_curs &curs, atf_amc::FUnitSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.FUnitSort.fixary_curs.ValidQ
-bool                 FUnitSort_fixary_curs_ValidQ(FUnitSort_fixary_curs &curs);
+bool                 FUnitSort_fixary_curs_ValidQ(FUnitSort_fixary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.FUnitSort.fixary_curs.Next
-void                 FUnitSort_fixary_curs_Next(FUnitSort_fixary_curs &curs);
+void                 FUnitSort_fixary_curs_Next(FUnitSort_fixary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.FUnitSort.fixary_curs.Access
-atf_amc::TypeA&      FUnitSort_fixary_curs_Access(FUnitSort_fixary_curs &curs);
+atf_amc::TypeA&      FUnitSort_fixary_curs_Access(FUnitSort_fixary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.FUnitSort..Init
 void                 FUnitSort_Init(atf_amc::FUnitSort& parent);
@@ -5256,28 +5256,28 @@ bool                 inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::
 
 // cursor points to valid item
 // func:atf_amc.InlaryPrint.fixary_curs.Reset
-void                 InlaryPrint_fixary_curs_Reset(InlaryPrint_fixary_curs &curs, atf_amc::InlaryPrint &parent);
+void                 InlaryPrint_fixary_curs_Reset(InlaryPrint_fixary_curs &curs, atf_amc::InlaryPrint &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.InlaryPrint.fixary_curs.ValidQ
-bool                 InlaryPrint_fixary_curs_ValidQ(InlaryPrint_fixary_curs &curs);
+bool                 InlaryPrint_fixary_curs_ValidQ(InlaryPrint_fixary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.InlaryPrint.fixary_curs.Next
-void                 InlaryPrint_fixary_curs_Next(InlaryPrint_fixary_curs &curs);
+void                 InlaryPrint_fixary_curs_Next(InlaryPrint_fixary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.InlaryPrint.fixary_curs.Access
-u32&                 InlaryPrint_fixary_curs_Access(InlaryPrint_fixary_curs &curs);
+u32&                 InlaryPrint_fixary_curs_Access(InlaryPrint_fixary_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.InlaryPrint.inlary_curs.Reset
-void                 InlaryPrint_inlary_curs_Reset(InlaryPrint_inlary_curs &curs, atf_amc::InlaryPrint &parent);
+void                 InlaryPrint_inlary_curs_Reset(InlaryPrint_inlary_curs &curs, atf_amc::InlaryPrint &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.InlaryPrint.inlary_curs.ValidQ
-bool                 InlaryPrint_inlary_curs_ValidQ(InlaryPrint_inlary_curs &curs);
+bool                 InlaryPrint_inlary_curs_ValidQ(InlaryPrint_inlary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.InlaryPrint.inlary_curs.Next
-void                 InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs);
+void                 InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.InlaryPrint.inlary_curs.Access
-u32&                 InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs);
+u32&                 InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs) __attribute__((nothrow));
 // func:atf_amc.InlaryPrint..ReadFieldMaybe
 bool                 InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::InlaryPrint from an ascii string.
@@ -5340,16 +5340,16 @@ u32&                 lary_qFind(atf_amc::Lary32& parent, u64 t) __attribute__((n
 
 // cursor points to valid item
 // func:atf_amc.Lary32.lary_curs.Reset
-void                 Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent);
+void                 Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Lary32.lary_curs.ValidQ
-bool                 Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs);
+bool                 Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.Lary32.lary_curs.Next
-void                 Lary32_lary_curs_Next(Lary32_lary_curs &curs);
+void                 Lary32_lary_curs_Next(Lary32_lary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Lary32.lary_curs.Access
-u32&                 Lary32_lary_curs_Access(Lary32_lary_curs &curs);
+u32&                 Lary32_lary_curs_Access(Lary32_lary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.Lary32..Init
 void                 Lary32_Init(atf_amc::Lary32& parent);
@@ -5915,16 +5915,16 @@ u32                  v_N(const atf_amc::MsgLTV& parent) __attribute__((__warn_un
 bool                 v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:atf_amc.MsgLTV.v_curs.Reset
-void                 MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent);
+void                 MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.MsgLTV.v_curs.ValidQ
-bool                 MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs);
+bool                 MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.MsgLTV.v_curs.Next
-void                 MsgLTV_v_curs_Next(MsgLTV_v_curs &curs);
+void                 MsgLTV_v_curs_Next(MsgLTV_v_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.MsgLTV.v_curs.Access
-atf_amc::MsgHdrLT&   MsgLTV_v_curs_Access(MsgLTV_v_curs &curs);
+atf_amc::MsgHdrLT&   MsgLTV_v_curs_Access(MsgLTV_v_curs &curs) __attribute__((nothrow));
 // func:atf_amc.MsgLTV..ReadFieldMaybe
 bool                 MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -6758,35 +6758,35 @@ int                  value7_Present_GetBit(atf_amc::PmaskMultiple& parent) __att
 // func:atf_amc.PmaskMultiple.present_bitcurs.Next
 void                 PmaskMultiple_present_bitcurs_Next(PmaskMultiple_present_bitcurs &curs);
 // func:atf_amc.PmaskMultiple.present_bitcurs.Reset
-void                 PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+void                 PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskMultiple.present_bitcurs.ValidQ
-bool                 PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs);
+bool                 PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskMultiple.present_bitcurs.Access
-int&                 PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs);
+int&                 PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.PmaskMultiple.assigned_bitcurs.Next
 void                 PmaskMultiple_assigned_bitcurs_Next(PmaskMultiple_assigned_bitcurs &curs);
 // func:atf_amc.PmaskMultiple.assigned_bitcurs.Reset
-void                 PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+void                 PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
-bool                 PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs);
+bool                 PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskMultiple.assigned_bitcurs.Access
-int&                 PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs);
+int&                 PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.PmaskMultiple.nullable_bitcurs.Next
 void                 PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs &curs);
 // func:atf_amc.PmaskMultiple.nullable_bitcurs.Reset
-void                 PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent);
+void                 PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
-bool                 PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs);
+bool                 PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskMultiple.nullable_bitcurs.Access
-int&                 PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs);
+int&                 PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) __attribute__((nothrow));
 // func:atf_amc.PmaskMultiple..ReadFieldMaybe
 bool                 PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::PmaskMultiple from an ascii string.
@@ -7776,13 +7776,13 @@ int                  value5_Present_GetBit(atf_amc::PmaskU32& parent) __attribut
 // func:atf_amc.PmaskU32.pmask_bitcurs.Next
 void                 PmaskU32_pmask_bitcurs_Next(PmaskU32_pmask_bitcurs &curs);
 // func:atf_amc.PmaskU32.pmask_bitcurs.Reset
-void                 PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent);
+void                 PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskU32.pmask_bitcurs.ValidQ
-bool                 PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs);
+bool                 PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskU32.pmask_bitcurs.Access
-int&                 PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs);
+int&                 PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs) __attribute__((nothrow));
 // func:atf_amc.PmaskU32..ReadFieldMaybe
 bool                 PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_amc::PmaskU32 from an ascii string.
@@ -7889,25 +7889,25 @@ u64&                 pmask_qFind(atf_amc::PmaskU555& parent, u64 t) __attribute_
 // func:atf_amc.PmaskU555.pmask_bitcurs.Next
 void                 PmaskU555_pmask_bitcurs_Next(PmaskU555_pmask_bitcurs &curs);
 // func:atf_amc.PmaskU555.pmask_bitcurs.Reset
-void                 PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent);
+void                 PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskU555.pmask_bitcurs.ValidQ
-bool                 PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs);
+bool                 PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskU555.pmask_bitcurs.Access
-int&                 PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs);
+int&                 PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskU555.pmask_curs.Reset
-void                 PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent);
+void                 PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.PmaskU555.pmask_curs.ValidQ
-bool                 PmaskU555_pmask_curs_ValidQ(PmaskU555_pmask_curs &curs);
+bool                 PmaskU555_pmask_curs_ValidQ(PmaskU555_pmask_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.PmaskU555.pmask_curs.Next
-void                 PmaskU555_pmask_curs_Next(PmaskU555_pmask_curs &curs);
+void                 PmaskU555_pmask_curs_Next(PmaskU555_pmask_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.PmaskU555.pmask_curs.Access
-u64&                 PmaskU555_pmask_curs_Access(PmaskU555_pmask_curs &curs);
+u64&                 PmaskU555_pmask_curs_Access(PmaskU555_pmask_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.PmaskU555..Init
 void                 PmaskU555_Init(atf_amc::PmaskU555& parent);
@@ -8477,15 +8477,15 @@ algo::aryptr<u32>    tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, c
 
 // proceed to next item
 // func:atf_amc.TaryU32.tary_u32_curs.Next
-void                 TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs);
+void                 TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs) __attribute__((nothrow));
 // func:atf_amc.TaryU32.tary_u32_curs.Reset
-void                 TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, atf_amc::TaryU32 &parent);
+void                 TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, atf_amc::TaryU32 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.TaryU32.tary_u32_curs.ValidQ
-bool                 TaryU32_tary_u32_curs_ValidQ(TaryU32_tary_u32_curs &curs);
+bool                 TaryU32_tary_u32_curs_ValidQ(TaryU32_tary_u32_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.TaryU32.tary_u32_curs.Access
-u32&                 TaryU32_tary_u32_curs_Access(TaryU32_tary_u32_curs &curs);
+u32&                 TaryU32_tary_u32_curs_Access(TaryU32_tary_u32_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TaryU32..Init
 void                 TaryU32_Init(atf_amc::TaryU32& parent);
@@ -8566,15 +8566,15 @@ algo::aryptr<u8>     ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u
 
 // proceed to next item
 // func:atf_amc.TaryU8.ary_curs.Next
-void                 TaryU8_ary_curs_Next(TaryU8_ary_curs &curs);
+void                 TaryU8_ary_curs_Next(TaryU8_ary_curs &curs) __attribute__((nothrow));
 // func:atf_amc.TaryU8.ary_curs.Reset
-void                 TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU8 &parent);
+void                 TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU8 &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.TaryU8.ary_curs.ValidQ
-bool                 TaryU8_ary_curs_ValidQ(TaryU8_ary_curs &curs);
+bool                 TaryU8_ary_curs_ValidQ(TaryU8_ary_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.TaryU8.ary_curs.Access
-u8&                  TaryU8_ary_curs_Access(TaryU8_ary_curs &curs);
+u8&                  TaryU8_ary_curs_Access(TaryU8_ary_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_amc.TaryU8..Init
 void                 TaryU8_Init(atf_amc::TaryU8& parent);
@@ -8658,16 +8658,16 @@ u32                  text_N(const atf_amc::Text& parent) __attribute__((__warn_u
 bool                 text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:atf_amc.Text.text_curs.Reset
-void                 Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent);
+void                 Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.Text.text_curs.ValidQ
-bool                 Text_text_curs_ValidQ(Text_text_curs &curs);
+bool                 Text_text_curs_ValidQ(Text_text_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.Text.text_curs.Next
-void                 Text_text_curs_Next(Text_text_curs &curs);
+void                 Text_text_curs_Next(Text_text_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.Text.text_curs.Access
-char&                Text_text_curs_Access(Text_text_curs &curs);
+char&                Text_text_curs_Access(Text_text_curs &curs) __attribute__((nothrow));
 // func:atf_amc.Text..ReadFieldMaybe
 bool                 Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -9233,16 +9233,16 @@ i32*                 elem_Addr(atf_amc::VarlenAlloc& varlenalloc);
 u32                  elem_N(const atf_amc::VarlenAlloc& varlenalloc) __attribute__((__warn_unused_result__, nothrow, pure));
 
 // func:atf_amc.VarlenAlloc.elem_curs.Reset
-void                 varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent);
+void                 varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.VarlenAlloc.elem_curs.ValidQ
-bool                 varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs);
+bool                 varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.VarlenAlloc.elem_curs.Next
-void                 varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs);
+void                 varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.VarlenAlloc.elem_curs.Access
-i32&                 varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs);
+i32&                 varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:atf_amc.VarlenAlloc..GetMsgLength
 i32                  VarlenAlloc_GetMsgLength(const atf_amc::VarlenAlloc& parent) __attribute__((nothrow));
@@ -9313,16 +9313,16 @@ u32*                 varlen_Addr(atf_amc::VarlenExtern& varlen_extern);
 u32                  varlen_N(const atf_amc::VarlenExtern& varlen_extern) __attribute__((__warn_unused_result__, nothrow, pure));
 
 // func:atf_amc.VarlenExtern.varlen_curs.Reset
-void                 varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent);
+void                 varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.VarlenExtern.varlen_curs.ValidQ
-bool                 varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs);
+bool                 varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.VarlenExtern.varlen_curs.Next
-void                 varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs);
+void                 varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.VarlenExtern.varlen_curs.Access
-u32&                 varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs);
+u32&                 varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:atf_amc.VarlenExtern..GetMsgLength
 i32                  VarlenExtern_GetMsgLength(const atf_amc::VarlenExtern& parent) __attribute__((nothrow));
@@ -9391,16 +9391,16 @@ void                 typeh_QuickSort(atf_amc::VarlenH& parent) __attribute__((no
 bool                 typeh_XrefMaybe(atf_amc::TypeH &row);
 
 // func:atf_amc.VarlenH.typeh_curs.Reset
-void                 VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent);
+void                 VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.VarlenH.typeh_curs.ValidQ
-bool                 VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs);
+bool                 VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.VarlenH.typeh_curs.Next
-void                 VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs);
+void                 VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.VarlenH.typeh_curs.Access
-atf_amc::TypeH&      VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs);
+atf_amc::TypeH&      VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:atf_amc.VarlenH..GetMsgLength
 i32                  VarlenH_GetMsgLength(const atf_amc::VarlenH& parent) __attribute__((nothrow));
@@ -9459,16 +9459,16 @@ u32                  i_N(const atf_amc::VarlenK& k) __attribute__((__warn_unused
 bool                 i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) __attribute__((nothrow));
 
 // func:atf_amc.VarlenK.i_curs.Reset
-void                 k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent);
+void                 k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.VarlenK.i_curs.ValidQ
-bool                 k_i_curs_ValidQ(k_i_curs &curs);
+bool                 k_i_curs_ValidQ(k_i_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.VarlenK.i_curs.Next
-void                 k_i_curs_Next(k_i_curs &curs);
+void                 k_i_curs_Next(k_i_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.VarlenK.i_curs.Access
-u32&                 k_i_curs_Access(k_i_curs &curs);
+u32&                 k_i_curs_Access(k_i_curs &curs) __attribute__((nothrow));
 // func:atf_amc.VarlenK..ReadFieldMaybe
 bool                 VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -9553,16 +9553,16 @@ bool                 k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr 
 bool                 k_XrefMaybe(atf_amc::VarlenK &row);
 
 // func:atf_amc.VarlenMsg.k_curs.Reset
-void                 VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent);
+void                 VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_amc.VarlenMsg.k_curs.ValidQ
-bool                 VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs);
+bool                 VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_amc.VarlenMsg.k_curs.Next
-void                 VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs);
+void                 VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_amc.VarlenMsg.k_curs.Access
-atf_amc::VarlenK&    VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs);
+atf_amc::VarlenK&    VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs) __attribute__((nothrow));
 // func:atf_amc.VarlenMsg..ReadFieldMaybe
 bool                 VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set

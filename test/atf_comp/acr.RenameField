@@ -1,0 +1,6 @@
+acr.update  dmmeta.ns  ns:ns1  blah:exe       license:GPL  comment:""
+acr.update  dmmeta.ns  ns:ns2  blah:ssimdb    license:GPL  comment:""
+acr.update  dmmeta.ns  ns:ns3  blah:protocol  license:GPL  comment:""
+
+acr.update  dmmeta.field  field:dmmeta.Ns.blah  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"
+report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0

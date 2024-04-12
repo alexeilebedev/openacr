@@ -93,6 +93,7 @@ dmmeta.xref  field:acr.FCtype.c_ssimreq  inscond:true  via:acr.FDb.ind_ctype/dmm
 dmmeta.xref  field:acr.FSsimreq.p_ctype  inscond:true  via:acr.FDb.ind_ctype/dmmeta.Ssimreq.parent_ctype
 dmmeta.xref  field:acr.FSsimreq.p_child_ssimfile  inscond:true  via:acr.FDb.ind_ssimfile/dmmeta.Ssimreq.child_ssimfile
 dmmeta.xref  field:acr.FSsimreq.p_parent_field  inscond:true  via:acr.FDb.ind_field/dmmeta.Ssimreq.parent_field
+dmmeta.xref  field:acr.FDb.ind_sortkey  inscond:true  via:""
 dmmeta.xref  field:acr_compl.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:acr_compl.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:acr_compl.FDb.ind_ssimfile  inscond:true  via:""
@@ -429,6 +430,8 @@ dmmeta.xref  field:amc.FPmaskfld.c_pmaskfld_member  inscond:true  via:amc.FDb.in
 dmmeta.xref  field:amc.FPmaskfldMember.p_field  inscond:true  via:amc.FDb.ind_field/dmmeta.PmaskfldMember.field
 dmmeta.xref  field:amc.FPmaskfldMember.p_pmaskfld  inscond:true  via:amc.FDb.ind_pmaskfld/dmmeta.PmaskfldMember.pmaskfld
 dmmeta.xref  field:amc.FField.c_pmaskfld_member  inscond:true  via:amc.FDb.ind_field/dmmeta.PmaskfldMember.field
+dmmeta.xref  field:amc.FSsimsort.p_ssimfile  inscond:true  via:amc.FDb.ind_ssimfile/dmmeta.Ssimsort.ssimfile
+dmmeta.xref  field:amc.FSsimsort.p_sortfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Ssimsort.sortfld
 dmmeta.xref  field:amc_vis.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_node  inscond:true  via:""

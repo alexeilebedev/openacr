@@ -761,7 +761,6 @@ inline src_hdr::FTargsrc& src_hdr::c_targsrc_qLast(src_hdr::FTarget& target) {
 // --- src_hdr.FTarget..Init
 // Set all fields to initial values.
 inline void src_hdr::FTarget_Init(src_hdr::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targsrc_elems = NULL; // (src_hdr.FTarget.c_targsrc)
     target.c_targsrc_n = 0; // (src_hdr.FTarget.c_targsrc)
     target.c_targsrc_max = 0; // (src_hdr.FTarget.c_targsrc)

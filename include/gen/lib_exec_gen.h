@@ -338,28 +338,28 @@ lib_exec::FSyscmd&   zd_started_qLast() __attribute__((__warn_unused_result__, n
 
 // cursor points to valid item
 // func:lib_exec.FDb.syscmddep_curs.Reset
-void                 _db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, lib_exec::FDb &parent);
+void                 _db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, lib_exec::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FDb.syscmddep_curs.ValidQ
-bool                 _db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs);
+bool                 _db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_exec.FDb.syscmddep_curs.Next
-void                 _db_syscmddep_curs_Next(_db_syscmddep_curs &curs);
+void                 _db_syscmddep_curs_Next(_db_syscmddep_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_exec.FDb.syscmddep_curs.Access
-lib_exec::FSyscmddep& _db_syscmddep_curs_Access(_db_syscmddep_curs &curs);
+lib_exec::FSyscmddep& _db_syscmddep_curs_Access(_db_syscmddep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FDb.syscmd_curs.Reset
-void                 _db_syscmd_curs_Reset(_db_syscmd_curs &curs, lib_exec::FDb &parent);
+void                 _db_syscmd_curs_Reset(_db_syscmd_curs &curs, lib_exec::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FDb.syscmd_curs.ValidQ
-bool                 _db_syscmd_curs_ValidQ(_db_syscmd_curs &curs);
+bool                 _db_syscmd_curs_ValidQ(_db_syscmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_exec.FDb.syscmd_curs.Next
-void                 _db_syscmd_curs_Next(_db_syscmd_curs &curs);
+void                 _db_syscmd_curs_Next(_db_syscmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_exec.FDb.syscmd_curs.Access
-lib_exec::FSyscmd&   _db_syscmd_curs_Access(_db_syscmd_curs &curs);
+lib_exec::FSyscmd&   _db_syscmd_curs_Access(_db_syscmd_curs &curs) __attribute__((nothrow));
 // func:lib_exec.FDb.bh_syscmd_curs.Reserve
 void                 _db_bh_syscmd_curs_Reserve(_db_bh_syscmd_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -370,22 +370,22 @@ void                 _db_bh_syscmd_curs_Reset(_db_bh_syscmd_curs &curs, lib_exec
 void                 _db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:lib_exec.FDb.bh_syscmd_curs.Access
-lib_exec::FSyscmd&   _db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs);
+lib_exec::FSyscmd&   _db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:lib_exec.FDb.bh_syscmd_curs.ValidQ
-bool                 _db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs);
+bool                 _db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FDb.zd_started_curs.Reset
-void                 _db_zd_started_curs_Reset(_db_zd_started_curs &curs, lib_exec::FDb &parent);
+void                 _db_zd_started_curs_Reset(_db_zd_started_curs &curs, lib_exec::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FDb.zd_started_curs.ValidQ
-bool                 _db_zd_started_curs_ValidQ(_db_zd_started_curs &curs);
+bool                 _db_zd_started_curs_ValidQ(_db_zd_started_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_exec.FDb.zd_started_curs.Next
-void                 _db_zd_started_curs_Next(_db_zd_started_curs &curs);
+void                 _db_zd_started_curs_Next(_db_zd_started_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_exec.FDb.zd_started_curs.Access
-lib_exec::FSyscmd&   _db_zd_started_curs_Access(_db_zd_started_curs &curs);
+lib_exec::FSyscmd&   _db_zd_started_curs_Access(_db_zd_started_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_exec.FDb..Init
 void                 FDb_Init();
@@ -531,27 +531,27 @@ lib_exec::FSyscmddep& c_next_qLast(lib_exec::FSyscmd& syscmd) __attribute__((not
 // func:lib_exec.FSyscmd..Init
 void                 FSyscmd_Init(lib_exec::FSyscmd& syscmd);
 // func:lib_exec.FSyscmd.c_prior_curs.Reset
-void                 syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent);
+void                 syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FSyscmd.c_prior_curs.ValidQ
-bool                 syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs);
+bool                 syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_exec.FSyscmd.c_prior_curs.Next
-void                 syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs);
+void                 syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_exec.FSyscmd.c_prior_curs.Access
-lib_exec::FSyscmddep& syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs);
+lib_exec::FSyscmddep& syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs) __attribute__((nothrow));
 // func:lib_exec.FSyscmd.c_next_curs.Reset
-void                 syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exec::FSyscmd &parent);
+void                 syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exec::FSyscmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_exec.FSyscmd.c_next_curs.ValidQ
-bool                 syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs);
+bool                 syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_exec.FSyscmd.c_next_curs.Next
-void                 syscmd_c_next_curs_Next(syscmd_c_next_curs &curs);
+void                 syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_exec.FSyscmd.c_next_curs.Access
-lib_exec::FSyscmddep& syscmd_c_next_curs_Access(syscmd_c_next_curs &curs);
+lib_exec::FSyscmddep& syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) __attribute__((nothrow));
 // func:lib_exec.FSyscmd..Uninit
 void                 FSyscmd_Uninit(lib_exec::FSyscmd& syscmd) __attribute__((nothrow));
 // print string representation of ROW to string STR

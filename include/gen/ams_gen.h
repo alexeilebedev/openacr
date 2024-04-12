@@ -603,16 +603,16 @@ u32                  text_N(const ams::ExpectMsg& parent) __attribute__((__warn_
 bool                 text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.ExpectMsg.text_curs.Reset
-void                 ExpectMsg_text_curs_Reset(ExpectMsg_text_curs &curs, ams::ExpectMsg &parent);
+void                 ExpectMsg_text_curs_Reset(ExpectMsg_text_curs &curs, ams::ExpectMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.ExpectMsg.text_curs.ValidQ
-bool                 ExpectMsg_text_curs_ValidQ(ExpectMsg_text_curs &curs);
+bool                 ExpectMsg_text_curs_ValidQ(ExpectMsg_text_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.ExpectMsg.text_curs.Next
-void                 ExpectMsg_text_curs_Next(ExpectMsg_text_curs &curs);
+void                 ExpectMsg_text_curs_Next(ExpectMsg_text_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.ExpectMsg.text_curs.Access
-char&                ExpectMsg_text_curs_Access(ExpectMsg_text_curs &curs);
+char&                ExpectMsg_text_curs_Access(ExpectMsg_text_curs &curs) __attribute__((nothrow));
 // func:ams.ExpectMsg..ReadFieldMaybe
 bool                 ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -762,16 +762,16 @@ u32                  payload_N(const ams::InputLineMsg& parent) __attribute__((_
 bool                 payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.InputLineMsg.payload_curs.Reset
-void                 InputLineMsg_payload_curs_Reset(InputLineMsg_payload_curs &curs, ams::InputLineMsg &parent);
+void                 InputLineMsg_payload_curs_Reset(InputLineMsg_payload_curs &curs, ams::InputLineMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.InputLineMsg.payload_curs.ValidQ
-bool                 InputLineMsg_payload_curs_ValidQ(InputLineMsg_payload_curs &curs);
+bool                 InputLineMsg_payload_curs_ValidQ(InputLineMsg_payload_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.InputLineMsg.payload_curs.Next
-void                 InputLineMsg_payload_curs_Next(InputLineMsg_payload_curs &curs);
+void                 InputLineMsg_payload_curs_Next(InputLineMsg_payload_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.InputLineMsg.payload_curs.Access
-char&                InputLineMsg_payload_curs_Access(InputLineMsg_payload_curs &curs);
+char&                InputLineMsg_payload_curs_Access(InputLineMsg_payload_curs &curs) __attribute__((nothrow));
 // func:ams.InputLineMsg..ReadFieldMaybe
 bool                 InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -832,16 +832,16 @@ u32                  text_N(const ams::LogMsg& parent) __attribute__((__warn_unu
 bool                 text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.LogMsg.text_curs.Reset
-void                 LogMsg_text_curs_Reset(LogMsg_text_curs &curs, ams::LogMsg &parent);
+void                 LogMsg_text_curs_Reset(LogMsg_text_curs &curs, ams::LogMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.LogMsg.text_curs.ValidQ
-bool                 LogMsg_text_curs_ValidQ(LogMsg_text_curs &curs);
+bool                 LogMsg_text_curs_ValidQ(LogMsg_text_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.LogMsg.text_curs.Next
-void                 LogMsg_text_curs_Next(LogMsg_text_curs &curs);
+void                 LogMsg_text_curs_Next(LogMsg_text_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.LogMsg.text_curs.Access
-char&                LogMsg_text_curs_Access(LogMsg_text_curs &curs);
+char&                LogMsg_text_curs_Access(LogMsg_text_curs &curs) __attribute__((nothrow));
 // func:ams.LogMsg..ReadFieldMaybe
 bool                 LogMsg_ReadFieldMaybe(ams::LogMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -960,16 +960,16 @@ u8*                  messages_Addr(ams::MsgBlock& parent);
 u32                  messages_N(const ams::MsgBlock& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 
 // func:ams.MsgBlock.messages_curs.Reset
-void                 MsgBlock_messages_curs_Reset(MsgBlock_messages_curs &curs, ams::MsgBlock &parent);
+void                 MsgBlock_messages_curs_Reset(MsgBlock_messages_curs &curs, ams::MsgBlock &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.MsgBlock.messages_curs.ValidQ
-bool                 MsgBlock_messages_curs_ValidQ(MsgBlock_messages_curs &curs);
+bool                 MsgBlock_messages_curs_ValidQ(MsgBlock_messages_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.MsgBlock.messages_curs.Next
-void                 MsgBlock_messages_curs_Next(MsgBlock_messages_curs &curs);
+void                 MsgBlock_messages_curs_Next(MsgBlock_messages_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.MsgBlock.messages_curs.Access
-u8&                  MsgBlock_messages_curs_Access(MsgBlock_messages_curs &curs);
+u8&                  MsgBlock_messages_curs_Access(MsgBlock_messages_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.MsgBlock..GetMsgLength
 i32                  MsgBlock_GetMsgLength(const ams::MsgBlock& parent) __attribute__((nothrow));
@@ -1770,16 +1770,16 @@ u32                  data_N(const ams::Trace2Msg& parent) __attribute__((__warn_
 bool                 data_ReadStrptrMaybe(ams::Trace2Msg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.Trace2Msg.data_curs.Reset
-void                 Trace2Msg_data_curs_Reset(Trace2Msg_data_curs &curs, ams::Trace2Msg &parent);
+void                 Trace2Msg_data_curs_Reset(Trace2Msg_data_curs &curs, ams::Trace2Msg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.Trace2Msg.data_curs.ValidQ
-bool                 Trace2Msg_data_curs_ValidQ(Trace2Msg_data_curs &curs);
+bool                 Trace2Msg_data_curs_ValidQ(Trace2Msg_data_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.Trace2Msg.data_curs.Next
-void                 Trace2Msg_data_curs_Next(Trace2Msg_data_curs &curs);
+void                 Trace2Msg_data_curs_Next(Trace2Msg_data_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.Trace2Msg.data_curs.Access
-u64&                 Trace2Msg_data_curs_Access(Trace2Msg_data_curs &curs);
+u64&                 Trace2Msg_data_curs_Access(Trace2Msg_data_curs &curs) __attribute__((nothrow));
 // func:ams.Trace2Msg..ReadFieldMaybe
 bool                 Trace2Msg_ReadFieldMaybe(ams::Trace2Msg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -1844,16 +1844,16 @@ u32                  data_N(const ams::TraceInfo2Msg& parent) __attribute__((__w
 bool                 data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.TraceInfo2Msg.data_curs.Reset
-void                 TraceInfo2Msg_data_curs_Reset(TraceInfo2Msg_data_curs &curs, ams::TraceInfo2Msg &parent);
+void                 TraceInfo2Msg_data_curs_Reset(TraceInfo2Msg_data_curs &curs, ams::TraceInfo2Msg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.TraceInfo2Msg.data_curs.ValidQ
-bool                 TraceInfo2Msg_data_curs_ValidQ(TraceInfo2Msg_data_curs &curs);
+bool                 TraceInfo2Msg_data_curs_ValidQ(TraceInfo2Msg_data_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.TraceInfo2Msg.data_curs.Next
-void                 TraceInfo2Msg_data_curs_Next(TraceInfo2Msg_data_curs &curs);
+void                 TraceInfo2Msg_data_curs_Next(TraceInfo2Msg_data_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.TraceInfo2Msg.data_curs.Access
-char&                TraceInfo2Msg_data_curs_Access(TraceInfo2Msg_data_curs &curs);
+char&                TraceInfo2Msg_data_curs_Access(TraceInfo2Msg_data_curs &curs) __attribute__((nothrow));
 // func:ams.TraceInfo2Msg..ReadFieldMaybe
 bool                 TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -1916,16 +1916,16 @@ u32                  data_N(const ams::TraceInfoMsg& parent) __attribute__((__wa
 bool                 data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.TraceInfoMsg.data_curs.Reset
-void                 TraceInfoMsg_data_curs_Reset(TraceInfoMsg_data_curs &curs, ams::TraceInfoMsg &parent);
+void                 TraceInfoMsg_data_curs_Reset(TraceInfoMsg_data_curs &curs, ams::TraceInfoMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.TraceInfoMsg.data_curs.ValidQ
-bool                 TraceInfoMsg_data_curs_ValidQ(TraceInfoMsg_data_curs &curs);
+bool                 TraceInfoMsg_data_curs_ValidQ(TraceInfoMsg_data_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.TraceInfoMsg.data_curs.Next
-void                 TraceInfoMsg_data_curs_Next(TraceInfoMsg_data_curs &curs);
+void                 TraceInfoMsg_data_curs_Next(TraceInfoMsg_data_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.TraceInfoMsg.data_curs.Access
-char&                TraceInfoMsg_data_curs_Access(TraceInfoMsg_data_curs &curs);
+char&                TraceInfoMsg_data_curs_Access(TraceInfoMsg_data_curs &curs) __attribute__((nothrow));
 // func:ams.TraceInfoMsg..ReadFieldMaybe
 bool                 TraceInfoMsg_ReadFieldMaybe(ams::TraceInfoMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -1986,16 +1986,16 @@ u32                  data_N(const ams::TraceMsg& parent) __attribute__((__warn_u
 bool                 data_ReadStrptrMaybe(ams::TraceMsg& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // func:ams.TraceMsg.data_curs.Reset
-void                 TraceMsg_data_curs_Reset(TraceMsg_data_curs &curs, ams::TraceMsg &parent);
+void                 TraceMsg_data_curs_Reset(TraceMsg_data_curs &curs, ams::TraceMsg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.TraceMsg.data_curs.ValidQ
-bool                 TraceMsg_data_curs_ValidQ(TraceMsg_data_curs &curs);
+bool                 TraceMsg_data_curs_ValidQ(TraceMsg_data_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.TraceMsg.data_curs.Next
-void                 TraceMsg_data_curs_Next(TraceMsg_data_curs &curs);
+void                 TraceMsg_data_curs_Next(TraceMsg_data_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.TraceMsg.data_curs.Access
-u64&                 TraceMsg_data_curs_Access(TraceMsg_data_curs &curs);
+u64&                 TraceMsg_data_curs_Access(TraceMsg_data_curs &curs) __attribute__((nothrow));
 // func:ams.TraceMsg..ReadFieldMaybe
 bool                 TraceMsg_ReadFieldMaybe(ams::TraceMsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
@@ -2054,16 +2054,16 @@ u8*                  payload_Addr(ams::UdpFrame& parent);
 u32                  payload_N(const ams::UdpFrame& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 
 // func:ams.UdpFrame.payload_curs.Reset
-void                 UdpFrame_payload_curs_Reset(UdpFrame_payload_curs &curs, ams::UdpFrame &parent);
+void                 UdpFrame_payload_curs_Reset(UdpFrame_payload_curs &curs, ams::UdpFrame &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams.UdpFrame.payload_curs.ValidQ
-bool                 UdpFrame_payload_curs_ValidQ(UdpFrame_payload_curs &curs);
+bool                 UdpFrame_payload_curs_ValidQ(UdpFrame_payload_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams.UdpFrame.payload_curs.Next
-void                 UdpFrame_payload_curs_Next(UdpFrame_payload_curs &curs);
+void                 UdpFrame_payload_curs_Next(UdpFrame_payload_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams.UdpFrame.payload_curs.Access
-u8&                  UdpFrame_payload_curs_Access(UdpFrame_payload_curs &curs);
+u8&                  UdpFrame_payload_curs_Access(UdpFrame_payload_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.UdpFrame..GetMsgLength
 i32                  UdpFrame_GetMsgLength(const ams::UdpFrame& parent) __attribute__((nothrow));

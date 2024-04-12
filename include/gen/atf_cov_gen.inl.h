@@ -864,7 +864,6 @@ inline void atf_cov::c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov&
 // --- atf_cov.FTarget..Init
 // Set all fields to initial values.
 inline void atf_cov::FTarget_Init(atf_cov::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targsrc_elems = NULL; // (atf_cov.FTarget.c_targsrc)
     target.c_targsrc_n = 0; // (atf_cov.FTarget.c_targsrc)
     target.c_targsrc_max = 0; // (atf_cov.FTarget.c_targsrc)

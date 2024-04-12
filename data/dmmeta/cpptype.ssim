@@ -250,6 +250,9 @@ dmmeta.cpptype  ctype:dev.Compiler  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.Gitfile  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.Gitinfo  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.OptType  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:dev.Package  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:dev.Pkgdep  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:dev.Pkgkey  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.Readme  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.Syscmd  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:dev.Syscmddep  ctor:Y  dtor:Y  cheap_copy:N
@@ -327,8 +330,8 @@ dmmeta.cpptype  ctype:i16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:i32  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:i64  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:i8  ctor:N  dtor:N  cheap_copy:Y
-dmmeta.cpptype  ctype:ietf.Ipport  ctor:Y  dtor:Y  cheap_copy:Y
-dmmeta.cpptype  ctype:ietf.Ipv4  ctor:Y  dtor:Y  cheap_copy:Y
+dmmeta.cpptype  ctype:ietf.Ipport  ctor:Y  dtor:N  cheap_copy:Y
+dmmeta.cpptype  ctype:ietf.Ipv4  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:ietf.Ipv4Addr  ctor:Y  dtor:Y  cheap_copy:Y
 dmmeta.cpptype  ctype:lib_ctype.Match  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:lib_json.FldKey  ctor:Y  dtor:Y  cheap_copy:N

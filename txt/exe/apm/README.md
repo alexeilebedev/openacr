@@ -49,9 +49,11 @@ apm: Algo Package Manager
 Usage: apm [[-package:]<regx>] [options]
     OPTION       TYPE    DFLT    COMMENT
     -in          string  "data"  Input directory or filename, - for stdin
+    -pkgdata     string  ""      Load package definitions from here
     [package]    regx    ""      Regx of package
+    -ns          regx    ""      Operate on specified namespace only
     -install                     Install new package (specify -origin)
-    -update                      Update new package (-origin)
+    -update                      Update package (-origin)
     -list                        List installed packages
     -diff                        Diff package with respect to installed version
     -push                        Evaluate package diff and push it to origin
@@ -63,16 +65,15 @@ Usage: apm [[-package:]<regx>] [options]
     -showrec                     Show records belonging to package
     -showfile                    List package files (gitfile records)
     -R                           reverse the diff direction
+    -l                           Use local package definition on the remote side
     -reset                       Reset package baseref/origin to those provided by the command line
     -checkclean          Y       Ensure that changes are applied to a clean directory
-    -t                           Select dependent packages for operation
+    -t                           Select parent packages for operation
     -stat                        (with -diff) show stats
     -annotate    string  ""      Read file and annotate each input tuple with package(s) it belongs to
-    -gen                 Y       Show differences in generated files
     -data_in     string  "data"  Dataset from which package records are loaded
     -e                           Open selected records in editor
     -binpath     string  "bin"   (internal use)
-    -nosort                      (with -showrec) don't sort resulting records
     -verbose     int             Verbosity level (0..255); alias -v; cumulative
     -debug       int             Debug level (0..255); alias -d; cumulative
     -help                        Print help and exit; alias -h
@@ -87,14 +88,24 @@ Usage: apm [[-package:]<regx>] [options]
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
+#### -pkgdata -- Load package definitions from here
+<a href="#-pkgdata"></a>
+
 #### -package -- Regx of package
 <a href="#-package"></a>
+
+#### -ns -- Operate on specified namespace only
+<a href="#-ns"></a>
 
 #### -install -- Install new package (specify -origin)
 <a href="#-install"></a>
 
-#### -update -- Update new package (-origin)
+#### -update -- Update package (-origin)
 <a href="#-update"></a>
+
+APM will perform a 3-way merge between the base (attribute dev.package.baseref),
+the current directory, and the most recent version of the package.
+This results in a git diff which must be committed.
 
 #### -list -- List installed packages
 <a href="#-list"></a>
@@ -102,8 +113,14 @@ Usage: apm [[-package:]<regx>] [options]
 #### -diff -- Diff package with respect to installed version
 <a href="#-diff"></a>
 
+Apm shows the difference between package's base version (as defined by attribute dev.package.baseref)
+and its current state in the current directory.
+
 #### -push -- Evaluate package diff and push it to origin
 <a href="#-push"></a>
+
+Apm pushes any files/records corresponding to selected packages into the origin
+directory, disregarding any base commit.
 
 #### -check -- Consistency check
 <a href="#-check"></a>
@@ -111,8 +128,14 @@ Usage: apm [[-package:]<regx>] [options]
 #### -remove -- Remove specified package
 <a href="#-remove"></a>
 
+The specified package and all dependent packages are removed.
+This results in a git diff which then must be committed.
+
 #### -origin -- Upstream URL of new package
 <a href="#-origin"></a>
+
+This option must be specified with `-install`. But it can also be used
+to override package's `origin` attribute when invoked with `-diff`, `-push`, or `-update`.
 
 #### -ref -- (with -create) Gitref or branch to fetch
 <a href="#-ref"></a>
@@ -129,14 +152,33 @@ Usage: apm [[-package:]<regx>] [options]
 #### -R -- reverse the diff direction
 <a href="#-r"></a>
 
+When used with `-diff`, this reverses the patch direction.
+
+#### -l -- Use local package definition on the remote side
+<a href="#-l"></a>
+
+If the remote side (i.e. the origin repo) doesn't have the definition
+of the package in question, this option will use the local `pkgkey`/`pkgdep` records
+when evaluating package contents on the remote side.
+
 #### -reset -- Reset package baseref/origin to those provided by the command line
 <a href="#-reset"></a>
+
+This option updates the local `package` record with values provided in
+`-ref` and `-origin`.
 
 #### -checkclean -- Ensure that changes are applied to a clean directory
 <a href="#-checkclean"></a>
 
-#### -t -- Select dependent packages for operation
+Normally, `apm` will refuse to update a non-clean repo. Use this option to override
+that behavior.
+
+#### -t -- Select parent packages for operation
 <a href="#-t"></a>
+
+With `-install`, this option is forced to true.
+With all other operations, the selection of packages is extended to include all parents
+before proceeding.
 
 #### -stat -- (with -diff) show stats
 <a href="#-stat"></a>
@@ -144,8 +186,17 @@ Usage: apm [[-package:]<regx>] [options]
 #### -annotate -- Read file and annotate each input tuple with package(s) it belongs to
 <a href="#-annotate"></a>
 
-#### -gen -- Show differences in generated files
-<a href="#-gen"></a>
+This option is used for package definitions. With it, you can check packages any given ssim record
+belongs to. The argument is the file to read, `-` for stdin.
+
+```
+$ acr gitfile:README.md | apm -annotate -
+dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfile:README.md
+```
+
+Apm will print each input line, appending all the pkgkeys which capture the record.
+The last pkgkey determines which package the record belongs to. To check files,
+simply use the `gitfile` table.
 
 #### -data_in -- Dataset from which package records are loaded
 <a href="#-data_in"></a>
@@ -156,13 +207,8 @@ Usage: apm [[-package:]<regx>] [options]
 #### -binpath -- (internal use)
 <a href="#-binpath"></a>
 
-#### -nosort -- (with -showrec) don't sort resulting records
-<a href="#-nosort"></a>
-
 ### Limitations
 <a href="#limitations"></a>
-
-Apm doesn't track file renames.
 
 Currently, if you make a local change to a package file, and the file is later renamed in the package origin
 repository, your file will be silently deleted upon update. The git history will still have your changes
@@ -381,6 +427,7 @@ The following source files are part of this tool:
 `apm` takes the following tables on input:
 |ssimfile|comment|
 |---|---|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|

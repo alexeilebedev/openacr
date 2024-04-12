@@ -20,6 +20,7 @@ atfdb.tfilt  comptest:acr.NullTrunc  filter:"acr -trunc -insert | cat"  comment:
 atfdb.tfilt  comptest:acr.QueryCtype  filter:cat  comment:""
 atfdb.tfilt  comptest:acr.RenameCollision  filter:cat  comment:""
 atfdb.tfilt  comptest:acr.RenameCollisionMultiple  filter:cat  comment:""
+atfdb.tfilt  comptest:acr.RenameField  filter:cat  comment:""
 atfdb.tfilt  comptest:acr.RenameRecord  filter:cat  comment:""
 atfdb.tfilt  comptest:acr.Replace  filter:cat  comment:""
 atfdb.tfilt  comptest:acr.Select  filter:cat  comment:""

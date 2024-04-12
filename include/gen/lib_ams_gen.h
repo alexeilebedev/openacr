@@ -915,124 +915,124 @@ void                 regx_trace_Print(algo::cstring &out) __attribute__((nothrow
 
 // cursor points to valid item
 // func:lib_ams.FDb.fdin_curs.Reset
-void                 _db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent);
+void                 _db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.fdin_curs.ValidQ
-bool                 _db_fdin_curs_ValidQ(_db_fdin_curs &curs);
+bool                 _db_fdin_curs_ValidQ(_db_fdin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.fdin_curs.Next
-void                 _db_fdin_curs_Next(_db_fdin_curs &curs);
+void                 _db_fdin_curs_Next(_db_fdin_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.fdin_curs.Access
-lib_ams::FFdin&      _db_fdin_curs_Access(_db_fdin_curs &curs);
+lib_ams::FFdin&      _db_fdin_curs_Access(_db_fdin_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_fdin_eof_curs.Reset
-void                 _db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent);
+void                 _db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_fdin_eof_curs.ValidQ
-bool                 _db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs);
+bool                 _db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.cd_fdin_eof_curs.Next
-void                 _db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs);
+void                 _db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.cd_fdin_eof_curs.Access
-lib_ams::FFdin&      _db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs);
+lib_ams::FFdin&      _db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_fdin_read_curs.Reset
-void                 _db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent);
+void                 _db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_fdin_read_curs.ValidQ
-bool                 _db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs);
+bool                 _db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.cd_fdin_read_curs.Next
-void                 _db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs);
+void                 _db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.cd_fdin_read_curs.Access
-lib_ams::FFdin&      _db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs);
+lib_ams::FFdin&      _db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_flush_curs.Reset
-void                 _db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent);
+void                 _db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_flush_curs.ValidQ
-bool                 _db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs);
+bool                 _db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.zd_flush_curs.Next
-void                 _db_zd_flush_curs_Next(_db_zd_flush_curs &curs);
+void                 _db_zd_flush_curs_Next(_db_zd_flush_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.zd_flush_curs.Access
-lib_ams::FWritefile& _db_zd_flush_curs_Access(_db_zd_flush_curs &curs);
+lib_ams::FWritefile& _db_zd_flush_curs_Access(_db_zd_flush_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.stream_curs.Reset
-void                 _db_stream_curs_Reset(_db_stream_curs &curs, lib_ams::FDb &parent);
+void                 _db_stream_curs_Reset(_db_stream_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.stream_curs.ValidQ
-bool                 _db_stream_curs_ValidQ(_db_stream_curs &curs);
+bool                 _db_stream_curs_ValidQ(_db_stream_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.stream_curs.Next
-void                 _db_stream_curs_Next(_db_stream_curs &curs);
+void                 _db_stream_curs_Next(_db_stream_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.stream_curs.Access
-lib_ams::FStream&    _db_stream_curs_Access(_db_stream_curs &curs);
+lib_ams::FStream&    _db_stream_curs_Access(_db_stream_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_stream_hb_curs.Reset
-void                 _db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent);
+void                 _db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_stream_hb_curs.ValidQ
-bool                 _db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs);
+bool                 _db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.cd_stream_hb_curs.Next
-void                 _db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs);
+void                 _db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.cd_stream_hb_curs.Access
-lib_ams::FStream&    _db_cd_stream_hb_curs_Access(_db_cd_stream_hb_curs &curs);
+lib_ams::FStream&    _db_cd_stream_hb_curs_Access(_db_cd_stream_hb_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_poll_read_curs.Reset
-void                 _db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent);
+void                 _db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.cd_poll_read_curs.ValidQ
-bool                 _db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs);
+bool                 _db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.cd_poll_read_curs.Next
-void                 _db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs);
+void                 _db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.cd_poll_read_curs.Access
-lib_ams::FStream&    _db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs);
+lib_ams::FStream&    _db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.streamtype_curs.Reset
-void                 _db_streamtype_curs_Reset(_db_streamtype_curs &curs, lib_ams::FDb &parent);
+void                 _db_streamtype_curs_Reset(_db_streamtype_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.streamtype_curs.ValidQ
-bool                 _db_streamtype_curs_ValidQ(_db_streamtype_curs &curs);
+bool                 _db_streamtype_curs_ValidQ(_db_streamtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.streamtype_curs.Next
-void                 _db_streamtype_curs_Next(_db_streamtype_curs &curs);
+void                 _db_streamtype_curs_Next(_db_streamtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.streamtype_curs.Access
-lib_ams::FStreamType& _db_streamtype_curs_Access(_db_streamtype_curs &curs);
+lib_ams::FStreamType& _db_streamtype_curs_Access(_db_streamtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_ctlin_curs.Reset
-void                 _db_zd_ctlin_curs_Reset(_db_zd_ctlin_curs &curs, lib_ams::FDb &parent);
+void                 _db_zd_ctlin_curs_Reset(_db_zd_ctlin_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_ctlin_curs.ValidQ
-bool                 _db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs);
+bool                 _db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.zd_ctlin_curs.Next
-void                 _db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs);
+void                 _db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.zd_ctlin_curs.Access
-lib_ams::FStream&    _db_zd_ctlin_curs_Access(_db_zd_ctlin_curs &curs);
+lib_ams::FStream&    _db_zd_ctlin_curs_Access(_db_zd_ctlin_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_proc_curs.Reset
-void                 _db_zd_proc_curs_Reset(_db_zd_proc_curs &curs, lib_ams::FDb &parent);
+void                 _db_zd_proc_curs_Reset(_db_zd_proc_curs &curs, lib_ams::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FDb.zd_proc_curs.ValidQ
-bool                 _db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs);
+bool                 _db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FDb.zd_proc_curs.Next
-void                 _db_zd_proc_curs_Next(_db_zd_proc_curs &curs);
+void                 _db_zd_proc_curs_Next(_db_zd_proc_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FDb.zd_proc_curs.Access
-lib_ams::FProc&      _db_zd_proc_curs_Access(_db_zd_proc_curs &curs);
+lib_ams::FProc&      _db_zd_proc_curs_Access(_db_zd_proc_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ams.FDb..Init
 void                 FDb_Init();
@@ -1237,16 +1237,16 @@ lib_ams::FMember&    zd_member_byproc_qLast(lib_ams::FProc& proc) __attribute__(
 void                 FProc_Init(lib_ams::FProc& proc);
 // cursor points to valid item
 // func:lib_ams.FProc.zd_member_byproc_curs.Reset
-void                 proc_zd_member_byproc_curs_Reset(proc_zd_member_byproc_curs &curs, lib_ams::FProc &parent);
+void                 proc_zd_member_byproc_curs_Reset(proc_zd_member_byproc_curs &curs, lib_ams::FProc &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FProc.zd_member_byproc_curs.ValidQ
-bool                 proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_curs &curs);
+bool                 proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FProc.zd_member_byproc_curs.Next
-void                 proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs);
+void                 proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FProc.zd_member_byproc_curs.Access
-lib_ams::FMember&    proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs);
+lib_ams::FMember&    proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FProc..Uninit
 void                 FProc_Uninit(lib_ams::FProc& proc) __attribute__((nothrow));
 
@@ -1462,37 +1462,37 @@ algo::aryptr<u32>    offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, c
 
 // proceed to next item
 // func:lib_ams.FReadfile.buf_curs.Next
-void                 FReadfile_buf_curs_Next(FReadfile_buf_curs &curs);
+void                 FReadfile_buf_curs_Next(FReadfile_buf_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FReadfile.buf_curs.Reset
-void                 FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent);
+void                 FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FReadfile.buf_curs.ValidQ
-bool                 FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs);
+bool                 FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FReadfile.buf_curs.Access
-u8&                  FReadfile_buf_curs_Access(FReadfile_buf_curs &curs);
+u8&                  FReadfile_buf_curs_Access(FReadfile_buf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FReadfile.cbuf_curs.Next
-void                 FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs);
+void                 FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FReadfile.cbuf_curs.Reset
-void                 FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent);
+void                 FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FReadfile.cbuf_curs.ValidQ
-bool                 FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs);
+bool                 FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FReadfile.cbuf_curs.Access
-u8&                  FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs);
+u8&                  FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FReadfile.offset_curs.Next
-void                 FReadfile_offset_curs_Next(FReadfile_offset_curs &curs);
+void                 FReadfile_offset_curs_Next(FReadfile_offset_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FReadfile.offset_curs.Reset
-void                 FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent);
+void                 FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FReadfile.offset_curs.ValidQ
-bool                 FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs);
+bool                 FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FReadfile.offset_curs.Access
-u32&                 FReadfile_offset_curs_Access(FReadfile_offset_curs &curs);
+u32&                 FReadfile_offset_curs_Access(FReadfile_offset_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ams.FReadfile..Init
 void                 FReadfile_Init(lib_ams::FReadfile& parent);
@@ -1635,16 +1635,16 @@ lib_ams::FMember&    zd_member_bystream_qLast(lib_ams::FStream& stream) __attrib
 void                 FStream_Init(lib_ams::FStream& stream);
 // cursor points to valid item
 // func:lib_ams.FStream.zd_member_bystream_curs.Reset
-void                 stream_zd_member_bystream_curs_Reset(stream_zd_member_bystream_curs &curs, lib_ams::FStream &parent);
+void                 stream_zd_member_bystream_curs_Reset(stream_zd_member_bystream_curs &curs, lib_ams::FStream &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FStream.zd_member_bystream_curs.ValidQ
-bool                 stream_zd_member_bystream_curs_ValidQ(stream_zd_member_bystream_curs &curs);
+bool                 stream_zd_member_bystream_curs_ValidQ(stream_zd_member_bystream_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FStream.zd_member_bystream_curs.Next
-void                 stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs);
+void                 stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FStream.zd_member_bystream_curs.Access
-lib_ams::FMember&    stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs);
+lib_ams::FMember&    stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FStream..Uninit
 void                 FStream_Uninit(lib_ams::FStream& stream) __attribute__((nothrow));
 
@@ -1834,26 +1834,26 @@ algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems,
 void                 FWritefile_Init(lib_ams::FWritefile& writefile);
 // proceed to next item
 // func:lib_ams.FWritefile.buf_curs.Next
-void                 writefile_buf_curs_Next(writefile_buf_curs &curs);
+void                 writefile_buf_curs_Next(writefile_buf_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FWritefile.buf_curs.Reset
-void                 writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent);
+void                 writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FWritefile.buf_curs.ValidQ
-bool                 writefile_buf_curs_ValidQ(writefile_buf_curs &curs);
+bool                 writefile_buf_curs_ValidQ(writefile_buf_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FWritefile.buf_curs.Access
-u8&                  writefile_buf_curs_Access(writefile_buf_curs &curs);
+u8&                  writefile_buf_curs_Access(writefile_buf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_ams.FWritefile.cbuf_curs.Next
-void                 writefile_cbuf_curs_Next(writefile_cbuf_curs &curs);
+void                 writefile_cbuf_curs_Next(writefile_cbuf_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FWritefile.cbuf_curs.Reset
-void                 writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent);
+void                 writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_ams.FWritefile.cbuf_curs.ValidQ
-bool                 writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs);
+bool                 writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_ams.FWritefile.cbuf_curs.Access
-u8&                  writefile_cbuf_curs_Access(writefile_cbuf_curs &curs);
+u8&                  writefile_cbuf_curs_Access(writefile_cbuf_curs &curs) __attribute__((nothrow));
 // func:lib_ams.FWritefile..Uninit
 void                 FWritefile_Uninit(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // print string representation of ROW to string STR

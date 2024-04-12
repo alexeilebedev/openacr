@@ -263,7 +263,7 @@ void acr::Main() {
     // see FileInputQ(), FileOutputQ(), GetOutPath()
     acr::_db.file_input = FileQ(acr::_db.cmdline.in);
     // look up important fields
-    _db.c_field_ctype = ind_ctype_Find("dmmeta.Ctype");
+    _db.c_field_ctype = ind_ctype_Find("dmmeta.Field");
     _db.c_ssimfile_ctype = ind_ctype_Find("dmmeta.Ssimfile");
     ind_beg(_db_ssimreq_curs,ssimreq,_db) {
         Regx_ReadAcr(ssimreq.regx_value,value_Get(ssimreq),true);

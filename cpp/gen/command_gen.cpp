@@ -186,6 +186,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_msgsize_max   : ret = "msgsize_max";  break;
         case command_FieldId_bufsize       : ret = "bufsize";  break;
         case command_FieldId_recvdelay     : ret = "recvdelay";  break;
+        case command_FieldId_pkgdata       : ret = "pkgdata";  break;
         case command_FieldId_diff          : ret = "diff";  break;
         case command_FieldId_push          : ret = "push";  break;
         case command_FieldId_remove        : ret = "remove";  break;
@@ -198,10 +199,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_checkclean    : ret = "checkclean";  break;
         case command_FieldId_stat          : ret = "stat";  break;
         case command_FieldId_annotate      : ret = "annotate";  break;
-        case command_FieldId_gen           : ret = "gen";  break;
         case command_FieldId_data_in       : ret = "data_in";  break;
         case command_FieldId_binpath       : ret = "binpath";  break;
-        case command_FieldId_nosort        : ret = "nosort";  break;
         case command_FieldId_amctest       : ret = "amctest";  break;
         case command_FieldId_dofork        : ret = "dofork";  break;
         case command_FieldId_q             : ret = "q";  break;
@@ -315,6 +314,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_updateproto   : ret = "updateproto";  break;
         case command_FieldId_listfunc      : ret = "listfunc";  break;
         case command_FieldId_iffy          : ret = "iffy";  break;
+        case command_FieldId_gen           : ret = "gen";  break;
         case command_FieldId_showloc       : ret = "showloc";  break;
         case command_FieldId_showstatic    : ret = "showstatic";  break;
         case command_FieldId_showsortkey   : ret = "showsortkey";  break;
@@ -869,9 +869,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('n','o','l','o','g','o'): {
                     value_SetEnum(parent,command_FieldId_nologo); ret = true; break;
                 }
-                case LE_STR6('n','o','s','o','r','t'): {
-                    value_SetEnum(parent,command_FieldId_nosort); ret = true; break;
-                }
                 case LE_STR6('n','s','t','y','p','e'): {
                     value_SetEnum(parent,command_FieldId_nstype); ret = true; break;
                 }
@@ -1047,6 +1044,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('p','a','c','k','a','g','e'): {
                     value_SetEnum(parent,command_FieldId_package); ret = true; break;
+                }
+                case LE_STR7('p','k','g','d','a','t','a'): {
+                    value_SetEnum(parent,command_FieldId_pkgdata); ret = true; break;
                 }
                 case LE_STR7('p','r','e','p','r','o','c'): {
                     value_SetEnum(parent,command_FieldId_preproc); ret = true; break;
@@ -8909,6 +8909,21 @@ bool command::package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
     return retval;
 }
 
+// --- command.apm.ns.Print
+// Print back to string
+void command::ns_Print(command::apm& parent, algo::cstring &out) {
+    Regx_Print(parent.ns, out);
+}
+
+// --- command.apm.ns.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ns_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
+    Regx_ReadSql(parent.ns, in, true);
+    bool retval = true;// !parent.ns.parseerror; -- TODO: uncomment
+    return retval;
+}
+
 // --- command.apm..ReadFieldMaybe
 bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -8919,8 +8934,16 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
             break;
         }
+        case command_FieldId_pkgdata: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.pkgdata, strval);
+            break;
+        }
         case command_FieldId_package: {
             retval = package_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case command_FieldId_ns: {
+            retval = ns_ReadStrptrMaybe(parent, strval);
             break;
         }
         case command_FieldId_install: {
@@ -8975,6 +8998,10 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
             retval = bool_ReadStrptrMaybe(parent.R, strval);
             break;
         }
+        case command_FieldId_l: {
+            retval = bool_ReadStrptrMaybe(parent.l, strval);
+            break;
+        }
         case command_FieldId_reset: {
             retval = bool_ReadStrptrMaybe(parent.reset, strval);
             break;
@@ -8995,10 +9022,6 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
             retval = algo::cstring_ReadStrptrMaybe(parent.annotate, strval);
             break;
         }
-        case command_FieldId_gen: {
-            retval = bool_ReadStrptrMaybe(parent.gen, strval);
-            break;
-        }
         case command_FieldId_data_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data_in, strval);
             break;
@@ -9009,10 +9032,6 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
         }
         case command_FieldId_binpath: {
             retval = algo::cstring_ReadStrptrMaybe(parent.binpath, strval);
-            break;
-        }
-        case command_FieldId_nosort: {
-            retval = bool_ReadStrptrMaybe(parent.nosort, strval);
             break;
         }
         default: break;
@@ -9044,7 +9063,9 @@ bool command::apm_ReadTupleMaybe(command::apm &parent, algo::Tuple &tuple) {
 // Set all fields to initial values.
 void command::apm_Init(command::apm& parent) {
     parent.in = algo::strptr("data");
+    parent.pkgdata = algo::strptr("");
     Regx_ReadSql(parent.package, "", true);
+    Regx_ReadSql(parent.ns, "", true);
     parent.install = bool(false);
     parent.update = bool(false);
     parent.list = bool(false);
@@ -9058,16 +9079,15 @@ void command::apm_Init(command::apm& parent) {
     parent.showrec = bool(false);
     parent.showfile = bool(false);
     parent.R = bool(false);
+    parent.l = bool(false);
     parent.reset = bool(false);
     parent.checkclean = bool(true);
     parent.t = bool(false);
     parent.stat = bool(false);
     parent.annotate = algo::strptr("");
-    parent.gen = bool(true);
     parent.data_in = algo::strptr("data");
     parent.e = bool(false);
     parent.binpath = algo::strptr("bin");
-    parent.nosort = bool(false);
 }
 
 // --- command.apm..PrintArgv
@@ -9083,10 +9103,22 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.pkgdata == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.pkgdata, temp);
+        str << " -pkgdata:";
+        strptr_PrintBash(temp,str);
+    }
     ch_RemoveAll(temp);
     command::package_Print(const_cast<command::apm&>(row), temp);
     str << " -package:";
     strptr_PrintBash(temp,str);
+    if (!(row.ns.expr == "")) {
+        ch_RemoveAll(temp);
+        command::ns_Print(const_cast<command::apm&>(row), temp);
+        str << " -ns:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.install == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.install, temp);
@@ -9165,6 +9197,12 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
         str << " -R:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.l == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.l, temp);
+        str << " -l:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.reset == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.reset, temp);
@@ -9195,12 +9233,6 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
         str << " -annotate:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.gen == true)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.gen, temp);
-        str << " -gen:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.data_in == "data")) {
         ch_RemoveAll(temp);
         cstring_Print(row.data_in, temp);
@@ -9217,12 +9249,6 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring &str) {
         ch_RemoveAll(temp);
         cstring_Print(row.binpath, temp);
         str << " -binpath:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.nosort == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.nosort, temp);
-        str << " -nosort:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -9263,8 +9289,14 @@ i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
         case command_FieldId_in: { // $comment
             *out_anon = false;
         } break;
+        case command_FieldId_pkgdata: { // $comment
+            *out_anon = false;
+        } break;
         case command_FieldId_package: { // $comment
             *out_anon = true;
+        } break;
+        case command_FieldId_ns: { // $comment
+            *out_anon = false;
         } break;
         case command_FieldId_install: { // $comment
             *out_anon = false;
@@ -9327,7 +9359,12 @@ i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_reset: { // bool: no argument required but value may be specified as R:Y
+        case command_FieldId_l: { // bool: no argument required but value may be specified as R:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_reset: { // bool: no argument required but value may be specified as l:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -9350,26 +9387,16 @@ i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
         case command_FieldId_annotate: { // bool: no argument required but value may be specified as stat:Y
             *out_anon = false;
         } break;
-        case command_FieldId_gen: { // bool: no argument required but value may be specified as stat:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_data_in: { // bool: no argument required but value may be specified as gen:Y
+        case command_FieldId_data_in: { // bool: no argument required but value may be specified as stat:Y
             *out_anon = false;
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as gen:Y
+        case command_FieldId_e: { // bool: no argument required but value may be specified as stat:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
         case command_FieldId_binpath: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
-        } break;
-        case command_FieldId_nosort: { // bool: no argument required but value may be specified as e:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
         } break;
         default:
         retval=-1; // unrecognized
@@ -9486,10 +9513,22 @@ int command::apm_Execv(command::apm_proc& parent) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
+    if (parent.cmd.pkgdata != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-pkgdata:";
+        cstring_Print(parent.cmd.pkgdata, *arg);
+    }
+
     if (parent.cmd.package.expr != "") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-package:";
         command::package_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "") {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.install != false) {
@@ -9570,6 +9609,12 @@ int command::apm_Execv(command::apm_proc& parent) {
         bool_Print(parent.cmd.R, *arg);
     }
 
+    if (parent.cmd.l != false) {
+        cstring *arg = &algo_lib::exec_args_Alloc();
+        *arg << "-l:";
+        bool_Print(parent.cmd.l, *arg);
+    }
+
     if (parent.cmd.reset != false) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-reset:";
@@ -9600,12 +9645,6 @@ int command::apm_Execv(command::apm_proc& parent) {
         cstring_Print(parent.cmd.annotate, *arg);
     }
 
-    if (parent.cmd.gen != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-gen:";
-        bool_Print(parent.cmd.gen, *arg);
-    }
-
     if (parent.cmd.data_in != "data") {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-data_in:";
@@ -9622,12 +9661,6 @@ int command::apm_Execv(command::apm_proc& parent) {
         cstring *arg = &algo_lib::exec_args_Alloc();
         *arg << "-binpath:";
         cstring_Print(parent.cmd.binpath, *arg);
-    }
-
-    if (parent.cmd.nosort != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-nosort:";
-        bool_Print(parent.cmd.nosort, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         algo_lib::exec_args_Alloc() << "-verbose";
@@ -17412,76 +17445,6 @@ void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
     mysql2ssim_Kill(parent); // kill child, ensure forward progress
-}
-
-// --- command.ob..ReadFieldMaybe
-bool command::ob_ReadFieldMaybe(command::ob& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    (void)strval;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- command.ob..ReadTupleMaybe
-// Read fields of command::ob from attributes of ascii tuple TUPLE
-bool command::ob_ReadTupleMaybe(command::ob &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = ob_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
-    return retval;
-}
-
-// --- command.ob..PrintArgv
-// print command-line args of command::ob to string  -- cprint:command.ob.Argv
-void command::ob_PrintArgv(command::ob& row, algo::cstring &str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)row;
-    (void)str;
-}
-
-// --- command.ob..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::ob_ToCmdline(command::ob& row) {
-    tempstr ret;
-    ret << "bin/ob ";
-    ob_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
-}
-
-// --- command.ob..NArgs
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32 command::ob_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
-    i32 retval = 1;
-    switch (field) {
-        default:
-        retval=-1; // unrecognized
-    }
-    (void)out_dflt;//only to avoid -Wunused-parameter
-    (void)out_anon;//only to avoid -Wunused-parameter
-    return retval;
 }
 
 // --- command.orgfile.dedup.Print

@@ -611,6 +611,14 @@ inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) {
     return parent.ch_elems[t];
 }
 
+// --- algo.Charset.ch_bitcurs.Reset
+inline void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) {
+    curs.elems = &ch_qFind(parent,0);
+    curs.n_elems = ch_N(parent);
+    curs.bit = -1;
+    Charset_ch_bitcurs_Next(curs);
+}
+
 // --- algo.Charset.ch_bitcurs.ValidQ
 // cursor points to valid item
 inline bool algo::Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs) {

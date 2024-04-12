@@ -207,7 +207,6 @@ inline atf_fuzz::FTarget::~FTarget() {
 // --- atf_fuzz.FTarget..Init
 // Set all fields to initial values.
 inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.ind_target_next = (atf_fuzz::FTarget*)-1; // (atf_fuzz.FDb.ind_target) not-in-hash
 }
 inline atf_fuzz::FieldId::FieldId(i32                            in_value)

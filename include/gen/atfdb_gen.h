@@ -36,31 +36,32 @@ enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
     ,atfdb_FieldId_package               = 3
     ,atfdb_FieldId_remove                = 4
     ,atfdb_FieldId_build                 = 5
-    ,atfdb_FieldId_citest                = 6
-    ,atfdb_FieldId_sandbox               = 7
-    ,atfdb_FieldId_comptest              = 8
-    ,atfdb_FieldId_target                = 9
-    ,atfdb_FieldId_testname              = 10
-    ,atfdb_FieldId_timeout               = 11
-    ,atfdb_FieldId_memcheck              = 12
-    ,atfdb_FieldId_exit_code             = 13
-    ,atfdb_FieldId_fuzzstrat             = 14
-    ,atfdb_FieldId_msgdir                = 15
-    ,atfdb_FieldId_args                  = 16
-    ,atfdb_FieldId_test_gsymbol_char     = 17
-    ,atfdb_FieldId_test_gsymbol_pkey     = 18
-    ,atfdb_FieldId_test_gsymbol_strptr   = 19
-    ,atfdb_FieldId_filter                = 20
-    ,atfdb_FieldId_tmsg                  = 21
-    ,atfdb_FieldId_rank                  = 22
-    ,atfdb_FieldId_dir                   = 23
-    ,atfdb_FieldId_istuple               = 24
-    ,atfdb_FieldId_msg                   = 25
-    ,atfdb_FieldId_unittest              = 26
-    ,atfdb_FieldId_value                 = 27
+    ,atfdb_FieldId_reinstall             = 6
+    ,atfdb_FieldId_citest                = 7
+    ,atfdb_FieldId_sandbox               = 8
+    ,atfdb_FieldId_comptest              = 9
+    ,atfdb_FieldId_target                = 10
+    ,atfdb_FieldId_testname              = 11
+    ,atfdb_FieldId_timeout               = 12
+    ,atfdb_FieldId_memcheck              = 13
+    ,atfdb_FieldId_exit_code             = 14
+    ,atfdb_FieldId_fuzzstrat             = 15
+    ,atfdb_FieldId_msgdir                = 16
+    ,atfdb_FieldId_args                  = 17
+    ,atfdb_FieldId_test_gsymbol_char     = 18
+    ,atfdb_FieldId_test_gsymbol_pkey     = 19
+    ,atfdb_FieldId_test_gsymbol_strptr   = 20
+    ,atfdb_FieldId_filter                = 21
+    ,atfdb_FieldId_tmsg                  = 22
+    ,atfdb_FieldId_rank                  = 23
+    ,atfdb_FieldId_dir                   = 24
+    ,atfdb_FieldId_istuple               = 25
+    ,atfdb_FieldId_msg                   = 26
+    ,atfdb_FieldId_unittest              = 27
+    ,atfdb_FieldId_value                 = 28
 };
 
-enum { atfdb_FieldIdEnum_N = 28 };
+enum { atfdb_FieldIdEnum_N = 29 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -135,10 +136,11 @@ void                 Cijob_Print(atfdb::Cijob& row, algo::cstring& str) __attrib
 
 // --- atfdb.Cipackage
 struct Cipackage { // atfdb.Cipackage
-    algo::Smallstr50   package;   //
-    bool               remove;    //   false
-    bool               build;     //   false
-    algo::Comment      comment;   //
+    algo::Smallstr50    package;     //
+    bool                remove;      //   false
+    bool                build;       //   false
+    algo::Smallstr100   reinstall;   //
+    algo::Comment       comment;     //
     Cipackage();
 };
 

@@ -438,61 +438,61 @@ bool                 flatten_XrefMaybe(ssim2csv::FFlatten &row);
 
 // cursor points to valid item
 // func:ssim2csv.FDb.expand_curs.Reset
-void                 _db_expand_curs_Reset(_db_expand_curs &curs, ssim2csv::FDb &parent);
+void                 _db_expand_curs_Reset(_db_expand_curs &curs, ssim2csv::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.expand_curs.ValidQ
-bool                 _db_expand_curs_ValidQ(_db_expand_curs &curs);
+bool                 _db_expand_curs_ValidQ(_db_expand_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2csv.FDb.expand_curs.Next
-void                 _db_expand_curs_Next(_db_expand_curs &curs);
+void                 _db_expand_curs_Next(_db_expand_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2csv.FDb.expand_curs.Access
-ssim2csv::FExpand&   _db_expand_curs_Access(_db_expand_curs &curs);
+ssim2csv::FExpand&   _db_expand_curs_Access(_db_expand_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.outfile_curs.Reset
-void                 _db_outfile_curs_Reset(_db_outfile_curs &curs, ssim2csv::FDb &parent);
+void                 _db_outfile_curs_Reset(_db_outfile_curs &curs, ssim2csv::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.outfile_curs.ValidQ
-bool                 _db_outfile_curs_ValidQ(_db_outfile_curs &curs);
+bool                 _db_outfile_curs_ValidQ(_db_outfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2csv.FDb.outfile_curs.Next
-void                 _db_outfile_curs_Next(_db_outfile_curs &curs);
+void                 _db_outfile_curs_Next(_db_outfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2csv.FDb.outfile_curs.Access
-ssim2csv::FOutfile&  _db_outfile_curs_Access(_db_outfile_curs &curs);
+ssim2csv::FOutfile&  _db_outfile_curs_Access(_db_outfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2csv.FDb.name_curs.Next
-void                 _db_name_curs_Next(_db_name_curs &curs);
+void                 _db_name_curs_Next(_db_name_curs &curs) __attribute__((nothrow));
 // func:ssim2csv.FDb.name_curs.Reset
-void                 _db_name_curs_Reset(_db_name_curs &curs, ssim2csv::FDb &parent);
+void                 _db_name_curs_Reset(_db_name_curs &curs, ssim2csv::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.name_curs.ValidQ
-bool                 _db_name_curs_ValidQ(_db_name_curs &curs);
+bool                 _db_name_curs_ValidQ(_db_name_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2csv.FDb.name_curs.Access
-algo::cstring&       _db_name_curs_Access(_db_name_curs &curs);
+algo::cstring&       _db_name_curs_Access(_db_name_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2csv.FDb.value_curs.Next
-void                 _db_value_curs_Next(_db_value_curs &curs);
+void                 _db_value_curs_Next(_db_value_curs &curs) __attribute__((nothrow));
 // func:ssim2csv.FDb.value_curs.Reset
-void                 _db_value_curs_Reset(_db_value_curs &curs, ssim2csv::FDb &parent);
+void                 _db_value_curs_Reset(_db_value_curs &curs, ssim2csv::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.value_curs.ValidQ
-bool                 _db_value_curs_ValidQ(_db_value_curs &curs);
+bool                 _db_value_curs_ValidQ(_db_value_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2csv.FDb.value_curs.Access
-algo::cstring&       _db_value_curs_Access(_db_value_curs &curs);
+algo::cstring&       _db_value_curs_Access(_db_value_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssim2csv.FDb.flatten_curs.Next
-void                 _db_flatten_curs_Next(_db_flatten_curs &curs);
+void                 _db_flatten_curs_Next(_db_flatten_curs &curs) __attribute__((nothrow));
 // func:ssim2csv.FDb.flatten_curs.Reset
-void                 _db_flatten_curs_Reset(_db_flatten_curs &curs, ssim2csv::FDb &parent);
+void                 _db_flatten_curs_Reset(_db_flatten_curs &curs, ssim2csv::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssim2csv.FDb.flatten_curs.ValidQ
-bool                 _db_flatten_curs_ValidQ(_db_flatten_curs &curs);
+bool                 _db_flatten_curs_ValidQ(_db_flatten_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssim2csv.FDb.flatten_curs.Access
-ssim2csv::FFlatten&  _db_flatten_curs_Access(_db_flatten_curs &curs);
+ssim2csv::FFlatten&  _db_flatten_curs_Access(_db_flatten_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2csv.FDb..Init
 void                 FDb_Init();

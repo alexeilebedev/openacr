@@ -1036,6 +1036,48 @@ inline i32 apm::ind_mkdir_N() {
     return _db.ind_mkdir_n;
 }
 
+// --- apm.FDb.ns.EmptyQ
+// Return true if index is empty
+inline bool apm::ns_EmptyQ() {
+    return _db.ns_n == 0;
+}
+
+// --- apm.FDb.ns.Find
+// Look up row by row id. Return NULL if out of range
+inline apm::FNs* apm::ns_Find(u64 t) {
+    apm::FNs *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ns_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- apm.FDb.ns.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline apm::FNs* apm::ns_Last() {
+    return ns_Find(u64(_db.ns_n-1));
+}
+
+// --- apm.FDb.ns.N
+// Return number of items in the pool
+inline i32 apm::ns_N() {
+    return _db.ns_n;
+}
+
+// --- apm.FDb.ns.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline apm::FNs& apm::ns_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ns_lary[bsr][index];
+}
+
 // --- apm.FDb.package_curs.Reset
 // cursor points to valid item
 inline void apm::_db_package_curs_Reset(_db_package_curs &curs, apm::FDb &parent) {
@@ -1441,6 +1483,31 @@ inline void apm::_db_mkdir_curs_Next(_db_mkdir_curs &curs) {
 inline apm::FMkdir& apm::_db_mkdir_curs_Access(_db_mkdir_curs &curs) {
     return mkdir_qFind(u64(curs.index));
 }
+
+// --- apm.FDb.ns_curs.Reset
+// cursor points to valid item
+inline void apm::_db_ns_curs_Reset(_db_ns_curs &curs, apm::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- apm.FDb.ns_curs.ValidQ
+// cursor points to valid item
+inline bool apm::_db_ns_curs_ValidQ(_db_ns_curs &curs) {
+    return curs.index < _db.ns_n;
+}
+
+// --- apm.FDb.ns_curs.Next
+// proceed to next item
+inline void apm::_db_ns_curs_Next(_db_ns_curs &curs) {
+    curs.index++;
+}
+
+// --- apm.FDb.ns_curs.Access
+// item access
+inline apm::FNs& apm::_db_ns_curs_Access(_db_ns_curs &curs) {
+    return ns_qFind(u64(curs.index));
+}
 inline apm::FField::FField() {
     apm::FField_Init(*this);
 }
@@ -1500,6 +1567,9 @@ inline apm::FMkdir::~FMkdir() {
 inline void apm::FMkdir_Init(apm::FMkdir& mkdir) {
     mkdir.ind_mkdir_next = (apm::FMkdir*)-1; // (apm.FDb.ind_mkdir) not-in-hash
 }
+inline apm::FNs::FNs() {
+}
+
 inline apm::FPackage::FPackage() {
     apm::FPackage_Init(*this);
 }
@@ -2125,7 +2195,6 @@ inline void apm::FRec_Init(apm::FRec& rec) {
     rec.zd_rec_pkgrec_head = NULL; // (apm.FRec.zd_rec_pkgrec)
     rec.zd_rec_pkgrec_n = 0; // (apm.FRec.zd_rec_pkgrec)
     rec.zd_rec_pkgrec_tail = NULL; // (apm.FRec.zd_rec_pkgrec)
-    rec.rowid = i32(0);
     rec.rec_next = (apm::FRec*)-1; // (apm.FDb.rec) not-in-tpool's freelist
     rec.ind_rec_next = (apm::FRec*)-1; // (apm.FDb.ind_rec) not-in-hash
     rec.zd_rec_next = (apm::FRec*)-1; // (apm.FDb.zd_rec) not-in-list

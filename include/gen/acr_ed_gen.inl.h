@@ -445,7 +445,7 @@ inline bool acr_ed::field_EmptyQ() {
 
 // --- acr_ed.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_ed::FField* acr_ed::field_Find(u32 t) {
+inline acr_ed::FField* acr_ed::field_Find(u64 t) {
     acr_ed::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
         u64 x = t + 1;
@@ -460,7 +460,7 @@ inline acr_ed::FField* acr_ed::field_Find(u32 t) {
 // --- acr_ed.FDb.field.Last
 // Return pointer to last element of array, or NULL if array is empty
 inline acr_ed::FField* acr_ed::field_Last() {
-    return field_Find(u32(_db.field_n-1));
+    return field_Find(u64(_db.field_n-1));
 }
 
 // --- acr_ed.FDb.field.N
@@ -471,7 +471,7 @@ inline i32 acr_ed::field_N() {
 
 // --- acr_ed.FDb.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline acr_ed::FField& acr_ed::field_qFind(u32 t) {
+inline acr_ed::FField& acr_ed::field_qFind(u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1333,7 +1333,7 @@ inline void acr_ed::_db_field_curs_Next(_db_field_curs &curs) {
 // --- acr_ed.FDb.field_curs.Access
 // item access
 inline acr_ed::FField& acr_ed::_db_field_curs_Access(_db_field_curs &curs) {
-    return field_qFind(u32(curs.index));
+    return field_qFind(u64(curs.index));
 }
 
 // --- acr_ed.FDb.ctype_curs.Reset
@@ -1899,7 +1899,6 @@ inline acr_ed::FTargsrc& acr_ed::zd_targsrc_qLast(acr_ed::FTarget& target) {
 // --- acr_ed.FTarget..Init
 // Set all fields to initial values.
 inline void acr_ed::FTarget_Init(acr_ed::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.score = u32(0);
     target.zd_targsrc_head = NULL; // (acr_ed.FTarget.zd_targsrc)
     target.zd_targsrc_n = 0; // (acr_ed.FTarget.zd_targsrc)

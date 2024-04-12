@@ -148,26 +148,12 @@ static void Main_ComputeAlllib() {// transitively collect all libraries for targ
 
 // -----------------------------------------------------------------------------
 
-// Check if specified target is compatible with
-// currently selected configuration
-static bool CompatTargetQ(abt::FTarget &target) {
-    bool ret = true;
-    if (!abt::_db.cmdline.listincl) {
-        algo_lib::Regx compat;
-        Regx_ReadSql(compat,target.compat,true);
-        ret = Regx_Match(compat,abt::_db.builddir);
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
 static void Main_SelectTarget() {
     // create list of targets to consider:
     // any target matching command line regex, but filtered for compatibility with
     // current configuration (uname-compiler.cfg-arch)
     ind_beg(abt::_db_target_curs, target,abt::_db) {
-        if (Regx_Match(abt::_db.cmdline.target, target.target) && CompatTargetQ(target)) {
+        if (Regx_Match(abt::_db.cmdline.target, target.target)) {
             abt::zs_origsel_target_Insert(target);
             abt::zs_sel_target_Insert(target);
         }

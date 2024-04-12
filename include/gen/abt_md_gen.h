@@ -353,27 +353,27 @@ bool                 ctype_c_field_arg_InAryQ(abt_md::FField& row) __attribute__
 abt_md::FField&      c_field_arg_qLast(abt_md::FCtype& ctype) __attribute__((nothrow));
 
 // func:abt_md.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FCtype.c_field_curs.Access
-abt_md::FField&      ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+abt_md::FField&      ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // func:abt_md.FCtype.c_field_arg_curs.Reset
-void                 ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, abt_md::FCtype &parent);
+void                 ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, abt_md::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FCtype.c_field_arg_curs.ValidQ
-bool                 ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs);
+bool                 ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FCtype.c_field_arg_curs.Next
-void                 ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs);
+void                 ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FCtype.c_field_arg_curs.Access
-abt_md::FField&      ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs);
+abt_md::FField&      ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt_md.FCtype..Init
 void                 FCtype_Init(abt_md::FCtype& ctype);
@@ -467,16 +467,16 @@ abt_md::FFileSection& zd_file_section_qLast(abt_md::FMdsection& mdsection) __att
 void                 FMdsection_Init(abt_md::FMdsection& mdsection);
 // cursor points to valid item
 // func:abt_md.FMdsection.zd_file_section_curs.Reset
-void                 mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent);
+void                 mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FMdsection.zd_file_section_curs.ValidQ
-bool                 mdsection_zd_file_section_curs_ValidQ(mdsection_zd_file_section_curs &curs);
+bool                 mdsection_zd_file_section_curs_ValidQ(mdsection_zd_file_section_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FMdsection.zd_file_section_curs.Next
-void                 mdsection_zd_file_section_curs_Next(mdsection_zd_file_section_curs &curs);
+void                 mdsection_zd_file_section_curs_Next(mdsection_zd_file_section_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FMdsection.zd_file_section_curs.Access
-abt_md::FFileSection& mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs);
+abt_md::FFileSection& mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs) __attribute__((nothrow));
 
 // --- abt_md.trace
 #pragma pack(push,1)
@@ -1733,40 +1733,40 @@ bool                 gconst_XrefMaybe(abt_md::FGconst &row);
 
 // cursor points to valid item
 // func:abt_md.FDb.readme_curs.Reset
-void                 _db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent);
+void                 _db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.readme_curs.ValidQ
-bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs);
+bool                 _db_readme_curs_ValidQ(_db_readme_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.readme_curs.Next
-void                 _db_readme_curs_Next(_db_readme_curs &curs);
+void                 _db_readme_curs_Next(_db_readme_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.readme_curs.Access
-abt_md::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs);
+abt_md::FReadme&     _db_readme_curs_Access(_db_readme_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.mdsection_curs.Reset
-void                 _db_mdsection_curs_Reset(_db_mdsection_curs &curs, abt_md::FDb &parent);
+void                 _db_mdsection_curs_Reset(_db_mdsection_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.mdsection_curs.ValidQ
-bool                 _db_mdsection_curs_ValidQ(_db_mdsection_curs &curs);
+bool                 _db_mdsection_curs_ValidQ(_db_mdsection_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.mdsection_curs.Next
-void                 _db_mdsection_curs_Next(_db_mdsection_curs &curs);
+void                 _db_mdsection_curs_Next(_db_mdsection_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.mdsection_curs.Access
-abt_md::FMdsection&  _db_mdsection_curs_Access(_db_mdsection_curs &curs);
+abt_md::FMdsection&  _db_mdsection_curs_Access(_db_mdsection_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.file_section_curs.Reset
-void                 _db_file_section_curs_Reset(_db_file_section_curs &curs, abt_md::FDb &parent);
+void                 _db_file_section_curs_Reset(_db_file_section_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.file_section_curs.ValidQ
-bool                 _db_file_section_curs_ValidQ(_db_file_section_curs &curs);
+bool                 _db_file_section_curs_ValidQ(_db_file_section_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.file_section_curs.Next
-void                 _db_file_section_curs_Next(_db_file_section_curs &curs);
+void                 _db_file_section_curs_Next(_db_file_section_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.file_section_curs.Access
-abt_md::FFileSection& _db_file_section_curs_Access(_db_file_section_curs &curs);
+abt_md::FFileSection& _db_file_section_curs_Access(_db_file_section_curs &curs) __attribute__((nothrow));
 // func:abt_md.FDb.bh_file_section_curs.Reserve
 void                 _db_bh_file_section_curs_Reserve(_db_bh_file_section_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -1777,129 +1777,129 @@ void                 _db_bh_file_section_curs_Reset(_db_bh_file_section_curs &cu
 void                 _db_bh_file_section_curs_Next(_db_bh_file_section_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:abt_md.FDb.bh_file_section_curs.Access
-abt_md::FFileSection& _db_bh_file_section_curs_Access(_db_bh_file_section_curs &curs);
+abt_md::FFileSection& _db_bh_file_section_curs_Access(_db_bh_file_section_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:abt_md.FDb.bh_file_section_curs.ValidQ
-bool                 _db_bh_file_section_curs_ValidQ(_db_bh_file_section_curs &curs);
+bool                 _db_bh_file_section_curs_ValidQ(_db_bh_file_section_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, abt_md::FDb &parent);
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs);
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.ns_curs.Access
-abt_md::FNs&         _db_ns_curs_Access(_db_ns_curs &curs);
+abt_md::FNs&         _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, abt_md::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.ssimfile_curs.Access
-abt_md::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+abt_md::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, abt_md::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.ctype_curs.Access
-abt_md::FCtype&      _db_ctype_curs_Access(_db_ctype_curs &curs);
+abt_md::FCtype&      _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, abt_md::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.field_curs.Access
-abt_md::FField&      _db_field_curs_Access(_db_field_curs &curs);
+abt_md::FField&      _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, abt_md::FDb &parent);
+void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs);
+bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs);
+void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.targsrc_curs.Access
-abt_md::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs);
+abt_md::FTargsrc&    _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, abt_md::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.substr_curs.Access
-abt_md::FSubstr&     _db_substr_curs_Access(_db_substr_curs &curs);
+abt_md::FSubstr&     _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // func:abt_md.FDb.ind_human_text_curs.Reset
-void                 _db_ind_human_text_curs_Reset(_db_ind_human_text_curs &curs, abt_md::FDb &parent);
+void                 _db_ind_human_text_curs_Reset(_db_ind_human_text_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.ind_human_text_curs.ValidQ
-bool                 _db_ind_human_text_curs_ValidQ(_db_ind_human_text_curs &curs);
+bool                 _db_ind_human_text_curs_ValidQ(_db_ind_human_text_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.ind_human_text_curs.Next
-void                 _db_ind_human_text_curs_Next(_db_ind_human_text_curs &curs);
+void                 _db_ind_human_text_curs_Next(_db_ind_human_text_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.ind_human_text_curs.Access
-abt_md::FHumanText&  _db_ind_human_text_curs_Access(_db_ind_human_text_curs &curs);
+abt_md::FHumanText&  _db_ind_human_text_curs_Access(_db_ind_human_text_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.scriptfile_curs.Reset
-void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, abt_md::FDb &parent);
+void                 _db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.scriptfile_curs.ValidQ
-bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs);
+bool                 _db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.scriptfile_curs.Next
-void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs);
+void                 _db_scriptfile_curs_Next(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.scriptfile_curs.Access
-abt_md::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs);
+abt_md::FScriptfile& _db_scriptfile_curs_Access(_db_scriptfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.nstype_curs.Reset
-void                 _db_nstype_curs_Reset(_db_nstype_curs &curs, abt_md::FDb &parent);
+void                 _db_nstype_curs_Reset(_db_nstype_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.nstype_curs.ValidQ
-bool                 _db_nstype_curs_ValidQ(_db_nstype_curs &curs);
+bool                 _db_nstype_curs_ValidQ(_db_nstype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.nstype_curs.Next
-void                 _db_nstype_curs_Next(_db_nstype_curs &curs);
+void                 _db_nstype_curs_Next(_db_nstype_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.nstype_curs.Access
-abt_md::FNstype&     _db_nstype_curs_Access(_db_nstype_curs &curs);
+abt_md::FNstype&     _db_nstype_curs_Access(_db_nstype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.dirent_curs.Reset
-void                 _db_dirent_curs_Reset(_db_dirent_curs &curs, abt_md::FDb &parent);
+void                 _db_dirent_curs_Reset(_db_dirent_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.dirent_curs.ValidQ
-bool                 _db_dirent_curs_ValidQ(_db_dirent_curs &curs);
+bool                 _db_dirent_curs_ValidQ(_db_dirent_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.dirent_curs.Next
-void                 _db_dirent_curs_Next(_db_dirent_curs &curs);
+void                 _db_dirent_curs_Next(_db_dirent_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.dirent_curs.Access
-abt_md::FDirent&     _db_dirent_curs_Access(_db_dirent_curs &curs);
+abt_md::FDirent&     _db_dirent_curs_Access(_db_dirent_curs &curs) __attribute__((nothrow));
 // func:abt_md.FDb.bh_dirent_curs.Reserve
 void                 _db_bh_dirent_curs_Reserve(_db_bh_dirent_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -1910,94 +1910,94 @@ void                 _db_bh_dirent_curs_Reset(_db_bh_dirent_curs &curs, abt_md::
 void                 _db_bh_dirent_curs_Next(_db_bh_dirent_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:abt_md.FDb.bh_dirent_curs.Access
-abt_md::FDirent&     _db_bh_dirent_curs_Access(_db_bh_dirent_curs &curs);
+abt_md::FDirent&     _db_bh_dirent_curs_Access(_db_bh_dirent_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:abt_md.FDb.bh_dirent_curs.ValidQ
-bool                 _db_bh_dirent_curs_ValidQ(_db_bh_dirent_curs &curs);
+bool                 _db_bh_dirent_curs_ValidQ(_db_bh_dirent_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.comptest_curs.Reset
-void                 _db_comptest_curs_Reset(_db_comptest_curs &curs, abt_md::FDb &parent);
+void                 _db_comptest_curs_Reset(_db_comptest_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.comptest_curs.ValidQ
-bool                 _db_comptest_curs_ValidQ(_db_comptest_curs &curs);
+bool                 _db_comptest_curs_ValidQ(_db_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.comptest_curs.Next
-void                 _db_comptest_curs_Next(_db_comptest_curs &curs);
+void                 _db_comptest_curs_Next(_db_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.comptest_curs.Access
-abt_md::FComptest&   _db_comptest_curs_Access(_db_comptest_curs &curs);
+abt_md::FComptest&   _db_comptest_curs_Access(_db_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.anchor_curs.Reset
-void                 _db_anchor_curs_Reset(_db_anchor_curs &curs, abt_md::FDb &parent);
+void                 _db_anchor_curs_Reset(_db_anchor_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.anchor_curs.ValidQ
-bool                 _db_anchor_curs_ValidQ(_db_anchor_curs &curs);
+bool                 _db_anchor_curs_ValidQ(_db_anchor_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.anchor_curs.Next
-void                 _db_anchor_curs_Next(_db_anchor_curs &curs);
+void                 _db_anchor_curs_Next(_db_anchor_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.anchor_curs.Access
-abt_md::FAnchor&     _db_anchor_curs_Access(_db_anchor_curs &curs);
+abt_md::FAnchor&     _db_anchor_curs_Access(_db_anchor_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.link_curs.Reset
-void                 _db_link_curs_Reset(_db_link_curs &curs, abt_md::FDb &parent);
+void                 _db_link_curs_Reset(_db_link_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.link_curs.ValidQ
-bool                 _db_link_curs_ValidQ(_db_link_curs &curs);
+bool                 _db_link_curs_ValidQ(_db_link_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.link_curs.Next
-void                 _db_link_curs_Next(_db_link_curs &curs);
+void                 _db_link_curs_Next(_db_link_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.link_curs.Access
-abt_md::FLink&       _db_link_curs_Access(_db_link_curs &curs);
+abt_md::FLink&       _db_link_curs_Access(_db_link_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.reftype_curs.Reset
-void                 _db_reftype_curs_Reset(_db_reftype_curs &curs, abt_md::FDb &parent);
+void                 _db_reftype_curs_Reset(_db_reftype_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.reftype_curs.ValidQ
-bool                 _db_reftype_curs_ValidQ(_db_reftype_curs &curs);
+bool                 _db_reftype_curs_ValidQ(_db_reftype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.reftype_curs.Next
-void                 _db_reftype_curs_Next(_db_reftype_curs &curs);
+void                 _db_reftype_curs_Next(_db_reftype_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.reftype_curs.Access
-abt_md::FReftype&    _db_reftype_curs_Access(_db_reftype_curs &curs);
+abt_md::FReftype&    _db_reftype_curs_Access(_db_reftype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.tclass_curs.Reset
-void                 _db_tclass_curs_Reset(_db_tclass_curs &curs, abt_md::FDb &parent);
+void                 _db_tclass_curs_Reset(_db_tclass_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.tclass_curs.ValidQ
-bool                 _db_tclass_curs_ValidQ(_db_tclass_curs &curs);
+bool                 _db_tclass_curs_ValidQ(_db_tclass_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.tclass_curs.Next
-void                 _db_tclass_curs_Next(_db_tclass_curs &curs);
+void                 _db_tclass_curs_Next(_db_tclass_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.tclass_curs.Access
-abt_md::FTclass&     _db_tclass_curs_Access(_db_tclass_curs &curs);
+abt_md::FTclass&     _db_tclass_curs_Access(_db_tclass_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.fconst_curs.Reset
-void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, abt_md::FDb &parent);
+void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.fconst_curs.ValidQ
-bool                 _db_fconst_curs_ValidQ(_db_fconst_curs &curs);
+bool                 _db_fconst_curs_ValidQ(_db_fconst_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.fconst_curs.Next
-void                 _db_fconst_curs_Next(_db_fconst_curs &curs);
+void                 _db_fconst_curs_Next(_db_fconst_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.fconst_curs.Access
-abt_md::FFconst&     _db_fconst_curs_Access(_db_fconst_curs &curs);
+abt_md::FFconst&     _db_fconst_curs_Access(_db_fconst_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.gconst_curs.Reset
-void                 _db_gconst_curs_Reset(_db_gconst_curs &curs, abt_md::FDb &parent);
+void                 _db_gconst_curs_Reset(_db_gconst_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FDb.gconst_curs.ValidQ
-bool                 _db_gconst_curs_ValidQ(_db_gconst_curs &curs);
+bool                 _db_gconst_curs_ValidQ(_db_gconst_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FDb.gconst_curs.Next
-void                 _db_gconst_curs_Next(_db_gconst_curs &curs);
+void                 _db_gconst_curs_Next(_db_gconst_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FDb.gconst_curs.Access
-abt_md::FGconst&     _db_gconst_curs_Access(_db_gconst_curs &curs);
+abt_md::FGconst&     _db_gconst_curs_Access(_db_gconst_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt_md.FDb..Init
 void                 FDb_Init();
@@ -2183,16 +2183,16 @@ void                 c_gconst_Remove(abt_md::FField& field, abt_md::FGconst& row
 // func:abt_md.FField..Init
 void                 FField_Init(abt_md::FField& field);
 // func:abt_md.FField.c_fconst_curs.Reset
-void                 field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md::FField &parent);
+void                 field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md::FField &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FField.c_fconst_curs.ValidQ
-bool                 field_c_fconst_curs_ValidQ(field_c_fconst_curs &curs);
+bool                 field_c_fconst_curs_ValidQ(field_c_fconst_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FField.c_fconst_curs.Next
-void                 field_c_fconst_curs_Next(field_c_fconst_curs &curs);
+void                 field_c_fconst_curs_Next(field_c_fconst_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FField.c_fconst_curs.Access
-abt_md::FFconst&     field_c_fconst_curs_Access(field_c_fconst_curs &curs);
+abt_md::FFconst&     field_c_fconst_curs_Access(field_c_fconst_curs &curs) __attribute__((nothrow));
 // func:abt_md.FField..Uninit
 void                 FField_Uninit(abt_md::FField& field) __attribute__((nothrow));
 
@@ -2466,38 +2466,38 @@ abt_md::FComptest&   c_comptest_qLast(abt_md::FNs& ns) __attribute__((nothrow));
 // func:abt_md.FNs..Init
 void                 FNs_Init(abt_md::FNs& ns);
 // func:abt_md.FNs.c_targsrc_curs.Reset
-void                 ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs &parent);
+void                 ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FNs.c_targsrc_curs.ValidQ
-bool                 ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs);
+bool                 ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FNs.c_targsrc_curs.Next
-void                 ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs);
+void                 ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FNs.c_targsrc_curs.Access
-abt_md::FTargsrc&    ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs);
+abt_md::FTargsrc&    ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:abt_md.FNs.c_ctype_curs.Reset
-void                 ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, abt_md::FNs &parent);
+void                 ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, abt_md::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FNs.c_ctype_curs.ValidQ
-bool                 ns_c_ctype_curs_ValidQ(ns_c_ctype_curs &curs);
+bool                 ns_c_ctype_curs_ValidQ(ns_c_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FNs.c_ctype_curs.Next
-void                 ns_c_ctype_curs_Next(ns_c_ctype_curs &curs);
+void                 ns_c_ctype_curs_Next(ns_c_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FNs.c_ctype_curs.Access
-abt_md::FCtype&      ns_c_ctype_curs_Access(ns_c_ctype_curs &curs);
+abt_md::FCtype&      ns_c_ctype_curs_Access(ns_c_ctype_curs &curs) __attribute__((nothrow));
 // func:abt_md.FNs.c_comptest_curs.Reset
-void                 ns_c_comptest_curs_Reset(ns_c_comptest_curs &curs, abt_md::FNs &parent);
+void                 ns_c_comptest_curs_Reset(ns_c_comptest_curs &curs, abt_md::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:abt_md.FNs.c_comptest_curs.ValidQ
-bool                 ns_c_comptest_curs_ValidQ(ns_c_comptest_curs &curs);
+bool                 ns_c_comptest_curs_ValidQ(ns_c_comptest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:abt_md.FNs.c_comptest_curs.Next
-void                 ns_c_comptest_curs_Next(ns_c_comptest_curs &curs);
+void                 ns_c_comptest_curs_Next(ns_c_comptest_curs &curs) __attribute__((nothrow));
 // item access
 // func:abt_md.FNs.c_comptest_curs.Access
-abt_md::FComptest&   ns_c_comptest_curs_Access(ns_c_comptest_curs &curs);
+abt_md::FComptest&   ns_c_comptest_curs_Access(ns_c_comptest_curs &curs) __attribute__((nothrow));
 // func:abt_md.FNs..Uninit
 void                 FNs_Uninit(abt_md::FNs& ns) __attribute__((nothrow));
 

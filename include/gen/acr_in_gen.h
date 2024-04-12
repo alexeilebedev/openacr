@@ -261,27 +261,27 @@ acr_in::FCtype&      c_ctype_qFind(acr_in::FCtype& ctype, u32 idx) __attribute__
 acr_in::FCtype&      c_ctype_qLast(acr_in::FCtype& ctype) __attribute__((nothrow));
 
 // func:acr_in.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_in::FCtype &parent);
+void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_in::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs);
+bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs);
+void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FCtype.c_field_curs.Access
-acr_in::FField&      ctype_c_field_curs_Access(ctype_c_field_curs &curs);
+acr_in::FField&      ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // func:acr_in.FCtype.c_ctype_curs.Reset
-void                 ctype_c_ctype_curs_Reset(ctype_c_ctype_curs &curs, acr_in::FCtype &parent);
+void                 ctype_c_ctype_curs_Reset(ctype_c_ctype_curs &curs, acr_in::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FCtype.c_ctype_curs.ValidQ
-bool                 ctype_c_ctype_curs_ValidQ(ctype_c_ctype_curs &curs);
+bool                 ctype_c_ctype_curs_ValidQ(ctype_c_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FCtype.c_ctype_curs.Next
-void                 ctype_c_ctype_curs_Next(ctype_c_ctype_curs &curs);
+void                 ctype_c_ctype_curs_Next(ctype_c_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FCtype.c_ctype_curs.Access
-acr_in::FCtype&      ctype_c_ctype_curs_Access(ctype_c_ctype_curs &curs);
+acr_in::FCtype&      ctype_c_ctype_curs_Access(ctype_c_ctype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_in.FCtype..Init
 void                 FCtype_Init(acr_in::FCtype& ctype);
@@ -1254,208 +1254,208 @@ void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr_in.FDb.tuple_curs.Reset
-void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, acr_in::FDb &parent);
+void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.tuple_curs.ValidQ
-bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs);
+bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.tuple_curs.Next
-void                 _db_tuple_curs_Next(_db_tuple_curs &curs);
+void                 _db_tuple_curs_Next(_db_tuple_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.tuple_curs.Access
-acr_in::FTuple&      _db_tuple_curs_Access(_db_tuple_curs &curs);
+acr_in::FTuple&      _db_tuple_curs_Access(_db_tuple_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.finput_curs.Reset
-void                 _db_finput_curs_Reset(_db_finput_curs &curs, acr_in::FDb &parent);
+void                 _db_finput_curs_Reset(_db_finput_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.finput_curs.ValidQ
-bool                 _db_finput_curs_ValidQ(_db_finput_curs &curs);
+bool                 _db_finput_curs_ValidQ(_db_finput_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.finput_curs.Next
-void                 _db_finput_curs_Next(_db_finput_curs &curs);
+void                 _db_finput_curs_Next(_db_finput_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.finput_curs.Access
-acr_in::FFinput&     _db_finput_curs_Access(_db_finput_curs &curs);
+acr_in::FFinput&     _db_finput_curs_Access(_db_finput_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, acr_in::FDb &parent);
+void                 _db_field_curs_Reset(_db_field_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs);
+bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs);
+void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.field_curs.Access
-acr_in::FField&      _db_field_curs_Access(_db_field_curs &curs);
+acr_in::FField&      _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_in::FDb &parent);
+void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs);
+bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs);
+void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.ctype_curs.Access
-acr_in::FCtype&      _db_ctype_curs_Access(_db_ctype_curs &curs);
+acr_in::FCtype&      _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_in::FDb &parent);
+void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs);
+bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs);
+void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.ssimfile_curs.Access
-acr_in::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs);
+acr_in::FSsimfile&   _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, acr_in::FDb &parent);
+void                 _db_ns_curs_Reset(_db_ns_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs);
+bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs);
+void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.ns_curs.Access
-acr_in::FNs&         _db_ns_curs_Access(_db_ns_curs &curs);
+acr_in::FNs&         _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_todo_curs.Reset
-void                 _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_todo_curs.ValidQ
-bool                 _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs);
+bool                 _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_todo_curs.Next
-void                 _db_zd_todo_curs_Next(_db_zd_todo_curs &curs);
+void                 _db_zd_todo_curs_Next(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_todo_curs.Access
-acr_in::FCtype&      _db_zd_todo_curs_Access(_db_zd_todo_curs &curs);
+acr_in::FCtype&      _db_zd_todo_curs_Access(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_ssimfile_curs.Reset
-void                 _db_zd_ssimfile_curs_Reset(_db_zd_ssimfile_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_ssimfile_curs_Reset(_db_zd_ssimfile_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_ssimfile_curs.ValidQ
-bool                 _db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs);
+bool                 _db_zd_ssimfile_curs_ValidQ(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_ssimfile_curs.Next
-void                 _db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs);
+void                 _db_zd_ssimfile_curs_Next(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_ssimfile_curs.Access
-acr_in::FSsimfile&   _db_zd_ssimfile_curs_Access(_db_zd_ssimfile_curs &curs);
+acr_in::FSsimfile&   _db_zd_ssimfile_curs_Access(_db_zd_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, acr_in::FDb &parent);
+void                 _db_substr_curs_Reset(_db_substr_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs);
+bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs);
+void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.substr_curs.Access
-acr_in::FSubstr&     _db_substr_curs_Access(_db_substr_curs &curs);
+acr_in::FSubstr&     _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.dispsig_curs.Reset
-void                 _db_dispsig_curs_Reset(_db_dispsig_curs &curs, acr_in::FDb &parent);
+void                 _db_dispsig_curs_Reset(_db_dispsig_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.dispsig_curs.ValidQ
-bool                 _db_dispsig_curs_ValidQ(_db_dispsig_curs &curs);
+bool                 _db_dispsig_curs_ValidQ(_db_dispsig_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.dispsig_curs.Next
-void                 _db_dispsig_curs_Next(_db_dispsig_curs &curs);
+void                 _db_dispsig_curs_Next(_db_dispsig_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.dispsig_curs.Access
-acr_in::FDispsig&    _db_dispsig_curs_Access(_db_dispsig_curs &curs);
+acr_in::FDispsig&    _db_dispsig_curs_Access(_db_dispsig_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_select_curs.Reset
-void                 _db_zd_select_curs_Reset(_db_zd_select_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_select_curs_Reset(_db_zd_select_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_select_curs.ValidQ
-bool                 _db_zd_select_curs_ValidQ(_db_zd_select_curs &curs);
+bool                 _db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_select_curs.Next
-void                 _db_zd_select_curs_Next(_db_zd_select_curs &curs);
+void                 _db_zd_select_curs_Next(_db_zd_select_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_select_curs.Access
-acr_in::FTuple&      _db_zd_select_curs_Access(_db_zd_select_curs &curs);
+acr_in::FTuple&      _db_zd_select_curs_Access(_db_zd_select_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_deselect_curs.Reset
-void                 _db_zd_deselect_curs_Reset(_db_zd_deselect_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_deselect_curs_Reset(_db_zd_deselect_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_deselect_curs.ValidQ
-bool                 _db_zd_deselect_curs_ValidQ(_db_zd_deselect_curs &curs);
+bool                 _db_zd_deselect_curs_ValidQ(_db_zd_deselect_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_deselect_curs.Next
-void                 _db_zd_deselect_curs_Next(_db_zd_deselect_curs &curs);
+void                 _db_zd_deselect_curs_Next(_db_zd_deselect_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_deselect_curs.Access
-acr_in::FTuple&      _db_zd_deselect_curs_Access(_db_zd_deselect_curs &curs);
+acr_in::FTuple&      _db_zd_deselect_curs_Access(_db_zd_deselect_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_related_curs.Reset
-void                 _db_zd_related_curs_Reset(_db_zd_related_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_related_curs_Reset(_db_zd_related_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_related_curs.ValidQ
-bool                 _db_zd_related_curs_ValidQ(_db_zd_related_curs &curs);
+bool                 _db_zd_related_curs_ValidQ(_db_zd_related_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_related_curs.Next
-void                 _db_zd_related_curs_Next(_db_zd_related_curs &curs);
+void                 _db_zd_related_curs_Next(_db_zd_related_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_related_curs.Access
-acr_in::FCtype&      _db_zd_related_curs_Access(_db_zd_related_curs &curs);
+acr_in::FCtype&      _db_zd_related_curs_Access(_db_zd_related_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, acr_in::FDb &parent);
+void                 _db_target_curs_Reset(_db_target_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs);
+bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs);
+void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.target_curs.Access
-acr_in::FTarget&     _db_target_curs_Access(_db_target_curs &curs);
+acr_in::FTarget&     _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.targdep_curs.Reset
-void                 _db_targdep_curs_Reset(_db_targdep_curs &curs, acr_in::FDb &parent);
+void                 _db_targdep_curs_Reset(_db_targdep_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.targdep_curs.ValidQ
-bool                 _db_targdep_curs_ValidQ(_db_targdep_curs &curs);
+bool                 _db_targdep_curs_ValidQ(_db_targdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.targdep_curs.Next
-void                 _db_targdep_curs_Next(_db_targdep_curs &curs);
+void                 _db_targdep_curs_Next(_db_targdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.targdep_curs.Access
-acr_in::FTargdep&    _db_targdep_curs_Access(_db_targdep_curs &curs);
+acr_in::FTargdep&    _db_targdep_curs_Access(_db_targdep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_targ_visit_curs.Reset
-void                 _db_zd_targ_visit_curs_Reset(_db_zd_targ_visit_curs &curs, acr_in::FDb &parent);
+void                 _db_zd_targ_visit_curs_Reset(_db_zd_targ_visit_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.zd_targ_visit_curs.ValidQ
-bool                 _db_zd_targ_visit_curs_ValidQ(_db_zd_targ_visit_curs &curs);
+bool                 _db_zd_targ_visit_curs_ValidQ(_db_zd_targ_visit_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.zd_targ_visit_curs.Next
-void                 _db_zd_targ_visit_curs_Next(_db_zd_targ_visit_curs &curs);
+void                 _db_zd_targ_visit_curs_Next(_db_zd_targ_visit_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.zd_targ_visit_curs.Access
-acr_in::FTarget&     _db_zd_targ_visit_curs_Access(_db_zd_targ_visit_curs &curs);
+acr_in::FTarget&     _db_zd_targ_visit_curs_Access(_db_zd_targ_visit_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.nsssimfile_curs.Reset
-void                 _db_nsssimfile_curs_Reset(_db_nsssimfile_curs &curs, acr_in::FDb &parent);
+void                 _db_nsssimfile_curs_Reset(_db_nsssimfile_curs &curs, acr_in::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FDb.nsssimfile_curs.ValidQ
-bool                 _db_nsssimfile_curs_ValidQ(_db_nsssimfile_curs &curs);
+bool                 _db_nsssimfile_curs_ValidQ(_db_nsssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FDb.nsssimfile_curs.Next
-void                 _db_nsssimfile_curs_Next(_db_nsssimfile_curs &curs);
+void                 _db_nsssimfile_curs_Next(_db_nsssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FDb.nsssimfile_curs.Access
-acr_in::FNsssimfile& _db_nsssimfile_curs_Access(_db_nsssimfile_curs &curs);
+acr_in::FNsssimfile& _db_nsssimfile_curs_Access(_db_nsssimfile_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_in.FDb..Init
 void                 FDb_Init();
@@ -1677,16 +1677,16 @@ acr_in::FNsssimfile& zd_nsssimfile_ns_qLast(acr_in::FNs& ns) __attribute__((__wa
 void                 FNs_Init(acr_in::FNs& ns);
 // cursor points to valid item
 // func:acr_in.FNs.zd_nsssimfile_ns_curs.Reset
-void                 ns_zd_nsssimfile_ns_curs_Reset(ns_zd_nsssimfile_ns_curs &curs, acr_in::FNs &parent);
+void                 ns_zd_nsssimfile_ns_curs_Reset(ns_zd_nsssimfile_ns_curs &curs, acr_in::FNs &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FNs.zd_nsssimfile_ns_curs.ValidQ
-bool                 ns_zd_nsssimfile_ns_curs_ValidQ(ns_zd_nsssimfile_ns_curs &curs);
+bool                 ns_zd_nsssimfile_ns_curs_ValidQ(ns_zd_nsssimfile_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FNs.zd_nsssimfile_ns_curs.Next
-void                 ns_zd_nsssimfile_ns_curs_Next(ns_zd_nsssimfile_ns_curs &curs);
+void                 ns_zd_nsssimfile_ns_curs_Next(ns_zd_nsssimfile_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FNs.zd_nsssimfile_ns_curs.Access
-acr_in::FNsssimfile& ns_zd_nsssimfile_ns_curs_Access(ns_zd_nsssimfile_ns_curs &curs);
+acr_in::FNsssimfile& ns_zd_nsssimfile_ns_curs_Access(ns_zd_nsssimfile_ns_curs &curs) __attribute__((nothrow));
 // func:acr_in.FNs..Uninit
 void                 FNs_Uninit(acr_in::FNs& ns) __attribute__((nothrow));
 
@@ -1815,16 +1815,16 @@ acr_in::FNsssimfile& zd_nsssimfile_ssimfile_qLast(acr_in::FSsimfile& ssimfile) _
 void                 FSsimfile_Init(acr_in::FSsimfile& ssimfile);
 // cursor points to valid item
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.Reset
-void                 ssimfile_zd_nsssimfile_ssimfile_curs_Reset(ssimfile_zd_nsssimfile_ssimfile_curs &curs, acr_in::FSsimfile &parent);
+void                 ssimfile_zd_nsssimfile_ssimfile_curs_Reset(ssimfile_zd_nsssimfile_ssimfile_curs &curs, acr_in::FSsimfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.ValidQ
-bool                 ssimfile_zd_nsssimfile_ssimfile_curs_ValidQ(ssimfile_zd_nsssimfile_ssimfile_curs &curs);
+bool                 ssimfile_zd_nsssimfile_ssimfile_curs_ValidQ(ssimfile_zd_nsssimfile_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.Next
-void                 ssimfile_zd_nsssimfile_ssimfile_curs_Next(ssimfile_zd_nsssimfile_ssimfile_curs &curs);
+void                 ssimfile_zd_nsssimfile_ssimfile_curs_Next(ssimfile_zd_nsssimfile_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.Access
-acr_in::FNsssimfile& ssimfile_zd_nsssimfile_ssimfile_curs_Access(ssimfile_zd_nsssimfile_ssimfile_curs &curs);
+acr_in::FNsssimfile& ssimfile_zd_nsssimfile_ssimfile_curs_Access(ssimfile_zd_nsssimfile_ssimfile_curs &curs) __attribute__((nothrow));
 // func:acr_in.FSsimfile..Uninit
 void                 FSsimfile_Uninit(acr_in::FSsimfile& ssimfile) __attribute__((nothrow));
 
@@ -1905,7 +1905,6 @@ struct FTarget { // acr_in.FTarget
     acr_in::FTarget*     zd_targ_visit_next;      // zslist link; -1 means not-in-list
     acr_in::FTarget*     zd_targ_visit_prev;      // previous element
     algo::Smallstr16     target;                  // Primary key - name of target
-    algo::Smallstr50     compat;                  //   "Linux-%.%-%"  Compatibility (regx of builddir)
     acr_in::FTargdep**   c_targdep_elems;         // array of pointers
     u32                  c_targdep_n;             // array of pointers
     u32                  c_targdep_max;           // capacity of allocated array
@@ -2014,27 +2013,27 @@ acr_in::FTargdep&    c_targdep_child_qLast(acr_in::FTarget& target) __attribute_
 // func:acr_in.FTarget..Init
 void                 FTarget_Init(acr_in::FTarget& target);
 // func:acr_in.FTarget.c_targdep_curs.Reset
-void                 target_c_targdep_curs_Reset(target_c_targdep_curs &curs, acr_in::FTarget &parent);
+void                 target_c_targdep_curs_Reset(target_c_targdep_curs &curs, acr_in::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FTarget.c_targdep_curs.ValidQ
-bool                 target_c_targdep_curs_ValidQ(target_c_targdep_curs &curs);
+bool                 target_c_targdep_curs_ValidQ(target_c_targdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FTarget.c_targdep_curs.Next
-void                 target_c_targdep_curs_Next(target_c_targdep_curs &curs);
+void                 target_c_targdep_curs_Next(target_c_targdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FTarget.c_targdep_curs.Access
-acr_in::FTargdep&    target_c_targdep_curs_Access(target_c_targdep_curs &curs);
+acr_in::FTargdep&    target_c_targdep_curs_Access(target_c_targdep_curs &curs) __attribute__((nothrow));
 // func:acr_in.FTarget.c_targdep_child_curs.Reset
-void                 target_c_targdep_child_curs_Reset(target_c_targdep_child_curs &curs, acr_in::FTarget &parent);
+void                 target_c_targdep_child_curs_Reset(target_c_targdep_child_curs &curs, acr_in::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FTarget.c_targdep_child_curs.ValidQ
-bool                 target_c_targdep_child_curs_ValidQ(target_c_targdep_child_curs &curs);
+bool                 target_c_targdep_child_curs_ValidQ(target_c_targdep_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FTarget.c_targdep_child_curs.Next
-void                 target_c_targdep_child_curs_Next(target_c_targdep_child_curs &curs);
+void                 target_c_targdep_child_curs_Next(target_c_targdep_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FTarget.c_targdep_child_curs.Access
-acr_in::FTargdep&    target_c_targdep_child_curs_Access(target_c_targdep_child_curs &curs);
+acr_in::FTargdep&    target_c_targdep_child_curs_Access(target_c_targdep_child_curs &curs) __attribute__((nothrow));
 // func:acr_in.FTarget..Uninit
 void                 FTarget_Uninit(acr_in::FTarget& target) __attribute__((nothrow));
 
@@ -2152,27 +2151,27 @@ acr_in::FTuple&      c_parent_qLast(acr_in::FTuple& tuple) __attribute__((nothro
 // func:acr_in.FTuple..Init
 void                 FTuple_Init(acr_in::FTuple& tuple);
 // func:acr_in.FTuple.c_child_curs.Reset
-void                 tuple_c_child_curs_Reset(tuple_c_child_curs &curs, acr_in::FTuple &parent);
+void                 tuple_c_child_curs_Reset(tuple_c_child_curs &curs, acr_in::FTuple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FTuple.c_child_curs.ValidQ
-bool                 tuple_c_child_curs_ValidQ(tuple_c_child_curs &curs);
+bool                 tuple_c_child_curs_ValidQ(tuple_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FTuple.c_child_curs.Next
-void                 tuple_c_child_curs_Next(tuple_c_child_curs &curs);
+void                 tuple_c_child_curs_Next(tuple_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FTuple.c_child_curs.Access
-acr_in::FTuple&      tuple_c_child_curs_Access(tuple_c_child_curs &curs);
+acr_in::FTuple&      tuple_c_child_curs_Access(tuple_c_child_curs &curs) __attribute__((nothrow));
 // func:acr_in.FTuple.c_parent_curs.Reset
-void                 tuple_c_parent_curs_Reset(tuple_c_parent_curs &curs, acr_in::FTuple &parent);
+void                 tuple_c_parent_curs_Reset(tuple_c_parent_curs &curs, acr_in::FTuple &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_in.FTuple.c_parent_curs.ValidQ
-bool                 tuple_c_parent_curs_ValidQ(tuple_c_parent_curs &curs);
+bool                 tuple_c_parent_curs_ValidQ(tuple_c_parent_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_in.FTuple.c_parent_curs.Next
-void                 tuple_c_parent_curs_Next(tuple_c_parent_curs &curs);
+void                 tuple_c_parent_curs_Next(tuple_c_parent_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_in.FTuple.c_parent_curs.Access
-acr_in::FTuple&      tuple_c_parent_curs_Access(tuple_c_parent_curs &curs);
+acr_in::FTuple&      tuple_c_parent_curs_Access(tuple_c_parent_curs &curs) __attribute__((nothrow));
 // func:acr_in.FTuple..Uninit
 void                 FTuple_Uninit(acr_in::FTuple& tuple) __attribute__((nothrow));
 

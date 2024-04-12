@@ -283,9 +283,11 @@ Other ctypes in this namespace which don't have own readme files
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |in|algo.cstring|Val|"data"|Input directory or filename, - for stdin|
+|pkgdata|algo.cstring|Val|""|Load package definitions from here|
 |package|[dev.Package](/txt/ssimdb/dev/package.md)|RegxSql|""|Regx of package|
+|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|RegxSql|""|Operate on specified namespace only|
 |install|bool|Val||Install new package (specify -origin)|
-|update|bool|Val||Update new package (-origin)|
+|update|bool|Val||Update package (-origin)|
 |list|bool|Val||List installed packages|
 |diff|bool|Val||Diff package with respect to installed version|
 |push|bool|Val||Evaluate package diff and push it to origin|
@@ -297,16 +299,15 @@ Other ctypes in this namespace which don't have own readme files
 |showrec|bool|Val||Show records belonging to package|
 |showfile|bool|Val||List package files (gitfile records)|
 |R|bool|Val||reverse the diff direction|
+|l|bool|Val||Use local package definition on the remote side|
 |reset|bool|Val||Reset package baseref/origin to those provided by the command line|
 |checkclean|bool|Val|true|Ensure that changes are applied to a clean directory|
-|t|bool|Val||Select dependent packages for operation|
+|t|bool|Val||Select parent packages for operation|
 |stat|bool|Val||(with -diff) show stats|
 |annotate|algo.cstring|Val|""|Read file and annotate each input tuple with package(s) it belongs to|
-|gen|bool|Val|true|Show differences in generated files|
 |data_in|algo.cstring|Val|"data"|Dataset from which package records are loaded|
 |e|bool|Val||Open selected records in editor|
 |binpath|algo.cstring|Val|"bin"|(internal use)|
-|nosort|bool|Val|false|(with -showrec) don't sort resulting records|
 
 #### command.atf_amc - Command line for [atf_amc](/txt/exe/atf_amc/README.md)
 <a href="#command-atf_amc"></a>
@@ -560,9 +561,6 @@ Other ctypes in this namespace which don't have own readme files
 |pretty|bool|Val|false|Format output for the screen|
 |nologo|bool|Val||Don't show copyright notice|
 |baddbok|bool|Val||Don't claim if bad database|
-
-#### command.ob - 
-<a href="#command-ob"></a>
 
 #### command.orgfile - Command line for [orgfile](/txt/exe/orgfile/README.md)
 <a href="#command-orgfile"></a>

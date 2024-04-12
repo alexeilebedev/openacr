@@ -264,6 +264,13 @@ void gcli::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:gcli.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!gcli::LoadTuplesMaybe(cmd.in,true)) {
+            err << "gcli.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -276,8 +283,6 @@ void gcli::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(gcli::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- gcli.FDb._db.MainLoop

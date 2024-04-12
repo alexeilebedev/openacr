@@ -7887,6 +7887,48 @@ inline i32 amc::ind_pmaskfld_N() {
     return _db.ind_pmaskfld_n;
 }
 
+// --- amc.FDb.ssimsort.EmptyQ
+// Return true if index is empty
+inline bool amc::ssimsort_EmptyQ() {
+    return _db.ssimsort_n == 0;
+}
+
+// --- amc.FDb.ssimsort.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FSsimsort* amc::ssimsort_Find(u64 t) {
+    amc::FSsimsort *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ssimsort_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ssimsort_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.ssimsort.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FSsimsort* amc::ssimsort_Last() {
+    return ssimsort_Find(u64(_db.ssimsort_n-1));
+}
+
+// --- amc.FDb.ssimsort.N
+// Return number of items in the pool
+inline i32 amc::ssimsort_N() {
+    return _db.ssimsort_n;
+}
+
+// --- amc.FDb.ssimsort.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FSsimsort& amc::ssimsort_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ssimsort_lary[bsr][index];
+}
+
 // --- amc.FDb.fsort_curs.Reset
 // cursor points to valid item
 inline void amc::_db_fsort_curs_Reset(_db_fsort_curs &curs, amc::FDb &parent) {
@@ -10976,6 +11018,31 @@ inline void amc::_db_pmaskfld_member_curs_Next(_db_pmaskfld_member_curs &curs) {
 // item access
 inline amc::FPmaskfldMember& amc::_db_pmaskfld_member_curs_Access(_db_pmaskfld_member_curs &curs) {
     return pmaskfld_member_qFind(u64(curs.index));
+}
+
+// --- amc.FDb.ssimsort_curs.Reset
+// cursor points to valid item
+inline void amc::_db_ssimsort_curs_Reset(_db_ssimsort_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.ssimsort_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_ssimsort_curs_ValidQ(_db_ssimsort_curs &curs) {
+    return curs.index < _db.ssimsort_n;
+}
+
+// --- amc.FDb.ssimsort_curs.Next
+// proceed to next item
+inline void amc::_db_ssimsort_curs_Next(_db_ssimsort_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.ssimsort_curs.Access
+// item access
+inline amc::FSsimsort& amc::_db_ssimsort_curs_Access(_db_ssimsort_curs &curs) {
+    return ssimsort_qFind(u64(curs.index));
 }
 inline amc::FDispatch::FDispatch() {
     amc::FDispatch_Init(*this);
@@ -15548,6 +15615,17 @@ inline void amc::c_ssimvolatile_Remove(amc::FSsimfile& ssimfile, amc::FSsimvolat
         ssimfile.c_ssimvolatile = NULL;
     }
 }
+inline amc::FSsimsort::FSsimsort() {
+    amc::FSsimsort_Init(*this);
+}
+
+
+// --- amc.FSsimsort..Init
+// Set all fields to initial values.
+inline void amc::FSsimsort_Init(amc::FSsimsort& ssimsort) {
+    ssimsort.p_ssimfile = NULL;
+    ssimsort.p_sortfld = NULL;
+}
 inline amc::FSsimvolatile::FSsimvolatile() {
 }
 
@@ -15674,7 +15752,6 @@ inline amc::FTargdep& amc::c_targdep_qLast(amc::FTarget& target) {
 // --- amc.FTarget..Init
 // Set all fields to initial values.
 inline void amc::FTarget_Init(amc::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.c_targdep_elems = NULL; // (amc.FTarget.c_targdep)
     target.c_targdep_n = 0; // (amc.FTarget.c_targdep)
     target.c_targdep_max = 0; // (amc.FTarget.c_targdep)

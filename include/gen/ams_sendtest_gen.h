@@ -244,16 +244,16 @@ bool                 child_XrefMaybe(ams_sendtest::FChild &row);
 
 // cursor points to valid item
 // func:ams_sendtest.FDb.child_curs.Reset
-void                 _db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent);
+void                 _db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams_sendtest.FDb.child_curs.ValidQ
-bool                 _db_child_curs_ValidQ(_db_child_curs &curs);
+bool                 _db_child_curs_ValidQ(_db_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams_sendtest.FDb.child_curs.Next
-void                 _db_child_curs_Next(_db_child_curs &curs);
+void                 _db_child_curs_Next(_db_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams_sendtest.FDb.child_curs.Access
-ams_sendtest::FChild& _db_child_curs_Access(_db_child_curs &curs);
+ams_sendtest::FChild& _db_child_curs_Access(_db_child_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams_sendtest.FDb..Init
 void                 FDb_Init();

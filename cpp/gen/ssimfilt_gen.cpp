@@ -229,6 +229,13 @@ void ssimfilt::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:ssimfilt.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!ssimfilt::LoadTuplesMaybe(cmd.in,true)) {
+            err << "ssimfilt.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -241,8 +248,6 @@ void ssimfilt::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(ssimfilt::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- ssimfilt.FDb._db.MainLoop

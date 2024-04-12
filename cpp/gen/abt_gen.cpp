@@ -1430,6 +1430,13 @@ void abt::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:abt.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!abt::LoadTuplesMaybe(cmd.in,true)) {
+            err << "abt.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -1442,8 +1449,6 @@ void abt::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(abt::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- abt.FDb._db.MainLoop
@@ -1479,7 +1484,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'7e023e6a973c96b9eff77b297f4736dc1b800211'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'c19adc35633653a85ee5ea1cc7565d6328cf53e5'");
 }
 
 // --- abt.FDb._db.StaticCheck
@@ -5378,14 +5383,12 @@ void abt::FTargdep_Uninit(abt::FTargdep& targdep) {
 // Copy fields out of row
 void abt::target_CopyOut(abt::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- abt.FTarget.msghdr.CopyIn
 // Copy fields in to row
 void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- abt.FTarget.c_targsrc.Insert
@@ -5802,7 +5805,6 @@ void abt::c_alllib_Reserve(abt::FTarget& target, u32 n) {
 // --- abt.FTarget..Init
 // Set all fields to initial values.
 void abt::FTarget_Init(abt::FTarget& target) {
-    target.compat = algo::strptr("Linux-%.%-%");
     target.ood = bool(false);
     target.targ_start = NULL;
     target.targ_compile = NULL;

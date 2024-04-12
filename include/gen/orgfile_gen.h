@@ -307,28 +307,28 @@ bool                 timefmt_XrefMaybe(orgfile::FTimefmt &row);
 
 // cursor points to valid item
 // func:orgfile.FDb.filehash_curs.Reset
-void                 _db_filehash_curs_Reset(_db_filehash_curs &curs, orgfile::FDb &parent);
+void                 _db_filehash_curs_Reset(_db_filehash_curs &curs, orgfile::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:orgfile.FDb.filehash_curs.ValidQ
-bool                 _db_filehash_curs_ValidQ(_db_filehash_curs &curs);
+bool                 _db_filehash_curs_ValidQ(_db_filehash_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:orgfile.FDb.filehash_curs.Next
-void                 _db_filehash_curs_Next(_db_filehash_curs &curs);
+void                 _db_filehash_curs_Next(_db_filehash_curs &curs) __attribute__((nothrow));
 // item access
 // func:orgfile.FDb.filehash_curs.Access
-orgfile::FFilehash&  _db_filehash_curs_Access(_db_filehash_curs &curs);
+orgfile::FFilehash&  _db_filehash_curs_Access(_db_filehash_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:orgfile.FDb.timefmt_curs.Reset
-void                 _db_timefmt_curs_Reset(_db_timefmt_curs &curs, orgfile::FDb &parent);
+void                 _db_timefmt_curs_Reset(_db_timefmt_curs &curs, orgfile::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:orgfile.FDb.timefmt_curs.ValidQ
-bool                 _db_timefmt_curs_ValidQ(_db_timefmt_curs &curs);
+bool                 _db_timefmt_curs_ValidQ(_db_timefmt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:orgfile.FDb.timefmt_curs.Next
-void                 _db_timefmt_curs_Next(_db_timefmt_curs &curs);
+void                 _db_timefmt_curs_Next(_db_timefmt_curs &curs) __attribute__((nothrow));
 // item access
 // func:orgfile.FDb.timefmt_curs.Access
-orgfile::FTimefmt&   _db_timefmt_curs_Access(_db_timefmt_curs &curs);
+orgfile::FTimefmt&   _db_timefmt_curs_Access(_db_timefmt_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:orgfile.FDb..Init
 void                 FDb_Init();
@@ -400,16 +400,16 @@ orgfile::FFilename&  c_filename_qLast(orgfile::FFilehash& filehash) __attribute_
 // func:orgfile.FFilehash..Init
 void                 FFilehash_Init(orgfile::FFilehash& filehash);
 // func:orgfile.FFilehash.c_filename_curs.Reset
-void                 filehash_c_filename_curs_Reset(filehash_c_filename_curs &curs, orgfile::FFilehash &parent);
+void                 filehash_c_filename_curs_Reset(filehash_c_filename_curs &curs, orgfile::FFilehash &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:orgfile.FFilehash.c_filename_curs.ValidQ
-bool                 filehash_c_filename_curs_ValidQ(filehash_c_filename_curs &curs);
+bool                 filehash_c_filename_curs_ValidQ(filehash_c_filename_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:orgfile.FFilehash.c_filename_curs.Next
-void                 filehash_c_filename_curs_Next(filehash_c_filename_curs &curs);
+void                 filehash_c_filename_curs_Next(filehash_c_filename_curs &curs) __attribute__((nothrow));
 // item access
 // func:orgfile.FFilehash.c_filename_curs.Access
-orgfile::FFilename&  filehash_c_filename_curs_Access(filehash_c_filename_curs &curs);
+orgfile::FFilename&  filehash_c_filename_curs_Access(filehash_c_filename_curs &curs) __attribute__((nothrow));
 // func:orgfile.FFilehash..Uninit
 void                 FFilehash_Uninit(orgfile::FFilehash& filehash) __attribute__((nothrow));
 

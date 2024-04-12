@@ -133,6 +133,17 @@ void amc::gen_check_cascdel() {
 
 // -----------------------------------------------------------------------------
 
+void amc::gen_check_ssimsort() {
+    ind_beg(_db_ssimsort_curs,ssimsort,_db) {
+        amccheck(ssimsort.p_ssimfile->p_ctype  == ssimsort.p_sortfld->p_ctype, "amc.bad_ssimsort"
+                 <<Keyval("ssimsort",ssimsort.ssimfile)
+                 <<Keyval("sortfld",ssimsort.sortfld)
+                 <<Keyval("comment","Sort field unrelated to the type"));
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::gen_countxref() {
     ind_beg(amc::_db_xref_curs, xref,amc::_db) {
         xref.p_field->p_arg->n_xref++;
@@ -701,9 +712,6 @@ void amc::gen_prep_ctype() {
 }
 
 // -----------------------------------------------------------------------------
-
-void amc::gen_copypriv() {
-}
 
 void amc::gen_xref2() {
     // for each ctype, calculate list of xrefs where the ctype is a child

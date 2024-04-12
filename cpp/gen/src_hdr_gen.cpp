@@ -250,6 +250,13 @@ void src_hdr::ReadArgv() {
     }
     if (!dohelp) {
     }
+    // dmmeta.floadtuples:src_hdr.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!src_hdr::LoadTuplesMaybe(cmd.in,true)) {
+            err << "src_hdr.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -262,8 +269,6 @@ void src_hdr::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(src_hdr::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- src_hdr.FDb._db.MainLoop
@@ -299,7 +304,7 @@ static void src_hdr::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'323f10076c68df02dee95ec49c713fe77dc669b1'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'75d7aed238629cf14dd7cdb7e480666e8a15ba85'");
 }
 
 // --- src_hdr.FDb._db.StaticCheck
@@ -2163,14 +2168,12 @@ void src_hdr::FSrc_Init(src_hdr::FSrc& parent) {
 // Copy fields out of row
 void src_hdr::target_CopyOut(src_hdr::FTarget &row, dev::Target &out) {
     out.target = row.target;
-    out.compat = row.compat;
 }
 
 // --- src_hdr.FTarget.base.CopyIn
 // Copy fields in to row
 void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
     row.target = in.target;
-    row.compat = in.compat;
 }
 
 // --- src_hdr.FTarget.c_targsrc.Insert

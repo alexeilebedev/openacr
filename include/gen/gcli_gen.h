@@ -2292,386 +2292,386 @@ void                 ind_gact_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:gcli.FDb.gtype_curs.Reset
-void                 _db_gtype_curs_Reset(_db_gtype_curs &curs, gcli::FDb &parent);
+void                 _db_gtype_curs_Reset(_db_gtype_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtype_curs.ValidQ
-bool                 _db_gtype_curs_ValidQ(_db_gtype_curs &curs);
+bool                 _db_gtype_curs_ValidQ(_db_gtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtype_curs.Next
-void                 _db_gtype_curs_Next(_db_gtype_curs &curs);
+void                 _db_gtype_curs_Next(_db_gtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtype_curs.Access
-gcli::FGtype&        _db_gtype_curs_Access(_db_gtype_curs &curs);
+gcli::FGtype&        _db_gtype_curs_Access(_db_gtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepossh_curs.Reset
-void                 _db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent);
+void                 _db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepossh_curs.ValidQ
-bool                 _db_grepossh_curs_ValidQ(_db_grepossh_curs &curs);
+bool                 _db_grepossh_curs_ValidQ(_db_grepossh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepossh_curs.Next
-void                 _db_grepossh_curs_Next(_db_grepossh_curs &curs);
+void                 _db_grepossh_curs_Next(_db_grepossh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepossh_curs.Access
-gcli::FGrepossh&     _db_grepossh_curs_Access(_db_grepossh_curs &curs);
+gcli::FGrepossh&     _db_grepossh_curs_Access(_db_grepossh_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepogitport_curs.Reset
-void                 _db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent);
+void                 _db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepogitport_curs.ValidQ
-bool                 _db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs);
+bool                 _db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepogitport_curs.Next
-void                 _db_grepogitport_curs_Next(_db_grepogitport_curs &curs);
+void                 _db_grepogitport_curs_Next(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepogitport_curs.Access
-gcli::FGrepogitport& _db_grepogitport_curs_Access(_db_grepogitport_curs &curs);
+gcli::FGrepogitport& _db_grepogitport_curs_Access(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.githost_curs.Reset
-void                 _db_githost_curs_Reset(_db_githost_curs &curs, gcli::FDb &parent);
+void                 _db_githost_curs_Reset(_db_githost_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.githost_curs.ValidQ
-bool                 _db_githost_curs_ValidQ(_db_githost_curs &curs);
+bool                 _db_githost_curs_ValidQ(_db_githost_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.githost_curs.Next
-void                 _db_githost_curs_Next(_db_githost_curs &curs);
+void                 _db_githost_curs_Next(_db_githost_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.githost_curs.Access
-gcli::FGithost&      _db_githost_curs_Access(_db_githost_curs &curs);
+gcli::FGithost&      _db_githost_curs_Access(_db_githost_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gstatet_curs.Reset
-void                 _db_gstatet_curs_Reset(_db_gstatet_curs &curs, gcli::FDb &parent);
+void                 _db_gstatet_curs_Reset(_db_gstatet_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gstatet_curs.ValidQ
-bool                 _db_gstatet_curs_ValidQ(_db_gstatet_curs &curs);
+bool                 _db_gstatet_curs_ValidQ(_db_gstatet_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gstatet_curs.Next
-void                 _db_gstatet_curs_Next(_db_gstatet_curs &curs);
+void                 _db_gstatet_curs_Next(_db_gstatet_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gstatet_curs.Access
-gcli::FGstatet&      _db_gstatet_curs_Access(_db_gstatet_curs &curs);
+gcli::FGstatet&      _db_gstatet_curs_Access(_db_gstatet_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gmethod_curs.Reset
-void                 _db_gmethod_curs_Reset(_db_gmethod_curs &curs, gcli::FDb &parent);
+void                 _db_gmethod_curs_Reset(_db_gmethod_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gmethod_curs.ValidQ
-bool                 _db_gmethod_curs_ValidQ(_db_gmethod_curs &curs);
+bool                 _db_gmethod_curs_ValidQ(_db_gmethod_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gmethod_curs.Next
-void                 _db_gmethod_curs_Next(_db_gmethod_curs &curs);
+void                 _db_gmethod_curs_Next(_db_gmethod_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gmethod_curs.Access
-gcli::FGmethod&      _db_gmethod_curs_Access(_db_gmethod_curs &curs);
+gcli::FGmethod&      _db_gmethod_curs_Access(_db_gmethod_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdt_curs.Reset
-void                 _db_gclicmdt_curs_Reset(_db_gclicmdt_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdt_curs_Reset(_db_gclicmdt_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdt_curs.ValidQ
-bool                 _db_gclicmdt_curs_ValidQ(_db_gclicmdt_curs &curs);
+bool                 _db_gclicmdt_curs_ValidQ(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdt_curs.Next
-void                 _db_gclicmdt_curs_Next(_db_gclicmdt_curs &curs);
+void                 _db_gclicmdt_curs_Next(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdt_curs.Access
-gcli::FGclicmdt&     _db_gclicmdt_curs_Access(_db_gclicmdt_curs &curs);
+gcli::FGclicmdt&     _db_gclicmdt_curs_Access(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf_curs.Reset
-void                 _db_gclicmdf_curs_Reset(_db_gclicmdf_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdf_curs_Reset(_db_gclicmdf_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf_curs.ValidQ
-bool                 _db_gclicmdf_curs_ValidQ(_db_gclicmdf_curs &curs);
+bool                 _db_gclicmdf_curs_ValidQ(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdf_curs.Next
-void                 _db_gclicmdf_curs_Next(_db_gclicmdf_curs &curs);
+void                 _db_gclicmdf_curs_Next(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdf_curs.Access
-gcli::FGclicmdf&     _db_gclicmdf_curs_Access(_db_gclicmdf_curs &curs);
+gcli::FGclicmdf&     _db_gclicmdf_curs_Access(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf2j_curs.Reset
-void                 _db_gclicmdf2j_curs_Reset(_db_gclicmdf2j_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdf2j_curs_Reset(_db_gclicmdf2j_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf2j_curs.ValidQ
-bool                 _db_gclicmdf2j_curs_ValidQ(_db_gclicmdf2j_curs &curs);
+bool                 _db_gclicmdf2j_curs_ValidQ(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdf2j_curs.Next
-void                 _db_gclicmdf2j_curs_Next(_db_gclicmdf2j_curs &curs);
+void                 _db_gclicmdf2j_curs_Next(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdf2j_curs.Access
-gcli::FGclicmdf2j&   _db_gclicmdf2j_curs_Access(_db_gclicmdf2j_curs &curs);
+gcli::FGclicmdf2j&   _db_gclicmdf2j_curs_Access(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmd_curs.Reset
-void                 _db_gclicmd_curs_Reset(_db_gclicmd_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmd_curs_Reset(_db_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmd_curs.ValidQ
-bool                 _db_gclicmd_curs_ValidQ(_db_gclicmd_curs &curs);
+bool                 _db_gclicmd_curs_ValidQ(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmd_curs.Next
-void                 _db_gclicmd_curs_Next(_db_gclicmd_curs &curs);
+void                 _db_gclicmd_curs_Next(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmd_curs.Access
-gcli::FGclicmd&      _db_gclicmd_curs_Access(_db_gclicmd_curs &curs);
+gcli::FGclicmd&      _db_gclicmd_curs_Access(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeh_curs.Reset
-void                 _db_gtypeh_curs_Reset(_db_gtypeh_curs &curs, gcli::FDb &parent);
+void                 _db_gtypeh_curs_Reset(_db_gtypeh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeh_curs.ValidQ
-bool                 _db_gtypeh_curs_ValidQ(_db_gtypeh_curs &curs);
+bool                 _db_gtypeh_curs_ValidQ(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtypeh_curs.Next
-void                 _db_gtypeh_curs_Next(_db_gtypeh_curs &curs);
+void                 _db_gtypeh_curs_Next(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtypeh_curs.Access
-gcli::FGtypeh&       _db_gtypeh_curs_Access(_db_gtypeh_curs &curs);
+gcli::FGtypeh&       _db_gtypeh_curs_Access(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // func:gcli.FDb.c_gclicmd_curs.Reset
-void                 _db_c_gclicmd_curs_Reset(_db_c_gclicmd_curs &curs, gcli::FDb &parent);
+void                 _db_c_gclicmd_curs_Reset(_db_c_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.c_gclicmd_curs.ValidQ
-bool                 _db_c_gclicmd_curs_ValidQ(_db_c_gclicmd_curs &curs);
+bool                 _db_c_gclicmd_curs_ValidQ(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.c_gclicmd_curs.Next
-void                 _db_c_gclicmd_curs_Next(_db_c_gclicmd_curs &curs);
+void                 _db_c_gclicmd_curs_Next(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.c_gclicmd_curs.Access
-gcli::FGclicmd&      _db_c_gclicmd_curs_Access(_db_c_gclicmd_curs &curs);
+gcli::FGclicmd&      _db_c_gclicmd_curs_Access(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdj2f_curs.Reset
-void                 _db_gclicmdj2f_curs_Reset(_db_gclicmdj2f_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdj2f_curs_Reset(_db_gclicmdj2f_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdj2f_curs.ValidQ
-bool                 _db_gclicmdj2f_curs_ValidQ(_db_gclicmdj2f_curs &curs);
+bool                 _db_gclicmdj2f_curs_ValidQ(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdj2f_curs.Next
-void                 _db_gclicmdj2f_curs_Next(_db_gclicmdj2f_curs &curs);
+void                 _db_gclicmdj2f_curs_Next(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdj2f_curs.Access
-gcli::FGclicmdj2f&   _db_gclicmdj2f_curs_Access(_db_gclicmdj2f_curs &curs);
+gcli::FGclicmdj2f&   _db_gclicmdj2f_curs_Access(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdc_curs.Reset
-void                 _db_gclicmdc_curs_Reset(_db_gclicmdc_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdc_curs_Reset(_db_gclicmdc_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdc_curs.ValidQ
-bool                 _db_gclicmdc_curs_ValidQ(_db_gclicmdc_curs &curs);
+bool                 _db_gclicmdc_curs_ValidQ(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdc_curs.Next
-void                 _db_gclicmdc_curs_Next(_db_gclicmdc_curs &curs);
+void                 _db_gclicmdc_curs_Next(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdc_curs.Access
-gcli::FGclicmdc&     _db_gclicmdc_curs_Access(_db_gclicmdc_curs &curs);
+gcli::FGclicmdc&     _db_gclicmdc_curs_Access(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdarg_curs.Reset
-void                 _db_gclicmdarg_curs_Reset(_db_gclicmdarg_curs &curs, gcli::FDb &parent);
+void                 _db_gclicmdarg_curs_Reset(_db_gclicmdarg_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdarg_curs.ValidQ
-bool                 _db_gclicmdarg_curs_ValidQ(_db_gclicmdarg_curs &curs);
+bool                 _db_gclicmdarg_curs_ValidQ(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdarg_curs.Next
-void                 _db_gclicmdarg_curs_Next(_db_gclicmdarg_curs &curs);
+void                 _db_gclicmdarg_curs_Next(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdarg_curs.Access
-gcli::FGclicmdarg&   _db_gclicmdarg_curs_Access(_db_gclicmdarg_curs &curs);
+gcli::FGclicmdarg&   _db_gclicmdarg_curs_Access(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issue_curs.Reset
-void                 _db_issue_curs_Reset(_db_issue_curs &curs, gcli::FDb &parent);
+void                 _db_issue_curs_Reset(_db_issue_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issue_curs.ValidQ
-bool                 _db_issue_curs_ValidQ(_db_issue_curs &curs);
+bool                 _db_issue_curs_ValidQ(_db_issue_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.issue_curs.Next
-void                 _db_issue_curs_Next(_db_issue_curs &curs);
+void                 _db_issue_curs_Next(_db_issue_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.issue_curs.Access
-gcli::FIssue&        _db_issue_curs_Access(_db_issue_curs &curs);
+gcli::FIssue&        _db_issue_curs_Access(_db_issue_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepo_curs.Reset
-void                 _db_grepo_curs_Reset(_db_grepo_curs &curs, gcli::FDb &parent);
+void                 _db_grepo_curs_Reset(_db_grepo_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepo_curs.ValidQ
-bool                 _db_grepo_curs_ValidQ(_db_grepo_curs &curs);
+bool                 _db_grepo_curs_ValidQ(_db_grepo_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepo_curs.Next
-void                 _db_grepo_curs_Next(_db_grepo_curs &curs);
+void                 _db_grepo_curs_Next(_db_grepo_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepo_curs.Access
-gcli::FGrepo&        _db_grepo_curs_Access(_db_grepo_curs &curs);
+gcli::FGrepo&        _db_grepo_curs_Access(_db_grepo_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.tuples_curs.Reset
-void                 _db_tuples_curs_Reset(_db_tuples_curs &curs, gcli::FDb &parent);
+void                 _db_tuples_curs_Reset(_db_tuples_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.tuples_curs.ValidQ
-bool                 _db_tuples_curs_ValidQ(_db_tuples_curs &curs);
+bool                 _db_tuples_curs_ValidQ(_db_tuples_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.tuples_curs.Next
-void                 _db_tuples_curs_Next(_db_tuples_curs &curs);
+void                 _db_tuples_curs_Next(_db_tuples_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.tuples_curs.Access
-gcli::FTuples&       _db_tuples_curs_Access(_db_tuples_curs &curs);
+gcli::FTuples&       _db_tuples_curs_Access(_db_tuples_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issuenote_curs.Reset
-void                 _db_issuenote_curs_Reset(_db_issuenote_curs &curs, gcli::FDb &parent);
+void                 _db_issuenote_curs_Reset(_db_issuenote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issuenote_curs.ValidQ
-bool                 _db_issuenote_curs_ValidQ(_db_issuenote_curs &curs);
+bool                 _db_issuenote_curs_ValidQ(_db_issuenote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.issuenote_curs.Next
-void                 _db_issuenote_curs_Next(_db_issuenote_curs &curs);
+void                 _db_issuenote_curs_Next(_db_issuenote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.issuenote_curs.Access
-gcli::FIssuenote&    _db_issuenote_curs_Access(_db_issuenote_curs &curs);
+gcli::FIssuenote&    _db_issuenote_curs_Access(_db_issuenote_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrjob_curs.Reset
-void                 _db_mrjob_curs_Reset(_db_mrjob_curs &curs, gcli::FDb &parent);
+void                 _db_mrjob_curs_Reset(_db_mrjob_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrjob_curs.ValidQ
-bool                 _db_mrjob_curs_ValidQ(_db_mrjob_curs &curs);
+bool                 _db_mrjob_curs_ValidQ(_db_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mrjob_curs.Next
-void                 _db_mrjob_curs_Next(_db_mrjob_curs &curs);
+void                 _db_mrjob_curs_Next(_db_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mrjob_curs.Access
-gcli::FMrjob&        _db_mrjob_curs_Access(_db_mrjob_curs &curs);
+gcli::FMrjob&        _db_mrjob_curs_Access(_db_mrjob_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrnote_curs.Reset
-void                 _db_mrnote_curs_Reset(_db_mrnote_curs &curs, gcli::FDb &parent);
+void                 _db_mrnote_curs_Reset(_db_mrnote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrnote_curs.ValidQ
-bool                 _db_mrnote_curs_ValidQ(_db_mrnote_curs &curs);
+bool                 _db_mrnote_curs_ValidQ(_db_mrnote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mrnote_curs.Next
-void                 _db_mrnote_curs_Next(_db_mrnote_curs &curs);
+void                 _db_mrnote_curs_Next(_db_mrnote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mrnote_curs.Access
-gcli::FMrnote&       _db_mrnote_curs_Access(_db_mrnote_curs &curs);
+gcli::FMrnote&       _db_mrnote_curs_Access(_db_mrnote_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.user_curs.Reset
-void                 _db_user_curs_Reset(_db_user_curs &curs, gcli::FDb &parent);
+void                 _db_user_curs_Reset(_db_user_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.user_curs.ValidQ
-bool                 _db_user_curs_ValidQ(_db_user_curs &curs);
+bool                 _db_user_curs_ValidQ(_db_user_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.user_curs.Next
-void                 _db_user_curs_Next(_db_user_curs &curs);
+void                 _db_user_curs_Next(_db_user_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.user_curs.Access
-gcli::FUser&         _db_user_curs_Access(_db_user_curs &curs);
+gcli::FUser&         _db_user_curs_Access(_db_user_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.milestone_curs.Reset
-void                 _db_milestone_curs_Reset(_db_milestone_curs &curs, gcli::FDb &parent);
+void                 _db_milestone_curs_Reset(_db_milestone_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.milestone_curs.ValidQ
-bool                 _db_milestone_curs_ValidQ(_db_milestone_curs &curs);
+bool                 _db_milestone_curs_ValidQ(_db_milestone_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.milestone_curs.Next
-void                 _db_milestone_curs_Next(_db_milestone_curs &curs);
+void                 _db_milestone_curs_Next(_db_milestone_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.milestone_curs.Access
-gcli::FMilestone&    _db_milestone_curs_Access(_db_milestone_curs &curs);
+gcli::FMilestone&    _db_milestone_curs_Access(_db_milestone_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mr_curs.Reset
-void                 _db_mr_curs_Reset(_db_mr_curs &curs, gcli::FDb &parent);
+void                 _db_mr_curs_Reset(_db_mr_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mr_curs.ValidQ
-bool                 _db_mr_curs_ValidQ(_db_mr_curs &curs);
+bool                 _db_mr_curs_ValidQ(_db_mr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mr_curs.Next
-void                 _db_mr_curs_Next(_db_mr_curs &curs);
+void                 _db_mr_curs_Next(_db_mr_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mr_curs.Access
-gcli::FMr&           _db_mr_curs_Access(_db_mr_curs &curs);
+gcli::FMr&           _db_mr_curs_Access(_db_mr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeprefix_curs.Reset
-void                 _db_gtypeprefix_curs_Reset(_db_gtypeprefix_curs &curs, gcli::FDb &parent);
+void                 _db_gtypeprefix_curs_Reset(_db_gtypeprefix_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeprefix_curs.ValidQ
-bool                 _db_gtypeprefix_curs_ValidQ(_db_gtypeprefix_curs &curs);
+bool                 _db_gtypeprefix_curs_ValidQ(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtypeprefix_curs.Next
-void                 _db_gtypeprefix_curs_Next(_db_gtypeprefix_curs &curs);
+void                 _db_gtypeprefix_curs_Next(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtypeprefix_curs.Access
-gcli::FGtypeprefix&  _db_gtypeprefix_curs_Access(_db_gtypeprefix_curs &curs);
+gcli::FGtypeprefix&  _db_gtypeprefix_curs_Access(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblact_curs.Reset
-void                 _db_gtblact_curs_Reset(_db_gtblact_curs &curs, gcli::FDb &parent);
+void                 _db_gtblact_curs_Reset(_db_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblact_curs.ValidQ
-bool                 _db_gtblact_curs_ValidQ(_db_gtblact_curs &curs);
+bool                 _db_gtblact_curs_ValidQ(_db_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtblact_curs.Next
-void                 _db_gtblact_curs_Next(_db_gtblact_curs &curs);
+void                 _db_gtblact_curs_Next(_db_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtblact_curs.Access
-gcli::FGtblact&      _db_gtblact_curs_Access(_db_gtblact_curs &curs);
+gcli::FGtblact&      _db_gtblact_curs_Access(_db_gtblact_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblactfld_curs.Reset
-void                 _db_gtblactfld_curs_Reset(_db_gtblactfld_curs &curs, gcli::FDb &parent);
+void                 _db_gtblactfld_curs_Reset(_db_gtblactfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblactfld_curs.ValidQ
-bool                 _db_gtblactfld_curs_ValidQ(_db_gtblactfld_curs &curs);
+bool                 _db_gtblactfld_curs_ValidQ(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtblactfld_curs.Next
-void                 _db_gtblactfld_curs_Next(_db_gtblactfld_curs &curs);
+void                 _db_gtblactfld_curs_Next(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtblactfld_curs.Access
-gcli::FGtblactfld&   _db_gtblactfld_curs_Access(_db_gtblactfld_curs &curs);
+gcli::FGtblactfld&   _db_gtblactfld_curs_Access(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.zd_gtblact_curs.Reset
-void                 _db_zd_gtblact_curs_Reset(_db_zd_gtblact_curs &curs, gcli::FDb &parent);
+void                 _db_zd_gtblact_curs_Reset(_db_zd_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.zd_gtblact_curs.ValidQ
-bool                 _db_zd_gtblact_curs_ValidQ(_db_zd_gtblact_curs &curs);
+bool                 _db_zd_gtblact_curs_ValidQ(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.zd_gtblact_curs.Next
-void                 _db_zd_gtblact_curs_Next(_db_zd_gtblact_curs &curs);
+void                 _db_zd_gtblact_curs_Next(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.zd_gtblact_curs.Access
-gcli::FGtblact&      _db_zd_gtblact_curs_Access(_db_zd_gtblact_curs &curs);
+gcli::FGtblact&      _db_zd_gtblact_curs_Access(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gfld_curs.Reset
-void                 _db_gfld_curs_Reset(_db_gfld_curs &curs, gcli::FDb &parent);
+void                 _db_gfld_curs_Reset(_db_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gfld_curs.ValidQ
-bool                 _db_gfld_curs_ValidQ(_db_gfld_curs &curs);
+bool                 _db_gfld_curs_ValidQ(_db_gfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gfld_curs.Next
-void                 _db_gfld_curs_Next(_db_gfld_curs &curs);
+void                 _db_gfld_curs_Next(_db_gfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gfld_curs.Access
-gcli::FGfld&         _db_gfld_curs_Access(_db_gfld_curs &curs);
+gcli::FGfld&         _db_gfld_curs_Access(_db_gfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FDb.c_gfld_curs.Reset
-void                 _db_c_gfld_curs_Reset(_db_c_gfld_curs &curs, gcli::FDb &parent);
+void                 _db_c_gfld_curs_Reset(_db_c_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.c_gfld_curs.ValidQ
-bool                 _db_c_gfld_curs_ValidQ(_db_c_gfld_curs &curs);
+bool                 _db_c_gfld_curs_ValidQ(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.c_gfld_curs.Next
-void                 _db_c_gfld_curs_Next(_db_c_gfld_curs &curs);
+void                 _db_c_gfld_curs_Next(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.c_gfld_curs.Access
-gcli::FGfld&         _db_c_gfld_curs_Access(_db_c_gfld_curs &curs);
+gcli::FGfld&         _db_c_gfld_curs_Access(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtbl_curs.Reset
-void                 _db_gtbl_curs_Reset(_db_gtbl_curs &curs, gcli::FDb &parent);
+void                 _db_gtbl_curs_Reset(_db_gtbl_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtbl_curs.ValidQ
-bool                 _db_gtbl_curs_ValidQ(_db_gtbl_curs &curs);
+bool                 _db_gtbl_curs_ValidQ(_db_gtbl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtbl_curs.Next
-void                 _db_gtbl_curs_Next(_db_gtbl_curs &curs);
+void                 _db_gtbl_curs_Next(_db_gtbl_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtbl_curs.Access
-gcli::FGtbl&         _db_gtbl_curs_Access(_db_gtbl_curs &curs);
+gcli::FGtbl&         _db_gtbl_curs_Access(_db_gtbl_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gact_curs.Reset
-void                 _db_gact_curs_Reset(_db_gact_curs &curs, gcli::FDb &parent);
+void                 _db_gact_curs_Reset(_db_gact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gact_curs.ValidQ
-bool                 _db_gact_curs_ValidQ(_db_gact_curs &curs);
+bool                 _db_gact_curs_ValidQ(_db_gact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gact_curs.Next
-void                 _db_gact_curs_Next(_db_gact_curs &curs);
+void                 _db_gact_curs_Next(_db_gact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gact_curs.Access
-gcli::FGact&         _db_gact_curs_Access(_db_gact_curs &curs);
+gcli::FGact&         _db_gact_curs_Access(_db_gact_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FDb..Init
 void                 FDb_Init();
@@ -2937,49 +2937,49 @@ gcli::FGclicmdf2j&   c_gclicmdf2j_qLast(gcli::FGclicmd& gclicmd) __attribute__((
 // func:gcli.FGclicmd..Init
 void                 FGclicmd_Init(gcli::FGclicmd& gclicmd);
 // func:gcli.FGclicmd.c_tuples_curs.Reset
-void                 gclicmd_c_tuples_curs_Reset(gclicmd_c_tuples_curs &curs, gcli::FGclicmd &parent);
+void                 gclicmd_c_tuples_curs_Reset(gclicmd_c_tuples_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_tuples_curs.ValidQ
-bool                 gclicmd_c_tuples_curs_ValidQ(gclicmd_c_tuples_curs &curs);
+bool                 gclicmd_c_tuples_curs_ValidQ(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_tuples_curs.Next
-void                 gclicmd_c_tuples_curs_Next(gclicmd_c_tuples_curs &curs);
+void                 gclicmd_c_tuples_curs_Next(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_tuples_curs.Access
-gcli::FTuples&       gclicmd_c_tuples_curs_Access(gclicmd_c_tuples_curs &curs);
+gcli::FTuples&       gclicmd_c_tuples_curs_Access(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Reset
-void                 gclicmd_c_gclicmdarg_curs_Reset(gclicmd_c_gclicmdarg_curs &curs, gcli::FGclicmd &parent);
+void                 gclicmd_c_gclicmdarg_curs_Reset(gclicmd_c_gclicmdarg_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdarg_curs.ValidQ
-bool                 gclicmd_c_gclicmdarg_curs_ValidQ(gclicmd_c_gclicmdarg_curs &curs);
+bool                 gclicmd_c_gclicmdarg_curs_ValidQ(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Next
-void                 gclicmd_c_gclicmdarg_curs_Next(gclicmd_c_gclicmdarg_curs &curs);
+void                 gclicmd_c_gclicmdarg_curs_Next(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Access
-gcli::FGclicmdarg&   gclicmd_c_gclicmdarg_curs_Access(gclicmd_c_gclicmdarg_curs &curs);
+gcli::FGclicmdarg&   gclicmd_c_gclicmdarg_curs_Access(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdc_curs.Reset
-void                 gclicmd_c_gclicmdc_curs_Reset(gclicmd_c_gclicmdc_curs &curs, gcli::FGclicmd &parent);
+void                 gclicmd_c_gclicmdc_curs_Reset(gclicmd_c_gclicmdc_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdc_curs.ValidQ
-bool                 gclicmd_c_gclicmdc_curs_ValidQ(gclicmd_c_gclicmdc_curs &curs);
+bool                 gclicmd_c_gclicmdc_curs_ValidQ(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdc_curs.Next
-void                 gclicmd_c_gclicmdc_curs_Next(gclicmd_c_gclicmdc_curs &curs);
+void                 gclicmd_c_gclicmdc_curs_Next(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdc_curs.Access
-gcli::FGclicmdc&     gclicmd_c_gclicmdc_curs_Access(gclicmd_c_gclicmdc_curs &curs);
+gcli::FGclicmdc&     gclicmd_c_gclicmdc_curs_Access(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Reset
-void                 gclicmd_c_gclicmdf2j_curs_Reset(gclicmd_c_gclicmdf2j_curs &curs, gcli::FGclicmd &parent);
+void                 gclicmd_c_gclicmdf2j_curs_Reset(gclicmd_c_gclicmdf2j_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.ValidQ
-bool                 gclicmd_c_gclicmdf2j_curs_ValidQ(gclicmd_c_gclicmdf2j_curs &curs);
+bool                 gclicmd_c_gclicmdf2j_curs_ValidQ(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Next
-void                 gclicmd_c_gclicmdf2j_curs_Next(gclicmd_c_gclicmdf2j_curs &curs);
+void                 gclicmd_c_gclicmdf2j_curs_Next(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Access
-gcli::FGclicmdf2j&   gclicmd_c_gclicmdf2j_curs_Access(gclicmd_c_gclicmdf2j_curs &curs);
+gcli::FGclicmdf2j&   gclicmd_c_gclicmdf2j_curs_Access(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd..Uninit
 void                 FGclicmd_Uninit(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
@@ -3090,16 +3090,16 @@ void                 FGclicmdc_Init(gcli::FGclicmdc& gclicmdc);
 // func:gcli.FGclicmdc..Concat_gclicmd_ctype
 tempstr              FGclicmdc_Concat_gclicmd_ctype( const algo::strptr& gclicmd ,const algo::strptr& ctype );
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Reset
-void                 gclicmdc_c_gclicmdf_curs_Reset(gclicmdc_c_gclicmdf_curs &curs, gcli::FGclicmdc &parent);
+void                 gclicmdc_c_gclicmdf_curs_Reset(gclicmdc_c_gclicmdf_curs &curs, gcli::FGclicmdc &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmdc.c_gclicmdf_curs.ValidQ
-bool                 gclicmdc_c_gclicmdf_curs_ValidQ(gclicmdc_c_gclicmdf_curs &curs);
+bool                 gclicmdc_c_gclicmdf_curs_ValidQ(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Next
-void                 gclicmdc_c_gclicmdf_curs_Next(gclicmdc_c_gclicmdf_curs &curs);
+void                 gclicmdc_c_gclicmdf_curs_Next(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Access
-gcli::FGclicmdf&     gclicmdc_c_gclicmdf_curs_Access(gclicmdc_c_gclicmdf_curs &curs);
+gcli::FGclicmdf&     gclicmdc_c_gclicmdf_curs_Access(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmdc..Uninit
 void                 FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 
@@ -3263,16 +3263,16 @@ void                 FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f);
 // func:gcli.FGclicmdj2f..Concat_gclicmd_jkey
 tempstr              FGclicmdj2f_Concat_gclicmd_jkey( const algo::strptr& gclicmd ,const algo::strptr& jkey );
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Reset
-void                 gclicmdj2f_c_gclicmdf_curs_Reset(gclicmdj2f_c_gclicmdf_curs &curs, gcli::FGclicmdj2f &parent);
+void                 gclicmdj2f_c_gclicmdf_curs_Reset(gclicmdj2f_c_gclicmdf_curs &curs, gcli::FGclicmdj2f &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.ValidQ
-bool                 gclicmdj2f_c_gclicmdf_curs_ValidQ(gclicmdj2f_c_gclicmdf_curs &curs);
+bool                 gclicmdj2f_c_gclicmdf_curs_ValidQ(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Next
-void                 gclicmdj2f_c_gclicmdf_curs_Next(gclicmdj2f_c_gclicmdf_curs &curs);
+void                 gclicmdj2f_c_gclicmdf_curs_Next(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Access
-gcli::FGclicmdf&     gclicmdj2f_c_gclicmdf_curs_Access(gclicmdj2f_c_gclicmdf_curs &curs);
+gcli::FGclicmdf&     gclicmdj2f_c_gclicmdf_curs_Access(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmdj2f..Uninit
 void                 FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 
@@ -3392,16 +3392,16 @@ gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGfld& gfld) __attribute__((nothro
 // func:gcli.FGfld..Init
 void                 FGfld_Init(gcli::FGfld& gfld);
 // func:gcli.FGfld.c_gtblactfld_curs.Reset
-void                 gfld_c_gtblactfld_curs_Reset(gfld_c_gtblactfld_curs &curs, gcli::FGfld &parent);
+void                 gfld_c_gtblactfld_curs_Reset(gfld_c_gtblactfld_curs &curs, gcli::FGfld &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGfld.c_gtblactfld_curs.ValidQ
-bool                 gfld_c_gtblactfld_curs_ValidQ(gfld_c_gtblactfld_curs &curs);
+bool                 gfld_c_gtblactfld_curs_ValidQ(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGfld.c_gtblactfld_curs.Next
-void                 gfld_c_gtblactfld_curs_Next(gfld_c_gtblactfld_curs &curs);
+void                 gfld_c_gtblactfld_curs_Next(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGfld.c_gtblactfld_curs.Access
-gcli::FGtblactfld&   gfld_c_gtblactfld_curs_Access(gfld_c_gtblactfld_curs &curs);
+gcli::FGtblactfld&   gfld_c_gtblactfld_curs_Access(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FGfld..Uninit
 void                 FGfld_Uninit(gcli::FGfld& gfld) __attribute__((nothrow));
 
@@ -3694,16 +3694,16 @@ gcli::FGtblact&      c_gtblact_qLast(gcli::FGtbl& gtbl) __attribute__((nothrow))
 // func:gcli.FGtbl..Init
 void                 FGtbl_Init(gcli::FGtbl& gtbl);
 // func:gcli.FGtbl.c_gtblact_curs.Reset
-void                 gtbl_c_gtblact_curs_Reset(gtbl_c_gtblact_curs &curs, gcli::FGtbl &parent);
+void                 gtbl_c_gtblact_curs_Reset(gtbl_c_gtblact_curs &curs, gcli::FGtbl &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtbl.c_gtblact_curs.ValidQ
-bool                 gtbl_c_gtblact_curs_ValidQ(gtbl_c_gtblact_curs &curs);
+bool                 gtbl_c_gtblact_curs_ValidQ(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtbl.c_gtblact_curs.Next
-void                 gtbl_c_gtblact_curs_Next(gtbl_c_gtblact_curs &curs);
+void                 gtbl_c_gtblact_curs_Next(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtbl.c_gtblact_curs.Access
-gcli::FGtblact&      gtbl_c_gtblact_curs_Access(gtbl_c_gtblact_curs &curs);
+gcli::FGtblact&      gtbl_c_gtblact_curs_Access(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtbl..Uninit
 void                 FGtbl_Uninit(gcli::FGtbl& gtbl) __attribute__((nothrow));
 
@@ -3801,16 +3801,16 @@ gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGtblact& gtblact) __attribute__((
 // func:gcli.FGtblact..Init
 void                 FGtblact_Init(gcli::FGtblact& gtblact);
 // func:gcli.FGtblact.c_gtblactfld_curs.Reset
-void                 gtblact_c_gtblactfld_curs_Reset(gtblact_c_gtblactfld_curs &curs, gcli::FGtblact &parent);
+void                 gtblact_c_gtblactfld_curs_Reset(gtblact_c_gtblactfld_curs &curs, gcli::FGtblact &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtblact.c_gtblactfld_curs.ValidQ
-bool                 gtblact_c_gtblactfld_curs_ValidQ(gtblact_c_gtblactfld_curs &curs);
+bool                 gtblact_c_gtblactfld_curs_ValidQ(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtblact.c_gtblactfld_curs.Next
-void                 gtblact_c_gtblactfld_curs_Next(gtblact_c_gtblactfld_curs &curs);
+void                 gtblact_c_gtblactfld_curs_Next(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtblact.c_gtblactfld_curs.Access
-gcli::FGtblactfld&   gtblact_c_gtblactfld_curs_Access(gtblact_c_gtblactfld_curs &curs);
+gcli::FGtblactfld&   gtblact_c_gtblactfld_curs_Access(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtblact..Uninit
 void                 FGtblact_Uninit(gcli::FGtblact& gtblact) __attribute__((nothrow));
 
@@ -3984,27 +3984,27 @@ gcli::FGtypeprefix&  c_gtypeprefix_qLast(gcli::FGtype& gtype) __attribute__((not
 // func:gcli.FGtype..Init
 void                 FGtype_Init(gcli::FGtype& gtype);
 // func:gcli.FGtype.c_gtypeh_curs.Reset
-void                 gtype_c_gtypeh_curs_Reset(gtype_c_gtypeh_curs &curs, gcli::FGtype &parent);
+void                 gtype_c_gtypeh_curs_Reset(gtype_c_gtypeh_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtype.c_gtypeh_curs.ValidQ
-bool                 gtype_c_gtypeh_curs_ValidQ(gtype_c_gtypeh_curs &curs);
+bool                 gtype_c_gtypeh_curs_ValidQ(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtype.c_gtypeh_curs.Next
-void                 gtype_c_gtypeh_curs_Next(gtype_c_gtypeh_curs &curs);
+void                 gtype_c_gtypeh_curs_Next(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtype.c_gtypeh_curs.Access
-gcli::FGtypeh&       gtype_c_gtypeh_curs_Access(gtype_c_gtypeh_curs &curs);
+gcli::FGtypeh&       gtype_c_gtypeh_curs_Access(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtype.c_gtypeprefix_curs.Reset
-void                 gtype_c_gtypeprefix_curs_Reset(gtype_c_gtypeprefix_curs &curs, gcli::FGtype &parent);
+void                 gtype_c_gtypeprefix_curs_Reset(gtype_c_gtypeprefix_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtype.c_gtypeprefix_curs.ValidQ
-bool                 gtype_c_gtypeprefix_curs_ValidQ(gtype_c_gtypeprefix_curs &curs);
+bool                 gtype_c_gtypeprefix_curs_ValidQ(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtype.c_gtypeprefix_curs.Next
-void                 gtype_c_gtypeprefix_curs_Next(gtype_c_gtypeprefix_curs &curs);
+void                 gtype_c_gtypeprefix_curs_Next(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtype.c_gtypeprefix_curs.Access
-gcli::FGtypeprefix&  gtype_c_gtypeprefix_curs_Access(gtype_c_gtypeprefix_curs &curs);
+gcli::FGtypeprefix&  gtype_c_gtypeprefix_curs_Access(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtype..Uninit
 void                 FGtype_Uninit(gcli::FGtype& gtype) __attribute__((nothrow));
 
@@ -4194,15 +4194,15 @@ algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n
 
 // proceed to next item
 // func:gcli.FHttp.response_header_curs.Next
-void                 FHttp_response_header_curs_Next(FHttp_response_header_curs &curs);
+void                 FHttp_response_header_curs_Next(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // func:gcli.FHttp.response_header_curs.Reset
-void                 FHttp_response_header_curs_Reset(FHttp_response_header_curs &curs, gcli::FHttp &parent);
+void                 FHttp_response_header_curs_Reset(FHttp_response_header_curs &curs, gcli::FHttp &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FHttp.response_header_curs.ValidQ
-bool                 FHttp_response_header_curs_ValidQ(FHttp_response_header_curs &curs);
+bool                 FHttp_response_header_curs_ValidQ(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FHttp.response_header_curs.Access
-algo::cstring&       FHttp_response_header_curs_Access(FHttp_response_header_curs &curs);
+algo::cstring&       FHttp_response_header_curs_Access(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FHttp..Init
 void                 FHttp_Init(gcli::FHttp& parent);
@@ -4346,27 +4346,27 @@ gcli::FIssuenote&    c_issuenote_qLast(gcli::FIssue& issue) __attribute__((nothr
 // func:gcli.FIssue..Init
 void                 FIssue_Init(gcli::FIssue& issue);
 // func:gcli.FIssue.c_mrjob_curs.Reset
-void                 issue_c_mrjob_curs_Reset(issue_c_mrjob_curs &curs, gcli::FIssue &parent);
+void                 issue_c_mrjob_curs_Reset(issue_c_mrjob_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FIssue.c_mrjob_curs.ValidQ
-bool                 issue_c_mrjob_curs_ValidQ(issue_c_mrjob_curs &curs);
+bool                 issue_c_mrjob_curs_ValidQ(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FIssue.c_mrjob_curs.Next
-void                 issue_c_mrjob_curs_Next(issue_c_mrjob_curs &curs);
+void                 issue_c_mrjob_curs_Next(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FIssue.c_mrjob_curs.Access
-gcli::FMrjob&        issue_c_mrjob_curs_Access(issue_c_mrjob_curs &curs);
+gcli::FMrjob&        issue_c_mrjob_curs_Access(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // func:gcli.FIssue.c_issuenote_curs.Reset
-void                 issue_c_issuenote_curs_Reset(issue_c_issuenote_curs &curs, gcli::FIssue &parent);
+void                 issue_c_issuenote_curs_Reset(issue_c_issuenote_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FIssue.c_issuenote_curs.ValidQ
-bool                 issue_c_issuenote_curs_ValidQ(issue_c_issuenote_curs &curs);
+bool                 issue_c_issuenote_curs_ValidQ(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FIssue.c_issuenote_curs.Next
-void                 issue_c_issuenote_curs_Next(issue_c_issuenote_curs &curs);
+void                 issue_c_issuenote_curs_Next(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FIssue.c_issuenote_curs.Access
-gcli::FIssuenote&    issue_c_issuenote_curs_Access(issue_c_issuenote_curs &curs);
+gcli::FIssuenote&    issue_c_issuenote_curs_Access(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // func:gcli.FIssue..Uninit
 void                 FIssue_Uninit(gcli::FIssue& issue) __attribute__((nothrow));
 
@@ -4589,27 +4589,27 @@ gcli::FMrjob&        c_mrjob_qLast(gcli::FMr& mr) __attribute__((nothrow));
 // func:gcli.FMr..Init
 void                 FMr_Init(gcli::FMr& mr);
 // func:gcli.FMr.c_mrnote_curs.Reset
-void                 mr_c_mrnote_curs_Reset(mr_c_mrnote_curs &curs, gcli::FMr &parent);
+void                 mr_c_mrnote_curs_Reset(mr_c_mrnote_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FMr.c_mrnote_curs.ValidQ
-bool                 mr_c_mrnote_curs_ValidQ(mr_c_mrnote_curs &curs);
+bool                 mr_c_mrnote_curs_ValidQ(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FMr.c_mrnote_curs.Next
-void                 mr_c_mrnote_curs_Next(mr_c_mrnote_curs &curs);
+void                 mr_c_mrnote_curs_Next(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FMr.c_mrnote_curs.Access
-gcli::FMrnote&       mr_c_mrnote_curs_Access(mr_c_mrnote_curs &curs);
+gcli::FMrnote&       mr_c_mrnote_curs_Access(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // func:gcli.FMr.c_mrjob_curs.Reset
-void                 mr_c_mrjob_curs_Reset(mr_c_mrjob_curs &curs, gcli::FMr &parent);
+void                 mr_c_mrjob_curs_Reset(mr_c_mrjob_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FMr.c_mrjob_curs.ValidQ
-bool                 mr_c_mrjob_curs_ValidQ(mr_c_mrjob_curs &curs);
+bool                 mr_c_mrjob_curs_ValidQ(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FMr.c_mrjob_curs.Next
-void                 mr_c_mrjob_curs_Next(mr_c_mrjob_curs &curs);
+void                 mr_c_mrjob_curs_Next(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FMr.c_mrjob_curs.Access
-gcli::FMrjob&        mr_c_mrjob_curs_Access(mr_c_mrjob_curs &curs);
+gcli::FMrjob&        mr_c_mrjob_curs_Access(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // func:gcli.FMr..Uninit
 void                 FMr_Uninit(gcli::FMr& mr) __attribute__((nothrow));
 // print string representation of ROW to string STR

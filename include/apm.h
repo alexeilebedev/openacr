@@ -92,6 +92,9 @@ namespace apm { // update-hdr
 
     // Open selected package definitions for editing
     void Main_Edit();
+
+    // Definte fake packages based on 'ns' regx
+    void DefPackages();
     void Main();
 
     // -------------------------------------------------------------------
@@ -152,17 +155,15 @@ namespace apm { // update-hdr
     // cpp/apm/show.cpp
     //
 
-    // Rewrite ssim records in RECFILE in topological order
-    bool RewriteSsimfile(algo::strptr recfile);
-
     // Topologically sort selected records and save them to file RECFILE
     // Return success code
     bool SaveSelrecToFile(algo::strptr recfile);
 
+    // Save local package definitions to file
+    void SavePackageDefs(algo::strptr filename);
+
     // Collect package records from directory DIR into RECFILE
-    // If the remote side doesn't have APM, use local package definition to
-    // select files & records belonging to the package.
-    // On error, throw exception
+    // We run our executable in the remote directory to get predictable results
     void CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir);
 
     // Collect package records (dev.gitfile and other keys) into file RECFILE

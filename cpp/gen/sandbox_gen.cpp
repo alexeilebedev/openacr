@@ -237,6 +237,13 @@ void sandbox::ReadArgv() {
             doexit = true;
         }
     }
+    // dmmeta.floadtuples:sandbox.FDb.cmdline
+    if (!dohelp && err=="") {
+        algo_lib::ResetErrtext();
+        if (!sandbox::LoadTuplesMaybe(cmd.in,true)) {
+            err << "sandbox.load_input  "<<algo_lib::DetachBadTags()<<eol;
+        }
+    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr(err);
@@ -249,8 +256,6 @@ void sandbox::ReadArgv() {
         _exit(algo_lib::_db.exit_code);
     }
     algo_lib::ResetErrtext();
-    vrfy(sandbox::LoadTuplesMaybe(cmd.in,true)
-    ,tempstr()<<"where:load_input  "<<algo_lib::DetachBadTags());
 }
 
 // --- sandbox.FDb._db.MainLoop

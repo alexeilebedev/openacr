@@ -270,6 +270,14 @@ inline u64 algo_lib::ary_rowid_Get(algo_lib::Bitset& parent, u64 &elem) {
     return u64(id);
 }
 
+// --- algo_lib.Bitset.ary_bitcurs.Reset
+inline void algo_lib::Bitset_ary_bitcurs_Reset(Bitset_ary_bitcurs &curs, algo_lib::Bitset &parent) {
+    curs.elems = &ary_qFind(parent,0);
+    curs.n_elems = ary_N(parent);
+    curs.bit = -1;
+    Bitset_ary_bitcurs_Next(curs);
+}
+
 // --- algo_lib.Bitset.ary_bitcurs.ValidQ
 // cursor points to valid item
 inline bool algo_lib::Bitset_ary_bitcurs_ValidQ(Bitset_ary_bitcurs &curs) {
