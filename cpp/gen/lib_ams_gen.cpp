@@ -2634,6 +2634,23 @@ void lib_ams::FProc_Uninit(lib_ams::FProc& proc) {
     zd_proc_Remove(row); // remove proc from index zd_proc
 }
 
+// --- lib_ams.FReadfile.buf.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u8> lib_ams::buf_Addary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.buf_elems && rhs.elems < parent.buf_elems + parent.buf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.buf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    buf_Reserve(parent, nnew); // reserve space
+    int at = parent.buf_n;
+    memcpy(parent.buf_elems + at, rhs.elems, nnew * sizeof(u8));
+    parent.buf_n += nnew;
+    return algo::aryptr<u8>(parent.buf_elems + at, nnew);
+}
+
 // --- lib_ams.FReadfile.buf.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -2711,6 +2728,13 @@ void lib_ams::buf_AbsReserve(lib_ams::FReadfile& parent, int n) {
     }
 }
 
+// --- lib_ams.FReadfile.buf.Print
+// Convert buf to a string.
+// Array is printed as a regular string.
+void lib_ams::buf_Print(lib_ams::FReadfile& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(buf_Getary(parent));
+}
+
 // --- lib_ams.FReadfile.buf.Setary
 // Copy contents of RHS to PARENT.
 void lib_ams::buf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) {
@@ -2719,6 +2743,14 @@ void lib_ams::buf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) {
     buf_Reserve(parent, nnew); // reserve space
     memcpy(parent.buf_elems, rhs.buf_elems, nnew * sizeof(u8));
     parent.buf_n = nnew;
+}
+
+// --- lib_ams.FReadfile.buf.Setary2
+// Copy specified array into buf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void lib_ams::buf_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u8> &rhs) {
+    buf_RemoveAll(parent);
+    buf_Addary(parent, rhs);
 }
 
 // --- lib_ams.FReadfile.buf.AllocNVal
@@ -2731,6 +2763,32 @@ algo::aryptr<u8> lib_ams::buf_AllocNVal(lib_ams::FReadfile& parent, int n_elems,
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     parent.buf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.buf.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool lib_ams::buf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) {
+    bool retval = true;
+    buf_RemoveAll(parent);
+    buf_Addary(parent,algo::strptr_ToMemptr(in_str));
+    return retval;
+}
+
+// --- lib_ams.FReadfile.cbuf.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u8> lib_ams::cbuf_Addary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cbuf_elems && rhs.elems < parent.cbuf_elems + parent.cbuf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.cbuf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    cbuf_Reserve(parent, nnew); // reserve space
+    int at = parent.cbuf_n;
+    memcpy(parent.cbuf_elems + at, rhs.elems, nnew * sizeof(u8));
+    parent.cbuf_n += nnew;
+    return algo::aryptr<u8>(parent.cbuf_elems + at, nnew);
 }
 
 // --- lib_ams.FReadfile.cbuf.Alloc
@@ -2810,6 +2868,13 @@ void lib_ams::cbuf_AbsReserve(lib_ams::FReadfile& parent, int n) {
     }
 }
 
+// --- lib_ams.FReadfile.cbuf.Print
+// Convert cbuf to a string.
+// Array is printed as a regular string.
+void lib_ams::cbuf_Print(lib_ams::FReadfile& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(cbuf_Getary(parent));
+}
+
 // --- lib_ams.FReadfile.cbuf.Setary
 // Copy contents of RHS to PARENT.
 void lib_ams::cbuf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) {
@@ -2818,6 +2883,14 @@ void lib_ams::cbuf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) {
     cbuf_Reserve(parent, nnew); // reserve space
     memcpy(parent.cbuf_elems, rhs.cbuf_elems, nnew * sizeof(u8));
     parent.cbuf_n = nnew;
+}
+
+// --- lib_ams.FReadfile.cbuf.Setary2
+// Copy specified array into cbuf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void lib_ams::cbuf_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u8> &rhs) {
+    cbuf_RemoveAll(parent);
+    cbuf_Addary(parent, rhs);
 }
 
 // --- lib_ams.FReadfile.cbuf.AllocNVal
@@ -2830,6 +2903,32 @@ algo::aryptr<u8> lib_ams::cbuf_AllocNVal(lib_ams::FReadfile& parent, int n_elems
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     parent.cbuf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.cbuf.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool lib_ams::cbuf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) {
+    bool retval = true;
+    cbuf_RemoveAll(parent);
+    cbuf_Addary(parent,algo::strptr_ToMemptr(in_str));
+    return retval;
+}
+
+// --- lib_ams.FReadfile.offset.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u32> lib_ams::offset_Addary(lib_ams::FReadfile& parent, algo::aryptr<u32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.offset_elems && rhs.elems < parent.offset_elems + parent.offset_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.offset  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    offset_Reserve(parent, nnew); // reserve space
+    int at = parent.offset_n;
+    memcpy(parent.offset_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.offset_n += nnew;
+    return algo::aryptr<u32>(parent.offset_elems + at, nnew);
 }
 
 // --- lib_ams.FReadfile.offset.Alloc
@@ -2923,6 +3022,14 @@ void lib_ams::offset_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs)
     }
 }
 
+// --- lib_ams.FReadfile.offset.Setary2
+// Copy specified array into offset, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void lib_ams::offset_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u32> &rhs) {
+    offset_RemoveAll(parent);
+    offset_Addary(parent, rhs);
+}
+
 // --- lib_ams.FReadfile.offset.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 algo::aryptr<u32> lib_ams::offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u32& val) {
@@ -2935,6 +3042,20 @@ algo::aryptr<u32> lib_ams::offset_AllocNVal(lib_ams::FReadfile& parent, int n_el
     }
     parent.offset_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.offset.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool lib_ams::offset_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 &elem = offset_Alloc(parent);
+    retval = u32_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        offset_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- lib_ams.FReadfile..Uninit
@@ -2971,14 +3092,31 @@ void lib_ams::FReadfile_Print(lib_ams::FReadfile& row, algo::cstring& str) {
     algo::cstring_Print(row.filename, temp);
     PrintAttrSpaceReset(str,"filename", temp);
 
+    algo::Fildes_Print(row.fd, temp);
+    PrintAttrSpaceReset(str,"fd", temp);
+
     bool_Print(row.eof, temp);
     PrintAttrSpaceReset(str,"eof", temp);
 
     bool_Print(row.fail, temp);
     PrintAttrSpaceReset(str,"fail", temp);
 
+    lib_ams::buf_Print(row, temp);
+    PrintAttrSpaceReset(str,"buf", temp);
+
+    lib_ams::cbuf_Print(row, temp);
+    PrintAttrSpaceReset(str,"cbuf", temp);
+
     ams::MsgBlock_Print(row.block, temp);
     PrintAttrSpaceReset(str,"block", temp);
+
+    ind_beg(FReadfile_offset_curs,offset,row) {
+        u32_Print(offset, temp);
+        tempstr name;
+        name << "offset.";
+        name << ind_curs(offset).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.Insert
@@ -3114,6 +3252,23 @@ void lib_ams::FStreamType_Uninit(lib_ams::FStreamType& streamtype) {
     ind_streamtype_Remove(row); // remove streamtype from index ind_streamtype
 }
 
+// --- lib_ams.FWritefile.buf.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u8> lib_ams::buf_Addary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= writefile.buf_elems && rhs.elems < writefile.buf_elems + writefile.buf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FWritefile.buf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    buf_Reserve(writefile, nnew); // reserve space
+    int at = writefile.buf_n;
+    memcpy(writefile.buf_elems + at, rhs.elems, nnew * sizeof(u8));
+    writefile.buf_n += nnew;
+    return algo::aryptr<u8>(writefile.buf_elems + at, nnew);
+}
+
 // --- lib_ams.FWritefile.buf.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -3191,6 +3346,13 @@ void lib_ams::buf_AbsReserve(lib_ams::FWritefile& writefile, int n) {
     }
 }
 
+// --- lib_ams.FWritefile.buf.Print
+// Convert buf to a string.
+// Array is printed as a regular string.
+void lib_ams::buf_Print(lib_ams::FWritefile& writefile, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(buf_Getary(writefile));
+}
+
 // --- lib_ams.FWritefile.buf.Setary
 // Copy contents of RHS to PARENT.
 void lib_ams::buf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) {
@@ -3199,6 +3361,14 @@ void lib_ams::buf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rh
     buf_Reserve(writefile, nnew); // reserve space
     memcpy(writefile.buf_elems, rhs.buf_elems, nnew * sizeof(u8));
     writefile.buf_n = nnew;
+}
+
+// --- lib_ams.FWritefile.buf.Setary2
+// Copy specified array into buf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void lib_ams::buf_Setary(lib_ams::FWritefile& writefile, const algo::aryptr<u8> &rhs) {
+    buf_RemoveAll(writefile);
+    buf_Addary(writefile, rhs);
 }
 
 // --- lib_ams.FWritefile.buf.AllocNVal
@@ -3211,6 +3381,32 @@ algo::aryptr<u8> lib_ams::buf_AllocNVal(lib_ams::FWritefile& writefile, int n_el
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     writefile.buf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FWritefile.buf.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool lib_ams::buf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr in_str) {
+    bool retval = true;
+    buf_RemoveAll(writefile);
+    buf_Addary(writefile,algo::strptr_ToMemptr(in_str));
+    return retval;
+}
+
+// --- lib_ams.FWritefile.cbuf.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u8> lib_ams::cbuf_Addary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= writefile.cbuf_elems && rhs.elems < writefile.cbuf_elems + writefile.cbuf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FWritefile.cbuf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    cbuf_Reserve(writefile, nnew); // reserve space
+    int at = writefile.cbuf_n;
+    memcpy(writefile.cbuf_elems + at, rhs.elems, nnew * sizeof(u8));
+    writefile.cbuf_n += nnew;
+    return algo::aryptr<u8>(writefile.cbuf_elems + at, nnew);
 }
 
 // --- lib_ams.FWritefile.cbuf.Alloc
@@ -3290,6 +3486,13 @@ void lib_ams::cbuf_AbsReserve(lib_ams::FWritefile& writefile, int n) {
     }
 }
 
+// --- lib_ams.FWritefile.cbuf.Print
+// Convert cbuf to a string.
+// Array is printed as a regular string.
+void lib_ams::cbuf_Print(lib_ams::FWritefile& writefile, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(cbuf_Getary(writefile));
+}
+
 // --- lib_ams.FWritefile.cbuf.Setary
 // Copy contents of RHS to PARENT.
 void lib_ams::cbuf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) {
@@ -3298,6 +3501,14 @@ void lib_ams::cbuf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &r
     cbuf_Reserve(writefile, nnew); // reserve space
     memcpy(writefile.cbuf_elems, rhs.cbuf_elems, nnew * sizeof(u8));
     writefile.cbuf_n = nnew;
+}
+
+// --- lib_ams.FWritefile.cbuf.Setary2
+// Copy specified array into cbuf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void lib_ams::cbuf_Setary(lib_ams::FWritefile& writefile, const algo::aryptr<u8> &rhs) {
+    cbuf_RemoveAll(writefile);
+    cbuf_Addary(writefile, rhs);
 }
 
 // --- lib_ams.FWritefile.cbuf.AllocNVal
@@ -3310,6 +3521,15 @@ algo::aryptr<u8> lib_ams::cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_e
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     writefile.cbuf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FWritefile.cbuf.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool lib_ams::cbuf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr in_str) {
+    bool retval = true;
+    cbuf_RemoveAll(writefile);
+    cbuf_Addary(writefile,algo::strptr_ToMemptr(in_str));
+    return retval;
 }
 
 // --- lib_ams.FWritefile..Uninit
@@ -3341,8 +3561,17 @@ void lib_ams::FWritefile_Print(lib_ams::FWritefile& row, algo::cstring& str) {
     algo::cstring_Print(row.filename, temp);
     PrintAttrSpaceReset(str,"filename", temp);
 
+    algo::Fildes_Print(row.fd, temp);
+    PrintAttrSpaceReset(str,"fd", temp);
+
     bool_Print(row.fail, temp);
     PrintAttrSpaceReset(str,"fail", temp);
+
+    lib_ams::buf_Print(row, temp);
+    PrintAttrSpaceReset(str,"buf", temp);
+
+    lib_ams::cbuf_Print(row, temp);
+    PrintAttrSpaceReset(str,"cbuf", temp);
 
     u32_Print(row.buf_thr, temp);
     PrintAttrSpaceReset(str,"buf_thr", temp);

@@ -94,7 +94,7 @@ inline char* algo::ch_Find(algo::cstring& parent, u64 t) {
 
 // --- algo.cstring.ch.Getary
 // Return array pointer by value
-inline algo::aryptr<char> algo::ch_Getary(algo::cstring& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::cstring& parent) {
     return algo::aryptr<char>(parent.ch_elems, parent.ch_n);
 }
 
@@ -150,6 +150,11 @@ inline u64 algo::ch_rowid_Get(algo::cstring& parent, char &elem) {
     return u64(id);
 }
 
+// --- algo.cstring.ch.Cast
+inline algo::cstring::operator algo::strptr () const {
+    return ch_Getary(*this);
+}
+
 // --- algo.cstring.ch_curs.Next
 // proceed to next item
 inline void algo::cstring_ch_curs_Next(cstring_ch_curs &curs) {
@@ -196,7 +201,7 @@ inline void algo::cstring_Init(algo::cstring& parent) {
 }
 
 // --- algo.cstring..Eq
-inline bool algo::cstring_Eq(const algo::cstring& lhs, const algo::cstring& rhs) {
+inline bool algo::cstring_Eq(algo::cstring& lhs, algo::cstring& rhs) {
     bool retval = true;
     retval = ch_Eq(lhs,rhs);
     return retval;
@@ -241,7 +246,7 @@ inline i32 algo::Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) {
 }
 
 // --- algo.Attr..Eq
-inline bool algo::Attr_Eq(const algo::Attr& lhs, const algo::Attr& rhs) {
+inline bool algo::Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.name, rhs.name);
     if (!retval) {
@@ -308,7 +313,7 @@ inline u8* algo::ary_Find(algo::ByteAry& parent, u64 t) {
 
 // --- algo.ByteAry.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> algo::ary_Getary(algo::ByteAry& parent) {
+inline algo::aryptr<u8> algo::ary_Getary(const algo::ByteAry& parent) {
     return algo::aryptr<u8>(parent.ary_elems, parent.ary_n);
 }
 
@@ -362,6 +367,11 @@ inline u8& algo::ary_qLast(algo::ByteAry& parent) {
 inline u64 algo::ary_rowid_Get(algo::ByteAry& parent, u8 &elem) {
     u64 id = &elem - parent.ary_elems;
     return u64(id);
+}
+
+// --- algo.ByteAry.ary.Cast
+inline algo::ByteAry::operator algo::memptr () const {
+    return ary_Getary(*this);
 }
 
 // --- algo.ByteAry.ary_curs.Next
@@ -608,7 +618,7 @@ inline void algo::ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs)
 // --- algo.Charset.ch.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) {
-    return parent.ch_elems[t];
+    return parent.ch_elems[u64(t)];
 }
 
 // --- algo.Charset.ch_bitcurs.Reset
@@ -777,7 +787,7 @@ inline void algo::Smallstr150_Init(algo::Smallstr150& parent) {
 }
 
 // --- algo.Smallstr150..Eq
-inline bool algo::Smallstr150_Eq(const algo::Smallstr150& lhs, const algo::Smallstr150& rhs) {
+inline bool algo::Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -808,7 +818,7 @@ inline i32 algo::Comment_Cmp(algo::Comment& lhs, algo::Comment& rhs) {
 }
 
 // --- algo.Comment..Eq
-inline bool algo::Comment_Eq(const algo::Comment& lhs, const algo::Comment& rhs) {
+inline bool algo::Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) {
     bool retval = true;
     retval = algo::Smallstr150_Eq(lhs.value, rhs.value);
     return retval;
@@ -927,7 +937,7 @@ inline void algo::Smallstr250_Init(algo::Smallstr250& parent) {
 }
 
 // --- algo.Smallstr250..Eq
-inline bool algo::Smallstr250_Eq(const algo::Smallstr250& lhs, const algo::Smallstr250& rhs) {
+inline bool algo::Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -1050,6 +1060,15 @@ inline bool algo::UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) {
     return ret;
 }
 inline algo::DateCache::DateCache() {
+}
+
+inline algo::DayRange::DayRange(algo::UnTime                   in_start
+        ,algo::UnTime                   in_end)
+    : start(in_start)
+    , end(in_end)
+{
+}
+inline algo::DayRange::DayRange() {
 }
 
 inline algo::Decimal::Decimal(i32                            in_exponent
@@ -1354,7 +1373,7 @@ inline void algo::Fildes_Init(algo::Fildes& parent) {
 }
 
 // --- algo.Fildes..Eq
-inline bool algo::Fildes_Eq(const algo::Fildes& lhs, const algo::Fildes& rhs) {
+inline bool algo::Fildes_Eq(algo::Fildes& lhs, algo::Fildes& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.value, rhs.value);
     return retval;
@@ -2632,7 +2651,7 @@ inline void algo::Smallstr50_Init(algo::Smallstr50& parent) {
 }
 
 // --- algo.Smallstr50..Eq
-inline bool algo::Smallstr50_Eq(const algo::Smallstr50& lhs, const algo::Smallstr50& rhs) {
+inline bool algo::Smallstr50_Eq(algo::Smallstr50& lhs, algo::Smallstr50& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -2800,7 +2819,7 @@ inline void algo::Smallstr100_Init(algo::Smallstr100& parent) {
 }
 
 // --- algo.Smallstr100..Eq
-inline bool algo::Smallstr100_Eq(const algo::Smallstr100& lhs, const algo::Smallstr100& rhs) {
+inline bool algo::Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -2891,7 +2910,7 @@ inline char* algo::buf_Find(algo::LineBuf& parent, u64 t) {
 
 // --- algo.LineBuf.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<char> algo::buf_Getary(algo::LineBuf& parent) {
+inline algo::aryptr<char> algo::buf_Getary(const algo::LineBuf& parent) {
     return algo::aryptr<char>(parent.buf_elems, parent.buf_n);
 }
 
@@ -3081,7 +3100,7 @@ inline void algo::LnumStr10_U64_Init(algo::LnumStr10_U64& parent) {
 }
 
 // --- algo.LnumStr10_U64..Eq
-inline bool algo::LnumStr10_U64_Eq(const algo::LnumStr10_U64& lhs, const algo::LnumStr10_U64& rhs) {
+inline bool algo::LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3193,7 +3212,7 @@ inline void algo::LnumStr11_U64_Init(algo::LnumStr11_U64& parent) {
 }
 
 // --- algo.LnumStr11_U64..Eq
-inline bool algo::LnumStr11_U64_Eq(const algo::LnumStr11_U64& lhs, const algo::LnumStr11_U64& rhs) {
+inline bool algo::LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3306,7 +3325,7 @@ inline void algo::LnumStr12_U64_Init(algo::LnumStr12_U64& parent) {
 }
 
 // --- algo.LnumStr12_U64..Eq
-inline bool algo::LnumStr12_U64_Eq(const algo::LnumStr12_U64& lhs, const algo::LnumStr12_U64& rhs) {
+inline bool algo::LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3418,7 +3437,7 @@ inline void algo::LnumStr13_U64_Base36_Init(algo::LnumStr13_U64_Base36& parent) 
 }
 
 // --- algo.LnumStr13_U64_Base36..Eq
-inline bool algo::LnumStr13_U64_Base36_Eq(const algo::LnumStr13_U64_Base36& lhs, const algo::LnumStr13_U64_Base36& rhs) {
+inline bool algo::LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3531,7 +3550,7 @@ inline void algo::LnumStr16_U64_Base16_Init(algo::LnumStr16_U64_Base16& parent) 
 }
 
 // --- algo.LnumStr16_U64_Base16..Eq
-inline bool algo::LnumStr16_U64_Base16_Eq(const algo::LnumStr16_U64_Base16& lhs, const algo::LnumStr16_U64_Base16& rhs) {
+inline bool algo::LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3643,7 +3662,7 @@ inline void algo::LnumStr1_U32_Init(algo::LnumStr1_U32& parent) {
 }
 
 // --- algo.LnumStr1_U32..Eq
-inline bool algo::LnumStr1_U32_Eq(const algo::LnumStr1_U32& lhs, const algo::LnumStr1_U32& rhs) {
+inline bool algo::LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u8*)(lhs.ch+0) == *(u8*)(rhs.ch+0);
@@ -3754,7 +3773,7 @@ inline void algo::LnumStr20_U64_Init(algo::LnumStr20_U64& parent) {
 }
 
 // --- algo.LnumStr20_U64..Eq
-inline bool algo::LnumStr20_U64_Eq(const algo::LnumStr20_U64& lhs, const algo::LnumStr20_U64& rhs) {
+inline bool algo::LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3867,7 +3886,7 @@ inline void algo::LnumStr22_U64_Init(algo::LnumStr22_U64& parent) {
 }
 
 // --- algo.LnumStr22_U64..Eq
-inline bool algo::LnumStr22_U64_Eq(const algo::LnumStr22_U64& lhs, const algo::LnumStr22_U64& rhs) {
+inline bool algo::LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3981,7 +4000,7 @@ inline void algo::LnumStr2_U32_Init(algo::LnumStr2_U32& parent) {
 }
 
 // --- algo.LnumStr2_U32..Eq
-inline bool algo::LnumStr2_U32_Eq(const algo::LnumStr2_U32& lhs, const algo::LnumStr2_U32& rhs) {
+inline bool algo::LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0);
@@ -4092,7 +4111,7 @@ inline void algo::LnumStr3_U32_Init(algo::LnumStr3_U32& parent) {
 }
 
 // --- algo.LnumStr3_U32..Eq
-inline bool algo::LnumStr3_U32_Eq(const algo::LnumStr3_U32& lhs, const algo::LnumStr3_U32& rhs) {
+inline bool algo::LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -4204,7 +4223,7 @@ inline void algo::LnumStr4_U32_Init(algo::LnumStr4_U32& parent) {
 }
 
 // --- algo.LnumStr4_U32..Eq
-inline bool algo::LnumStr4_U32_Eq(const algo::LnumStr4_U32& lhs, const algo::LnumStr4_U32& rhs) {
+inline bool algo::LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -4315,7 +4334,7 @@ inline void algo::LnumStr5_U32_Init(algo::LnumStr5_U32& parent) {
 }
 
 // --- algo.LnumStr5_U32..Eq
-inline bool algo::LnumStr5_U32_Eq(const algo::LnumStr5_U32& lhs, const algo::LnumStr5_U32& rhs) {
+inline bool algo::LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4427,7 +4446,7 @@ inline void algo::LnumStr5_U32_Base36_Init(algo::LnumStr5_U32_Base36& parent) {
 }
 
 // --- algo.LnumStr5_U32_Base36..Eq
-inline bool algo::LnumStr5_U32_Base36_Eq(const algo::LnumStr5_U32_Base36& lhs, const algo::LnumStr5_U32_Base36& rhs) {
+inline bool algo::LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4539,7 +4558,7 @@ inline void algo::LnumStr6_U32_Init(algo::LnumStr6_U32& parent) {
 }
 
 // --- algo.LnumStr6_U32..Eq
-inline bool algo::LnumStr6_U32_Eq(const algo::LnumStr6_U32& lhs, const algo::LnumStr6_U32& rhs) {
+inline bool algo::LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4651,7 +4670,7 @@ inline void algo::LnumStr7_U32_Init(algo::LnumStr7_U32& parent) {
 }
 
 // --- algo.LnumStr7_U32..Eq
-inline bool algo::LnumStr7_U32_Eq(const algo::LnumStr7_U32& lhs, const algo::LnumStr7_U32& rhs) {
+inline bool algo::LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4764,7 +4783,7 @@ inline void algo::LnumStr7_U32_Base36_Init(algo::LnumStr7_U32_Base36& parent) {
 }
 
 // --- algo.LnumStr7_U32_Base36..Eq
-inline bool algo::LnumStr7_U32_Base36_Eq(const algo::LnumStr7_U32_Base36& lhs, const algo::LnumStr7_U32_Base36& rhs) {
+inline bool algo::LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4877,7 +4896,7 @@ inline void algo::LnumStr8_U32_Init(algo::LnumStr8_U32& parent) {
 }
 
 // --- algo.LnumStr8_U32..Eq
-inline bool algo::LnumStr8_U32_Eq(const algo::LnumStr8_U32& lhs, const algo::LnumStr8_U32& rhs) {
+inline bool algo::LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -4988,7 +5007,7 @@ inline void algo::LnumStr8_U32_Base16_Init(algo::LnumStr8_U32_Base16& parent) {
 }
 
 // --- algo.LnumStr8_U32_Base16..Eq
-inline bool algo::LnumStr8_U32_Base16_Eq(const algo::LnumStr8_U32_Base16& lhs, const algo::LnumStr8_U32_Base16& rhs) {
+inline bool algo::LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -5099,7 +5118,7 @@ inline void algo::LnumStr8_U64_Init(algo::LnumStr8_U64& parent) {
 }
 
 // --- algo.LnumStr8_U64..Eq
-inline bool algo::LnumStr8_U64_Eq(const algo::LnumStr8_U64& lhs, const algo::LnumStr8_U64& rhs) {
+inline bool algo::LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -5210,7 +5229,7 @@ inline void algo::LnumStr9_U32_Init(algo::LnumStr9_U32& parent) {
 }
 
 // --- algo.LnumStr9_U32..Eq
-inline bool algo::LnumStr9_U32_Eq(const algo::LnumStr9_U32& lhs, const algo::LnumStr9_U32& rhs) {
+inline bool algo::LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5322,7 +5341,7 @@ inline void algo::LnumStr9_U64_Init(algo::LnumStr9_U64& parent) {
 }
 
 // --- algo.LnumStr9_U64..Eq
-inline bool algo::LnumStr9_U64_Eq(const algo::LnumStr9_U64& lhs, const algo::LnumStr9_U64& rhs) {
+inline bool algo::LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5430,7 +5449,7 @@ inline void algo::LspaceStr10_Init(algo::LspaceStr10& parent) {
 }
 
 // --- algo.LspaceStr10..Eq
-inline bool algo::LspaceStr10_Eq(const algo::LspaceStr10& lhs, const algo::LspaceStr10& rhs) {
+inline bool algo::LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5538,7 +5557,7 @@ inline void algo::LspaceStr12_Init(algo::LspaceStr12& parent) {
 }
 
 // --- algo.LspaceStr12..Eq
-inline bool algo::LspaceStr12_Eq(const algo::LspaceStr12& lhs, const algo::LspaceStr12& rhs) {
+inline bool algo::LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5646,7 +5665,7 @@ inline void algo::LspaceStr14_Init(algo::LspaceStr14& parent) {
 }
 
 // --- algo.LspaceStr14..Eq
-inline bool algo::LspaceStr14_Eq(const algo::LspaceStr14& lhs, const algo::LspaceStr14& rhs) {
+inline bool algo::LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5755,7 +5774,7 @@ inline void algo::LspaceStr15_Init(algo::LspaceStr15& parent) {
 }
 
 // --- algo.LspaceStr15..Eq
-inline bool algo::LspaceStr15_Eq(const algo::LspaceStr15& lhs, const algo::LspaceStr15& rhs) {
+inline bool algo::LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5865,7 +5884,7 @@ inline void algo::LspaceStr20_I64_Init(algo::LspaceStr20_I64& parent) {
 }
 
 // --- algo.LspaceStr20_I64..Eq
-inline bool algo::LspaceStr20_I64_Eq(const algo::LspaceStr20_I64& lhs, const algo::LspaceStr20_I64& rhs) {
+inline bool algo::LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5974,7 +5993,7 @@ inline void algo::LspaceStr20_U64_Init(algo::LspaceStr20_U64& parent) {
 }
 
 // --- algo.LspaceStr20_U64..Eq
-inline bool algo::LspaceStr20_U64_Eq(const algo::LspaceStr20_U64& lhs, const algo::LspaceStr20_U64& rhs) {
+inline bool algo::LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -6083,7 +6102,7 @@ inline void algo::LspaceStr3_Init(algo::LspaceStr3& parent) {
 }
 
 // --- algo.LspaceStr3..Eq
-inline bool algo::LspaceStr3_Eq(const algo::LspaceStr3& lhs, const algo::LspaceStr3& rhs) {
+inline bool algo::LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -6191,7 +6210,7 @@ inline void algo::LspaceStr3_I16_Init(algo::LspaceStr3_I16& parent) {
 }
 
 // --- algo.LspaceStr3_I16..Eq
-inline bool algo::LspaceStr3_I16_Eq(const algo::LspaceStr3_I16& lhs, const algo::LspaceStr3_I16& rhs) {
+inline bool algo::LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -6299,7 +6318,7 @@ inline void algo::LspaceStr4_Init(algo::LspaceStr4& parent) {
 }
 
 // --- algo.LspaceStr4..Eq
-inline bool algo::LspaceStr4_Eq(const algo::LspaceStr4& lhs, const algo::LspaceStr4& rhs) {
+inline bool algo::LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -6406,7 +6425,7 @@ inline void algo::LspaceStr5_Init(algo::LspaceStr5& parent) {
 }
 
 // --- algo.LspaceStr5..Eq
-inline bool algo::LspaceStr5_Eq(const algo::LspaceStr5& lhs, const algo::LspaceStr5& rhs) {
+inline bool algo::LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6514,7 +6533,7 @@ inline void algo::LspaceStr5_I16_Init(algo::LspaceStr5_I16& parent) {
 }
 
 // --- algo.LspaceStr5_I16..Eq
-inline bool algo::LspaceStr5_I16_Eq(const algo::LspaceStr5_I16& lhs, const algo::LspaceStr5_I16& rhs) {
+inline bool algo::LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6622,7 +6641,7 @@ inline void algo::LspaceStr6_Init(algo::LspaceStr6& parent) {
 }
 
 // --- algo.LspaceStr6..Eq
-inline bool algo::LspaceStr6_Eq(const algo::LspaceStr6& lhs, const algo::LspaceStr6& rhs) {
+inline bool algo::LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6730,7 +6749,7 @@ inline void algo::LspaceStr6_U32_Init(algo::LspaceStr6_U32& parent) {
 }
 
 // --- algo.LspaceStr6_U32..Eq
-inline bool algo::LspaceStr6_U32_Eq(const algo::LspaceStr6_U32& lhs, const algo::LspaceStr6_U32& rhs) {
+inline bool algo::LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6838,7 +6857,7 @@ inline void algo::LspaceStr7_I32_Base36_Init(algo::LspaceStr7_I32_Base36& parent
 }
 
 // --- algo.LspaceStr7_I32_Base36..Eq
-inline bool algo::LspaceStr7_I32_Base36_Eq(const algo::LspaceStr7_I32_Base36& lhs, const algo::LspaceStr7_I32_Base36& rhs) {
+inline bool algo::LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6947,7 +6966,7 @@ inline void algo::LspaceStr8_Init(algo::LspaceStr8& parent) {
 }
 
 // --- algo.LspaceStr8..Eq
-inline bool algo::LspaceStr8_Eq(const algo::LspaceStr8& lhs, const algo::LspaceStr8& rhs) {
+inline bool algo::LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -7054,7 +7073,7 @@ inline void algo::LspaceStr9_Init(algo::LspaceStr9& parent) {
 }
 
 // --- algo.LspaceStr9..Eq
-inline bool algo::LspaceStr9_Eq(const algo::LspaceStr9& lhs, const algo::LspaceStr9& rhs) {
+inline bool algo::LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -7123,7 +7142,7 @@ inline void algo::value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &
 // --- algo.Md5Digest.value.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline u8& algo::value_qFind(algo::Md5Digest& parent, u64 t) {
-    return parent.value_elems[t];
+    return parent.value_elems[u64(t)];
 }
 
 // --- algo.Md5Digest.value_curs.Reset
@@ -7653,7 +7672,7 @@ inline void algo::RnullStr100_Init(algo::RnullStr100& parent) {
 }
 
 // --- algo.RnullStr100..Eq
-inline bool algo::RnullStr100_Eq(const algo::RnullStr100& lhs, const algo::RnullStr100& rhs) {
+inline bool algo::RnullStr100_Eq(algo::RnullStr100& lhs, algo::RnullStr100& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -7801,7 +7820,7 @@ inline void algo::RnullStr1000_Init(algo::RnullStr1000& parent) {
 }
 
 // --- algo.RnullStr1000..Eq
-inline bool algo::RnullStr1000_Eq(const algo::RnullStr1000& lhs, const algo::RnullStr1000& rhs) {
+inline bool algo::RnullStr1000_Eq(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) {
     bool retval = true;
     for (int i=0; i<125 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -7938,7 +7957,7 @@ inline void algo::RnullStr11_Init(algo::RnullStr11& parent) {
 }
 
 // --- algo.RnullStr11..Eq
-inline bool algo::RnullStr11_Eq(const algo::RnullStr11& lhs, const algo::RnullStr11& rhs) {
+inline bool algo::RnullStr11_Eq(algo::RnullStr11& lhs, algo::RnullStr11& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8076,7 +8095,7 @@ inline void algo::RnullStr12_Init(algo::RnullStr12& parent) {
 }
 
 // --- algo.RnullStr12..Eq
-inline bool algo::RnullStr12_Eq(const algo::RnullStr12& lhs, const algo::RnullStr12& rhs) {
+inline bool algo::RnullStr12_Eq(algo::RnullStr12& lhs, algo::RnullStr12& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8213,7 +8232,7 @@ inline void algo::RnullStr129_Init(algo::RnullStr129& parent) {
 }
 
 // --- algo.RnullStr129..Eq
-inline bool algo::RnullStr129_Eq(const algo::RnullStr129& lhs, const algo::RnullStr129& rhs) {
+inline bool algo::RnullStr129_Eq(algo::RnullStr129& lhs, algo::RnullStr129& rhs) {
     bool retval = true;
     for (int i=0; i<16 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -8352,7 +8371,7 @@ inline void algo::RnullStr13_Init(algo::RnullStr13& parent) {
 }
 
 // --- algo.RnullStr13..Eq
-inline bool algo::RnullStr13_Eq(const algo::RnullStr13& lhs, const algo::RnullStr13& rhs) {
+inline bool algo::RnullStr13_Eq(algo::RnullStr13& lhs, algo::RnullStr13& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8490,7 +8509,7 @@ inline void algo::RnullStr14_Init(algo::RnullStr14& parent) {
 }
 
 // --- algo.RnullStr14..Eq
-inline bool algo::RnullStr14_Eq(const algo::RnullStr14& lhs, const algo::RnullStr14& rhs) {
+inline bool algo::RnullStr14_Eq(algo::RnullStr14& lhs, algo::RnullStr14& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8628,7 +8647,7 @@ inline void algo::RnullStr15_Init(algo::RnullStr15& parent) {
 }
 
 // --- algo.RnullStr15..Eq
-inline bool algo::RnullStr15_Eq(const algo::RnullStr15& lhs, const algo::RnullStr15& rhs) {
+inline bool algo::RnullStr15_Eq(algo::RnullStr15& lhs, algo::RnullStr15& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8767,7 +8786,7 @@ inline void algo::RnullStr151_Init(algo::RnullStr151& parent) {
 }
 
 // --- algo.RnullStr151..Eq
-inline bool algo::RnullStr151_Eq(const algo::RnullStr151& lhs, const algo::RnullStr151& rhs) {
+inline bool algo::RnullStr151_Eq(algo::RnullStr151& lhs, algo::RnullStr151& rhs) {
     bool retval = true;
     for (int i=0; i<18 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -9017,7 +9036,7 @@ inline void algo::RnullStr17_Init(algo::RnullStr17& parent) {
 }
 
 // --- algo.RnullStr17..Eq
-inline bool algo::RnullStr17_Eq(const algo::RnullStr17& lhs, const algo::RnullStr17& rhs) {
+inline bool algo::RnullStr17_Eq(algo::RnullStr17& lhs, algo::RnullStr17& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9265,7 +9284,7 @@ inline void algo::RnullStr19_Init(algo::RnullStr19& parent) {
 }
 
 // --- algo.RnullStr19..Eq
-inline bool algo::RnullStr19_Eq(const algo::RnullStr19& lhs, const algo::RnullStr19& rhs) {
+inline bool algo::RnullStr19_Eq(algo::RnullStr19& lhs, algo::RnullStr19& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9650,7 +9669,7 @@ inline void algo::RnullStr21_Init(algo::RnullStr21& parent) {
 }
 
 // --- algo.RnullStr21..Eq
-inline bool algo::RnullStr21_Eq(const algo::RnullStr21& lhs, const algo::RnullStr21& rhs) {
+inline bool algo::RnullStr21_Eq(algo::RnullStr21& lhs, algo::RnullStr21& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9789,7 +9808,7 @@ inline void algo::RnullStr24_Init(algo::RnullStr24& parent) {
 }
 
 // --- algo.RnullStr24..Eq
-inline bool algo::RnullStr24_Eq(const algo::RnullStr24& lhs, const algo::RnullStr24& rhs) {
+inline bool algo::RnullStr24_Eq(algo::RnullStr24& lhs, algo::RnullStr24& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9927,7 +9946,7 @@ inline void algo::RnullStr25_Init(algo::RnullStr25& parent) {
 }
 
 // --- algo.RnullStr25..Eq
-inline bool algo::RnullStr25_Eq(const algo::RnullStr25& lhs, const algo::RnullStr25& rhs) {
+inline bool algo::RnullStr25_Eq(algo::RnullStr25& lhs, algo::RnullStr25& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10066,7 +10085,7 @@ inline void algo::RnullStr28_Init(algo::RnullStr28& parent) {
 }
 
 // --- algo.RnullStr28..Eq
-inline bool algo::RnullStr28_Eq(const algo::RnullStr28& lhs, const algo::RnullStr28& rhs) {
+inline bool algo::RnullStr28_Eq(algo::RnullStr28& lhs, algo::RnullStr28& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10593,7 +10612,7 @@ inline void algo::RnullStr33_Init(algo::RnullStr33& parent) {
 }
 
 // --- algo.RnullStr33..Eq
-inline bool algo::RnullStr33_Eq(const algo::RnullStr33& lhs, const algo::RnullStr33& rhs) {
+inline bool algo::RnullStr33_Eq(algo::RnullStr33& lhs, algo::RnullStr33& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10733,7 +10752,7 @@ inline void algo::RnullStr35_Init(algo::RnullStr35& parent) {
 }
 
 // --- algo.RnullStr35..Eq
-inline bool algo::RnullStr35_Eq(const algo::RnullStr35& lhs, const algo::RnullStr35& rhs) {
+inline bool algo::RnullStr35_Eq(algo::RnullStr35& lhs, algo::RnullStr35& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10874,7 +10893,7 @@ inline void algo::RnullStr36_Init(algo::RnullStr36& parent) {
 }
 
 // --- algo.RnullStr36..Eq
-inline bool algo::RnullStr36_Eq(const algo::RnullStr36& lhs, const algo::RnullStr36& rhs) {
+inline bool algo::RnullStr36_Eq(algo::RnullStr36& lhs, algo::RnullStr36& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11122,7 +11141,7 @@ inline void algo::RnullStr40_Init(algo::RnullStr40& parent) {
 }
 
 // --- algo.RnullStr40..Eq
-inline bool algo::RnullStr40_Eq(const algo::RnullStr40& lhs, const algo::RnullStr40& rhs) {
+inline bool algo::RnullStr40_Eq(algo::RnullStr40& lhs, algo::RnullStr40& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11262,7 +11281,7 @@ inline void algo::RnullStr41_Init(algo::RnullStr41& parent) {
 }
 
 // --- algo.RnullStr41..Eq
-inline bool algo::RnullStr41_Eq(const algo::RnullStr41& lhs, const algo::RnullStr41& rhs) {
+inline bool algo::RnullStr41_Eq(algo::RnullStr41& lhs, algo::RnullStr41& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11375,7 +11394,7 @@ inline void algo::RnullStr43_Init(algo::RnullStr43& parent) {
 }
 
 // --- algo.RnullStr43..Eq
-inline bool algo::RnullStr43_Eq(const algo::RnullStr43& lhs, const algo::RnullStr43& rhs) {
+inline bool algo::RnullStr43_Eq(algo::RnullStr43& lhs, algo::RnullStr43& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11489,7 +11508,7 @@ inline void algo::RnullStr44_Init(algo::RnullStr44& parent) {
 }
 
 // --- algo.RnullStr44..Eq
-inline bool algo::RnullStr44_Eq(const algo::RnullStr44& lhs, const algo::RnullStr44& rhs) {
+inline bool algo::RnullStr44_Eq(algo::RnullStr44& lhs, algo::RnullStr44& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11602,7 +11621,7 @@ inline void algo::RnullStr48_Init(algo::RnullStr48& parent) {
 }
 
 // --- algo.RnullStr48..Eq
-inline bool algo::RnullStr48_Eq(const algo::RnullStr48& lhs, const algo::RnullStr48& rhs) {
+inline bool algo::RnullStr48_Eq(algo::RnullStr48& lhs, algo::RnullStr48& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11824,7 +11843,7 @@ inline void algo::RnullStr50_Init(algo::RnullStr50& parent) {
 }
 
 // --- algo.RnullStr50..Eq
-inline bool algo::RnullStr50_Eq(const algo::RnullStr50& lhs, const algo::RnullStr50& rhs) {
+inline bool algo::RnullStr50_Eq(algo::RnullStr50& lhs, algo::RnullStr50& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11966,7 +11985,7 @@ inline void algo::RnullStr54_Init(algo::RnullStr54& parent) {
 }
 
 // --- algo.RnullStr54..Eq
-inline bool algo::RnullStr54_Eq(const algo::RnullStr54& lhs, const algo::RnullStr54& rhs) {
+inline bool algo::RnullStr54_Eq(algo::RnullStr54& lhs, algo::RnullStr54& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12081,7 +12100,7 @@ inline void algo::RnullStr55_Init(algo::RnullStr55& parent) {
 }
 
 // --- algo.RnullStr55..Eq
-inline bool algo::RnullStr55_Eq(const algo::RnullStr55& lhs, const algo::RnullStr55& rhs) {
+inline bool algo::RnullStr55_Eq(algo::RnullStr55& lhs, algo::RnullStr55& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12362,7 +12381,7 @@ inline void algo::RnullStr60_Init(algo::RnullStr60& parent) {
 }
 
 // --- algo.RnullStr60..Eq
-inline bool algo::RnullStr60_Eq(const algo::RnullStr60& lhs, const algo::RnullStr60& rhs) {
+inline bool algo::RnullStr60_Eq(algo::RnullStr60& lhs, algo::RnullStr60& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12505,7 +12524,7 @@ inline void algo::RnullStr62_Init(algo::RnullStr62& parent) {
 }
 
 // --- algo.RnullStr62..Eq
-inline bool algo::RnullStr62_Eq(const algo::RnullStr62& lhs, const algo::RnullStr62& rhs) {
+inline bool algo::RnullStr62_Eq(algo::RnullStr62& lhs, algo::RnullStr62& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12621,7 +12640,7 @@ inline void algo::RnullStr66_Init(algo::RnullStr66& parent) {
 }
 
 // --- algo.RnullStr66..Eq
-inline bool algo::RnullStr66_Eq(const algo::RnullStr66& lhs, const algo::RnullStr66& rhs) {
+inline bool algo::RnullStr66_Eq(algo::RnullStr66& lhs, algo::RnullStr66& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12744,7 +12763,7 @@ inline void algo::RnullStr6_U32_Init(algo::RnullStr6_U32& parent) {
 }
 
 // --- algo.RnullStr6_U32..Eq
-inline bool algo::RnullStr6_U32_Eq(const algo::RnullStr6_U32& lhs, const algo::RnullStr6_U32& rhs) {
+inline bool algo::RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -13089,7 +13108,7 @@ inline void algo::RnullStr80_Init(algo::RnullStr80& parent) {
 }
 
 // --- algo.RnullStr80..Eq
-inline bool algo::RnullStr80_Eq(const algo::RnullStr80& lhs, const algo::RnullStr80& rhs) {
+inline bool algo::RnullStr80_Eq(algo::RnullStr80& lhs, algo::RnullStr80& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13234,7 +13253,7 @@ inline void algo::RnullStr9_Init(algo::RnullStr9& parent) {
 }
 
 // --- algo.RnullStr9..Eq
-inline bool algo::RnullStr9_Eq(const algo::RnullStr9& lhs, const algo::RnullStr9& rhs) {
+inline bool algo::RnullStr9_Eq(algo::RnullStr9& lhs, algo::RnullStr9& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13456,7 +13475,7 @@ inline void algo::RspaceStr100_Init(algo::RspaceStr100& parent) {
 }
 
 // --- algo.RspaceStr100..Eq
-inline bool algo::RspaceStr100_Eq(const algo::RspaceStr100& lhs, const algo::RspaceStr100& rhs) {
+inline bool algo::RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13573,7 +13592,7 @@ inline void algo::RspaceStr11_Init(algo::RspaceStr11& parent) {
 }
 
 // --- algo.RspaceStr11..Eq
-inline bool algo::RspaceStr11_Eq(const algo::RspaceStr11& lhs, const algo::RspaceStr11& rhs) {
+inline bool algo::RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14549,7 +14568,7 @@ inline void algo::RspaceStr200_Init(algo::RspaceStr200& parent) {
 }
 
 // --- algo.RspaceStr200..Eq
-inline bool algo::RspaceStr200_Eq(const algo::RspaceStr200& lhs, const algo::RspaceStr200& rhs) {
+inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) {
     bool retval = true;
     for (int i=0; i<25 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -14655,7 +14674,7 @@ inline void algo::RspaceStr21_Init(algo::RspaceStr21& parent) {
 }
 
 // --- algo.RspaceStr21..Eq
-inline bool algo::RspaceStr21_Eq(const algo::RspaceStr21& lhs, const algo::RspaceStr21& rhs) {
+inline bool algo::RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14873,7 +14892,7 @@ inline void algo::RspaceStr240_Init(algo::RspaceStr240& parent) {
 }
 
 // --- algo.RspaceStr240..Eq
-inline bool algo::RspaceStr240_Eq(const algo::RspaceStr240& lhs, const algo::RspaceStr240& rhs) {
+inline bool algo::RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) {
     bool retval = true;
     for (int i=0; i<30 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -15090,7 +15109,7 @@ inline void algo::RspaceStr26_Init(algo::RspaceStr26& parent) {
 }
 
 // --- algo.RspaceStr26..Eq
-inline bool algo::RspaceStr26_Eq(const algo::RspaceStr26& lhs, const algo::RspaceStr26& rhs) {
+inline bool algo::RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15304,7 +15323,7 @@ inline void algo::RspaceStr31_Init(algo::RspaceStr31& parent) {
 }
 
 // --- algo.RspaceStr31..Eq
-inline bool algo::RspaceStr31_Eq(const algo::RspaceStr31& lhs, const algo::RspaceStr31& rhs) {
+inline bool algo::RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16078,7 +16097,7 @@ inline void algo::RspaceStr64_Init(algo::RspaceStr64& parent) {
 }
 
 // --- algo.RspaceStr64..Eq
-inline bool algo::RspaceStr64_Eq(const algo::RspaceStr64& lhs, const algo::RspaceStr64& rhs) {
+inline bool algo::RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16520,7 +16539,7 @@ inline void algo::RspaceStr9_Init(algo::RspaceStr9& parent) {
 }
 
 // --- algo.RspaceStr9..Eq
-inline bool algo::RspaceStr9_Eq(const algo::RspaceStr9& lhs, const algo::RspaceStr9& rhs) {
+inline bool algo::RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16711,7 +16730,7 @@ inline void algo::sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &
 // --- algo.Sha1sig.sha1sig.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline u8& algo::sha1sig_qFind(algo::Sha1sig& parent, u64 t) {
-    return parent.sha1sig_elems[t];
+    return parent.sha1sig_elems[u64(t)];
 }
 
 // --- algo.Sha1sig.sha1sig_curs.Reset
@@ -16760,7 +16779,7 @@ inline void algo::Sha1sig_Init(algo::Sha1sig& parent) {
 }
 
 // --- algo.Sha1sig..Eq
-inline bool algo::Sha1sig_Eq(const algo::Sha1sig& lhs, const algo::Sha1sig& rhs) {
+inline bool algo::Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
     bool retval = true;
     retval = sha1sig_Eq(lhs,rhs);
     return retval;
@@ -16889,7 +16908,7 @@ inline void algo::Smallstr1_Init(algo::Smallstr1& parent) {
 }
 
 // --- algo.Smallstr1..Eq
-inline bool algo::Smallstr1_Eq(const algo::Smallstr1& lhs, const algo::Smallstr1& rhs) {
+inline bool algo::Smallstr1_Eq(algo::Smallstr1& lhs, algo::Smallstr1& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17013,7 +17032,7 @@ inline void algo::Smallstr10_Init(algo::Smallstr10& parent) {
 }
 
 // --- algo.Smallstr10..Eq
-inline bool algo::Smallstr10_Eq(const algo::Smallstr10& lhs, const algo::Smallstr10& rhs) {
+inline bool algo::Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17137,7 +17156,7 @@ inline void algo::Smallstr16_Init(algo::Smallstr16& parent) {
 }
 
 // --- algo.Smallstr16..Eq
-inline bool algo::Smallstr16_Eq(const algo::Smallstr16& lhs, const algo::Smallstr16& rhs) {
+inline bool algo::Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17261,7 +17280,7 @@ inline void algo::Smallstr2_Init(algo::Smallstr2& parent) {
 }
 
 // --- algo.Smallstr2..Eq
-inline bool algo::Smallstr2_Eq(const algo::Smallstr2& lhs, const algo::Smallstr2& rhs) {
+inline bool algo::Smallstr2_Eq(algo::Smallstr2& lhs, algo::Smallstr2& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17406,7 +17425,7 @@ inline void algo::Smallstr20_Init(algo::Smallstr20& parent) {
 }
 
 // --- algo.Smallstr20..Eq
-inline bool algo::Smallstr20_Eq(const algo::Smallstr20& lhs, const algo::Smallstr20& rhs) {
+inline bool algo::Smallstr20_Eq(algo::Smallstr20& lhs, algo::Smallstr20& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17540,7 +17559,7 @@ inline void algo::Smallstr200_Init(algo::Smallstr200& parent) {
 }
 
 // --- algo.Smallstr200..Eq
-inline bool algo::Smallstr200_Eq(const algo::Smallstr200& lhs, const algo::Smallstr200& rhs) {
+inline bool algo::Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17664,7 +17683,7 @@ inline void algo::Smallstr25_Init(algo::Smallstr25& parent) {
 }
 
 // --- algo.Smallstr25..Eq
-inline bool algo::Smallstr25_Eq(const algo::Smallstr25& lhs, const algo::Smallstr25& rhs) {
+inline bool algo::Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17788,7 +17807,7 @@ inline void algo::Smallstr3_Init(algo::Smallstr3& parent) {
 }
 
 // --- algo.Smallstr3..Eq
-inline bool algo::Smallstr3_Eq(const algo::Smallstr3& lhs, const algo::Smallstr3& rhs) {
+inline bool algo::Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17933,7 +17952,7 @@ inline void algo::Smallstr30_Init(algo::Smallstr30& parent) {
 }
 
 // --- algo.Smallstr30..Eq
-inline bool algo::Smallstr30_Eq(const algo::Smallstr30& lhs, const algo::Smallstr30& rhs) {
+inline bool algo::Smallstr30_Eq(algo::Smallstr30& lhs, algo::Smallstr30& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18067,7 +18086,7 @@ inline void algo::Smallstr32_Init(algo::Smallstr32& parent) {
 }
 
 // --- algo.Smallstr32..Eq
-inline bool algo::Smallstr32_Eq(const algo::Smallstr32& lhs, const algo::Smallstr32& rhs) {
+inline bool algo::Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18191,7 +18210,7 @@ inline void algo::Smallstr4_Init(algo::Smallstr4& parent) {
 }
 
 // --- algo.Smallstr4..Eq
-inline bool algo::Smallstr4_Eq(const algo::Smallstr4& lhs, const algo::Smallstr4& rhs) {
+inline bool algo::Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18315,7 +18334,7 @@ inline void algo::Smallstr40_Init(algo::Smallstr40& parent) {
 }
 
 // --- algo.Smallstr40..Eq
-inline bool algo::Smallstr40_Eq(const algo::Smallstr40& lhs, const algo::Smallstr40& rhs) {
+inline bool algo::Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18439,7 +18458,7 @@ inline void algo::Smallstr5_Init(algo::Smallstr5& parent) {
 }
 
 // --- algo.Smallstr5..Eq
-inline bool algo::Smallstr5_Eq(const algo::Smallstr5& lhs, const algo::Smallstr5& rhs) {
+inline bool algo::Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18448,6 +18467,115 @@ inline bool algo::Smallstr5_Eq(const algo::Smallstr5& lhs, const algo::Smallstr5
 // --- algo.Smallstr5..EqStrptr
 inline bool algo::Smallstr5_EqStrptr(const algo::Smallstr5& lhs, const algo::strptr& rhs) {
     return algo::strptr_Eq(ch_Getary(lhs), rhs);
+}
+inline algo::StringAry::StringAry() {
+    algo::StringAry_Init(*this);
+}
+
+inline algo::StringAry::~StringAry() {
+    algo::StringAry_Uninit(*this);
+}
+
+
+// --- algo.StringAry.ary.EmptyQ
+// Return true if index is empty
+inline bool algo::ary_EmptyQ(algo::StringAry& parent) {
+    return parent.ary_n == 0;
+}
+
+// --- algo.StringAry.ary.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* algo::ary_Find(algo::StringAry& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.ary_n;
+    if (idx >= lim) return NULL;
+    return parent.ary_elems + idx;
+}
+
+// --- algo.StringAry.ary.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> algo::ary_Getary(const algo::StringAry& parent) {
+    return algo::aryptr<algo::cstring>(parent.ary_elems, parent.ary_n);
+}
+
+// --- algo.StringAry.ary.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* algo::ary_Last(algo::StringAry& parent) {
+    return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.StringAry.ary.Max
+// Return max. number of items in the array
+inline i32 algo::ary_Max(algo::StringAry& parent) {
+    (void)parent;
+    return parent.ary_max;
+}
+
+// --- algo.StringAry.ary.N
+// Return number of items in the array
+inline i32 algo::ary_N(const algo::StringAry& parent) {
+    return parent.ary_n;
+}
+
+// --- algo.StringAry.ary.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo::ary_Reserve(algo::StringAry& parent, int n) {
+    u32 new_n = parent.ary_n + n;
+    if (UNLIKELY(new_n > parent.ary_max)) {
+        ary_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo.StringAry.ary.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& algo::ary_qFind(algo::StringAry& parent, u64 t) {
+    return parent.ary_elems[t];
+}
+
+// --- algo.StringAry.ary.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& algo::ary_qLast(algo::StringAry& parent) {
+    return ary_qFind(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.StringAry.ary.rowid_Get
+// Return row id of specified element
+inline u64 algo::ary_rowid_Get(algo::StringAry& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.ary_elems;
+    return u64(id);
+}
+
+// --- algo.StringAry.ary_curs.Next
+// proceed to next item
+inline void algo::StringAry_ary_curs_Next(StringAry_ary_curs &curs) {
+    curs.index++;
+}
+
+// --- algo.StringAry.ary_curs.Reset
+inline void algo::StringAry_ary_curs_Reset(StringAry_ary_curs &curs, algo::StringAry &parent) {
+    curs.elems = parent.ary_elems;
+    curs.n_elems = parent.ary_n;
+    curs.index = 0;
+}
+
+// --- algo.StringAry.ary_curs.ValidQ
+// cursor points to valid item
+inline bool algo::StringAry_ary_curs_ValidQ(StringAry_ary_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo.StringAry.ary_curs.Access
+// item access
+inline algo::cstring& algo::StringAry_ary_curs_Access(StringAry_ary_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo.StringAry..Init
+// Set all fields to initial values.
+inline void algo::StringAry_Init(algo::StringAry& parent) {
+    parent.ary_elems 	= 0; // (algo.StringAry.ary)
+    parent.ary_n     	= 0; // (algo.StringAry.ary)
+    parent.ary_max   	= 0; // (algo.StringAry.ary)
 }
 inline algo::TermStyle::TermStyle(u32                            in_value)
     : value(in_value)
@@ -18543,7 +18671,7 @@ inline algo::Attr* algo::attrs_Find(algo::Tuple& parent, u64 t) {
 
 // --- algo.Tuple.attrs.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::Attr> algo::attrs_Getary(algo::Tuple& parent) {
+inline algo::aryptr<algo::Attr> algo::attrs_Getary(const algo::Tuple& parent) {
     return algo::aryptr<algo::Attr>(parent.attrs_elems, parent.attrs_n);
 }
 
@@ -19006,7 +19134,7 @@ inline u64* algo::ary_Find(algo::U64Ary& parent, u64 t) {
 
 // --- algo.U64Ary.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u64> algo::ary_Getary(algo::U64Ary& parent) {
+inline algo::aryptr<u64> algo::ary_Getary(const algo::U64Ary& parent) {
     return algo::aryptr<u64>(parent.ary_elems, parent.ary_n);
 }
 
@@ -20181,7 +20309,7 @@ inline void algo::i32_Range_Init(algo::i32_Range& parent) {
 }
 
 // --- algo.i32_Range..Eq
-inline bool algo::i32_Range_Eq(const algo::i32_Range& lhs, const algo::i32_Range& rhs) {
+inline bool algo::i32_Range_Eq(algo::i32_Range& lhs, algo::i32_Range& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.beg, rhs.beg);
     if (!retval) {
@@ -20253,6 +20381,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::FailokQ 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::FieldId &row) {// cfmt:algo.FieldId.String
     algo::FieldId_Print(const_cast<algo::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Fildes &row) {// cfmt:algo.Fildes.String
+    algo::Fildes_Print(const_cast<algo::Fildes&>(row), str);
     return str;
 }
 
@@ -20388,6 +20521,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::SeqType 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Sha1sig &row) {// cfmt:algo.Sha1sig.String
     algo::Sha1sig_Print(const_cast<algo::Sha1sig&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::StringAry &row) {// cfmt:algo.StringAry.String
+    algo::StringAry_Print(const_cast<algo::StringAry&>(row), str);
     return str;
 }
 

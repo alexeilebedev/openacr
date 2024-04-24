@@ -39,6 +39,7 @@ inline void lib_exec::Cmdline_Init(lib_exec::Cmdline& parent) {
     parent.q = bool(true);
     parent.maxjobs = i32(8);
     parent.complooo = bool(false);
+    parent.merge_output = bool(false);
 }
 inline lib_exec::trace::trace() {
 }

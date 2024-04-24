@@ -1,6 +1,6 @@
-// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -107,7 +107,7 @@ static void Check(T &bin_literal, strptr str) {
         algo::ByteAry buf;
         vrfy_(atf_amc::MsgHdrLTMsgs_ReadStrptrMaybe(str,buf));
         algo::memptr out(ary_Getary(buf));
-        verblog(out);
+        verblog(ToStrPtr(out));
         vrfyeq_(ToStrPtr(out),bin);
     }
 }

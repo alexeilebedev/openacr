@@ -83,7 +83,7 @@ bool                 value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strp
 // Read fields of lib_prot::FieldId from an ascii string.
 // The format of the string is the format of the lib_prot::FieldId's only field
 // func:lib_prot.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_prot.FieldId..Init
 void                 FieldId_Init(lib_prot::FieldId& parent);

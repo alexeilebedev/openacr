@@ -1,6 +1,6 @@
-// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -180,6 +180,19 @@ void atf_amc::amctest_OptOptG9() {
     str << *optoptg;
     //prerr(str);
     vrfyeq_(str, "atf_amc.OptOptG  optg:\"atf_amc.OptG  typeg:12345\"");
+}
+
+void atf_amc::amctest_OptOptG10() {
+    algo::ByteAry buf;
+    algo::ByteAry temp;
+    algo_lib::_db.varlenbuf = &temp;
+    atf_amc::OptOptG *optoptg = new(ary_AllocN(buf, sizeof(atf_amc::OptOptG)).elems) atf_amc::OptOptG;
+    atf_amc::OptOptG_ReadStrptrMaybe(*optoptg, "atf_amc.OptOptG  optg:'atf_amc.OptG'");
+    optoptg->length = sizeof(atf_amc::OptOptG) + ary_N(temp);
+    ary_Addary(buf,ary_Getary(temp));
+    tempstr str;
+    str << *optoptg;
+    vrfyeq_(str, "atf_amc.OptOptG  optg:atf_amc.OptG");
 }
 
 // -----------------------------------------------------------------------------

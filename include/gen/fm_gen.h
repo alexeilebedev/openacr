@@ -144,14 +144,14 @@ u32                  Code_Hash(u32 prev, const fm::Code & rhs) __attribute__((no
 // Read fields of fm::Code from an ascii string.
 // The format of the string is the format of the fm::Code's only field
 // func:fm.Code..ReadStrptrMaybe
-bool                 Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str);
+bool                 Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Code..Cmp
 i32                  Code_Cmp(fm::Code& lhs, fm::Code& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Code..Init
 void                 Code_Init(fm::Code& parent);
 // func:fm.Code..Eq
-bool                 Code_Eq(const fm::Code& lhs, const fm::Code& rhs) __attribute__((nothrow));
+bool                 Code_Eq(fm::Code& lhs, fm::Code& rhs) __attribute__((nothrow));
 // func:fm.Code..EqStrptr
 bool                 Code_EqStrptr(const fm::Code& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -211,14 +211,14 @@ u32                  Objtype_Hash(u32 prev, const fm::Objtype & rhs) __attribute
 // Read fields of fm::Objtype from an ascii string.
 // The format of the string is the format of the fm::Objtype's only field
 // func:fm.Objtype..ReadStrptrMaybe
-bool                 Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str);
+bool                 Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Objtype..Cmp
 i32                  Objtype_Cmp(fm::Objtype& lhs, fm::Objtype& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Objtype..Init
 void                 Objtype_Init(fm::Objtype& parent);
 // func:fm.Objtype..Eq
-bool                 Objtype_Eq(const fm::Objtype& lhs, const fm::Objtype& rhs) __attribute__((nothrow));
+bool                 Objtype_Eq(fm::Objtype& lhs, fm::Objtype& rhs) __attribute__((nothrow));
 // func:fm.Objtype..EqStrptr
 bool                 Objtype_EqStrptr(const fm::Objtype& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -278,14 +278,14 @@ u32                  Objinst_Hash(u32 prev, const fm::Objinst & rhs) __attribute
 // Read fields of fm::Objinst from an ascii string.
 // The format of the string is the format of the fm::Objinst's only field
 // func:fm.Objinst..ReadStrptrMaybe
-bool                 Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str);
+bool                 Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Objinst..Cmp
 i32                  Objinst_Cmp(fm::Objinst& lhs, fm::Objinst& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Objinst..Init
 void                 Objinst_Init(fm::Objinst& parent);
 // func:fm.Objinst..Eq
-bool                 Objinst_Eq(const fm::Objinst& lhs, const fm::Objinst& rhs) __attribute__((nothrow));
+bool                 Objinst_Eq(fm::Objinst& lhs, fm::Objinst& rhs) __attribute__((nothrow));
 // func:fm.Objinst..EqStrptr
 bool                 Objinst_EqStrptr(const fm::Objinst& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -331,7 +331,7 @@ bool                 value_ReadStrptrMaybe(fm::Flag& parent, algo::strptr rhs) _
 // Read fields of fm::Flag from an ascii string.
 // The format of the string is the format of the fm::Flag's only field
 // func:fm.Flag..ReadStrptrMaybe
-bool                 Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str);
+bool                 Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Flag..Init
 void                 Flag_Init(fm::Flag& parent);
@@ -385,7 +385,7 @@ bool                 value_ReadStrptrMaybe(fm::Severity& parent, algo::strptr rh
 // Read fields of fm::Severity from an ascii string.
 // The format of the string is the format of the fm::Severity's only field
 // func:fm.Severity..ReadStrptrMaybe
-bool                 Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str);
+bool                 Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Severity..Lt
 bool                 Severity_Lt(fm::Severity lhs, fm::Severity rhs) __attribute__((nothrow));
 // func:fm.Severity..Cmp
@@ -470,14 +470,14 @@ u32                  Summary_Hash(u32 prev, const fm::Summary & rhs) __attribute
 // Read fields of fm::Summary from an ascii string.
 // The format of the string is the format of the fm::Summary's only field
 // func:fm.Summary..ReadStrptrMaybe
-bool                 Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str);
+bool                 Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Summary..Cmp
 i32                  Summary_Cmp(fm::Summary& lhs, fm::Summary& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Summary..Init
 void                 Summary_Init(fm::Summary& parent);
 // func:fm.Summary..Eq
-bool                 Summary_Eq(const fm::Summary& lhs, const fm::Summary& rhs) __attribute__((nothrow));
+bool                 Summary_Eq(fm::Summary& lhs, fm::Summary& rhs) __attribute__((nothrow));
 // func:fm.Summary..EqStrptr
 bool                 Summary_EqStrptr(const fm::Summary& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -537,14 +537,14 @@ u32                  Description_Hash(u32 prev, const fm::Description & rhs) __a
 // Read fields of fm::Description from an ascii string.
 // The format of the string is the format of the fm::Description's only field
 // func:fm.Description..ReadStrptrMaybe
-bool                 Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_str);
+bool                 Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Description..Cmp
 i32                  Description_Cmp(fm::Description& lhs, fm::Description& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Description..Init
 void                 Description_Init(fm::Description& parent);
 // func:fm.Description..Eq
-bool                 Description_Eq(const fm::Description& lhs, const fm::Description& rhs) __attribute__((nothrow));
+bool                 Description_Eq(fm::Description& lhs, fm::Description& rhs) __attribute__((nothrow));
 // func:fm.Description..EqStrptr
 bool                 Description_EqStrptr(const fm::Description& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -604,14 +604,14 @@ u32                  Source_Hash(u32 prev, const fm::Source & rhs) __attribute__
 // Read fields of fm::Source from an ascii string.
 // The format of the string is the format of the fm::Source's only field
 // func:fm.Source..ReadStrptrMaybe
-bool                 Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str);
+bool                 Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:fm.Source..Cmp
 i32                  Source_Cmp(fm::Source& lhs, fm::Source& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.Source..Init
 void                 Source_Init(fm::Source& parent);
 // func:fm.Source..Eq
-bool                 Source_Eq(const fm::Source& lhs, const fm::Source& rhs) __attribute__((nothrow));
+bool                 Source_Eq(fm::Source& lhs, fm::Source& rhs) __attribute__((nothrow));
 // func:fm.Source..EqStrptr
 bool                 Source_EqStrptr(const fm::Source& lhs, const algo::strptr& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -659,13 +659,13 @@ bool                 AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr 
 // Read fields of fm::AlarmMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:fm.AlarmMsg..ReadStrptrMaybe
-bool                 AlarmMsg_ReadStrptrMaybe(fm::AlarmMsg &parent, algo::strptr in_str);
+bool                 AlarmMsg_ReadStrptrMaybe(fm::AlarmMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:fm.AlarmMsg..GetMsgLength
-i32                  AlarmMsg_GetMsgLength(const fm::AlarmMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const fm::AlarmMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:fm.AlarmMsg..GetMsgMemptr
-algo::memptr         AlarmMsg_GetMsgMemptr(const fm::AlarmMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const fm::AlarmMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.AlarmMsg..Init
 void                 AlarmMsg_Init(fm::AlarmMsg& parent);
@@ -715,7 +715,7 @@ bool                 value_ReadStrptrMaybe(fm::FieldId& parent, algo::strptr rhs
 // Read fields of fm::FieldId from an ascii string.
 // The format of the string is the format of the fm::FieldId's only field
 // func:fm.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fm.FieldId..Init
 void                 FieldId_Init(fm::FieldId& parent);

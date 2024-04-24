@@ -1528,7 +1528,7 @@ bool                 value_ReadStrptrMaybe(ssim2mysql::FieldId& parent, algo::st
 // Read fields of ssim2mysql::FieldId from an ascii string.
 // The format of the string is the format of the ssim2mysql::FieldId's only field
 // func:ssim2mysql.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ssim2mysql::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ssim2mysql::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2mysql.FieldId..Init
 void                 FieldId_Init(ssim2mysql::FieldId& parent);
@@ -1576,7 +1576,7 @@ bool                 value_ReadStrptrMaybe(ssim2mysql::TableId& parent, algo::st
 // Read fields of ssim2mysql::TableId from an ascii string.
 // The format of the string is the format of the ssim2mysql::TableId's only field
 // func:ssim2mysql.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(ssim2mysql::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(ssim2mysql::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2mysql.TableId..Init
 void                 TableId_Init(ssim2mysql::TableId& parent);

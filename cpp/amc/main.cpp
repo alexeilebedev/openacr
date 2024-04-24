@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2013 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -87,6 +87,7 @@
 
 // -----------------------------------------------------------------------------
 
+// Return TRUE if field is a padding field with no semantic significance
 bool amc::PadQ(amc::FField &field) {
     return field.arg == "pad_byte";
 }
@@ -366,12 +367,10 @@ bool amc::PoolHasAllocQ(amc::FCtype &ctype) {
 
 void amc::GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field, strptr strname, strptr parentname) {
     if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
-        if (func->ismacro) {// inline the function!
-            out << func->body;
-        } else {
-            out << ns_Get(*field.p_ctype) << "::"
-                << name_Get(field) << "_Print("<<parentname<<"), "<<strname<<");\n";
-        }
+        vrfy(!func->ismacro, tempstr()<<"invalid macro print function "<<func->func);
+        out << ns_Get(*field.p_ctype) << "::"
+            << name_Get(field)
+            << "_Print("<<parentname<<"), "<<strname<<");\n";
     } else {
         out << name_Get(*field.p_arg)
             <<"_Print("<<FieldvalExpr(&parenttype,field,parentname) <<", "<<strname<<");\n";
@@ -379,17 +378,6 @@ void amc::GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field
 }
 
 // -----------------------------------------------------------------------------
-
-// print binary octet string as hex byte array initializer
-void amc::memptr_PrintOctetsHexArray(algo::memptr ary, cstring &out, bool caps) {
-    out << "{";
-    algo::ListSep ls(",");
-    frep_(i,elems_N(ary)) {
-        out << ls;
-        u64_PrintHex(ary[i],out,2,true,caps);
-    }
-    out << "}";
-}
 
 bool amc::FldfuncQ(amc::FField &field) {
     return field.c_cppfunc || field.c_substr || field.c_falias;
@@ -525,7 +513,10 @@ static bool HasFcast(amc::FCtype& ctype){
     return result;
 }
 
-tempstr amc::EvalRowid(amc::FCtype &ctype) {// return c++ type for rowid
+// Return c++ type for rowid of FCtype
+// By default this is a u64, but if the struct has a field marked rowid,
+// then the type of that field is the row id type.
+tempstr amc::EvalRowid(amc::FCtype &ctype) {
     tempstr rowid("u64");
     ind_beg(amc::ctype_c_field_curs,field,ctype) if (field.c_rowid) {
         if(CastsToU64Q(field) || HasFcast(*field.p_arg)){
@@ -551,11 +542,12 @@ bool amc::GlobalQ(amc::FCtype &ctype) {
 // -----------------------------------------------------------------------------
 
 // Pick a name with which to refer to a record of type CTYPE
-tempstr amc::Refname(amc::FCtype &ctype) {
+tempstr amc::Refname(amc::FCtype &ctype, algo::strptr dflt DFLTVAL("parent")) {
     tempstr refname;
     ind_beg(amc::ctype_zd_inst_curs,inst,ctype) {// has global instance? use it
         if (inst.reftype == dmmeta_Reftype_reftype_Global) {
             refname << name_Get(inst);
+            break;
         }
     }ind_end;
     if (!ch_N(refname)) {
@@ -563,7 +555,7 @@ tempstr amc::Refname(amc::FCtype &ctype) {
         if (pool) {// pick first usable instance
             refname << name_Get(*pool);
         } else {
-            refname << "parent";
+            refname << dflt;
         }
     }
     return refname;
@@ -582,6 +574,27 @@ bool amc::ValQ(amc::FField &field) {
 
 bool amc::ComputedFieldQ(amc::FField &field) {
     return field.c_typefld || GetLenfld(field);
+}
+
+// -----------------------------------------------------------------------------
+
+tempstr amc::char_ToCppSingleQuote(char c) {
+    tempstr out;
+    char_PrintCppSingleQuote(c,out);
+    return out;
+}
+
+// -----------------------------------------------------------------------------
+
+// return separator to be used for array field FIELD
+// if not found, return 0 (NUL)
+char amc::GetSep(amc::FField &field) {
+    char ret = 0;
+    amc::FCfmt *cfmt = FindStringRead(*field.p_ctype);
+    if (cfmt && cfmt->sep != "") {
+        ret = cfmt->sep.ch[0];
+    }
+    return ret;
 }
 
 // -----------------------------------------------------------------------------

@@ -879,23 +879,20 @@ void atf_nrun::job_ExecX(atf_nrun::FEntry& fentry) {
 
 // --- atf_nrun.FEntry.job.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:bash.Argv
+// Call execv with specified parameters
 int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) {
-    algo_lib::exec_args_Alloc() << fentry.job_path;
-
-    if (fentry.job_cmd.c != "") {
-        algo_lib::exec_args_Alloc() << "-c";
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        cstring_Print(fentry.job_cmd.c, *arg);
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    job_ToArgv(fentry, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if fentry.job_path is relative, search for it in PATH
     algo_lib::ResolveExecFname(fentry.job_path);
-    return execv(Zeroterm(fentry.job_path),argv);
+    ret = execv(Zeroterm(fentry.job_path),argv);
+    return ret;
 }
 
 // --- atf_nrun.FEntry.job.ToCmdline
@@ -913,6 +910,19 @@ algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) {
         retval << " 2" << fentry.job_fstderr;
     }
     return retval;
+}
+
+// --- atf_nrun.FEntry.job.ToArgv
+// Form array from the command line
+void atf_nrun::job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << fentry.job_path;
+
+    if (fentry.job_cmd.c != "") {
+        ary_Alloc(args) << "-c";
+        cstring *arg = &ary_Alloc(args);
+        cstring_Print(fentry.job_cmd.c, *arg);
+    }
 }
 
 // --- atf_nrun.FEntry..Init

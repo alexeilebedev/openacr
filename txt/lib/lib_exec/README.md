@@ -20,9 +20,10 @@ Other ctypes in this namespace which don't have own readme files
 |dry_run|bool|Val|
 |q|bool|Val|true|Do not print node name|
 |maxjobs|i32|Val|8|Maximum number of parallel jobs|
-|complooo|bool|Val|false|
+|complooo|bool|Val|false|Allow jobs to complete out-of-order|
+|merge_output|bool|Val|false|Merge stderr and stdout from child processes|
 
-#### lib_exec.FDb - In-memory database for lib_exec
+#### lib_exec.FDb - 
 <a href="#lib_exec-fdb"></a>
 
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
@@ -51,6 +52,7 @@ Other ctypes in this namespace which don't have own readme files
 |stdout_fd|algo_lib.FFildes|Val||Temporary file containing stdout of subprocess|
 |stderr_fd|algo_lib.FFildes|Val||Temporary file containing stderr of subprocess|
 |signal|i32|Val||Signal received by process (if any)|
+|args|algo.StringAry|Val||Overrides 'command'|
 
 #### lib_exec.FSyscmddep - 
 <a href="#lib_exec-fsyscmddep"></a>

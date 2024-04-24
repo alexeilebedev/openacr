@@ -21,5 +21,6 @@ dmmeta.ssimreq  ssimreq:dmmeta.llist:$field  parent:dmmeta.Field.reftype:Llist  
 dmmeta.ssimreq  ssimreq:dmmeta.nsx:$ns  parent:"dmmeta.Ns.nstype:(exe|lib|objlist|protocol)"  reqchild:N  bidir:Y  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.ptrary:$field  parent:dmmeta.Field.reftype:Ptrary  reqchild:Y  bidir:Y  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.smallstr:$field  parent:dmmeta.Field.reftype:Smallstr  reqchild:Y  bidir:Y  comment:""
+dmmeta.ssimreq  ssimreq:dmmeta.sortfld:$field  parent:"dmmeta.Field.reftype:(Atree|Bheap)"  reqchild:Y  bidir:N  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.tary:$field  parent:dmmeta.Field.reftype:Tary  reqchild:Y  bidir:Y  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.thash:$field  parent:dmmeta.Field.reftype:Thash  reqchild:Y  bidir:Y  comment:""

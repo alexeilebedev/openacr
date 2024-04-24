@@ -246,7 +246,7 @@ bool                 value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strpt
 // Read fields of lib_sql::FieldId from an ascii string.
 // The format of the string is the format of the lib_sql::FieldId's only field
 // func:lib_sql.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sql.FieldId..Init
 void                 FieldId_Init(lib_sql::FieldId& parent);

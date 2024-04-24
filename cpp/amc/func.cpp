@@ -1,6 +1,6 @@
-// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -216,7 +216,7 @@ amc::FFunc &amc::CreateCurFunc(bool proto DFLTVAL(false), algo::strptr funcname 
                 func.proto << name_Get(*field);
             }
         } else {
-            if (!GlobalQ(*ctype)) {
+            if (!GlobalQ(*ctype) && funcname == "") {
                 // function name based on ctype
                 func.proto << name_Get(*ctype);
             }

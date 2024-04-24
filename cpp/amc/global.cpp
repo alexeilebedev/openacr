@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -200,13 +200,8 @@ void amc::tfunc_Global_InsertStrptrMaybe() {
         Ins(&R, fcn.body   , "switch (value_GetEnum(table_id)) {");
         ind_beg(amc::ctype_c_field_curs, inst, *field.p_ctype) if (inst.c_finput) {
             vrfy(!inst.c_gstatic, tempstr()<<"Finput and gstatic cannot be specified together. Field: ["<<inst.field<<"]");
-            amc::FCtype *base  = GetBaseType(*inst.p_arg,inst.p_arg);// always read base class if possible
-            if (HasReadQ(*inst.p_arg) && base != inst.p_arg) {
-                prerr("amc.read_base  "
-                      <<Keyval("base_ctype",base->ctype)
-                      <<Keyval("orig_ctype",inst.arg)
-                      <<Keyval("comment","program will read bad type instead of original"));
-            }
+            // always read base class if possible
+            amc::FCtype *base  = GetBaseType(*inst.p_arg,inst.p_arg);
             Set(R, "$basens" , ns_Get(*base));
             Set(R, "$basename" , name_Get(*base));
             Set(R, "$instname"   , name_Get(inst));
@@ -224,9 +219,6 @@ void amc::tfunc_Global_InsertStrptrMaybe() {
             Ins(&R, fcn.body    , "}");
         }ind_end;
         Ins(&R, fcn.body    , "default:");
-        //if (ns_Get(*field.p_ctype) != "algo_lib") {
-        //    Ins(&R, fcn.body    , "    retval = algo_lib::InsertStrptrMaybe(str);");
-        //}
         Ins(&R, fcn.body        , "    break;");
         Ins(&R, fcn.body        , "} //switch");
         Ins(&R, fcn.body    , "if (!retval) {");

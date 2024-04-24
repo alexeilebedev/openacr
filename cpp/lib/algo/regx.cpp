@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ static int RegxState_ReadStrptrChClass(algo_lib::RegxState &state, strptr str);
 // Return true if state has a total (all chars allowed) transition.
 static bool TotalQ(algo_lib::RegxState &state) {
     bool ret=false;
-    ind_beg(algo_lib::state_ch_class_curs,ch_class,state) {
+    ind_beg(algo_lib::RegxState_ch_class_curs,ch_class,state) {
         if (ch_class == algo::i32_Range(0,INT_MAX)) {
             ret=true;
             break;

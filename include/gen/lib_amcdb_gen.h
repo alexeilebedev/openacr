@@ -83,7 +83,7 @@ bool                 value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::str
 // Read fields of lib_amcdb::FieldId from an ascii string.
 // The format of the string is the format of the lib_amcdb::FieldId's only field
 // func:lib_amcdb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_amcdb.FieldId..Init
 void                 FieldId_Init(lib_amcdb::FieldId& parent);

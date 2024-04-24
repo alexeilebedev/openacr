@@ -4133,6 +4133,11 @@ bool                 request_method_SetStrptrMaybe(gcli::FHttp& parent, algo::st
 // func:gcli.FHttp.request_method.SetStrptr
 void                 request_method_SetStrptr(gcli::FHttp& parent, algo::strptr rhs, gcli_FHttp_request_method_Enum dflt) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:gcli.FHttp.response_header.Addary
+algo::aryptr<algo::cstring> response_header_Addary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:gcli.FHttp.response_header.Alloc
@@ -4152,7 +4157,7 @@ bool                 response_header_EmptyQ(gcli::FHttp& parent) __attribute__((
 algo::cstring*       response_header_Find(gcli::FHttp& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:gcli.FHttp.response_header.Getary
-algo::aryptr<algo::cstring> response_header_Getary(gcli::FHttp& parent) __attribute__((nothrow));
+algo::aryptr<algo::cstring> response_header_Getary(const gcli::FHttp& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FHttp.response_header.Last
 algo::cstring*       response_header_Last(gcli::FHttp& parent) __attribute__((nothrow, pure));
@@ -4179,6 +4184,10 @@ void                 response_header_AbsReserve(gcli::FHttp& parent, int n) __at
 // Copy contents of RHS to PARENT.
 // func:gcli.FHttp.response_header.Setary
 void                 response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rhs) __attribute__((nothrow));
+// Copy specified array into response_header, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:gcli.FHttp.response_header.Setary2
+void                 response_header_Setary(gcli::FHttp& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FHttp.response_header.qFind
 algo::cstring&       response_header_qFind(gcli::FHttp& parent, u64 t) __attribute__((nothrow));
@@ -4191,6 +4200,11 @@ u64                  response_header_rowid_Get(gcli::FHttp& parent, algo::cstrin
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:gcli.FHttp.response_header.AllocNVal
 algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:gcli.FHttp.response_header.ReadStrptrMaybe
+bool                 response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:gcli.FHttp.response_header_curs.Next
@@ -4794,7 +4808,7 @@ bool                 value_ReadStrptrMaybe(gcli::FieldId& parent, algo::strptr r
 // Read fields of gcli::FieldId from an ascii string.
 // The format of the string is the format of the gcli::FieldId's only field
 // func:gcli.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FieldId..Init
 void                 FieldId_Init(gcli::FieldId& parent);
@@ -4842,7 +4856,7 @@ bool                 value_ReadStrptrMaybe(gcli::TableId& parent, algo::strptr r
 // Read fields of gcli::TableId from an ascii string.
 // The format of the string is the format of the gcli::TableId's only field
 // func:gcli.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.TableId..Init
 void                 TableId_Init(gcli::TableId& parent);

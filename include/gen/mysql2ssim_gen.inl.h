@@ -239,7 +239,7 @@ inline algo::cstring* mysql2ssim::vals_Find(mysql2ssim::FTobltin& parent, u64 t)
 
 // --- mysql2ssim.FTobltin.vals.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> mysql2ssim::vals_Getary(mysql2ssim::FTobltin& parent) {
+inline algo::aryptr<algo::cstring> mysql2ssim::vals_Getary(const mysql2ssim::FTobltin& parent) {
     return algo::aryptr<algo::cstring>(parent.vals_elems, parent.vals_n);
 }
 

@@ -369,7 +369,7 @@ bool                 value_ReadStrptrMaybe(sandbox::FieldId& parent, algo::strpt
 // Read fields of sandbox::FieldId from an ascii string.
 // The format of the string is the format of the sandbox::FieldId's only field
 // func:sandbox.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.FieldId..Init
 void                 FieldId_Init(sandbox::FieldId& parent);
@@ -417,7 +417,7 @@ bool                 value_ReadStrptrMaybe(sandbox::TableId& parent, algo::strpt
 // Read fields of sandbox::TableId from an ascii string.
 // The format of the string is the format of the sandbox::TableId's only field
 // func:sandbox.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.TableId..Init
 void                 TableId_Init(sandbox::TableId& parent);

@@ -91,7 +91,7 @@ bool                 value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr r
 // Read fields of ietf::FieldId from an ascii string.
 // The format of the string is the format of the ietf::FieldId's only field
 // func:ietf.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ietf.FieldId..Init
 void                 FieldId_Init(ietf::FieldId& parent);
@@ -118,10 +118,9 @@ struct Ipv4 { // ietf.Ipv4
 // func:ietf.Ipv4..Hash
 u32                  Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4 from an ascii string.
-// The function is implemented externally.
 // func:ietf.Ipv4..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Ipv4_ReadStrptrMaybe(ietf::Ipv4 &parent, algo::strptr in_str);
+bool                 Ipv4_ReadStrptrMaybe(ietf::Ipv4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipv4..Lt
 bool                 Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // func:ietf.Ipv4..Cmp
@@ -160,10 +159,9 @@ struct Ipport { // ietf.Ipport: IP+Port: host format
 // func:ietf.Ipport..Hash
 u32                  Ipport_Hash(u32 prev, ietf::Ipport rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipport from an ascii string.
-// The function is implemented externally.
 // func:ietf.Ipport..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Ipport_ReadStrptrMaybe(ietf::Ipport &parent, algo::strptr in_str);
+bool                 Ipport_ReadStrptrMaybe(ietf::Ipport &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipport..Lt
 bool                 Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // func:ietf.Ipport..Cmp
@@ -205,10 +203,9 @@ void                 addr_Set(ietf::Ipv4Addr& parent, u32 rhs) __attribute__((no
 // func:ietf.Ipv4Addr..Hash
 u32                  Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4Addr from an ascii string.
-// The function is implemented externally.
 // func:ietf.Ipv4Addr..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str);
+bool                 Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipv4Addr..Lt
 bool                 Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // func:ietf.Ipv4Addr..Cmp

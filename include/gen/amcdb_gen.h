@@ -151,7 +151,7 @@ bool                 Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr fie
 // Read fields of amcdb::Bltin from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Bltin..ReadStrptrMaybe
-bool                 Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str);
+bool                 Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amcdb.Bltin..Init
 void                 Bltin_Init(amcdb::Bltin& parent);
@@ -172,7 +172,7 @@ bool                 Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strp
 // Read fields of amcdb::Curstype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Curstype..ReadStrptrMaybe
-bool                 Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str);
+bool                 Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amcdb.Curstype.String  printfmt:Tuple
 // func:amcdb.Curstype..Print
@@ -219,7 +219,7 @@ bool                 value_ReadStrptrMaybe(amcdb::FieldId& parent, algo::strptr 
 // Read fields of amcdb::FieldId from an ascii string.
 // The format of the string is the format of the amcdb::FieldId's only field
 // func:amcdb.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amcdb.FieldId..Init
 void                 FieldId_Init(amcdb::FieldId& parent);
@@ -241,7 +241,7 @@ bool                 Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, 
 // Read fields of amcdb::Gen from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Gen..ReadStrptrMaybe
-bool                 Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str);
+bool                 Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amcdb.Gen..Init
 void                 Gen_Init(amcdb::Gen& parent);
@@ -262,7 +262,7 @@ bool                 Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strp
 // Read fields of amcdb::Regxtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Regxtype..ReadStrptrMaybe
-bool                 Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_str);
+bool                 Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amcdb.Regxtype.String  printfmt:Tuple
 // func:amcdb.Regxtype..Print
@@ -280,7 +280,7 @@ bool                 Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr f
 // Read fields of amcdb::Tclass from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Tclass..ReadStrptrMaybe
-bool                 Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str);
+bool                 Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:amcdb.Tclass.String  printfmt:Tuple
 // func:amcdb.Tclass..Print
@@ -304,7 +304,7 @@ bool                 Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr fie
 // Read fields of amcdb::Tcurs from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Tcurs..ReadStrptrMaybe
-bool                 Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str);
+bool                 Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amcdb.Tcurs..Init
 void                 Tcurs_Init(amcdb::Tcurs& parent);
@@ -344,7 +344,7 @@ bool                 Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr fie
 // Read fields of amcdb::Tfunc from an ascii string.
 // The format of the string is an ssim Tuple
 // func:amcdb.Tfunc..ReadStrptrMaybe
-bool                 Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in_str);
+bool                 Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amcdb.Tfunc..Init
 void                 Tfunc_Init(amcdb::Tfunc& parent);

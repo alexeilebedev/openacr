@@ -229,20 +229,33 @@ The following functions are generated:
 inline-command: amc -report:N algo_lib.FDb.lpool.% -proto
 // Free block of memory previously returned by Lpool.
 // func:algo_lib.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:algo_lib.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:algo_lib.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:algo_lib.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:algo_lib.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:algo_lib.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:algo_lib.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 ```
 
@@ -355,7 +368,7 @@ bool                 buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
 char*                buf_Find(algo::LineBuf& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.LineBuf.buf.Getary
-algo::aryptr<char>   buf_Getary(algo::LineBuf& parent) __attribute__((nothrow));
+algo::aryptr<char>   buf_Getary(const algo::LineBuf& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.LineBuf.buf.Last
 char*                buf_Last(algo::LineBuf& parent) __attribute__((nothrow, pure));
@@ -379,6 +392,10 @@ void                 buf_Reserve(algo::LineBuf& parent, int n) __attribute__((no
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo.LineBuf.buf.AbsReserve
 void                 buf_AbsReserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
+// Convert buf to a string.
+// Array is printed as a regular string.
+// func:algo.LineBuf.buf.Print
+void                 buf_Print(algo::LineBuf& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo.LineBuf.buf.Setary
 void                 buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) __attribute__((nothrow));
@@ -398,6 +415,9 @@ u64                  buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribut
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.LineBuf.buf.AllocNVal
 algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:algo.LineBuf.buf.ReadStrptrMaybe
+bool                 buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) __attribute__((nothrow));
 
 ```
 

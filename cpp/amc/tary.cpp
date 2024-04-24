@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -59,12 +59,11 @@ void amc::tclass_Tary() {
 void amc::tfunc_Tary_Addary() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FTary &tary = *field.c_tary;
     bool can_copy = !CopyPrivQ(*field.p_arg);
-    bool can_memcpy = field.arg == "char" || field.arg == "u8";
+    bool can_memcpy = field.p_arg->c_bltin;
 
     // do not generate Addary for fields which are rows.
-    if (field.p_arg->n_xref == 0 && can_copy && tary.aliased) {
+    if (field.p_arg->n_xref == 0 && can_copy) {
         amc::FFunc& addary = amc::CreateCurFunc();
         Ins(&R, addary.comment, "Reserve space (this may move memory). Insert N element at the end.");
         Ins(&R, addary.comment, "Return aryptr to newly inserted block.");
@@ -247,7 +246,7 @@ void amc::tfunc_Tary_Getary() {
 
     amc::FFunc& getary = amc::CreateCurFunc();
     Ins(&R, getary.ret  , "algo::aryptr<$Cpptype>", false);
-    Ins(&R, getary.proto, "$name_Getary($Parent)", false);
+    Ins(&R, getary.proto, "$name_Getary($Cparent)", false);
     Ins(&R, getary.body, "return algo::aryptr<$Cpptype>($parname.$name_elems, $parname.$name_n);");
 }
 
@@ -465,11 +464,10 @@ void amc::tfunc_Tary_Setary2() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
     bool glob = GlobalQ(*field.p_ctype);
-    amc::FTary &tary = *field.c_tary;
     bool can_copy = !CopyPrivQ(*field.p_arg);
 
     // This is a potentially aliasing version of the copy function.
-    if (!glob && can_copy && tary.aliased) {
+    if (!glob && can_copy) {
         amc::FFunc &copy = amc::CreateCurFunc();
         Ins(&R, copy.comment, "Copy specified array into $name, discarding previous contents.");
         Ins(&R, copy.comment, "If the RHS argument aliases the array (refers to the same memory), throw exception.");
@@ -620,25 +618,64 @@ void amc::tfunc_Tary_curs() {
     }
 }
 
+// Read/Accumulate Tary from string.
+// arg:char & U8
+//    the array is flushed befor reading
+//    input is a string that is copied to the array.
+// any other type, with separator:
+//    the array is flushed before reading
+//    input string is split on separator character, elements are appended one by one
+//    if any element cannot be read, function returns false
+//        (but array retains values read so far)
+// any other type, without separator:
+//    one element is read from input string and appended to the array without flushing.
+//    if the element cannot be read, the array is unchanged
+//
 void amc::tfunc_Tary_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genfield.R;
     amc::FField &field = *amc::_db.genfield.p_field;
-    if (HasArgvReadQ(*field.p_ctype)) {
-        amc::FFunc& rd = amc::CreateCurFunc();
-        Ins(&R, rd.comment, "Convert string to field. Return success value");
-        Ins(&R, rd.ret  , "bool", false);
-        Ins(&R, rd.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in_str)", false);
-        Ins(&R, rd.body, "bool retval = true;");
+    char sep = GetSep(field);
+    if (!PadQ(field) && HasStringReadQ(*field.p_arg)) {
+        Set(R, "$sep", char_ToCppSingleQuote(sep));
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddRetval(func, "bool", "retval", "true");
+        AddProtoArg(func, "algo::strptr", "in_str");
         if (field.arg == "char") {
-            Ins(&R, rd.body , "$name_AddAry($parname,in_str);");
+            Ins(&R, func.comment, "The array is replaced with the input string. Function always succeeds.");
+            Ins(&R, func.body, "$name_RemoveAll($pararg);");
+            Ins(&R, func.body, "$name_Addary($pararg,in_str);");
         } else if (field.arg == "u8") {
-            Ins(&R, rd.body , "$name_AddAry($parname,strptr_ToMemptr(in_str));");
+            Ins(&R, func.comment, "The array is replaced with the input string. Function always succeeds.");
+            Ins(&R, func.body, "$name_RemoveAll($pararg);");
+            Ins(&R, func.body, "$name_Addary($pararg,algo::strptr_ToMemptr(in_str));");
+        } else if (sep) {
+            Ins(&R, func.comment, "The array is replaced with a set of elements, which are parsed from input string (split on $sep).");
+            Ins(&R, func.comment, "Function returns true if the input string contains no error.");
+            Ins(&R, func.comment, "Any values already loaded into the array remain in place");
+            Ins(&R, func.body, "$name_RemoveAll($pararg);");
+            Ins(&R, func.body, "for (int i=0; in_str != \"\"; i++) {");
+            Ins(&R, func.body, "    algo::strptr token;");
+            Ins(&R, func.body, "    algo::NextSep(in_str, $sep, token);");
+            Ins(&R, func.body, "    $Cpptype &elem = $name_Alloc($pararg);");
+            Ins(&R, func.body, "    retval = $Cpptype_ReadStrptrMaybe(elem, token);");
+            Ins(&R, func.body, "    if (!retval) {");
+            Ins(&R, func.body, "        $name_RemoveLast($pararg);");
+            Ins(&R, func.body, "        break;");
+            Ins(&R, func.body, "    }");
+            Ins(&R, func.body, "}");
         } else {
-            Ins(&R, rd.body , "retval = $Cpptype_ReadStrptrMaybe($name_Alloc($parname), in_str);");
+            Ins(&R, func.comment, "A single element is read from input string and appended to the array.");
+            Ins(&R, func.comment, "If the string contains an error, the array is untouched.");
+            Ins(&R, func.comment, "Function returns success value.");
+            Ins(&R, func.body, "$Cpptype &elem = $name_Alloc($pararg);");
+            Ins(&R, func.body, "retval = $Cpptype_ReadStrptrMaybe(elem, in_str);");
+            Ins(&R, func.body, "if (!retval) {");
+            Ins(&R, func.body, "    $name_RemoveLast($pararg);");
+            Ins(&R, func.body, "}");
         }
-        SetPresent(rd,Subst(R,"$parname"),field);
-        MaybeUnused(rd,Subst(R,"$parname"));
-        MaybeUnused(rd,"in_str");
-        Ins(&R, rd.body, "return retval;");
     }
+}
+
+void amc::tfunc_Tary_Print() {
+    tfunc_Inlary_Print();
 }

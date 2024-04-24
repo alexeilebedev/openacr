@@ -159,7 +159,7 @@ bool                 value_ReadStrptrMaybe(lib_ams::CtlConnCase& parent, algo::s
 // Read fields of lib_ams::CtlConnCase from an ascii string.
 // The format of the string is the format of the lib_ams::CtlConnCase's only field
 // func:lib_ams.CtlConnCase..ReadStrptrMaybe
-bool                 CtlConnCase_ReadStrptrMaybe(lib_ams::CtlConnCase &parent, algo::strptr in_str);
+bool                 CtlConnCase_ReadStrptrMaybe(lib_ams::CtlConnCase &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ams.CtlConnCase..Init
 void                 CtlConnCase_Init(lib_ams::CtlConnCase& parent);
@@ -205,7 +205,7 @@ bool                 value_ReadStrptrMaybe(lib_ams::CtlMsgCase& parent, algo::st
 // Read fields of lib_ams::CtlMsgCase from an ascii string.
 // The format of the string is the format of the lib_ams::CtlMsgCase's only field
 // func:lib_ams.CtlMsgCase..ReadStrptrMaybe
-bool                 CtlMsgCase_ReadStrptrMaybe(lib_ams::CtlMsgCase &parent, algo::strptr in_str);
+bool                 CtlMsgCase_ReadStrptrMaybe(lib_ams::CtlMsgCase &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ams.CtlMsgCase..Init
 void                 CtlMsgCase_Init(lib_ams::CtlMsgCase& parent);
@@ -1283,6 +1283,11 @@ private:
 // this function is 'extrn' and implemented by user
 void                 fd_Cleanup(lib_ams::FReadfile& parent) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_ams.FReadfile.buf.Addary
+algo::aryptr<u8>     buf_Addary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:lib_ams.FReadfile.buf.Alloc
@@ -1302,7 +1307,7 @@ bool                 buf_EmptyQ(lib_ams::FReadfile& parent) __attribute__((nothr
 u8*                  buf_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:lib_ams.FReadfile.buf.Getary
-algo::aryptr<u8>     buf_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
+algo::aryptr<u8>     buf_Getary(const lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_ams.FReadfile.buf.Last
 u8*                  buf_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
@@ -1326,9 +1331,17 @@ void                 buf_Reserve(lib_ams::FReadfile& parent, int n) __attribute_
 // Make sure N elements fit in array. Process dies if out of memory
 // func:lib_ams.FReadfile.buf.AbsReserve
 void                 buf_AbsReserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
+// Convert buf to a string.
+// Array is printed as a regular string.
+// func:lib_ams.FReadfile.buf.Print
+void                 buf_Print(lib_ams::FReadfile& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:lib_ams.FReadfile.buf.Setary
 void                 buf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
+// Copy specified array into buf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_ams.FReadfile.buf.Setary2
+void                 buf_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_ams.FReadfile.buf.qFind
 u8&                  buf_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
@@ -1341,7 +1354,15 @@ u64                  buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attri
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:lib_ams.FReadfile.buf.AllocNVal
 algo::aryptr<u8>     buf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:lib_ams.FReadfile.buf.ReadStrptrMaybe
+bool                 buf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_ams.FReadfile.cbuf.Addary
+algo::aryptr<u8>     cbuf_Addary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:lib_ams.FReadfile.cbuf.Alloc
@@ -1361,7 +1382,7 @@ bool                 cbuf_EmptyQ(lib_ams::FReadfile& parent) __attribute__((noth
 u8*                  cbuf_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:lib_ams.FReadfile.cbuf.Getary
-algo::aryptr<u8>     cbuf_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
+algo::aryptr<u8>     cbuf_Getary(const lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_ams.FReadfile.cbuf.Last
 u8*                  cbuf_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
@@ -1385,9 +1406,17 @@ void                 cbuf_Reserve(lib_ams::FReadfile& parent, int n) __attribute
 // Make sure N elements fit in array. Process dies if out of memory
 // func:lib_ams.FReadfile.cbuf.AbsReserve
 void                 cbuf_AbsReserve(lib_ams::FReadfile& parent, int n) __attribute__((nothrow));
+// Convert cbuf to a string.
+// Array is printed as a regular string.
+// func:lib_ams.FReadfile.cbuf.Print
+void                 cbuf_Print(lib_ams::FReadfile& parent, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:lib_ams.FReadfile.cbuf.Setary
 void                 cbuf_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
+// Copy specified array into cbuf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_ams.FReadfile.cbuf.Setary2
+void                 cbuf_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_ams.FReadfile.cbuf.qFind
 u8&                  cbuf_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
@@ -1400,7 +1429,15 @@ u64                  cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) __attr
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:lib_ams.FReadfile.cbuf.AllocNVal
 algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:lib_ams.FReadfile.cbuf.ReadStrptrMaybe
+bool                 cbuf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_ams.FReadfile.offset.Addary
+algo::aryptr<u32>    offset_Addary(lib_ams::FReadfile& parent, algo::aryptr<u32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:lib_ams.FReadfile.offset.Alloc
@@ -1420,7 +1457,7 @@ bool                 offset_EmptyQ(lib_ams::FReadfile& parent) __attribute__((no
 u32*                 offset_Find(lib_ams::FReadfile& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:lib_ams.FReadfile.offset.Getary
-algo::aryptr<u32>    offset_Getary(lib_ams::FReadfile& parent) __attribute__((nothrow));
+algo::aryptr<u32>    offset_Getary(const lib_ams::FReadfile& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_ams.FReadfile.offset.Last
 u32*                 offset_Last(lib_ams::FReadfile& parent) __attribute__((nothrow, pure));
@@ -1447,6 +1484,10 @@ void                 offset_AbsReserve(lib_ams::FReadfile& parent, int n) __attr
 // Copy contents of RHS to PARENT.
 // func:lib_ams.FReadfile.offset.Setary
 void                 offset_Setary(lib_ams::FReadfile& parent, lib_ams::FReadfile &rhs) __attribute__((nothrow));
+// Copy specified array into offset, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_ams.FReadfile.offset.Setary2
+void                 offset_Setary(lib_ams::FReadfile& parent, const algo::aryptr<u32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_ams.FReadfile.offset.qFind
 u32&                 offset_qFind(lib_ams::FReadfile& parent, u64 t) __attribute__((nothrow));
@@ -1459,6 +1500,11 @@ u64                  offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:lib_ams.FReadfile.offset.AllocNVal
 algo::aryptr<u32>    offset_AllocNVal(lib_ams::FReadfile& parent, int n_elems, const u32& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:lib_ams.FReadfile.offset.ReadStrptrMaybe
+bool                 offset_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:lib_ams.FReadfile.buf_curs.Next
@@ -1711,6 +1757,11 @@ private:
 // this function is 'extrn' and implemented by user
 void                 fd_Cleanup(lib_ams::FWritefile& writefile) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_ams.FWritefile.buf.Addary
+algo::aryptr<u8>     buf_Addary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:lib_ams.FWritefile.buf.Alloc
@@ -1730,7 +1781,7 @@ bool                 buf_EmptyQ(lib_ams::FWritefile& writefile) __attribute__((n
 u8*                  buf_Find(lib_ams::FWritefile& writefile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:lib_ams.FWritefile.buf.Getary
-algo::aryptr<u8>     buf_Getary(lib_ams::FWritefile& writefile) __attribute__((nothrow));
+algo::aryptr<u8>     buf_Getary(const lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_ams.FWritefile.buf.Last
 u8*                  buf_Last(lib_ams::FWritefile& writefile) __attribute__((nothrow, pure));
@@ -1754,9 +1805,17 @@ void                 buf_Reserve(lib_ams::FWritefile& writefile, int n) __attrib
 // Make sure N elements fit in array. Process dies if out of memory
 // func:lib_ams.FWritefile.buf.AbsReserve
 void                 buf_AbsReserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
+// Convert buf to a string.
+// Array is printed as a regular string.
+// func:lib_ams.FWritefile.buf.Print
+void                 buf_Print(lib_ams::FWritefile& writefile, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:lib_ams.FWritefile.buf.Setary
 void                 buf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) __attribute__((nothrow));
+// Copy specified array into buf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_ams.FWritefile.buf.Setary2
+void                 buf_Setary(lib_ams::FWritefile& writefile, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_ams.FWritefile.buf.qFind
 u8&                  buf_qFind(lib_ams::FWritefile& writefile, u64 t) __attribute__((nothrow));
@@ -1769,7 +1828,15 @@ u64                  buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:lib_ams.FWritefile.buf.AllocNVal
 algo::aryptr<u8>     buf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:lib_ams.FWritefile.buf.ReadStrptrMaybe
+bool                 buf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_ams.FWritefile.cbuf.Addary
+algo::aryptr<u8>     cbuf_Addary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:lib_ams.FWritefile.cbuf.Alloc
@@ -1789,7 +1856,7 @@ bool                 cbuf_EmptyQ(lib_ams::FWritefile& writefile) __attribute__((
 u8*                  cbuf_Find(lib_ams::FWritefile& writefile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:lib_ams.FWritefile.cbuf.Getary
-algo::aryptr<u8>     cbuf_Getary(lib_ams::FWritefile& writefile) __attribute__((nothrow));
+algo::aryptr<u8>     cbuf_Getary(const lib_ams::FWritefile& writefile) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_ams.FWritefile.cbuf.Last
 u8*                  cbuf_Last(lib_ams::FWritefile& writefile) __attribute__((nothrow, pure));
@@ -1813,9 +1880,17 @@ void                 cbuf_Reserve(lib_ams::FWritefile& writefile, int n) __attri
 // Make sure N elements fit in array. Process dies if out of memory
 // func:lib_ams.FWritefile.cbuf.AbsReserve
 void                 cbuf_AbsReserve(lib_ams::FWritefile& writefile, int n) __attribute__((nothrow));
+// Convert cbuf to a string.
+// Array is printed as a regular string.
+// func:lib_ams.FWritefile.cbuf.Print
+void                 cbuf_Print(lib_ams::FWritefile& writefile, algo::cstring &rhs) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:lib_ams.FWritefile.cbuf.Setary
 void                 cbuf_Setary(lib_ams::FWritefile& writefile, lib_ams::FWritefile &rhs) __attribute__((nothrow));
+// Copy specified array into cbuf, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_ams.FWritefile.cbuf.Setary2
+void                 cbuf_Setary(lib_ams::FWritefile& writefile, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_ams.FWritefile.cbuf.qFind
 u8&                  cbuf_qFind(lib_ams::FWritefile& writefile, u64 t) __attribute__((nothrow));
@@ -1828,6 +1903,9 @@ u64                  cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) __
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:lib_ams.FWritefile.cbuf.AllocNVal
 algo::aryptr<u8>     cbuf_AllocNVal(lib_ams::FWritefile& writefile, int n_elems, const u8& val) __attribute__((nothrow));
+// The array is replaced with the input string. Function always succeeds.
+// func:lib_ams.FWritefile.cbuf.ReadStrptrMaybe
+bool                 cbuf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr in_str) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_ams.FWritefile..Init
@@ -1902,7 +1980,7 @@ bool                 value_ReadStrptrMaybe(lib_ams::FieldId& parent, algo::strpt
 // Read fields of lib_ams::FieldId from an ascii string.
 // The format of the string is the format of the lib_ams::FieldId's only field
 // func:lib_ams.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_ams::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_ams::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ams.FieldId..Init
 void                 FieldId_Init(lib_ams::FieldId& parent);

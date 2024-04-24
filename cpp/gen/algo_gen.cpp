@@ -196,6 +196,13 @@ void algo::ch_AbsReserve(algo::cstring& parent, int n) {
     }
 }
 
+// --- algo.cstring.ch.Print
+// Convert ch to a string.
+// Array is printed as a regular string.
+void algo::ch_Print(algo::cstring& parent, algo::cstring &rhs) {
+    rhs << ch_Getary(parent);
+}
+
 // --- algo.cstring.ch.Setary
 // Copy contents of RHS to PARENT.
 void algo::ch_Setary(algo::cstring& parent, algo::cstring &rhs) {
@@ -224,6 +231,15 @@ algo::aryptr<char> algo::ch_AllocNVal(algo::cstring& parent, int n_elems, const 
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     parent.ch_n = new_n;
     return algo::aryptr<char>(elems + old_n, n_elems);
+}
+
+// --- algo.cstring.ch.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool algo::ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) {
+    bool retval = true;
+    ch_RemoveAll(parent);
+    ch_Addary(parent,in_str);
+    return retval;
 }
 
 // --- algo.cstring..Uninit
@@ -428,6 +444,13 @@ void algo::ary_AbsReserve(algo::ByteAry& parent, int n) {
     }
 }
 
+// --- algo.ByteAry.ary.Print
+// Convert ary to a string.
+// Array is printed as a regular string.
+void algo::ary_Print(algo::ByteAry& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(ary_Getary(parent));
+}
+
 // --- algo.ByteAry.ary.Setary
 // Copy contents of RHS to PARENT.
 void algo::ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) {
@@ -458,6 +481,15 @@ algo::aryptr<u8> algo::ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u
     return algo::aryptr<u8>(elems + old_n, n_elems);
 }
 
+// --- algo.ByteAry.ary.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool algo::ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) {
+    bool retval = true;
+    ary_RemoveAll(parent);
+    ary_Addary(parent,algo::strptr_ToMemptr(in_str));
+    return retval;
+}
+
 // --- algo.ByteAry..Uninit
 void algo::ByteAry_Uninit(algo::ByteAry& parent) {
     algo::ByteAry &row = parent; (void)row;
@@ -470,15 +502,15 @@ void algo::ByteAry_Uninit(algo::ByteAry& parent) {
 }
 
 // --- algo.Charset.ch.Print
-// Convert ch to a string. Parent's separator is used.
-void algo::ch_Print(algo::Charset& parent, algo::cstring &lhs) {
-    int len = 8;
-    for (int i = 0; i < len; i++) {
-        if (i > 0) {
-            lhs << ',';
+// Convert ch to a string.
+// The separator character is ','.
+void algo::ch_Print(algo::Charset& parent, algo::cstring &rhs) {
+    ind_beg(Charset_ch_curs,ch_elem,parent) {
+        if (ind_curs(ch_elem).index > 0) {
+            rhs << ',';
         }
-        u64_Print(parent.ch_elems[i], lhs);
-    }
+        u64_Print(ch_elem, rhs);
+    }ind_end;
 }
 
 // --- algo.Charset.ch.ReadStrptrMaybe
@@ -486,7 +518,7 @@ void algo::ch_Print(algo::Charset& parent, algo::cstring &lhs) {
 // Convert string to field. Return success value
 bool algo::ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_str) {
     bool retval = true;
-    for (int i=0; in_str != "" && i < ch_Max(parent); i++) {
+    for (int i=0; in_str != "" && i < 8; i++) {
         algo::strptr token;
         algo::NextSep(in_str, ',', token);
         retval = u64_ReadStrptrMaybe(parent.ch_elems[i], token);
@@ -899,6 +931,7 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
         case algo_FieldId_overflow         : ret = "overflow";  break;
         case algo_FieldId_hex              : ret = "hex";  break;
         case algo_FieldId_sha1sig          : ret = "sha1sig";  break;
+        case algo_FieldId_ary              : ret = "ary";  break;
         case algo_FieldId_attrs            : ret = "attrs";  break;
         case algo_FieldId_head             : ret = "head";  break;
         case algo_FieldId_protocol         : ret = "protocol";  break;
@@ -956,6 +989,9 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','r','y'): {
+                    value_SetEnum(parent,algo_FieldId_ary); ret = true; break;
+                }
                 case LE_STR3('d','i','r'): {
                     value_SetEnum(parent,algo_FieldId_dir); ret = true; break;
                 }
@@ -1116,6 +1152,22 @@ bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) {
 // cfmt:algo.FieldId.String  printfmt:Raw
 void algo::FieldId_Print(algo::FieldId& row, algo::cstring& str) {
     algo::value_Print(row, str);
+}
+
+// --- algo.Fildes..ReadStrptrMaybe
+// Read fields of algo::Fildes from an ascii string.
+// The format of the string is the format of the algo::Fildes's only field
+bool algo::Fildes_ReadStrptrMaybe(algo::Fildes &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && i32_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
+// --- algo.Fildes..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Fildes.String  printfmt:Raw
+void algo::Fildes_Print(algo::Fildes& row, algo::cstring& str) {
+    i32_Print(row.value, str);
 }
 
 // --- algo.FileFlags.append.ReadStrptrMaybe
@@ -2996,6 +3048,10 @@ void algo::Imdb_Print(algo::Imdb& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.imdb, temp);
     PrintAttrSpaceReset(str,"imdb", temp);
 
+
+
+
+
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
@@ -3075,6 +3131,10 @@ void algo::Imtable_Print(algo::Imtable& row, algo::cstring& str) {
 
     algo::Smallstr100_Print(row.elem_type, temp);
     PrintAttrSpaceReset(str,"elem_type", temp);
+
+
+
+
 
     i32_Print(row.size, temp);
     PrintAttrSpaceReset(str,"size", temp);
@@ -3180,6 +3240,13 @@ void algo::buf_AbsReserve(algo::LineBuf& parent, int n) {
     }
 }
 
+// --- algo.LineBuf.buf.Print
+// Convert buf to a string.
+// Array is printed as a regular string.
+void algo::buf_Print(algo::LineBuf& parent, algo::cstring &rhs) {
+    rhs << buf_Getary(parent);
+}
+
 // --- algo.LineBuf.buf.Setary
 // Copy contents of RHS to PARENT.
 void algo::buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) {
@@ -3208,6 +3275,15 @@ algo::aryptr<char> algo::buf_AllocNVal(algo::LineBuf& parent, int n_elems, const
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     parent.buf_n = new_n;
     return algo::aryptr<char>(elems + old_n, n_elems);
+}
+
+// --- algo.LineBuf.buf.ReadStrptrMaybe
+// The array is replaced with the input string. Function always succeeds.
+bool algo::buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) {
+    bool retval = true;
+    buf_RemoveAll(parent);
+    buf_Addary(parent,in_str);
+    return retval;
 }
 
 // --- algo.LineBuf..Uninit
@@ -6958,15 +7034,10 @@ void algo::LspaceStr9_Print(algo::LspaceStr9& row, algo::cstring& str) {
 }
 
 // --- algo.Md5Digest.value.Print
-// Convert value to a string. Parent's separator is used.
-void algo::value_Print(algo::Md5Digest& parent, algo::cstring &lhs) {
-    int len = 16;
-    for (int i = 0; i < len; i++) {
-        if (i > 0) {
-            lhs << ':';
-        }
-        u8_Print(parent.value_elems[i], lhs);
-    }
+// Convert value to a string.
+// Array is printed as a regular string.
+void algo::value_Print(algo::Md5Digest& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(value_Getary(parent));
 }
 
 // --- algo.Md5Digest.value.ReadStrptrMaybe
@@ -6974,14 +7045,8 @@ void algo::value_Print(algo::Md5Digest& parent, algo::cstring &lhs) {
 // Convert string to field. Return success value
 bool algo::value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr in_str) {
     bool retval = true;
-    for (int i=0; in_str != "" && i < value_Max(parent); i++) {
-        algo::strptr token;
-        algo::NextSep(in_str, ':', token);
-        retval = u8_ReadStrptrMaybe(parent.value_elems[i], token);
-        if (!retval) {
-            break;
-        }
-    }
+    i32 newlen = i32_Min(in_str.n_elems, 16);
+    memcpy(parent.value_elems, in_str.elems, newlen);
     return retval;
 }
 
@@ -11859,10 +11924,10 @@ void algo::SeqType_Print(algo::SeqType row, algo::cstring& str) {
 }
 
 // --- algo.Sha1sig.sha1sig.Eq
-bool algo::sha1sig_Eq(const algo::Sha1sig& parent, const algo::Sha1sig &rhs) {
+bool algo::sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
     int len = 20;
     for (int i = 0; i < len; i++) {
-        if (!(parent.sha1sig_elems[i] == rhs.sha1sig_elems[i])) {
+        if (!(parent.sha1sig_elems[i] == sha1sig_qFind(rhs,i))) {
             return false;
         }
     }
@@ -11874,7 +11939,7 @@ int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
     int len = 20;
     int retval = 0;
     for (int i = 0; i < len; i++) {
-        retval = u8_Cmp(parent.sha1sig_elems[i], rhs.sha1sig_elems[i]);
+        retval = u8_Cmp(parent.sha1sig_elems[i], sha1sig_qFind(rhs,i));
         if (retval != 0) {
             return retval;
         }
@@ -11883,15 +11948,10 @@ int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
 }
 
 // --- algo.Sha1sig.sha1sig.Print
-// Convert sha1sig to a string. Parent's separator is used.
-void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &lhs) {
-    int len = 20;
-    for (int i = 0; i < len; i++) {
-        if (i > 0) {
-            lhs << ':';
-        }
-        u8_Print(parent.sha1sig_elems[i], lhs);
-    }
+// Convert sha1sig to a string.
+// Array is printed as a regular string.
+void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(sha1sig_Getary(parent));
 }
 
 // --- algo.Sha1sig.sha1sig.ReadStrptrMaybe
@@ -11899,14 +11959,8 @@ void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &lhs) {
 // Convert string to field. Return success value
 bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) {
     bool retval = true;
-    for (int i=0; in_str != "" && i < sha1sig_Max(parent); i++) {
-        algo::strptr token;
-        algo::NextSep(in_str, ':', token);
-        retval = u8_ReadStrptrMaybe(parent.sha1sig_elems[i], token);
-        if (!retval) {
-            break;
-        }
-    }
+    i32 newlen = i32_Min(in_str.n_elems, 20);
+    memcpy(parent.sha1sig_elems, in_str.elems, newlen);
     return retval;
 }
 
@@ -12638,6 +12692,192 @@ void algo::Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
+// --- algo.StringAry.ary.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> algo::ary_Addary(algo::StringAry& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.StringAry.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_Reserve(parent, nnew); // reserve space
+    int at = parent.ary_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.ary_elems + at + i) algo::cstring(rhs[i]);
+        parent.ary_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.ary_elems + at, nnew);
+}
+
+// --- algo.StringAry.ary.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& algo::ary_Alloc(algo::StringAry& parent) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    int at = n;
+    algo::cstring *elems = parent.ary_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.StringAry.ary.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& algo::ary_AllocAt(algo::StringAry& parent, int at) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo.bad_alloc_at  field:algo.StringAry.ary  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.ary_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.StringAry.ary.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> algo::ary_AllocN(algo::StringAry& parent, int n_elems) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo.StringAry.ary.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo::ary_Remove(algo::StringAry& parent, u32 i) {
+    u32 lim = parent.ary_n;
+    algo::cstring *elems = parent.ary_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        parent.ary_n = lim - 1;
+    }
+}
+
+// --- algo.StringAry.ary.RemoveAll
+void algo::ary_RemoveAll(algo::StringAry& parent) {
+    u32 n = parent.ary_n;
+    while (n > 0) {
+        n -= 1;
+        parent.ary_elems[n].~cstring();
+        parent.ary_n = n;
+    }
+}
+
+// --- algo.StringAry.ary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo::ary_RemoveLast(algo::StringAry& parent) {
+    u64 n = parent.ary_n;
+    if (n > 0) {
+        n -= 1;
+        ary_qFind(parent, u64(n)).~cstring();
+        parent.ary_n = n;
+    }
+}
+
+// --- algo.StringAry.ary.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo::ary_AbsReserve(algo::StringAry& parent, int n) {
+    u32 old_max  = parent.ary_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.StringAry.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (algo::cstring*)new_mem;
+        parent.ary_max = new_max;
+    }
+}
+
+// --- algo.StringAry.ary.Setary
+// Copy contents of RHS to PARENT.
+void algo::ary_Setary(algo::StringAry& parent, algo::StringAry &rhs) {
+    ary_RemoveAll(parent);
+    int nnew = rhs.ary_n;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.ary_elems + i) algo::cstring(ary_qFind(rhs, i));
+        parent.ary_n = i + 1;
+    }
+}
+
+// --- algo.StringAry.ary.Setary2
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo::ary_Setary(algo::StringAry& parent, const algo::aryptr<algo::cstring> &rhs) {
+    ary_RemoveAll(parent);
+    ary_Addary(parent, rhs);
+}
+
+// --- algo.StringAry.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> algo::ary_AllocNVal(algo::StringAry& parent, int n_elems, const algo::cstring& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo.StringAry.ary.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool algo::ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = ary_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_RemoveLast(parent);
+    }
+    return retval;
+}
+
+// --- algo.StringAry..ReadStrptrMaybe
+// Read fields of algo::StringAry from an ascii string.
+// The format of the string is the format of the algo::StringAry's only field
+bool algo::StringAry_ReadStrptrMaybe(algo::StringAry &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ary_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.StringAry..Uninit
+void algo::StringAry_Uninit(algo::StringAry& parent) {
+    algo::StringAry &row = parent; (void)row;
+
+    // algo.StringAry.ary.Uninit (Tary)  //
+    // remove all elements from algo.StringAry.ary
+    ary_RemoveAll(parent);
+    // free memory for Tary algo.StringAry.ary
+    algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(algo::cstring)*parent.ary_max); // (algo.StringAry.ary)
+}
+
+// --- algo.StringAry..Print
+// print string representation of ROW to string STR
+// cfmt:algo.StringAry.String  printfmt:Raw
+void algo::StringAry_Print(algo::StringAry& row, algo::cstring& str) {
+    (void)row;//only to avoid -Wunused-parameter
+    (void)str;//only to avoid -Wunused-parameter
+}
+
 // --- algo.TermStyle.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -12992,6 +13232,20 @@ algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems,
     }
     parent.attrs_n = new_n;
     return algo::aryptr<algo::Attr>(elems + old_n, n_elems);
+}
+
+// --- algo.Tuple.attrs.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool algo::attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::Attr &elem = attrs_Alloc(parent);
+    retval = algo::Attr_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        attrs_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- algo.Tuple..Uninit
@@ -13521,10 +13775,8 @@ algo::aryptr<u64> algo::ary_Addary(algo::U64Ary& parent, algo::aryptr<u64> rhs) 
     int nnew = rhs.n_elems;
     ary_Reserve(parent, nnew); // reserve space
     int at = parent.ary_n;
-    for (int i = 0; i < nnew; i++) {
-        new (parent.ary_elems + at + i) u64(rhs[i]);
-        parent.ary_n++;
-    }
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u64));
+    parent.ary_n += nnew;
     return algo::aryptr<u64>(parent.ary_elems + at, nnew);
 }
 
@@ -13639,6 +13891,20 @@ algo::aryptr<u64> algo::ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u
     }
     parent.ary_n = new_n;
     return algo::aryptr<u64>(elems + old_n, n_elems);
+}
+
+// --- algo.U64Ary.ary.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool algo::ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) {
+    bool retval = true;
+    u64 &elem = ary_Alloc(parent);
+    retval = u64_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_RemoveLast(parent);
+    }
+    return retval;
 }
 
 // --- algo.U64Ary..Uninit

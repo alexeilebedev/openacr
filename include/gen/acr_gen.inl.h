@@ -92,7 +92,7 @@ inline void acr::CtypeTopoKey_Init(acr::CtypeTopoKey& parent) {
 }
 
 // --- acr.CtypeTopoKey..Eq
-inline bool acr::CtypeTopoKey_Eq(const acr::CtypeTopoKey& lhs, const acr::CtypeTopoKey& rhs) {
+inline bool acr::CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.alldep, rhs.alldep);
     if (!retval) {
@@ -224,7 +224,7 @@ inline algo::cstring* acr::ary_name_Find(acr::FCheck& check, u64 t) {
 
 // --- acr.FCheck.ary_name.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> acr::ary_name_Getary(acr::FCheck& check) {
+inline algo::aryptr<algo::cstring> acr::ary_name_Getary(const acr::FCheck& check) {
     return algo::aryptr<algo::cstring>(check.ary_name_elems, check.ary_name_n);
 }
 
@@ -3367,7 +3367,7 @@ inline acr::AttrRegx* acr::where_Find(acr::FQuery& query, u64 t) {
 
 // --- acr.FQuery.where.Getary
 // Return array pointer by value
-inline algo::aryptr<acr::AttrRegx> acr::where_Getary(acr::FQuery& query) {
+inline algo::aryptr<acr::AttrRegx> acr::where_Getary(const acr::FQuery& query) {
     return algo::aryptr<acr::AttrRegx>(query.where_elems, query.where_n);
 }
 
@@ -3972,7 +3972,7 @@ inline void acr::ReadMode_Init(acr::ReadMode& parent) {
 }
 
 // --- acr.ReadMode..Eq
-inline bool acr::ReadMode_Eq(const acr::ReadMode& lhs, const acr::ReadMode& rhs) {
+inline bool acr::ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) {
     bool retval = true;
     retval = u8_Eq(lhs.read_mode, rhs.read_mode);
     return retval;

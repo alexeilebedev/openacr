@@ -883,7 +883,7 @@ bool                 Anonfld_ReadFieldMaybe(dmmeta::Anonfld& parent, algo::strpt
 // Read fields of dmmeta::Anonfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Anonfld..ReadStrptrMaybe
-bool                 Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strptr in_str);
+bool                 Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Anonfld.String  printfmt:Tuple
 // func:dmmeta.Anonfld..Print
@@ -902,7 +902,7 @@ bool                 Argvtype_ReadFieldMaybe(dmmeta::Argvtype& parent, algo::str
 // Read fields of dmmeta::Argvtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Argvtype..ReadStrptrMaybe
-bool                 Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::strptr in_str);
+bool                 Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Argvtype.String  printfmt:Tuple
 // func:dmmeta.Argvtype..Print
@@ -922,7 +922,7 @@ bool                 Basepool_ReadFieldMaybe(dmmeta::Basepool& parent, algo::str
 // Read fields of dmmeta::Basepool from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Basepool..ReadStrptrMaybe
-bool                 Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::strptr in_str);
+bool                 Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Basepool.String  printfmt:Tuple
 // func:dmmeta.Basepool..Print
@@ -953,7 +953,7 @@ bool                 Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr 
 // Read fields of dmmeta::Bitfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Bitfld..ReadStrptrMaybe
-bool                 Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str);
+bool                 Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Bitfld..Init
 void                 Bitfld_Init(dmmeta::Bitfld& parent);
@@ -976,7 +976,7 @@ bool                 Buftype_ReadFieldMaybe(dmmeta::Buftype& parent, algo::strpt
 // Read fields of dmmeta::Buftype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Buftype..ReadStrptrMaybe
-bool                 Buftype_ReadStrptrMaybe(dmmeta::Buftype &parent, algo::strptr in_str);
+bool                 Buftype_ReadStrptrMaybe(dmmeta::Buftype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Buftype.String  printfmt:Tuple
 // func:dmmeta.Buftype..Print
@@ -1006,7 +1006,7 @@ bool                 Cafter_ReadFieldMaybe(dmmeta::Cafter& parent, algo::strptr 
 // Read fields of dmmeta::Cafter from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cafter..ReadStrptrMaybe
-bool                 Cafter_ReadStrptrMaybe(dmmeta::Cafter &parent, algo::strptr in_str);
+bool                 Cafter_ReadStrptrMaybe(dmmeta::Cafter &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cafter.String  printfmt:Tuple
 // func:dmmeta.Cafter..Print
@@ -1026,7 +1026,7 @@ bool                 Cascdel_ReadFieldMaybe(dmmeta::Cascdel& parent, algo::strpt
 // Read fields of dmmeta::Cascdel from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cascdel..ReadStrptrMaybe
-bool                 Cascdel_ReadStrptrMaybe(dmmeta::Cascdel &parent, algo::strptr in_str);
+bool                 Cascdel_ReadStrptrMaybe(dmmeta::Cascdel &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cascdel.String  printfmt:Tuple
 // func:dmmeta.Cascdel..Print
@@ -1054,7 +1054,7 @@ bool                 Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr fiel
 // Read fields of dmmeta::Ccmp from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ccmp..ReadStrptrMaybe
-bool                 Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str);
+bool                 Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ccmp..Init
 void                 Ccmp_Init(dmmeta::Ccmp& parent);
@@ -1079,7 +1079,7 @@ bool                 Cdflt_ReadFieldMaybe(dmmeta::Cdflt& parent, algo::strptr fi
 // Read fields of dmmeta::Cdflt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cdflt..ReadStrptrMaybe
-bool                 Cdflt_ReadStrptrMaybe(dmmeta::Cdflt &parent, algo::strptr in_str);
+bool                 Cdflt_ReadStrptrMaybe(dmmeta::Cdflt &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cdflt.String  printfmt:Tuple
 // func:dmmeta.Cdflt..Print
@@ -1101,7 +1101,7 @@ bool                 Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strpt
 // Read fields of dmmeta::Cextern from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cextern..ReadStrptrMaybe
-bool                 Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_str);
+bool                 Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cextern..Init
 void                 Cextern_Init(dmmeta::Cextern& parent);
@@ -1125,7 +1125,7 @@ bool                 Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr fi
 // Read fields of dmmeta::Cfast from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cfast..ReadStrptrMaybe
-bool                 Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str);
+bool                 Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cfast..Init
 void                 Cfast_Init(dmmeta::Cfast& parent);
@@ -1170,7 +1170,7 @@ bool                 Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr fiel
 // Read fields of dmmeta::Cfmt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cfmt..ReadStrptrMaybe
-bool                 Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str);
+bool                 Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cfmt..Init
 void                 Cfmt_Init(dmmeta::Cfmt& parent);
@@ -1191,7 +1191,7 @@ bool                 Cget_ReadFieldMaybe(dmmeta::Cget& parent, algo::strptr fiel
 // Read fields of dmmeta::Cget from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cget..ReadStrptrMaybe
-bool                 Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_str);
+bool                 Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cget.String  printfmt:Tuple
 // func:dmmeta.Cget..Print
@@ -1212,7 +1212,7 @@ bool                 Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strpt
 // Read fields of dmmeta::Charset from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Charset..ReadStrptrMaybe
-bool                 Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_str);
+bool                 Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Charset..Init
 void                 Charset_Init(dmmeta::Charset& parent);
@@ -1237,7 +1237,7 @@ bool                 Chash_ReadFieldMaybe(dmmeta::Chash& parent, algo::strptr fi
 // Read fields of dmmeta::Chash from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Chash..ReadStrptrMaybe
-bool                 Chash_ReadStrptrMaybe(dmmeta::Chash &parent, algo::strptr in_str);
+bool                 Chash_ReadStrptrMaybe(dmmeta::Chash &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Chash.String  printfmt:Tuple
 // func:dmmeta.Chash..Print
@@ -1257,7 +1257,7 @@ bool                 Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strpt
 // Read fields of dmmeta::Cppfunc from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cppfunc..ReadStrptrMaybe
-bool                 Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_str);
+bool                 Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cppfunc..Init
 void                 Cppfunc_Init(dmmeta::Cppfunc& parent);
@@ -1278,7 +1278,7 @@ bool                 Cppkeyword_ReadFieldMaybe(dmmeta::Cppkeyword& parent, algo:
 // Read fields of dmmeta::Cppkeyword from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cppkeyword..ReadStrptrMaybe
-bool                 Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo::strptr in_str);
+bool                 Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cppkeyword.String  printfmt:Tuple
 // func:dmmeta.Cppkeyword..Print
@@ -1302,7 +1302,7 @@ bool                 Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strpt
 // Read fields of dmmeta::Cpptype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cpptype..ReadStrptrMaybe
-bool                 Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_str);
+bool                 Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cpptype..Init
 void                 Cpptype_Init(dmmeta::Cpptype& parent);
@@ -1329,7 +1329,7 @@ bool                 Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr fi
 // Read fields of dmmeta::Csize from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Csize..ReadStrptrMaybe
-bool                 Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str);
+bool                 Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Csize..Init
 void                 Csize_Init(dmmeta::Csize& parent);
@@ -1351,7 +1351,7 @@ bool                 Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr fiel
 // Read fields of dmmeta::Cstr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Cstr..ReadStrptrMaybe
-bool                 Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str);
+bool                 Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cstr..Init
 void                 Cstr_Init(dmmeta::Cstr& parent);
@@ -1386,7 +1386,7 @@ bool                 Ctype_ReadFieldMaybe(dmmeta::Ctype& parent, algo::strptr fi
 // Read fields of dmmeta::Ctype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ctype..ReadStrptrMaybe
-bool                 Ctype_ReadStrptrMaybe(dmmeta::Ctype &parent, algo::strptr in_str);
+bool                 Ctype_ReadStrptrMaybe(dmmeta::Ctype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ctype.String  printfmt:Tuple
 // func:dmmeta.Ctype..Print
@@ -1410,7 +1410,7 @@ bool                 Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::str
 // Read fields of dmmeta::Ctypelen from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ctypelen..ReadStrptrMaybe
-bool                 Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_str);
+bool                 Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ctypelen..Init
 void                 Ctypelen_Init(dmmeta::Ctypelen& parent);
@@ -1457,7 +1457,7 @@ bool                 Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::str
 // Read fields of dmmeta::Dispatch from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Dispatch..ReadStrptrMaybe
-bool                 Dispatch_ReadStrptrMaybe(dmmeta::Dispatch &parent, algo::strptr in_str);
+bool                 Dispatch_ReadStrptrMaybe(dmmeta::Dispatch &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Dispatch..Init
 void                 Dispatch_Init(dmmeta::Dispatch& parent);
@@ -1492,7 +1492,7 @@ bool                 DispatchMsg_ReadFieldMaybe(dmmeta::DispatchMsg& parent, alg
 // Read fields of dmmeta::DispatchMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.DispatchMsg..ReadStrptrMaybe
-bool                 DispatchMsg_ReadStrptrMaybe(dmmeta::DispatchMsg &parent, algo::strptr in_str);
+bool                 DispatchMsg_ReadStrptrMaybe(dmmeta::DispatchMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.DispatchMsg.String  printfmt:Tuple
 // func:dmmeta.DispatchMsg..Print
@@ -1511,7 +1511,7 @@ bool                 Dispctx_ReadFieldMaybe(dmmeta::Dispctx& parent, algo::strpt
 // Read fields of dmmeta::Dispctx from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Dispctx..ReadStrptrMaybe
-bool                 Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strptr in_str);
+bool                 Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispctx.String  printfmt:Tuple
 // func:dmmeta.Dispctx..Print
@@ -1530,7 +1530,7 @@ bool                 Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo:
 // Read fields of dmmeta::Dispfilter from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Dispfilter..ReadStrptrMaybe
-bool                 Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr in_str);
+bool                 Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Dispfilter..Init
 void                 Dispfilter_Init(dmmeta::Dispfilter& parent);
@@ -1563,7 +1563,7 @@ bool                 Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strpt
 // Read fields of dmmeta::Dispsig from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Dispsig..ReadStrptrMaybe
-bool                 Dispsig_ReadStrptrMaybe(dmmeta::Dispsig &parent, algo::strptr in_str);
+bool                 Dispsig_ReadStrptrMaybe(dmmeta::Dispsig &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispsig.String  printfmt:Tuple
 // func:dmmeta.Dispsig..Print
@@ -1583,7 +1583,7 @@ bool                 Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, a
 // Read fields of dmmeta::Dispsigcheck from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Dispsigcheck..ReadStrptrMaybe
-bool                 Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, algo::strptr in_str);
+bool                 Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispsigcheck.String  printfmt:Tuple
 // func:dmmeta.Dispsigcheck..Print
@@ -1602,7 +1602,7 @@ bool                 Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::s
 // Read fields of dmmeta::Disptrace from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Disptrace..ReadStrptrMaybe
-bool                 Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr in_str);
+bool                 Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Disptrace..Init
 void                 Disptrace_Init(dmmeta::Disptrace& parent);
@@ -1624,7 +1624,7 @@ bool                 Falias_ReadFieldMaybe(dmmeta::Falias& parent, algo::strptr 
 // Read fields of dmmeta::Falias from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Falias..ReadStrptrMaybe
-bool                 Falias_ReadStrptrMaybe(dmmeta::Falias &parent, algo::strptr in_str);
+bool                 Falias_ReadStrptrMaybe(dmmeta::Falias &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Falias.String  printfmt:Tuple
 // func:dmmeta.Falias..Print
@@ -1642,7 +1642,7 @@ bool                 Fastenc_ReadFieldMaybe(dmmeta::Fastenc& parent, algo::strpt
 // Read fields of dmmeta::Fastenc from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fastenc..ReadStrptrMaybe
-bool                 Fastenc_ReadStrptrMaybe(dmmeta::Fastenc &parent, algo::strptr in_str);
+bool                 Fastenc_ReadStrptrMaybe(dmmeta::Fastenc &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastenc.String  printfmt:Tuple
 // func:dmmeta.Fastenc..Print
@@ -1699,7 +1699,7 @@ bool                 Fastinstr_ReadFieldMaybe(dmmeta::Fastinstr& parent, algo::s
 // Read fields of dmmeta::Fastinstr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fastinstr..ReadStrptrMaybe
-bool                 Fastinstr_ReadStrptrMaybe(dmmeta::Fastinstr &parent, algo::strptr in_str);
+bool                 Fastinstr_ReadStrptrMaybe(dmmeta::Fastinstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastinstr.String  printfmt:Tuple
 // func:dmmeta.Fastinstr..Print
@@ -1756,7 +1756,7 @@ bool                 Fastop_ReadFieldMaybe(dmmeta::Fastop& parent, algo::strptr 
 // Read fields of dmmeta::Fastop from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fastop..ReadStrptrMaybe
-bool                 Fastop_ReadStrptrMaybe(dmmeta::Fastop &parent, algo::strptr in_str);
+bool                 Fastop_ReadStrptrMaybe(dmmeta::Fastop &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastop.String  printfmt:Tuple
 // func:dmmeta.Fastop..Print
@@ -1814,7 +1814,7 @@ bool                 Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr fi
 // Read fields of dmmeta::Fbase from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbase..ReadStrptrMaybe
-bool                 Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str);
+bool                 Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbase..Init
 void                 Fbase_Init(dmmeta::Fbase& parent);
@@ -1835,7 +1835,7 @@ bool                 Fbigend_ReadFieldMaybe(dmmeta::Fbigend& parent, algo::strpt
 // Read fields of dmmeta::Fbigend from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbigend..ReadStrptrMaybe
-bool                 Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strptr in_str);
+bool                 Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbigend.String  printfmt:Tuple
 // func:dmmeta.Fbigend..Print
@@ -1855,7 +1855,7 @@ bool                 Fbitset_ReadFieldMaybe(dmmeta::Fbitset& parent, algo::strpt
 // Read fields of dmmeta::Fbitset from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbitset..ReadStrptrMaybe
-bool                 Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strptr in_str);
+bool                 Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbitset.String  printfmt:Tuple
 // func:dmmeta.Fbitset..Print
@@ -1882,7 +1882,7 @@ bool                 Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr fiel
 // Read fields of dmmeta::Fbuf from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbuf..ReadStrptrMaybe
-bool                 Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str);
+bool                 Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbuf..Init
 void                 Fbuf_Init(dmmeta::Fbuf& parent);
@@ -1904,7 +1904,7 @@ bool                 Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strpt
 // Read fields of dmmeta::Fbufdir from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbufdir..ReadStrptrMaybe
-bool                 Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_str);
+bool                 Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbufdir..Init
 void                 Fbufdir_Init(dmmeta::Fbufdir& parent);
@@ -1928,7 +1928,7 @@ bool                 Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::str
 // Read fields of dmmeta::Fbuftype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fbuftype..ReadStrptrMaybe
-bool                 Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_str);
+bool                 Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbuftype..Init
 void                 Fbuftype_Init(dmmeta::Fbuftype& parent);
@@ -1953,7 +1953,7 @@ bool                 Fcast_ReadFieldMaybe(dmmeta::Fcast& parent, algo::strptr fi
 // Read fields of dmmeta::Fcast from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcast..ReadStrptrMaybe
-bool                 Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr in_str);
+bool                 Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcast.String  printfmt:Tuple
 // func:dmmeta.Fcast..Print
@@ -1971,7 +1971,7 @@ bool                 Fcleanup_ReadFieldMaybe(dmmeta::Fcleanup& parent, algo::str
 // Read fields of dmmeta::Fcleanup from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcleanup..ReadStrptrMaybe
-bool                 Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::strptr in_str);
+bool                 Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcleanup.String  printfmt:Tuple
 // func:dmmeta.Fcleanup..Print
@@ -2012,7 +2012,7 @@ bool                 Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr fi
 // Read fields of dmmeta::Fcmap from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcmap..ReadStrptrMaybe
-bool                 Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str);
+bool                 Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmap..Init
 void                 Fcmap_Init(dmmeta::Fcmap& parent);
@@ -2040,7 +2040,7 @@ bool                 Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::str
 // Read fields of dmmeta::Fcmdline from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcmdline..ReadStrptrMaybe
-bool                 Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_str);
+bool                 Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmdline..Init
 void                 Fcmdline_Init(dmmeta::Fcmdline& parent);
@@ -2069,7 +2069,7 @@ bool                 Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr fiel
 // Read fields of dmmeta::Fcmp from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcmp..ReadStrptrMaybe
-bool                 Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str);
+bool                 Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmp..Init
 void                 Fcmp_Init(dmmeta::Fcmp& parent);
@@ -2090,7 +2090,7 @@ bool                 Fcompact_ReadFieldMaybe(dmmeta::Fcompact& parent, algo::str
 // Read fields of dmmeta::Fcompact from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcompact..ReadStrptrMaybe
-bool                 Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::strptr in_str);
+bool                 Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcompact.String  printfmt:Tuple
 // func:dmmeta.Fcompact..Print
@@ -2125,7 +2125,7 @@ bool                 Fconst_ReadFieldMaybe(dmmeta::Fconst& parent, algo::strptr 
 // Read fields of dmmeta::Fconst from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fconst..ReadStrptrMaybe
-bool                 Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr in_str);
+bool                 Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fconst.String  printfmt:Tuple
 // func:dmmeta.Fconst..Print
@@ -2160,7 +2160,7 @@ bool                 Fcurs_ReadFieldMaybe(dmmeta::Fcurs& parent, algo::strptr fi
 // Read fields of dmmeta::Fcurs from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fcurs..ReadStrptrMaybe
-bool                 Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr in_str);
+bool                 Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcurs.String  printfmt:Tuple
 // func:dmmeta.Fcurs..Print
@@ -2180,7 +2180,7 @@ bool                 Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr fiel
 // Read fields of dmmeta::Fdec from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fdec..ReadStrptrMaybe
-bool                 Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str);
+bool                 Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fdec..Init
 void                 Fdec_Init(dmmeta::Fdec& parent);
@@ -2203,7 +2203,7 @@ bool                 Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr 
 // Read fields of dmmeta::Fdelay from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fdelay..ReadStrptrMaybe
-bool                 Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str);
+bool                 Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fdelay..Init
 void                 Fdelay_Init(dmmeta::Fdelay& parent);
@@ -2248,7 +2248,7 @@ bool                 Ffast_ReadFieldMaybe(dmmeta::Ffast& parent, algo::strptr fi
 // Read fields of dmmeta::Ffast from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ffast..ReadStrptrMaybe
-bool                 Ffast_ReadStrptrMaybe(dmmeta::Ffast &parent, algo::strptr in_str);
+bool                 Ffast_ReadStrptrMaybe(dmmeta::Ffast &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ffast..Init
 void                 Ffast_Init(dmmeta::Ffast& parent);
@@ -2271,7 +2271,7 @@ bool                 Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr fi
 // Read fields of dmmeta::Fflag from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fflag..ReadStrptrMaybe
-bool                 Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str);
+bool                 Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fflag..Init
 void                 Fflag_Init(dmmeta::Fflag& parent);
@@ -2317,7 +2317,7 @@ bool                 Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr fi
 // Read fields of dmmeta::Field from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Field..ReadStrptrMaybe
-bool                 Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str);
+bool                 Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Field..Init
 void                 Field_Init(dmmeta::Field& parent);
@@ -2367,7 +2367,7 @@ bool                 value_ReadStrptrMaybe(dmmeta::FieldId& parent, algo::strptr
 // Read fields of dmmeta::FieldId from an ascii string.
 // The format of the string is the format of the dmmeta::FieldId's only field
 // func:dmmeta.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.FieldId..Init
 void                 FieldId_Init(dmmeta::FieldId& parent);
@@ -2388,7 +2388,7 @@ bool                 Findrem_ReadFieldMaybe(dmmeta::Findrem& parent, algo::strpt
 // Read fields of dmmeta::Findrem from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Findrem..ReadStrptrMaybe
-bool                 Findrem_ReadStrptrMaybe(dmmeta::Findrem &parent, algo::strptr in_str);
+bool                 Findrem_ReadStrptrMaybe(dmmeta::Findrem &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Findrem.String  printfmt:Tuple
 // func:dmmeta.Findrem..Print
@@ -2419,7 +2419,7 @@ bool                 Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr 
 // Read fields of dmmeta::Finput from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Finput..ReadStrptrMaybe
-bool                 Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str);
+bool                 Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Finput..Init
 void                 Finput_Init(dmmeta::Finput& parent);
@@ -2442,7 +2442,7 @@ bool                 Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::s
 // Read fields of dmmeta::Fldoffset from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fldoffset..ReadStrptrMaybe
-bool                 Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr in_str);
+bool                 Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fldoffset..Init
 void                 Fldoffset_Init(dmmeta::Fldoffset& parent);
@@ -2468,7 +2468,7 @@ bool                 Floadtuples_ReadFieldMaybe(dmmeta::Floadtuples& parent, alg
 // Read fields of dmmeta::Floadtuples from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Floadtuples..ReadStrptrMaybe
-bool                 Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, algo::strptr in_str);
+bool                 Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Floadtuples.String  printfmt:Tuple
 // func:dmmeta.Floadtuples..Print
@@ -2486,7 +2486,7 @@ bool                 Fnoremove_ReadFieldMaybe(dmmeta::Fnoremove& parent, algo::s
 // Read fields of dmmeta::Fnoremove from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fnoremove..ReadStrptrMaybe
-bool                 Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::strptr in_str);
+bool                 Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fnoremove.String  printfmt:Tuple
 // func:dmmeta.Fnoremove..Print
@@ -2509,7 +2509,7 @@ bool                 Foutput_ReadFieldMaybe(dmmeta::Foutput& parent, algo::strpt
 // Read fields of dmmeta::Foutput from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Foutput..ReadStrptrMaybe
-bool                 Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strptr in_str);
+bool                 Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Foutput.String  printfmt:Tuple
 // func:dmmeta.Foutput..Print
@@ -2528,7 +2528,7 @@ bool                 Fprefix_ReadFieldMaybe(dmmeta::Fprefix& parent, algo::strpt
 // Read fields of dmmeta::Fprefix from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fprefix..ReadStrptrMaybe
-bool                 Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strptr in_str);
+bool                 Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fprefix.String  printfmt:Tuple
 // func:dmmeta.Fprefix..Print
@@ -2548,7 +2548,7 @@ bool                 Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr fi
 // Read fields of dmmeta::Fregx from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fregx..ReadStrptrMaybe
-bool                 Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str);
+bool                 Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fregx..Init
 void                 Fregx_Init(dmmeta::Fregx& parent);
@@ -2571,7 +2571,7 @@ bool                 Fsort_ReadFieldMaybe(dmmeta::Fsort& parent, algo::strptr fi
 // Read fields of dmmeta::Fsort from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fsort..ReadStrptrMaybe
-bool                 Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr in_str);
+bool                 Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fsort.String  printfmt:Tuple
 // func:dmmeta.Fsort..Print
@@ -2607,7 +2607,7 @@ bool                 Fstep_ReadFieldMaybe(dmmeta::Fstep& parent, algo::strptr fi
 // Read fields of dmmeta::Fstep from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fstep..ReadStrptrMaybe
-bool                 Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr in_str);
+bool                 Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fstep.String  printfmt:Tuple
 // func:dmmeta.Fstep..Print
@@ -2625,7 +2625,7 @@ bool                 Ftrace_ReadFieldMaybe(dmmeta::Ftrace& parent, algo::strptr 
 // Read fields of dmmeta::Ftrace from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ftrace..ReadStrptrMaybe
-bool                 Ftrace_ReadStrptrMaybe(dmmeta::Ftrace &parent, algo::strptr in_str);
+bool                 Ftrace_ReadStrptrMaybe(dmmeta::Ftrace &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ftrace.String  printfmt:Tuple
 // func:dmmeta.Ftrace..Print
@@ -2643,7 +2643,7 @@ bool                 Ftuple_ReadFieldMaybe(dmmeta::Ftuple& parent, algo::strptr 
 // Read fields of dmmeta::Ftuple from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ftuple..ReadStrptrMaybe
-bool                 Ftuple_ReadStrptrMaybe(dmmeta::Ftuple &parent, algo::strptr in_str);
+bool                 Ftuple_ReadStrptrMaybe(dmmeta::Ftuple &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ftuple.String  printfmt:Tuple
 // func:dmmeta.Ftuple..Print
@@ -2692,7 +2692,7 @@ bool                 Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr fiel
 // Read fields of dmmeta::Func from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Func..ReadStrptrMaybe
-bool                 Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str);
+bool                 Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Func..Init
 void                 Func_Init(dmmeta::Func& parent);
@@ -2713,7 +2713,7 @@ bool                 Funique_ReadFieldMaybe(dmmeta::Funique& parent, algo::strpt
 // Read fields of dmmeta::Funique from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Funique..ReadStrptrMaybe
-bool                 Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strptr in_str);
+bool                 Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Funique.String  printfmt:Tuple
 // func:dmmeta.Funique..Print
@@ -2731,7 +2731,7 @@ bool                 Fuserinit_ReadFieldMaybe(dmmeta::Fuserinit& parent, algo::s
 // Read fields of dmmeta::Fuserinit from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fuserinit..ReadStrptrMaybe
-bool                 Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::strptr in_str);
+bool                 Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fuserinit.String  printfmt:Tuple
 // func:dmmeta.Fuserinit..Print
@@ -2761,7 +2761,7 @@ bool                 Fwddecl_ReadFieldMaybe(dmmeta::Fwddecl& parent, algo::strpt
 // Read fields of dmmeta::Fwddecl from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Fwddecl..ReadStrptrMaybe
-bool                 Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strptr in_str);
+bool                 Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fwddecl.String  printfmt:Tuple
 // func:dmmeta.Fwddecl..Print
@@ -2790,7 +2790,7 @@ bool                 Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr 
 // Read fields of dmmeta::Gconst from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Gconst..ReadStrptrMaybe
-bool                 Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str);
+bool                 Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Gconst..Init
 void                 Gconst_Init(dmmeta::Gconst& parent);
@@ -2818,7 +2818,7 @@ bool                 Gstatic_ReadFieldMaybe(dmmeta::Gstatic& parent, algo::strpt
 // Read fields of dmmeta::Gstatic from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Gstatic..ReadStrptrMaybe
-bool                 Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strptr in_str);
+bool                 Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gstatic.String  printfmt:Tuple
 // func:dmmeta.Gstatic..Print
@@ -2850,7 +2850,7 @@ bool                 Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol& parent, algo::strpt
 // Read fields of dmmeta::Gsymbol from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Gsymbol..ReadStrptrMaybe
-bool                 Gsymbol_ReadStrptrMaybe(dmmeta::Gsymbol &parent, algo::strptr in_str);
+bool                 Gsymbol_ReadStrptrMaybe(dmmeta::Gsymbol &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gsymbol.String  printfmt:Tuple
 // func:dmmeta.Gsymbol..Print
@@ -2870,7 +2870,7 @@ bool                 Hashtype_ReadFieldMaybe(dmmeta::Hashtype& parent, algo::str
 // Read fields of dmmeta::Hashtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Hashtype..ReadStrptrMaybe
-bool                 Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::strptr in_str);
+bool                 Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Hashtype.String  printfmt:Tuple
 // func:dmmeta.Hashtype..Print
@@ -2888,7 +2888,7 @@ bool                 Hook_ReadFieldMaybe(dmmeta::Hook& parent, algo::strptr fiel
 // Read fields of dmmeta::Hook from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Hook..ReadStrptrMaybe
-bool                 Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_str);
+bool                 Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Hook.String  printfmt:Tuple
 // func:dmmeta.Hook..Print
@@ -2912,7 +2912,7 @@ bool                 Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr 
 // Read fields of dmmeta::Inlary from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Inlary..ReadStrptrMaybe
-bool                 Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str);
+bool                 Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Inlary..Init
 void                 Inlary_Init(dmmeta::Inlary& parent);
@@ -2940,7 +2940,7 @@ bool                 Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr 
 // Read fields of dmmeta::Lenfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Lenfld..ReadStrptrMaybe
-bool                 Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str);
+bool                 Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Lenfld..Init
 void                 Lenfld_Init(dmmeta::Lenfld& parent);
@@ -2964,7 +2964,7 @@ bool                 Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::str
 // Read fields of dmmeta::Listtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Listtype..ReadStrptrMaybe
-bool                 Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_str);
+bool                 Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Listtype..Init
 void                 Listtype_Init(dmmeta::Listtype& parent);
@@ -2996,7 +2996,7 @@ bool                 Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr fi
 // Read fields of dmmeta::Llist from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Llist..ReadStrptrMaybe
-bool                 Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str);
+bool                 Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Llist..Init
 void                 Llist_Init(dmmeta::Llist& parent);
@@ -3019,7 +3019,7 @@ bool                 Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr 
 // Read fields of dmmeta::Logcat from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Logcat..ReadStrptrMaybe
-bool                 Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str);
+bool                 Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Logcat..Init
 void                 Logcat_Init(dmmeta::Logcat& parent);
@@ -3042,7 +3042,7 @@ bool                 Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr fiel
 // Read fields of dmmeta::Main from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Main..ReadStrptrMaybe
-bool                 Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str);
+bool                 Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Main..Init
 void                 Main_Init(dmmeta::Main& parent);
@@ -3065,7 +3065,7 @@ bool                 Msgtype_ReadFieldMaybe(dmmeta::Msgtype& parent, algo::strpt
 // Read fields of dmmeta::Msgtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Msgtype..ReadStrptrMaybe
-bool                 Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strptr in_str);
+bool                 Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Msgtype.String  printfmt:Tuple
 // func:dmmeta.Msgtype..Print
@@ -3083,7 +3083,7 @@ bool                 Nocascdel_ReadFieldMaybe(dmmeta::Nocascdel& parent, algo::s
 // Read fields of dmmeta::Nocascdel from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nocascdel..ReadStrptrMaybe
-bool                 Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::strptr in_str);
+bool                 Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nocascdel.String  printfmt:Tuple
 // func:dmmeta.Nocascdel..Print
@@ -3101,7 +3101,7 @@ bool                 Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile& parent, algo:
 // Read fields of dmmeta::Nossimfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nossimfile..ReadStrptrMaybe
-bool                 Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str);
+bool                 Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nossimfile.String  printfmt:Tuple
 // func:dmmeta.Nossimfile..Print
@@ -3119,7 +3119,7 @@ bool                 Noxref_ReadFieldMaybe(dmmeta::Noxref& parent, algo::strptr 
 // Read fields of dmmeta::Noxref from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Noxref..ReadStrptrMaybe
-bool                 Noxref_ReadStrptrMaybe(dmmeta::Noxref &parent, algo::strptr in_str);
+bool                 Noxref_ReadStrptrMaybe(dmmeta::Noxref &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Noxref.String  printfmt:Tuple
 // func:dmmeta.Noxref..Print
@@ -3143,7 +3143,7 @@ bool                 Ns_ReadFieldMaybe(dmmeta::Ns& parent, algo::strptr field, a
 // Read fields of dmmeta::Ns from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ns..ReadStrptrMaybe
-bool                 Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str);
+bool                 Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ns.String  printfmt:Tuple
 // func:dmmeta.Ns..Print
@@ -3163,7 +3163,7 @@ bool                 Nscpp_ReadFieldMaybe(dmmeta::Nscpp& parent, algo::strptr fi
 // Read fields of dmmeta::Nscpp from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nscpp..ReadStrptrMaybe
-bool                 Nscpp_ReadStrptrMaybe(dmmeta::Nscpp &parent, algo::strptr in_str);
+bool                 Nscpp_ReadStrptrMaybe(dmmeta::Nscpp &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nscpp.String  printfmt:Tuple
 // func:dmmeta.Nscpp..Print
@@ -3181,7 +3181,7 @@ bool                 Nsdb_ReadFieldMaybe(dmmeta::Nsdb& parent, algo::strptr fiel
 // Read fields of dmmeta::Nsdb from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsdb..ReadStrptrMaybe
-bool                 Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str);
+bool                 Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsdb.String  printfmt:Tuple
 // func:dmmeta.Nsdb..Print
@@ -3199,7 +3199,7 @@ bool                 Nsfast_ReadFieldMaybe(dmmeta::Nsfast& parent, algo::strptr 
 // Read fields of dmmeta::Nsfast from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsfast..ReadStrptrMaybe
-bool                 Nsfast_ReadStrptrMaybe(dmmeta::Nsfast &parent, algo::strptr in_str);
+bool                 Nsfast_ReadStrptrMaybe(dmmeta::Nsfast &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsfast.String  printfmt:Tuple
 // func:dmmeta.Nsfast..Print
@@ -3230,7 +3230,7 @@ bool                 Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::s
 // Read fields of dmmeta::Nsinclude from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsinclude..ReadStrptrMaybe
-bool                 Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr in_str);
+bool                 Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Nsinclude..Init
 void                 Nsinclude_Init(dmmeta::Nsinclude& parent);
@@ -3253,7 +3253,7 @@ bool                 Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strpt
 // Read fields of dmmeta::Nsproto from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsproto..ReadStrptrMaybe
-bool                 Nsproto_ReadStrptrMaybe(dmmeta::Nsproto &parent, algo::strptr in_str);
+bool                 Nsproto_ReadStrptrMaybe(dmmeta::Nsproto &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsproto.String  printfmt:Tuple
 // func:dmmeta.Nsproto..Print
@@ -3273,7 +3273,7 @@ bool                 Nstype_ReadFieldMaybe(dmmeta::Nstype& parent, algo::strptr 
 // Read fields of dmmeta::Nstype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nstype..ReadStrptrMaybe
-bool                 Nstype_ReadStrptrMaybe(dmmeta::Nstype &parent, algo::strptr in_str);
+bool                 Nstype_ReadStrptrMaybe(dmmeta::Nstype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nstype.String  printfmt:Tuple
 // func:dmmeta.Nstype..Print
@@ -3292,7 +3292,7 @@ bool                 Nsversion_ReadFieldMaybe(dmmeta::Nsversion& parent, algo::s
 // Read fields of dmmeta::Nsversion from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsversion..ReadStrptrMaybe
-bool                 Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::strptr in_str);
+bool                 Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsversion.String  printfmt:Tuple
 // func:dmmeta.Nsversion..Print
@@ -3322,7 +3322,7 @@ bool                 Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field,
 // Read fields of dmmeta::Nsx from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Nsx..ReadStrptrMaybe
-bool                 Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str);
+bool                 Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Nsx..Init
 void                 Nsx_Init(dmmeta::Nsx& parent);
@@ -3349,7 +3349,7 @@ bool                 Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr 
 // Read fields of dmmeta::Numstr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Numstr..ReadStrptrMaybe
-bool                 Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str);
+bool                 Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Numstr..Init
 void                 Numstr_Init(dmmeta::Numstr& parent);
@@ -3372,7 +3372,7 @@ bool                 Pack_ReadFieldMaybe(dmmeta::Pack& parent, algo::strptr fiel
 // Read fields of dmmeta::Pack from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Pack..ReadStrptrMaybe
-bool                 Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_str);
+bool                 Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pack.String  printfmt:Tuple
 // func:dmmeta.Pack..Print
@@ -3399,7 +3399,7 @@ bool                 Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::str
 // Read fields of dmmeta::Pmaskfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Pmaskfld..ReadStrptrMaybe
-bool                 Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_str);
+bool                 Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Pmaskfld..Init
 void                 Pmaskfld_Init(dmmeta::Pmaskfld& parent);
@@ -3432,7 +3432,7 @@ bool                 PmaskfldMember_ReadFieldMaybe(dmmeta::PmaskfldMember& paren
 // Read fields of dmmeta::PmaskfldMember from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.PmaskfldMember..ReadStrptrMaybe
-bool                 PmaskfldMember_ReadStrptrMaybe(dmmeta::PmaskfldMember &parent, algo::strptr in_str);
+bool                 PmaskfldMember_ReadStrptrMaybe(dmmeta::PmaskfldMember &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.PmaskfldMember.String  printfmt:Tuple
 // func:dmmeta.PmaskfldMember..Print
@@ -3469,7 +3469,7 @@ bool                 Pnew_ReadFieldMaybe(dmmeta::Pnew& parent, algo::strptr fiel
 // Read fields of dmmeta::Pnew from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Pnew..ReadStrptrMaybe
-bool                 Pnew_ReadStrptrMaybe(dmmeta::Pnew &parent, algo::strptr in_str);
+bool                 Pnew_ReadStrptrMaybe(dmmeta::Pnew &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pnew.String  printfmt:Tuple
 // func:dmmeta.Pnew..Print
@@ -3487,7 +3487,7 @@ bool                 Printfmt_ReadFieldMaybe(dmmeta::Printfmt& parent, algo::str
 // Read fields of dmmeta::Printfmt from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Printfmt..ReadStrptrMaybe
-bool                 Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::strptr in_str);
+bool                 Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Printfmt.String  printfmt:Tuple
 // func:dmmeta.Printfmt..Print
@@ -3507,7 +3507,7 @@ bool                 Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr 
 // Read fields of dmmeta::Ptrary from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ptrary..ReadStrptrMaybe
-bool                 Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str);
+bool                 Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ptrary..Init
 void                 Ptrary_Init(dmmeta::Ptrary& parent);
@@ -3538,7 +3538,7 @@ bool                 Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strpt
 // Read fields of dmmeta::Reftype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Reftype..ReadStrptrMaybe
-bool                 Reftype_ReadStrptrMaybe(dmmeta::Reftype &parent, algo::strptr in_str);
+bool                 Reftype_ReadStrptrMaybe(dmmeta::Reftype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Reftype..Init
 void                 Reftype_Init(dmmeta::Reftype& parent);
@@ -3598,7 +3598,7 @@ bool                 Rowid_ReadFieldMaybe(dmmeta::Rowid& parent, algo::strptr fi
 // Read fields of dmmeta::Rowid from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Rowid..ReadStrptrMaybe
-bool                 Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr in_str);
+bool                 Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Rowid.String  printfmt:Tuple
 // func:dmmeta.Rowid..Print
@@ -3624,7 +3624,7 @@ bool                 Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::str
 // Read fields of dmmeta::Smallstr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Smallstr..ReadStrptrMaybe
-bool                 Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_str);
+bool                 Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Smallstr..Init
 void                 Smallstr_Init(dmmeta::Smallstr& parent);
@@ -3647,7 +3647,7 @@ bool                 Sortfld_ReadFieldMaybe(dmmeta::Sortfld& parent, algo::strpt
 // Read fields of dmmeta::Sortfld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Sortfld..ReadStrptrMaybe
-bool                 Sortfld_ReadStrptrMaybe(dmmeta::Sortfld &parent, algo::strptr in_str);
+bool                 Sortfld_ReadStrptrMaybe(dmmeta::Sortfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sortfld.String  printfmt:Tuple
 // func:dmmeta.Sortfld..Print
@@ -3665,7 +3665,7 @@ bool                 Sorttype_ReadFieldMaybe(dmmeta::Sorttype& parent, algo::str
 // Read fields of dmmeta::Sorttype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Sorttype..ReadStrptrMaybe
-bool                 Sorttype_ReadStrptrMaybe(dmmeta::Sorttype &parent, algo::strptr in_str);
+bool                 Sorttype_ReadStrptrMaybe(dmmeta::Sorttype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sorttype.String  printfmt:Tuple
 // func:dmmeta.Sorttype..Print
@@ -3684,7 +3684,7 @@ bool                 Sqltype_ReadFieldMaybe(dmmeta::Sqltype& parent, algo::strpt
 // Read fields of dmmeta::Sqltype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Sqltype..ReadStrptrMaybe
-bool                 Sqltype_ReadStrptrMaybe(dmmeta::Sqltype &parent, algo::strptr in_str);
+bool                 Sqltype_ReadStrptrMaybe(dmmeta::Sqltype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sqltype.String  printfmt:Tuple
 // func:dmmeta.Sqltype..Print
@@ -3719,7 +3719,7 @@ bool                 Ssimfile_ReadFieldMaybe(dmmeta::Ssimfile& parent, algo::str
 // Read fields of dmmeta::Ssimfile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ssimfile..ReadStrptrMaybe
-bool                 Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::strptr in_str);
+bool                 Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimfile.String  printfmt:Tuple
 // func:dmmeta.Ssimfile..Print
@@ -3767,7 +3767,7 @@ bool                 Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq& parent, algo::strpt
 // Read fields of dmmeta::Ssimreq from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ssimreq..ReadStrptrMaybe
-bool                 Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str);
+bool                 Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ssimreq..Init
 void                 Ssimreq_Init(dmmeta::Ssimreq& parent);
@@ -3789,7 +3789,7 @@ bool                 Ssimsort_ReadFieldMaybe(dmmeta::Ssimsort& parent, algo::str
 // Read fields of dmmeta::Ssimsort from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ssimsort..ReadStrptrMaybe
-bool                 Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::strptr in_str);
+bool                 Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimsort.String  printfmt:Tuple
 // func:dmmeta.Ssimsort..Print
@@ -3807,7 +3807,7 @@ bool                 Ssimvolatile_ReadFieldMaybe(dmmeta::Ssimvolatile& parent, a
 // Read fields of dmmeta::Ssimvolatile from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Ssimvolatile..ReadStrptrMaybe
-bool                 Ssimvolatile_ReadStrptrMaybe(dmmeta::Ssimvolatile &parent, algo::strptr in_str);
+bool                 Ssimvolatile_ReadStrptrMaybe(dmmeta::Ssimvolatile &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimvolatile.String  printfmt:Tuple
 // func:dmmeta.Ssimvolatile..Print
@@ -3827,7 +3827,7 @@ bool                 Steptype_ReadFieldMaybe(dmmeta::Steptype& parent, algo::str
 // Read fields of dmmeta::Steptype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Steptype..ReadStrptrMaybe
-bool                 Steptype_ReadStrptrMaybe(dmmeta::Steptype &parent, algo::strptr in_str);
+bool                 Steptype_ReadStrptrMaybe(dmmeta::Steptype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Steptype.String  printfmt:Tuple
 // func:dmmeta.Steptype..Print
@@ -3857,7 +3857,7 @@ bool                 Strtype_ReadFieldMaybe(dmmeta::Strtype& parent, algo::strpt
 // Read fields of dmmeta::Strtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Strtype..ReadStrptrMaybe
-bool                 Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strptr in_str);
+bool                 Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Strtype.String  printfmt:Tuple
 // func:dmmeta.Strtype..Print
@@ -3879,7 +3879,7 @@ bool                 Substr_ReadFieldMaybe(dmmeta::Substr& parent, algo::strptr 
 // Read fields of dmmeta::Substr from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Substr..ReadStrptrMaybe
-bool                 Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr in_str);
+bool                 Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Substr.String  printfmt:Tuple
 // func:dmmeta.Substr..Print
@@ -3900,7 +3900,7 @@ bool                 Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr 
 // Read fields of dmmeta::Svtype from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Svtype..ReadStrptrMaybe
-bool                 Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str);
+bool                 Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Svtype..Init
 void                 Svtype_Init(dmmeta::Svtype& parent);
@@ -3922,7 +3922,7 @@ bool                 Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr fiel
 // Read fields of dmmeta::Tary from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Tary..ReadStrptrMaybe
-bool                 Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str);
+bool                 Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Tary..Init
 void                 Tary_Init(dmmeta::Tary& parent);
@@ -3949,7 +3949,7 @@ bool                 Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr fi
 // Read fields of dmmeta::Thash from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Thash..ReadStrptrMaybe
-bool                 Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str);
+bool                 Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Thash..Init
 void                 Thash_Init(dmmeta::Thash& parent);
@@ -3984,7 +3984,7 @@ bool                 Tracefld_ReadFieldMaybe(dmmeta::Tracefld& parent, algo::str
 // Read fields of dmmeta::Tracefld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Tracefld..ReadStrptrMaybe
-bool                 Tracefld_ReadStrptrMaybe(dmmeta::Tracefld &parent, algo::strptr in_str);
+bool                 Tracefld_ReadStrptrMaybe(dmmeta::Tracefld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tracefld.String  printfmt:Tuple
 // func:dmmeta.Tracefld..Print
@@ -4016,7 +4016,7 @@ bool                 Tracerec_ReadFieldMaybe(dmmeta::Tracerec& parent, algo::str
 // Read fields of dmmeta::Tracerec from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Tracerec..ReadStrptrMaybe
-bool                 Tracerec_ReadStrptrMaybe(dmmeta::Tracerec &parent, algo::strptr in_str);
+bool                 Tracerec_ReadStrptrMaybe(dmmeta::Tracerec &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tracerec.String  printfmt:Tuple
 // func:dmmeta.Tracerec..Print
@@ -4041,7 +4041,7 @@ bool                 Typefld_ReadFieldMaybe(dmmeta::Typefld& parent, algo::strpt
 // Read fields of dmmeta::Typefld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Typefld..ReadStrptrMaybe
-bool                 Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strptr in_str);
+bool                 Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Typefld.String  printfmt:Tuple
 // func:dmmeta.Typefld..Print
@@ -4059,7 +4059,7 @@ bool                 Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, a
 // Read fields of dmmeta::Usertracefld from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Usertracefld..ReadStrptrMaybe
-bool                 Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, algo::strptr in_str);
+bool                 Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Usertracefld.String  printfmt:Tuple
 // func:dmmeta.Usertracefld..Print
@@ -4101,7 +4101,7 @@ bool                 Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr fiel
 // Read fields of dmmeta::Xref from an ascii string.
 // The format of the string is an ssim Tuple
 // func:dmmeta.Xref..ReadStrptrMaybe
-bool                 Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str);
+bool                 Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Xref..Init
 void                 Xref_Init(dmmeta::Xref& parent);

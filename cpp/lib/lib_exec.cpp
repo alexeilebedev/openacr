@@ -1,6 +1,6 @@
-// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,9 @@ i64 lib_exec::execkey_Get(lib_exec::FSyscmd &cmd) {
 
 // -----------------------------------------------------------------------------
 
+// If command produced an error, print the command line
+// and dump captured stderr output
+// If SHOW_OUT flag is set on the command CMD, dump captured stdout and stderr
 static void ShowOutput(lib_exec::FSyscmd &cmd) {
     bool print_msg = true;
     bool show_out = cmd.show_out && ValidQ(cmd.stdout_fd.fd);
@@ -55,13 +58,17 @@ static void ShowOutput(lib_exec::FSyscmd &cmd) {
         sep = "";
     }
 
-    print_cmd &= ch_N(cmd.command) > 0;    // don't print if there was no command
+    print_cmd &= ary_N(cmd.args) > 0;      // don't print if there was no command
     print_cmd &= !cmd.fail_prereq;         // if the command is failing because some prior command failed, don't print
                                            // print command name and status
     if (print_cmd) {
         tempstr pre(lib_exec::_db.cmdline.dry_run ? "dry_run: " : sep);
         tempstr outstr;
-        outstr << pre << cmd.command;
+        outstr << pre;
+        algo::ListSep ls(" ");
+        ind_beg(algo::StringAry_ary_curs,arg,cmd.args) {
+            outstr << ls << arg;
+        }ind_end;
         if (cmd.status != 0) {
             outstr << ": status "<<cmd.status;
         }
@@ -93,9 +100,13 @@ static void SetupRedirect(lib_exec::FSyscmd &cmd) {
     cmd.stdout_fd.fd = algo::Fildes(mkstemp(buf));
     unlink(buf);// unlink temporary file from filesystem
 
-    strcpy(buf,"/tmp/execXXXXXX");
-    cmd.stderr_fd.fd = algo::Fildes(mkstemp(buf));
-    unlink(buf);// unlink temporary file from filesystem
+    // If MERGE_OUTPUT flag is set, both stdout and stderr go into the same
+    // file (improves output coherency)
+    if (!lib_exec::_db.cmdline.merge_output) {
+        strcpy(buf,"/tmp/execXXXXXX");
+        cmd.stderr_fd.fd = algo::Fildes(mkstemp(buf));
+        unlink(buf);// unlink temporary file from filesystem
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -115,12 +126,24 @@ static void Child(lib_exec::FSyscmd &cmd) {
     // by the shell itself becomes part of stderr.
     if (cmd.redir_out) {// child
         dup2(cmd.stdout_fd.fd.value, 1);  // closes 1 first if necessary
-        dup2(cmd.stderr_fd.fd.value, 2);  // closes 2 first if necessary
+        dup2(lib_exec::_db.cmdline.merge_output ? cmd.stdout_fd.fd.value : cmd.stderr_fd.fd.value, 2);
+        for (int i=3; close(i)!=-1; i++) {// close fds above 2
+            // we assume fds are contiguous
+        }
         algo::Refurbish(cmd.stdout_fd);
         algo::Refurbish(cmd.stderr_fd);
     }
-    // execute child process
-    int ret = execl("/bin/sh", "/bin/sh", "-c", Zeroterm(cmd.command), (char*)NULL);
+    int ret=0;
+    if (ary_N(cmd.args)) {
+        char **argv = (char**)alloca((ary_N(cmd.args)+1)*sizeof(*argv));
+        ind_beg(algo::StringAry_ary_curs,arg,cmd.args) {
+            argv[ind_curs(arg).index] = Zeroterm(arg);
+        }ind_end;
+        argv[ary_N(cmd.args)] = NULL;
+        ret = execv(argv[0],argv);
+    } else {
+        ret = execl("/bin/sh", "/bin/sh", "-c", Zeroterm(cmd.command), (char*)NULL);
+    }
     errno_vrfy(ret==0, "can't exec");
     _exit(1);// not sure if _exit or exit should be called here
 }
@@ -132,7 +155,13 @@ static void Child(lib_exec::FSyscmd &cmd) {
 // If the command was started successfully, its pid can be
 // looked up in ind_running, and the command is added to zd_started list.
 void lib_exec::StartCmd(lib_exec::FSyscmd &cmd) {
-    if (lib_exec::_db.cmdline.dry_run || !ch_N(cmd.command) || cmd.fail_prereq) {
+    // if a specific argv array has been provided, create the command string from it
+    if (cmd.command != "") {
+        ary_Alloc(cmd.args)="/bin/sh";
+        ary_Alloc(cmd.args)="-c";
+        ary_Alloc(cmd.args)=cmd.command;
+    }
+    if (lib_exec::_db.cmdline.dry_run || !ary_N(cmd.args) || cmd.fail_prereq) {
         if (cmd.fail_prereq) {
             cmd.status = 1;
         } else {
@@ -171,7 +200,7 @@ static void MarkStoppedInorder() {
         bool good = syscmd->completed;
         // skip past nodes that are clearly there for dependency only -- this helps
         // keep total # of open file descriptors down.
-        good |= !ch_N(syscmd->command) && !ch_N(syscmd->message);
+        good |= !ary_N(syscmd->args) && !ch_N(syscmd->message);
         if (good) {
             MarkStopped(syscmd);
         } else {

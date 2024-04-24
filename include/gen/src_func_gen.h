@@ -1176,7 +1176,7 @@ bool                 value_ReadStrptrMaybe(src_func::FieldId& parent, algo::strp
 // Read fields of src_func::FieldId from an ascii string.
 // The format of the string is the format of the src_func::FieldId's only field
 // func:src_func.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_func.FieldId..Init
 void                 FieldId_Init(src_func::FieldId& parent);
@@ -1224,7 +1224,7 @@ bool                 value_ReadStrptrMaybe(src_func::TableId& parent, algo::strp
 // Read fields of src_func::TableId from an ascii string.
 // The format of the string is the format of the src_func::TableId's only field
 // func:src_func.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_func.TableId..Init
 void                 TableId_Init(src_func::TableId& parent);

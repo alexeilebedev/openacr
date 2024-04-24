@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2013 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2013 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -79,13 +79,15 @@ tempstr lib_iconv::Convert(lib_iconv::Icd &icd, strptr in, bool no_throw) {
                 continue;
             }
             case EILSEQ: {
-                vrfy(no_throw,tempstr()<<"Invalid multibyte sequence (first 6 bytes shown): "
-                     << strptr_ToMemptr(FirstN(strptr(inbuf,inbytesleft),6)));
+                vrfy(no_throw,tempstr()<<"lib_iconv.invalid_sequence"
+                     << Keyval("data",FirstN(strptr(inbuf,inbytesleft),6))
+                     << Keyval("comment","Invalid multibyte sequence (first new bytes shown)"));
                 break;
             }
             case EINVAL:
-                vrfy(no_throw,tempstr()<<"Incomplete multibyte sequence: "
-                     << strptr_ToMemptr(strptr(inbuf,inbytesleft)));
+                vrfy(no_throw,tempstr()<<"lib_iconv.incomplete_Sequence"
+                     << Keyval("data",strptr(inbuf,inbytesleft))
+                     << Keyval("comment","Incomplete multibyte sequence"));
                 break;
             default:
                 errno_vrfy(no_throw,"iconv");

@@ -1,6 +1,6 @@
-// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2023 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -173,6 +173,7 @@ void acr_ed::edaction_Create_Target() {
         if (is_exe) {
             Ins(&R, acr_ed::_db.script, "void $target::Main() {");
             Ins(&R, acr_ed::_db.script, "    prlog(\"Hello, World!\");");
+            Ins(&R, acr_ed::_db.script, "    $target::MainLoop();");
             Ins(&R, acr_ed::_db.script, "}");
         }
         Ins(&R, acr_ed::_db.script, "EOF");

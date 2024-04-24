@@ -14,6 +14,7 @@ dmmeta.cpptype  ctype:algo.Bool  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.Comment  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.CppExpr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:algo.DateCache  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:algo.DayRange  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Decimal  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.DryrunQ  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.EchoQ  ctor:Y  dtor:N  cheap_copy:Y

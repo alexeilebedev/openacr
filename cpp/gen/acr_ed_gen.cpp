@@ -1879,6 +1879,25 @@ bool acr_ed::cstr_XrefMaybe(acr_ed::FCstr &row) {
     return retval;
 }
 
+// --- acr_ed.FDb.vis.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr_ed::vis_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.vis_elems && rhs.elems < _db.vis_elems + _db.vis_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_ed.tary_alias  field:acr_ed.FDb.vis  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    vis_Reserve(nnew); // reserve space
+    int at = _db.vis_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.vis_elems + at + i) algo::cstring(rhs[i]);
+        _db.vis_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.vis_elems + at, nnew);
+}
+
 // --- acr_ed.FDb.vis.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -1982,6 +2001,20 @@ algo::aryptr<algo::cstring> acr_ed::vis_AllocNVal(int n_elems, const algo::cstri
     }
     _db.vis_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_ed.FDb.vis.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr_ed::vis_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = vis_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        vis_RemoveLast();
+    }
+    return retval;
 }
 
 // --- acr_ed.FDb.listtype.Alloc
@@ -2843,170 +2876,20 @@ void acr_ed::abt_ExecX() {
 
 // --- acr_ed.FDb.abt.Execv
 // Call execv()
-// Call execv with specified parameters -- cprint:abt.Argv
+// Call execv with specified parameters
 int acr_ed::abt_Execv() {
-    algo_lib::exec_args_Alloc() << _db.abt_path;
-
-    if (_db.abt_cmd.target.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-target:";
-        command::target_Print(_db.abt_cmd, *arg);
-    }
-
-    if (_db.abt_cmd.in != "data") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-in:";
-        cstring_Print(_db.abt_cmd.in, *arg);
-    }
-
-    if (_db.abt_cmd.out_dir != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-out_dir:";
-        cstring_Print(_db.abt_cmd.out_dir, *arg);
-    }
-
-    if (_db.abt_cmd.cfg != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cfg:";
-        Smallstr50_Print(_db.abt_cmd.cfg, *arg);
-    }
-
-    if (_db.abt_cmd.compiler != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-compiler:";
-        Smallstr50_Print(_db.abt_cmd.compiler, *arg);
-    }
-
-    if (_db.abt_cmd.uname != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-uname:";
-        Smallstr50_Print(_db.abt_cmd.uname, *arg);
-    }
-
-    if (_db.abt_cmd.arch != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-arch:";
-        Smallstr50_Print(_db.abt_cmd.arch, *arg);
-    }
-
-    if (_db.abt_cmd.ood != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-ood:";
-        bool_Print(_db.abt_cmd.ood, *arg);
-    }
-
-    if (_db.abt_cmd.list != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-list:";
-        bool_Print(_db.abt_cmd.list, *arg);
-    }
-
-    if (_db.abt_cmd.listincl != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-listincl:";
-        bool_Print(_db.abt_cmd.listincl, *arg);
-    }
-
-    if (_db.abt_cmd.build != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-build:";
-        bool_Print(_db.abt_cmd.build, *arg);
-    }
-
-    if (_db.abt_cmd.preproc != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-preproc:";
-        bool_Print(_db.abt_cmd.preproc, *arg);
-    }
-
-    if (_db.abt_cmd.clean != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-clean:";
-        bool_Print(_db.abt_cmd.clean, *arg);
-    }
-
-    if (_db.abt_cmd.dry_run != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-dry_run:";
-        bool_Print(_db.abt_cmd.dry_run, *arg);
-    }
-
-    if (_db.abt_cmd.maxjobs != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxjobs:";
-        i32_Print(_db.abt_cmd.maxjobs, *arg);
-    }
-
-    if (_db.abt_cmd.printcmd != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-printcmd:";
-        bool_Print(_db.abt_cmd.printcmd, *arg);
-    }
-
-    if (_db.abt_cmd.force != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-force:";
-        bool_Print(_db.abt_cmd.force, *arg);
-    }
-
-    if (_db.abt_cmd.install != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-install:";
-        bool_Print(_db.abt_cmd.install, *arg);
-    }
-
-    if (_db.abt_cmd.coverity != false) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-coverity:";
-        bool_Print(_db.abt_cmd.coverity, *arg);
-    }
-
-    if (_db.abt_cmd.package != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-package:";
-        cstring_Print(_db.abt_cmd.package, *arg);
-    }
-
-    if (_db.abt_cmd.maxerr != 100) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-maxerr:";
-        u32_Print(_db.abt_cmd.maxerr, *arg);
-    }
-
-    if (_db.abt_cmd.disas.expr != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-disas:";
-        command::disas_Print(_db.abt_cmd, *arg);
-    }
-
-    if (_db.abt_cmd.report != true) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-report:";
-        bool_Print(_db.abt_cmd.report, *arg);
-    }
-
-    if (_db.abt_cmd.jcdb != "") {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-jcdb:";
-        cstring_Print(_db.abt_cmd.jcdb, *arg);
-    }
-
-    if (_db.abt_cmd.cache != 0) {
-        cstring *arg = &algo_lib::exec_args_Alloc();
-        *arg << "-cache:";
-        u8_Print(_db.abt_cmd.cache, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        algo_lib::exec_args_Alloc() << "-verbose";
-    }
-    char **argv = (char**)alloca((algo_lib::exec_args_N()+1)*sizeof(*argv));
-    ind_beg(algo_lib::_db_exec_args_curs,arg,algo_lib::_db) {
+    int ret = 0;
+    algo::StringAry args;
+    abt_ToArgv(args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
         argv[ind_curs(arg).index] = Zeroterm(arg);
     }ind_end;
-    argv[algo_lib::exec_args_N()] = NULL;
+    argv[ary_N(args)] = NULL;
     // if _db.abt_path is relative, search for it in PATH
     algo_lib::ResolveExecFname(_db.abt_path);
-    return execv(Zeroterm(_db.abt_path),argv);
+    ret = execv(Zeroterm(_db.abt_path),argv);
+    return ret;
 }
 
 // --- acr_ed.FDb.abt.ToCmdline
@@ -3024,6 +2907,166 @@ algo::tempstr acr_ed::abt_ToCmdline() {
         retval << " 2" << _db.abt_fstderr;
     }
     return retval;
+}
+
+// --- acr_ed.FDb.abt.ToArgv
+// Form array from the command line
+void acr_ed::abt_ToArgv(algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << _db.abt_path;
+
+    if (_db.abt_cmd.target.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        command::target_Print(_db.abt_cmd, *arg);
+    }
+
+    if (_db.abt_cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(_db.abt_cmd.in, *arg);
+    }
+
+    if (_db.abt_cmd.out_dir != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-out_dir:";
+        cstring_Print(_db.abt_cmd.out_dir, *arg);
+    }
+
+    if (_db.abt_cmd.cfg != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cfg:";
+        Smallstr50_Print(_db.abt_cmd.cfg, *arg);
+    }
+
+    if (_db.abt_cmd.compiler != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-compiler:";
+        Smallstr50_Print(_db.abt_cmd.compiler, *arg);
+    }
+
+    if (_db.abt_cmd.uname != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-uname:";
+        Smallstr50_Print(_db.abt_cmd.uname, *arg);
+    }
+
+    if (_db.abt_cmd.arch != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-arch:";
+        Smallstr50_Print(_db.abt_cmd.arch, *arg);
+    }
+
+    if (_db.abt_cmd.ood != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ood:";
+        bool_Print(_db.abt_cmd.ood, *arg);
+    }
+
+    if (_db.abt_cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(_db.abt_cmd.list, *arg);
+    }
+
+    if (_db.abt_cmd.listincl != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-listincl:";
+        bool_Print(_db.abt_cmd.listincl, *arg);
+    }
+
+    if (_db.abt_cmd.build != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-build:";
+        bool_Print(_db.abt_cmd.build, *arg);
+    }
+
+    if (_db.abt_cmd.preproc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-preproc:";
+        bool_Print(_db.abt_cmd.preproc, *arg);
+    }
+
+    if (_db.abt_cmd.clean != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-clean:";
+        bool_Print(_db.abt_cmd.clean, *arg);
+    }
+
+    if (_db.abt_cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(_db.abt_cmd.dry_run, *arg);
+    }
+
+    if (_db.abt_cmd.maxjobs != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxjobs:";
+        i32_Print(_db.abt_cmd.maxjobs, *arg);
+    }
+
+    if (_db.abt_cmd.printcmd != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-printcmd:";
+        bool_Print(_db.abt_cmd.printcmd, *arg);
+    }
+
+    if (_db.abt_cmd.force != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-force:";
+        bool_Print(_db.abt_cmd.force, *arg);
+    }
+
+    if (_db.abt_cmd.install != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-install:";
+        bool_Print(_db.abt_cmd.install, *arg);
+    }
+
+    if (_db.abt_cmd.coverity != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-coverity:";
+        bool_Print(_db.abt_cmd.coverity, *arg);
+    }
+
+    if (_db.abt_cmd.package != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-package:";
+        cstring_Print(_db.abt_cmd.package, *arg);
+    }
+
+    if (_db.abt_cmd.maxerr != 100) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxerr:";
+        u32_Print(_db.abt_cmd.maxerr, *arg);
+    }
+
+    if (_db.abt_cmd.disas.expr != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-disas:";
+        command::disas_Print(_db.abt_cmd, *arg);
+    }
+
+    if (_db.abt_cmd.report != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-report:";
+        bool_Print(_db.abt_cmd.report, *arg);
+    }
+
+    if (_db.abt_cmd.jcdb != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-jcdb:";
+        cstring_Print(_db.abt_cmd.jcdb, *arg);
+    }
+
+    if (_db.abt_cmd.cache != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cache:";
+        u8_Print(_db.abt_cmd.cache, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
 }
 
 // --- acr_ed.FDb.sbpath.Alloc

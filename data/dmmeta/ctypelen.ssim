@@ -1,7 +1,7 @@
 dmmeta.ctypelen  ctype:abt.FArch  len:216  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:abt.FCfg  len:224  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:abt.FCompiler  len:544  alignment:8  padbytes:6
-dmmeta.ctypelen  ctype:abt.FDb  len:5440  alignment:8  padbytes:96
+dmmeta.ctypelen  ctype:abt.FDb  len:5472  alignment:8  padbytes:92
 dmmeta.ctypelen  ctype:abt.FFilestat  len:48  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:abt.FInclude  len:400  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:abt.FNs  len:288  alignment:8  padbytes:6
@@ -132,6 +132,7 @@ dmmeta.ctypelen  ctype:algo.Charset  len:64  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo.Comment  len:152  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.CppExpr  len:252  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.DateCache  len:16  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:algo.DayRange  len:16  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Decimal  len:16  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:algo.DirEntry  len:112  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:algo.DryrunQ  len:1  alignment:1  padbytes:0
@@ -308,6 +309,7 @@ dmmeta.ctypelen  ctype:algo.Smallstr4  len:6  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr40  len:42  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr5  len:7  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo.Smallstr50  len:52  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:algo.StringAry  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo.TermStyle  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo.TextJust  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo.TstampCache  len:56  alignment:8  padbytes:2
@@ -342,7 +344,7 @@ dmmeta.ctypelen  ctype:algo_lib.Bitset  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.Cmdline  len:5  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.CsvParse  len:48  alignment:8  padbytes:12
 dmmeta.ctypelen  ctype:algo_lib.ErrorX  len:16  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:algo_lib.FDb  len:10672  alignment:16  padbytes:97
+dmmeta.ctypelen  ctype:algo_lib.FDb  len:10704  alignment:16  padbytes:93
 dmmeta.ctypelen  ctype:algo_lib.FDispsigcheck  len:80  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.FFildes  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:algo_lib.FImdb  len:248  alignment:8  padbytes:4
@@ -392,7 +394,7 @@ dmmeta.ctypelen  ctype:amc.FCsize  len:112  alignment:4  padbytes:2
 dmmeta.ctypelen  ctype:amc.FCstr  len:103  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc.FCtype  len:840  alignment:8  padbytes:37
 dmmeta.ctypelen  ctype:amc.FCtypelen  len:120  alignment:4  padbytes:5
-dmmeta.ctypelen  ctype:amc.FDb  len:34816  alignment:16  padbytes:474
+dmmeta.ctypelen  ctype:amc.FDb  len:34848  alignment:16  padbytes:470
 dmmeta.ctypelen  ctype:amc.FDispatch  len:168  alignment:8  padbytes:17
 dmmeta.ctypelen  ctype:amc.FDispatchmsg  len:144  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:amc.FDispctx  len:168  alignment:8  padbytes:6
@@ -491,7 +493,7 @@ dmmeta.ctypelen  ctype:amc.Genpnew  len:104  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:amc.Pnewtype  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc_gc.FDb  len:240  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:amc_vis.FCtype  len:328  alignment:8  padbytes:5
-dmmeta.ctypelen  ctype:amc_vis.FDb  len:2912  alignment:8  padbytes:43
+dmmeta.ctypelen  ctype:amc_vis.FDb  len:2944  alignment:8  padbytes:39
 dmmeta.ctypelen  ctype:amc_vis.FField  len:712  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:amc_vis.FFinput  len:257  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:amc_vis.FNode  len:464  alignment:8  padbytes:26
@@ -579,11 +581,11 @@ dmmeta.ctypelen  ctype:atf_amc.DelType1  len:8  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.DispType1  len:52  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.DispType2  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.DispType3  len:28  alignment:4  padbytes:2
-dmmeta.ctypelen  ctype:atf_amc.FAmctest  len:216  alignment:8  padbytes:2
+dmmeta.ctypelen  ctype:atf_amc.FAmctest  len:224  alignment:8  padbytes:2
 dmmeta.ctypelen  ctype:atf_amc.FAvl  len:40  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_amc.FCascdel  len:184  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:atf_amc.FCstring  len:24  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:atf_amc.FDb  len:5472  alignment:16  padbytes:111
+dmmeta.ctypelen  ctype:atf_amc.FDb  len:5600  alignment:16  padbytes:95
 dmmeta.ctypelen  ctype:atf_amc.FListtype  len:184  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:atf_amc.FOptG  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.FPerfSortString  len:32  alignment:8  padbytes:0
@@ -689,10 +691,10 @@ dmmeta.ctypelen  ctype:atf_nrun.FDb  len:368  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:atf_nrun.FEntry  len:144  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:atf_unit.Cstr  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_unit.Dbl  len:8  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:atf_unit.FDb  len:2312  alignment:8  padbytes:13
+dmmeta.ctypelen  ctype:atf_unit.FDb  len:2336  alignment:8  padbytes:21
 dmmeta.ctypelen  ctype:atf_unit.FNumber  len:40  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_unit.FPerfSort  len:48  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:atf_unit.FUnittest  len:232  alignment:8  padbytes:10
+dmmeta.ctypelen  ctype:atf_unit.FUnittest  len:256  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:atf_unit.TestJson  len:128  alignment:8  padbytes:16
 dmmeta.ctypelen  ctype:atf_unit.TypeA  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf_unit.TypeB  len:8  alignment:4  padbytes:0
@@ -745,7 +747,7 @@ dmmeta.ctypelen  ctype:command.orgfile  len:144  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.samp_regx  len:64  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:command.sandbox  len:176  alignment:8  padbytes:15
 dmmeta.ctypelen  ctype:command.src_func  len:760  alignment:8  padbytes:1
-dmmeta.ctypelen  ctype:command.src_hdr  len:216  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:command.src_hdr  len:200  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:command.src_lim  len:208  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:command.ssim2csv  len:24  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:command.ssim2mysql  len:80  alignment:8  padbytes:6
@@ -1021,9 +1023,9 @@ dmmeta.ctypelen  ctype:lib_ctype.FSsimfile  len:176  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:lib_ctype.FSubstr  len:472  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_ctype.FUnstablefld  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_ctype.Match  len:72  alignment:8  padbytes:7
-dmmeta.ctypelen  ctype:lib_exec.Cmdline  len:12  alignment:4  padbytes:5
+dmmeta.ctypelen  ctype:lib_exec.Cmdline  len:12  alignment:4  padbytes:4
 dmmeta.ctypelen  ctype:lib_exec.FDb  len:616  alignment:8  padbytes:23
-dmmeta.ctypelen  ctype:lib_exec.FSyscmd  len:152  alignment:8  padbytes:16
+dmmeta.ctypelen  ctype:lib_exec.FSyscmd  len:168  alignment:8  padbytes:16
 dmmeta.ctypelen  ctype:lib_exec.FSyscmddep  len:40  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:lib_fm.FAlarm  len:536  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:lib_fm.FAlmCode  len:144  alignment:8  padbytes:7
@@ -1032,7 +1034,7 @@ dmmeta.ctypelen  ctype:lib_fm.FDb  len:880  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:lib_git.FDb  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_iconv.FDb  len:1  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_iconv.Icd  len:8  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:lib_json.FDb  len:304  alignment:8  padbytes:4
+dmmeta.ctypelen  ctype:lib_json.FDb  len:336  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:lib_json.FNode  len:72  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:lib_json.FParser  len:96  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:lib_json.FldKey  len:24  alignment:8  padbytes:0
@@ -1042,7 +1044,7 @@ dmmeta.ctypelen  ctype:lib_sql.FAttr  len:32  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_sql.FDb  len:288  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:mdbg.FBuilddir  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:mdbg.FCfg  len:240  alignment:8  padbytes:5
-dmmeta.ctypelen  ctype:mdbg.FDb  len:1000  alignment:8  padbytes:14
+dmmeta.ctypelen  ctype:mdbg.FDb  len:1032  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:mysql2ssim.FDb  len:136  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:mysql2ssim.FTobltin  len:24  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:orgfile.FDb  len:720  alignment:8  padbytes:7
@@ -1074,7 +1076,7 @@ dmmeta.ctypelen  ctype:src_func.FGstatic  len:254  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:src_func.FTarget  len:48  alignment:8  padbytes:9
 dmmeta.ctypelen  ctype:src_func.FTargsrc  len:312  alignment:8  padbytes:13
 dmmeta.ctypelen  ctype:src_hdr.FCopyline  len:32  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:src_hdr.FCopyright  len:216  alignment:8  padbytes:3
+dmmeta.ctypelen  ctype:src_hdr.FCopyright  len:248  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:src_hdr.FDb  len:2176  alignment:8  padbytes:35
 dmmeta.ctypelen  ctype:src_hdr.FLicense  len:232  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:src_hdr.FNs  len:304  alignment:8  padbytes:6

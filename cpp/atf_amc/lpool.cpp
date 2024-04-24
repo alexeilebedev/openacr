@@ -1,6 +1,6 @@
-// Copyright (C) 2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,16 @@
 // Source: cpp/atf_amc/lpool.cpp
 //
 
+#include "include/atf_amc.h"
 #ifndef WIN32
 #include <sys/resource.h>
 #endif
-#include "include/atf_amc.h"
 
 // -----------------------------------------------------------------------------
 
+// if MARK is TRUE, fill region MEM with random values
+// If MARK is false, check that the contents of the region MEM
+// matches random values. The random seed is picked based on the address MEM.
 static void MarkOrCheckMem(void *mem, int n, bool mark) {
     srandom((int)(i64)mem);
     int i=0;
@@ -68,42 +71,52 @@ static void LimitMem(i64 size) {
 // -----------------------------------------------------------------------------
 
 void atf_amc::amctest_Lpool() {
-    // step 1: check that lpool is empty
+    int minlevels=4;
+    int nlevels=36;
+    Phase("check that lpool is empty");
     for (int i=0; i<ssizeof(atf_amc::_db.optalloc_free)/ssizeof(void*); i++) {
         vrfy_(atf_amc::_db.optalloc_free[i]==NULL);
     }
-    // step 2: alloc 2MB
+    Phase("alloc 2MB");
     {
-        if (void* elem = atf_amc::optalloc_AllocMem(1<<21)) {
-            vrfy_(atf_amc::_db.optalloc_n==1);
-            atf_amc::optalloc_FreeMem(elem,1<<21);
-        }
+        void* elem = atf_amc::optalloc_AllocMem(1<<21);
+        vrfy_(elem!=NULL);
+        vrfy_(atf_amc::_db.optalloc_n==1);
+        atf_amc::optalloc_FreeMem(elem,1<<21);
         vrfy_(atf_amc::_db.optalloc_n==0);
+        // and only 2MB freelist should be nonempty
         for (int i=0; i<ssizeof(atf_amc::_db.optalloc_free)/ssizeof(void*); i++) {
-            vrfy_((atf_amc::_db.optalloc_free[i]!=NULL) == (i == 21));
+            vrfy_((atf_amc::_db.optalloc_free[i]!=NULL) == (i == 21-minlevels));
         }
     }
-    // step 3: alloc 1MB -- it should come out of the 2MB block
+    Phase("alloc 1MB -- it should come out of the 2MB block");
     {
-        if (void* elem = atf_amc::optalloc_AllocMem(1<<20)) {
-            vrfy_(atf_amc::_db.optalloc_n==1);
-            atf_amc::optalloc_FreeMem(elem,1<<20);
-        }
+        void* elem = atf_amc::optalloc_AllocMem(1<<20);
+        vrfy_(elem!=NULL);
+        vrfy_(atf_amc::_db.optalloc_n==1);
+        atf_amc::optalloc_FreeMem(elem,1<<20);
         vrfy_(atf_amc::_db.optalloc_n==0);
         // and only 1MB freelist should be nonempty
         for (int i=0; i<ssizeof(atf_amc::_db.optalloc_free)/ssizeof(void*); i++) {
-            vrfy_((atf_amc::_db.optalloc_free[i]!=NULL) == (i == 20));
+            vrfy_((atf_amc::_db.optalloc_free[i]!=NULL) == (i == 20-minlevels));
         }
     }
-    // step 4: realloc from 0 -- it's an alloc
-    // realloc to 0 is NOT a free (since NULL indicates failure of realloc)
-    // it's a realloc to 16 bytes
-    //
+    Phase("check small size allocations");
+    {
+        for (int i=0; i<minlevels; i++) {
+            void *elem=atf_amc::optalloc_AllocMem(1<<i);
+            vrfy_(elem!=NULL);
+            atf_amc::optalloc_FreeMem(elem,1<<i);
+            vrfy_(atf_amc::_db.optalloc_free[0]==elem);
+        }
+    }
+    Phase("realloc from 0 -- it's an alloc");
     {
         void* elem = atf_amc::optalloc_ReallocMem(NULL, 0, 1<<20);
         vrfy_(elem != NULL);
         vrfy_(atf_amc::_db.optalloc_n==1);
 
+        Phase("    realloc to 0 size -- it's not a free");
         elem = atf_amc::optalloc_ReallocMem(elem, 1<<20, 0);
         vrfy_(elem != NULL);
         vrfy_(atf_amc::_db.optalloc_n==1);
@@ -111,24 +124,60 @@ void atf_amc::amctest_Lpool() {
         // free from 0 bytes -- same as free from 16
         atf_amc::optalloc_FreeMem(elem, 0);
         vrfy_(atf_amc::_db.optalloc_n==0);
-        vrfy_(atf_amc::_db.optalloc_free[4] == elem);// check that it went into the right bin
+        vrfy_(atf_amc::_db.optalloc_free[0] == elem);// check that it went into the right bin
     }
-    // step 5: use setrlimit and alloc a block that's too large
+    Phase("alloc a region that's definitely too large");
+    {
+        void *elem1 = atf_amc::optalloc_AllocMem(1ULL << 41);
+        vrfy_(elem1 == NULL);
+    }
+    Phase("realloc a region to a size that's too large -- should fail");
+    {
+        void *elem1 = atf_amc::optalloc_AllocMem(1ULL << 10);
+        vrfy_(elem1 != NULL);
+        MarkOrCheckMem(elem1, 1<<10, true);
+        void *elem2 = atf_amc::optalloc_ReallocMem(elem1, 1ULL << 10, 1ULL << (minlevels+nlevels+1));
+        vrfy_(elem2 == NULL);
+        MarkOrCheckMem(elem1, 1<<10, false);// check old contents
+        atf_amc::optalloc_FreeMem(elem1, 1<<10);
+        vrfy_(atf_amc::_db.optalloc_n==0);
+    }
+    Phase("alloc an 8GB region -- should succeed");
+    {
+        algo_lib::_db.sbrk_zeromem=false;
+        void *elem1 = atf_amc::optalloc_AllocMem(1ULL << 33);
+        vrfy_(elem1 != NULL);
+        atf_amc::optalloc_FreeMem(elem1, 1ULL << 33);
+        // print distribution of allocated buckets:
+        for (int i=0; i<ssizeof(atf_amc::_db.optalloc_free)/ssizeof(void*); i++) {
+            tempstr s;
+            s<<"level "<<i<<"; size "<<(u64(1)<<(i+minlevels))<<": ";
+            for (optalloc_Lpblock *blk = (optalloc_Lpblock *)atf_amc::_db.optalloc_free[i]; blk; blk=blk->next) {
+                s<<".";
+            }
+            prlog(s);
+        }
+    }
+}
+
+void atf_amc::amctest_LpoolLockMem() {
+    Phase("use setrlimit and alloc a block that's too large");
     if (algo::LockAllMemory()) {
         // don't worry, each test executes inside a fork() anyway
         // so after this function exits, these changes will be discarded
         algo_lib::_db.sbrk_zeromem = true;
-        LimitMem(10*1024*1024);
+        LimitMem(20*1024*1024);
 
-        void *elem1 = atf_amc::optalloc_AllocMem(1<<15); // 1MB will fit
+        void *elem1 = atf_amc::optalloc_AllocMem(1<<20); // 1MB will fit
         vrfy_(elem1 != NULL);
         vrfy_(atf_amc::_db.optalloc_n==1);
-        MarkOrCheckMem(elem1, 1<<15, true);
-        void *elem2 = atf_amc::optalloc_ReallocMem(elem1, 1<<15, 1<<30);// 1GB won't fit
+        MarkOrCheckMem(elem1, 1<<20, true);
+
+        void *elem2 = atf_amc::optalloc_ReallocMem(elem1, 1<<20, 1<<30);// 1GB won't fit
         vrfy_(elem2 == NULL);
         vrfy_(atf_amc::_db.optalloc_n==1);
 
-        MarkOrCheckMem(elem1, 1<<15, false);
+        MarkOrCheckMem(elem1, 1<<20, false);
         atf_amc::optalloc_FreeMem(elem1,1<<20);// free the original block
         vrfy_(atf_amc::_db.optalloc_n==0);
     } else {

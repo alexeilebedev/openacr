@@ -160,7 +160,7 @@ bool                 value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::str
 // Read fields of bash2html::FieldId from an ascii string.
 // The format of the string is the format of the bash2html::FieldId's only field
 // func:bash2html.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:bash2html.FieldId..Init
 void                 FieldId_Init(bash2html::FieldId& parent);

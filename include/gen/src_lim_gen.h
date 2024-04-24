@@ -728,7 +728,7 @@ bool                 value_ReadStrptrMaybe(src_lim::FieldId& parent, algo::strpt
 // Read fields of src_lim::FieldId from an ascii string.
 // The format of the string is the format of the src_lim::FieldId's only field
 // func:src_lim.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.FieldId..Init
 void                 FieldId_Init(src_lim::FieldId& parent);
@@ -776,7 +776,7 @@ bool                 value_ReadStrptrMaybe(src_lim::TableId& parent, algo::strpt
 // Read fields of src_lim::TableId from an ascii string.
 // The format of the string is the format of the src_lim::TableId's only field
 // func:src_lim.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.TableId..Init
 void                 TableId_Init(src_lim::TableId& parent);

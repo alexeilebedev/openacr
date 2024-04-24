@@ -279,8 +279,7 @@ void                 trace_Print(abt::trace& row, algo::cstring& str) __attribut
 // --- abt.FDb
 // create: abt.FDb._db (Global)
 struct FDb { // abt.FDb: In-memory database for abt
-    lpool_Lpblock*      lpool_free[31];               // Lpool levels
-    u32                 lpool_lock;                   // Lpool lock
+    lpool_Lpblock*      lpool_free[36];               // Lpool levels
     command::abt        cmdline;                      //
     abt::FSrcfile*      srcfile_lary[32];             // level array
     i32                 srcfile_n;                    // number of elements in array
@@ -380,20 +379,33 @@ struct FDb { // abt.FDb: In-memory database for abt
 
 // Free block of memory previously returned by Lpool.
 // func:abt.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:abt.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:abt.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:abt.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:abt.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:abt.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1314,6 +1326,11 @@ void                 ind_include_Remove(abt::FInclude& row) __attribute__((nothr
 // func:abt.FDb.ind_include.Reserve
 void                 ind_include_Reserve(int n) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:abt.FDb.sysincl.Addary
+algo::aryptr<algo::cstring> sysincl_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:abt.FDb.sysincl.Alloc
@@ -1369,6 +1386,11 @@ u64                  sysincl_rowid_Get(algo::cstring &elem) __attribute__((nothr
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:abt.FDb.sysincl.AllocNVal
 algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:abt.FDb.sysincl.ReadStrptrMaybe
+bool                 sysincl_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt.FDb.zs_origsel_target.EmptyQ
@@ -2885,7 +2907,7 @@ bool                 value_ReadStrptrMaybe(abt::FieldId& parent, algo::strptr rh
 // Read fields of abt::FieldId from an ascii string.
 // The format of the string is the format of the abt::FieldId's only field
 // func:abt.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt.FieldId..Init
 void                 FieldId_Init(abt::FieldId& parent);
@@ -2933,7 +2955,7 @@ bool                 value_ReadStrptrMaybe(abt::TableId& parent, algo::strptr rh
 // Read fields of abt::TableId from an ascii string.
 // The format of the string is the format of the abt::TableId's only field
 // func:abt.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt.TableId..Init
 void                 TableId_Init(abt::TableId& parent);

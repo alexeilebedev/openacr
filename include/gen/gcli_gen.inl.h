@@ -3771,7 +3771,7 @@ inline algo::cstring* gcli::response_header_Find(gcli::FHttp& parent, u64 t) {
 
 // --- gcli.FHttp.response_header.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> gcli::response_header_Getary(gcli::FHttp& parent) {
+inline algo::aryptr<algo::cstring> gcli::response_header_Getary(const gcli::FHttp& parent) {
     return algo::aryptr<algo::cstring>(parent.response_header_elems, parent.response_header_n);
 }
 

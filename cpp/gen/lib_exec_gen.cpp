@@ -87,6 +87,10 @@ bool lib_exec::Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr fi
             retval = bool_ReadStrptrMaybe(parent.complooo, strval);
             break;
         }
+        case lib_exec_FieldId_merge_output: {
+            retval = bool_ReadStrptrMaybe(parent.merge_output, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -108,12 +112,29 @@ bool lib_exec::Cmdline_ReadTupleMaybe(lib_exec::Cmdline &parent, algo::Tuple &tu
     return retval;
 }
 
+// --- lib_exec.Cmdline..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline& row) {
+    tempstr ret;
+    ret << "bin/Cmdline ";
+    Cmdline_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
 // --- lib_exec.Cmdline..PrintArgv
-// print command-line args of lib_exec::Cmdline to string  -- cprint:lib_exec.Cmdline.Argv
-void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring &str) {
+// print string representation of ROW to string STR
+// cfmt:lib_exec.Cmdline.Argv  printfmt:Auto
+void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
-    (void)row;
     (void)str;
     if (!(row.dry_run == false)) {
         ch_RemoveAll(temp);
@@ -139,23 +160,12 @@ void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring &str) {
         str << " -complooo:";
         strptr_PrintBash(temp,str);
     }
-}
-
-// --- lib_exec.Cmdline..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline& row) {
-    tempstr ret;
-    ret << "bin/Cmdline ";
-    Cmdline_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
+    if (!(row.merge_output == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.merge_output, temp);
+        str << " -merge_output:";
+        strptr_PrintBash(temp,str);
     }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
 }
 
 // --- lib_exec.Cmdline..NArgs
@@ -179,6 +189,11 @@ i32 lib_exec::Cmdline_NArgs(lib_exec::FieldId field, algo::strptr& out_dflt, boo
             *out_anon = false;
         } break;
         case lib_exec_FieldId_complooo: { // bool: no argument required but value may be specified as q:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case lib_exec_FieldId_merge_output: { // bool: no argument required but value may be specified as complooo:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -1295,6 +1310,9 @@ void lib_exec::FSyscmd_Print(lib_exec::FSyscmd& row, algo::cstring& str) {
 
     i32_Print(row.signal, temp);
     PrintAttrSpaceReset(str,"signal", temp);
+
+    algo::StringAry_Print(row.args, temp);
+    PrintAttrSpaceReset(str,"args", temp);
 }
 
 // --- lib_exec.FSyscmddep.msghdr.CopyOut
@@ -1354,6 +1372,7 @@ const char* lib_exec::value_ToCstr(const lib_exec::FieldId& parent) {
         case lib_exec_FieldId_q            : ret = "q";  break;
         case lib_exec_FieldId_maxjobs      : ret = "maxjobs";  break;
         case lib_exec_FieldId_complooo     : ret = "complooo";  break;
+        case lib_exec_FieldId_merge_output : ret = "merge_output";  break;
         case lib_exec_FieldId_value        : ret = "value";  break;
     }
     return ret;
@@ -1409,6 +1428,15 @@ bool lib_exec::value_SetStrptrMaybe(lib_exec::FieldId& parent, algo::strptr rhs)
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','o','m','p','l','o','o','o'): {
                     value_SetEnum(parent,lib_exec_FieldId_complooo); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('m','e','r','g','e','_','o','u'): {
+                    if (memcmp(rhs.elems+8,"tput",4)==0) { value_SetEnum(parent,lib_exec_FieldId_merge_output); ret = true; break; }
+                    break;
                 }
             }
             break;

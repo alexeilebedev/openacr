@@ -1,6 +1,6 @@
-// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2020-2021 Astra
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -26,43 +26,35 @@
 
 // -----------------------------------------------------------------------------
 
-void amc::tfunc_Ctype_ReadTupleMaybe() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
-    ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) if (cfmt.read && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Tuple) {
-        algo_lib::Replscope R;
-        int n_anon = c_anonfld_N(ctype);
-        Set(R, "$ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        amc::FFunc& readtuple = amc::CreateCurFunc();
-        readtuple.glob = true;
-        readtuple.extrn = cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern;
-        Ins(&R, readtuple.comment, "Read fields of $Cpptype from attributes of ascii tuple TUPLE");
-        Ins(&R, readtuple.ret    , "bool",false);
-        Ins(&R, readtuple.proto  , "$Name_ReadTupleMaybe($Cpptype &parent, algo::Tuple &tuple)",false);
-        Ins(&R, readtuple.body          , "bool retval = true;");
+static void GenRead_Tuple(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &cfmt) {
+    int n_anon = c_anonfld_N(ctype);
+    amc::FFunc& func = amc::CreateCurFunc(false, "ReadTupleMaybe");
+    Ins(&R, func.proto, "$Name_ReadTupleMaybe()",false);
+    AddProtoArg(func, Subst(R,"$Cpptype &"), "parent");
+    AddProtoArg(func, "algo::Tuple &", "tuple");
+    AddRetval(func, "bool", "retval", "true");
+    func.glob = true;
+    func.extrn = cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern;
+    Ins(&R, func.comment, "Read fields of $Cpptype from attributes of ascii tuple TUPLE");
+    if (n_anon > 0) {
+        Ins(&R, func.body      , "int anon_idx = 0;");
+    }
+    if (!func.extrn) {
+        Ins(&R, func.body      , "ind_beg(algo::Tuple_attrs_curs,attr,tuple) {");
         if (n_anon > 0) {
-            Ins(&R, readtuple.body      , "int anon_idx = 0;");
+            Ins(&R, func.body  , "    if (ch_N(attr.name) == 0) {");
+            Ins(&R, func.body  , "        attr.name = $Name_GetAnon(parent, anon_idx++);");
+            Ins(&R, func.body  , "    }");
         }
-        if (!readtuple.extrn) {
-            Ins(&R, readtuple.body      , "ind_beg(algo::Tuple_attrs_curs,attr,tuple) {");
-            if (n_anon > 0) {
-                Ins(&R, readtuple.body  , "    if (ch_N(attr.name) == 0) {");
-                Ins(&R, readtuple.body  , "        attr.name = $Name_GetAnon(parent, anon_idx++);");
-                Ins(&R, readtuple.body  , "    }");
-            }
-            Ins(&R, readtuple.body      , "    retval = $Name_ReadFieldMaybe(parent, attr.name, attr.value);");
-            Ins(&R, readtuple.body      , "    if (!retval) {");
-            Ins(&R, readtuple.body      , "        break;");
-            Ins(&R, readtuple.body      , "    }");
-            Ins(&R, readtuple.body      , "}ind_end;");
-            if (n_anon > 0) {
-                MaybeUnused(readtuple, "anon_idx");
-            }
-            MaybeUnused(readtuple, "parent");
-            Ins(&R, readtuple.body      , "return retval;");
+        Ins(&R, func.body      , "    retval = $Name_ReadFieldMaybe(parent, attr.name, attr.value);");
+        Ins(&R, func.body      , "    if (!retval) {");
+        Ins(&R, func.body      , "        break;");
+        Ins(&R, func.body      , "    }");
+        Ins(&R, func.body      , "}ind_end;");
+        if (n_anon > 0) {
+            MaybeUnused(func, "anon_idx");
         }
-    }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -213,57 +205,24 @@ static void Ctype_ReadStrptrMaybe_Bitset(algo_lib::Replscope &R, amc::FCtype &ct
 
 // -----------------------------------------------------------------------------
 
-void amc::tfunc_Ctype_ReadStrptrMaybe() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
-    ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) {
-        if (cfmt.read && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_String
-            && !(cfmt.printfmt == dmmeta_Printfmt_printfmt_CompactSep)) {
-            algo_lib::Replscope R;
-            Set(R, "$ctype", ctype.ctype);
-            Set(R, "$Name", name_Get(ctype));
-            Set(R, "$Cpptype", ctype.cpp_type);
-            vrfy(!(cfmt.printfmt == dmmeta_Printfmt_printfmt_Auto)
-                 , tempstr()<<"amc.read_string"
-                 <<Keyval("ctype",ctype.ctype)
-                 <<Keyval("comment","auto not supported"));
-            amc::FFunc& readstrptr = amc::CreateCurFunc();
-            Ins(&R, readstrptr.proto, "$Name_ReadStrptrMaybe($Cpptype &parent, algo::strptr in_str)",false);
-            Ins(&R, readstrptr.ret  , "bool", false);
-            Ins(&R, readstrptr.body, "bool retval = true;");
-            if (VarlenQ(ctype)) {
-                Ins(&R, readstrptr.comment, "Any varlen fields are returned in algo_lib::_db.varlenbuf if set");
-            }
-            readstrptr.extrn = cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern;
-            Ins(&R, readstrptr.comment, "Read fields of $Cpptype from an ascii string.");
-            if (readstrptr.extrn) {
-                Ins(&R, readstrptr.comment, "The function is implemented externally.");
-            }
-            if (!readstrptr.extrn) {
-                if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Sep) {
-                    Ctype_ReadStrptrMaybe_Sep(R, ctype, readstrptr, cfmt.sep);
-                } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw) {
-                    Ctype_ReadStrptrMaybe_Raw(R, ctype, readstrptr);
-                } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple) {
-                    Ctype_ReadStrptrMaybe_Ssim(R, ctype, readstrptr);
-                } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
-                    Ctype_ReadStrptrMaybe_Bitset(R, ctype, cfmt, readstrptr);
-                }
-            }
-            Ins(&R, readstrptr.body, "return retval;");
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
+// Dispatach on field name, and read appropriate field
 void amc::tfunc_Ctype_ReadFieldMaybe() {
     amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
     bool doit = false;
     ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) if (cfmt.read
                                                     && !(   cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw
-                                                            || cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern
-                                                            || cfmt.printfmt == dmmeta_Printfmt_printfmt_CompactSep)) {
+                                                            || cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern)) {
         doit = true;
+    }ind_end;
+    bool has_varlen=false;
+    ind_beg(amc::ctype_c_field_curs,field,ctype) {
+        has_varlen
+            = field.reftype == dmmeta_Reftype_reftype_Varlen
+            || field.reftype == dmmeta_Reftype_reftype_Inlary
+            || field.reftype == dmmeta_Reftype_reftype_Tary;
+        if (has_varlen) {
+            break;
+        }
     }ind_end;
 
     if (doit) {
@@ -275,11 +234,11 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
         fcn.glob = true;
         fcn.extrn = false;
         AddRetval(fcn, "bool", "retval", "true");
-        AddProtoArg(fcn, Refto(ctype.cpp_type), "parent");
+        AddProtoArg(fcn, amc::Refto(ctype.cpp_type), "parent");
         AddProtoArg(fcn, "algo::strptr", "field");
         AddProtoArg(fcn, "algo::strptr", "strval");
         Ins(&R, fcn.body       , "$ns::FieldId field_id;");
-        Set(R, "$strippedfield", ctype.c_varlenfld ? "algo::Pathcomp(field, \".LL\")" : "field");
+        Set(R, "$strippedfield", has_varlen ? "algo::Pathcomp(field, \".LL\")" : "field");
         Ins(&R, fcn.body       , "(void)value_SetStrptrMaybe(field_id,$strippedfield);");
         Ins(&R, fcn.body       , "switch(field_id) {");
         ind_beg(amc::ctype_c_field_curs, field,ctype) {
@@ -300,5 +259,43 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
         Ins(&R, fcn.body, "if (!retval) {");
         Ins(&R, fcn.body, "    algo_lib::AppendErrtext(\"attr\",field);");
         Ins(&R, fcn.body, "}");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt) {
+    algo_lib::Replscope R;
+    Set(R, "$ctype", ctype.ctype);
+    Set(R, "$Name", name_Get(ctype));
+    Set(R, "$Cpptype", ctype.cpp_type);
+    if (strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_String) {
+        amc::FFunc& func = amc::CreateCurFunc(false, "ReadStrptrMaybe");
+        Ins(&R, func.proto, "$Name_ReadStrptrMaybe()", false);
+        AddProtoArg(func,Subst(R,"$Cpptype &"),"parent");
+        AddProtoArg(func,"algo::strptr", "in_str");
+        AddRetval(func, "bool", "retval", "true");
+        if (VarlenQ(ctype)) {
+            Ins(&R, func.comment, "Any varlen fields are returned in algo_lib::_db.varlenbuf if set");
+        }
+        Ins(&R, func.comment, "Read fields of $Cpptype from an ascii string.");
+        if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern) {
+            func.extrn = true;
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Sep) {
+            Ctype_ReadStrptrMaybe_Sep(R, ctype, func, cfmt.sep);
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw) {
+            Ctype_ReadStrptrMaybe_Raw(R, ctype, func);
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple) {
+            Ctype_ReadStrptrMaybe_Ssim(R, ctype, func);
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
+            Ctype_ReadStrptrMaybe_Bitset(R, ctype, cfmt, func);
+        } else {
+            vrfy("amc.badcfmt",tempstr()
+                 <<Keyval("cfmt",cfmt.cfmt)
+                 <<Keyval("printfmt",cfmt.printfmt)
+                 <<Keyval("comment","unsupported strfmt for reading"));
+        }
+    } else if (strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Tuple) {
+        GenRead_Tuple(R,ctype,cfmt);
     }
 }

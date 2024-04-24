@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -104,21 +104,4 @@ void amc::tfunc_Ptr_Cascdel() {
         Ins(&R, cascdel.body, "}");
     }
 
-}
-
-void amc::tfunc_Ptr_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-
-    if (!FldfuncQ(field)) {
-        amc::FFunc& print = amc::CreateCurFunc();
-        Ins(&R, print.comment, "Default format");
-        Ins(&R, print.ret  , "void", false);
-        // this is a terrible hack. the print function is inlined into the ctype
-        // print function. I know, having looked at the code, that ctype
-        // print uses words 'row' and 'temp'.
-        Set(R, "$xgetfld", FieldvalExpr(field.p_ctype, field, GlobalQ(*field.p_ctype) ? "_db" : "row"));
-        Ins(&R, print.proto, "$name_Print($Cpptype &row, cstring &temp)", false);
-        Ins(&R, print.body, "u64_PrintHex(u64((const $Cpptype*)$xgetfld), temp, 8, true);");
-    }
 }

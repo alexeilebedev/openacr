@@ -1130,20 +1130,6 @@ void algo::char_PrintCppSingleQuote(int c, algo::cstring &out)
 ```
 
 ```c++
-// Print contents of memptr as a double-quoted C++ string
-// Bytes with codes 32-126, escept " (ASCII 34) and \ (ascii 92) are printed as-is.
-// All other characters are printed as \xHH where H is a hex digit.
-// NOTE: Compare with strptr_PrintCppQuoted, which \-escapes
-// more characters and uses octal sequences for non-printable characters.
-void algo::memptr_Print(memptr ary, algo::cstring &out) 
-```
-
-```c++
-// print 64 bytes per line
-void algo::memptr_PrintHex(memptr bytes, algo::cstring &str) 
-```
-
-```c++
 // prints a character suitable for appearance inside an XML string.
 // character is either printed as-is, or is escaped so that its meaning does not change.
 void algo::char_PrintXml(char c, algo::cstring &out, bool quoted) 
@@ -2575,6 +2561,42 @@ void algo::reset(algo::cstring &lhs)
 ```
 
 ```c++
+void algo::DayRange_curs_Reset(algo::DayRange_curs &curs, const algo::DayRange& range) 
+```
+
+```c++
+void algo::DayRange_curs_Next(algo::DayRange_curs &curs) 
+```
+
+```c++
+bool algo::DayRange_curs_ValidQ(algo::DayRange_curs &curs) 
+```
+
+```c++
+algo::UnTime& algo::DayRange_curs_Access(algo::DayRange_curs &curs) 
+```
+
+```c++
+algo::u64_Ranges_curs::u64_Ranges_curs() : cur(0), end(0), valid(false) 
+```
+
+```c++
+void algo::u64_Ranges_curs_Reset(algo::u64_Ranges_curs &curs, strptr str) 
+```
+
+```c++
+void algo::u64_Ranges_curs_Next(algo::u64_Ranges_curs &curs) 
+```
+
+```c++
+bool algo::u64_Ranges_curs_ValidQ(algo::u64_Ranges_curs &curs) 
+```
+
+```c++
+u64 &algo::u64_Ranges_curs_Access(algo::u64_Ranges_curs &curs) 
+```
+
+```c++
 void algo::Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep) 
 ```
 
@@ -2616,6 +2638,10 @@ TimeStruct algo::GetLocalTimeStruct(UnTime U)
 
 ```c++
 const algo::UnTime algo::LocalDate(UnTime in) 
+```
+
+```c++
+algo::UnDiff algo::StripDate(UnTime t) 
 ```
 
 ```c++
@@ -2665,12 +2691,15 @@ const algo::UnTime algo::DateCache_LocalDate(algo::DateCache &dc, UnTime in)
 ```
 
 ```c++
-// Todo: test on windows
-algo::UnTime algo::CurrUnTime() 
+algo::UnTime algo::ToUnTime(WTime s) 
 ```
 
 ```c++
-algo::UnTime algo::ToUnTime(WTime s) 
+algo::UnTime algo::ParseUnTime(StringIter &s, const algo::strptr spec) 
+```
+
+```c++
+algo::UnTime algo::ParseUnTime(const algo::strptr& s, const algo::strptr spec) 
 ```
 
 ```c++
@@ -3373,11 +3402,19 @@ inline algo::UnixTime operator -  (const algo::UnixTime &a, algo::UnixDiff d)
 ```
 
 ```c++
-inline algo::UnixDiff operator -  (const algo::UnixTime &a, algo::UnixTime b) 
+inline algo::UnixDiff operator - (const algo::UnixTime &a, algo::UnixTime b) 
 ```
 
 ```c++
-inline algo::UnTime operator +    (algo::UnTime a, algo::UnDiff d) 
+inline algo::UnTime operator + (algo::UnTime a, algo::UnDiff d) 
+```
+
+```c++
+inline algo::UnTime operator += (algo::UnTime &a, const algo::UnDiff d) 
+```
+
+```c++
+inline algo::UnDiff operator += (algo::UnDiff &a, const algo::UnDiff d) 
 ```
 
 ```c++
@@ -3386,6 +3423,18 @@ inline algo::UnTime operator -    (algo::UnTime a, algo::UnDiff d)
 
 ```c++
 inline algo::UnDiff operator -    (algo::UnTime a, algo::UnTime b) 
+```
+
+```c++
+inline algo::UnDiff operator -    (const algo::UnDiff a) 
+```
+
+```c++
+inline algo::UnixDiff operator *  (const algo::UnixDiff &a, i64 d) 
+```
+
+```c++
+inline algo::UnixDiff operator /  (const algo::UnixDiff &a, i64 d) 
 ```
 
 ```c++
@@ -3402,6 +3451,14 @@ inline algo::UnDiff operator +    (const algo::UnDiff &a, algo::UnDiff d)
 
 ```c++
 inline algo::UnDiff operator -    (const algo::UnDiff &a, algo::UnDiff d) 
+```
+
+```c++
+inline algo::UnDiff operator *  (const algo::UnDiff &a, i64 d) 
+```
+
+```c++
+inline algo::UnDiff operator /  (const algo::UnDiff &a, i64 d) 
 ```
 
 ```c++
@@ -3747,6 +3804,14 @@ inline algo::UnDiff algo::UnDiffSecs(double d)
 ```
 
 ```c++
+inline algo::UnDiff algo::UnDiffMsecs(const i64 i) 
+```
+
+```c++
+inline algo::UnDiff algo::UnDiffUsecs(const double d) 
+```
+
+```c++
 inline algo::UnTime algo::UnTimeSecs(double d) 
 ```
 
@@ -3892,11 +3957,11 @@ inline int algo::ch_N(const strptr &s)
 ```
 
 ```c++
-inline int algo::ch_First(const strptr &s, int dflt) 
+inline int algo::ch_First(const strptr &s, int dflt = 0) 
 ```
 
 ```c++
-inline int algo::ch_Last(const strptr &s, int dflt) 
+inline int algo::ch_Last(const strptr &s, int dflt = 0) 
 ```
 
 ```c++
@@ -4030,15 +4095,16 @@ inline algo::cstring &algo::operator<<(algo::cstring &out, const ListSep &t)
 ```
 
 ```c++
-inline algo::cstring &algo::operator<<(algo::cstring &out, const memptr &t) 
-```
-
-```c++
 inline algo::cstring &algo::operator<<(algo::cstring &out, const strptr &t) 
 ```
 
 ```c++
 inline algo::cstring &algo::operator<<(algo::cstring &out, void (*t)(algo::cstring &)) 
+```
+
+```c++
+// SameSign returns false if one of the arguments is zero.
+template<typename T> inline bool algo::SameSignQ(T a, T b) 
 ```
 
 ```c++
@@ -4054,6 +4120,13 @@ inline bool algo::strptr_Lt(algo::strptr a, algo::strptr b)
 ```c++
 // reverse bit order in a byte
 inline u8 algo::u8_ReverseBits(u8 b) 
+```
+
+```c++
+// Return unix-epoch time with nanosecond resolution
+// On Linux, this function calls clock_gettime() which takes about
+// 30ns and uses rdtsc() to increase underlying clock resolution
+inline algo::UnTime algo::CurrUnTime() 
 ```
 
 ### Sources

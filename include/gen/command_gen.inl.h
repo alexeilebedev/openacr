@@ -140,7 +140,7 @@ inline algo::cstring* command::where_Find(command::acr& parent, u64 t) {
 
 // --- command.acr.where.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::where_Getary(command::acr& parent) {
+inline algo::aryptr<algo::cstring> command::where_Getary(const command::acr& parent) {
     return algo::aryptr<algo::cstring>(parent.where_elems, parent.where_n);
 }
 
@@ -208,7 +208,7 @@ inline algo::cstring* command::field_Find(command::acr& parent, u64 t) {
 
 // --- command.acr.field.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::field_Getary(command::acr& parent) {
+inline algo::aryptr<algo::cstring> command::field_Getary(const command::acr& parent) {
     return algo::aryptr<algo::cstring>(parent.field_elems, parent.field_n);
 }
 
@@ -367,7 +367,7 @@ inline algo::cstring* command::arg_Find(command::acr_dm& parent, u64 t) {
 
 // --- command.acr_dm.arg.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::arg_Getary(command::acr_dm& parent) {
+inline algo::aryptr<algo::cstring> command::arg_Getary(const command::acr_dm& parent) {
     return algo::aryptr<algo::cstring>(parent.arg_elems, parent.arg_n);
 }
 
@@ -751,7 +751,7 @@ inline algo::cstring* command::mstr_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mstr.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::mstr_Getary(command::atf_cmdline& parent) {
+inline algo::aryptr<algo::cstring> command::mstr_Getary(const command::atf_cmdline& parent) {
     return algo::aryptr<algo::cstring>(parent.mstr_elems, parent.mstr_n);
 }
 
@@ -819,7 +819,7 @@ inline i32* command::mnum_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mnum.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> command::mnum_Getary(command::atf_cmdline& parent) {
+inline algo::aryptr<i32> command::mnum_Getary(const command::atf_cmdline& parent) {
     return algo::aryptr<i32>(parent.mnum_elems, parent.mnum_n);
 }
 
@@ -892,7 +892,7 @@ inline double* command::mdbl_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mdbl.Getary
 // Return array pointer by value
-inline algo::aryptr<double> command::mdbl_Getary(command::atf_cmdline& parent) {
+inline algo::aryptr<double> command::mdbl_Getary(const command::atf_cmdline& parent) {
     return algo::aryptr<double>(parent.mdbl_elems, parent.mdbl_n);
 }
 
@@ -965,7 +965,7 @@ inline i32* command::amnum_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.amnum.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> command::amnum_Getary(command::atf_cmdline& parent) {
+inline algo::aryptr<i32> command::amnum_Getary(const command::atf_cmdline& parent) {
     return algo::aryptr<i32>(parent.amnum_elems, parent.amnum_n);
 }
 
@@ -1364,7 +1364,7 @@ inline algo::cstring* command::cmd_Find(command::gcache& parent, u64 t) {
 
 // --- command.gcache.cmd.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::cmd_Getary(command::gcache& parent) {
+inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::gcache& parent) {
     return algo::aryptr<algo::cstring>(parent.cmd_elems, parent.cmd_n);
 }
 
@@ -1482,7 +1482,7 @@ inline algo::cstring* command::fields_Find(command::gcli& parent, u64 t) {
 
 // --- command.gcli.fields.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::fields_Getary(command::gcli& parent) {
+inline algo::aryptr<algo::cstring> command::fields_Getary(const command::gcli& parent) {
     return algo::aryptr<algo::cstring>(parent.fields_elems, parent.fields_n);
 }
 
@@ -1600,7 +1600,7 @@ inline algo::cstring* command::args_Find(command::mdbg& parent, u64 t) {
 
 // --- command.mdbg.args.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::args_Getary(command::mdbg& parent) {
+inline algo::aryptr<algo::cstring> command::args_Getary(const command::mdbg& parent) {
     return algo::aryptr<algo::cstring>(parent.args_elems, parent.args_n);
 }
 
@@ -1668,7 +1668,7 @@ inline algo::cstring* command::b_Find(command::mdbg& parent, u64 t) {
 
 // --- command.mdbg.b.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::b_Getary(command::mdbg& parent) {
+inline algo::aryptr<algo::cstring> command::b_Getary(const command::mdbg& parent) {
     return algo::aryptr<algo::cstring>(parent.b_elems, parent.b_n);
 }
 
@@ -1908,7 +1908,7 @@ inline algo::cstring* command::cmd_Find(command::sandbox& parent, u64 t) {
 
 // --- command.sandbox.cmd.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::cmd_Getary(command::sandbox& parent) {
+inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::sandbox& parent) {
     return algo::aryptr<algo::cstring>(parent.cmd_elems, parent.cmd_n);
 }
 
@@ -1976,7 +1976,7 @@ inline algo::cstring* command::files_Find(command::sandbox& parent, u64 t) {
 
 // --- command.sandbox.files.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::files_Getary(command::sandbox& parent) {
+inline algo::aryptr<algo::cstring> command::files_Getary(const command::sandbox& parent) {
     return algo::aryptr<algo::cstring>(parent.files_elems, parent.files_n);
 }
 
@@ -2231,7 +2231,7 @@ inline algo::cstring* command::match_Find(command::ssimfilt& parent, u64 t) {
 
 // --- command.ssimfilt.match.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::match_Getary(command::ssimfilt& parent) {
+inline algo::aryptr<algo::cstring> command::match_Getary(const command::ssimfilt& parent) {
     return algo::aryptr<algo::cstring>(parent.match_elems, parent.match_n);
 }
 
@@ -2299,7 +2299,7 @@ inline algo::cstring* command::field_Find(command::ssimfilt& parent, u64 t) {
 
 // --- command.ssimfilt.field.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::field_Getary(command::ssimfilt& parent) {
+inline algo::aryptr<algo::cstring> command::field_Getary(const command::ssimfilt& parent) {
     return algo::aryptr<algo::cstring>(parent.field_elems, parent.field_n);
 }
 

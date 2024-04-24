@@ -506,7 +506,7 @@ bool                 value_ReadStrptrMaybe(orgfile::FieldId& parent, algo::strpt
 // Read fields of orgfile::FieldId from an ascii string.
 // The format of the string is the format of the orgfile::FieldId's only field
 // func:orgfile.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:orgfile.FieldId..Init
 void                 FieldId_Init(orgfile::FieldId& parent);
@@ -554,7 +554,7 @@ bool                 value_ReadStrptrMaybe(orgfile::TableId& parent, algo::strpt
 // Read fields of orgfile::TableId from an ascii string.
 // The format of the string is the format of the orgfile::TableId's only field
 // func:orgfile.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:orgfile.TableId..Init
 void                 TableId_Init(orgfile::TableId& parent);
@@ -576,7 +576,7 @@ bool                 dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr f
 // Read fields of orgfile::dedup from an ascii string.
 // The format of the string is an ssim Tuple
 // func:orgfile.dedup..ReadStrptrMaybe
-bool                 dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str);
+bool                 dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:orgfile.dedup.String  printfmt:Tuple
 // func:orgfile.dedup..Print
@@ -595,7 +595,7 @@ bool                 move_ReadFieldMaybe(orgfile::move& parent, algo::strptr fie
 // Read fields of orgfile::move from an ascii string.
 // The format of the string is an ssim Tuple
 // func:orgfile.move..ReadStrptrMaybe
-bool                 move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str);
+bool                 move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:orgfile.move.String  printfmt:Tuple
 // func:orgfile.move..Print

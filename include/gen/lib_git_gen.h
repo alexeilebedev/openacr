@@ -141,7 +141,7 @@ bool                 value_ReadStrptrMaybe(lib_git::FieldId& parent, algo::strpt
 // Read fields of lib_git::FieldId from an ascii string.
 // The format of the string is the format of the lib_git::FieldId's only field
 // func:lib_git.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_git.FieldId..Init
 void                 FieldId_Init(lib_git::FieldId& parent);

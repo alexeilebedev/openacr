@@ -1,7 +1,7 @@
-// Copyright (C) 2008-2013 AlgoEngineering LLC
-// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
+// Copyright (C) 2020-2023 Astra
+// Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
+// Copyright (C) 2008-2013 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 //
 
 #include "include/atf_unit.h"
+#include "include/lib_exec.h"
 
 // -----------------------------------------------------------------------------
 
@@ -95,9 +96,8 @@ static void Main_CheckUntrackedFiles() {
 // -----------------------------------------------------------------------------
 
 // Run specified test (called both with -nofork and without)
-void atf_unit::Main_Test(atf_unit::FUnittest &test) {
+void atf_unit::Main_StartTest(atf_unit::FUnittest &test, lib_exec::FSyscmd *start, lib_exec::FSyscmd *end) {
     atf_unit::_db.c_curtest = &test;
-    cstring comment;
     if (atf_unit::_db.cmdline.nofork) {
         try {
             prlog("atf_unit.begin"
@@ -105,44 +105,39 @@ void atf_unit::Main_Test(atf_unit::FUnittest &test) {
             alarm(atf_unit::_db.cmdline.pertest_timeout);// reasonable timeout
             (*test.step)();
         }catch(algo_lib::ErrorX &x) {
-            comment << "error "<<x;
+            test.error << "exception: "<<x;
         }
-    } else {
-        command::atf_unit_proc cmd;
-        cmd.path = "/proc/self/exe";
-        cmd.cmd.unittest.expr = test.unittest;
-        cmd.cmd.capture = atf_unit::_db.cmdline.capture;
-        cmd.cmd.perf_secs = atf_unit::_db.cmdline.perf_secs;
-        cmd.cmd.pertest_timeout = atf_unit::_db.cmdline.pertest_timeout;
-        cmd.cmd.data_dir = atf_unit::_db.cmdline.data_dir;
-        cmd.cmd.nofork = true;
-        cmd.cmd.check_untracked = atf_unit::_db.cmdline.check_untracked;
-        cmd.cmd.report = false;// prevent double reporting
-        int rc = atf_unit_Exec(cmd);
-        if (rc!=0) {
-            comment << "Subprocess exited with code "<<cmd.status;
-        } else {
-            if (_db.cmdline.check_untracked) {
-                // check for untracked files
-                tempstr files;
-                CheckUntrackedFiles(files);
-                if (files != "") {
-                    comment << "Test created untracked files: "<<files;
-                }
+        if (test.error=="" && _db.cmdline.check_untracked) {
+            // check for untracked files
+            tempstr files;
+            CheckUntrackedFiles(files);
+            if (files != "") {
+                test.error << "Test created untracked files: "<<files;
             }
         }
-    }
-    test.comment.value = comment;
-    test.success = comment == "";
-    // only the instance of atf_unit that actually executed the test
-    // reports on it, because test.comment may contain information obtained
-    // from running the test.
-    if (atf_unit::_db.cmdline.nofork){
+        test.success = test.error == "";
         prlog("atf_unit.unittest"
               <<Keyval("unittest",test.unittest)
               <<Keyval("success",test.success)
-              <<Keyval("comment",comment)
+              <<Keyval("comment",test.error)
               );
+    } else {
+        command::atf_unit_proc cmd;
+        cmd.path="/proc/self/exe";
+        cmd.cmd.unittest.expr   = test.unittest;
+        cmd.cmd.capture         = atf_unit::_db.cmdline.capture;
+        cmd.cmd.perf_secs       = atf_unit::_db.cmdline.perf_secs;
+        cmd.cmd.pertest_timeout = atf_unit::_db.cmdline.pertest_timeout;
+        cmd.cmd.data_dir        = atf_unit::_db.cmdline.data_dir;
+        cmd.cmd.nofork          = true;
+        cmd.cmd.check_untracked = atf_unit::_db.cmdline.check_untracked;
+        cmd.cmd.report          = false; // prevent double reporting
+
+        lib_exec::FSyscmd &syscmd = lib_exec::NewCmd(start,end);
+        syscmd.redir_out          = true;
+        syscmd.show_out           = true;
+        atf_unit_ToArgv(cmd,syscmd.args);
+        test.c_syscmd=&syscmd;
     }
 }
 
@@ -200,8 +195,14 @@ void atf_unit::unittest_atf_unit_Outfile() {
 // -----------------------------------------------------------------------------
 
 void atf_unit::Main() {
-
     atf_unit::_db.perf_cycle_budget = algo::ToSchedTime(atf_unit::_db.cmdline.perf_secs);
+    lib_exec::_db.cmdline.maxjobs = i32_Max(4,sysconf(_SC_NPROCESSORS_ONLN));
+    lib_exec::_db.cmdline.q=true;
+    lib_exec::_db.cmdline.complooo=false;
+    lib_exec::_db.cmdline.merge_output=true;
+
+    vrfy((tempstr() << algo::UnixTime()) == "1970/01/01 00:00:00"
+         , "Wrong timezone, run with atf_ci");
 
     int nsel=0;
     ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) {
@@ -229,11 +230,30 @@ void atf_unit::Main() {
     }
 
     atf_unit::_db.report.n_test_total += atf_unit::unittest_N();
+    lib_exec::FSyscmd *start=NULL,*end=NULL;
+    if (!_db.cmdline.nofork) {
+        start=&lib_exec::NewCmd(NULL,NULL);
+        end=&lib_exec::NewCmd(start,NULL);
+    }
     ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {
-        Main_Test(unittest);
+        Main_StartTest(unittest,start,end);
         atf_unit::_db.report.n_test_run++;
-        atf_unit::_db.report.n_err += unittest.success==false;
     }ind_end;
+    // parallel version
+    if (!_db.cmdline.nofork) {
+        lib_exec::SyscmdExecute();
+        ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {
+            if (unittest.c_syscmd && !CompletedOKQ(*unittest.c_syscmd)) {
+                unittest.error << "Subprocess exited with code "<<unittest.c_syscmd->status;
+            }
+        }ind_end;
+    }
+    // set success flag and count errors
+    ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) if (unittest.select) {
+        unittest.success = unittest.error == "";
+        _db.report.n_err += !unittest.success;
+    }ind_end;
+
 
     atf_unit::_db.report.success = atf_unit::_db.report.n_err==0;
     algo_lib::_db.exit_code = atf_unit::_db.report.n_err;// zero errors = zero exit code

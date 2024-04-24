@@ -264,6 +264,11 @@ void                 ind_outfile_Remove(ssim2csv::FOutfile& row) __attribute__((
 // func:ssim2csv.FDb.ind_outfile.Reserve
 void                 ind_outfile_Reserve(int n) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.name.Addary
+algo::aryptr<algo::cstring> name_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:ssim2csv.FDb.name.Alloc
@@ -319,7 +324,17 @@ u64                  name_rowid_Get(algo::cstring &elem) __attribute__((nothrow)
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.name.AllocNVal
 algo::aryptr<algo::cstring> name_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:ssim2csv.FDb.name.ReadStrptrMaybe
+bool                 name_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.value.Addary
+algo::aryptr<algo::cstring> value_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:ssim2csv.FDb.value.Alloc
@@ -375,7 +390,17 @@ u64                  value_rowid_Get(algo::cstring &elem) __attribute__((nothrow
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.value.AllocNVal
 algo::aryptr<algo::cstring> value_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:ssim2csv.FDb.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.flatten.Addary
+algo::aryptr<ssim2csv::FFlatten> flatten_Addary(algo::aryptr<ssim2csv::FFlatten> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:ssim2csv.FDb.flatten.Alloc
@@ -431,10 +456,6 @@ u64                  flatten_rowid_Get(ssim2csv::FFlatten &elem) __attribute__((
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.flatten.AllocNVal
 algo::aryptr<ssim2csv::FFlatten> flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:ssim2csv.FDb.flatten.XrefMaybe
-bool                 flatten_XrefMaybe(ssim2csv::FFlatten &row);
 
 // cursor points to valid item
 // func:ssim2csv.FDb.expand_curs.Reset
@@ -609,7 +630,7 @@ bool                 value_ReadStrptrMaybe(ssim2csv::FieldId& parent, algo::strp
 // Read fields of ssim2csv::FieldId from an ascii string.
 // The format of the string is the format of the ssim2csv::FieldId's only field
 // func:ssim2csv.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssim2csv.FieldId..Init
 void                 FieldId_Init(ssim2csv::FieldId& parent);

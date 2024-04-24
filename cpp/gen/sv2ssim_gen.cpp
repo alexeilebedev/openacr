@@ -525,6 +525,25 @@ bool sv2ssim::field_XrefMaybe(sv2ssim::FField &row) {
     return retval;
 }
 
+// --- sv2ssim.FDb.linetok.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.linetok_elems && rhs.elems < _db.linetok_elems + _db.linetok_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("sv2ssim.tary_alias  field:sv2ssim.FDb.linetok  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    linetok_Reserve(nnew); // reserve space
+    int at = _db.linetok_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.linetok_elems + at + i) algo::cstring(rhs[i]);
+        _db.linetok_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.linetok_elems + at, nnew);
+}
+
 // --- sv2ssim.FDb.linetok.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -628,6 +647,20 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(int n_elems, const algo::
     }
     _db.linetok_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- sv2ssim.FDb.linetok.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = linetok_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        linetok_RemoveLast();
+    }
+    return retval;
 }
 
 // --- sv2ssim.FDb.svtype.Alloc

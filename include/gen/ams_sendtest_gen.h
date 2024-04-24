@@ -124,11 +124,14 @@ int                  child_Exec(ams_sendtest::FChild& child) __attribute__((noth
 // func:ams_sendtest.FChild.child.ExecX
 void                 child_ExecX(ams_sendtest::FChild& child);
 // Call execv()
-// Call execv with specified parameters -- cprint:ams_sendtest.Argv
+// Call execv with specified parameters
 // func:ams_sendtest.FChild.child.Execv
 int                  child_Execv(ams_sendtest::FChild& child) __attribute__((nothrow));
 // func:ams_sendtest.FChild.child.ToCmdline
 algo::tempstr        child_ToCmdline(ams_sendtest::FChild& child) __attribute__((nothrow));
+// Form array from the command line
+// func:ams_sendtest.FChild.child.ToArgv
+void                 child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:ams_sendtest.FChild..Init
@@ -301,7 +304,7 @@ bool                 value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::
 // Read fields of ams_sendtest::FieldId from an ascii string.
 // The format of the string is the format of the ams_sendtest::FieldId's only field
 // func:ams_sendtest.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams_sendtest.FieldId..Init
 void                 FieldId_Init(ams_sendtest::FieldId& parent);

@@ -564,7 +564,7 @@ bool                 value_ReadStrptrMaybe(lib_fm::FieldId& parent, algo::strptr
 // Read fields of lib_fm::FieldId from an ascii string.
 // The format of the string is the format of the lib_fm::FieldId's only field
 // func:lib_fm.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.FieldId..Init
 void                 FieldId_Init(lib_fm::FieldId& parent);
@@ -612,7 +612,7 @@ bool                 value_ReadStrptrMaybe(lib_fm::TableId& parent, algo::strptr
 // Read fields of lib_fm::TableId from an ascii string.
 // The format of the string is the format of the lib_fm::TableId's only field
 // func:lib_fm.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.TableId..Init
 void                 TableId_Init(lib_fm::TableId& parent);

@@ -31,28 +31,36 @@
 // --- algo_lib_FieldIdEnum
 
 enum algo_lib_FieldIdEnum {               // algo_lib.FieldId.value
-     algo_lib_FieldId_verbose       = 0
-    ,algo_lib_FieldId_debug         = 1
-    ,algo_lib_FieldId_help          = 2
-    ,algo_lib_FieldId_version       = 3
-    ,algo_lib_FieldId_signature     = 4
-    ,algo_lib_FieldId_v             = 5
-    ,algo_lib_FieldId_d             = 6
-    ,algo_lib_FieldId_sig           = 7
-    ,algo_lib_FieldId_h             = 8
-    ,algo_lib_FieldId_expr          = 9
-    ,algo_lib_FieldId_state         = 10
-    ,algo_lib_FieldId_front         = 11
-    ,algo_lib_FieldId_next_front    = 12
-    ,algo_lib_FieldId_start         = 13
-    ,algo_lib_FieldId_accept        = 14
-    ,algo_lib_FieldId_parseerror    = 15
-    ,algo_lib_FieldId_accepts_all   = 16
-    ,algo_lib_FieldId_literal       = 17
-    ,algo_lib_FieldId_value         = 18
+     algo_lib_FieldId_ary           = 0
+    ,algo_lib_FieldId_verbose       = 1
+    ,algo_lib_FieldId_debug         = 2
+    ,algo_lib_FieldId_help          = 3
+    ,algo_lib_FieldId_version       = 4
+    ,algo_lib_FieldId_signature     = 5
+    ,algo_lib_FieldId_v             = 6
+    ,algo_lib_FieldId_d             = 7
+    ,algo_lib_FieldId_sig           = 8
+    ,algo_lib_FieldId_h             = 9
+    ,algo_lib_FieldId_time          = 10
+    ,algo_lib_FieldId_delay         = 11
+    ,algo_lib_FieldId_hook          = 12
+    ,algo_lib_FieldId_recurrent     = 13
+    ,algo_lib_FieldId_expr          = 14
+    ,algo_lib_FieldId_state         = 15
+    ,algo_lib_FieldId_front         = 16
+    ,algo_lib_FieldId_next_front    = 17
+    ,algo_lib_FieldId_start         = 18
+    ,algo_lib_FieldId_accept        = 19
+    ,algo_lib_FieldId_parseerror    = 20
+    ,algo_lib_FieldId_accepts_all   = 21
+    ,algo_lib_FieldId_literal       = 22
+    ,algo_lib_FieldId_type          = 23
+    ,algo_lib_FieldId_in            = 24
+    ,algo_lib_FieldId_out           = 25
+    ,algo_lib_FieldId_value         = 26
 };
 
-enum { algo_lib_FieldIdEnum_N = 19 };
+enum { algo_lib_FieldIdEnum_N = 27 };
 
 
 // --- algo_lib_RegxToken_type_Enum
@@ -105,7 +113,7 @@ namespace algo_lib { struct txttbl_c_txtrow_curs; }
 namespace algo_lib { struct InTextFile_temp_buf_curs; }
 namespace algo_lib { struct regx_state_curs; }
 namespace algo_lib { struct regxparse_ary_expr_curs; }
-namespace algo_lib { struct state_ch_class_curs; }
+namespace algo_lib { struct RegxState_ch_class_curs; }
 namespace algo_lib { struct replscope_ind_replvar_curs; }
 namespace algo_lib { struct tabulate_width_curs; }
 namespace algo_lib { struct Bitset; }
@@ -213,6 +221,11 @@ void                 ary_AllocBit(algo_lib::Bitset& parent, u32 bit_idx) __attri
 // Return smallest number N such that indexes of all 1 bits are below N
 // func:algo_lib.Bitset.ary.Sup
 i32                  ary_Sup(algo_lib::Bitset& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.Bitset.ary.Addary
+algo::aryptr<u64>    ary_Addary(algo_lib::Bitset& parent, algo::aryptr<u64> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.Bitset.ary.Alloc
@@ -232,7 +245,7 @@ bool                 ary_EmptyQ(algo_lib::Bitset& parent) __attribute__((nothrow
 u64*                 ary_Find(algo_lib::Bitset& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.Bitset.ary.Getary
-algo::aryptr<u64>    ary_Getary(algo_lib::Bitset& parent) __attribute__((nothrow));
+algo::aryptr<u64>    ary_Getary(const algo_lib::Bitset& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.Bitset.ary.Last
 u64*                 ary_Last(algo_lib::Bitset& parent) __attribute__((nothrow, pure));
@@ -259,6 +272,10 @@ void                 ary_AbsReserve(algo_lib::Bitset& parent, int n) __attribute
 // Copy contents of RHS to PARENT.
 // func:algo_lib.Bitset.ary.Setary
 void                 ary_Setary(algo_lib::Bitset& parent, algo_lib::Bitset &rhs) __attribute__((nothrow));
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.Bitset.ary.Setary2
+void                 ary_Setary(algo_lib::Bitset& parent, const algo::aryptr<u64> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.Bitset.ary.qFind
 u64&                 ary_qFind(algo_lib::Bitset& parent, u64 t) __attribute__((nothrow));
@@ -271,6 +288,11 @@ u64                  ary_rowid_Get(algo_lib::Bitset& parent, u64 &elem) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Bitset.ary.AllocNVal
 algo::aryptr<u64>    ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.Bitset.ary.ReadStrptrMaybe
+bool                 ary_ReadStrptrMaybe(algo_lib::Bitset& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.Bitset.ary_bitcurs.Next
@@ -294,11 +316,19 @@ bool                 Bitset_ary_curs_ValidQ(Bitset_ary_curs &curs) __attribute__
 // item access
 // func:algo_lib.Bitset.ary_curs.Access
 u64&                 Bitset_ary_curs_Access(Bitset_ary_curs &curs) __attribute__((nothrow));
+// Read fields of algo_lib::Bitset from an ascii string.
+// The format of the string is the format of the algo_lib::Bitset's only field
+// func:algo_lib.Bitset..ReadStrptrMaybe
+bool                 Bitset_ReadStrptrMaybe(algo_lib::Bitset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Bitset..Init
 void                 Bitset_Init(algo_lib::Bitset& parent);
 // func:algo_lib.Bitset..Uninit
 void                 Bitset_Uninit(algo_lib::Bitset& parent) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo_lib.Bitset.String  printfmt:Raw
+// func:algo_lib.Bitset..Print
+void                 Bitset_Print(algo_lib::Bitset& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.Cmdline
 struct Cmdline { // algo_lib.Cmdline: *can't move this to command namespace because of circular dependency*
@@ -395,6 +425,11 @@ private:
     void operator =(const CsvParse&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.CsvParse.ary_tok.Addary
+algo::aryptr<algo::cstring> ary_tok_Addary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.CsvParse.ary_tok.Alloc
@@ -414,7 +449,7 @@ bool                 ary_tok_EmptyQ(algo_lib::CsvParse& csvparse) __attribute__(
 algo::cstring*       ary_tok_Find(algo_lib::CsvParse& csvparse, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.CsvParse.ary_tok.Getary
-algo::aryptr<algo::cstring> ary_tok_Getary(algo_lib::CsvParse& csvparse) __attribute__((nothrow));
+algo::aryptr<algo::cstring> ary_tok_Getary(const algo_lib::CsvParse& csvparse) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.CsvParse.ary_tok.Last
 algo::cstring*       ary_tok_Last(algo_lib::CsvParse& csvparse) __attribute__((nothrow, pure));
@@ -441,6 +476,10 @@ void                 ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, int n) __a
 // Copy contents of RHS to PARENT.
 // func:algo_lib.CsvParse.ary_tok.Setary
 void                 ary_tok_Setary(algo_lib::CsvParse& csvparse, algo_lib::CsvParse &rhs) __attribute__((nothrow));
+// Copy specified array into ary_tok, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.CsvParse.ary_tok.Setary2
+void                 ary_tok_Setary(algo_lib::CsvParse& csvparse, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.CsvParse.ary_tok.qFind
 algo::cstring&       ary_tok_qFind(algo_lib::CsvParse& csvparse, u64 t) __attribute__((nothrow));
@@ -453,6 +492,11 @@ u64                  ary_tok_rowid_Get(algo_lib::CsvParse& csvparse, algo::cstri
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.CsvParse.ary_tok.AllocNVal
 algo::aryptr<algo::cstring> ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.CsvParse.ary_tok.ReadStrptrMaybe
+bool                 ary_tok_ReadStrptrMaybe(algo_lib::CsvParse& csvparse, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.CsvParse.ary_tok_curs.Next
@@ -581,8 +625,18 @@ template<class T> void hook_Set2(algo_lib::FTimehook& timehook, T& ctx, void (*f
 // Set all fields to initial values.
 // func:algo_lib.FTimehook..Init
 void                 FTimehook_Init(algo_lib::FTimehook& timehook);
+// func:algo_lib.FTimehook..ReadFieldMaybe
+bool                 FTimehook_ReadFieldMaybe(algo_lib::FTimehook& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of algo_lib::FTimehook from an ascii string.
+// The format of the string is an ssim Tuple
+// func:algo_lib.FTimehook..ReadStrptrMaybe
+bool                 FTimehook_ReadStrptrMaybe(algo_lib::FTimehook &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:algo_lib.FTimehook..Uninit
 void                 FTimehook_Uninit(algo_lib::FTimehook& timehook) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo_lib.FTimehook.String  printfmt:Tuple
+// func:algo_lib.FTimehook..Print
+void                 FTimehook_Print(algo_lib::FTimehook& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.FImdb
 // create: algo_lib.FDb.imdb (Inlary)
@@ -676,8 +730,7 @@ struct FDb { // algo_lib.FDb: In-memory database for algo_lib
     u64                               sbrk_huge_limit;                              // Huge page limit in bytes -- set to 0 with fork!
     u64                               sbrk_huge_alloc;                              // Huge page bytes allocated
     bool                              sbrk_zeromem;                                 // Zero allocated memory
-    lpool_Lpblock*                    lpool_free[31];                               // Lpool levels
-    u32                               lpool_lock;                                   // Lpool lock
+    lpool_Lpblock*                    lpool_free[36];                               // Lpool levels
     algo::SchedTime                   next_loop;                                    //
     algo::SchedTime                   limit;                                        //   0x7fffffffffffffff
     double                            clocks_to_ms;                                 //   0.0
@@ -779,20 +832,33 @@ void                 sbrk_FreeMem(void *mem, u32 size) __attribute__((nothrow));
 
 // Free block of memory previously returned by Lpool.
 // func:algo_lib.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void *mem, u64 size) __attribute__((nothrow));
+void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 // func:algo_lib.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
 // func:algo_lib.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(int nbuf, u64 bufsize) __attribute__((nothrow));
+bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
 // func:algo_lib.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:algo_lib.FDb.lpool.Alloc
+u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:algo_lib.FDb.lpool.AllocMaybe
+u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:algo_lib.FDb.lpool.Delete
+void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -820,6 +886,10 @@ void                 temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs)
 // 'quick' Access row by row id. No bounds checking in release.
 // func:algo_lib.FDb.temp_strings.qFind
 algo::cstring&       temp_strings_qFind(u64 t) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:algo_lib.FDb.temp_strings.ReadStrptrMaybe
+bool                 temp_strings_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // func:algo_lib.FDb.ArgvIdent.Match
 bool                 ArgvIdentQ(u32 ch) __attribute__((nothrow));
@@ -1182,6 +1252,16 @@ void                 ind_imdb_Remove(algo_lib::FImdb& row) __attribute__((nothro
 // func:algo_lib.FDb.ind_imdb.Reserve
 void                 ind_imdb_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:algo_lib.FDb.malloc.Alloc
+u8&                  malloc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:algo_lib.FDb.malloc.AllocMaybe
+u8*                  malloc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:algo_lib.FDb.malloc.Delete
+void                 malloc_Delete(u8 &row) __attribute__((nothrow));
 // Allocate n bytes. If no memory available, return NULL.
 // func:algo_lib.FDb.malloc.AllocMem
 void*                malloc_AllocMem(size_t n) __attribute__((__warn_unused_result__, nothrow));
@@ -1420,6 +1500,11 @@ void                 ind_logcat_Remove(algo_lib::FLogcat& row) __attribute__((no
 // func:algo_lib.FDb.ind_logcat.Reserve
 void                 ind_logcat_Reserve(int n) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.FDb.exec_args.Addary
+algo::aryptr<algo::cstring> exec_args_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.FDb.exec_args.Alloc
@@ -1475,7 +1560,17 @@ u64                  exec_args_rowid_Get(algo::cstring &elem) __attribute__((not
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.FDb.exec_args.AllocNVal
 algo::aryptr<algo::cstring> exec_args_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.FDb.exec_args.ReadStrptrMaybe
+bool                 exec_args_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.FDb.dirstack.Addary
+algo::aryptr<algo::cstring> dirstack_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.FDb.dirstack.Alloc
@@ -1531,6 +1626,11 @@ u64                  dirstack_rowid_Get(algo::cstring &elem) __attribute__((noth
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.FDb.dirstack.AllocNVal
 algo::aryptr<algo::cstring> dirstack_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.FDb.dirstack.ReadStrptrMaybe
+bool                 dirstack_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:algo_lib.FDb.temp_strings_curs.Reset
@@ -2064,7 +2164,7 @@ bool                 value_ReadStrptrMaybe(algo_lib::FieldId& parent, algo::strp
 // Read fields of algo_lib::FieldId from an ascii string.
 // The format of the string is the format of the algo_lib::FieldId's only field
 // func:algo_lib.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(algo_lib::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(algo_lib::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.FieldId..Init
 void                 FieldId_Init(algo_lib::FieldId& parent);
@@ -2096,6 +2196,13 @@ private:
 // this function is 'extrn' and implemented by user
 void                 file_Cleanup(algo_lib::InTextFile& parent) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:algo_lib.InTextFile.temp_buf.Alloc
+u8&                  temp_buf_Alloc(algo_lib::InTextFile& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:algo_lib.InTextFile.temp_buf.AllocMaybe
+u8*                  temp_buf_AllocMaybe(algo_lib::InTextFile& parent) __attribute__((__warn_unused_result__, nothrow));
 // Allocate space for one element. If no memory available, return NULL.
 // func:algo_lib.InTextFile.temp_buf.AllocMem
 void*                temp_buf_AllocMem(algo_lib::InTextFile& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -2126,6 +2233,14 @@ u8&                  temp_buf_qFind(algo_lib::InTextFile& parent, u64 t) __attri
 // Compute row id of element given element's address
 // func:algo_lib.InTextFile.temp_buf.rowid_Get
 u64                  temp_buf_rowid_Get(algo_lib::InTextFile& parent, u8 &row) __attribute__((nothrow));
+// Convert temp_buf to a string.
+// Array is printed as a regular string.
+// func:algo_lib.InTextFile.temp_buf.Print
+void                 temp_buf_Print(algo_lib::InTextFile& parent, algo::cstring &rhs) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:algo_lib.InTextFile.temp_buf.ReadStrptrMaybe
+bool                 temp_buf_ReadStrptrMaybe(algo_lib::InTextFile& parent, algo::strptr in_str) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:algo_lib.InTextFile.temp_buf_curs.Reset
@@ -2224,7 +2339,7 @@ bool                 state_EmptyQ(algo_lib::Regx& regx) __attribute__((nothrow))
 algo_lib::RegxState* state_Find(algo_lib::Regx& regx, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.Regx.state.Getary
-algo::aryptr<algo_lib::RegxState> state_Getary(algo_lib::Regx& regx) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxState> state_Getary(const algo_lib::Regx& regx) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.Regx.state.Last
 algo_lib::RegxState* state_Last(algo_lib::Regx& regx) __attribute__((nothrow, pure));
@@ -2257,10 +2372,6 @@ algo_lib::RegxState& state_qLast(algo_lib::Regx& regx) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.Regx.state.rowid_Get
 u64                  state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:algo_lib.Regx.state.XrefMaybe
-bool                 state_XrefMaybe(algo_lib::RegxState &row);
 
 // proceed to next item
 // func:algo_lib.Regx.state_curs.Next
@@ -2274,10 +2385,9 @@ bool                 regx_state_curs_ValidQ(regx_state_curs &curs) __attribute__
 // func:algo_lib.Regx.state_curs.Access
 algo_lib::RegxState& regx_state_curs_Access(regx_state_curs &curs) __attribute__((nothrow));
 // Read fields of algo_lib::Regx from an ascii string.
-// The function is implemented externally.
 // func:algo_lib.Regx..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
-bool                 Regx_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str);
+bool                 Regx_ReadStrptrMaybe(algo_lib::Regx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.Regx..Init
 void                 Regx_Init(algo_lib::Regx& regx);
@@ -2321,10 +2431,21 @@ bool                 type_SetStrptrMaybe(algo_lib::RegxToken& parent, algo::strp
 // If the string is invalid, set numeric value to DFLT
 // func:algo_lib.RegxToken.type.SetStrptr
 void                 type_SetStrptr(algo_lib::RegxToken& parent, algo::strptr rhs, algo_lib_RegxToken_type_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:algo_lib.RegxToken.type.ReadStrptrMaybe
+bool                 type_ReadStrptrMaybe(algo_lib::RegxToken& parent, algo::strptr rhs) __attribute__((nothrow));
 
+// Read fields of algo_lib::RegxToken from an ascii string.
+// The format of the string is the format of the algo_lib::RegxToken's only field
+// func:algo_lib.RegxToken..ReadStrptrMaybe
+bool                 RegxToken_ReadStrptrMaybe(algo_lib::RegxToken &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxToken..Init
 void                 RegxToken_Init(algo_lib::RegxToken& parent);
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxToken.String  printfmt:Raw
+// func:algo_lib.RegxToken..Print
+void                 RegxToken_Print(algo_lib::RegxToken& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.RegxExpr
 // create: algo_lib.RegxParse.ary_expr (Tary)
@@ -2339,9 +2460,19 @@ private:
     void operator =(const RegxExpr&){ /*disallow direct assignment */}
 };
 
+// func:algo_lib.RegxExpr..ReadFieldMaybe
+bool                 RegxExpr_ReadFieldMaybe(algo_lib::RegxExpr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of algo_lib::RegxExpr from an ascii string.
+// The format of the string is an ssim Tuple
+// func:algo_lib.RegxExpr..ReadStrptrMaybe
+bool                 RegxExpr_ReadStrptrMaybe(algo_lib::RegxExpr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxExpr..Init
-void                 RegxExpr_Init(algo_lib::RegxExpr& ary_expr);
+void                 RegxExpr_Init(algo_lib::RegxExpr& parent);
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxExpr.String  printfmt:Tuple
+// func:algo_lib.RegxExpr..Print
+void                 RegxExpr_Print(algo_lib::RegxExpr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.RegxParse
 // create: algo_lib.FDb.regxparse (Cppstack)
@@ -2378,7 +2509,7 @@ bool                 ary_expr_EmptyQ(algo_lib::RegxParse& regxparse) __attribute
 algo_lib::RegxExpr*  ary_expr_Find(algo_lib::RegxParse& regxparse, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.RegxParse.ary_expr.Getary
-algo::aryptr<algo_lib::RegxExpr> ary_expr_Getary(algo_lib::RegxParse& regxparse) __attribute__((nothrow));
+algo::aryptr<algo_lib::RegxExpr> ary_expr_Getary(const algo_lib::RegxParse& regxparse) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.RegxParse.ary_expr.Last
 algo_lib::RegxExpr*  ary_expr_Last(algo_lib::RegxParse& regxparse) __attribute__((nothrow, pure));
@@ -2411,10 +2542,11 @@ algo_lib::RegxExpr&  ary_expr_qLast(algo_lib::RegxParse& regxparse) __attribute_
 // Return row id of specified element
 // func:algo_lib.RegxParse.ary_expr.rowid_Get
 u64                  ary_expr_rowid_Get(algo_lib::RegxParse& regxparse, algo_lib::RegxExpr &elem) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:algo_lib.RegxParse.ary_expr.XrefMaybe
-bool                 ary_expr_XrefMaybe(algo_lib::RegxExpr &row);
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.RegxParse.ary_expr.ReadStrptrMaybe
+bool                 ary_expr_ReadStrptrMaybe(algo_lib::RegxParse& regxparse, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.RegxParse.ary_expr_curs.Next
@@ -2454,93 +2586,102 @@ private:
     void operator =(const RegxState&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.RegxState.ch_class.Addary
+algo::aryptr<algo::i32_Range> ch_class_Addary(algo_lib::RegxState& parent, algo::aryptr<algo::i32_Range> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.RegxState.ch_class.Alloc
-algo::i32_Range&     ch_class_Alloc(algo_lib::RegxState& state) __attribute__((__warn_unused_result__, nothrow));
+algo::i32_Range&     ch_class_Alloc(algo_lib::RegxState& parent) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:algo_lib.RegxState.ch_class.AllocAt
-algo::i32_Range&     ch_class_AllocAt(algo_lib::RegxState& state, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::i32_Range&     ch_class_AllocAt(algo_lib::RegxState& parent, int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.RegxState.ch_class.AllocN
-algo::aryptr<algo::i32_Range> ch_class_AllocN(algo_lib::RegxState& state, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<algo::i32_Range> ch_class_AllocN(algo_lib::RegxState& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo_lib.RegxState.ch_class.EmptyQ
-bool                 ch_class_EmptyQ(algo_lib::RegxState& state) __attribute__((nothrow));
+bool                 ch_class_EmptyQ(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.RegxState.ch_class.Find
-algo::i32_Range*     ch_class_Find(algo_lib::RegxState& state, u64 t) __attribute__((__warn_unused_result__, nothrow));
+algo::i32_Range*     ch_class_Find(algo_lib::RegxState& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.RegxState.ch_class.Getary
-algo::aryptr<algo::i32_Range> ch_class_Getary(algo_lib::RegxState& state) __attribute__((nothrow));
+algo::aryptr<algo::i32_Range> ch_class_Getary(const algo_lib::RegxState& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.RegxState.ch_class.Last
-algo::i32_Range*     ch_class_Last(algo_lib::RegxState& state) __attribute__((nothrow, pure));
+algo::i32_Range*     ch_class_Last(algo_lib::RegxState& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo_lib.RegxState.ch_class.Max
-i32                  ch_class_Max(algo_lib::RegxState& state) __attribute__((nothrow));
+i32                  ch_class_Max(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.RegxState.ch_class.N
-i32                  ch_class_N(const algo_lib::RegxState& state) __attribute__((__warn_unused_result__, nothrow, pure));
+i32                  ch_class_N(const algo_lib::RegxState& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo_lib.RegxState.ch_class.Remove
-void                 ch_class_Remove(algo_lib::RegxState& state, u32 i) __attribute__((nothrow));
+void                 ch_class_Remove(algo_lib::RegxState& parent, u32 i) __attribute__((nothrow));
 // func:algo_lib.RegxState.ch_class.RemoveAll
-void                 ch_class_RemoveAll(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 ch_class_RemoveAll(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo_lib.RegxState.ch_class.RemoveLast
-void                 ch_class_RemoveLast(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 ch_class_RemoveLast(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo_lib.RegxState.ch_class.Reserve
-void                 ch_class_Reserve(algo_lib::RegxState& state, int n) __attribute__((nothrow));
+void                 ch_class_Reserve(algo_lib::RegxState& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo_lib.RegxState.ch_class.AbsReserve
-void                 ch_class_AbsReserve(algo_lib::RegxState& state, int n) __attribute__((nothrow));
+void                 ch_class_AbsReserve(algo_lib::RegxState& parent, int n) __attribute__((nothrow));
 // Copy contents of RHS to PARENT.
 // func:algo_lib.RegxState.ch_class.Setary
-void                 ch_class_Setary(algo_lib::RegxState& state, algo_lib::RegxState &rhs) __attribute__((nothrow));
+void                 ch_class_Setary(algo_lib::RegxState& parent, algo_lib::RegxState &rhs) __attribute__((nothrow));
+// Copy specified array into ch_class, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.RegxState.ch_class.Setary2
+void                 ch_class_Setary(algo_lib::RegxState& parent, const algo::aryptr<algo::i32_Range> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.RegxState.ch_class.qFind
-algo::i32_Range&     ch_class_qFind(algo_lib::RegxState& state, u64 t) __attribute__((nothrow));
+algo::i32_Range&     ch_class_qFind(algo_lib::RegxState& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo_lib.RegxState.ch_class.qLast
-algo::i32_Range&     ch_class_qLast(algo_lib::RegxState& state) __attribute__((nothrow));
+algo::i32_Range&     ch_class_qLast(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo_lib.RegxState.ch_class.rowid_Get
-u64                  ch_class_rowid_Get(algo_lib::RegxState& state, algo::i32_Range &elem) __attribute__((nothrow));
+u64                  ch_class_rowid_Get(algo_lib::RegxState& parent, algo::i32_Range &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.RegxState.ch_class.AllocNVal
-algo::aryptr<algo::i32_Range> ch_class_AllocNVal(algo_lib::RegxState& state, int n_elems, const algo::i32_Range& val) __attribute__((nothrow));
+algo::aryptr<algo::i32_Range> ch_class_AllocNVal(algo_lib::RegxState& parent, int n_elems, const algo::i32_Range& val) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:algo_lib.RegxState.ch_class.SortedQ
-bool                 ch_class_SortedQ(algo_lib::RegxState& state) __attribute__((nothrow));
+bool                 ch_class_SortedQ(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Insertion sort
 // func:algo_lib.RegxState.ch_class.InsertionSort
-void                 ch_class_InsertionSort(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 ch_class_InsertionSort(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Heap sort
 // func:algo_lib.RegxState.ch_class.HeapSort
-void                 ch_class_HeapSort(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 ch_class_HeapSort(algo_lib::RegxState& parent) __attribute__((nothrow));
 // Quick sort
 // func:algo_lib.RegxState.ch_class.QuickSort
-void                 ch_class_QuickSort(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 ch_class_QuickSort(algo_lib::RegxState& parent) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.RegxState.ch_class_curs.Next
-void                 state_ch_class_curs_Next(state_ch_class_curs &curs) __attribute__((nothrow));
+void                 RegxState_ch_class_curs_Next(RegxState_ch_class_curs &curs) __attribute__((nothrow));
 // func:algo_lib.RegxState.ch_class_curs.Reset
-void                 state_ch_class_curs_Reset(state_ch_class_curs &curs, algo_lib::RegxState &parent) __attribute__((nothrow));
+void                 RegxState_ch_class_curs_Reset(RegxState_ch_class_curs &curs, algo_lib::RegxState &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:algo_lib.RegxState.ch_class_curs.ValidQ
-bool                 state_ch_class_curs_ValidQ(state_ch_class_curs &curs) __attribute__((nothrow));
+bool                 RegxState_ch_class_curs_ValidQ(RegxState_ch_class_curs &curs) __attribute__((nothrow));
 // item access
 // func:algo_lib.RegxState.ch_class_curs.Access
-algo::i32_Range&     state_ch_class_curs_Access(state_ch_class_curs &curs) __attribute__((nothrow));
+algo::i32_Range&     RegxState_ch_class_curs_Access(RegxState_ch_class_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.RegxState..Init
-void                 RegxState_Init(algo_lib::RegxState& state);
+void                 RegxState_Init(algo_lib::RegxState& parent);
 // func:algo_lib.RegxState..Uninit
-void                 RegxState_Uninit(algo_lib::RegxState& state) __attribute__((nothrow));
+void                 RegxState_Uninit(algo_lib::RegxState& parent) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxState.String  printfmt:Extern
 // func:algo_lib.RegxState..Print
@@ -2678,7 +2819,7 @@ bool                 value_ReadStrptrMaybe(algo_lib::TableId& parent, algo::strp
 // Read fields of algo_lib::TableId from an ascii string.
 // The format of the string is the format of the algo_lib::TableId's only field
 // func:algo_lib.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(algo_lib::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(algo_lib::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo_lib.TableId..Init
 void                 TableId_Init(algo_lib::TableId& parent);
@@ -2702,6 +2843,11 @@ private:
     void operator =(const Tabulate&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo_lib.Tabulate.width.Addary
+algo::aryptr<i32>    width_Addary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:algo_lib.Tabulate.width.Alloc
@@ -2721,7 +2867,7 @@ bool                 width_EmptyQ(algo_lib::Tabulate& tabulate) __attribute__((n
 i32*                 width_Find(algo_lib::Tabulate& tabulate, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo_lib.Tabulate.width.Getary
-algo::aryptr<i32>    width_Getary(algo_lib::Tabulate& tabulate) __attribute__((nothrow));
+algo::aryptr<i32>    width_Getary(const algo_lib::Tabulate& tabulate) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo_lib.Tabulate.width.Last
 i32*                 width_Last(algo_lib::Tabulate& tabulate) __attribute__((nothrow, pure));
@@ -2748,6 +2894,10 @@ void                 width_AbsReserve(algo_lib::Tabulate& tabulate, int n) __att
 // Copy contents of RHS to PARENT.
 // func:algo_lib.Tabulate.width.Setary
 void                 width_Setary(algo_lib::Tabulate& tabulate, algo_lib::Tabulate &rhs) __attribute__((nothrow));
+// Copy specified array into width, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:algo_lib.Tabulate.width.Setary2
+void                 width_Setary(algo_lib::Tabulate& tabulate, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo_lib.Tabulate.width.qFind
 i32&                 width_qFind(algo_lib::Tabulate& tabulate, u64 t) __attribute__((nothrow));
@@ -2760,6 +2910,11 @@ u64                  width_rowid_Get(algo_lib::Tabulate& tabulate, i32 &elem) __
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo_lib.Tabulate.width.AllocNVal
 algo::aryptr<i32>    width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:algo_lib.Tabulate.width.ReadStrptrMaybe
+bool                 width_ReadStrptrMaybe(algo_lib::Tabulate& tabulate, algo::strptr in_str) __attribute__((nothrow));
 
 // proceed to next item
 // func:algo_lib.Tabulate.width_curs.Next
@@ -2925,12 +3080,12 @@ struct regxparse_ary_expr_curs {// cursor
 };
 
 
-struct state_ch_class_curs {// cursor
+struct RegxState_ch_class_curs {// cursor
     typedef algo::i32_Range ChildType;
     algo::i32_Range* elems;
     int n_elems;
     int index;
-    state_ch_class_curs() { elems=NULL; n_elems=0; index=0; }
+    RegxState_ch_class_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 
@@ -2956,14 +3111,18 @@ namespace algo_lib { // gen:ns_func
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::Bitset &row);// cfmt:algo_lib.Bitset.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::CsvParse &row);// cfmt:algo_lib.CsvParse.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::ErrorX &row);// cfmt:algo_lib.ErrorX.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::FFildes &row);// cfmt:algo_lib.FFildes.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::FTimehook &row);// cfmt:algo_lib.FTimehook.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::trace &row);// cfmt:algo_lib.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::FDispsigcheck &row);// cfmt:algo_lib.FDispsigcheck.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::FTxttbl &row);// cfmt:algo_lib.FTxttbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::FieldId &row);// cfmt:algo_lib.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::Regx &row);// cfmt:algo_lib.Regx.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::RegxToken &row);// cfmt:algo_lib.RegxToken.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::RegxExpr &row);// cfmt:algo_lib.RegxExpr.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::RegxParse &row);// cfmt:algo_lib.RegxParse.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::RegxState &row);// cfmt:algo_lib.RegxState.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo_lib::Replscope &row);// cfmt:algo_lib.Replscope.String

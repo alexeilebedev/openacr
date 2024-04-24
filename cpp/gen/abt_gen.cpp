@@ -249,10 +249,10 @@ void abt::trace_Print(abt::trace& row, algo::cstring& str) {
 
 // --- abt.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void abt::lpool_FreeMem(void *mem, u64 size) {
-    if (mem) {
-        size = u64_Max(size,16); // enforce alignment
-        u64 cell = algo::u64_BitScanReverse(size-1) + 1;
+void abt::lpool_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -262,37 +262,40 @@ void abt::lpool_FreeMem(void *mem, u64 size) {
 // --- abt.FDb.lpool.AllocMem
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
-// The allocated block is 16-byte aligned
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
 void* abt::lpool_AllocMem(u64 size) {
-    size     = u64_Max(size,16); // enforce alignment
-    u64 cell = algo::u64_BitScanReverse(size-1)+1;
-    u64 i    = cell;
-    u8 *retval = NULL;
-    // try to find a block that's at least as large as required.
-    // if found, remove from free list
-    for (; i < 31; i++) {
-        lpool_Lpblock *blk = _db.lpool_free[i];
-        if (blk) {
-            _db.lpool_free[i] = blk->next;
-            retval = (u8*)blk;
-            break;
+    void *retval = NULL;
+    size     = u64_Max(size,1<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (cell < 36) {
+        u64 i    = cell;
+        // try to find a block that's at least as large as required.
+        // if found, remove from free list
+        for (; i < 36; i++) {
+            lpool_Lpblock *blk = _db.lpool_free[i];
+            if (blk) {
+                _db.lpool_free[i] = blk->next;
+                retval = blk;
+                break;
+            }
         }
-    }
-    // if suitable size block is not found, create a new one
-    // by requesting a block from the base allocator.
-    if (UNLIKELY(!retval)) {
-        i = u64_Max(cell, 21); // 2MB min -- allow huge page to be used
-        retval = (u8*)algo_lib::sbrk_AllocMem(1<<i);
-    }
-    if (LIKELY(retval)) {
-        // if block is more than 2x as large as needed, return the upper half to the free
-        // list (repeatedly). meanwhile, retval doesn't change.
-        while (i > cell) {
-            i--;
-            int half = 1<<i;
-            lpool_Lpblock *blk = (lpool_Lpblock*)(retval + half);
-            blk->next = _db.lpool_free[i];
-            _db.lpool_free[i] = blk;
+        // if suitable size block is not found, create a new one
+        // by requesting a block from the base allocator.
+        if (UNLIKELY(!retval)) {
+            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
+            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(retval)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, retval doesn't change.
+            while (i > cell) {
+                i--;
+                int half = 1ULL<<(i+4);
+                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
+                blk->next = _db.lpool_free[i];
+                _db.lpool_free[i] = blk;
+            }
         }
     }
     return retval;
@@ -300,19 +303,22 @@ void* abt::lpool_AllocMem(u64 size) {
 
 // --- abt.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-bool abt::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
+// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+bool abt::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 16);
-    for (int i = 0; i < nbuf; i++) {
-        u64     cell = algo::u64_BitScanReverse(bufsize-1)+1;
-        u64     size = 1ULL<<cell;
-        lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-        if (temp == NULL) {
-            retval = false;
-            break;// why continue?
-        } else {
-            temp->next = _db.lpool_free[cell];
-            _db.lpool_free[cell] = temp;
+    bufsize = u64_Max(bufsize, 1<<4);
+    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
+    if (cell < 36) {
+        for (u64 i = 0; i < nbuf; i++) {
+            u64 size = 1ULL<<(cell+4);
+            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
+            if (temp == NULL) {
+                retval = false;
+                break;// why continue?
+            } else {
+                temp->next = _db.lpool_free[cell];
+                _db.lpool_free[cell] = temp;
+            }
         }
     }
     return retval;
@@ -320,10 +326,11 @@ bool abt::lpool_ReserveBuffers(int nbuf, u64 bufsize) {
 
 // --- abt.FDb.lpool.ReallocMem
 // Allocate new block, copy old to new, delete old.
-// New memory is always allocated (i.e. size reduction is not a no-op)
-// If no memory, return NULL: old memory untouched
-void* abt::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
-    void* ret = oldmem;
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* abt::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
         if (ret && oldmem) {
@@ -332,6 +339,34 @@ void* abt::lpool_ReallocMem(void *oldmem, u64 old_size, u64 new_size) {
         }
     }
     return ret;
+}
+
+// --- abt.FDb.lpool.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u8& abt::lpool_Alloc() {
+    u8* row = lpool_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt.out_of_mem  field:abt.FDb.lpool  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt.FDb.lpool.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u8* abt::lpool_AllocMaybe() {
+    u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
+    if (row) {
+        new (row) u8; // call constructor
+    }
+    return row;
+}
+
+// --- abt.FDb.lpool.Delete
+// Remove row from all global and cross indices, then deallocate row
+void abt::lpool_Delete(u8 &row) {
+    int length = sizeof(u8);
+    lpool_FreeMem(&row, length);
 }
 
 // --- abt.FDb.srcfile.Alloc
@@ -3748,6 +3783,25 @@ void abt::ind_include_Reserve(int n) {
     }
 }
 
+// --- abt.FDb.sysincl.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.sysincl_elems && rhs.elems < _db.sysincl_elems + _db.sysincl_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("abt.tary_alias  field:abt.FDb.sysincl  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    sysincl_Reserve(nnew); // reserve space
+    int at = _db.sysincl_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.sysincl_elems + at + i) algo::cstring(rhs[i]);
+        _db.sysincl_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.sysincl_elems + at, nnew);
+}
+
 // --- abt.FDb.sysincl.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -3851,6 +3905,20 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstr
     }
     _db.sysincl_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- abt.FDb.sysincl.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = sysincl_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        sysincl_RemoveLast();
+    }
+    return retval;
 }
 
 // --- abt.FDb.zs_origsel_target.Insert
@@ -4514,7 +4582,6 @@ void abt::_db_bh_syscmd_curs_Next(_db_bh_syscmd_curs &curs) {
 // --- abt.FDb..Init
 // Set all fields to initial values.
 void abt::FDb_Init() {
-    _db.lpool_lock = 0;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
     // initialize LAry srcfile (abt.FDb.srcfile)
     _db.srcfile_n = 0;

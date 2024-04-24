@@ -240,6 +240,11 @@ sv2ssim::FField&     field_qFind(i32 t) __attribute__((nothrow, pure));
 // func:sv2ssim.FDb.field.XrefMaybe
 bool                 field_XrefMaybe(sv2ssim::FField &row);
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:sv2ssim.FDb.linetok.Addary
+algo::aryptr<algo::cstring> linetok_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:sv2ssim.FDb.linetok.Alloc
@@ -295,6 +300,11 @@ u64                  linetok_rowid_Get(algo::cstring &elem) __attribute__((nothr
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:sv2ssim.FDb.linetok.AllocNVal
 algo::aryptr<algo::cstring> linetok_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:sv2ssim.FDb.linetok.ReadStrptrMaybe
+bool                 linetok_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -569,7 +579,7 @@ bool                 FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr
 // Read fields of sv2ssim::FField from an ascii string.
 // The format of the string is an ssim Tuple
 // func:sv2ssim.FField..ReadStrptrMaybe
-bool                 FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_str);
+bool                 FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:sv2ssim.FField..Uninit
 void                 FField_Uninit(sv2ssim::FField& field) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -645,7 +655,7 @@ bool                 value_ReadStrptrMaybe(sv2ssim::FieldId& parent, algo::strpt
 // Read fields of sv2ssim::FieldId from an ascii string.
 // The format of the string is the format of the sv2ssim::FieldId's only field
 // func:sv2ssim.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.FieldId..Init
 void                 FieldId_Init(sv2ssim::FieldId& parent);
@@ -693,7 +703,7 @@ bool                 value_ReadStrptrMaybe(sv2ssim::TableId& parent, algo::strpt
 // Read fields of sv2ssim::TableId from an ascii string.
 // The format of the string is the format of the sv2ssim::TableId's only field
 // func:sv2ssim.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.TableId..Init
 void                 TableId_Init(sv2ssim::TableId& parent);

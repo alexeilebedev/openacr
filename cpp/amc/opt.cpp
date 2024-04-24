@@ -1,6 +1,6 @@
-// Copyright (C) 2008-2012 AlgoEngineering LLC
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
+// Copyright (C) 2008-2012 AlgoEngineering LLC
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -119,6 +119,30 @@ void amc::tfunc_Opt_ReadStrptrMaybe() {
             Ins(&R, doread.body, "    algo::ByteAry temp;");
             Ins(&R, doread.body, "    retval = $FldhdrtypeMsgs_ReadStrptrMaybe(in_str, temp); // read any of several message types here");
             Ins(&R, doread.body, "    ary_Setary(*algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it");
+            Ins(&R, doread.body, "}");
+            SetPresent(doread,Subst(R,"$parname"),field);
+        } else if (FindStringRead(*field.p_arg) && field.p_arg->c_lenfld) {
+            // try to use read function
+            amc::FLenfld& lenfld = *field.p_arg->c_lenfld;
+            Set(R, "$Msgname", name_Get(*field.p_arg));
+            Set(R, "$Ctype", amc::NsToCpp(field.p_arg->ctype));
+            cstring lenassign("len");
+            if (lenfld.extra > 0) {
+                lenassign << "+" << lenfld.extra;
+            } else if (lenfld.extra < 0) {
+                lenassign << lenfld.extra;
+            }
+            Set(R, "$assignlen", AssignExpr(*lenfld.p_field, "*ctype", lenassign, true));
+            Ins(&R, doread.body, "if (algo::ByteAry* varlenbuf_save = algo_lib::_db.varlenbuf) {");
+            Ins(&R, doread.body, "    int len = sizeof($Ctype);");
+            Ins(&R, doread.body, "    $Ctype *ctype = new(ary_AllocN(*varlenbuf_save, len).elems) $Ctype; // default values");
+            Ins(&R, doread.body, "    algo::ByteAry varlenbuf; // use for varlen msgs");
+            Ins(&R, doread.body, "    algo_lib::_db.varlenbuf = &varlenbuf;");
+            Ins(&R, doread.body, "    retval = $Msgname_ReadStrptrMaybe(*ctype,in_str); // read the type");
+            Ins(&R, doread.body, "    len += ary_N(varlenbuf);");
+            Ins(&R, doread.body, "    $assignlen;");
+            Ins(&R, doread.body, "    ary_Addary(*varlenbuf_save, ary_Getary(varlenbuf));");
+            Ins(&R, doread.body, "    algo_lib::_db.varlenbuf = varlenbuf_save;");
             Ins(&R, doread.body, "}");
             SetPresent(doread,Subst(R,"$parname"),field);
         } else {

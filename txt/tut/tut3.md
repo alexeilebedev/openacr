@@ -70,33 +70,21 @@ please execute $(acr_compl -install) to add completions support for new target
 report.amc  ***
 ```
 
-Since `amc` always generates a main loop in case the program wants it, we don't need to
-do anything special except modify the `samp_tut3::Main` function:
-
 ```
-inline-command: sed -i 's/prlog.*/samp_tut3::MainLoop();/' cpp/samp_tut3/samp_tut3.cpp
-```
-
-```
-inline-command: sed '/{/,/}/p;d' cpp/samp_tut3/samp_tut3.cpp
+inline-command: src_func samp_tut3 Main
+cpp/samp_tut3/samp_tut3.cpp:25: 
 void samp_tut3::Main() {
+    prlog("Hello, World!");
     samp_tut3::MainLoop();
 }
-```
 
-Build:
-
-```
-inline-command: ai samp_tut3
-abt.config  config:Linux-g++.release-x86_64  cache:***  out_dir:build/release
-abt.outofdate  ***
-report.abt  ***
 ```
 
 Run:
 
 ```
 inline-command: samp_tut3
+Hello, World!
 ```
 
 When you run the newly modified samp_tut3, you will notice that it exits right away. That's

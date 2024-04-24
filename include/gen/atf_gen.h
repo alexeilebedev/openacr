@@ -106,7 +106,7 @@ bool                 value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rh
 // Read fields of atf::FieldId from an ascii string.
 // The format of the string is the format of the atf::FieldId's only field
 // func:atf.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.FieldId..Init
 void                 FieldId_Init(atf::FieldId& parent);
@@ -166,7 +166,7 @@ bool                 value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr
 // Read fields of atf::Testresult from an ascii string.
 // The format of the string is the format of the atf::Testresult's only field
 // func:atf.Testresult..ReadStrptrMaybe
-bool                 Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str);
+bool                 Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.Testresult..Init
 void                 Testresult_Init(atf::Testresult& parent);
@@ -195,7 +195,7 @@ bool                 Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr f
 // Read fields of atf::Testrun from an ascii string.
 // The format of the string is an ssim Tuple
 // func:atf.Testrun..ReadStrptrMaybe
-bool                 Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str);
+bool                 Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.Testrun..Init
 void                 Testrun_Init(atf::Testrun& parent);

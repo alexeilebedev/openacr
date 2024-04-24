@@ -123,13 +123,14 @@ bool                 Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tu
 // Set all fields to initial values.
 // func:lib_ctype.Cmdline..Init
 void                 Cmdline_Init(lib_ctype::Cmdline& parent);
-// print command-line args of lib_ctype::Cmdline to string  -- cprint:lib_ctype.Cmdline.Argv
-// func:lib_ctype.Cmdline..PrintArgv
-void                 Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring &str) __attribute__((nothrow));
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:lib_ctype.Cmdline..ToCmdline
 tempstr              Cmdline_ToCmdline(lib_ctype::Cmdline& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
+// func:lib_ctype.Cmdline..PrintArgv
+void                 Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
@@ -1634,7 +1635,7 @@ bool                 value_ReadStrptrMaybe(lib_ctype::FieldId& parent, algo::str
 // Read fields of lib_ctype::FieldId from an ascii string.
 // The format of the string is the format of the lib_ctype::FieldId's only field
 // func:lib_ctype.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.FieldId..Init
 void                 FieldId_Init(lib_ctype::FieldId& parent);
@@ -1701,7 +1702,7 @@ bool                 value_ReadStrptrMaybe(lib_ctype::TableId& parent, algo::str
 // Read fields of lib_ctype::TableId from an ascii string.
 // The format of the string is the format of the lib_ctype::TableId's only field
 // func:lib_ctype.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.TableId..Init
 void                 TableId_Init(lib_ctype::TableId& parent);

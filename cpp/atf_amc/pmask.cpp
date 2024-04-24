@@ -1,5 +1,5 @@
+// Copyright (C) 2023-2024 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
-// Copyright (C) 2023 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -29,12 +29,10 @@ void atf_amc::amctest_TestPmask1() {
 }
 
 void atf_amc::amctest_TestPmask2() {
-#if 0
     atf_amc::PmaskU32 pmask_u32;
     value_Set(pmask_u32, 33);
     vrfyeq_(value_PresentQ(pmask_u32), true);
     vrfyeq_(pmask_u32.value, (u32)33);
-#endif
 }
 
 void atf_amc::amctest_TestPmask3() {
@@ -47,11 +45,10 @@ void atf_amc::amctest_TestPmask4() {
     atf_amc::PmaskU32 pmask_u32;
     PmaskU32_ReadStrptrMaybe(pmask_u32, "atf_amc.PmaskU32  value:33");
     vrfyeq_(value_PresentQ(pmask_u32), true);
-    // value_Set(pmask_u32, (u32)33); what is this?
+    value_Set(pmask_u32, (u32)33);
 }
 
 void atf_amc::amctest_TestPmask5() {
-#if 0
     atf_amc::PmaskU32 pmask_u32;
     vrfyeq_(pmask_u32.pmask, (u32)0);
     value_Set(pmask_u32, 1);
@@ -64,8 +61,6 @@ void atf_amc::amctest_TestPmask5() {
     vrfyeq_(pmask_u32.pmask, (u32)0xf);
     value5_Set(pmask_u32, 5);
     vrfyeq_(pmask_u32.pmask, (u32)0x1f);
-#endif
-
 }
 
 void atf_amc::amctest_TestPmask6() {
@@ -75,7 +70,6 @@ void atf_amc::amctest_TestPmask6() {
 }
 
 void atf_amc::amctest_TestPmask7() {
-#if 0
     atf_amc::PmaskU128 pmask_u128;
     value63_Set(pmask_u128, 63);
     value64_Set(pmask_u128, 64);
@@ -87,20 +81,15 @@ void atf_amc::amctest_TestPmask7() {
     vrfyeq_(pmask_u128.value71, (u32)71);
     vrfyeq_(pmask_u128.value63, (u32)63);
     vrfyeq_(pmask_u128.value64, (u32)64);
-#endif
 }
 
 void atf_amc::amctest_TestPmask8() {
-#if 0
     atf_amc::PmaskU555 pmask_u555;
     value_Set(pmask_u555, 1);
     vrfyeq_(pmask_qGetBit(pmask_u555, 0), 1);
-#endif
-
 }
 
 void atf_amc::amctest_PmaskMultiple() {
-#if 0
     atf_amc::PmaskMultiple p;
     // check that value1 is in none of the pmasks
     vrfyeq_(value1_PresentQ(p),false);
@@ -123,5 +112,4 @@ void atf_amc::amctest_PmaskMultiple() {
     // pmask3 controls printing.
     prlog(p);
     vrfyeq_(tempstr()<<p, "atf_amc.PmaskMultiple  value1:1  value2:2  value4:0  value6:0  value7:0");
-#endif
 }

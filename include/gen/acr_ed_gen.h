@@ -910,6 +910,11 @@ acr_ed::FCstr&       cstr_qFind(u64 t) __attribute__((nothrow, pure));
 // func:acr_ed.FDb.cstr.XrefMaybe
 bool                 cstr_XrefMaybe(acr_ed::FCstr &row);
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_ed.FDb.vis.Addary
+algo::aryptr<algo::cstring> vis_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr_ed.FDb.vis.Alloc
@@ -965,6 +970,11 @@ u64                  vis_rowid_Get(algo::cstring &elem) __attribute__((nothrow))
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_ed.FDb.vis.AllocNVal
 algo::aryptr<algo::cstring> vis_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:acr_ed.FDb.vis.ReadStrptrMaybe
+bool                 vis_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1211,11 +1221,14 @@ int                  abt_Exec() __attribute__((nothrow));
 // func:acr_ed.FDb.abt.ExecX
 void                 abt_ExecX();
 // Call execv()
-// Call execv with specified parameters -- cprint:abt.Argv
+// Call execv with specified parameters
 // func:acr_ed.FDb.abt.Execv
 int                  abt_Execv() __attribute__((nothrow));
 // func:acr_ed.FDb.abt.ToCmdline
 algo::tempstr        abt_ToCmdline() __attribute__((nothrow));
+// Form array from the command line
+// func:acr_ed.FDb.abt.ToArgv
+void                 abt_ToArgv(algo::StringAry& args) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2302,7 +2315,7 @@ bool                 value_ReadStrptrMaybe(acr_ed::FieldId& parent, algo::strptr
 // Read fields of acr_ed::FieldId from an ascii string.
 // The format of the string is the format of the acr_ed::FieldId's only field
 // func:acr_ed.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(acr_ed::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(acr_ed::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_ed.FieldId..Init
 void                 FieldId_Init(acr_ed::FieldId& parent);
@@ -2350,7 +2363,7 @@ bool                 value_ReadStrptrMaybe(acr_ed::TableId& parent, algo::strptr
 // Read fields of acr_ed::TableId from an ascii string.
 // The format of the string is the format of the acr_ed::TableId's only field
 // func:acr_ed.TableId..ReadStrptrMaybe
-bool                 TableId_ReadStrptrMaybe(acr_ed::TableId &parent, algo::strptr in_str);
+bool                 TableId_ReadStrptrMaybe(acr_ed::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_ed.TableId..Init
 void                 TableId_Init(acr_ed::TableId& parent);

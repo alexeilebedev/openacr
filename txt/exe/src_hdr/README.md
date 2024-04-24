@@ -18,7 +18,7 @@ Usage: src_hdr [options]
     -targsrc           regx    ""      Regx of targsrc to update
     -write                             Update files in-place
     -indent                            Indent source files
-    -update_copyright  string  ""      Update copyright notice for specified company with current year
+    -update_copyright                  Update copyright year for current company
     -scriptfile        regx    ""      Regx of scripts to update header
     -verbose           int             Verbosity level (0..255); alias -v; cumulative
     -debug             int             Debug level (0..255); alias -d; cumulative
@@ -43,7 +43,7 @@ Usage: src_hdr [options]
 #### -indent -- Indent source files
 <a href="#-indent"></a>
 
-#### -update_copyright -- Update copyright notice for specified company with current year
+#### -update_copyright -- Update copyright year for current company
 <a href="#-update_copyright"></a>
 
 #### -scriptfile -- Regx of scripts to update header

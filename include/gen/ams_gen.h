@@ -277,13 +277,13 @@ bool                 AlarmSyncMsg_ReadFieldMaybe(ams::AlarmSyncMsg& parent, algo
 // Read fields of ams::AlarmSyncMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.AlarmSyncMsg..ReadStrptrMaybe
-bool                 AlarmSyncMsg_ReadStrptrMaybe(ams::AlarmSyncMsg &parent, algo::strptr in_str);
+bool                 AlarmSyncMsg_ReadStrptrMaybe(ams::AlarmSyncMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.AlarmSyncMsg..GetMsgLength
-i32                  AlarmSyncMsg_GetMsgLength(const ams::AlarmSyncMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::AlarmSyncMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.AlarmSyncMsg..GetMsgMemptr
-algo::memptr         AlarmSyncMsg_GetMsgMemptr(const ams::AlarmSyncMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::AlarmSyncMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.AlarmSyncMsg..Init
 void                 AlarmSyncMsg_Init(ams::AlarmSyncMsg& parent);
@@ -337,7 +337,7 @@ u32                  ProcType_Hash(u32 prev, ams::ProcType rhs) __attribute__((n
 // Read fields of ams::ProcType from an ascii string.
 // The format of the string is the format of the ams::ProcType's only field
 // func:ams.ProcType..ReadStrptrMaybe
-bool                 ProcType_ReadStrptrMaybe(ams::ProcType &parent, algo::strptr in_str);
+bool                 ProcType_ReadStrptrMaybe(ams::ProcType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ams.ProcType..Cmp
 i32                  ProcType_Cmp(ams::ProcType lhs, ams::ProcType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -373,7 +373,7 @@ bool                 ProcId_ReadFieldMaybe(ams::ProcId& parent, algo::strptr fie
 // Read fields of ams::ProcId from an ascii string.
 // The format of the string is a string with separated values
 // func:ams.ProcId..ReadStrptrMaybe
-bool                 ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str);
+bool                 ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ams.ProcId..Cmp
 i32                  ProcId_Cmp(ams::ProcId lhs, ams::ProcId rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -431,7 +431,7 @@ u32                  StreamType_Hash(u32 prev, ams::StreamType rhs) __attribute_
 // Read fields of ams::StreamType from an ascii string.
 // The format of the string is the format of the ams::StreamType's only field
 // func:ams.StreamType..ReadStrptrMaybe
-bool                 StreamType_ReadStrptrMaybe(ams::StreamType &parent, algo::strptr in_str);
+bool                 StreamType_ReadStrptrMaybe(ams::StreamType &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ams.StreamType..Cmp
 i32                  StreamType_Cmp(ams::StreamType lhs, ams::StreamType rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -469,7 +469,7 @@ bool                 StreamId_ReadFieldMaybe(ams::StreamId& parent, algo::strptr
 // Read fields of ams::StreamId from an ascii string.
 // The format of the string is a string with separated values
 // func:ams.StreamId..ReadStrptrMaybe
-bool                 StreamId_ReadStrptrMaybe(ams::StreamId &parent, algo::strptr in_str);
+bool                 StreamId_ReadStrptrMaybe(ams::StreamId &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ams.StreamId..Cmp
 i32                  StreamId_Cmp(ams::StreamId lhs, ams::StreamId rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -510,13 +510,13 @@ bool                 DfltStream_ReadFieldMaybe(ams::DfltStream& parent, algo::st
 // Read fields of ams::DfltStream from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.DfltStream..ReadStrptrMaybe
-bool                 DfltStream_ReadStrptrMaybe(ams::DfltStream &parent, algo::strptr in_str);
+bool                 DfltStream_ReadStrptrMaybe(ams::DfltStream &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.DfltStream..GetMsgLength
-i32                  DfltStream_GetMsgLength(const ams::DfltStream& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::DfltStream& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.DfltStream..GetMsgMemptr
-algo::memptr         DfltStream_GetMsgMemptr(const ams::DfltStream& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::DfltStream& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.DfltStream..Init
 void                 DfltStream_Init(ams::DfltStream& parent);
@@ -553,13 +553,13 @@ bool                 DumpStreamTableMsg_ReadFieldMaybe(ams::DumpStreamTableMsg& 
 // Read fields of ams::DumpStreamTableMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.DumpStreamTableMsg..ReadStrptrMaybe
-bool                 DumpStreamTableMsg_ReadStrptrMaybe(ams::DumpStreamTableMsg &parent, algo::strptr in_str);
+bool                 DumpStreamTableMsg_ReadStrptrMaybe(ams::DumpStreamTableMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.DumpStreamTableMsg..GetMsgLength
-i32                  DumpStreamTableMsg_GetMsgLength(const ams::DumpStreamTableMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::DumpStreamTableMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.DumpStreamTableMsg..GetMsgMemptr
-algo::memptr         DumpStreamTableMsg_GetMsgMemptr(const ams::DumpStreamTableMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::DumpStreamTableMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.DumpStreamTableMsg..Init
 void                 DumpStreamTableMsg_Init(ams::DumpStreamTableMsg& parent);
@@ -601,6 +601,10 @@ u32                  text_N(const ams::ExpectMsg& parent) __attribute__((__warn_
 // Convert string to field. Return success value
 // func:ams.ExpectMsg.text.ReadStrptrMaybe
 bool                 text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:ams.ExpectMsg.text.Print
+void                 text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.ExpectMsg.text_curs.Reset
 void                 ExpectMsg_text_curs_Reset(ExpectMsg_text_curs &curs, ams::ExpectMsg &parent) __attribute__((nothrow));
@@ -619,13 +623,13 @@ bool                 ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strp
 // Read fields of ams::ExpectMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.ExpectMsg..ReadStrptrMaybe
-bool                 ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str);
+bool                 ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.ExpectMsg..GetMsgLength
-i32                  ExpectMsg_GetMsgLength(const ams::ExpectMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::ExpectMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.ExpectMsg..GetMsgMemptr
-algo::memptr         ExpectMsg_GetMsgMemptr(const ams::ExpectMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::ExpectMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.ExpectMsg..Init
 void                 ExpectMsg_Init(ams::ExpectMsg& parent);
@@ -675,7 +679,7 @@ bool                 value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rh
 // Read fields of ams::FieldId from an ascii string.
 // The format of the string is the format of the ams::FieldId's only field
 // func:ams.FieldId..ReadStrptrMaybe
-bool                 FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str);
+bool                 FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.FieldId..Init
 void                 FieldId_Init(ams::FieldId& parent);
@@ -712,13 +716,13 @@ bool                 HeartbeatMsg_ReadFieldMaybe(ams::HeartbeatMsg& parent, algo
 // Read fields of ams::HeartbeatMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.HeartbeatMsg..ReadStrptrMaybe
-bool                 HeartbeatMsg_ReadStrptrMaybe(ams::HeartbeatMsg &parent, algo::strptr in_str);
+bool                 HeartbeatMsg_ReadStrptrMaybe(ams::HeartbeatMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.HeartbeatMsg..GetMsgLength
-i32                  HeartbeatMsg_GetMsgLength(const ams::HeartbeatMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::HeartbeatMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.HeartbeatMsg..GetMsgMemptr
-algo::memptr         HeartbeatMsg_GetMsgMemptr(const ams::HeartbeatMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::HeartbeatMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.HeartbeatMsg..Init
 void                 HeartbeatMsg_Init(ams::HeartbeatMsg& parent);
@@ -760,6 +764,10 @@ u32                  payload_N(const ams::InputLineMsg& parent) __attribute__((_
 // Convert string to field. Return success value
 // func:ams.InputLineMsg.payload.ReadStrptrMaybe
 bool                 payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert payload to a string.
+// Array is printed as a regular string.
+// func:ams.InputLineMsg.payload.Print
+void                 payload_Print(ams::InputLineMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.InputLineMsg.payload_curs.Reset
 void                 InputLineMsg_payload_curs_Reset(InputLineMsg_payload_curs &curs, ams::InputLineMsg &parent) __attribute__((nothrow));
@@ -778,13 +786,13 @@ bool                 InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo
 // Read fields of ams::InputLineMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.InputLineMsg..ReadStrptrMaybe
-bool                 InputLineMsg_ReadStrptrMaybe(ams::InputLineMsg &parent, algo::strptr in_str);
+bool                 InputLineMsg_ReadStrptrMaybe(ams::InputLineMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.InputLineMsg..GetMsgLength
-i32                  InputLineMsg_GetMsgLength(const ams::InputLineMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::InputLineMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.InputLineMsg..GetMsgMemptr
-algo::memptr         InputLineMsg_GetMsgMemptr(const ams::InputLineMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::InputLineMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.InputLineMsg..Init
 void                 InputLineMsg_Init(ams::InputLineMsg& parent);
@@ -830,6 +838,10 @@ u32                  text_N(const ams::LogMsg& parent) __attribute__((__warn_unu
 // Convert string to field. Return success value
 // func:ams.LogMsg.text.ReadStrptrMaybe
 bool                 text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert text to a string.
+// Array is printed as a regular string.
+// func:ams.LogMsg.text.Print
+void                 text_Print(ams::LogMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.LogMsg.text_curs.Reset
 void                 LogMsg_text_curs_Reset(LogMsg_text_curs &curs, ams::LogMsg &parent) __attribute__((nothrow));
@@ -848,13 +860,13 @@ bool                 LogMsg_ReadFieldMaybe(ams::LogMsg& parent, algo::strptr fie
 // Read fields of ams::LogMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.LogMsg..ReadStrptrMaybe
-bool                 LogMsg_ReadStrptrMaybe(ams::LogMsg &parent, algo::strptr in_str);
+bool                 LogMsg_ReadStrptrMaybe(ams::LogMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.LogMsg..GetMsgLength
-i32                  LogMsg_GetMsgLength(const ams::LogMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::LogMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.LogMsg..GetMsgMemptr
-algo::memptr         LogMsg_GetMsgMemptr(const ams::LogMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::LogMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.LogMsg..Init
 void                 LogMsg_Init(ams::LogMsg& parent);
@@ -912,7 +924,7 @@ bool                 Member_ReadFieldMaybe(ams::Member& parent, algo::strptr fie
 // Read fields of ams::Member from an ascii string.
 // The format of the string is a string with separated values
 // func:ams.Member..ReadStrptrMaybe
-bool                 Member_ReadStrptrMaybe(ams::Member &parent, algo::strptr in_str);
+bool                 Member_ReadStrptrMaybe(ams::Member &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ams.Member..Cmp
 i32                  Member_Cmp(ams::Member lhs, ams::Member rhs) __attribute__((nothrow));
 // Set all fields to initial values.
@@ -958,6 +970,10 @@ u8*                  messages_Addr(ams::MsgBlock& parent);
 // Return number of elements in varlen field
 // func:ams.MsgBlock.messages.N
 u32                  messages_N(const ams::MsgBlock& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert messages to a string.
+// Array is printed as a regular string.
+// func:ams.MsgBlock.messages.Print
+void                 messages_Print(ams::MsgBlock& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.MsgBlock.messages_curs.Reset
 void                 MsgBlock_messages_curs_Reset(MsgBlock_messages_curs &curs, ams::MsgBlock &parent) __attribute__((nothrow));
@@ -972,10 +988,10 @@ void                 MsgBlock_messages_curs_Next(MsgBlock_messages_curs &curs) _
 u8&                  MsgBlock_messages_curs_Access(MsgBlock_messages_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.MsgBlock..GetMsgLength
-i32                  MsgBlock_GetMsgLength(const ams::MsgBlock& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::MsgBlock& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.MsgBlock..GetMsgMemptr
-algo::memptr         MsgBlock_GetMsgMemptr(const ams::MsgBlock& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::MsgBlock& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.MsgBlock..Init
 void                 MsgBlock_Init(ams::MsgBlock& parent);
@@ -1052,13 +1068,13 @@ bool                 MsgHeader_ReadFieldMaybe(ams::MsgHeader& parent, algo::strp
 // Read fields of ams::MsgHeader from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.MsgHeader..ReadStrptrMaybe
-bool                 MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str);
+bool                 MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.MsgHeader..GetMsgLength
-i32                  MsgHeader_GetMsgLength(const ams::MsgHeader& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::MsgHeader& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.MsgHeader..GetMsgMemptr
-algo::memptr         MsgHeader_GetMsgMemptr(const ams::MsgHeader& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::MsgHeader& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.MsgHeader..Init
 void                 MsgHeader_Init(ams::MsgHeader& data);
@@ -1108,7 +1124,7 @@ bool                 value_ReadStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo:
 // Read fields of ams::MsgHeaderMsgsCase from an ascii string.
 // The format of the string is the format of the ams::MsgHeaderMsgsCase's only field
 // func:ams.MsgHeaderMsgsCase..ReadStrptrMaybe
-bool                 MsgHeaderMsgsCase_ReadStrptrMaybe(ams::MsgHeaderMsgsCase &parent, algo::strptr in_str);
+bool                 MsgHeaderMsgsCase_ReadStrptrMaybe(ams::MsgHeaderMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.MsgHeaderMsgsCase..Init
 void                 MsgHeaderMsgsCase_Init(ams::MsgHeaderMsgsCase& parent);
@@ -1153,7 +1169,7 @@ bool                 StreamPos_ReadFieldMaybe(ams::StreamPos& parent, algo::strp
 // Read fields of ams::StreamPos from an ascii string.
 // The format of the string is a string with separated values
 // func:ams.StreamPos..ReadStrptrMaybe
-bool                 StreamPos_ReadStrptrMaybe(ams::StreamPos &parent, algo::strptr in_str);
+bool                 StreamPos_ReadStrptrMaybe(ams::StreamPos &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.StreamPos..Init
 void                 StreamPos_Init(ams::StreamPos& parent);
@@ -1192,13 +1208,13 @@ bool                 OpenMsg_ReadFieldMaybe(ams::OpenMsg& parent, algo::strptr f
 // Read fields of ams::OpenMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.OpenMsg..ReadStrptrMaybe
-bool                 OpenMsg_ReadStrptrMaybe(ams::OpenMsg &parent, algo::strptr in_str);
+bool                 OpenMsg_ReadStrptrMaybe(ams::OpenMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.OpenMsg..GetMsgLength
-i32                  OpenMsg_GetMsgLength(const ams::OpenMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::OpenMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.OpenMsg..GetMsgMemptr
-algo::memptr         OpenMsg_GetMsgMemptr(const ams::OpenMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::OpenMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.OpenMsg..Init
 void                 OpenMsg_Init(ams::OpenMsg& parent);
@@ -1254,13 +1270,13 @@ bool                 PrlogMsg_ReadFieldMaybe(ams::PrlogMsg& parent, algo::strptr
 // Read fields of ams::PrlogMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.PrlogMsg..ReadStrptrMaybe
-bool                 PrlogMsg_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str);
+bool                 PrlogMsg_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.PrlogMsg..GetMsgLength
-i32                  PrlogMsg_GetMsgLength(const ams::PrlogMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::PrlogMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.PrlogMsg..GetMsgMemptr
-algo::memptr         PrlogMsg_GetMsgMemptr(const ams::PrlogMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::PrlogMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.PrlogMsg..Init
 void                 PrlogMsg_Init(ams::PrlogMsg& parent);
@@ -1297,13 +1313,13 @@ bool                 ProcAddMsg_ReadFieldMaybe(ams::ProcAddMsg& parent, algo::st
 // Read fields of ams::ProcAddMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.ProcAddMsg..ReadStrptrMaybe
-bool                 ProcAddMsg_ReadStrptrMaybe(ams::ProcAddMsg &parent, algo::strptr in_str);
+bool                 ProcAddMsg_ReadStrptrMaybe(ams::ProcAddMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.ProcAddMsg..GetMsgLength
-i32                  ProcAddMsg_GetMsgLength(const ams::ProcAddMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::ProcAddMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.ProcAddMsg..GetMsgMemptr
-algo::memptr         ProcAddMsg_GetMsgMemptr(const ams::ProcAddMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::ProcAddMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.ProcAddMsg..Init
 void                 ProcAddMsg_Init(ams::ProcAddMsg& parent);
@@ -1340,13 +1356,13 @@ bool                 ProcRemoveMsg_ReadFieldMaybe(ams::ProcRemoveMsg& parent, al
 // Read fields of ams::ProcRemoveMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.ProcRemoveMsg..ReadStrptrMaybe
-bool                 ProcRemoveMsg_ReadStrptrMaybe(ams::ProcRemoveMsg &parent, algo::strptr in_str);
+bool                 ProcRemoveMsg_ReadStrptrMaybe(ams::ProcRemoveMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.ProcRemoveMsg..GetMsgLength
-i32                  ProcRemoveMsg_GetMsgLength(const ams::ProcRemoveMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::ProcRemoveMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.ProcRemoveMsg..GetMsgMemptr
-algo::memptr         ProcRemoveMsg_GetMsgMemptr(const ams::ProcRemoveMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::ProcRemoveMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.ProcRemoveMsg..Init
 void                 ProcRemoveMsg_Init(ams::ProcRemoveMsg& parent);
@@ -1385,7 +1401,7 @@ bool                 SeqmsgId_ReadFieldMaybe(ams::SeqmsgId& parent, algo::strptr
 // Read fields of ams::SeqmsgId from an ascii string.
 // The format of the string is a string with separated values
 // func:ams.SeqmsgId..ReadStrptrMaybe
-bool                 SeqmsgId_ReadStrptrMaybe(ams::SeqmsgId &parent, algo::strptr in_str);
+bool                 SeqmsgId_ReadStrptrMaybe(ams::SeqmsgId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.SeqmsgId..Init
 void                 SeqmsgId_Init(ams::SeqmsgId& parent);
@@ -1443,13 +1459,13 @@ bool                 Seqmsg_ReadFieldMaybe(ams::Seqmsg& parent, algo::strptr fie
 // Read fields of ams::Seqmsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.Seqmsg..ReadStrptrMaybe
-bool                 Seqmsg_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str);
+bool                 Seqmsg_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.Seqmsg..GetMsgLength
-i32                  Seqmsg_GetMsgLength(const ams::Seqmsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::Seqmsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.Seqmsg..GetMsgMemptr
-algo::memptr         Seqmsg_GetMsgMemptr(const ams::Seqmsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::Seqmsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.Seqmsg..Init
 void                 Seqmsg_Init(ams::Seqmsg& parent);
@@ -1538,13 +1554,13 @@ bool                 SeqmsgTrace_ReadFieldMaybe(ams::SeqmsgTrace& parent, algo::
 // Read fields of ams::SeqmsgTrace from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.SeqmsgTrace..ReadStrptrMaybe
-bool                 SeqmsgTrace_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str);
+bool                 SeqmsgTrace_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.SeqmsgTrace..GetMsgLength
-i32                  SeqmsgTrace_GetMsgLength(const ams::SeqmsgTrace& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::SeqmsgTrace& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.SeqmsgTrace..GetMsgMemptr
-algo::memptr         SeqmsgTrace_GetMsgMemptr(const ams::SeqmsgTrace& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::SeqmsgTrace& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.SeqmsgTrace..Init
 void                 SeqmsgTrace_Init(ams::SeqmsgTrace& parent);
@@ -1630,7 +1646,7 @@ void                 trace_text_Set(ams::StreamFlags& parent, bool rhs) __attrib
 bool                 StreamFlags_ReadFieldMaybe(ams::StreamFlags& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of ams::StreamFlags from an ascii string.
 // func:ams.StreamFlags..ReadStrptrMaybe
-bool                 StreamFlags_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str);
+bool                 StreamFlags_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.StreamFlags..Init
 void                 StreamFlags_Init(ams::StreamFlags& parent);
@@ -1673,13 +1689,13 @@ bool                 StreamHbMsg_ReadFieldMaybe(ams::StreamHbMsg& parent, algo::
 // Read fields of ams::StreamHbMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.StreamHbMsg..ReadStrptrMaybe
-bool                 StreamHbMsg_ReadStrptrMaybe(ams::StreamHbMsg &parent, algo::strptr in_str);
+bool                 StreamHbMsg_ReadStrptrMaybe(ams::StreamHbMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.StreamHbMsg..GetMsgLength
-i32                  StreamHbMsg_GetMsgLength(const ams::StreamHbMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::StreamHbMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.StreamHbMsg..GetMsgMemptr
-algo::memptr         StreamHbMsg_GetMsgMemptr(const ams::StreamHbMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::StreamHbMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.StreamHbMsg..Init
 void                 StreamHbMsg_Init(ams::StreamHbMsg& parent);
@@ -1714,13 +1730,13 @@ bool                 TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo
 // Read fields of ams::TerminateMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.TerminateMsg..ReadStrptrMaybe
-bool                 TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr in_str);
+bool                 TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.TerminateMsg..GetMsgLength
-i32                  TerminateMsg_GetMsgLength(const ams::TerminateMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::TerminateMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.TerminateMsg..GetMsgMemptr
-algo::memptr         TerminateMsg_GetMsgMemptr(const ams::TerminateMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::TerminateMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.TerminateMsg..Init
 void                 TerminateMsg_Init(ams::TerminateMsg& parent);
@@ -1786,13 +1802,13 @@ bool                 Trace2Msg_ReadFieldMaybe(ams::Trace2Msg& parent, algo::strp
 // Read fields of ams::Trace2Msg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.Trace2Msg..ReadStrptrMaybe
-bool                 Trace2Msg_ReadStrptrMaybe(ams::Trace2Msg &parent, algo::strptr in_str);
+bool                 Trace2Msg_ReadStrptrMaybe(ams::Trace2Msg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.Trace2Msg..GetMsgLength
-i32                  Trace2Msg_GetMsgLength(const ams::Trace2Msg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::Trace2Msg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.Trace2Msg..GetMsgMemptr
-algo::memptr         Trace2Msg_GetMsgMemptr(const ams::Trace2Msg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::Trace2Msg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.Trace2Msg..Init
 void                 Trace2Msg_Init(ams::Trace2Msg& parent);
@@ -1842,6 +1858,10 @@ u32                  data_N(const ams::TraceInfo2Msg& parent) __attribute__((__w
 // Convert string to field. Return success value
 // func:ams.TraceInfo2Msg.data.ReadStrptrMaybe
 bool                 data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert data to a string.
+// Array is printed as a regular string.
+// func:ams.TraceInfo2Msg.data.Print
+void                 data_Print(ams::TraceInfo2Msg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.TraceInfo2Msg.data_curs.Reset
 void                 TraceInfo2Msg_data_curs_Reset(TraceInfo2Msg_data_curs &curs, ams::TraceInfo2Msg &parent) __attribute__((nothrow));
@@ -1860,13 +1880,13 @@ bool                 TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, al
 // Read fields of ams::TraceInfo2Msg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.TraceInfo2Msg..ReadStrptrMaybe
-bool                 TraceInfo2Msg_ReadStrptrMaybe(ams::TraceInfo2Msg &parent, algo::strptr in_str);
+bool                 TraceInfo2Msg_ReadStrptrMaybe(ams::TraceInfo2Msg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.TraceInfo2Msg..GetMsgLength
-i32                  TraceInfo2Msg_GetMsgLength(const ams::TraceInfo2Msg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::TraceInfo2Msg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.TraceInfo2Msg..GetMsgMemptr
-algo::memptr         TraceInfo2Msg_GetMsgMemptr(const ams::TraceInfo2Msg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::TraceInfo2Msg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.TraceInfo2Msg..Init
 void                 TraceInfo2Msg_Init(ams::TraceInfo2Msg& parent);
@@ -1914,6 +1934,10 @@ u32                  data_N(const ams::TraceInfoMsg& parent) __attribute__((__wa
 // Convert string to field. Return success value
 // func:ams.TraceInfoMsg.data.ReadStrptrMaybe
 bool                 data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Convert data to a string.
+// Array is printed as a regular string.
+// func:ams.TraceInfoMsg.data.Print
+void                 data_Print(ams::TraceInfoMsg& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.TraceInfoMsg.data_curs.Reset
 void                 TraceInfoMsg_data_curs_Reset(TraceInfoMsg_data_curs &curs, ams::TraceInfoMsg &parent) __attribute__((nothrow));
@@ -1932,13 +1956,13 @@ bool                 TraceInfoMsg_ReadFieldMaybe(ams::TraceInfoMsg& parent, algo
 // Read fields of ams::TraceInfoMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.TraceInfoMsg..ReadStrptrMaybe
-bool                 TraceInfoMsg_ReadStrptrMaybe(ams::TraceInfoMsg &parent, algo::strptr in_str);
+bool                 TraceInfoMsg_ReadStrptrMaybe(ams::TraceInfoMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.TraceInfoMsg..GetMsgLength
-i32                  TraceInfoMsg_GetMsgLength(const ams::TraceInfoMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::TraceInfoMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.TraceInfoMsg..GetMsgMemptr
-algo::memptr         TraceInfoMsg_GetMsgMemptr(const ams::TraceInfoMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::TraceInfoMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.TraceInfoMsg..Init
 void                 TraceInfoMsg_Init(ams::TraceInfoMsg& parent);
@@ -2002,13 +2026,13 @@ bool                 TraceMsg_ReadFieldMaybe(ams::TraceMsg& parent, algo::strptr
 // Read fields of ams::TraceMsg from an ascii string.
 // The format of the string is an ssim Tuple
 // func:ams.TraceMsg..ReadStrptrMaybe
-bool                 TraceMsg_ReadStrptrMaybe(ams::TraceMsg &parent, algo::strptr in_str);
+bool                 TraceMsg_ReadStrptrMaybe(ams::TraceMsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.TraceMsg..GetMsgLength
-i32                  TraceMsg_GetMsgLength(const ams::TraceMsg& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::TraceMsg& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.TraceMsg..GetMsgMemptr
-algo::memptr         TraceMsg_GetMsgMemptr(const ams::TraceMsg& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::TraceMsg& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.TraceMsg..Init
 void                 TraceMsg_Init(ams::TraceMsg& parent);
@@ -2052,6 +2076,10 @@ u8*                  payload_Addr(ams::UdpFrame& parent);
 // Return number of elements in varlen field
 // func:ams.UdpFrame.payload.N
 u32                  payload_N(const ams::UdpFrame& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Convert payload to a string.
+// Array is printed as a regular string.
+// func:ams.UdpFrame.payload.Print
+void                 payload_Print(ams::UdpFrame& parent, algo::cstring &rhs) __attribute__((nothrow));
 
 // func:ams.UdpFrame.payload_curs.Reset
 void                 UdpFrame_payload_curs_Reset(UdpFrame_payload_curs &curs, ams::UdpFrame &parent) __attribute__((nothrow));
@@ -2066,10 +2094,10 @@ void                 UdpFrame_payload_curs_Next(UdpFrame_payload_curs &curs) __a
 u8&                  UdpFrame_payload_curs_Access(UdpFrame_payload_curs &curs) __attribute__((nothrow));
 // Message length (uses length field)
 // func:ams.UdpFrame..GetMsgLength
-i32                  UdpFrame_GetMsgLength(const ams::UdpFrame& parent) __attribute__((nothrow));
+i32                  GetMsgLength(const ams::UdpFrame& parent) __attribute__((nothrow));
 // Memptr encompassing the message (uses length field)
 // func:ams.UdpFrame..GetMsgMemptr
-algo::memptr         UdpFrame_GetMsgMemptr(const ams::UdpFrame& row) __attribute__((nothrow));
+algo::memptr         GetMsgMemptr(const ams::UdpFrame& row) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams.UdpFrame..Init
 void                 UdpFrame_Init(ams::UdpFrame& parent);
