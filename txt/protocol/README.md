@@ -3,6 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
+<!-- TOC_BEG AUTO -->
 * [algo - Basic types and functions](/txt/protocol/algo/README.md)
 
 * [ams - Algo Messaging System protocol](/txt/protocol/ams/README.md)
@@ -16,4 +17,6 @@
 * [ietf - Some IETF structs](/txt/protocol/ietf/README.md)
 
 * [report - Command reports](/txt/protocol/report/README.md)
+
+<!-- TOC_END AUTO -->
 

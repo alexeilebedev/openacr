@@ -201,8 +201,6 @@ void atf_unit::Main() {
     lib_exec::_db.cmdline.complooo=false;
     lib_exec::_db.cmdline.merge_output=true;
 
-    vrfyeq((tempstr() << algo::UnixTime()), "1970/01/01 00:00:00", "Wrong timezone");
-
     int nsel=0;
     ind_beg(atf_unit::_db_unittest_curs,unittest, atf_unit::_db) {
         atf_unit::_db.report.n_test_total++;

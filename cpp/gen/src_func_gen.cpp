@@ -135,6 +135,7 @@ void src_func::ctypelen_CopyOut(src_func::FCtypelen &row, dmmeta::Ctypelen &out)
     out.len = row.len;
     out.alignment = row.alignment;
     out.padbytes = row.padbytes;
+    out.plaindata = row.plaindata;
 }
 
 // --- src_func.FCtypelen.base.CopyIn
@@ -144,6 +145,7 @@ void src_func::ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen &in) {
     row.len = in.len;
     row.alignment = in.alignment;
     row.padbytes = in.padbytes;
+    row.plaindata = in.plaindata;
 }
 
 // --- src_func.FCtypelen..Uninit
@@ -434,7 +436,7 @@ static void src_func::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'fcceb1600247efc0d7b15d2ae7a9429c3b809332'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'5d834e23d5da4b43a45249cf5cc36918b46802fa'");
 }
 
 // --- src_func.FDb._db.InsertStrptrMaybe

@@ -511,6 +511,7 @@ dev.gitfile  gitfile:data/dev/package.ssim
 dev.gitfile  gitfile:data/dev/pkgdep.ssim
 dev.gitfile  gitfile:data/dev/pkgkey.ssim
 dev.gitfile  gitfile:data/dev/readme.ssim
+dev.gitfile  gitfile:data/dev/readmecat.ssim
 dev.gitfile  gitfile:data/dev/sandbox.ssim
 dev.gitfile  gitfile:data/dev/sbpath.ssim
 dev.gitfile  gitfile:data/dev/scriptfile.ssim
@@ -909,7 +910,6 @@ dev.gitfile  gitfile:test/atf_comp/acr.Meta3
 dev.gitfile  gitfile:test/atf_comp/acr.NullTrunc
 dev.gitfile  gitfile:test/atf_comp/acr.QueryCtype
 dev.gitfile  gitfile:test/atf_comp/acr.RenameCollision
-dev.gitfile  gitfile:test/atf_comp/acr.RenameCollisionMultiple
 dev.gitfile  gitfile:test/atf_comp/acr.RenameField
 dev.gitfile  gitfile:test/atf_comp/acr.RenameRecord
 dev.gitfile  gitfile:test/atf_comp/acr.Replace
@@ -1096,8 +1096,6 @@ dev.gitfile  gitfile:test/orgfile/a.txt
 dev.gitfile  gitfile:test/orgfile/b.txt
 dev.gitfile  gitfile:test/orgfile/c.txt
 dev.gitfile  gitfile:txt/README.md
-dev.gitfile  gitfile:txt/about.md
-dev.gitfile  gitfile:txt/coding-style.md
 dev.gitfile  gitfile:txt/exe/README.md
 dev.gitfile  gitfile:txt/exe/abt/README.md
 dev.gitfile  gitfile:txt/exe/abt_md/README.md
@@ -1111,7 +1109,7 @@ dev.gitfile  gitfile:txt/exe/acr_my/README.md
 dev.gitfile  gitfile:txt/exe/amc/README.md
 dev.gitfile  gitfile:txt/exe/amc/enum.md
 dev.gitfile  gitfile:txt/exe/amc/exec.md
-dev.gitfile  gitfile:txt/exe/amc/intro.md
+dev.gitfile  gitfile:txt/exe/amc/pmask.md
 dev.gitfile  gitfile:txt/exe/amc/pools.md
 dev.gitfile  gitfile:txt/exe/amc/proto.md
 dev.gitfile  gitfile:txt/exe/amc/reflection.md
@@ -1151,6 +1149,18 @@ dev.gitfile  gitfile:txt/exe/ssim2mysql/README.md
 dev.gitfile  gitfile:txt/exe/ssimfilt/README.md
 dev.gitfile  gitfile:txt/exe/strconv/README.md
 dev.gitfile  gitfile:txt/exe/sv2ssim/README.md
+dev.gitfile  gitfile:txt/fun/README.md
+dev.gitfile  gitfile:txt/fun/cpp/README.md
+dev.gitfile  gitfile:txt/fun/cpp/coding-style.md
+dev.gitfile  gitfile:txt/fun/cpp/fun_06.md
+dev.gitfile  gitfile:txt/fun/cpp/intro.md
+dev.gitfile  gitfile:txt/fun/ssim/README.md
+dev.gitfile  gitfile:txt/fun/ssim/fun_01.md
+dev.gitfile  gitfile:txt/fun/ssim/fun_02.md
+dev.gitfile  gitfile:txt/fun/ssim/fun_03.md
+dev.gitfile  gitfile:txt/fun/ssim/fun_04.md
+dev.gitfile  gitfile:txt/fun/ssim/fun_05.md
+dev.gitfile  gitfile:txt/intro/about.md
 dev.gitfile  gitfile:txt/lib/README.md
 dev.gitfile  gitfile:txt/lib/algo_lib/README.md
 dev.gitfile  gitfile:txt/lib/lib_amcdb/README.md
@@ -1240,6 +1250,13 @@ dev.gitfile  gitfile:txt/protocol/command/README.md
 dev.gitfile  gitfile:txt/protocol/fm/README.md
 dev.gitfile  gitfile:txt/protocol/ietf/README.md
 dev.gitfile  gitfile:txt/protocol/report/README.md
+dev.gitfile  gitfile:txt/recipe/README.md
+dev.gitfile  gitfile:txt/recipe/cpp/README.md
+dev.gitfile  gitfile:txt/recipe/cpp/recipe_04.md
+dev.gitfile  gitfile:txt/recipe/ssim/README.md
+dev.gitfile  gitfile:txt/recipe/ssim/recipe_01.md
+dev.gitfile  gitfile:txt/recipe/ssim/recipe_02.md
+dev.gitfile  gitfile:txt/recipe/ssim/recipe_03.md
 dev.gitfile  gitfile:txt/script/README.md
 dev.gitfile  gitfile:txt/script/abt_md_filt.md
 dev.gitfile  gitfile:txt/script/ai.md
@@ -1292,7 +1309,6 @@ dev.gitfile  gitfile:txt/script/update-gitfile.md
 dev.gitfile  gitfile:txt/script/update-hdr.md
 dev.gitfile  gitfile:txt/script/update-scriptfile.md
 dev.gitfile  gitfile:txt/script/zfs_snapshot.pl.md
-dev.gitfile  gitfile:txt/setup.md
 dev.gitfile  gitfile:txt/ssimdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/bltin.md
@@ -1347,6 +1363,7 @@ dev.gitfile  gitfile:txt/ssimdb/dev/package.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgdep.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgkey.md
 dev.gitfile  gitfile:txt/ssimdb/dev/readme.md
+dev.gitfile  gitfile:txt/ssimdb/dev/readmecat.md
 dev.gitfile  gitfile:txt/ssimdb/dev/sandbox.md
 dev.gitfile  gitfile:txt/ssimdb/dev/sbpath.md
 dev.gitfile  gitfile:txt/ssimdb/dev/scriptfile.md
@@ -1525,6 +1542,7 @@ dev.gitfile  gitfile:txt/ssimdb/gclidb/mrjob.md
 dev.gitfile  gitfile:txt/ssimdb/gclidb/mrnote.md
 dev.gitfile  gitfile:txt/ssimdb/gclidb/project.md
 dev.gitfile  gitfile:txt/ssimdb/gclidb/user.md
+dev.gitfile  gitfile:txt/start/setup.md
 dev.gitfile  gitfile:txt/tut/README.md
 dev.gitfile  gitfile:txt/tut/tut1.md
 dev.gitfile  gitfile:txt/tut/tut2.md

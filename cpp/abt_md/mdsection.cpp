@@ -205,6 +205,14 @@ void abt_md::mdsection_Syntax(abt_md::FFileSection &section) {
 }
 
 // -----------------------------------------------------------------------------
+static void Marktoc(abt_md::FFileSection &section, strptr text){
+    if (text!=""){
+        section.text << "<!-- TOC_BEG AUTO -->"<<eol;
+        section.text << text <<eol;
+        section.text << "<!-- TOC_END AUTO -->";
+    }
+}
+// -----------------------------------------------------------------------------
 
 // Table of contents
 // for README file, create links to subdirectories
@@ -238,15 +246,18 @@ void abt_md::mdsection_Toc(abt_md::FFileSection &section) {
     if (mainfile) {
         // create links to sub-directories
         PopulateDirent(DirFileJoin(dirname,"*"));
+        tempstr text;
         ind_beg(abt_md::_db_bh_dirent_curs,ent,_db) {
             tempstr subfile = DirFileJoin(ent.pathname,"README.md");
             if (!FileQ(subfile)) {
                 subfile = DirFileJoin(ent.pathname,tempstr()<<ent.filename<<".md");// recognize $ns/$ns.md
             }
             if (ent.is_dir && FileQ(subfile)) {
-                section.text << "* "<<LinkToMd(subfile)<<eol;
+                text << "* "<<LinkToMd(subfile)<<eol;
             }
         }ind_end;
+        Marktoc(section,text);
+
         // create links to individual files
         // PopulateDirent(DirFileJoin(dirname,"*.md"));
         // ind_beg(abt_md::_db_bh_dirent_curs,ent,_db) {
@@ -262,14 +273,16 @@ void abt_md::mdsection_Toc(abt_md::FFileSection &section) {
 // Create links to other files in the same directory
 void abt_md::mdsection_Chapters(abt_md::FFileSection &section) {
     section.text = "";
+    tempstr text;
     PopulateDirent(tempstr()<<GetDirName(_db.c_readme->gitfile)<<"*.md");
     ind_beg(abt_md::_db_bh_dirent_curs,ent,_db) {
         if (ent.pathname != _db.c_readme->gitfile) {
             if (StripExt(ent.filename) != "") {// ignore the stupid ".md" file
-                section.text << "* "<<LinkToMd(ent.pathname)<<eol;
+                text << "* "<<LinkToMd(ent.pathname)<<eol;
             }
         }
     }ind_end;
+    Marktoc(section,text);
 }
 
 // -----------------------------------------------------------------------------

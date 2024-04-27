@@ -145,6 +145,8 @@ namespace abt_md { // gen:ns_print_proto
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
     // func:abt_md.FDb.gconst.InputMaybe
     static bool          gconst_InputMaybe(dmmeta::Gconst &elem) __attribute__((nothrow));
+    // func:abt_md.FDb.readmecat.InputMaybe
+    static bool          readmecat_InputMaybe(dev::Readmecat &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:abt_md.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -685,7 +687,7 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'e9b683d62401c41b8057b94ea43245f45960eaad'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'ba21a2e966c00e15cf4543fdd2e648f343db6aa0'");
 }
 
 // --- abt_md.FDb._db.InsertStrptrMaybe
@@ -780,6 +782,12 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && gconst_InputMaybe(elem);
             break;
         }
+        case abt_md_TableId_dev_Readmecat: { // finput:abt_md.FDb.readmecat
+            dev::Readmecat elem;
+            retval = dev::Readmecat_ReadStrptrMaybe(elem, str);
+            retval = retval && readmecat_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -811,6 +819,7 @@ bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
+        retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readmecat"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
         retval = retval && abt_md::LoadTuplesFile(algo::SsimFname(root,"atfdb.comptest"),recursive);
     } else {
@@ -4538,6 +4547,235 @@ bool abt_md::gconst_XrefMaybe(abt_md::FGconst &row) {
     return retval;
 }
 
+// --- abt_md.FDb.readmecat.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt_md::FReadmecat& abt_md::readmecat_Alloc() {
+    abt_md::FReadmecat* row = readmecat_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.readmecat  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt_md.FDb.readmecat.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt_md::FReadmecat* abt_md::readmecat_AllocMaybe() {
+    abt_md::FReadmecat *row = (abt_md::FReadmecat*)readmecat_AllocMem();
+    if (row) {
+        new (row) abt_md::FReadmecat; // call constructor
+    }
+    return row;
+}
+
+// --- abt_md.FDb.readmecat.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt_md::FReadmecat* abt_md::readmecat_InsertMaybe(const dev::Readmecat &value) {
+    abt_md::FReadmecat *row = &readmecat_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    readmecat_CopyIn(*row,const_cast<dev::Readmecat&>(value));
+    bool ok = readmecat_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        readmecat_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt_md.FDb.readmecat.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt_md::readmecat_AllocMem() {
+    u64 new_nelems     = _db.readmecat_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt_md::FReadmecat*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.readmecat_lary[bsr];
+        if (!lev) {
+            lev=(abt_md::FReadmecat*)algo_lib::malloc_AllocMem(sizeof(abt_md::FReadmecat) * (u64(1)<<bsr));
+            _db.readmecat_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.readmecat_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt_md.FDb.readmecat.RemoveAll
+// Remove all elements from Lary
+void abt_md::readmecat_RemoveAll() {
+    for (u64 n = _db.readmecat_n; n>0; ) {
+        n--;
+        readmecat_qFind(u64(n)).~FReadmecat(); // destroy last element
+        _db.readmecat_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.readmecat.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt_md::readmecat_RemoveLast() {
+    u64 n = _db.readmecat_n;
+    if (n > 0) {
+        n -= 1;
+        readmecat_qFind(u64(n)).~FReadmecat();
+        _db.readmecat_n = i32(n);
+    }
+}
+
+// --- abt_md.FDb.readmecat.InputMaybe
+static bool abt_md::readmecat_InputMaybe(dev::Readmecat &elem) {
+    bool retval = true;
+    retval = readmecat_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt_md.FDb.readmecat.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt_md::readmecat_XrefMaybe(abt_md::FReadmecat &row) {
+    bool retval = true;
+    (void)row;
+    // insert readmecat into index ind_readmecat
+    if (true) { // user-defined insert condition
+        bool success = ind_readmecat_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt_md.duplicate_key  xref:abt_md.FDb.ind_readmecat"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_readmecat.Find
+// Find row by key. Return NULL if not found.
+abt_md::FReadmecat* abt_md::ind_readmecat_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_readmecat_buckets_n - 1);
+    abt_md::FReadmecat* *e = &_db.ind_readmecat_buckets_elems[index];
+    abt_md::FReadmecat* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).readmecat == key;
+        if (done) break;
+        e         = &ret->ind_readmecat_next;
+    } while (true);
+    return ret;
+}
+
+// --- abt_md.FDb.ind_readmecat.FindX
+// Look up row by key and return reference. Throw exception if not found
+abt_md::FReadmecat& abt_md::ind_readmecat_FindX(const algo::strptr& key) {
+    abt_md::FReadmecat* ret = ind_readmecat_Find(key);
+    vrfy(ret, tempstr() << "abt_md.key_error  table:ind_readmecat  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_readmecat.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt_md::FReadmecat& abt_md::ind_readmecat_GetOrCreate(const algo::strptr& key) {
+    abt_md::FReadmecat* ret = ind_readmecat_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &readmecat_Alloc();
+        (*ret).readmecat = key;
+        bool good = readmecat_XrefMaybe(*ret);
+        if (!good) {
+            readmecat_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "abt_md.create_error  table:ind_readmecat  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- abt_md.FDb.ind_readmecat.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt_md::ind_readmecat_InsertMaybe(abt_md::FReadmecat& row) {
+    ind_readmecat_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_readmecat_next == (abt_md::FReadmecat*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.readmecat) & (_db.ind_readmecat_buckets_n - 1);
+        abt_md::FReadmecat* *prev = &_db.ind_readmecat_buckets_elems[index];
+        do {
+            abt_md::FReadmecat* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).readmecat == row.readmecat) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_readmecat_next;
+        } while (true);
+        if (retval) {
+            row.ind_readmecat_next = *prev;
+            _db.ind_readmecat_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.ind_readmecat.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt_md::ind_readmecat_Remove(abt_md::FReadmecat& row) {
+    if (LIKELY(row.ind_readmecat_next != (abt_md::FReadmecat*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.readmecat) & (_db.ind_readmecat_buckets_n - 1);
+        abt_md::FReadmecat* *prev = &_db.ind_readmecat_buckets_elems[index]; // addr of pointer to current element
+        while (abt_md::FReadmecat *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_readmecat_next; // unlink (singly linked list)
+                _db.ind_readmecat_n--;
+                row.ind_readmecat_next = (abt_md::FReadmecat*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_readmecat_next;
+        }
+    }
+}
+
+// --- abt_md.FDb.ind_readmecat.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt_md::ind_readmecat_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_readmecat_buckets_n;
+    u32 new_nelems   = _db.ind_readmecat_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt_md::FReadmecat*);
+        u32 new_size = new_nbuckets * sizeof(abt_md::FReadmecat*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt_md::FReadmecat* *new_buckets = (abt_md::FReadmecat**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt_md.out_of_memory  field:abt_md.FDb.ind_readmecat");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_readmecat_buckets_n; i++) {
+            abt_md::FReadmecat* elem = _db.ind_readmecat_buckets_elems[i];
+            while (elem) {
+                abt_md::FReadmecat &row        = *elem;
+                abt_md::FReadmecat* next       = row.ind_readmecat_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.readmecat) & (new_nbuckets-1);
+                row.ind_readmecat_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_readmecat_buckets_elems, old_size);
+        _db.ind_readmecat_buckets_elems = new_buckets;
+        _db.ind_readmecat_buckets_n = new_nbuckets;
+    }
+}
+
 // --- abt_md.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr abt_md::trace_RowidFind(int t) {
@@ -5030,6 +5268,25 @@ void abt_md::FDb_Init() {
         _db.gconst_lary[i]  = gconst_first;
         gconst_first    += 1ULL<<i;
     }
+    // initialize LAry readmecat (abt_md.FDb.readmecat)
+    _db.readmecat_n = 0;
+    memset(_db.readmecat_lary, 0, sizeof(_db.readmecat_lary)); // zero out all level pointers
+    abt_md::FReadmecat* readmecat_first = (abt_md::FReadmecat*)algo_lib::malloc_AllocMem(sizeof(abt_md::FReadmecat) * (u64(1)<<4));
+    if (!readmecat_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.readmecat_lary[i]  = readmecat_first;
+        readmecat_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt_md::FReadmecat;
+    _db.ind_readmecat_n             	= 0; // (abt_md.FDb.ind_readmecat)
+    _db.ind_readmecat_buckets_n     	= 4; // (abt_md.FDb.ind_readmecat)
+    _db.ind_readmecat_buckets_elems 	= (abt_md::FReadmecat**)algo_lib::malloc_AllocMem(sizeof(abt_md::FReadmecat*)*_db.ind_readmecat_buckets_n); // initial buckets (abt_md.FDb.ind_readmecat)
+    if (!_db.ind_readmecat_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt_md.FDb.ind_readmecat)
+    }
+    memset(_db.ind_readmecat_buckets_elems, 0, sizeof(abt_md::FReadmecat*)*_db.ind_readmecat_buckets_n); // (abt_md.FDb.ind_readmecat)
 
     abt_md::InitReflection();
     mdsection_LoadStatic(); // gen:ns_gstatic  gstatic:abt_md.FDb.mdsection  load abt_md.FMdsection records
@@ -5039,6 +5296,12 @@ void abt_md::FDb_Init() {
 void abt_md::FDb_Uninit() {
     abt_md::FDb &row = _db; (void)row;
     ind_human_text_Cascdel(); // dmmeta.cascdel:abt_md.FDb.ind_human_text
+
+    // abt_md.FDb.ind_readmecat.Uninit (Thash)  //
+    // skip destruction of ind_readmecat in global scope
+
+    // abt_md.FDb.readmecat.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // abt_md.FDb.gconst.Uninit (Lary)  //
     // skip destruction in global scope
@@ -5638,6 +5901,12 @@ void abt_md::readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) {
     row.comment = in.comment;
 }
 
+// --- abt_md.FReadme.readmecat.Get
+algo::Smallstr50 abt_md::readmecat_Get(abt_md::FReadme& readme) {
+    algo::Smallstr50 ret(algo::Pathcomp(readme.gitfile, "/LR/LL"));
+    return ret;
+}
+
 // --- abt_md.FReadme..Init
 // Set all fields to initial values.
 void abt_md::FReadme_Init(abt_md::FReadme& readme) {
@@ -5655,6 +5924,26 @@ void abt_md::FReadme_Init(abt_md::FReadme& readme) {
 void abt_md::FReadme_Uninit(abt_md::FReadme& readme) {
     abt_md::FReadme &row = readme; (void)row;
     ind_readme_Remove(row); // remove readme from index ind_readme
+}
+
+// --- abt_md.FReadmecat.base.CopyOut
+// Copy fields out of row
+void abt_md::readmecat_CopyOut(abt_md::FReadmecat &row, dev::Readmecat &out) {
+    out.readmecat = row.readmecat;
+    out.comment = row.comment;
+}
+
+// --- abt_md.FReadmecat.base.CopyIn
+// Copy fields in to row
+void abt_md::readmecat_CopyIn(abt_md::FReadmecat &row, dev::Readmecat &in) {
+    row.readmecat = in.readmecat;
+    row.comment = in.comment;
+}
+
+// --- abt_md.FReadmecat..Uninit
+void abt_md::FReadmecat_Uninit(abt_md::FReadmecat& readmecat) {
+    abt_md::FReadmecat &row = readmecat; (void)row;
+    ind_readmecat_Remove(row); // remove readmecat from index ind_readmecat
 }
 
 // --- abt_md.FReftype.base.CopyOut
@@ -5955,6 +6244,7 @@ const char* abt_md::value_ToCstr(const abt_md::TableId& parent) {
         case abt_md_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
         case abt_md_TableId_dmmeta_Nstype  : ret = "dmmeta.Nstype";  break;
         case abt_md_TableId_dev_Readme     : ret = "dev.Readme";  break;
+        case abt_md_TableId_dev_Readmecat  : ret = "dev.Readmecat";  break;
         case abt_md_TableId_dmmeta_Reftype : ret = "dmmeta.Reftype";  break;
         case abt_md_TableId_dev_Scriptfile : ret = "dev.Scriptfile";  break;
         case abt_md_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
@@ -6054,6 +6344,14 @@ bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','R','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mecat",5)==0) { value_SetEnum(parent,abt_md_TableId_dev_Readmecat); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','r','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mecat",5)==0) { value_SetEnum(parent,abt_md_TableId_dev_readmecat); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','F'): {
                     if (memcmp(rhs.elems+8,"const",5)==0) { value_SetEnum(parent,abt_md_TableId_dmmeta_Fconst); ret = true; break; }
                     break;

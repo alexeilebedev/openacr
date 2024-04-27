@@ -70,16 +70,6 @@ please execute $(acr_compl -install) to add completions support for new target
 report.amc  ***
 ```
 
-```
-inline-command: src_func samp_tut3 Main
-cpp/samp_tut3/samp_tut3.cpp:25: 
-void samp_tut3::Main() {
-    prlog("Hello, World!");
-    samp_tut3::MainLoop();
-}
-
-```
-
 Run:
 
 ```
@@ -162,7 +152,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
   dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
     dmmeta.ctype  ctype:samp_tut3.Value  comment:""
       dmmeta.field  field:samp_tut3.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
-      dmmeta.ctypelen  ctype:samp_tut3.Value  len:32  alignment:8  padbytes:4
+      dmmeta.ctypelen  ctype:samp_tut3.Value  len:32  alignment:8  padbytes:4  plaindata:N
 
 dmmeta.field  field:samp_tut3.FDb.value     arg:samp_tut3.Value  reftype:Tpool  dflt:""  comment:""
 dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  dflt:""  comment:""

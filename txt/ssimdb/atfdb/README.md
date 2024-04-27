@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [atfdb.amctest -](/txt/ssimdb/atfdb/amctest.md)
 
 * [atfdb.cijob -](/txt/ssimdb/atfdb/cijob.md)
@@ -31,6 +32,8 @@
 * [atfdb.tmsg -](/txt/ssimdb/atfdb/tmsg.md)
 
 * [atfdb.unittest -](/txt/ssimdb/atfdb/unittest.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

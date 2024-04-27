@@ -122,10 +122,12 @@ inline dmmeta::Cdflt::Cdflt() {
 
 inline dmmeta::Cextern::Cextern(const algo::strptr&            in_ctype
         ,bool                           in_initmemset
-        ,bool                           in_isstruct)
+        ,bool                           in_isstruct
+        ,bool                           in_plaindata)
     : ctype(in_ctype)
     , initmemset(in_initmemset)
     , isstruct(in_isstruct)
+    , plaindata(in_plaindata)
 {
 }
 inline dmmeta::Cextern::Cextern() {
@@ -138,6 +140,7 @@ inline dmmeta::Cextern::Cextern() {
 inline void dmmeta::Cextern_Init(dmmeta::Cextern& parent) {
     parent.initmemset = bool(false);
     parent.isstruct = bool(false);
+    parent.plaindata = bool(false);
 }
 inline dmmeta::Cfast::Cfast() {
     dmmeta::Cfast_Init(*this);
@@ -286,11 +289,13 @@ inline dmmeta::Ctype::Ctype() {
 inline dmmeta::Ctypelen::Ctypelen(const algo::strptr&            in_ctype
         ,u32                            in_len
         ,i32                            in_alignment
-        ,i32                            in_padbytes)
+        ,i32                            in_padbytes
+        ,bool                           in_plaindata)
     : ctype(in_ctype)
     , len(in_len)
     , alignment(in_alignment)
     , padbytes(in_padbytes)
+    , plaindata(in_plaindata)
 {
 }
 inline dmmeta::Ctypelen::Ctypelen() {
@@ -304,6 +309,7 @@ inline void dmmeta::Ctypelen_Init(dmmeta::Ctypelen& parent) {
     parent.len = u32(0);
     parent.alignment = i32(0);
     parent.padbytes = i32(0);
+    parent.plaindata = bool(false);
 }
 inline dmmeta::Dispatch::Dispatch(const algo::strptr&            in_dispatch
         ,bool                           in_unk

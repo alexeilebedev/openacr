@@ -1406,6 +1406,9 @@ void                 readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) __at
 // func:atf_ci.FReadme.base.CopyIn
 void                 readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
+// func:atf_ci.FReadme.readmecat.Get
+algo::Smallstr50     readmecat_Get(atf_ci::FReadme& readme) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:atf_ci.FReadme..Init
 void                 FReadme_Init(atf_ci::FReadme& readme);
@@ -1856,6 +1859,10 @@ void                 citest_atf_comp();
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_cov();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_check
+// this function is 'extrn' and implemented by user
+void                 citest_apm_check();
+// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_comp_mem
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_mem();
@@ -1864,17 +1871,13 @@ void                 citest_atf_comp_mem();
 // this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_apm_check
+// func:atf_ci...citest_apm
 // this function is 'extrn' and implemented by user
-void                 citest_apm_check();
+void                 citest_apm();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_acr_ed_ssimdb
 // this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimdb();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_apm
-// this function is 'extrn' and implemented by user
-void                 citest_apm();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_acr_ed_target
 // this function is 'extrn' and implemented by user

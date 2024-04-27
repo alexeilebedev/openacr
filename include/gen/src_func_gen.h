@@ -97,9 +97,10 @@ namespace src_func { // gen:ns_print_struct
 // global access: ind_ctypelen (Thash)
 struct FCtypelen { // src_func.FCtypelen
     algo::Smallstr100      ctype;               // Identifies the Ctype
-    u32                    len;                 //   0
-    i32                    alignment;           //   0
-    i32                    padbytes;            //   0
+    u32                    len;                 //   0  (calculated) length of the C++ struct in bytes
+    i32                    alignment;           //   0  (calculated) alignment for the struct
+    i32                    padbytes;            //   0  (calculated) total # of pad bytes
+    bool                   plaindata;           //   false  (calculated) this struct can me safely memcpy'ed
     src_func::FCtypelen*   ind_ctypelen_next;   // hash next
 private:
     friend src_func::FCtypelen& ctypelen_Alloc() __attribute__((__warn_unused_result__, nothrow));

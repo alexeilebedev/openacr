@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [dmmeta.anonfld - Omit field name where possible (command line, enums, constants)](/txt/ssimdb/dmmeta/anonfld.md)
 
 * [dmmeta.argvtype - Customize parsing of command lines (rarely used)](/txt/ssimdb/dmmeta/argvtype.md)
@@ -245,6 +246,8 @@
 * [dmmeta.usertracefld - Add custom user trace fields to process's trace struct](/txt/ssimdb/dmmeta/usertracefld.md)
 
 * [dmmeta.xref - Specify how to cross-reference (i.e. project, or group-by) one record with another](/txt/ssimdb/dmmeta/xref.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

@@ -1,4 +1,7 @@
+dev.pkgkey  pkgkey:amc/amcdb.%:%  comment:""
 dev.pkgkey  pkgkey:amc/dev.package:amc  comment:""
+dev.pkgkey  pkgkey:amc/dmmeta.ctype:dmmeta.Cextern  comment:""
+dev.pkgkey  pkgkey:amc/dmmeta.ctype:dmmeta.Ctypelen  comment:""
 dev.pkgkey  pkgkey:amc/dmmeta.ns:amc  comment:""
 dev.pkgkey  pkgkey:ams/dev.package:ams  comment:""
 dev.pkgkey  pkgkey:ams/dmmeta.ns:ams  comment:""

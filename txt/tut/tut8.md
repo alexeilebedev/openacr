@@ -609,7 +609,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
 
       dmmeta.field  field:dev.D.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.D.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.D  len:204  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:dev.D  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
@@ -780,7 +780,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
       dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
   dmmeta.substr  field:dev.D.c  expr:.RR  srcfield:dev.D.d
@@ -901,12 +901,7 @@ dmmeta.ctype  ctype:dev.C  comment:""
   dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
   dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-  dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0
-
-dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
-  dmmeta.substr  field:dev.D.c  expr:.RR  srcfield:dev.D.d
-
-dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
+  dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 report.acr  ***
 ```
 
@@ -937,8 +932,9 @@ dev.c  c:blue   comment:""
 dev.c  c:green  comment:""
 dev.c  c:red    comment:""
 
-# Field    Arg              Reftype  Comment
-# dev.C.c  algo.Smallstr50  Val      Name of the color (primary key)
+# Field          Arg              Reftype  Comment
+# dev.C.c        algo.Smallstr50  Val      Name of the color (primary key)
+# dev.C.comment  algo.Comment     Val
 report.acr  ***
 ```
 

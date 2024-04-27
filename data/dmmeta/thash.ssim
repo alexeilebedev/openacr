@@ -18,6 +18,7 @@ dmmeta.thash  field:abt_md.FDb.ind_human_text  hashfld:abt_md.FHumanText.key  un
 dmmeta.thash  field:abt_md.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:""
 dmmeta.thash  field:abt_md.FDb.ind_nstype  hashfld:dmmeta.Nstype.nstype  unique:Y  comment:""
 dmmeta.thash  field:abt_md.FDb.ind_readme  hashfld:dev.Readme.gitfile  unique:Y  comment:""
+dmmeta.thash  field:abt_md.FDb.ind_readmecat  hashfld:dev.Readmecat.readmecat  unique:Y  comment:""
 dmmeta.thash  field:abt_md.FDb.ind_scriptfile  hashfld:dev.Scriptfile.gitfile  unique:Y  comment:""
 dmmeta.thash  field:abt_md.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""
 dmmeta.thash  field:abt_md.FDb.ind_tclass  hashfld:amcdb.Tclass.tclass  unique:Y  comment:""

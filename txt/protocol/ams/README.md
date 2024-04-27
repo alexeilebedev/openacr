@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [txt/protocol/ams/AlarmSyncMsg.md](/txt/protocol/ams/AlarmSyncMsg.md)
 
 * [txt/protocol/ams/DfltStream.md](/txt/protocol/ams/DfltStream.md)
@@ -63,6 +64,8 @@
 * [txt/protocol/ams/TraceMsg.md](/txt/protocol/ams/TraceMsg.md)
 
 * [txt/protocol/ams/UdpFrame.md](/txt/protocol/ams/UdpFrame.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

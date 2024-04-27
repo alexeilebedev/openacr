@@ -1,6 +1,6 @@
 ## AMC Intro
 <a href="#amc-intro"></a>
-Most of software design, or rather design of libraries, looks like this:
+Most design of libraries looks like this:
 library author decides what type of data to represent and manipulate in memory;
 Without exception, the library declares some number of *records*, each containing
 some fields, and a set of functions that manipulate sets of these records while
@@ -11,34 +11,39 @@ modification, updates, and querying. Update operations range from allocation and
 handling of memory-related conditions and errors, to business logic (the most
 application-specific part). Sometimes the library is deemed to be purely algorithmic
 and not data-oriented. But this is just a viewpoint and doesn't change the correctness
-of the above observation. Any computer program maps a set of types from its input domain to an output domain.
+of the above observation. It is true whether we are talking about a filesystem driver,
+a game engine, a matching engine for an exchange, or any other library.
+Any computer program maps a set of types from its input domain to an output domain.
 
 Designing abstract data structures is difficult because of the need to track various 
 pointers and cross-references in the resulting data structures, and subsequently 
 rewriting these pointers without causing corruption. To be robust and to avoid leaks, 
 the library must also track resources that were allocated.
-This difficulty, and the corresponding debugging effort, which can exceed
-the initial coding time by 10- or 100x, means that once a library has been built, it
+This difficulty, and the corresponding debugging effort, which often exceeds
+the initial coding time, means that once a library has been built, it
 is not updated frequently. 
-Sometimes, the choice of the data structure itself makes adding additional
-indexes impractical. For instance, if we think of our main data structure as being 
+Sometimes, the choice of the data structure itself precludes adding additional
+indexes. For instance, if we think of our main data structure as being 
 a "hash table of X", we have committed to a key-value map as the main access structure,
 and all other operations are operations other than lookup by key are made less efficient.
 And if we have decided to use "a binary tree of X", then we'll use the binary tree lookup
 and not consider also hashing the items. This type of thinking characterizes "data structure" 
-design, and is taught in schools. 
+design, and is the one primarily taught when programming is taught.
 The very term "data structure" presupposes that we take our data and then structure
 it somehow. The metaphor is some sort of data origame, or moving data around for 
-better access. There is no concept of access as being separate from the data.
+better access. In this paradigm, data and access to data are fused.
 This is assumed to be the price to pay if we want to write good algorithms.
 
 On the other hand, there is a different approach to handling data -- the database approach.
-If the data structure approach blends data with indexing (it's inherent in the notion of
-"structuring the data"), the database approach maximally separates
+If the data structure approach blends data with indexing, the database approach maximally separates
 them. The data which we want to handle is first split (factored) into various tables.
-A table contains a number of records, and each record has some fields (also known as attributes).
-We then create *indexes on attributes*, so that we can quickly locate
-any record. Typically, any number of such indexes are allowed by a database management system.
+Tables are functional relations, meaning that the table compactly represents one or more functions
+from the key (typically first column of the table) to values (all other columns).
+A physical table instance contains a number of records, and each record has some fields.
+(When we talk about the table as a whole, we say "columns". When talking about one row, it makes more sense
+to say "fields", but the terms are synonymous).
+We then create *indexes on fields*, so that we can quickly locate
+any record. Any number of such indexes are allowed by a database management system.
 Then, we write a query in some special query language, and a mechanism known as the query
 planner decides which indexes to use to answer the query (so it's not just a multiply-nested
 for-loop over all tables) and hopefully completes the query. But not *that*

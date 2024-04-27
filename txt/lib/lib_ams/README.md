@@ -95,7 +95,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:ams.ProcAddMsg.base     arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
       dmmeta.field  field:ams.ProcAddMsg.proc_id  arg:ams.ProcId  reftype:Val  dflt:""  comment:"ID of process being added"
       dmmeta.cfmt  cfmt:ams.ProcAddMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:ams.ProcAddMsg  len:10  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:ams.ProcAddMsg  len:10  alignment:1  padbytes:0  plaindata:Y
 ```
 
 Control process creates a new subprocess.
@@ -117,7 +117,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:ams.ProcRemoveMsg.base     arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
       dmmeta.field  field:ams.ProcRemoveMsg.proc_id  arg:ams.ProcId  reftype:Val  dflt:""  comment:"ID of process being removed"
       dmmeta.cfmt  cfmt:ams.ProcRemoveMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:ams.ProcRemoveMsg  len:10  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:ams.ProcRemoveMsg  len:10  alignment:1  padbytes:0  plaindata:Y
 ```
 
 Control process destroys the subprocess and removes its streams.
@@ -144,7 +144,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:ams.Seqmsg.tsc        arg:u64            reftype:Val  dflt:""  comment:"TSC of sender"
       dmmeta.field  field:ams.Seqmsg.payload    arg:ams.MsgHeader  reftype:Opt  dflt:""  comment:"Actual Payload"
       dmmeta.cfmt  cfmt:ams.Seqmsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:ams.Seqmsg  len:32  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:ams.Seqmsg  len:32  alignment:1  padbytes:0  plaindata:N
 ```
 
 ### `ams.OpenMsg`: Open stream for reading/writing
@@ -163,7 +163,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:ams.OpenMsg.member  arg:ams.Member     reftype:Val  dflt:""  comment:"Target process_id and stream_id"
       dmmeta.field  field:ams.OpenMsg.pos     arg:ams.StreamPos  reftype:Val  dflt:""  comment:"Start reading here"
       dmmeta.cfmt  cfmt:ams.OpenMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:ams.OpenMsg  len:31  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:ams.OpenMsg  len:31  alignment:1  padbytes:0  plaindata:Y
 ```
 
 Begin reading/writing stream identified by `streamid` from shared memory region
@@ -189,7 +189,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:ams.StreamHbMsg.pos      arg:ams.StreamPos  reftype:Val  dflt:""  comment:"Read/write position"
       dmmeta.field  field:ams.StreamHbMsg.wbudget  arg:u32            reftype:Val  dflt:""  comment:"Max. offset for writing"
       dmmeta.cfmt  cfmt:ams.StreamHbMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:ams.StreamHbMsg  len:35  alignment:1  padbytes:0
+      dmmeta.ctypelen  ctype:ams.StreamHbMsg  len:35  alignment:1  padbytes:0  plaindata:Y
 ```
 
 For each stream being either read or written, each process outputs a StreamHb message.

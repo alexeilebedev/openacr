@@ -1089,6 +1089,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_soft              : ret = "soft";  break;
         case dev_FieldId_pkgkey            : ret = "pkgkey";  break;
         case dev_FieldId_key               : ret = "key";  break;
+        case dev_FieldId_readmecat         : ret = "readmecat";  break;
         case dev_FieldId_inl               : ret = "inl";  break;
         case dev_FieldId_sandbox           : ret = "sandbox";  break;
         case dev_FieldId_filter            : ret = "filter";  break;
@@ -1468,6 +1469,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','l','o','n','g','l','i','n'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dev_FieldId_nlongline); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','a','d','m','e','c','a'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,dev_FieldId_readmecat); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','y','s','c','m','d','d','e'): {
@@ -2504,6 +2509,18 @@ void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Readme.readmecat.Get
+algo::Smallstr50 dev::readmecat_Get(dev::Readme& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.gitfile, "/LR/LL"));
+    return ret;
+}
+
+// --- dev.Readme.readmecat.Get2
+algo::Smallstr50 dev::Readme_readmecat_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR/LL"));
+    return ret;
+}
+
 // --- dev.Readme..ReadFieldMaybe
 bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2512,6 +2529,10 @@ bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
+            break;
+        }
+        case dev_FieldId_readmecat: {
+            retval = false;
             break;
         }
         case dev_FieldId_inl: {
@@ -2568,6 +2589,54 @@ void dev::Readme_Print(dev::Readme& row, algo::cstring& str) {
 
     algo::Smallstr100_Print(row.filter, temp);
     PrintAttrSpaceReset(str,"filter", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.Readmecat..ReadFieldMaybe
+bool dev::Readmecat_ReadFieldMaybe(dev::Readmecat& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_readmecat: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.readmecat, strval);
+            break;
+        }
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Readmecat..ReadStrptrMaybe
+// Read fields of dev::Readmecat from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Readmecat_ReadStrptrMaybe(dev::Readmecat &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.readmecat") || algo::StripTypeTag(in_str, "dev.Readmecat");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Readmecat_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Readmecat..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Readmecat.String  printfmt:Tuple
+void dev::Readmecat_Print(dev::Readmecat& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.readmecat";
+
+    algo::Smallstr50_Print(row.readmecat, temp);
+    PrintAttrSpaceReset(str,"readmecat", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

@@ -60,12 +60,12 @@ static amc::FTclass &amc_tclass_Lary       = ((amc::FTclass*)amc::_db.tclass_dat
 static amc::FTclass &amc_tclass_Llist      = ((amc::FTclass*)amc::_db.tclass_data)[26];
 static amc::FTclass &amc_tclass_Lpool      = ((amc::FTclass*)amc::_db.tclass_data)[27];
 static amc::FTclass &amc_tclass_Malloc     = ((amc::FTclass*)amc::_db.tclass_data)[28];
-static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[29];
-static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[30];
-static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[31];
-static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[32];
-static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[33];
-static amc::FTclass &amc_tclass_Protocol   = ((amc::FTclass*)amc::_db.tclass_data)[34];
+static amc::FTclass &amc_tclass_Ns         = ((amc::FTclass*)amc::_db.tclass_data)[29];
+static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[30];
+static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[31];
+static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[32];
+static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[33];
+static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[34];
 static amc::FTclass &amc_tclass_Ptr        = ((amc::FTclass*)amc::_db.tclass_data)[35];
 static amc::FTclass &amc_tclass_Ptrary     = ((amc::FTclass*)amc::_db.tclass_data)[36];
 static amc::FTclass &amc_tclass_Regx       = ((amc::FTclass*)amc::_db.tclass_data)[37];
@@ -374,6 +374,7 @@ inline amc::FCextern::~FCextern() {
 inline void amc::FCextern_Init(amc::FCextern& cextern) {
     cextern.initmemset = bool(false);
     cextern.isstruct = bool(false);
+    cextern.plaindata = bool(false);
 }
 inline amc::FCfast::FCfast() {
     amc::FCfast_Init(*this);
@@ -1953,6 +1954,7 @@ inline void amc::FCtypelen_Init(amc::FCtypelen& ctypelen) {
     ctypelen.len = u32(0);
     ctypelen.alignment = i32(0);
     ctypelen.padbytes = i32(0);
+    ctypelen.plaindata = bool(false);
     ctypelen._db_c_ctypelen_in_ary = bool(false);
 }
 inline amc::Genctx::Genctx() {

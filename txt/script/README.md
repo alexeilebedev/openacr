@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [bin/abt_md_filt - Eliminate unstable fields from inline-command output](/txt/script/abt_md_filt.md)
 
 * [bin/ai - Bootstrapped compilation script](/txt/script/ai.md)
@@ -105,6 +106,8 @@
 * [bin/update-scriptfile -](/txt/script/update-scriptfile.md)
 
 * [bin/zfs_snapshot.pl -](/txt/script/zfs_snapshot.pl.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

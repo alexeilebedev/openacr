@@ -7,7 +7,10 @@ An acr dataset can be a directory, file or stdin.
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [ACR release notes](/txt/exe/acr/relnotes.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
@@ -404,9 +407,9 @@ When sorting is enabled, it can be done on any fields, including a fldfunc.
 <a href="#see-also"></a>
 
 * [acr_my](/txt/exe/acr_my/README.md)
-* [acr_ed](txt/exe/acr_ed/README.md)
-* [mysql2ssim](txt/exe/mysql2ssim/README.md)
-* [ssim2mysql](txt/exe/ssim2mysql/README.md)
+* [acr_ed](/txt/exe/acr_ed/README.md)
+* [mysql2ssim](/txt/exe/mysql2ssim/README.md)
+* [ssim2mysql](/txt/exe/ssim2mysql/README.md)
 
 ### Sources
 <a href="#sources"></a>
@@ -478,7 +481,6 @@ These can be executed with `atf_comp <comptest> -v`
 |acr.NullTrunc|Trunc with reinsertion has no effect|
 |acr.QueryCtype|Select one record|
 |acr.RenameCollision|Rename with collision|
-|acr.RenameCollisionMultiple|Rename multiple records with collision|
 |acr.RenameField|-rename -field renames affected attributes in dataset|
 |acr.RenameRecord|Rename field and propagate recursively through structured keys|
 |acr.Replace|A record is replaced|

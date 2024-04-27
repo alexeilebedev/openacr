@@ -124,6 +124,7 @@ The following source files are part of this tool:
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
+|[dev.readmecat](/txt/ssimdb/dev/readmecat.md)|sorted categories of txt/ *.md files presented in dev.readme|
 |[dev.readme](/txt/ssimdb/dev/readme.md)|File containing documentation|
 |[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
 |[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|

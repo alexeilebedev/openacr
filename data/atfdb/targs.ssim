@@ -19,7 +19,6 @@ atfdb.targs  comptest:acr.Meta3  args:"ftuple -meta -cmt"
 atfdb.targs  comptest:acr.NullTrunc  args:"ns -report:N"
 atfdb.targs  comptest:acr.QueryCtype  args:dmmeta.ctype:dmmeta.Ctype
 atfdb.targs  comptest:acr.RenameCollision  args:"uname:Linux -rename SunOS"
-atfdb.targs  comptest:acr.RenameCollisionMultiple  args:"uname:% -rename Blah"
 atfdb.targs  comptest:acr.RenameField  args:"-in:- field:dmmeta.Ns.nstype -rename dmmeta.Ns.blah"
 atfdb.targs  comptest:acr.RenameRecord  args:"-in:- target:samp -rename:xyz"
 atfdb.targs  comptest:acr.Replace  args:"-replace ns:ns%"

@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [Tutorial 1: Parts And Projects Tutorial](/txt/tut/tut1.md)
 
 * [Tutorial 2: Parts And Projects in SQL](/txt/tut/tut2.md)
@@ -19,6 +20,8 @@
 * [Tests](/txt/tut/tut7.md)
 
 * [tut8 - ACR live tutorial](/txt/tut/tut8.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

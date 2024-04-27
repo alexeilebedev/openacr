@@ -1228,6 +1228,7 @@ struct FCextern { // amc.FCextern
     algo::Smallstr100   ctype;        // Ctype in question
     bool                initmemset;   //   false  Initialize using memset? (set this to Y for all C structs)
     bool                isstruct;     //   false
+    bool                plaindata;    //   false
 private:
     friend amc::FCextern&       cextern_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FCextern*       cextern_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -2498,9 +2499,10 @@ void                 FCtype_Uninit(amc::FCtype& ctype) __attribute__((nothrow));
 // access: amc.FCtype.c_ctypelen (Ptr)
 struct FCtypelen { // amc.FCtypelen
     algo::Smallstr100   ctype;                   // Identifies the Ctype
-    u32                 len;                     //   0
-    i32                 alignment;               //   0
-    i32                 padbytes;                //   0
+    u32                 len;                     //   0  (calculated) length of the C++ struct in bytes
+    i32                 alignment;               //   0  (calculated) alignment for the struct
+    i32                 padbytes;                //   0  (calculated) total # of pad bytes
+    bool                plaindata;               //   false  (calculated) this struct can me safely memcpy'ed
     bool                _db_c_ctypelen_in_ary;   //   false  membership flag
 private:
     friend amc::FCtypelen&      ctypelen_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -17435,6 +17437,10 @@ void                 tclass_Lpool();
 // this function is 'extrn' and implemented by user
 void                 tclass_Malloc();
 // User-implemented function from gstatic:amc.FDb.tclass
+// func:amc...tclass_Ns
+// this function is 'extrn' and implemented by user
+void                 tclass_Ns();
+// User-implemented function from gstatic:amc.FDb.tclass
 // func:amc...tclass_Numstr
 // this function is 'extrn' and implemented by user
 void                 tclass_Numstr();
@@ -17454,10 +17460,6 @@ void                 tclass_Pmask();
 // func:amc...tclass_Pool
 // this function is 'extrn' and implemented by user
 void                 tclass_Pool();
-// User-implemented function from gstatic:amc.FDb.tclass
-// func:amc...tclass_Protocol
-// this function is 'extrn' and implemented by user
-void                 tclass_Protocol();
 // User-implemented function from gstatic:amc.FDb.tclass
 // func:amc...tclass_Ptr
 // this function is 'extrn' and implemented by user
@@ -18263,10 +18265,6 @@ void                 tfunc_Global_Main();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Global_InitReflection();
 // User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Global_StaticCheck
-// this function is 'extrn' and implemented by user
-void                 tfunc_Global_StaticCheck();
-// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Global_InsertStrptrMaybe
 // this function is 'extrn' and implemented by user
 void                 tfunc_Global_InsertStrptrMaybe();
@@ -18571,6 +18569,10 @@ void                 tfunc_Malloc_FreeMem();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Malloc_ReallocMem();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ns_StaticCheck
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ns_StaticCheck();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Numstr_Getnum
 // this function is 'extrn' and implemented by user
 void                 tfunc_Numstr_Getnum();
@@ -18654,10 +18656,6 @@ void                 tfunc_Pool_UpdateMaybe();
 // func:amc...tfunc_Pool_Delete
 // this function is 'extrn' and implemented by user
 void                 tfunc_Pool_Delete();
-// User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Protocol_StaticCheck
-// this function is 'extrn' and implemented by user
-void                 tfunc_Protocol_StaticCheck();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ptr_Cascdel
 // this function is 'extrn' and implemented by user
@@ -19247,10 +19245,6 @@ void                 gen_clonefconst();
 // this function is 'extrn' and implemented by user
 void                 gen_parsenum();
 // User-implemented function from gstatic:amc.FDb.gen
-// func:amc...gen_prep_proto
-// this function is 'extrn' and implemented by user
-void                 gen_prep_proto();
-// User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_newfield_charset
 // this function is 'extrn' and implemented by user
 void                 gen_newfield_charset();
@@ -19355,6 +19349,10 @@ void                 gen_datafld();
 // this function is 'extrn' and implemented by user
 void                 gen_ctype_toposort();
 // User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_plaindata
+// this function is 'extrn' and implemented by user
+void                 gen_plaindata();
+// User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_prep_ctype
 // this function is 'extrn' and implemented by user
 void                 gen_prep_ctype();
@@ -19399,9 +19397,9 @@ void                 gen_ns_enums();
 // this function is 'extrn' and implemented by user
 void                 gen_ns_pkeytypedef();
 // User-implemented function from gstatic:amc.FDb.gen
-// func:amc...gen_ns_field
+// func:amc...gen_ns_tclass_field
 // this function is 'extrn' and implemented by user
-void                 gen_ns_field();
+void                 gen_ns_tclass_field();
 // User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_fwddecl
 // this function is 'extrn' and implemented by user
@@ -19439,9 +19437,13 @@ void                 gen_ns_gsymbol();
 // this function is 'extrn' and implemented by user
 void                 gen_ns_size_enums();
 // User-implemented function from gstatic:amc.FDb.gen
-// func:amc...gen_ns_ctype
+// func:amc...gen_ns_tclass_ns
 // this function is 'extrn' and implemented by user
-void                 gen_ns_ctype();
+void                 gen_ns_tclass_ns();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_ns_tclass_ctype
+// this function is 'extrn' and implemented by user
+void                 gen_ns_tclass_ctype();
 // User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_check_path
 // this function is 'extrn' and implemented by user

@@ -46,7 +46,7 @@ pathnames to a single form.
 ### Building
 <a href="#building"></a>
 Run `ai`.
-See also [ai](txt/script/ai.md) and [abt](txt/exe/abt.md)
+See also [ai](/txt/script/ai.md) and [abt](/txt/exe/abt/README.md)
 
 ### Editor configuration files
 <a href="#editor-configuration-files"></a>

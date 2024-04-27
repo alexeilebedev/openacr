@@ -19,7 +19,6 @@ dmmeta.reftype  reftype:Lpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isx
 dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y
 dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y
 dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Protocol  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
 dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
 dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N

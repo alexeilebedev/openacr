@@ -1380,6 +1380,60 @@ inline abt_md::FGconst& abt_md::gconst_qFind(u64 t) {
     return _db.gconst_lary[bsr][index];
 }
 
+// --- abt_md.FDb.readmecat.EmptyQ
+// Return true if index is empty
+inline bool abt_md::readmecat_EmptyQ() {
+    return _db.readmecat_n == 0;
+}
+
+// --- abt_md.FDb.readmecat.Find
+// Look up row by row id. Return NULL if out of range
+inline abt_md::FReadmecat* abt_md::readmecat_Find(u64 t) {
+    abt_md::FReadmecat *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.readmecat_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.readmecat_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- abt_md.FDb.readmecat.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline abt_md::FReadmecat* abt_md::readmecat_Last() {
+    return readmecat_Find(u64(_db.readmecat_n-1));
+}
+
+// --- abt_md.FDb.readmecat.N
+// Return number of items in the pool
+inline i32 abt_md::readmecat_N() {
+    return _db.readmecat_n;
+}
+
+// --- abt_md.FDb.readmecat.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline abt_md::FReadmecat& abt_md::readmecat_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.readmecat_lary[bsr][index];
+}
+
+// --- abt_md.FDb.ind_readmecat.EmptyQ
+// Return true if hash is empty
+inline bool abt_md::ind_readmecat_EmptyQ() {
+    return _db.ind_readmecat_n == 0;
+}
+
+// --- abt_md.FDb.ind_readmecat.N
+// Return number of items in the hash
+inline i32 abt_md::ind_readmecat_N() {
+    return _db.ind_readmecat_n;
+}
+
 // --- abt_md.FDb.readme_curs.Reset
 // cursor points to valid item
 inline void abt_md::_db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent) {
@@ -1900,6 +1954,31 @@ inline void abt_md::_db_gconst_curs_Next(_db_gconst_curs &curs) {
 // item access
 inline abt_md::FGconst& abt_md::_db_gconst_curs_Access(_db_gconst_curs &curs) {
     return gconst_qFind(u64(curs.index));
+}
+
+// --- abt_md.FDb.readmecat_curs.Reset
+// cursor points to valid item
+inline void abt_md::_db_readmecat_curs_Reset(_db_readmecat_curs &curs, abt_md::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- abt_md.FDb.readmecat_curs.ValidQ
+// cursor points to valid item
+inline bool abt_md::_db_readmecat_curs_ValidQ(_db_readmecat_curs &curs) {
+    return curs.index < _db.readmecat_n;
+}
+
+// --- abt_md.FDb.readmecat_curs.Next
+// proceed to next item
+inline void abt_md::_db_readmecat_curs_Next(_db_readmecat_curs &curs) {
+    curs.index++;
+}
+
+// --- abt_md.FDb.readmecat_curs.Access
+// item access
+inline abt_md::FReadmecat& abt_md::_db_readmecat_curs_Access(_db_readmecat_curs &curs) {
+    return readmecat_qFind(u64(curs.index));
 }
 inline abt_md::FDirent::FDirent() {
     abt_md::FDirent_Init(*this);
@@ -2423,6 +2502,20 @@ inline abt_md::FReadme::~FReadme() {
     abt_md::FReadme_Uninit(*this);
 }
 
+inline abt_md::FReadmecat::FReadmecat() {
+    abt_md::FReadmecat_Init(*this);
+}
+
+inline abt_md::FReadmecat::~FReadmecat() {
+    abt_md::FReadmecat_Uninit(*this);
+}
+
+
+// --- abt_md.FReadmecat..Init
+// Set all fields to initial values.
+inline void abt_md::FReadmecat_Init(abt_md::FReadmecat& readmecat) {
+    readmecat.ind_readmecat_next = (abt_md::FReadmecat*)-1; // (abt_md.FDb.ind_readmecat) not-in-hash
+}
 inline abt_md::FReftype::FReftype() {
     abt_md::FReftype_Init(*this);
 }

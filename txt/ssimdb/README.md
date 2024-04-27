@@ -3,6 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
+<!-- TOC_BEG AUTO -->
 * [amcdb - Algo Model Compiler support tables](/txt/ssimdb/amcdb/README.md)
 
 * [amsdb - AMS configuration (ssim database)](/txt/ssimdb/amsdb/README.md)
@@ -16,4 +17,6 @@
 * [fmdb - Fault management tables (ssim database)](/txt/ssimdb/fmdb/README.md)
 
 * [gclidb - gcli db](/txt/ssimdb/gclidb/README.md)
+
+<!-- TOC_END AUTO -->
 

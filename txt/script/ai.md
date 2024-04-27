@@ -9,7 +9,7 @@ This is where `ai` comes in (despite its name, it has nothing to do with machine
 
 `ai` will choose a bootstrap file by looking at what kind of system you're running
 on and what compilers you have. It won't install pre-requisites, for that, see
-[pre-requisites](/txt/setup.md#setup-and-installation).
+[pre-requisites](/txt/start/setup.md#setup-and-installation).
 
 The bootstrap files are located in bin/bootstrap.
 

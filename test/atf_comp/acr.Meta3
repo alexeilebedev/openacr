@@ -8,43 +8,36 @@
 # dmmeta.Ctypelen  Size of Ctype
 # dmmeta.Field     Specify field of a struct
 # dmmeta.Reftype   Field type constructor (e.g. reference type)
-# dmmeta.Ssimfile  File with ssim tuples
-# dmmeta.Nsdb      Annotate ssimdb namespaces
-# dmmeta.Ssimsort  Define sort order for ssimfile
-# dmmeta.Xref      Specify how to cross-reference (i.e. project, or group-by) one record with another
 
 # e.g. dmmeta.ctype  ctype:""  comment:""
 # e.g. dmmeta.cfmt  cfmt:""  printfmt:""  read:""  print:""  sep:""  genop:""  comment:""
-# e.g. dmmeta.ctypelen  ctype:""  len:""  alignment:""  padbytes:""
+# e.g. dmmeta.ctypelen  ctype:""  len:""  alignment:""  padbytes:""  plaindata:""
 # e.g. dmmeta.field  field:""  arg:""  reftype:""  dflt:""  comment:""
-# e.g. dmmeta.ssimfile  ssimfile:""  ctype:""
-# e.g. dmmeta.ssimsort  ssimfile:""  sortfld:""  comment:""
-# e.g. dmmeta.xref  field:""  inscond:""  via:""
 
 dmmeta.ctype  ctype:dmmeta.Ftuple  comment:""
   dmmeta.field  field:dmmeta.Ftuple.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
   dmmeta.field  field:dmmeta.Ftuple.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
   dmmeta.cfmt  cfmt:dmmeta.Ftuple.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-  dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:254  alignment:1  padbytes:0
+  dmmeta.ctypelen  ctype:dmmeta.Ftuple  len:254  alignment:1  padbytes:0  plaindata:Y
 
-dmmeta.field  field:lib_ctype.FFtuple.msghdr  arg:dmmeta.Ftuple  reftype:Base  dflt:""  comment:""
-dmmeta.ssimfile  ssimfile:dmmeta.ftuple  ctype:dmmeta.Ftuple
-  dmmeta.ssimsort  ssimfile:dmmeta.ftuple  sortfld:dmmeta.Ftuple.field  comment:""
-
-dmmeta.xref  field:lib_ctype.FField.c_ftuple  inscond:true  via:lib_ctype.FDb.ind_field/dmmeta.Ftuple.field
-
-# Field                  Arg               Reftype  Comment
-# dmmeta.Ctype.ctype     algo.Smallstr100  Val      Identifier. must be ns.typename
-# dmmeta.Ctype.ns        dmmeta.Ns         Pkey     Parent namespace
-# dmmeta.Ctype.name      algo.Smallstr100  Val      Name sans namespace
-# dmmeta.Ctypelen.ctype  dmmeta.Ctype      Pkey     Identifies the Ctype
-# dmmeta.Field.field     algo.Smallstr100  Val      Primary key, as ctype.name
-# dmmeta.Field.ctype     dmmeta.Ctype      Pkey     Parent structure
-# dmmeta.Field.ns        dmmeta.Ns         Pkey     Parent namespace
-# dmmeta.Field.name      algo.Smallstr50   Val      Name of the field
-# dmmeta.Field.arg       dmmeta.Ctype      Pkey     Type of field
-# dmmeta.Field.reftype   dmmeta.Reftype    Pkey     Type constructor
-# dmmeta.Field.dflt      algo.CppExpr      Val      Default value (c++ expression)
-# dmmeta.Xref.inscond    algo.CppExpr      Val      Insert condition
-# dmmeta.Xref.ns         dmmeta.Ns         Pkey     Ns with which this xref is a member
-report.acr  n_select:9  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# Field                      Arg               Reftype  Comment
+# dmmeta.Ctype.ctype         algo.Smallstr100  Val      Identifier. must be ns.typename
+# dmmeta.Ctype.comment       algo.Comment      Val
+# dmmeta.Cfmt.cfmt           algo.Smallstr100  Val
+# dmmeta.Cfmt.printfmt       dmmeta.Printfmt   Pkey
+# dmmeta.Cfmt.read           bool              Val
+# dmmeta.Cfmt.print          bool              Val
+# dmmeta.Cfmt.sep            algo.Smallstr20   Val
+# dmmeta.Cfmt.genop          bool              Val
+# dmmeta.Cfmt.comment        algo.Comment      Val
+# dmmeta.Ctypelen.ctype      dmmeta.Ctype      Pkey     Identifies the Ctype
+# dmmeta.Ctypelen.len        u32               Val      (calculated) length of the C++ struct in bytes
+# dmmeta.Ctypelen.alignment  i32               Val      (calculated) alignment for the struct
+# dmmeta.Ctypelen.padbytes   i32               Val      (calculated) total # of pad bytes
+# dmmeta.Ctypelen.plaindata  bool              Val      (calculated) this struct can me safely memcpy'ed
+# dmmeta.Field.field         algo.Smallstr100  Val      Primary key, as ctype.name
+# dmmeta.Field.arg           dmmeta.Ctype      Pkey     Type of field
+# dmmeta.Field.reftype       dmmeta.Reftype    Pkey     Type constructor
+# dmmeta.Field.dflt          algo.CppExpr      Val      Default value (c++ expression)
+# dmmeta.Field.comment       algo.Comment      Val
+report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

@@ -193,6 +193,12 @@ void abt_md::PopulateDirent(strptr pattern) {
     ind_beg(algo::Dir_curs,ent,pattern) {
         abt_md::FDirent &dirent=dirent_Alloc();
         dirent.filename=ent.filename;
+        // support sorting by readmecat
+        if (FReadmecat *readmecat=ind_readmecat_Find(ent.filename)){
+            dirent.sortfld=readmecat->sortfld;
+        }else{
+            dirent.sortfld=ent.filename;
+        }
         dirent.pathname=ent.pathname;
         dirent.is_dir=ent.is_dir;
         vrfy_(dirent_XrefMaybe(dirent));
@@ -264,6 +270,16 @@ void abt_md::UpdateReadme() {
     if (!_db.cmdline.dry_run) {
         verblog("save "<<readme.gitfile<<eol);
         SafeStringToFile(out,readme.gitfile);
+        // **VP** Hardcoded code for keeping top level README.md to be automatically visible in gitlab/github
+        // Softlink README.md to txt/README.md doesn't work for gitlab - doesn't render
+        // Keeping README.md in dev.readme table so abt_md generates it breaks xref with ordered dev.readmecat
+        if (readme.gitfile=="txt/README.md"){
+            tempstr out_readme;
+            out_readme<<"<!-- This file is a copy of txt/README.md -->"<<eol;
+            out_readme<<"<!-- Don't edit this file, edit txt/README.md -->"<<eol;
+            out_readme<<out;
+            SafeStringToFile(out_readme,"README.md");
+        }
     }
 }
 
@@ -396,6 +412,11 @@ void abt_md::Main() {
     if (_db.cmdline.check || _db.cmdline.print) {
         _db.cmdline.update=false;
     }
+    // initialize reademecat for sorting
+    u32 sort_n=0;
+    ind_beg(_db_readmecat_curs,readmecat,_db){
+        i64_PrintPadLeft(sort_n++,readmecat.sortfld,3);
+    }ind_end;
 
     // initialize regx for mdsection
     ind_beg(_db_mdsection_curs,mdsection,_db) {

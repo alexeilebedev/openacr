@@ -3,17 +3,4 @@ dmmeta.ctype  ctype:dmmeta.Anonfld  comment:"Omit field name where possible (com
   dmmeta.field  field:dmmeta.Anonfld.field    arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
   dmmeta.field  field:dmmeta.Anonfld.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
   dmmeta.cfmt  cfmt:dmmeta.Anonfld.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-  dmmeta.ctypelen  ctype:dmmeta.Anonfld  len:254  alignment:1  padbytes:0
-
-dmmeta.field  field:acr.FAnonfld.base  arg:dmmeta.Anonfld  reftype:Base  dflt:""  comment:""
-  dmmeta.fbase  field:acr.FAnonfld.base  stripcomment:Y  comment:""
-
-dmmeta.field  field:acr_compl.FAnonfld.msghdr  arg:dmmeta.Anonfld  reftype:Base  dflt:""  comment:""
-dmmeta.field  field:amc.FAnonfld.msghdr  arg:dmmeta.Anonfld  reftype:Base  dflt:""  comment:""
-  dmmeta.fbase  field:amc.FAnonfld.msghdr  stripcomment:Y  comment:""
-
-dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
-  dmmeta.ssimsort  ssimfile:dmmeta.anonfld  sortfld:dmmeta.Anonfld.field  comment:""
-
-dmmeta.xref  field:acr_compl.FField.c_anonfld  inscond:true  via:acr_compl.FDb.ind_field/dmmeta.Anonfld.field
-dmmeta.xref  field:amc.FField.c_anonfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Anonfld.field
+  dmmeta.ctypelen  ctype:dmmeta.Anonfld  len:254  alignment:1  padbytes:0  plaindata:Y
