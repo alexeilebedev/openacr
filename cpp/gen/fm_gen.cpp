@@ -918,14 +918,14 @@ void fm::FieldId_Print(fm::FieldId& row, algo::cstring& str) {
     fm::value_Print(row, str);
 }
 
-// --- fm.Protocol.proto.StaticCheck
+// --- fm...SizeCheck
+inline static void fm::SizeCheck() {
+}
+
+// --- fm...StaticCheck
 void fm::StaticCheck() {
     algo_assert(_offset_of(fm::Flag, value) + sizeof(((fm::Flag*)0)->value) == sizeof(fm::Flag));
     algo_assert(_offset_of(fm::Severity, value) + sizeof(((fm::Severity*)0)->value) == sizeof(fm::Severity));
     algo_assert(_offset_of(fm::AlarmMsg, source) + sizeof(((fm::AlarmMsg*)0)->source) == sizeof(fm::AlarmMsg));
     algo_assert(_offset_of(fm::FieldId, value) + sizeof(((fm::FieldId*)0)->value) == sizeof(fm::FieldId));
-}
-
-// --- fm...SizeCheck
-inline static void fm::SizeCheck() {
 }

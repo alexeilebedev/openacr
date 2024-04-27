@@ -740,8 +740,8 @@ namespace dmmeta { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TracerecPkey;
     typedef algo::Smallstr100 XrefPkey;
 } // gen:ns_pkeytypedef
-namespace dmmeta { // gen:ns_field
-} // gen:ns_field
+namespace dmmeta { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }

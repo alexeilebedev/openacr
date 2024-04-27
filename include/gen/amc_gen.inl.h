@@ -1955,16 +1955,17 @@ inline void amc::FCtypelen_Init(amc::FCtypelen& ctypelen) {
     ctypelen.padbytes = i32(0);
     ctypelen._db_c_ctypelen_in_ary = bool(false);
 }
-inline amc::Genfield::Genfield() {
-    amc::Genfield_Init(*this);
+inline amc::Genctx::Genctx() {
+    amc::Genctx_Init(*this);
 }
 
 
-// --- amc.Genfield..Init
+// --- amc.Genctx..Init
 // Set all fields to initial values.
-inline void amc::Genfield_Init(amc::Genfield& parent) {
-    parent.p_field = NULL;
+inline void amc::Genctx_Init(amc::Genctx& parent) {
+    parent.p_ns = NULL;
     parent.p_ctype = NULL;
+    parent.p_field = NULL;
     parent.p_tfunc = NULL;
 }
 inline amc::FTclass::FTclass() {

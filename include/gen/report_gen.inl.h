@@ -57,9 +57,6 @@ inline report::FieldId::operator report_FieldIdEnum () const {
 inline void report::FieldId_Init(report::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline report::Protocol::Protocol() {
-}
-
 inline report::abt::abt(u16                            in_n_target
         ,algo::UnDiff                   in_time
         ,const algo::strptr&            in_hitrate

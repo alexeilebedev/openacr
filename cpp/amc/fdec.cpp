@@ -29,8 +29,8 @@ void amc::tclass_Dec() {
 }
 
 void amc::tfunc_Dec_GetDouble() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFdec &fdec = *field.c_fdec;
     Set(R, "$fromdbl", tempstr() << algo::I64Power10(fdec.nplace));
@@ -45,8 +45,8 @@ void amc::tfunc_Dec_GetDouble() {
 }
 
 void amc::tfunc_Dec_GetInt() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFdec &fdec = *field.c_fdec;
     Set(R, "$scale", tempstr() << algo::I64Power10(fdec.nplace));
@@ -62,8 +62,8 @@ void amc::tfunc_Dec_GetInt() {
 }
 
 void amc::tfunc_Dec_GetScale() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFdec &fdec = *field.c_fdec;
     Set(R, "$scale", tempstr() << algo::I64Power10(fdec.nplace));
@@ -77,8 +77,8 @@ void amc::tfunc_Dec_GetScale() {
 }
 
 void amc::tfunc_Dec_qSetDouble() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFdec &fdec = *field.c_fdec;
     Set(R, "$fromdbl", tempstr() << algo::I64Power10(fdec.nplace));
@@ -101,8 +101,8 @@ void amc::tfunc_Dec_qSetDouble() {
 }
 
 void amc::tfunc_Dec_SetDoubleMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFdec &fdec = *field.c_fdec;
     Set(R, "$fromdbl", tempstr() << algo::I64Power10(fdec.nplace));
@@ -138,8 +138,8 @@ void amc::tfunc_Dec_SetDoubleMaybe() {
 }
 
 void amc::tfunc_Dec_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFdec &fdec = *field.c_fdec;
 
     u64 minval=0;
@@ -216,8 +216,8 @@ void amc::tfunc_Dec_ReadStrptrMaybe() {
 }
 
 void amc::tfunc_Dec_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFdec &fdec = *field.c_fdec;
     amc::FCtype& valtype = *(field).p_arg;
 

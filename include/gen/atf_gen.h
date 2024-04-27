@@ -56,11 +56,10 @@ enum { atf_TestresultEnum_N = 6 };
 
 namespace atf { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace atf { // gen:ns_field
-} // gen:ns_field
+namespace atf { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atf { struct FieldId; }
-namespace atf { struct Protocol; }
 namespace atf { struct Testresult; }
 namespace atf { struct Testrun; }
 namespace atf { // gen:ns_print_struct
@@ -114,18 +113,6 @@ void                 FieldId_Init(atf::FieldId& parent);
 // cfmt:atf.FieldId.String  printfmt:Raw
 // func:atf.FieldId..Print
 void                 FieldId_Print(atf::FieldId& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- atf.Protocol
-// access: atf.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // atf.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:atf.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 
 // --- atf.Testresult
 struct Testresult { // atf.Testresult
@@ -205,6 +192,8 @@ void                 Testrun_Init(atf::Testrun& parent);
 void                 Testrun_Print(atf::Testrun& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf { // gen:ns_func
+// func:atf...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

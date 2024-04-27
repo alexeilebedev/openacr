@@ -358,11 +358,6 @@ static void gcache::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- gcache.FDb._db.StaticCheck
-void gcache::StaticCheck() {
-    algo_assert(_offset_of(gcache::FieldId, value) + sizeof(((gcache::FieldId*)0)->value) == sizeof(gcache::FieldId));
-}
-
 // --- gcache.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -733,6 +728,11 @@ void gcache::FieldId_Print(gcache::FieldId& row, algo::cstring& str) {
 
 // --- gcache...SizeCheck
 inline static void gcache::SizeCheck() {
+}
+
+// --- gcache...StaticCheck
+void gcache::StaticCheck() {
+    algo_assert(_offset_of(gcache::FieldId, value) + sizeof(((gcache::FieldId*)0)->value) == sizeof(gcache::FieldId));
 }
 
 // --- gcache...main

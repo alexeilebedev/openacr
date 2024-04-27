@@ -85,11 +85,10 @@ enum { report_FieldIdEnum_N = 49 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace report { // gen:ns_field
-} // gen:ns_field
+namespace report { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace report { struct FieldId; }
-namespace report { struct Protocol; }
 namespace report { struct abt; }
 namespace report { struct acr; }
 namespace report { struct acr_check; }
@@ -150,18 +149,6 @@ void                 FieldId_Init(report::FieldId& parent);
 // cfmt:report.FieldId.String  printfmt:Raw
 // func:report.FieldId..Print
 void                 FieldId_Print(report::FieldId& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- report.Protocol
-// access: report.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // report.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:report.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 
 // --- report.abt
 struct abt { // report.abt
@@ -407,6 +394,8 @@ void                 src_func_Init(report::src_func& parent);
 void                 src_func_Print(report::src_func& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace report { // gen:ns_func
+// func:report...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

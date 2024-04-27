@@ -286,12 +286,6 @@ static void atf_fuzz::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_fuzz.Input'  signature:'9ba6a4d39f12eb6e4056fa626a272e08de588888'");
 }
 
-// --- atf_fuzz.FDb._db.StaticCheck
-void atf_fuzz::StaticCheck() {
-    algo_assert(sizeof(atf_fuzz::fuzzstrat_step_hook) == 8); // csize:atf_fuzz.fuzzstrat_step_hook
-    algo_assert(_offset_of(atf_fuzz::FieldId, value) + sizeof(((atf_fuzz::FieldId*)0)->value) == sizeof(atf_fuzz::FieldId));
-}
-
 // --- atf_fuzz.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -993,6 +987,12 @@ void atf_fuzz::TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) {
 
 // --- atf_fuzz...SizeCheck
 inline static void atf_fuzz::SizeCheck() {
+}
+
+// --- atf_fuzz...StaticCheck
+void atf_fuzz::StaticCheck() {
+    algo_assert(sizeof(atf_fuzz::fuzzstrat_step_hook) == 8); // csize:atf_fuzz.fuzzstrat_step_hook
+    algo_assert(_offset_of(atf_fuzz::FieldId, value) + sizeof(((atf_fuzz::FieldId*)0)->value) == sizeof(atf_fuzz::FieldId));
 }
 
 // --- atf_fuzz...main

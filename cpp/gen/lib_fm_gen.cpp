@@ -215,12 +215,6 @@ static void lib_fm::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_fm.Input'  signature:'31fbf0507fb2ed9da38949e132b768cb72b6de2b'");
 }
 
-// --- lib_fm.FDb._db.StaticCheck
-void lib_fm::StaticCheck() {
-    algo_assert(sizeof(lib_fm::_db_h_alarm_hook) == 8); // csize:lib_fm._db_h_alarm_hook
-    algo_assert(_offset_of(lib_fm::FieldId, value) + sizeof(((lib_fm::FieldId*)0)->value) == sizeof(lib_fm::FieldId));
-}
-
 // --- lib_fm.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1321,4 +1315,10 @@ void lib_fm::TableId_Print(lib_fm::TableId& row, algo::cstring& str) {
 
 // --- lib_fm...SizeCheck
 inline static void lib_fm::SizeCheck() {
+}
+
+// --- lib_fm...StaticCheck
+void lib_fm::StaticCheck() {
+    algo_assert(sizeof(lib_fm::_db_h_alarm_hook) == 8); // csize:lib_fm._db_h_alarm_hook
+    algo_assert(_offset_of(lib_fm::FieldId, value) + sizeof(((lib_fm::FieldId*)0)->value) == sizeof(lib_fm::FieldId));
 }

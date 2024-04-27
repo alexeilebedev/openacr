@@ -146,14 +146,6 @@ inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strp
     return retval;
 }
 
-// --- ietf.Protocol.proto.StaticCheck
-void ietf::StaticCheck() {
-    algo_assert(_offset_of(ietf::FieldId, value) + sizeof(((ietf::FieldId*)0)->value) == sizeof(ietf::FieldId));
-    algo_assert(_offset_of(ietf::Ipv4, ipv4) + sizeof(((ietf::Ipv4*)0)->ipv4) == sizeof(ietf::Ipv4));
-    algo_assert(_offset_of(ietf::Ipport, port) + sizeof(((ietf::Ipport*)0)->port) == sizeof(ietf::Ipport));
-    algo_assert(_offset_of(ietf::Ipv4Addr, addr_be) + sizeof(((ietf::Ipv4Addr*)0)->addr_be) == sizeof(ietf::Ipv4Addr));
-}
-
 // --- ietf...SizeCheck
 inline static void ietf::SizeCheck() {
     algo_assert(_offset_of(ietf::Ipv4,ipv4) == 0);
@@ -163,4 +155,12 @@ inline static void ietf::SizeCheck() {
     algo_assert(sizeof(ietf::Ipport) == 6);
     algo_assert(_offset_of(ietf::Ipv4Addr,addr_be) == 0);
     algo_assert(sizeof(ietf::Ipv4Addr) == 4);
+}
+
+// --- ietf...StaticCheck
+void ietf::StaticCheck() {
+    algo_assert(_offset_of(ietf::FieldId, value) + sizeof(((ietf::FieldId*)0)->value) == sizeof(ietf::FieldId));
+    algo_assert(_offset_of(ietf::Ipv4, ipv4) + sizeof(((ietf::Ipv4*)0)->ipv4) == sizeof(ietf::Ipv4));
+    algo_assert(_offset_of(ietf::Ipport, port) + sizeof(((ietf::Ipport*)0)->port) == sizeof(ietf::Ipport));
+    algo_assert(_offset_of(ietf::Ipv4Addr, addr_be) + sizeof(((ietf::Ipv4Addr*)0)->addr_be) == sizeof(ietf::Ipv4Addr));
 }

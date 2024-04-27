@@ -38,9 +38,9 @@ enum { ssimfilt_FieldIdEnum_N = 1 };
 
 namespace ssimfilt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace ssimfilt { // gen:ns_field
+namespace ssimfilt { // gen:ns_tclass_field
 extern const char *ssimfilt_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ssimfilt { struct _db_tuple_curs; }
 namespace ssimfilt { struct _db_matchfield_curs; }
@@ -94,8 +94,6 @@ void                 Step();
 // func:ssimfilt.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:ssimfilt.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:ssimfilt.FDb._db.InsertStrptrMaybe
@@ -375,6 +373,8 @@ struct _db_selfield_curs {// cursor
 
 } // gen:ns_curstext
 namespace ssimfilt { // gen:ns_func
+// func:ssimfilt...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:ssimfilt...main
 int                  main(int argc, char **argv);

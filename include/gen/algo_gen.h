@@ -204,8 +204,8 @@ enum { algo_TextJustEnum_N = 3 };
 
 namespace algo { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace algo { // gen:ns_field
-} // gen:ns_field
+namespace algo { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace algo { struct cstring_ch_curs; }
 namespace algo { struct ByteAry_ary_curs; }
@@ -304,7 +304,6 @@ namespace algo { struct LspaceStr9; }
 namespace algo { struct Md5Digest; }
 namespace algo { struct Month; }
 namespace algo { struct NumParseFlags; }
-namespace algo { struct Protocol; }
 namespace algo { struct RnullStr1; }
 namespace algo { struct RnullStr10; }
 namespace algo { struct RnullStr100; }
@@ -5891,18 +5890,6 @@ void                 NumParseFlags_Init(algo::NumParseFlags& parent);
 void                 NumParseFlags_Print(algo::NumParseFlags& row, algo::cstring& str) __attribute__((nothrow));
 // func:algo.NumParseFlags..GetAnon
 algo::strptr         NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) __attribute__((nothrow));
-
-// --- algo.Protocol
-// access: algo.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // algo.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:algo.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 
 // --- algo.RnullStr1
 #pragma pack(push,1)
@@ -14006,6 +13993,8 @@ namespace algo { // gen:ns_func
 // Test string conversion
 // func:algo...ForAllStrings
 void                 ForAllStrings(void (*fcn)(algo::StringDesc&) );
+// func:algo...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

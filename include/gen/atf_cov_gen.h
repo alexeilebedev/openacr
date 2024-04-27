@@ -74,9 +74,9 @@ enum { atf_cov_TableIdEnum_N = 14 };
 
 namespace atf_cov { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace atf_cov { // gen:ns_field
+namespace atf_cov { // gen:ns_tclass_field
 extern const char *atf_cov_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Covfile; }
 namespace dev { struct Covline; }
@@ -292,8 +292,6 @@ void                 Step();
 // func:atf_cov.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:atf_cov.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:atf_cov.FDb._db.InsertStrptrMaybe
@@ -1345,6 +1343,8 @@ struct target_c_targsrc_curs {// fcurs:atf_cov.FTarget.c_targsrc/curs
 
 } // gen:ns_curstext
 namespace atf_cov { // gen:ns_func
+// func:atf_cov...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:atf_cov...main
 int                  main(int argc, char **argv);

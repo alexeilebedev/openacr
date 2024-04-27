@@ -207,7 +207,7 @@ static void Ctype_ReadStrptrMaybe_Bitset(algo_lib::Replscope &R, amc::FCtype &ct
 
 // Dispatach on field name, and read appropriate field
 void amc::tfunc_Ctype_ReadFieldMaybe() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     bool doit = false;
     ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) if (cfmt.read
                                                     && !(   cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw

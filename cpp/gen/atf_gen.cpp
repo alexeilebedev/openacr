@@ -145,11 +145,6 @@ void atf::FieldId_Print(atf::FieldId& row, algo::cstring& str) {
     atf::value_Print(row, str);
 }
 
-// --- atf.Protocol.proto.StaticCheck
-void atf::StaticCheck() {
-    algo_assert(_offset_of(atf::FieldId, value) + sizeof(((atf::FieldId*)0)->value) == sizeof(atf::FieldId));
-}
-
 // --- atf.Testresult.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -339,4 +334,9 @@ void atf::Testrun_Print(atf::Testrun& row, algo::cstring& str) {
 
 // --- atf...SizeCheck
 inline static void atf::SizeCheck() {
+}
+
+// --- atf...StaticCheck
+void atf::StaticCheck() {
+    algo_assert(_offset_of(atf::FieldId, value) + sizeof(((atf::FieldId*)0)->value) == sizeof(atf::FieldId));
 }

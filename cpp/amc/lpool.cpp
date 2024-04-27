@@ -35,9 +35,9 @@ static bool HaveCountQ(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Lpool() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     Set(R, "$minlevels", tempstr()<<4);// lowest size levels to skip. i.e. 4 -> min allocsize is 2^4
     Set(R, "$nlevels", tempstr()<<36);// number of levels; 36 with minlevels:4 = (1<<40) = 1TB
 
@@ -55,7 +55,7 @@ void amc::tclass_Lpool() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_FreeMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "void", "", "");
     AddProtoArg(func, "void*", "mem");
@@ -66,7 +66,7 @@ void amc::tfunc_Lpool_FreeMem() {
     Ins(&R, func.body, "    $name_Lpblock *temp = ($name_Lpblock*)mem; // push  singly linked list");
     Ins(&R, func.body, "    temp->next = $parname.$name_free[cell];");
     Ins(&R, func.body, "    $parname.$name_free[cell] = temp;");
-    if (HaveCountQ(*amc::_db.genfield.p_field)) {
+    if (HaveCountQ(*amc::_db.genctx.p_field)) {
         Ins(&R, func.body, "    $parname.$name_n--;");
     }
     Ins(&R, func.body, "}");
@@ -75,8 +75,8 @@ void amc::tfunc_Lpool_FreeMem() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "void*","retval","NULL");
     AddProtoArg(func, "u64","size");
@@ -115,7 +115,7 @@ void amc::tfunc_Lpool_AllocMem() {
     Ins(&R, func.body, "            $parname.$name_free[i] = blk;");
     Ins(&R, func.body, "        }");
     Ins(&R, func.body, "    }");
-    if (HaveCountQ(*amc::_db.genfield.p_field)) {
+    if (HaveCountQ(*amc::_db.genctx.p_field)) {
         Ins(&R, func.body, "$parname.$name_n += retval != NULL;");
     }
     if (field.do_trace) {
@@ -128,7 +128,7 @@ void amc::tfunc_Lpool_AllocMem() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_ReserveBuffers() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "bool", "retval", "true");
     AddProtoArg(func, "u64", "nbuf");
@@ -154,7 +154,7 @@ void amc::tfunc_Lpool_ReserveBuffers() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_ReallocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "void*", "ret", "oldmem");
     AddProtoArg(func, "void*", "oldmem");
@@ -177,11 +177,11 @@ void amc::tfunc_Lpool_ReallocMem() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.body, "memset($parname.$name_free, 0, sizeof($parname.$name_free));");
-    if (HaveCountQ(*amc::_db.genfield.p_field)) {
+    if (HaveCountQ(*amc::_db.genctx.p_field)) {
         Ins(&R, func.body, "$parname.$name_n = 0;");
     }
 }
@@ -189,8 +189,8 @@ void amc::tfunc_Lpool_Init() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Lpool_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    if (HaveCountQ(*amc::_db.genfield.p_field)) {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    if (HaveCountQ(*amc::_db.genctx.p_field)) {
         amc::FFunc& func = amc::CreateCurFunc(true); {
             AddRetval(func, "i64", "", "");
         }

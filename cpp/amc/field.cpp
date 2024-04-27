@@ -59,7 +59,7 @@ static void CheckUnderscores(amc::FField &field) {
 
 void amc::tclass_Field() {
     if (algo_lib::_db.cmdline.verbose) {
-        amc::FField &field = *amc::_db.genfield.p_field;
+        amc::FField &field = *amc::_db.genctx.p_field;
         CheckUnderscores(field);
     }
 }
@@ -68,8 +68,8 @@ void amc::tclass_Field2() {
 }
 
 void amc::tfunc_Field_Cleanup() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // cleanup function -- call user-defined function
     // at destruct time
@@ -83,8 +83,8 @@ void amc::tfunc_Field_Cleanup() {
 }
 
 void amc::tfunc_Field_Userinit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_fuserinit) {
         amc::FFunc& func = amc::CreateCurFunc(true); {
             AddRetval(func, "void", "", "");
@@ -95,8 +95,8 @@ void amc::tfunc_Field_Userinit() {
 }
 
 void amc::tfunc_Field_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // cascade delete -- define function
     // implementation will be supplied by the field generator
@@ -118,8 +118,8 @@ void amc::tfunc_Field_Cascdel() {
 void amc::tfunc_Field2_ReadStrptrMaybe() {
     // provide a read function for the field if it already has a Set function,
     // or if the underlying type supports read.
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype &ctype = *field.p_ctype;
     bool ok = true;
     // need srcfield for raw
@@ -184,7 +184,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Field_Concat(){
-    amc::FField* field = amc::_db.genfield.p_field;
+    amc::FField* field = amc::_db.genctx.p_field;
     if (field->has_substr) {// initialized in gen_prepfield
         // collect all fields that use FIELD as a source
         amc::c_substr_field_RemoveAll();

@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Upptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (!FldfuncQ(field)) {
         InsVar(R, field.p_ctype, "$Cpptype*", "$name", "", "reference to parent row");
@@ -34,8 +34,8 @@ void amc::tclass_Upptr() {
 }
 
 void amc::tfunc_Upptr_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FldfuncQ(field)) {
         amc::FFunc& init = amc::CreateCurFunc();
         init.inl = true;

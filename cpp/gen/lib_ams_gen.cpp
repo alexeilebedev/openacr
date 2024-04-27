@@ -652,16 +652,6 @@ static void lib_ams::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.CtlMsg'  signature:'90f280b1d0ea224349fab6afa67209c80742b8f4'");
 }
 
-// --- lib_ams.FDb._db.StaticCheck
-void lib_ams::StaticCheck() {
-    algo_assert(sizeof(lib_ams::stream_h_msg_hook) == 8); // csize:lib_ams.stream_h_msg_hook
-    algo_assert(sizeof(lib_ams::stream_h_msg_orig_hook) == 8); // csize:lib_ams.stream_h_msg_orig_hook
-    algo_assert(_offset_of(lib_ams::CtlConnCase, value) + sizeof(((lib_ams::CtlConnCase*)0)->value) == sizeof(lib_ams::CtlConnCase));
-    algo_assert(_offset_of(lib_ams::CtlMsgCase, value) + sizeof(((lib_ams::CtlMsgCase*)0)->value) == sizeof(lib_ams::CtlMsgCase));
-    algo_assert(_offset_of(lib_ams::trace, n_write_block_spin) + sizeof(((lib_ams::trace*)0)->n_write_block_spin) == sizeof(lib_ams::trace));
-    algo_assert(_offset_of(lib_ams::FieldId, value) + sizeof(((lib_ams::FieldId*)0)->value) == sizeof(lib_ams::FieldId));
-}
-
 // --- lib_ams.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -3658,6 +3648,16 @@ void lib_ams::FieldId_Print(lib_ams::FieldId& row, algo::cstring& str) {
 
 // --- lib_ams...SizeCheck
 inline static void lib_ams::SizeCheck() {
+}
+
+// --- lib_ams...StaticCheck
+void lib_ams::StaticCheck() {
+    algo_assert(sizeof(lib_ams::stream_h_msg_hook) == 8); // csize:lib_ams.stream_h_msg_hook
+    algo_assert(sizeof(lib_ams::stream_h_msg_orig_hook) == 8); // csize:lib_ams.stream_h_msg_orig_hook
+    algo_assert(_offset_of(lib_ams::CtlConnCase, value) + sizeof(((lib_ams::CtlConnCase*)0)->value) == sizeof(lib_ams::CtlConnCase));
+    algo_assert(_offset_of(lib_ams::CtlMsgCase, value) + sizeof(((lib_ams::CtlMsgCase*)0)->value) == sizeof(lib_ams::CtlMsgCase));
+    algo_assert(_offset_of(lib_ams::trace, n_write_block_spin) + sizeof(((lib_ams::trace*)0)->n_write_block_spin) == sizeof(lib_ams::trace));
+    algo_assert(_offset_of(lib_ams::FieldId, value) + sizeof(((lib_ams::FieldId*)0)->value) == sizeof(lib_ams::FieldId));
 }
 
 // --- lib_ams.CtlMsg..DispatchRaw

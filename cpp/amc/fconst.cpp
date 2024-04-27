@@ -30,9 +30,9 @@ static bool FieldBitsetQ(amc::FField &field) {
 }
 
 void amc::tclass_Fconst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     bool is_string = FieldStringQ(field);
 
     vrfy(!FldfuncQ(field), "amc.gen_field_fconst  error:'fldfunc may not be combined with fconst'");
@@ -75,8 +75,8 @@ void amc::tclass_Fconst() {
 }
 
 void amc::tfunc_Fconst_GetEnum() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& getenum = amc::CreateCurFunc();
         Ins(&R, getenum.comment, "Get value of field as enum type");
@@ -91,8 +91,8 @@ void amc::tfunc_Fconst_GetEnum() {
 }
 
 void amc::tfunc_Fconst_SetEnum() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& setenum = amc::CreateCurFunc();
         Ins(&R, setenum.comment, "Set value of field from enum type.");
@@ -103,8 +103,8 @@ void amc::tfunc_Fconst_SetEnum() {
 }
 
 void amc::tfunc_Fconst_ToCstr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& tocstr = amc::CreateCurFunc();
         Ins(&R, tocstr.comment, "Convert numeric value of field to one of predefined string constants.");
@@ -132,8 +132,8 @@ void amc::tfunc_Fconst_ToCstr() {
 }
 
 void amc::tfunc_Fconst_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         Set(R, "$getexpr", amc::FieldvalExpr(field.p_ctype,field,"$parname"));
         amc::FFunc& prn = amc::CreateCurFunc();
@@ -151,8 +151,8 @@ void amc::tfunc_Fconst_Print() {
 }
 
 void amc::tfunc_Fconst_SetStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& mbssp = amc::CreateCurFunc();
         Ins(&R, mbssp.comment, "Convert string to field.");
@@ -220,8 +220,8 @@ void amc::tfunc_Fconst_SetStrptrMaybe() {
 }
 
 void amc::tfunc_Fconst_SetStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field) && !FieldBitsetQ(field)) {
         amc::FFunc& ssp = amc::CreateCurFunc();
         Ins(&R, ssp.comment, "Convert string to field.");
@@ -233,8 +233,8 @@ void amc::tfunc_Fconst_SetStrptr() {
 }
 
 void amc::tfunc_Fconst_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FieldStringQ(field)  && !FieldBitsetQ(field) && HasReadQ(*field.p_ctype)) {
         amc::FFunc& rd = amc::CreateCurFunc();
         Ins(&R, rd.comment, "Convert string to field. Return success value");

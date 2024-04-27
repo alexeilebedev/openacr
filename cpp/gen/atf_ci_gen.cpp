@@ -436,12 +436,6 @@ static void atf_ci::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'7a8e5cb51bc025925f1aa7f6a12998146ebda21c'");
 }
 
-// --- atf_ci.FDb._db.StaticCheck
-void atf_ci::StaticCheck() {
-    algo_assert(sizeof(atf_ci::citest_step_hook) == 8); // csize:atf_ci.citest_step_hook
-    algo_assert(_offset_of(atf_ci::FieldId, value) + sizeof(((atf_ci::FieldId*)0)->value) == sizeof(atf_ci::FieldId));
-}
-
 // --- atf_ci.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -3647,6 +3641,12 @@ void atf_ci::TableId_Print(atf_ci::TableId& row, algo::cstring& str) {
 
 // --- atf_ci...SizeCheck
 inline static void atf_ci::SizeCheck() {
+}
+
+// --- atf_ci...StaticCheck
+void atf_ci::StaticCheck() {
+    algo_assert(sizeof(atf_ci::citest_step_hook) == 8); // csize:atf_ci.citest_step_hook
+    algo_assert(_offset_of(atf_ci::FieldId, value) + sizeof(((atf_ci::FieldId*)0)->value) == sizeof(atf_ci::FieldId));
 }
 
 // --- atf_ci...main

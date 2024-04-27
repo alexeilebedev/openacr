@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Bitfld() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     Set(R, "$Fldtype", field.cpp_type);
     Set(R, "$name"   , name_Get(field));
@@ -51,8 +51,8 @@ void amc::tclass_Bitfld() {
 }
 
 void amc::tfunc_Bitfld_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     Set(R, "$dflt", DfltExprBitfld(field));
     if (ch_N(Subst(R,"$dflt")) > 0) {
         amc::FFunc& init = amc::CreateCurFunc();
@@ -61,8 +61,8 @@ void amc::tfunc_Bitfld_Init() {
 }
 
 void amc::tfunc_Bitfld_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FBitfld &bitfld = *field.c_bitfld;
     amc::FField &srcfield = *bitfld.p_srcfield;
 
@@ -79,8 +79,8 @@ void amc::tfunc_Bitfld_Get() {
 }
 
 void amc::tfunc_Bitfld_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FBitfld &bitfld = *field.c_bitfld;
     amc::FField &srcfield = *bitfld.p_srcfield;
 

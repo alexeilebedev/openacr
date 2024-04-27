@@ -74,8 +74,8 @@ static bool FixedQ(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Inlary() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = FixedQ(field);
 
@@ -112,8 +112,8 @@ void amc::tclass_Inlary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_AllocMem() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -132,8 +132,8 @@ void amc::tfunc_Inlary_AllocMem() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_EmptyQ() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -148,8 +148,8 @@ void amc::tfunc_Inlary_EmptyQ() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Fill() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -167,8 +167,8 @@ void amc::tfunc_Inlary_Fill() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Find() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
 
     if (!PadQ(field)) {
         amc::FFunc& find = amc::CreateCurFunc();
@@ -184,8 +184,8 @@ void amc::tfunc_Inlary_Find() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Getary() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -205,8 +205,8 @@ void amc::tfunc_Inlary_Getary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Init() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -235,8 +235,8 @@ void amc::tfunc_Inlary_Init() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Eq() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
 
     if (field.p_ctype->c_ccmp && field.arg != "pad_byte") {
         amc::FFunc& opeq = amc::CreateCurFunc();
@@ -262,8 +262,8 @@ void amc::tfunc_Inlary_Eq() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Cmp() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     if (field.p_ctype->c_ccmp && field.arg != "pad_byte") {
         Set(R, "$width", tempstr() << WidthMax(field));
         Set(R, "$Fldtype", field.cpp_type);
@@ -294,8 +294,8 @@ void amc::tfunc_Inlary_Cmp() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Max() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -327,7 +327,7 @@ void amc::tfunc_Inlary_Max() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_N() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "i32", false);
@@ -339,8 +339,8 @@ void amc::tfunc_Inlary_N() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_RemoveAll() {
-    algo_lib::Replscope &R      = amc::_db.genfield.R;
-    amc::FField         &field  = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R      = amc::_db.genctx.R;
+    amc::FField         &field  = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary = *field.c_inlary;
     bool                 dtor   = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor) ||!field.p_arg->c_cpptype;
     bool                 fixed  = inlary.max == inlary.min;
@@ -368,8 +368,8 @@ void amc::tfunc_Inlary_RemoveAll() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_RemoveLast() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 dtor       = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
     bool                 fixed      = inlary.max == inlary.min;
@@ -396,8 +396,8 @@ void amc::tfunc_Inlary_RemoveLast() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_RowidFind() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     if (field.reflect) {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
         rowid_findx.priv=true;
@@ -410,8 +410,8 @@ void amc::tfunc_Inlary_RowidFind() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Setary() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -430,8 +430,8 @@ void amc::tfunc_Inlary_Setary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_Uninit() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 glob       = GlobalQ(*field.p_ctype);
     bool                 fixed      = inlary.max == inlary.min;
@@ -449,8 +449,8 @@ void amc::tfunc_Inlary_Uninit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_qFind() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     if (!PadQ(field)) {
         amc::FFunc& qfind = amc::CreateCurFunc();
         qfind.inl = true;
@@ -463,8 +463,8 @@ void amc::tfunc_Inlary_qFind() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_rowid_Get() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
     bool                 fixed      = inlary.max == inlary.min;
 
@@ -481,9 +481,9 @@ void amc::tfunc_Inlary_rowid_Get() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Inlary_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     amc::FInlary& inlary = *field.c_inlary;
     bool glob = GlobalQ(*field.p_ctype);
     bool fixed = inlary.max == inlary.min;
@@ -563,8 +563,8 @@ void amc::tfunc_Inlary_curs() {
 //    (for fixed array, element #0 is read)
 //
 void amc::tfunc_Inlary_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     char sep = GetSep(field);
     if (!PadQ(field) && (field.arg=="char" || field.arg=="u8" || HasStringReadQ(*field.p_arg))) {
         Set(R, "$sep", char_ToCppSingleQuote(sep));
@@ -630,8 +630,8 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
 // This function is reused by Tary and Varlen, so it cannot really assume
 // we're dealing with an Inlary
 void amc::tfunc_Inlary_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     char sep = GetSep(field);
     if (!PadQ(field) && (field.arg=="char" || field.arg=="u8" || sep)) {// ignore pad_byte
         Set(R, "$sep", char_ToCppSingleQuote(sep));

@@ -498,11 +498,6 @@ static void atf_comp::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'b05bbcc62beda39e9afa4145fceb830147523bd6'");
 }
 
-// --- atf_comp.FDb._db.StaticCheck
-void atf_comp::StaticCheck() {
-    algo_assert(_offset_of(atf_comp::FieldId, value) + sizeof(((atf_comp::FieldId*)0)->value) == sizeof(atf_comp::FieldId));
-}
-
 // --- atf_comp.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -2229,6 +2224,11 @@ void atf_comp::TableId_Print(atf_comp::TableId& row, algo::cstring& str) {
 
 // --- atf_comp...SizeCheck
 inline static void atf_comp::SizeCheck() {
+}
+
+// --- atf_comp...StaticCheck
+void atf_comp::StaticCheck() {
+    algo_assert(_offset_of(atf_comp::FieldId, value) + sizeof(((atf_comp::FieldId*)0)->value) == sizeof(atf_comp::FieldId));
 }
 
 // --- atf_comp...main

@@ -497,11 +497,6 @@ static void apm::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'6cd9ce149ee2dcf2150fc77eec6ace0504e98b5a'");
 }
 
-// --- apm.FDb._db.StaticCheck
-void apm::StaticCheck() {
-    algo_assert(_offset_of(apm::FieldId, value) + sizeof(((apm::FieldId*)0)->value) == sizeof(apm::FieldId));
-}
-
 // --- apm.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -4926,6 +4921,11 @@ void apm::TableId_Print(apm::TableId& row, algo::cstring& str) {
 
 // --- apm...SizeCheck
 inline static void apm::SizeCheck() {
+}
+
+// --- apm...StaticCheck
+void apm::StaticCheck() {
+    algo_assert(_offset_of(apm::FieldId, value) + sizeof(((apm::FieldId*)0)->value) == sizeof(apm::FieldId));
 }
 
 // --- apm...main

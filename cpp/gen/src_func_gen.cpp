@@ -437,11 +437,6 @@ static void src_func::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'fcceb1600247efc0d7b15d2ae7a9429c3b809332'");
 }
 
-// --- src_func.FDb._db.StaticCheck
-void src_func::StaticCheck() {
-    algo_assert(_offset_of(src_func::FieldId, value) + sizeof(((src_func::FieldId*)0)->value) == sizeof(src_func::FieldId));
-}
-
 // --- src_func.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -2825,6 +2820,11 @@ void src_func::TableId_Print(src_func::TableId& row, algo::cstring& str) {
 
 // --- src_func...SizeCheck
 inline static void src_func::SizeCheck() {
+}
+
+// --- src_func...StaticCheck
+void src_func::StaticCheck() {
+    algo_assert(_offset_of(src_func::FieldId, value) + sizeof(((src_func::FieldId*)0)->value) == sizeof(src_func::FieldId));
 }
 
 // --- src_func...main

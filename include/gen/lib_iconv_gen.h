@@ -37,8 +37,8 @@ enum { lib_iconv_FieldIdEnum_N = 1 };
 
 namespace lib_iconv { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_iconv { // gen:ns_field
-} // gen:ns_field
+namespace lib_iconv { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_iconv { struct trace; }
 namespace lib_iconv { struct FDb; }
@@ -65,8 +65,6 @@ struct FDb { // lib_iconv.FDb: In-memory database for lib_iconv
     lib_iconv::trace   trace;   //
 };
 
-// func:lib_iconv.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_iconv.FDb._db.InsertStrptrMaybe
@@ -186,6 +184,8 @@ void                 Icd_Uninit(lib_iconv::Icd& icd) __attribute__((nothrow));
 void                 Icd_Print(lib_iconv::Icd& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_iconv { // gen:ns_func
+// func:lib_iconv...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

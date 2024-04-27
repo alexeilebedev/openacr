@@ -379,12 +379,12 @@ enum { amc_TableIdEnum_N = 198 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace amc { // gen:ns_field
+namespace amc { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
 extern const char *amc_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
@@ -699,7 +699,7 @@ namespace amc { struct FCpptype; }
 namespace amc { struct FCsize; }
 namespace amc { struct FCstr; }
 namespace amc { struct FCtypelen; }
-namespace amc { struct Genfield; }
+namespace amc { struct Genctx; }
 namespace amc { struct trace; }
 namespace amc { struct FDb; }
 namespace amc { struct FDispatchmsg; }
@@ -1569,7 +1569,7 @@ void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
 // access: amc.FSsimfile.p_ctype (Upptr)
 // access: amc.FTypefld.p_ctype (Upptr)
 // access: amc.FXref.p_ctype (Upptr)
-// access: amc.Genfield.p_ctype (Upptr)
+// access: amc.Genctx.p_ctype (Upptr)
 // access: amc.Genpnew.p_ctype (Upptr)
 struct FCtype { // amc.FCtype
     algo::Smallstr100     ctype;                      // Identifier. must be ns.typename
@@ -1643,6 +1643,7 @@ struct FCtype { // amc.FCtype
     bool                  copy_priv;                  //   false  disallow copy ctor / assign op
     bool                  fields_cloned;              //   false  True if fields from c_cbase have been cloned.
     bool                  original;                   //   false  True if this ctype comes from disk
+    bool                  plaindata;                  //   false
     u32                   alignment;                  //   1
     i32                   n_padbytes;                 //   0
     u32                   totsize_byte;               //   0  Total size in bytes of all fields
@@ -2525,22 +2526,23 @@ void                 FCtypelen_Init(amc::FCtypelen& ctypelen);
 // func:amc.FCtypelen..Uninit
 void                 FCtypelen_Uninit(amc::FCtypelen& ctypelen) __attribute__((nothrow));
 
-// --- amc.Genfield
-struct Genfield { // amc.Genfield
+// --- amc.Genctx
+struct Genctx { // amc.Genctx
     algo_lib::Replscope   R;         //
-    amc::FField*          p_field;   // reference to parent row
+    amc::FNs*             p_ns;      // reference to parent row
     amc::FCtype*          p_ctype;   // reference to parent row
+    amc::FField*          p_field;   // reference to parent row
     amc::FTfunc*          p_tfunc;   // reference to parent row
-    Genfield();
+    Genctx();
 private:
-    // value field amc.Genfield.R is not copiable
-    Genfield(const Genfield&){ /*disallow copy constructor */}
-    void operator =(const Genfield&){ /*disallow direct assignment */}
+    // value field amc.Genctx.R is not copiable
+    Genctx(const Genctx&){ /*disallow copy constructor */}
+    void operator =(const Genctx&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
-// func:amc.Genfield..Init
-void                 Genfield_Init(amc::Genfield& parent);
+// func:amc.Genctx..Init
+void                 Genctx_Init(amc::Genctx& parent);
 
 // --- amc.FTclass
 // create: amc.FDb.tclass (Inlary)
@@ -2875,7 +2877,7 @@ struct FDb { // amc.FDb: In-memory database for amc
     i32                     dispctx_n;                                // number of elements in array
     amc::FPmaskfld*         pmaskfld_lary[32];                        // level array
     i32                     pmaskfld_n;                               // number of elements in array
-    amc::Genfield           genfield;                                 //
+    amc::Genctx             genctx;                                   //
     amc::FFwddecl*          fwddecl_lary[32];                         // level array
     i32                     fwddecl_n;                                // number of elements in array
     amc::FFwddecl**         ind_fwddecl_buckets_elems;                // pointer to bucket array
@@ -4175,8 +4177,6 @@ void                 Step();
 // func:amc.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:amc.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:amc.FDb._db.InsertStrptrMaybe
@@ -11386,7 +11386,7 @@ void                 FFflag_Uninit(amc::FFflag& fflag) __attribute__((nothrow));
 // access: amc.FXref.p_field (Upptr)
 // access: amc.FXref.p_viafld (Upptr)
 // access: amc.FXref.p_keyfld (Upptr)
-// access: amc.Genfield.p_field (Upptr)
+// access: amc.Genctx.p_field (Upptr)
 // access: amc.Genpnew.p_optfld (Upptr)
 // access: amc.Genpnew.p_varlenfld (Upptr)
 struct FField { // amc.FField
@@ -13415,6 +13415,7 @@ void                 FNoxref_Uninit(amc::FNoxref& noxref) __attribute__((nothrow
 // access: amc.FOutfile.p_ns (Upptr)
 // access: amc.FPnew.p_ns (Upptr)
 // access: amc.FTarget.p_ns (Upptr)
+// access: amc.Genctx.p_ns (Upptr)
 struct FNs { // amc.FNs
     amc::FNs*           ind_ns_next;         // hash next
     algo::Smallstr16    ns;                  // Namespace name (primary key)
@@ -13443,7 +13444,6 @@ struct FNs { // amc.FNs
     algo::cstring*      include_elems;       // pointer to elements
     u32                 include_n;           // number of elements in array
     u32                 include_max;         // max. capacity of array before realloc
-    bool                topo_visited;        //   false
     algo::Sha1sig       signature;           //
     algo::Sha1sig       signature_input;     //
     amc::FDispsig**     c_dispsig_elems;     // array of pointers
@@ -15441,7 +15441,7 @@ void                 FTcurs_Uninit(amc::FTcurs& tcurs) __attribute__((nothrow));
 // create: amc.FDb.tfunc (Lary)
 // global access: ind_tfunc (Thash)
 // access: amc.FTclass.c_tfunc (Ptrary)
-// access: amc.Genfield.p_tfunc (Upptr)
+// access: amc.Genctx.p_tfunc (Upptr)
 struct FTfunc { // amc.FTfunc
     amc::FTfunc*           ind_tfunc_next;          // hash next
     algo::Smallstr50       tfunc;                   //
@@ -19502,6 +19502,8 @@ void                 gen_ns_check_lim();
 // func:amc...gen_ns_write
 // this function is 'extrn' and implemented by user
 void                 gen_ns_write();
+// func:amc...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:amc...main
 int                  main(int argc, char **argv);

@@ -3008,6 +3008,7 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.copy_priv = bool(false);
     ctype.fields_cloned = bool(false);
     ctype.original = bool(false);
+    ctype.plaindata = bool(false);
     ctype.alignment = u32(1);
     ctype.n_padbytes = i32(0);
     ctype.totsize_byte = u32(0);
@@ -6876,15 +6877,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'469bbf0164731ea4924cd90c0b01213147e7f147'");
-}
-
-// --- amc.FDb._db.StaticCheck
-void amc::StaticCheck() {
-    algo_assert(sizeof(amc::gen_step_hook) == 8); // csize:amc.gen_step_hook
-    algo_assert(sizeof(amc::tclass_step_hook) == 8); // csize:amc.tclass_step_hook
-    algo_assert(sizeof(amc::tfunc_step_hook) == 8); // csize:amc.tfunc_step_hook
-    algo_assert(_offset_of(amc::FieldId, value) + sizeof(((amc::FieldId*)0)->value) == sizeof(amc::FieldId));
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'2845e5b90b8fa40f50b54fb5c8b4dcef3e6795ec'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -30102,7 +30095,6 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.include_elems 	= 0; // (amc.FNs.include)
     ns.include_n     	= 0; // (amc.FNs.include)
     ns.include_max   	= 0; // (amc.FNs.include)
-    ns.topo_visited = bool(false);
     ns.c_dispsig_elems = NULL; // (amc.FNs.c_dispsig)
     ns.c_dispsig_n = 0; // (amc.FNs.c_dispsig)
     ns.c_dispsig_max = 0; // (amc.FNs.c_dispsig)
@@ -32391,6 +32383,14 @@ void amc::TableId_Print(amc::TableId& row, algo::cstring& str) {
 
 // --- amc...SizeCheck
 inline static void amc::SizeCheck() {
+}
+
+// --- amc...StaticCheck
+void amc::StaticCheck() {
+    algo_assert(sizeof(amc::gen_step_hook) == 8); // csize:amc.gen_step_hook
+    algo_assert(sizeof(amc::tclass_step_hook) == 8); // csize:amc.tclass_step_hook
+    algo_assert(sizeof(amc::tfunc_step_hook) == 8); // csize:amc.tfunc_step_hook
+    algo_assert(_offset_of(amc::FieldId, value) + sizeof(((amc::FieldId*)0)->value) == sizeof(amc::FieldId));
 }
 
 // --- amc...main

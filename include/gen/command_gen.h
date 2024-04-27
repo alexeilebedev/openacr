@@ -387,8 +387,8 @@ enum { command_ssimfilt_format_Enum_N = 6 };
 
 namespace command { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace command { // gen:ns_field
-} // gen:ns_field
+namespace command { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace command { struct acr_where_curs; }
 namespace command { struct acr_field_curs; }
@@ -406,7 +406,6 @@ namespace command { struct sandbox_files_curs; }
 namespace command { struct ssimfilt_match_curs; }
 namespace command { struct ssimfilt_field_curs; }
 namespace command { struct FieldId; }
-namespace command { struct Protocol; }
 namespace command { struct abt; }
 namespace command { struct abt_md; }
 namespace command { struct abt_md_proc; }
@@ -540,18 +539,6 @@ void                 FieldId_Init(command::FieldId& parent);
 // cfmt:command.FieldId.String  printfmt:Raw
 // func:command.FieldId..Print
 void                 FieldId_Print(command::FieldId& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- command.Protocol
-// access: command.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // command.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:command.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 
 // --- command.abt
 // access: command.abt_proc.abt (Exec)
@@ -6521,6 +6508,8 @@ struct ssimfilt_field_curs {// cursor
 
 } // gen:ns_curstext
 namespace command { // gen:ns_func
+// func:command...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

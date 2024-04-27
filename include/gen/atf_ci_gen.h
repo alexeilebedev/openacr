@@ -71,9 +71,9 @@ enum { atf_ci_TableIdEnum_N = 22 };
 
 namespace atf_ci { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace atf_ci { // gen:ns_field
+namespace atf_ci { // gen:ns_tclass_field
 extern const char *atf_ci_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
@@ -359,8 +359,6 @@ void                 Step();
 // func:atf_ci.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:atf_ci.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:atf_ci.FDb._db.InsertStrptrMaybe
@@ -1889,6 +1887,8 @@ void                 citest_apm_reinstall();
 // func:atf_ci...citest_ssimfile
 // this function is 'extrn' and implemented by user
 void                 citest_ssimfile();
+// func:atf_ci...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:atf_ci...main
 int                  main(int argc, char **argv);

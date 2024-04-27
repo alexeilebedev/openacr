@@ -1176,7 +1176,7 @@ static void Main_Report() {
     amc::_db.report.n_xref = amc::xref_N();
     amc::_db.report.n_ctype   += amc::ctype_N();
     amc::_db.report.n_func    += amc::func_N();
-    ind_replvar_Cascdel(amc::_db.genfield.R);// defensive
+    ind_replvar_Cascdel(amc::_db.genctx.R);// defensive
 
     if (amc::_db.cmdline.report) {
         prlog(amc::_db.report);

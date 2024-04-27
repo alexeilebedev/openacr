@@ -294,11 +294,6 @@ static void sandbox::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'sandbox.Input'  signature:'cc12803fdb112312e03adeccfcb9535fc5825f85'");
 }
 
-// --- sandbox.FDb._db.StaticCheck
-void sandbox::StaticCheck() {
-    algo_assert(_offset_of(sandbox::FieldId, value) + sizeof(((sandbox::FieldId*)0)->value) == sizeof(sandbox::FieldId));
-}
-
 // --- sandbox.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1007,6 +1002,11 @@ void sandbox::TableId_Print(sandbox::TableId& row, algo::cstring& str) {
 
 // --- sandbox...SizeCheck
 inline static void sandbox::SizeCheck() {
+}
+
+// --- sandbox...StaticCheck
+void sandbox::StaticCheck() {
+    algo_assert(_offset_of(sandbox::FieldId, value) + sizeof(((sandbox::FieldId*)0)->value) == sizeof(sandbox::FieldId));
 }
 
 // --- sandbox...main

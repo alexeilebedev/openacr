@@ -688,12 +688,6 @@ static void abt_md::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'e9b683d62401c41b8057b94ea43245f45960eaad'");
 }
 
-// --- abt_md.FDb._db.StaticCheck
-void abt_md::StaticCheck() {
-    algo_assert(sizeof(abt_md::mdsection_step_hook) == 8); // csize:abt_md.mdsection_step_hook
-    algo_assert(_offset_of(abt_md::FieldId, value) + sizeof(((abt_md::FieldId*)0)->value) == sizeof(abt_md::FieldId));
-}
-
 // --- abt_md.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -6177,6 +6171,12 @@ void abt_md::TableId_Print(abt_md::TableId& row, algo::cstring& str) {
 
 // --- abt_md...SizeCheck
 inline static void abt_md::SizeCheck() {
+}
+
+// --- abt_md...StaticCheck
+void abt_md::StaticCheck() {
+    algo_assert(sizeof(abt_md::mdsection_step_hook) == 8); // csize:abt_md.mdsection_step_hook
+    algo_assert(_offset_of(abt_md::FieldId, value) + sizeof(((abt_md::FieldId*)0)->value) == sizeof(abt_md::FieldId));
 }
 
 // --- abt_md...main

@@ -109,8 +109,8 @@ static void CheckSmallstr(amc::FSmallstr &smallstr, amc::FNumstr *numstr) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Smallstr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     vrfy(field.c_smallstr, "smallstr required");
     amc::FSmallstr& smallstr = *field.c_smallstr;
@@ -152,8 +152,8 @@ void amc::tclass_Smallstr() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Smallstr_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     // init function
@@ -177,8 +177,8 @@ void amc::tfunc_Smallstr_Init() {
 }
 
 void amc::tfunc_Smallstr_Getary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     amc::FFunc& getary = amc::CreateCurFunc();
@@ -194,8 +194,8 @@ void amc::tfunc_Smallstr_Getary() {
 }
 
 void amc::tfunc_Smallstr_Add() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
@@ -212,8 +212,8 @@ void amc::tfunc_Smallstr_Add() {
 }
 
 void amc::tfunc_Smallstr_AddStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
@@ -234,8 +234,8 @@ void amc::tfunc_Smallstr_AddStrptr() {
 }
 
 void amc::tfunc_Smallstr_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (HasReadQ(*field.p_ctype)) {
         amc::FFunc& rd = amc::CreateCurFunc();
         Ins(&R, rd.comment, "Convert string to field. Return success value");
@@ -253,7 +253,7 @@ void amc::tfunc_Smallstr_ReadStrptrMaybe() {
 }
 
 void amc::tfunc_Smallstr_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     // print function.
     // strip any padding first).
@@ -266,8 +266,8 @@ void amc::tfunc_Smallstr_Print() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Smallstr_HashStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& hash = amc::CreateCurFunc();
     // PARENT IS LIMITED TO HAVING 1 SMALLSTR FIELD
     vrfy(amc::c_datafld_N(*field.p_ctype)==1, "amc.smallstr_hash  comment:'Hash for smallstr is limited to one field'");
@@ -288,8 +288,8 @@ void amc::tfunc_Smallstr_HashStrptr() {
 
 // compute length
 void amc::tfunc_Smallstr_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "int", false);
@@ -316,7 +316,7 @@ void amc::tfunc_Smallstr_N() {
 
 // Max # of elements (constant)
 void amc::tfunc_Smallstr_Max() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& maxitems = amc::CreateCurFunc();
     maxitems.inl=true;
@@ -335,8 +335,8 @@ void amc::tfunc_Smallstr_Max() {
 // Length of a padded string is determined by stripping the padded characters
 // from the appropriate end.
 void amc::tfunc_Smallstr_SetStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
     amc::FFunc& func = amc::CreateCurFunc(true);
     AddRetval(func, "void", "", "");
@@ -369,8 +369,8 @@ void amc::tfunc_Smallstr_SetStrptr() {
 
 // Copy from same type
 void amc::tfunc_Smallstr_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr& smallstr = *field.c_smallstr;
 
     amc::FFunc& func = amc::CreateCurFunc();
@@ -390,7 +390,7 @@ void amc::tfunc_Smallstr_Set() {
 
 // Assignment operator from strptr
 void amc::tfunc_Smallstr_AssignStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl=true;
@@ -404,7 +404,7 @@ void amc::tfunc_Smallstr_AssignStrptr() {
 
 // Construct from same type
 void amc::tfunc_Smallstr_Ctor() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl=true;
     func.comment="";// erase it
@@ -417,7 +417,7 @@ void amc::tfunc_Smallstr_Ctor() {
 
 // Construct from strptr
 void amc::tfunc_Smallstr_CtorStrptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl=true;
     func.comment="";// erase it

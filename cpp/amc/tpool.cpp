@@ -32,8 +32,8 @@ static bool MtfreeQ(amc::FField &field) {
 }
 
 void amc::tclass_Tpool() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool mtfree = MtfreeQ(field);
 
     GenTclass(amc_tclass_Pool);
@@ -60,7 +60,7 @@ void amc::tclass_Tpool() {
 }
 
 void amc::tfunc_Tpool_ReserveMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reservemem = amc::CreateCurFunc();
     Ins(&R, reservemem.comment, "Allocate block of given size, break up into small elements and append to free list.");
@@ -81,7 +81,7 @@ void amc::tfunc_Tpool_ReserveMem() {
 }
 
 void amc::tfunc_Tpool_Reserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.comment, "Preallocate memory for N more elements");
@@ -101,8 +101,8 @@ void amc::tfunc_Tpool_Reserve() {
 }
 
 void amc::tfunc_Tpool_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool mtfree = MtfreeQ(field);
 
     amc::FFunc& allocmem = amc::CreateCurFunc();
@@ -128,8 +128,8 @@ void amc::tfunc_Tpool_AllocMem() {
 }
 
 void amc::tfunc_Tpool_FreeMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool mtfree = MtfreeQ(field);
 
     amc::FFunc& freemem = amc::CreateCurFunc();
@@ -152,8 +152,8 @@ void amc::tfunc_Tpool_FreeMem() {
 }
 
 void amc::tfunc_Tpool_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // initialization
     amc::FFunc& init = amc::CreateCurFunc();

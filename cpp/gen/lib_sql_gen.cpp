@@ -80,11 +80,6 @@ static void lib_sql::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_sql.FDb._db.StaticCheck
-void lib_sql::StaticCheck() {
-    algo_assert(_offset_of(lib_sql::FieldId, value) + sizeof(((lib_sql::FieldId*)0)->value) == sizeof(lib_sql::FieldId));
-}
-
 // --- lib_sql.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -508,4 +503,9 @@ void lib_sql::FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) {
 
 // --- lib_sql...SizeCheck
 inline static void lib_sql::SizeCheck() {
+}
+
+// --- lib_sql...StaticCheck
+void lib_sql::StaticCheck() {
+    algo_assert(_offset_of(lib_sql::FieldId, value) + sizeof(((lib_sql::FieldId*)0)->value) == sizeof(lib_sql::FieldId));
 }

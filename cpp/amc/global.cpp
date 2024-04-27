@@ -33,8 +33,8 @@ void amc::tclass_Global() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (ctype_Get(field) == "algo_lib.FDb") {// dirty hack
         amc::FFunc& func = amc::CreateCurFunc(true); {
@@ -66,8 +66,8 @@ int amc::c_parentns_FindIndex(amc::FNs& ns, amc::FNs *val) {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_LoadTuplesMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     amc::FFunc& ldt = amc::CreateCurFunc(true); {
         AddProtoArg(ldt, "algo::strptr", "root");
@@ -103,7 +103,7 @@ void amc::tfunc_Global_LoadTuplesMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_LoadTuplesFile() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& ldt = amc::CreateCurFunc(true);
     Ins(&R, ldt.comment, "Read tuples from file FNAME into this namespace's in-memory database.");
     Ins(&R, ldt.comment, "If RECURSIVE is TRUE, then also load these tuples into any parent namespaces");
@@ -124,8 +124,8 @@ void amc::tfunc_Global_LoadTuplesFile() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_LoadTuplesFd() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     amc::FFunc& ldt = amc::CreateCurFunc(true);
     AddProtoArg(ldt, "algo::Fildes", "fd");
@@ -157,8 +157,8 @@ void amc::tfunc_Global_LoadTuplesFd() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_SaveTuples() {
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     if (c_foutput_N(ns)) {
         // function to save all tuples
@@ -184,8 +184,8 @@ void amc::tfunc_Global_SaveTuples() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_InsertStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     bool has_inputs = amc::HasFinputsQ(*field.p_ctype->p_ns);
     amc::FFunc& fcn = amc::CreateCurFunc(true); {
@@ -230,8 +230,8 @@ void amc::tfunc_Global_InsertStrptrMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_InitReflection() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
 
     amc::FFunc& initrefl = amc::CreateCurFunc(true); {
@@ -295,7 +295,7 @@ void amc::tfunc_Global_InitReflection() {
 }
 
 void amc::tfunc_Global_LoadSsimfileMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& loadssimfile = amc::CreateCurFunc(true); {
         AddProtoArg(loadssimfile,"algo::strptr","fname");
         AddProtoArg(loadssimfile,"bool","recursive");
@@ -310,8 +310,8 @@ void amc::tfunc_Global_LoadSsimfileMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_main() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (amc::c_fstep_N(ns) > 0 && !ns.c_main && ExeQ(ns)) {
         prerr("amc.no_main"
@@ -392,7 +392,7 @@ void amc::tfunc_Global_main() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_WinMain() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     // generate WinMain() function only if main() exists
     if (amc::ind_func_Find(Subst(R, "$ns...main"))) {
         amc::FFunc& winmain = amc::ind_func_GetOrCreate(Subst(R, "$ns...WinMain"));
@@ -417,8 +417,8 @@ static int CountDirectSteps(amc::FNs &ns) {
 }
 
 void amc::tfunc_Global_MainLoop() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (ns.c_main) {
         amc::FFunc& mainloop = amc::CreateCurFunc();
@@ -435,8 +435,8 @@ void amc::tfunc_Global_MainLoop() {
 }
 
 void amc::tfunc_Global_Steps() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (c_parentns_N(ns) > 0) {
         amc::FFunc& steps = amc::CreateCurFunc();
@@ -455,8 +455,8 @@ void amc::tfunc_Global_Steps() {
 
 
 void amc::tfunc_Global_Step() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (ns.c_main || c_fstep_N(ns)>0) {// generate main step function from all of its constituents.
         amc::FFunc& stepfunc = amc::CreateCurFunc(true);
@@ -472,20 +472,14 @@ void amc::tfunc_Global_Step() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Global_Main() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (ns.c_main) {
         amc::FFunc& func = amc::CreateCurFunc(true);
         func.extrn = true;
         Ins(&R, func.ret    , "void",false);
     }
-}
-
-// -----------------------------------------------------------------------------
-
-void amc::tfunc_Global_StaticCheck() {
-    amc::tfunc_Protocol_StaticCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -791,8 +785,8 @@ static void CheckBaseCmdline(amc::FFcmdline &cmdline) {
 
 // Namespace ReadArgv function to read command line
 void amc::tfunc_Global_ReadArgv() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field; // atf_amc_cmd.FDb._db
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field; // atf_amc_cmd.FDb._db
     amc::FNs &ns = *field.p_ctype->p_ns; // atf_amc_cmd
     amc::FFcmdline *fcmdline = ns.c_fcmdline; // atf_amc_cmd.FDb.cmdline
     if (ns.c_main && fcmdline) {

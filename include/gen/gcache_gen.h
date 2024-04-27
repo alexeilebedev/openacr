@@ -46,9 +46,9 @@ enum { gcache_FieldIdEnum_N = 7 };
 
 namespace gcache { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace gcache { // gen:ns_field
+namespace gcache { // gen:ns_tclass_field
 extern const char *gcache_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace gcache { struct _db_header_curs; }
 namespace gcache { struct cleanreport; }
@@ -139,8 +139,6 @@ void                 Step();
 // func:gcache.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:gcache.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:gcache.FDb._db.InsertStrptrMaybe
@@ -311,6 +309,8 @@ struct _db_header_curs {// cursor
 
 } // gen:ns_curstext
 namespace gcache { // gen:ns_func
+// func:gcache...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:gcache...main
 int                  main(int argc, char **argv);

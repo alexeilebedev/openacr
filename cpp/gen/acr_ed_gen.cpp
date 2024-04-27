@@ -889,12 +889,6 @@ static void acr_ed::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'042948d5ec028115be9d280cd8fe64e20bae7485'");
 }
 
-// --- acr_ed.FDb._db.StaticCheck
-void acr_ed::StaticCheck() {
-    algo_assert(sizeof(acr_ed::edaction_step_hook) == 8); // csize:acr_ed.edaction_step_hook
-    algo_assert(_offset_of(acr_ed::FieldId, value) + sizeof(((acr_ed::FieldId*)0)->value) == sizeof(acr_ed::FieldId));
-}
-
 // --- acr_ed.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -5262,6 +5256,12 @@ void acr_ed::TableId_Print(acr_ed::TableId& row, algo::cstring& str) {
 
 // --- acr_ed...SizeCheck
 inline static void acr_ed::SizeCheck() {
+}
+
+// --- acr_ed...StaticCheck
+void acr_ed::StaticCheck() {
+    algo_assert(sizeof(acr_ed::edaction_step_hook) == 8); // csize:acr_ed.edaction_step_hook
+    algo_assert(_offset_of(acr_ed::FieldId, value) + sizeof(((acr_ed::FieldId*)0)->value) == sizeof(acr_ed::FieldId));
 }
 
 // --- acr_ed...main

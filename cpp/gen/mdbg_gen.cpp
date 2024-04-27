@@ -553,11 +553,6 @@ static void mdbg::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'mdbg.Input'  signature:'a39a7508119d6dc51451d2cda9f120fd888b1184'");
 }
 
-// --- mdbg.FDb._db.StaticCheck
-void mdbg::StaticCheck() {
-    algo_assert(_offset_of(mdbg::FieldId, value) + sizeof(((mdbg::FieldId*)0)->value) == sizeof(mdbg::FieldId));
-}
-
 // --- mdbg.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1234,6 +1229,11 @@ void mdbg::TableId_Print(mdbg::TableId& row, algo::cstring& str) {
 
 // --- mdbg...SizeCheck
 inline static void mdbg::SizeCheck() {
+}
+
+// --- mdbg...StaticCheck
+void mdbg::StaticCheck() {
+    algo_assert(_offset_of(mdbg::FieldId, value) + sizeof(((mdbg::FieldId*)0)->value) == sizeof(mdbg::FieldId));
 }
 
 // --- mdbg...main

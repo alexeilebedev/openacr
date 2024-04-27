@@ -92,11 +92,6 @@ static void lib_sqlite::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_sqlite.Input'  signature:'8875eb4f7a60879bd250a23448b236d752a4dbb5'");
 }
 
-// --- lib_sqlite.FDb._db.StaticCheck
-void lib_sqlite::StaticCheck() {
-    algo_assert(_offset_of(lib_sqlite::FieldId, value) + sizeof(((lib_sqlite::FieldId*)0)->value) == sizeof(lib_sqlite::FieldId));
-}
-
 // --- lib_sqlite.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -764,4 +759,9 @@ void lib_sqlite::TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) {
 
 // --- lib_sqlite...SizeCheck
 inline static void lib_sqlite::SizeCheck() {
+}
+
+// --- lib_sqlite...StaticCheck
+void lib_sqlite::StaticCheck() {
+    algo_assert(_offset_of(lib_sqlite::FieldId, value) + sizeof(((lib_sqlite::FieldId*)0)->value) == sizeof(lib_sqlite::FieldId));
 }

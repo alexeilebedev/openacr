@@ -285,11 +285,6 @@ static void ssimfilt::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- ssimfilt.FDb._db.StaticCheck
-void ssimfilt::StaticCheck() {
-    algo_assert(_offset_of(ssimfilt::FieldId, value) + sizeof(((ssimfilt::FieldId*)0)->value) == sizeof(ssimfilt::FieldId));
-}
-
 // --- ssimfilt.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -761,6 +756,11 @@ void ssimfilt::value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
 
 // --- ssimfilt...SizeCheck
 inline static void ssimfilt::SizeCheck() {
+}
+
+// --- ssimfilt...StaticCheck
+void ssimfilt::StaticCheck() {
+    algo_assert(_offset_of(ssimfilt::FieldId, value) + sizeof(((ssimfilt::FieldId*)0)->value) == sizeof(ssimfilt::FieldId));
 }
 
 // --- ssimfilt...main

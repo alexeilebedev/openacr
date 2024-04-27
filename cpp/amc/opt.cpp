@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Opt() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     InsStruct(R, field.p_ctype, "// $Cpptype    \t$name[]; \t \t \toptional field");
     Set(R, "$lenexpr", LengthExpr(*field.p_ctype, Subst(R,"$parname")));
@@ -34,8 +34,8 @@ void amc::tclass_Opt() {
 }
 
 void amc::tfunc_Opt_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // access opt option
     amc::FFunc& get = amc::CreateCurFunc();
@@ -73,7 +73,7 @@ void amc::tfunc_Opt_Get() {
 }
 
 void amc::tfunc_Opt_Getary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& getary = amc::CreateCurFunc();
     Ins(&R, getary.ret  , "algo::aryptr<u8>", false);
@@ -83,8 +83,8 @@ void amc::tfunc_Opt_Getary() {
 }
 
 void amc::tfunc_Opt_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // Provide a print function for the field
     if (HasStringPrintQ(*field.p_ctype) && HasStringPrintQ(*field.p_arg)) {
@@ -105,8 +105,8 @@ void amc::tfunc_Opt_Print() {
 }
 
 void amc::tfunc_Opt_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (HasReadQ(*field.p_ctype)) {
         amc::FFunc& doread = amc::CreateCurFunc();
         Ins(&R, doread.comment, "Convert string to field. Return success value");

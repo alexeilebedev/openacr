@@ -66,9 +66,9 @@ enum { acr_in_TableIdEnum_N = 18 };
 
 namespace acr_in { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace acr_in { // gen:ns_field
+namespace acr_in { // gen:ns_tclass_field
 extern const char *acr_in_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace acr_in { struct FNs; }
@@ -451,8 +451,6 @@ void                 Step();
 // func:acr_in.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:acr_in.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:acr_in.FDb._db.InsertStrptrMaybe
@@ -2490,6 +2488,8 @@ struct tuple_c_parent_curs {// fcurs:acr_in.FTuple.c_parent/curs
 
 } // gen:ns_curstext
 namespace acr_in { // gen:ns_func
+// func:acr_in...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:acr_in...main
 int                  main(int argc, char **argv);

@@ -7392,45 +7392,6 @@ algo::strptr algo::NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) {
     }
 }
 
-// --- algo.Protocol.proto.StaticCheck
-void algo::StaticCheck() {
-    algo_assert(sizeof(algo::ImdbInsertStrptrMaybeFcn) == 8); // csize:algo.ImdbInsertStrptrMaybeFcn
-    algo_assert(sizeof(algo::ImdbStepFcn) == 8); // csize:algo.ImdbStepFcn
-    algo_assert(sizeof(algo::ImdbMainLoopFcn) == 8); // csize:algo.ImdbMainLoopFcn
-    algo_assert(sizeof(algo::ImdbGetTraceFcn) == 8); // csize:algo.ImdbGetTraceFcn
-    algo_assert(sizeof(algo::ImrowNItemsFcn) == 8); // csize:algo.ImrowNItemsFcn
-    algo_assert(sizeof(algo::ImrowPrintFcn) == 8); // csize:algo.ImrowPrintFcn
-    algo_assert(sizeof(algo::ImrowRowidFindFcn) == 8); // csize:algo.ImrowRowidFindFcn
-    algo_assert(sizeof(algo::ImrowXrefXFcn) == 8); // csize:algo.ImrowXrefXFcn
-    algo_assert(sizeof(algo::strptr) == 16); // csize:algo.strptr
-    algo_assert(sizeof(algo::PrlogFcn) == 8); // csize:algo.PrlogFcn
-    algo_assert(sizeof(algo::memptr) == 16); // csize:algo.memptr
-    algo_assert(_offset_of(algo::UnTime, value) + sizeof(((algo::UnTime*)0)->value) == sizeof(algo::UnTime));
-    // check that bitfield fits width
-    algo_assert(sizeof(((algo::Errcode*)0)->value)*8 >= 40);
-    algo_assert(_offset_of(algo::FieldId, value) + sizeof(((algo::FieldId*)0)->value) == sizeof(algo::FieldId));
-    // check that bitfield fits width
-    algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
-    algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
-    algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
-    algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));
-    // check that bitfield fits width
-    algo_assert(sizeof(((algo::IOEvtFlags*)0)->value)*8 >= 4);
-    // check that bitfield fits width
-    algo_assert(sizeof(((algo::NumParseFlags*)0)->value)*8 >= 5);
-    algo_assert(_offset_of(algo::SchedTime, value) + sizeof(((algo::SchedTime*)0)->value) == sizeof(algo::SchedTime));
-    algo_assert(_offset_of(algo::SeqType, value) + sizeof(((algo::SeqType*)0)->value) == sizeof(algo::SeqType));
-    algo_assert(_offset_of(algo::U16Dec2, value) + sizeof(((algo::U16Dec2*)0)->value) == sizeof(algo::U16Dec2));
-    algo_assert(_offset_of(algo::U32Dec1, value) + sizeof(((algo::U32Dec1*)0)->value) == sizeof(algo::U32Dec1));
-    algo_assert(_offset_of(algo::U64Dec2, value) + sizeof(((algo::U64Dec2*)0)->value) == sizeof(algo::U64Dec2));
-    algo_assert(_offset_of(algo::U64Dec4, value) + sizeof(((algo::U64Dec4*)0)->value) == sizeof(algo::U64Dec4));
-    algo_assert(_offset_of(algo::U64Dec8, value) + sizeof(((algo::U64Dec8*)0)->value) == sizeof(algo::U64Dec8));
-    algo_assert(_offset_of(algo::UnDiff, value) + sizeof(((algo::UnDiff*)0)->value) == sizeof(algo::UnDiff));
-    algo_assert(_offset_of(algo::UnixTime, value) + sizeof(((algo::UnixTime*)0)->value) == sizeof(algo::UnixTime));
-    algo_assert(_offset_of(algo::WDiff, value) + sizeof(((algo::WDiff*)0)->value) == sizeof(algo::WDiff));
-    algo_assert(_offset_of(algo::WTime, value) + sizeof(((algo::WTime*)0)->value) == sizeof(algo::WTime));
-}
-
 // --- algo.RnullStr1.ch.Print
 void algo::ch_Print(algo::RnullStr1& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -15074,4 +15035,43 @@ void algo::ForAllStrings(void (*fcn)(algo::StringDesc&) ) {
 
 // --- algo...SizeCheck
 inline static void algo::SizeCheck() {
+}
+
+// --- algo...StaticCheck
+void algo::StaticCheck() {
+    algo_assert(sizeof(algo::ImdbInsertStrptrMaybeFcn) == 8); // csize:algo.ImdbInsertStrptrMaybeFcn
+    algo_assert(sizeof(algo::ImdbStepFcn) == 8); // csize:algo.ImdbStepFcn
+    algo_assert(sizeof(algo::ImdbMainLoopFcn) == 8); // csize:algo.ImdbMainLoopFcn
+    algo_assert(sizeof(algo::ImdbGetTraceFcn) == 8); // csize:algo.ImdbGetTraceFcn
+    algo_assert(sizeof(algo::ImrowNItemsFcn) == 8); // csize:algo.ImrowNItemsFcn
+    algo_assert(sizeof(algo::ImrowPrintFcn) == 8); // csize:algo.ImrowPrintFcn
+    algo_assert(sizeof(algo::ImrowRowidFindFcn) == 8); // csize:algo.ImrowRowidFindFcn
+    algo_assert(sizeof(algo::ImrowXrefXFcn) == 8); // csize:algo.ImrowXrefXFcn
+    algo_assert(sizeof(algo::strptr) == 16); // csize:algo.strptr
+    algo_assert(sizeof(algo::PrlogFcn) == 8); // csize:algo.PrlogFcn
+    algo_assert(sizeof(algo::memptr) == 16); // csize:algo.memptr
+    algo_assert(_offset_of(algo::UnTime, value) + sizeof(((algo::UnTime*)0)->value) == sizeof(algo::UnTime));
+    // check that bitfield fits width
+    algo_assert(sizeof(((algo::Errcode*)0)->value)*8 >= 40);
+    algo_assert(_offset_of(algo::FieldId, value) + sizeof(((algo::FieldId*)0)->value) == sizeof(algo::FieldId));
+    // check that bitfield fits width
+    algo_assert(sizeof(((algo::FileFlags*)0)->value)*8 >= 10);
+    algo_assert(_offset_of(algo::I64Dec4, value) + sizeof(((algo::I64Dec4*)0)->value) == sizeof(algo::I64Dec4));
+    algo_assert(_offset_of(algo::I64Dec5, value) + sizeof(((algo::I64Dec5*)0)->value) == sizeof(algo::I64Dec5));
+    algo_assert(_offset_of(algo::I64Dec8, value) + sizeof(((algo::I64Dec8*)0)->value) == sizeof(algo::I64Dec8));
+    // check that bitfield fits width
+    algo_assert(sizeof(((algo::IOEvtFlags*)0)->value)*8 >= 4);
+    // check that bitfield fits width
+    algo_assert(sizeof(((algo::NumParseFlags*)0)->value)*8 >= 5);
+    algo_assert(_offset_of(algo::SchedTime, value) + sizeof(((algo::SchedTime*)0)->value) == sizeof(algo::SchedTime));
+    algo_assert(_offset_of(algo::SeqType, value) + sizeof(((algo::SeqType*)0)->value) == sizeof(algo::SeqType));
+    algo_assert(_offset_of(algo::U16Dec2, value) + sizeof(((algo::U16Dec2*)0)->value) == sizeof(algo::U16Dec2));
+    algo_assert(_offset_of(algo::U32Dec1, value) + sizeof(((algo::U32Dec1*)0)->value) == sizeof(algo::U32Dec1));
+    algo_assert(_offset_of(algo::U64Dec2, value) + sizeof(((algo::U64Dec2*)0)->value) == sizeof(algo::U64Dec2));
+    algo_assert(_offset_of(algo::U64Dec4, value) + sizeof(((algo::U64Dec4*)0)->value) == sizeof(algo::U64Dec4));
+    algo_assert(_offset_of(algo::U64Dec8, value) + sizeof(((algo::U64Dec8*)0)->value) == sizeof(algo::U64Dec8));
+    algo_assert(_offset_of(algo::UnDiff, value) + sizeof(((algo::UnDiff*)0)->value) == sizeof(algo::UnDiff));
+    algo_assert(_offset_of(algo::UnixTime, value) + sizeof(((algo::UnixTime*)0)->value) == sizeof(algo::UnixTime));
+    algo_assert(_offset_of(algo::WDiff, value) + sizeof(((algo::WDiff*)0)->value) == sizeof(algo::WDiff));
+    algo_assert(_offset_of(algo::WTime, value) + sizeof(((algo::WTime*)0)->value) == sizeof(algo::WTime));
 }

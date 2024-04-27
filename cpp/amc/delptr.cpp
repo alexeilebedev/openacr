@@ -25,8 +25,8 @@
 
 
 void amc::tclass_Delptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     vrfy(!FldfuncQ(field), "fldfunc for delptr not supported");
     vrfy(DefaultPool(*field.p_ctype->p_ns), "namespace needs a default pool");
@@ -36,22 +36,22 @@ void amc::tclass_Delptr() {
 }
 
 void amc::tfunc_Delptr_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = true;
     Ins(&R, init.body, "$parname.$name = NULL;");
 }
 
 void amc::tfunc_Delptr_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.comment << "Delete value, if necessary";
     Ins(&R, func.body, "$name_Delete($pararg);");
 }
 
 void amc::tfunc_Delptr_Delete() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, "void", "", "");
@@ -67,8 +67,8 @@ void amc::tfunc_Delptr_Delete() {
 }
 
 void amc::tfunc_Delptr_Access() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, Subst(R,"$Cpptype&"), "", "");

@@ -29,8 +29,8 @@ void amc::tclass_Substr() {
 }
 
 void amc::tfunc_Substr_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSubstr *substr = field.c_substr;
     if (substr) {
         Set(R, "$Fldtype", field.cpp_type);
@@ -60,8 +60,8 @@ void amc::tfunc_Substr_Get() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Substr_Get2() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSubstr *substr = field.c_substr;
     bool ssimdb = field.p_ctype->p_ns->nstype == dmmeta_Nstype_nstype_ssimdb;
     if (substr && ssimdb) {

@@ -190,8 +190,8 @@ enum { ams_StreamFlagsEnum_N = 7 };
 
 namespace ams { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace ams { // gen:ns_field
-} // gen:ns_field
+namespace ams { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ams { struct MsgHeader; }
 namespace ams { struct AlarmSyncMsg; }
@@ -236,7 +236,6 @@ namespace ams { struct Member; }
 namespace ams { struct MsgHeaderMsgsCase; }
 namespace ams { struct MsgHeader_curs; }
 namespace ams { struct StreamPos; }
-namespace ams { struct Protocol; }
 namespace ams { struct StreamFlags; }
 namespace ams { // gen:ns_size_enums
 
@@ -1371,18 +1370,6 @@ void                 ProcRemoveMsg_Init(ams::ProcRemoveMsg& parent);
 // func:ams.ProcRemoveMsg..Print
 void                 ProcRemoveMsg_Print(ams::ProcRemoveMsg& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- ams.Protocol
-// access: ams.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // ams.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:ams.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
-
 // --- ams.SeqmsgId
 #pragma pack(push,1)
 struct SeqmsgId { // ams.SeqmsgId: StreamID + Sequence number, e.g. proc1-0.out-0@1
@@ -2190,6 +2177,8 @@ struct UdpFrame_payload_curs {// cursor
 
 } // gen:ns_curstext
 namespace ams { // gen:ns_func
+// func:ams...StaticCheck
+void                 StaticCheck();
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len

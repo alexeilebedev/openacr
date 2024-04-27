@@ -7309,9 +7309,6 @@ inline void algo::hex_Set(algo::NumParseFlags& parent, bool rhs) {
 inline void algo::NumParseFlags_Init(algo::NumParseFlags& parent) {
     parent.value = u32(0);
 }
-inline algo::Protocol::Protocol() {
-}
-
 
 inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const {
     return algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));

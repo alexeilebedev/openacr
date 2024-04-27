@@ -72,11 +72,11 @@ enum { lib_json_FieldIdEnum_N = 1 };
 
 namespace lib_json { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_json { // gen:ns_field
+namespace lib_json { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_json { struct node_c_child_curs; }
 namespace lib_json { struct trace; }
@@ -146,8 +146,6 @@ u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, n
 // func:lib_json.FDb.lpool.Delete
 void                 lpool_Delete(u8 &row) __attribute__((nothrow));
 
-// func:lib_json.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_json.FDb._db.InsertStrptrMaybe
@@ -518,6 +516,8 @@ struct node_c_child_curs {// fcurs:lib_json.FNode.c_child/curs
 
 } // gen:ns_curstext
 namespace lib_json { // gen:ns_func
+// func:lib_json...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

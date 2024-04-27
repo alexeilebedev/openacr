@@ -52,9 +52,9 @@ enum { acr_my_TableIdEnum_N = 4 };
 
 namespace acr_my { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace acr_my { // gen:ns_field
+namespace acr_my { // gen:ns_tclass_field
 extern const char *acr_my_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Nsdb; }
 namespace dmmeta { struct Ssimfile; }
@@ -182,8 +182,6 @@ void                 Step();
 // func:acr_my.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:acr_my.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:acr_my.FDb._db.InsertStrptrMaybe
@@ -507,6 +505,8 @@ struct _db_ssimfile_curs {// cursor
 
 } // gen:ns_curstext
 namespace acr_my { // gen:ns_func
+// func:acr_my...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:acr_my...main
 int                  main(int argc, char **argv);

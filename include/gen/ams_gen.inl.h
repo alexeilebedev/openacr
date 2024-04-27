@@ -1215,9 +1215,6 @@ inline void ams::ProcRemoveMsg_Init(ams::ProcRemoveMsg& parent) {
     parent.type = u32(5);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::Protocol::Protocol() {
-}
-
 inline ams::SeqmsgId::SeqmsgId(ams::StreamId                  in_stream_id
         ,u64                            in_seq
         ,u32                            in_off)

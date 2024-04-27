@@ -1713,11 +1713,6 @@ static void lib_ctype::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'9f2e90c5e54c166080039493e7b06fd0cc60d63e'");
 }
 
-// --- lib_ctype.FDb._db.StaticCheck
-void lib_ctype::StaticCheck() {
-    algo_assert(_offset_of(lib_ctype::FieldId, value) + sizeof(((lib_ctype::FieldId*)0)->value) == sizeof(lib_ctype::FieldId));
-}
-
 // --- lib_ctype.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -3672,4 +3667,9 @@ void lib_ctype::TableId_Print(lib_ctype::TableId& row, algo::cstring& str) {
 
 // --- lib_ctype...SizeCheck
 inline static void lib_ctype::SizeCheck() {
+}
+
+// --- lib_ctype...StaticCheck
+void lib_ctype::StaticCheck() {
+    algo_assert(_offset_of(lib_ctype::FieldId, value) + sizeof(((lib_ctype::FieldId*)0)->value) == sizeof(lib_ctype::FieldId));
 }

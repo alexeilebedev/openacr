@@ -28,8 +28,8 @@
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Tary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     vrfy(field.c_tary, "tary required");
 
@@ -57,8 +57,8 @@ void amc::tclass_Tary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Addary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool can_copy = !CopyPrivQ(*field.p_arg);
     bool can_memcpy = field.p_arg->c_bltin;
 
@@ -99,8 +99,8 @@ void amc::tfunc_Tary_Addary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Alloc() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& alloc = amc::CreateCurFunc();
     Ins(&R, alloc.comment, "Reserve space. Insert element at the end");
@@ -123,8 +123,8 @@ void amc::tfunc_Tary_Alloc() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_AllocAt() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     {
         amc::FFunc& allocat = amc::CreateCurFunc();
@@ -152,8 +152,8 @@ void amc::tfunc_Tary_AllocAt() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_AllocN() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool can_memset = field.arg == "char" || field.arg == "u8";
 
     {
@@ -183,8 +183,8 @@ void amc::tfunc_Tary_AllocN() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_AllocNVal() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool can_copy = !CopyPrivQ(*field.p_arg);
     if (can_copy) {
         bool can_memset = field.arg == "char" || field.arg == "u8";
@@ -217,7 +217,7 @@ void amc::tfunc_Tary_AllocNVal() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.ret  , "bool", false);
@@ -228,7 +228,7 @@ void amc::tfunc_Tary_EmptyQ() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Find() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& find = amc::CreateCurFunc();
     Ins(&R, find.ret  , "$Cpptype*", false);
@@ -242,7 +242,7 @@ void amc::tfunc_Tary_Find() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Getary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& getary = amc::CreateCurFunc();
     Ins(&R, getary.ret  , "algo::aryptr<$Cpptype>", false);
@@ -253,7 +253,7 @@ void amc::tfunc_Tary_Getary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     Ins(&R, init.body, "$parname.$name_elems \t= 0; // ($field)");
@@ -264,7 +264,7 @@ void amc::tfunc_Tary_Init() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Last() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& last = amc::CreateCurFunc();
     Ins(&R, last.ret  , "$Cpptype*", false);
@@ -275,8 +275,8 @@ void amc::tfunc_Tary_Last() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Max() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& maxitems = amc::CreateCurFunc();
     Ins(&R, maxitems.ret  , "i32", false);
@@ -290,7 +290,7 @@ void amc::tfunc_Tary_Max() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "i32", false);
@@ -301,8 +301,8 @@ void amc::tfunc_Tary_N() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
 
     amc::FFunc& remove = amc::CreateCurFunc();
@@ -326,8 +326,8 @@ void amc::tfunc_Tary_Remove() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
 
     if (!field.c_fnoremove) {
@@ -355,8 +355,8 @@ void amc::tfunc_Tary_RemoveAll() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_RemoveLast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
 
     amc::FFunc& removelast = amc::CreateCurFunc();
@@ -379,7 +379,7 @@ void amc::tfunc_Tary_RemoveLast() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_AbsReserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, "void", "", "");
@@ -400,7 +400,7 @@ void amc::tfunc_Tary_AbsReserve() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Reserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         AddRetval(func, "void", "", "");
@@ -415,8 +415,8 @@ void amc::tfunc_Tary_Reserve() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_RowidFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.reflect) {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
         rowid_findx.priv=true;
@@ -429,8 +429,8 @@ void amc::tfunc_Tary_RowidFind() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Setary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool glob = GlobalQ(*field.p_ctype);
     bool can_copy = !CopyPrivQ(*field.p_arg);
     bool can_memcpy = field.arg == "char" || field.arg == "u8";
@@ -461,8 +461,8 @@ void amc::tfunc_Tary_Setary() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Setary2() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool glob = GlobalQ(*field.p_ctype);
     bool can_copy = !CopyPrivQ(*field.p_arg);
 
@@ -481,7 +481,7 @@ void amc::tfunc_Tary_Setary2() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& uninit = amc::CreateCurFunc();
     Ins(&R, uninit.body, "// remove all elements from $field");
@@ -493,7 +493,7 @@ void amc::tfunc_Tary_Uninit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_qFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& qat = amc::CreateCurFunc();
     Ins(&R, qat.ret  , "$Cpptype&", false);
@@ -504,7 +504,7 @@ void amc::tfunc_Tary_qFind() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_qLast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& qlast = amc::CreateCurFunc();
     Ins(&R, qlast.ret  , "$Cpptype&", false);
@@ -515,7 +515,7 @@ void amc::tfunc_Tary_qLast() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_rowid_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& getrowid = amc::CreateCurFunc();
     Ins(&R, getrowid.ret  , "$Rowid", false);
@@ -527,8 +527,8 @@ void amc::tfunc_Tary_rowid_Get() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Eq() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
 
     if (field.p_ctype->c_ccmp) {
         amc::FFunc& opeq = amc::CreateCurFunc();
@@ -550,8 +550,8 @@ void amc::tfunc_Tary_Eq() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Tary_Cmp() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     if (field.p_ctype->c_ccmp) {
         Set(R, "$Fldtype", field.cpp_type);
         amc::FFunc& opeq = amc::CreateCurFunc();
@@ -571,8 +571,8 @@ void amc::tfunc_Tary_Cmp() {
 
 
 void amc::tfunc_Tary_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
 
     Ins(&R, ns.curstext, "");
     Ins(&R, ns.curstext, "struct $Parname_$name_curs {// cursor");
@@ -632,8 +632,8 @@ void amc::tfunc_Tary_curs() {
 //    if the element cannot be read, the array is unchanged
 //
 void amc::tfunc_Tary_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     char sep = GetSep(field);
     if (!PadQ(field) && HasStringReadQ(*field.p_arg)) {
         Set(R, "$sep", char_ToCppSingleQuote(sep));

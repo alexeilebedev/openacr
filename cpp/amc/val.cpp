@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Val() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // hack
     // what is this crap???
@@ -70,8 +70,8 @@ void amc::tclass_Val() {
 }
 
 void amc::tfunc_Val_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // retrieve big-endian value.
     if (field.c_fbigend) {
@@ -85,8 +85,8 @@ void amc::tfunc_Val_Get() {
 }
 
 void amc::tfunc_Val_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool need_set = (field.c_fbigend || c_pmaskfld_member_N(field))
         && !PadQ(field)
         && !(field.arg == "algo_lib.Regx")
@@ -111,8 +111,8 @@ void amc::tfunc_Val_Set() {
 }
 
 void amc::tfunc_Val_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FldfuncQ(field)) {// default initializer for field
         amc::FFunc& init = amc::CreateCurFunc();
         init.inl = true;
@@ -133,8 +133,8 @@ void amc::tfunc_Val_Init() {
 }
 
 void amc::tfunc_Val_RowidFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.reflect) {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
@@ -147,8 +147,8 @@ void amc::tfunc_Val_RowidFind() {
 }
 
 void amc::tfunc_Val_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.reflect) {
         amc::FFunc& nitems = amc::CreateCurFunc();

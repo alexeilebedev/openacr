@@ -96,9 +96,9 @@ enum { acr_compl_TableIdEnum_N = 20 };
 
 namespace acr_compl { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace acr_compl { // gen:ns_field
+namespace acr_compl { // gen:ns_tclass_field
 extern const char *acr_compl_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Anonfld; }
 namespace dmmeta { struct Argvtype; }
@@ -569,8 +569,6 @@ void                 Step();
 // func:acr_compl.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:acr_compl.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:acr_compl.FDb._db.InsertStrptrMaybe
@@ -2216,6 +2214,8 @@ struct field_c_falias_srcfield_curs {// fcurs:acr_compl.FField.c_falias_srcfield
 
 } // gen:ns_curstext
 namespace acr_compl { // gen:ns_func
+// func:acr_compl...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:acr_compl...main
 int                  main(int argc, char **argv);

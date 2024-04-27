@@ -51,8 +51,8 @@ enum { lib_sqlite_TableIdEnum_N = 2 };
 
 namespace lib_sqlite { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_sqlite { // gen:ns_field
-} // gen:ns_field
+namespace lib_sqlite { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_sqlite { struct _db_substr_curs; }
 namespace lib_sqlite { struct FConn; }
@@ -121,8 +121,6 @@ struct FDb { // lib_sqlite.FDb
     lib_sqlite::trace      trace;                    //
 };
 
-// func:lib_sqlite.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_sqlite.FDb._db.InsertStrptrMaybe
@@ -429,6 +427,8 @@ struct _db_substr_curs {// cursor
 
 } // gen:ns_curstext
 namespace lib_sqlite { // gen:ns_func
+// func:lib_sqlite...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

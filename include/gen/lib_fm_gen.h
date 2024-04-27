@@ -51,8 +51,8 @@ enum { lib_fm_TableIdEnum_N = 4 };
 
 namespace lib_fm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_fm { // gen:ns_field
-} // gen:ns_field
+namespace lib_fm { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_fm { struct _db_alarm_curs; }
 namespace lib_fm { struct _db_alm_code_curs; }
@@ -236,8 +236,6 @@ struct FDb { // lib_fm.FDb: In-memory database for lib_fm
     lib_fm::trace              trace;                           //
 };
 
-// func:lib_fm.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_fm.FDb._db.InsertStrptrMaybe
@@ -648,6 +646,8 @@ struct _db_alm_objtype_curs {// cursor
 
 } // gen:ns_curstext
 namespace lib_fm { // gen:ns_func
+// func:lib_fm...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

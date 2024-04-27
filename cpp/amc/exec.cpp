@@ -52,8 +52,8 @@ static tempstr SubfieldName(amc::FField &field, strptr name) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Exec() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     Set(R, "$cmdname", name_Get(*field.p_arg));
     // allow access to custom fields using $_<fieldname>
@@ -64,13 +64,13 @@ void amc::tfunc_Exec_Init() {
 }
 
 void amc::tfunc_Exec_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& uninit = amc::CreateCurFunc();
     Ins(&R, uninit.body, "$name_Kill($pararg); // kill child, ensure forward progress");
 }
 
 void amc::tfunc_Exec_Wait() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& wait = amc::CreateCurFunc();
     Ins(&R, wait.ret  , "void",false);
     Ins(&R, wait.proto, "$name_Wait($Parent)",false);
@@ -91,7 +91,7 @@ void amc::tfunc_Exec_Wait() {
 
 
 void amc::tfunc_Exec_Kill() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& kill = amc::CreateCurFunc();
     Ins(&R, kill.ret  , "void",false);
     Ins(&R, kill.proto, "$name_Kill($Parent)",false);
@@ -102,8 +102,8 @@ void amc::tfunc_Exec_Kill() {
 }
 
 void amc::tfunc_Exec_Start() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     (void)field;
 
     amc::FFunc& start = amc::CreateCurFunc();
@@ -149,7 +149,7 @@ void amc::tfunc_Exec_Start() {
 }
 
 void amc::tfunc_Exec_StartRead() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& exec = amc::CreateCurFunc(true);
     exec.ret = "algo::Fildes";
     AddArg(exec.proto, "algo_lib::FFildes &read");
@@ -164,7 +164,7 @@ void amc::tfunc_Exec_StartRead() {
 }
 
 void amc::tfunc_Exec_Exec() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& exec = amc::CreateCurFunc();
     Ins(&R, exec.comment, "Execute subprocess and return exit code");
     Ins(&R, exec.ret  , "int",false);
@@ -175,7 +175,7 @@ void amc::tfunc_Exec_Exec() {
 }
 
 void amc::tfunc_Exec_ExecX() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& exec = amc::CreateCurFunc();
     Ins(&R, exec.comment, "Execute subprocess; throw human-readable exception on error");
     Ins(&R, exec.ret  , "void",false);
@@ -186,8 +186,8 @@ void amc::tfunc_Exec_ExecX() {
 }
 
 void amc::tfunc_Exec_ToCmdline() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &execfield = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &execfield = *amc::_db.genctx.p_field;
     if (!HasArgvPrintQ(*execfield.p_arg)) {
         prlog("amc.noargv"
               <<Keyval("exec_field",execfield.field)
@@ -214,11 +214,11 @@ void amc::tfunc_Exec_ToCmdline() {
 }
 
 void amc::tfunc_Exec_ToArgv() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &execfield = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &execfield = *amc::_db.genctx.p_field;
     bool amc_command = ind_ns_Find(name_Get(*execfield.p_arg)) != NULL;
 
-    amc::FCtype &cmdtype=*amc::_db.genfield.p_field->p_arg;
+    amc::FCtype &cmdtype=*amc::_db.genctx.p_field->p_arg;
     amc::FFunc& func = CreateCurFunc(true);
     AddRetval(func, "void", "", "");
     AddProtoArg(func, "algo::StringAry&", "args", "");
@@ -291,7 +291,7 @@ void amc::tfunc_Exec_ToArgv() {
 void amc::tfunc_Exec_Execv() {
     // form args array
     amc::FFunc& execv = CreateCurFunc(true);
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     AddRetval(execv, "int", "ret", "0");
     Ins(&R, execv.comment, "Call execv with specified parameters");
     Ins(&R, execv.body,"algo::StringAry args;");

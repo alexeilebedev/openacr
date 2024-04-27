@@ -59,9 +59,9 @@ enum { ssim2mysql_TableIdEnum_N = 12 };
 
 namespace ssim2mysql { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace ssim2mysql { // gen:ns_field
+namespace ssim2mysql { // gen:ns_tclass_field
 extern const char *ssim2mysql_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ssim2mysql { struct FField; }
 namespace ssim2mysql { struct FNs; }
@@ -597,8 +597,6 @@ void                 Step();
 // func:ssim2mysql.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:ssim2mysql.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:ssim2mysql.FDb._db.InsertStrptrMaybe
@@ -1700,6 +1698,8 @@ struct ssimfile_c_column_curs {// fcurs:ssim2mysql.FSsimfile.c_column/curs
 
 } // gen:ns_curstext
 namespace ssim2mysql { // gen:ns_func
+// func:ssim2mysql...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:ssim2mysql...main
 int                  main(int argc, char **argv);

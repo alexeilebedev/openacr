@@ -254,11 +254,6 @@ static void amc_gc::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- amc_gc.FDb._db.StaticCheck
-void amc_gc::StaticCheck() {
-    algo_assert(_offset_of(amc_gc::FieldId, value) + sizeof(((amc_gc::FieldId*)0)->value) == sizeof(amc_gc::FieldId));
-}
-
 // --- amc_gc.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -455,6 +450,11 @@ void amc_gc::FieldId_Print(amc_gc::FieldId& row, algo::cstring& str) {
 
 // --- amc_gc...SizeCheck
 inline static void amc_gc::SizeCheck() {
+}
+
+// --- amc_gc...StaticCheck
+void amc_gc::StaticCheck() {
+    algo_assert(_offset_of(amc_gc::FieldId, value) + sizeof(((amc_gc::FieldId*)0)->value) == sizeof(amc_gc::FieldId));
 }
 
 // --- amc_gc...main

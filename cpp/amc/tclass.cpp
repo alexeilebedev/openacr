@@ -26,31 +26,31 @@
 // -----------------------------------------------------------------------------
 
 // Call tclass, tfunc, and cursor generators for this template
-// Context is provided via _db.genfield:
-// - genfield.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
-// - genfield.p_ctype   --- current ctype, never NULL
-// - genfield.p_tfunc   --- pointer to tfunc, never NULL
+// Context is provided via _db.genctx:
+// - genctx.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
+// - genctx.p_ctype   --- current ctype, never NULL
+// - genctx.p_tfunc   --- pointer to tfunc, never NULL
 // First, the tclass function is called
 // Then, for each tfunc, its function is called
 // The tfunc may be a cursor generator (as indicated by tcurs table)
 // If it's a cursor generator, then a forward-declaration for the cursor is created.
 // In this case, variables $fcurs (cursor key) and $curstype (cursor type) are set.
 void amc::GenTclass(amc::FTclass &tclass) {
-    amc::FNs &ns = *amc::_db.genfield.p_ctype->p_ns;
+    amc::FNs &ns = *amc::_db.genctx.p_ns;
     tclass.step();
     ind_beg(amc::tclass_c_tfunc_curs,tfunc,tclass) {
-        amc::_db.genfield.p_tfunc = &tfunc;
+        amc::_db.genctx.p_tfunc = &tfunc;
         bool skip = tfunc.hasthrow && !GenThrowQ(ns);
         // cursor:
         // Set variables $curs (cursor name), $fcurs (key)
         // skip cursor generation if it's non-default and not explicitly requested
         if (tfunc.c_tcurs) {
-            tempstr key=tempstr()<<amc::_db.genfield.p_field->field<<"/"<<curstype_Get(*tfunc.c_tcurs);
+            tempstr key=tempstr()<<amc::_db.genctx.p_field->field<<"/"<<curstype_Get(*tfunc.c_tcurs);
             amc::FFcurs *fcurs = amc::ind_fcurs_Find(key);
             if (!tfunc.c_tcurs->dflt && fcurs == NULL) {
                 skip=true;
             }
-            algo_lib::Replscope &R = amc::_db.genfield.R;
+            algo_lib::Replscope &R = amc::_db.genctx.R;
             Set(R,"$fcurs",key);
             Set(R,"$curstype",curstype_Get(*tfunc.c_tcurs));
             if (!skip) {
@@ -87,7 +87,7 @@ amc::FField *amc::GetBasepool(amc::FField &field) {
 
 // Call all applicable generators for specified field
 static void GenTclass_Field(amc::FField &field) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FNs &ns = *field.p_ctype->p_ns;
     bool glob = GlobalQ(*field.p_ctype);
     amc::FCtype& parent = *field.p_ctype;
@@ -168,16 +168,23 @@ static void GenTclass_Field(amc::FField &field) {
 // Each field triggers zero or more tclass generators
 // (template class, no relation to C++ notion of template or class)
 // based on its type and associated records, and each tclass generates zero or more tfuncs
-void amc::GenTclass_Fields(amc::FCtype &ctype) {
-    amc::_db.genfield.p_ctype = &ctype;
-    ind_beg(amc::ctype_c_field_curs, field,ctype) {
-        ind_replvar_Cascdel(amc::_db.genfield.R);
-        amc::_db.genfield.p_field = &field;
-        GenTclass_Field(field);
-        field.processed=true;
+void amc::gen_ns_tclass_field() {
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+        amc::_db.genctx.p_ns = &ns;
+        amc::BeginNsBlock(*ns.hdr, ns, "");
+        ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
+            amc::_db.genctx.p_ctype = &ctype;
+            ind_beg(amc::ctype_c_field_curs, field,ctype) {
+                ind_replvar_Cascdel(amc::_db.genctx.R);
+                amc::_db.genctx.p_field = &field;
+                GenTclass_Field(field);
+                field.processed=true;
+            }ind_end;
+            amc::_db.genctx.p_ctype = NULL;
+            amc::_db.genctx.p_field = NULL;
+        }ind_end;
+        amc::EndNsBlock(*ns.hdr, ns, "");
     }ind_end;
-    amc::_db.genfield.p_ctype = NULL;
-    amc::_db.genfield.p_field = NULL;
 }
 
 // -----------------------------------------------------------------------------
@@ -185,12 +192,25 @@ void amc::GenTclass_Fields(amc::FCtype &ctype) {
 // Call tfunc generators without field context (Ctype generators)
 // This must be called after field-specific generators, since by this time
 // ctype sizes have been computed.
-void amc::gen_ns_ctype() {
+void amc::gen_ns_tclass_ctype() {
     amc::FNs &ns =*amc::_db.c_ns;
-    amc::_db.genfield.p_field = NULL;
+    amc::_db.genctx.p_ns = amc::_db.c_ns;
+    amc::_db.genctx.p_field = NULL;
     ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
-        amc::_db.genfield.p_ctype = &ctype;
+        amc::_db.genctx.p_ctype = &ctype;
         GenTclass(amc_tclass_Ctype);
     }ind_end;
-    amc::_db.genfield.p_ctype = NULL;
+    amc::_db.genctx.p_ctype = NULL;
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::gen_ns_tclass_ns() {
+    amc::FNs &ns =*amc::_db.c_ns;
+    amc::_db.genctx.p_ns = amc::_db.c_ns;
+    amc::_db.genctx.p_ctype = NULL;
+    amc::_db.genctx.p_field = NULL;
+    if (ns.ns != "") {
+        GenTclass(amc_tclass_Ns);
+    }
 }

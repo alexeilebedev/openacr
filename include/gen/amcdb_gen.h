@@ -118,8 +118,8 @@ namespace amcdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TclassPkey;
     typedef algo::Smallstr50 TfuncPkey;
 } // gen:ns_pkeytypedef
-namespace amcdb { // gen:ns_field
-} // gen:ns_field
+namespace amcdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amcdb { struct Bltin; }
 namespace amcdb { struct Curstype; }

@@ -32,9 +32,9 @@ static bool ReadQ(amc::FFbuf &fbuf) {
 // see tex/amc/amc_fbuf.tex for documentation
 //
 void amc::tclass_Fbuf() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
 
     Set(R, "$dflt"     , field.dflt.value);
     Set(R, "$ns"     , ns.ns);
@@ -93,8 +93,8 @@ void amc::tclass_Fbuf() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Fbuf_BeginRead() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
@@ -117,8 +117,8 @@ void amc::tfunc_Fbuf_BeginRead() {
 }
 
 void amc::tfunc_Fbuf_GetMsg() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -194,8 +194,8 @@ void amc::tfunc_Fbuf_GetMsg() {
 }
 
 void amc::tfunc_Fbuf_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -221,8 +221,8 @@ void amc::tfunc_Fbuf_Init() {
 }
 
 void amc::tfunc_Fbuf_Max() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     amc::FFunc& maxitems = amc::CreateCurFunc();
     Ins(&R, maxitems.ret  , "i32", false);
@@ -236,7 +236,7 @@ void amc::tfunc_Fbuf_Max() {
 }
 
 void amc::tfunc_Fbuf_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& navail = amc::CreateCurFunc();
     Ins(&R, navail.ret  , "i32",false);
@@ -245,8 +245,8 @@ void amc::tfunc_Fbuf_N() {
 }
 
 void amc::tfunc_Fbuf_Refill() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
@@ -283,8 +283,8 @@ void amc::tfunc_Fbuf_Refill() {
 }
 
 void amc::tfunc_Fbuf_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -302,8 +302,8 @@ void amc::tfunc_Fbuf_RemoveAll() {
 }
 
 void amc::tfunc_Fbuf_Scanmsg() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -352,7 +352,7 @@ void amc::tfunc_Fbuf_Scanmsg() {
 }
 
 void amc::tfunc_Fbuf_Shift() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& shift = amc::CreateCurFunc();
     shift.priv = true;
@@ -370,8 +370,8 @@ void amc::tfunc_Fbuf_Shift() {
 }
 
 void amc::tfunc_Fbuf_SkipBytes() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool outmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && !ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -390,8 +390,8 @@ void amc::tfunc_Fbuf_SkipBytes() {
 }
 
 void amc::tfunc_Fbuf_SkipMsg() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
@@ -418,8 +418,8 @@ void amc::tfunc_Fbuf_SkipMsg() {
 }
 
 void amc::tfunc_Fbuf_WriteAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     amc::FFunc& writeall = amc::CreateCurFunc();
@@ -458,8 +458,8 @@ void amc::tfunc_Fbuf_WriteAll() {
 }
 
 void amc::tfunc_Fbuf_WriteMsg() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     bool outmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && !ReadQ(fbuf);
@@ -481,8 +481,8 @@ void amc::tfunc_Fbuf_WriteMsg() {
 }
 
 void amc::tfunc_Fbuf_BeginWrite() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
@@ -507,8 +507,8 @@ void amc::tfunc_Fbuf_BeginWrite() {
 }
 
 void amc::tfunc_Fbuf_Outflow() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field     = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field     = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf       = *field.c_fbuf;
     Set(R,"$partrace", Refname(*field.p_ctype));
 
@@ -549,8 +549,8 @@ void amc::tfunc_Fbuf_Outflow() {
 }
 
 void amc::tfunc_Fbuf_EndRead() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
@@ -565,8 +565,8 @@ void amc::tfunc_Fbuf_EndRead() {
 }
 
 void amc::tfunc_Fbuf_EndWrite() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
@@ -582,8 +582,8 @@ void amc::tfunc_Fbuf_EndWrite() {
 }
 
 void amc::tfunc_Fbuf_Realloc() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (fbuf.max==0) {
@@ -606,8 +606,8 @@ void amc::tfunc_Fbuf_Realloc() {
 }
 
 void amc::tfunc_Fbuf_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     if (fbuf.max==0) {

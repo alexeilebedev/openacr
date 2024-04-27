@@ -50,12 +50,12 @@ void amc::gen_newfield_charset() {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Charset() {
-    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCharset *charset = field.c_charset;
     vrfy(charset,tempstr()<<"amc.need_charset"
          <<Keyval("field",field.field)
          <<Keyval("comment","charset record required"));
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     if (!charset->calc) {
         amc::FFunc *init = &amc::ind_func_GetOrCreate(tempstr() << field.field <<".Init");
         init->ismacro = true;
@@ -118,8 +118,8 @@ static void GenCalcMatch(algo_lib::Replscope &R, amc::FFunc &func, amc::FCharset
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Charset_Match() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& func = amc::CreateCurFunc(true); {
         func.proto = tempstr()<< name_Get(field)<<"Q()";// special syntax

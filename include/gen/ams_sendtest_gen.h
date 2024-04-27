@@ -41,9 +41,9 @@ enum { ams_sendtest_FieldIdEnum_N = 1 };
 
 namespace ams_sendtest { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace ams_sendtest { // gen:ns_field
+namespace ams_sendtest { // gen:ns_tclass_field
 extern const char *ams_sendtest_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ams_sendtest { struct _db_child_curs; }
 namespace ams_sendtest { struct AmsSendTest; }
@@ -178,8 +178,6 @@ void                 Step();
 // func:ams_sendtest.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:ams_sendtest.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:ams_sendtest.FDb._db.InsertStrptrMaybe
@@ -324,6 +322,8 @@ struct _db_child_curs {// cursor
 
 } // gen:ns_curstext
 namespace ams_sendtest { // gen:ns_func
+// func:ams_sendtest...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:ams_sendtest...main
 int                  main(int argc, char **argv);

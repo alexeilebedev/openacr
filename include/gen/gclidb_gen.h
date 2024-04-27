@@ -306,8 +306,8 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ProjectPkey;
     typedef algo::Smallstr50 UserPkey;
 } // gen:ns_pkeytypedef
-namespace gclidb { // gen:ns_field
-} // gen:ns_field
+namespace gclidb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace gclidb { struct FieldId; }
 namespace gclidb { struct Gact; }

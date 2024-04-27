@@ -27,8 +27,8 @@
 #include "include/amc.h"
 
 void amc::tfunc_Io_InputMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_finput) {
         vrfy(!field.c_gstatic
              , tempstr()<<"amc.too_much_gstatic"
@@ -75,8 +75,8 @@ void amc::tfunc_Io_InputMaybe() {
 }
 
 void amc::tfunc_Io_Input() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_finput && field.c_finput->extrn && GenThrowQ(*field.p_ctype->p_ns)) {
         amc::FCtype *basetype  = GetBaseType(*field.p_arg,field.p_arg);// always read base class if possible
         Set(R, "$Basetype", basetype->cpp_type);
@@ -88,8 +88,8 @@ void amc::tfunc_Io_Input() {
 }
 
 void amc::tfunc_Io_SaveSsimfile() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField *inst = FirstInst(*field.p_arg);
 
     if (field.c_foutput && !inst) {
@@ -165,7 +165,7 @@ static int NHooks(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 static void Gstatic_DataTable(cstring &out, amc::FField &field) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     Ins(&R, out, "static struct _t {");
     Ins(&R, out, "    const char *s;");
     ind_beg(amc::ctype_c_field_curs,hookfield,*field.p_arg) {
@@ -201,7 +201,7 @@ static void Gstatic_DataTable(cstring &out, amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 static void Gstatic_Insert(amc::FFunc &func, amc::FField &field) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     Set(R, "$Basetype", GetBaseType(*field.p_arg,field.p_arg)->cpp_type);
     Ins(&R,func.body     , "$Basetype $name;");
     Ins(&R,func.body     , "for (int i=0; data[i].s; i++) {");
@@ -245,8 +245,8 @@ static void Gstatic_Insert(amc::FFunc &func, amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 static void Gstatic_Globalref(amc::FField &field) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     tempstr gsymbol;
     int idx = 0;
     ind_beg(amc::ctype_c_static_curs, static_tuple, *field.p_arg) {
@@ -265,8 +265,8 @@ static void Gstatic_Globalref(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Io_LoadStatic() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_gstatic) {
         amc::FFunc &func = amc::CreateCurFunc();
         func.ret="void";

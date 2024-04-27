@@ -250,11 +250,6 @@ static void bash2html::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- bash2html.FDb._db.StaticCheck
-void bash2html::StaticCheck() {
-    algo_assert(_offset_of(bash2html::FieldId, value) + sizeof(((bash2html::FieldId*)0)->value) == sizeof(bash2html::FieldId));
-}
-
 // --- bash2html.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -445,6 +440,11 @@ void bash2html::FieldId_Print(bash2html::FieldId& row, algo::cstring& str) {
 
 // --- bash2html...SizeCheck
 inline static void bash2html::SizeCheck() {
+}
+
+// --- bash2html...StaticCheck
+void bash2html::StaticCheck() {
+    algo_assert(_offset_of(bash2html::FieldId, value) + sizeof(((bash2html::FieldId*)0)->value) == sizeof(bash2html::FieldId));
 }
 
 // --- bash2html...main

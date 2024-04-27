@@ -1238,12 +1238,6 @@ static void ssim2mysql::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'d41a6705fe7e51637203614b4b01fcef04566513'");
 }
 
-// --- ssim2mysql.FDb._db.StaticCheck
-void ssim2mysql::StaticCheck() {
-    algo_assert(_offset_of(ssim2mysql::trace, step_cd_input_line_cycles) + sizeof(((ssim2mysql::trace*)0)->step_cd_input_line_cycles) == sizeof(ssim2mysql::trace));
-    algo_assert(_offset_of(ssim2mysql::FieldId, value) + sizeof(((ssim2mysql::FieldId*)0)->value) == sizeof(ssim2mysql::FieldId));
-}
-
 // --- ssim2mysql.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -3565,6 +3559,12 @@ void ssim2mysql::TableId_Print(ssim2mysql::TableId& row, algo::cstring& str) {
 
 // --- ssim2mysql...SizeCheck
 inline static void ssim2mysql::SizeCheck() {
+}
+
+// --- ssim2mysql...StaticCheck
+void ssim2mysql::StaticCheck() {
+    algo_assert(_offset_of(ssim2mysql::trace, step_cd_input_line_cycles) + sizeof(((ssim2mysql::trace*)0)->step_cd_input_line_cycles) == sizeof(ssim2mysql::trace));
+    algo_assert(_offset_of(ssim2mysql::FieldId, value) + sizeof(((ssim2mysql::FieldId*)0)->value) == sizeof(ssim2mysql::FieldId));
 }
 
 // --- ssim2mysql...main

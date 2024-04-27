@@ -2126,32 +2126,6 @@ void ams::ProcRemoveMsg_Print(ams::ProcRemoveMsg& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"proc_id", temp);
 }
 
-// --- ams.Protocol.proto.StaticCheck
-void ams::StaticCheck() {
-    algo_assert(_offset_of(ams::AlarmSyncMsg, updated_after) + sizeof(((ams::AlarmSyncMsg*)0)->updated_after) == sizeof(ams::AlarmSyncMsg));
-    algo_assert(_offset_of(ams::ProcType, value) + sizeof(((ams::ProcType*)0)->value) == sizeof(ams::ProcType));
-    algo_assert(_offset_of(ams::ProcId, procidx) + sizeof(((ams::ProcId*)0)->procidx) == sizeof(ams::ProcId));
-    algo_assert(_offset_of(ams::StreamType, value) + sizeof(((ams::StreamType*)0)->value) == sizeof(ams::StreamType));
-    algo_assert(_offset_of(ams::StreamId, streamidx) + sizeof(((ams::StreamId*)0)->streamidx) == sizeof(ams::StreamId));
-    algo_assert(_offset_of(ams::DfltStream, stream_id) + sizeof(((ams::DfltStream*)0)->stream_id) == sizeof(ams::DfltStream));
-    algo_assert(_offset_of(ams::DumpStreamTableMsg, proc_id) + sizeof(((ams::DumpStreamTableMsg*)0)->proc_id) == sizeof(ams::DumpStreamTableMsg));
-    algo_assert(_offset_of(ams::FieldId, value) + sizeof(((ams::FieldId*)0)->value) == sizeof(ams::FieldId));
-    algo_assert(_offset_of(ams::HeartbeatMsg, time) + sizeof(((ams::HeartbeatMsg*)0)->time) == sizeof(ams::HeartbeatMsg));
-    algo_assert(_offset_of(ams::Member, mode) + sizeof(((ams::Member*)0)->mode) == sizeof(ams::Member));
-    algo_assert(_offset_of(ams::MsgHeaderMsgsCase, value) + sizeof(((ams::MsgHeaderMsgsCase*)0)->value) == sizeof(ams::MsgHeaderMsgsCase));
-    algo_assert(_offset_of(ams::MsgHeader_curs, msglen) + sizeof(((ams::MsgHeader_curs*)0)->msglen) == sizeof(ams::MsgHeader_curs));
-    algo_assert(_offset_of(ams::StreamPos, off) + sizeof(((ams::StreamPos*)0)->off) == sizeof(ams::StreamPos));
-    algo_assert(_offset_of(ams::OpenMsg, pos) + sizeof(((ams::OpenMsg*)0)->pos) == sizeof(ams::OpenMsg));
-    algo_assert(_offset_of(ams::ProcAddMsg, proc_id) + sizeof(((ams::ProcAddMsg*)0)->proc_id) == sizeof(ams::ProcAddMsg));
-    algo_assert(_offset_of(ams::ProcRemoveMsg, proc_id) + sizeof(((ams::ProcRemoveMsg*)0)->proc_id) == sizeof(ams::ProcRemoveMsg));
-    algo_assert(_offset_of(ams::SeqmsgId, off) + sizeof(((ams::SeqmsgId*)0)->off) == sizeof(ams::SeqmsgId));
-    // check that bitfield fits width
-    algo_assert(sizeof(((ams::StreamFlags*)0)->value)*8 >= 8);
-    algo_assert(_offset_of(ams::StreamFlags, value) + sizeof(((ams::StreamFlags*)0)->value) == sizeof(ams::StreamFlags));
-    algo_assert(_offset_of(ams::StreamHbMsg, wbudget) + sizeof(((ams::StreamHbMsg*)0)->wbudget) == sizeof(ams::StreamHbMsg));
-    algo_assert(_offset_of(ams::TerminateMsg, length) + sizeof(((ams::TerminateMsg*)0)->length) == sizeof(ams::TerminateMsg));
-}
-
 // --- ams.SeqmsgId..ReadFieldMaybe
 bool ams::SeqmsgId_ReadFieldMaybe(ams::SeqmsgId& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3355,6 +3329,32 @@ void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) {
 
 // --- ams...SizeCheck
 inline static void ams::SizeCheck() {
+}
+
+// --- ams...StaticCheck
+void ams::StaticCheck() {
+    algo_assert(_offset_of(ams::AlarmSyncMsg, updated_after) + sizeof(((ams::AlarmSyncMsg*)0)->updated_after) == sizeof(ams::AlarmSyncMsg));
+    algo_assert(_offset_of(ams::ProcType, value) + sizeof(((ams::ProcType*)0)->value) == sizeof(ams::ProcType));
+    algo_assert(_offset_of(ams::ProcId, procidx) + sizeof(((ams::ProcId*)0)->procidx) == sizeof(ams::ProcId));
+    algo_assert(_offset_of(ams::StreamType, value) + sizeof(((ams::StreamType*)0)->value) == sizeof(ams::StreamType));
+    algo_assert(_offset_of(ams::StreamId, streamidx) + sizeof(((ams::StreamId*)0)->streamidx) == sizeof(ams::StreamId));
+    algo_assert(_offset_of(ams::DfltStream, stream_id) + sizeof(((ams::DfltStream*)0)->stream_id) == sizeof(ams::DfltStream));
+    algo_assert(_offset_of(ams::DumpStreamTableMsg, proc_id) + sizeof(((ams::DumpStreamTableMsg*)0)->proc_id) == sizeof(ams::DumpStreamTableMsg));
+    algo_assert(_offset_of(ams::FieldId, value) + sizeof(((ams::FieldId*)0)->value) == sizeof(ams::FieldId));
+    algo_assert(_offset_of(ams::HeartbeatMsg, time) + sizeof(((ams::HeartbeatMsg*)0)->time) == sizeof(ams::HeartbeatMsg));
+    algo_assert(_offset_of(ams::Member, mode) + sizeof(((ams::Member*)0)->mode) == sizeof(ams::Member));
+    algo_assert(_offset_of(ams::MsgHeaderMsgsCase, value) + sizeof(((ams::MsgHeaderMsgsCase*)0)->value) == sizeof(ams::MsgHeaderMsgsCase));
+    algo_assert(_offset_of(ams::MsgHeader_curs, msglen) + sizeof(((ams::MsgHeader_curs*)0)->msglen) == sizeof(ams::MsgHeader_curs));
+    algo_assert(_offset_of(ams::StreamPos, off) + sizeof(((ams::StreamPos*)0)->off) == sizeof(ams::StreamPos));
+    algo_assert(_offset_of(ams::OpenMsg, pos) + sizeof(((ams::OpenMsg*)0)->pos) == sizeof(ams::OpenMsg));
+    algo_assert(_offset_of(ams::ProcAddMsg, proc_id) + sizeof(((ams::ProcAddMsg*)0)->proc_id) == sizeof(ams::ProcAddMsg));
+    algo_assert(_offset_of(ams::ProcRemoveMsg, proc_id) + sizeof(((ams::ProcRemoveMsg*)0)->proc_id) == sizeof(ams::ProcRemoveMsg));
+    algo_assert(_offset_of(ams::SeqmsgId, off) + sizeof(((ams::SeqmsgId*)0)->off) == sizeof(ams::SeqmsgId));
+    // check that bitfield fits width
+    algo_assert(sizeof(((ams::StreamFlags*)0)->value)*8 >= 8);
+    algo_assert(_offset_of(ams::StreamFlags, value) + sizeof(((ams::StreamFlags*)0)->value) == sizeof(ams::StreamFlags));
+    algo_assert(_offset_of(ams::StreamHbMsg, wbudget) + sizeof(((ams::StreamHbMsg*)0)->wbudget) == sizeof(ams::StreamHbMsg));
+    algo_assert(_offset_of(ams::TerminateMsg, length) + sizeof(((ams::TerminateMsg*)0)->length) == sizeof(ams::TerminateMsg));
 }
 
 // --- ams.MsgHeaderMsgs..Print

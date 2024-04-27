@@ -51,9 +51,9 @@ enum { sandbox_TableIdEnum_N = 4 };
 
 namespace sandbox { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace sandbox { // gen:ns_field
+namespace sandbox { // gen:ns_tclass_field
 extern const char *sandbox_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace sandbox { struct _db_sandbox_curs; }
 namespace sandbox { struct _db_sbpath_curs; }
@@ -108,8 +108,6 @@ void                 Step();
 // func:sandbox.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:sandbox.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:sandbox.FDb._db.InsertStrptrMaybe
@@ -445,6 +443,8 @@ struct _db_sbpath_curs {// cursor
 
 } // gen:ns_curstext
 namespace sandbox { // gen:ns_func
+// func:sandbox...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:sandbox...main
 int                  main(int argc, char **argv);

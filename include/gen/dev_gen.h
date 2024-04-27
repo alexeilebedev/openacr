@@ -226,8 +226,8 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr100 ToolOptPkey;
     typedef algo::Smallstr50 UnamePkey;
 } // gen:ns_pkeytypedef
-namespace dev { // gen:ns_field
-} // gen:ns_field
+namespace dev { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }

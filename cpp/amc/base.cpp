@@ -52,8 +52,8 @@ void amc::tclass_Base() {
 
 // Generate a function to copy fields from a ctype to its base type
 void amc::tfunc_Base_CopyOut() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &fldbase = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &fldbase = *amc::_db.genctx.p_field;
     amc::FFunc& copyout = amc::CreateCurFunc();
     Ins(&R, copyout.ret  , "void", false);
     Ins(&R, copyout.proto, "$parname_CopyOut($Partype &row, $Cpptype &out)", false);
@@ -84,8 +84,8 @@ void amc::tfunc_Base_CopyOut() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Base_CopyIn() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &fldbase = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &fldbase = *amc::_db.genctx.p_field;
     if (amc::CanCopyQ(*fldbase.p_ctype) && !zd_inst_EmptyQ(*fldbase.p_ctype)) {
         amc::FFunc& copyin = amc::CreateCurFunc();
         Ins(&R, copyin.ret  , "void", false);
@@ -118,8 +118,8 @@ void amc::tfunc_Base_CopyIn() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Base_Castbase() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (AllowCastbaseQ(field)) {
         amc::FFunc& castbase = amc::CreateCurFunc();
         Ins(&R, castbase.ret  , "$Cpptype&", false);
@@ -131,8 +131,8 @@ void amc::tfunc_Base_Castbase() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Base_Castdown() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype &ctype = *field.p_ctype;
     if (AllowCastbaseQ(field) && ctype.c_msgtype && ctype.c_typefld) {
         Set(R, "$Msgtype", ctype.c_msgtype->type.value);

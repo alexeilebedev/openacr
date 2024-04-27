@@ -37,8 +37,8 @@ enum { lib_sql_FieldIdEnum_N = 1 };
 
 namespace lib_sql { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_sql { // gen:ns_field
-} // gen:ns_field
+namespace lib_sql { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_sql { struct _db_attr_curs; }
 namespace lib_sql { struct FAttr; }
@@ -95,8 +95,6 @@ struct FDb { // lib_sql.FDb: In-memory database for lib_sql
     lib_sql::trace     trace;                    //
 };
 
-// func:lib_sql.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_sql.FDb._db.InsertStrptrMaybe
@@ -266,6 +264,8 @@ struct _db_attr_curs {// cursor
 
 } // gen:ns_curstext
 namespace lib_sql { // gen:ns_func
+// func:lib_sql...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

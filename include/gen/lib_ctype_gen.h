@@ -73,8 +73,8 @@ enum { lib_ctype_TableIdEnum_N = 24 };
 
 namespace lib_ctype { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_ctype { // gen:ns_field
-} // gen:ns_field
+namespace lib_ctype { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_ctype { struct FCtype; }
 namespace lib_ctype { struct FField; }
@@ -854,8 +854,6 @@ lib_ctype::FCdflt&   cdflt_qFind(u64 t) __attribute__((nothrow, pure));
 // func:lib_ctype.FDb.cdflt.XrefMaybe
 bool                 cdflt_XrefMaybe(lib_ctype::FCdflt &row);
 
-// func:lib_ctype.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_ctype.FDb._db.InsertStrptrMaybe
@@ -1940,6 +1938,8 @@ struct field_c_substr_srcfield_curs {// fcurs:lib_ctype.FField.c_substr_srcfield
 
 } // gen:ns_curstext
 namespace lib_ctype { // gen:ns_func
+// func:lib_ctype...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

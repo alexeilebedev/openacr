@@ -36,8 +36,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Bheap() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // implementation helper
     // I starting index
@@ -64,7 +64,7 @@ void amc::tclass_Bheap() {
 }
 
 void amc::tfunc_Bheap_Upheap() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& up = amc::CreateCurFunc();
     up.priv=true;
@@ -87,7 +87,7 @@ void amc::tfunc_Bheap_Upheap() {
 }
 
 void amc::tfunc_Bheap_Downheap() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& down = amc::CreateCurFunc();
     down.priv=true;
@@ -120,8 +120,8 @@ void amc::tfunc_Bheap_Downheap() {
 }
 
 void amc::tfunc_Bheap_Reheap() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& reheap = amc::CreateCurFunc();
     Ins(&R, reheap.comment, "If row is in heap, update its position. If row is not in heap, insert it.");
@@ -151,8 +151,8 @@ void amc::tfunc_Bheap_Reheap() {
 }
 
 void amc::tfunc_Bheap_ReheapFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& reheapfirst = amc::CreateCurFunc();
     Ins(&R, reheapfirst.comment, "Key of first element in the heap changed. Move it.");
@@ -175,8 +175,8 @@ void amc::tfunc_Bheap_ReheapFirst() {
 }
 
 void amc::tfunc_Bheap_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (NeedSetQ(field)) {
         amc::FFunc& set = amc::CreateCurFunc();
@@ -208,8 +208,8 @@ void amc::tfunc_Bheap_Set() {
 }
 
 void amc::tfunc_Bheap_SetIfBetter() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (NeedSetQ(field)) {
         amc::FFunc& sib = amc::CreateCurFunc();
@@ -229,8 +229,8 @@ void amc::tfunc_Bheap_SetIfBetter() {
 }
 
 void amc::tfunc_Bheap_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.c_cascdel) {
         amc::FFunc& cascdel = amc::CreateCurFunc();
@@ -247,8 +247,8 @@ void amc::tfunc_Bheap_Cascdel() {
 }
 
 void amc::tfunc_Bheap_RemoveFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& remfirst = amc::CreateCurFunc();
     Ins(&R, remfirst.comment, "If index is empty, return NULL. Otherwise remove and return first key in index.\n Call 'head changed' trigger.", false);
@@ -274,7 +274,7 @@ void amc::tfunc_Bheap_RemoveFirst() {
 }
 
 void amc::tfunc_Bheap_First() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& first = amc::CreateCurFunc(true); {
         AddRetval(first,Subst(R,"$Cpptype*"),"row","NULL");
     }
@@ -284,7 +284,7 @@ void amc::tfunc_Bheap_First() {
 }
 
 void amc::tfunc_Bheap_InBheapQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     // -- NOTE -- function takes reference to CHILD -- not parent.
     amc::FFunc& inheap = amc::CreateCurFunc();
@@ -296,8 +296,8 @@ void amc::tfunc_Bheap_InBheapQ() {
 }
 
 void amc::tfunc_Bheap_Insert() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& insert = amc::CreateCurFunc();
     Ins(&R, insert.comment, "Insert row. Row must not already be in index. If row is already in index, do nothing.", false);
@@ -319,8 +319,8 @@ void amc::tfunc_Bheap_Insert() {
 }
 
 void amc::tfunc_Bheap_Compact() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_fcompact) {
         amc::FFunc& compact = amc::CreateCurFunc(true);
         AddRetval(compact, "bool", "retval", "false");
@@ -340,8 +340,8 @@ void amc::tfunc_Bheap_Compact() {
 }
 
 void amc::tfunc_Bheap_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& remove = amc::CreateCurFunc();
     Ins(&R,  remove.ret  , "void", false);
@@ -374,7 +374,7 @@ void amc::tfunc_Bheap_Remove() {
 }
 
 void amc::tfunc_Bheap_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.comment, "Return number of items in the heap");
@@ -384,7 +384,7 @@ void amc::tfunc_Bheap_N() {
 }
 
 void amc::tfunc_Bheap_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.comment, "Return true if index is empty");
@@ -394,8 +394,8 @@ void amc::tfunc_Bheap_EmptyQ() {
 }
 
 void amc::tfunc_Bheap_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& flush = amc::CreateCurFunc();
     Ins(&R, flush.comment, "Remove all elements from binary heap");
@@ -414,7 +414,7 @@ void amc::tfunc_Bheap_RemoveAll() {
 }
 
 void amc::tfunc_Bheap_Dealloc() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& dealloc = amc::CreateCurFunc();
     Ins(&R, dealloc.comment, "Remove all elements from heap and free memory used by the array.");
@@ -427,7 +427,7 @@ void amc::tfunc_Bheap_Dealloc() {
 }
 
 void amc::tfunc_Bheap_Reserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.ret  , "void", false);
@@ -447,7 +447,7 @@ void amc::tfunc_Bheap_Reserve() {
 }
 
 void amc::tfunc_Bheap_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     Ins(&R, init.body, "$parname.$name_max   \t= 0; // ($field)");
@@ -456,8 +456,8 @@ void amc::tfunc_Bheap_Init() {
 }
 
 void amc::tfunc_Bheap_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& uninit = amc::CreateCurFunc();
     if (field.p_ctype == field.p_ctype->p_ns->c_globfld->p_ctype) {
@@ -468,8 +468,8 @@ void amc::tfunc_Bheap_Uninit() {
 }
 
 void amc::tfunc_Bheap_ElemLt() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
 
     amc::FFunc& lt = amc::CreateCurFunc();
@@ -491,8 +491,8 @@ void amc::tfunc_Bheap_ElemLt() {
 }
 
 void amc::tfunc_Bheap_ElemLtval() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (NeedSetQ(field)) {
         amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
@@ -512,9 +512,9 @@ void amc::tfunc_Bheap_ElemLtval() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bheap_unordcurs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     bool glob = GlobalQ(*field.p_ctype);
     Set(R, "$cursparent", glob ? "_db" : "(*curs.parent)");
     Set(R, "$curspararg", glob ? "" : "(*curs.parent)");
@@ -568,9 +568,9 @@ void amc::tfunc_Bheap_unordcurs() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bheap_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
 
     bool glob = GlobalQ(*field.p_ctype);
     Set(R, "$cursparent", glob ? "_db" : "(*curs.parent)");

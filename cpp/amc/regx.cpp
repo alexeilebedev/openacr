@@ -27,7 +27,7 @@
 
 void amc::tclass_RegxSql() {
     tclass_Regx();
-    vrfy(amc::_db.genfield.p_field->c_fregx, "missing fregx");
+    vrfy(amc::_db.genctx.p_field->c_fregx, "missing fregx");
 }
 
 void amc::tfunc_RegxSql_ReadStrptrMaybe() {
@@ -45,8 +45,8 @@ void amc::tfunc_RegxSql_Init() {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Regx() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFregx *fregx = field.c_fregx;
     Set(R, "$Regxtype", fregx ? strptr(fregx->regxtype) : strptr("Sql"));
     Set(R, "$dflt"   , strptr(field.dflt.value));
@@ -62,8 +62,8 @@ void amc::tclass_Regx() {
 }
 
 void amc::tfunc_Regx_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFregx *fregx = field.c_fregx;
     if (HasReadQ(*field.p_ctype)) {
         Set(R, "$full", (fregx && fregx->partial ? "false" : "true"));
@@ -77,7 +77,7 @@ void amc::tfunc_Regx_ReadStrptrMaybe() {
 }
 
 void amc::tfunc_Regx_Print() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& print = amc::CreateCurFunc(true);
     AddRetval(print, "void", "", "");
@@ -86,8 +86,8 @@ void amc::tfunc_Regx_Print() {
 }
 
 void amc::tfunc_Regx_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (ch_N(field.dflt.value)) {
         amc::FFunc& init = amc::CreateCurFunc();

@@ -79,9 +79,9 @@ enum { abt_md_TableIdEnum_N = 28 };
 
 namespace abt_md { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace abt_md { // gen:ns_field
+namespace abt_md { // gen:ns_tclass_field
 extern const char *abt_md_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Comptest; }
 namespace dmmeta { struct Ctype; }
@@ -592,8 +592,6 @@ void                 Step();
 // func:abt_md.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:abt_md.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:abt_md.FDb._db.InsertStrptrMaybe
@@ -3235,6 +3233,8 @@ void                 mdsection_Tests(abt_md::FFileSection&);
 // func:abt_md...mdsection_Copyright
 // this function is 'extrn' and implemented by user
 void                 mdsection_Copyright(abt_md::FFileSection&);
+// func:abt_md...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:abt_md...main
 int                  main(int argc, char **argv);

@@ -28,8 +28,8 @@
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Lary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     int nlevels = 32;
     Set(R, "$prealloc", "4");
@@ -44,7 +44,7 @@ void amc::tclass_Lary() {
 }
 
 void amc::tfunc_Lary_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& alloc = amc::CreateCurFunc();
     Ins(&R, alloc.ret  , "void*", false);
@@ -73,7 +73,7 @@ void amc::tfunc_Lary_AllocMem() {
 }
 
 void amc::tfunc_Lary_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.ret  , "bool", false);
@@ -82,7 +82,7 @@ void amc::tfunc_Lary_EmptyQ() {
 }
 
 void amc::tfunc_Lary_Find() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& find = amc::CreateCurFunc();
     find.inl = true;
@@ -100,7 +100,7 @@ void amc::tfunc_Lary_Find() {
 }
 
 void amc::tfunc_Lary_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
@@ -118,7 +118,7 @@ void amc::tfunc_Lary_Init() {
 }
 
 void amc::tfunc_Lary_Last() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& last = amc::CreateCurFunc();
     last.inl = true;
@@ -128,7 +128,7 @@ void amc::tfunc_Lary_Last() {
 }
 
 void amc::tfunc_Lary_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "i32", false);
@@ -137,8 +137,8 @@ void amc::tfunc_Lary_N() {
 }
 
 void amc::tfunc_Lary_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
 
     if (!field.c_fnoremove) {
@@ -162,8 +162,8 @@ void amc::tfunc_Lary_RemoveAll() {
 }
 
 void amc::tfunc_Lary_RemoveLast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
 
     amc::FFunc& remlast = amc::CreateCurFunc();
@@ -184,8 +184,8 @@ void amc::tfunc_Lary_RemoveLast() {
 }
 
 void amc::tfunc_Lary_RowidFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.reflect) {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
         rowid_findx.priv=true;
@@ -196,8 +196,8 @@ void amc::tfunc_Lary_RowidFind() {
 }
 
 void amc::tfunc_Lary_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& uninit = amc::CreateCurFunc();
     if (field.p_ctype == field.p_ctype->p_ns->c_globfld->p_ctype) {
@@ -215,7 +215,7 @@ void amc::tfunc_Lary_Uninit() {
 }
 
 void amc::tfunc_Lary_qFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& qfind = amc::CreateCurFunc();
     qfind.inl = true;
@@ -229,7 +229,7 @@ void amc::tfunc_Lary_qFind() {
 }
 
 void amc::tfunc_Lary_qLast() {
-    // algo_lib::Replscope &R = amc::_db.genfield.R;
+    // algo_lib::Replscope &R = amc::_db.genctx.R;
 
     // amc::FFunc& qlast = amc::CreateCurFunc();
     // qlast.inl = true;
@@ -239,9 +239,9 @@ void amc::tfunc_Lary_qLast() {
 }
 
 void amc::tfunc_Lary_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
 
     bool glob = GlobalQ(*field.p_ctype);
     Set(R, "$cursparent", glob ? "_db" : "(*curs.parent)");
