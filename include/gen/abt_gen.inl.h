@@ -30,51 +30,58 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline abt::FArch::FArch() {
-    abt::FArch_Init(*this);
-}
-
-inline abt::FArch::~FArch() {
-    abt::FArch_Uninit(*this);
-}
-
 
 // --- abt.FArch..Init
 // Set all fields to initial values.
 inline void abt::FArch_Init(abt::FArch& arch) {
     arch.ind_arch_next = (abt::FArch*)-1; // (abt.FDb.ind_arch) not-in-hash
 }
-inline abt::FCfg::FCfg() {
-    abt::FCfg_Init(*this);
+
+// --- abt.FArch..Ctor
+inline  abt::FArch::FArch() {
+    abt::FArch_Init(*this);
 }
 
-inline abt::FCfg::~FCfg() {
-    abt::FCfg_Uninit(*this);
+// --- abt.FArch..Dtor
+inline  abt::FArch::~FArch() {
+    abt::FArch_Uninit(*this);
 }
-
 
 // --- abt.FCfg..Init
 // Set all fields to initial values.
 inline void abt::FCfg_Init(abt::FCfg& cfg) {
     cfg.ind_cfg_next = (abt::FCfg*)-1; // (abt.FDb.ind_cfg) not-in-hash
 }
-inline abt::FCompiler::FCompiler() {
-    abt::FCompiler_Init(*this);
+
+// --- abt.FCfg..Ctor
+inline  abt::FCfg::FCfg() {
+    abt::FCfg_Init(*this);
 }
 
-inline abt::FCompiler::~FCompiler() {
-    abt::FCompiler_Uninit(*this);
+// --- abt.FCfg..Dtor
+inline  abt::FCfg::~FCfg() {
+    abt::FCfg_Uninit(*this);
 }
-
 
 // --- abt.FCompiler..Init
 // Set all fields to initial values.
 inline void abt::FCompiler_Init(abt::FCompiler& compiler) {
     compiler.ind_compiler_next = (abt::FCompiler*)-1; // (abt.FDb.ind_compiler) not-in-hash
 }
-inline abt::trace::trace() {
+
+// --- abt.FCompiler..Ctor
+inline  abt::FCompiler::FCompiler() {
+    abt::FCompiler_Init(*this);
 }
 
+// --- abt.FCompiler..Dtor
+inline  abt::FCompiler::~FCompiler() {
+    abt::FCompiler_Uninit(*this);
+}
+
+// --- abt.trace..Ctor
+inline  abt::trace::trace() {
+}
 
 // --- abt.FDb.srcfile.EmptyQ
 // Return true if index is empty
@@ -1731,14 +1738,6 @@ inline void abt::_db_zd_inclstack_curs_Next(_db_zd_inclstack_curs &curs) {
 inline abt::FSrcfile& abt::_db_zd_inclstack_curs_Access(_db_zd_inclstack_curs &curs) {
     return *curs.row;
 }
-inline abt::FFilestat::FFilestat() {
-    abt::FFilestat_Init(*this);
-}
-
-inline abt::FFilestat::~FFilestat() {
-    abt::FFilestat_Uninit(*this);
-}
-
 
 // --- abt.FFilestat..Init
 // Set all fields to initial values.
@@ -1748,14 +1747,16 @@ inline void abt::FFilestat_Init(abt::FFilestat& filestat) {
     filestat.exists = bool(false);
     filestat.ind_filestat_next = (abt::FFilestat*)-1; // (abt.FDb.ind_filestat) not-in-hash
 }
-inline abt::FInclude::FInclude() {
-    abt::FInclude_Init(*this);
+
+// --- abt.FFilestat..Ctor
+inline  abt::FFilestat::FFilestat() {
+    abt::FFilestat_Init(*this);
 }
 
-inline abt::FInclude::~FInclude() {
-    abt::FInclude_Uninit(*this);
+// --- abt.FFilestat..Dtor
+inline  abt::FFilestat::~FFilestat() {
+    abt::FFilestat_Uninit(*this);
 }
-
 
 // --- abt.FInclude..Init
 // Set all fields to initial values.
@@ -1767,28 +1768,32 @@ inline void abt::FInclude_Init(abt::FInclude& include) {
     include.zd_include_next = (abt::FInclude*)-1; // (abt.FSrcfile.zd_include) not-in-list
     include.zd_include_prev = NULL; // (abt.FSrcfile.zd_include)
 }
-inline abt::FNs::FNs() {
-    abt::FNs_Init(*this);
+
+// --- abt.FInclude..Ctor
+inline  abt::FInclude::FInclude() {
+    abt::FInclude_Init(*this);
 }
 
-inline abt::FNs::~FNs() {
-    abt::FNs_Uninit(*this);
+// --- abt.FInclude..Dtor
+inline  abt::FInclude::~FInclude() {
+    abt::FInclude_Uninit(*this);
 }
-
 
 // --- abt.FNs..Init
 // Set all fields to initial values.
 inline void abt::FNs_Init(abt::FNs& ns) {
     ns.ind_ns_next = (abt::FNs*)-1; // (abt.FDb.ind_ns) not-in-hash
 }
-inline abt::FSrcfile::FSrcfile() {
-    abt::FSrcfile_Init(*this);
+
+// --- abt.FNs..Ctor
+inline  abt::FNs::FNs() {
+    abt::FNs_Init(*this);
 }
 
-inline abt::FSrcfile::~FSrcfile() {
-    abt::FSrcfile_Uninit(*this);
+// --- abt.FNs..Dtor
+inline  abt::FNs::~FNs() {
+    abt::FNs_Uninit(*this);
 }
-
 
 // --- abt.FSrcfile.zd_include.EmptyQ
 // Return true if index is empty
@@ -1870,14 +1875,16 @@ inline void abt::srcfile_zd_include_curs_Next(srcfile_zd_include_curs &curs) {
 inline abt::FInclude& abt::srcfile_zd_include_curs_Access(srcfile_zd_include_curs &curs) {
     return *curs.row;
 }
-inline abt::FSyscmd::FSyscmd() {
-    abt::FSyscmd_Init(*this);
+
+// --- abt.FSrcfile..Ctor
+inline  abt::FSrcfile::FSrcfile() {
+    abt::FSrcfile_Init(*this);
 }
 
-inline abt::FSyscmd::~FSyscmd() {
-    abt::FSyscmd_Uninit(*this);
+// --- abt.FSrcfile..Dtor
+inline  abt::FSrcfile::~FSrcfile() {
+    abt::FSrcfile_Uninit(*this);
 }
-
 
 // --- abt.FSyscmd.c_prior.EmptyQ
 // Return true if index is empty
@@ -2044,14 +2051,16 @@ inline void abt::syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) {
 inline abt::FSyscmddep& abt::syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline abt::FSyscmddep::FSyscmddep() {
-    abt::FSyscmddep_Init(*this);
+
+// --- abt.FSyscmd..Ctor
+inline  abt::FSyscmd::FSyscmd() {
+    abt::FSyscmd_Init(*this);
 }
 
-inline abt::FSyscmddep::~FSyscmddep() {
-    abt::FSyscmddep_Uninit(*this);
+// --- abt.FSyscmd..Dtor
+inline  abt::FSyscmd::~FSyscmd() {
+    abt::FSyscmd_Uninit(*this);
 }
-
 
 // --- abt.FSyscmddep..Init
 // Set all fields to initial values.
@@ -2063,28 +2072,32 @@ inline void abt::FSyscmddep_Init(abt::FSyscmddep& syscmddep) {
     syscmddep.syscmd_c_next_in_ary = bool(false);
     syscmddep.syscmd_c_prior_in_ary = bool(false);
 }
-inline abt::FSyslib::FSyslib() {
-    abt::FSyslib_Init(*this);
+
+// --- abt.FSyscmddep..Ctor
+inline  abt::FSyscmddep::FSyscmddep() {
+    abt::FSyscmddep_Init(*this);
 }
 
-inline abt::FSyslib::~FSyslib() {
-    abt::FSyslib_Uninit(*this);
+// --- abt.FSyscmddep..Dtor
+inline  abt::FSyscmddep::~FSyscmddep() {
+    abt::FSyscmddep_Uninit(*this);
 }
-
 
 // --- abt.FSyslib..Init
 // Set all fields to initial values.
 inline void abt::FSyslib_Init(abt::FSyslib& syslib) {
     syslib.ind_syslib_next = (abt::FSyslib*)-1; // (abt.FDb.ind_syslib) not-in-hash
 }
-inline abt::FTargdep::FTargdep() {
-    abt::FTargdep_Init(*this);
+
+// --- abt.FSyslib..Ctor
+inline  abt::FSyslib::FSyslib() {
+    abt::FSyslib_Init(*this);
 }
 
-inline abt::FTargdep::~FTargdep() {
-    abt::FTargdep_Uninit(*this);
+// --- abt.FSyslib..Dtor
+inline  abt::FSyslib::~FSyslib() {
+    abt::FSyslib_Uninit(*this);
 }
-
 
 // --- abt.FTargdep..Init
 // Set all fields to initial values.
@@ -2092,14 +2105,16 @@ inline void abt::FTargdep_Init(abt::FTargdep& targdep) {
     targdep.p_parent = NULL;
     targdep.target_c_targdep_in_ary = bool(false);
 }
-inline abt::FTarget::FTarget() {
-    abt::FTarget_Init(*this);
+
+// --- abt.FTargdep..Ctor
+inline  abt::FTargdep::FTargdep() {
+    abt::FTargdep_Init(*this);
 }
 
-inline abt::FTarget::~FTarget() {
-    abt::FTarget_Uninit(*this);
+// --- abt.FTargdep..Dtor
+inline  abt::FTargdep::~FTargdep() {
+    abt::FTargdep_Uninit(*this);
 }
-
 
 // --- abt.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
@@ -2568,14 +2583,16 @@ inline void abt::target_c_alllib_curs_Next(target_c_alllib_curs &curs) {
 inline abt::FSyslib& abt::target_c_alllib_curs_Access(target_c_alllib_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline abt::FTargsrc::FTargsrc() {
-    abt::FTargsrc_Init(*this);
+
+// --- abt.FTarget..Ctor
+inline  abt::FTarget::FTarget() {
+    abt::FTarget_Init(*this);
 }
 
-inline abt::FTargsrc::~FTargsrc() {
-    abt::FTargsrc_Uninit(*this);
+// --- abt.FTarget..Dtor
+inline  abt::FTarget::~FTarget() {
+    abt::FTarget_Uninit(*this);
 }
-
 
 // --- abt.FTargsrc..Init
 // Set all fields to initial values.
@@ -2584,14 +2601,16 @@ inline void abt::FTargsrc_Init(abt::FTargsrc& targsrc) {
     targsrc.target_c_targsrc_in_ary = bool(false);
     targsrc.ind_targsrc_next = (abt::FTargsrc*)-1; // (abt.FDb.ind_targsrc) not-in-hash
 }
-inline abt::FTargsyslib::FTargsyslib() {
-    abt::FTargsyslib_Init(*this);
+
+// --- abt.FTargsrc..Ctor
+inline  abt::FTargsrc::FTargsrc() {
+    abt::FTargsrc_Init(*this);
 }
 
-inline abt::FTargsyslib::~FTargsyslib() {
-    abt::FTargsyslib_Uninit(*this);
+// --- abt.FTargsrc..Dtor
+inline  abt::FTargsrc::~FTargsrc() {
+    abt::FTargsrc_Uninit(*this);
 }
-
 
 // --- abt.FTargsyslib..Init
 // Set all fields to initial values.
@@ -2599,33 +2618,37 @@ inline void abt::FTargsyslib_Init(abt::FTargsyslib& targsyslib) {
     targsyslib.p_syslib = NULL;
     targsyslib.target_c_targsyslib_in_ary = bool(false);
 }
-inline abt::FToolOpt::FToolOpt() {
+
+// --- abt.FTargsyslib..Ctor
+inline  abt::FTargsyslib::FTargsyslib() {
+    abt::FTargsyslib_Init(*this);
+}
+
+// --- abt.FTargsyslib..Dtor
+inline  abt::FTargsyslib::~FTargsyslib() {
+    abt::FTargsyslib_Uninit(*this);
+}
+
+// --- abt.FToolOpt..Ctor
+inline  abt::FToolOpt::FToolOpt() {
     abt::FToolOpt_Init(*this);
 }
-
-inline abt::FUname::FUname() {
-    abt::FUname_Init(*this);
-}
-
-inline abt::FUname::~FUname() {
-    abt::FUname_Uninit(*this);
-}
-
 
 // --- abt.FUname..Init
 // Set all fields to initial values.
 inline void abt::FUname_Init(abt::FUname& uname) {
     uname.ind_uname_next = (abt::FUname*)-1; // (abt.FDb.ind_uname) not-in-hash
 }
-inline abt::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline abt::FieldId::FieldId(abt_FieldIdEnum arg) { this->value = i32(arg); }
-inline abt::FieldId::FieldId() {
-    abt::FieldId_Init(*this);
+
+// --- abt.FUname..Ctor
+inline  abt::FUname::FUname() {
+    abt::FUname_Init(*this);
 }
 
+// --- abt.FUname..Dtor
+inline  abt::FUname::~FUname() {
+    abt::FUname_Uninit(*this);
+}
 
 // --- abt.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -2640,7 +2663,7 @@ inline void abt::value_SetEnum(abt::FieldId& parent, abt_FieldIdEnum rhs) {
 }
 
 // --- abt.FieldId.value.Cast
-inline abt::FieldId::operator abt_FieldIdEnum () const {
+inline  abt::FieldId::operator abt_FieldIdEnum() const {
     return abt_FieldIdEnum((*this).value);
 }
 
@@ -2649,15 +2672,22 @@ inline abt::FieldId::operator abt_FieldIdEnum () const {
 inline void abt::FieldId_Init(abt::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline abt::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline abt::TableId::TableId(abt_TableIdEnum arg) { this->value = i32(arg); }
-inline abt::TableId::TableId() {
-    abt::TableId_Init(*this);
+
+// --- abt.FieldId..Ctor
+inline  abt::FieldId::FieldId() {
+    abt::FieldId_Init(*this);
 }
 
+// --- abt.FieldId..FieldwiseCtor
+inline  abt::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- abt.FieldId..EnumCtor
+inline  abt::FieldId::FieldId(abt_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- abt.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2672,7 +2702,7 @@ inline void abt::value_SetEnum(abt::TableId& parent, abt_TableIdEnum rhs) {
 }
 
 // --- abt.TableId.value.Cast
-inline abt::TableId::operator abt_TableIdEnum () const {
+inline  abt::TableId::operator abt_TableIdEnum() const {
     return abt_TableIdEnum((*this).value);
 }
 
@@ -2680,6 +2710,22 @@ inline abt::TableId::operator abt_TableIdEnum () const {
 // Set all fields to initial values.
 inline void abt::TableId_Init(abt::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- abt.TableId..Ctor
+inline  abt::TableId::TableId() {
+    abt::TableId_Init(*this);
+}
+
+// --- abt.TableId..FieldwiseCtor
+inline  abt::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- abt.TableId..EnumCtor
+inline  abt::TableId::TableId(abt_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const abt::trace &row) {// cfmt:abt.trace.String

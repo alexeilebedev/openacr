@@ -32,7 +32,7 @@
 //#pragma endinclude
 namespace command { // gen:ns_print_proto
     // func:command...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- command.FieldId.value.ToCstr
@@ -1699,7 +1699,7 @@ void command::abt_Init(command::abt& parent) {
     parent.coverity = bool(false);
     parent.package = algo::strptr("");
     parent.maxerr = u32(100);
-    Regx_ReadSql(parent.disas, "", true);
+    Regx_ReadSql(parent.disas, "", false);
     parent.report = bool(true);
     parent.jcdb = algo::strptr("");
     parent.cache = u8(0);
@@ -3807,6 +3807,100 @@ i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
     return retval;
 }
 
+// --- command.acr..AssignOp
+command::acr& command::acr::operator =(const command::acr &rhs) {
+    query = rhs.query;
+    where_Setary(*this, where_Getary(const_cast<command::acr&>(rhs)));
+    in = rhs.in;
+    del = rhs.del;
+    sel = rhs.sel;
+    insert = rhs.insert;
+    replace = rhs.replace;
+    update = rhs.update;
+    merge = rhs.merge;
+    unused = rhs.unused;
+    trunc = rhs.trunc;
+    check = rhs.check;
+    selerr = rhs.selerr;
+    maxshow = rhs.maxshow;
+    write = rhs.write;
+    rename = rhs.rename;
+    nup = rhs.nup;
+    ndown = rhs.ndown;
+    l = rhs.l;
+    xref = rhs.xref;
+    fldfunc = rhs.fldfunc;
+    maxgroup = rhs.maxgroup;
+    pretty = rhs.pretty;
+    tree = rhs.tree;
+    loose = rhs.loose;
+    my = rhs.my;
+    schema = rhs.schema;
+    e = rhs.e;
+    t = rhs.t;
+    g = rhs.g;
+    x = rhs.x;
+    rowid = rhs.rowid;
+    cmt = rhs.cmt;
+    report = rhs.report;
+    print = rhs.print;
+    cmd = rhs.cmd;
+    field_Setary(*this, field_Getary(const_cast<command::acr&>(rhs)));
+    regxof = rhs.regxof;
+    meta = rhs.meta;
+    return *this;
+}
+
+// --- command.acr..CopyCtor
+ command::acr::acr(const command::acr &rhs)
+    : query(rhs.query)
+    , in(rhs.in)
+    , del(rhs.del)
+    , sel(rhs.sel)
+    , insert(rhs.insert)
+    , replace(rhs.replace)
+    , update(rhs.update)
+    , merge(rhs.merge)
+    , unused(rhs.unused)
+    , trunc(rhs.trunc)
+    , check(rhs.check)
+    , selerr(rhs.selerr)
+    , maxshow(rhs.maxshow)
+    , write(rhs.write)
+    , rename(rhs.rename)
+    , nup(rhs.nup)
+    , ndown(rhs.ndown)
+    , l(rhs.l)
+    , xref(rhs.xref)
+    , fldfunc(rhs.fldfunc)
+    , maxgroup(rhs.maxgroup)
+    , pretty(rhs.pretty)
+    , tree(rhs.tree)
+    , loose(rhs.loose)
+    , my(rhs.my)
+    , schema(rhs.schema)
+    , e(rhs.e)
+    , t(rhs.t)
+    , g(rhs.g)
+    , x(rhs.x)
+    , rowid(rhs.rowid)
+    , cmt(rhs.cmt)
+    , report(rhs.report)
+    , print(rhs.print)
+    , cmd(rhs.cmd)
+    , regxof(rhs.regxof)
+    , meta(rhs.meta)
+ {
+    where_elems 	= 0; // (command.acr.where)
+    where_n     	= 0; // (command.acr.where)
+    where_max   	= 0; // (command.acr.where)
+    where_Setary(*this, where_Getary(const_cast<command::acr&>(rhs)));
+    field_elems 	= 0; // (command.acr.field)
+    field_n     	= 0; // (command.acr.field)
+    field_max   	= 0; // (command.acr.field)
+    field_Setary(*this, field_Getary(const_cast<command::acr&>(rhs)));
+}
+
 // --- command.acr_compl..ReadFieldMaybe
 bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -4513,6 +4607,29 @@ i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         retval=-1; // unrecognized
     }
     return retval;
+}
+
+// --- command.acr_dm..AssignOp
+command::acr_dm& command::acr_dm::operator =(const command::acr_dm &rhs) {
+    in = rhs.in;
+    arg_Setary(*this, arg_Getary(const_cast<command::acr_dm&>(rhs)));
+    write_ours = rhs.write_ours;
+    msize = rhs.msize;
+    rowid = rhs.rowid;
+    return *this;
+}
+
+// --- command.acr_dm..CopyCtor
+ command::acr_dm::acr_dm(const command::acr_dm &rhs)
+    : in(rhs.in)
+    , write_ours(rhs.write_ours)
+    , msize(rhs.msize)
+    , rowid(rhs.rowid)
+ {
+    arg_elems 	= 0; // (command.acr_dm.arg)
+    arg_n     	= 0; // (command.acr_dm.arg)
+    arg_max   	= 0; // (command.acr_dm.arg)
+    arg_Setary(*this, arg_Getary(const_cast<command::acr_dm&>(rhs)));
 }
 
 // --- command.acr_dm_proc.acr_dm.Start
@@ -12022,6 +12139,72 @@ i32 command::atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, b
     return retval;
 }
 
+// --- command.atf_cmdline..AssignOp
+command::atf_cmdline& command::atf_cmdline::operator =(const command::atf_cmdline &rhs) {
+    in = rhs.in;
+    exec = rhs.exec;
+    astr = rhs.astr;
+    anum = rhs.anum;
+    adbl = rhs.adbl;
+    aflag = rhs.aflag;
+    str = rhs.str;
+    num = rhs.num;
+    dbl = rhs.dbl;
+    flag = rhs.flag;
+    dstr = rhs.dstr;
+    dnum = rhs.dnum;
+    ddbl = rhs.ddbl;
+    dflag = rhs.dflag;
+    mstr_Setary(*this, mstr_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    mnum_Setary(*this, mnum_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    mdbl_Setary(*this, mdbl_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    amnum_Setary(*this, amnum_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    fconst = rhs.fconst;
+    cconst = rhs.cconst;
+    dregx = rhs.dregx;
+    dpkey = rhs.dpkey;
+    return *this;
+}
+
+// --- command.atf_cmdline..CopyCtor
+ command::atf_cmdline::atf_cmdline(const command::atf_cmdline &rhs)
+    : in(rhs.in)
+    , exec(rhs.exec)
+    , astr(rhs.astr)
+    , anum(rhs.anum)
+    , adbl(rhs.adbl)
+    , aflag(rhs.aflag)
+    , str(rhs.str)
+    , num(rhs.num)
+    , dbl(rhs.dbl)
+    , flag(rhs.flag)
+    , dstr(rhs.dstr)
+    , dnum(rhs.dnum)
+    , ddbl(rhs.ddbl)
+    , dflag(rhs.dflag)
+    , fconst(rhs.fconst)
+    , cconst(rhs.cconst)
+    , dregx(rhs.dregx)
+    , dpkey(rhs.dpkey)
+ {
+    mstr_elems 	= 0; // (command.atf_cmdline.mstr)
+    mstr_n     	= 0; // (command.atf_cmdline.mstr)
+    mstr_max   	= 0; // (command.atf_cmdline.mstr)
+    mstr_Setary(*this, mstr_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    mnum_elems 	= 0; // (command.atf_cmdline.mnum)
+    mnum_n     	= 0; // (command.atf_cmdline.mnum)
+    mnum_max   	= 0; // (command.atf_cmdline.mnum)
+    mnum_Setary(*this, mnum_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    mdbl_elems 	= 0; // (command.atf_cmdline.mdbl)
+    mdbl_n     	= 0; // (command.atf_cmdline.mdbl)
+    mdbl_max   	= 0; // (command.atf_cmdline.mdbl)
+    mdbl_Setary(*this, mdbl_Getary(const_cast<command::atf_cmdline&>(rhs)));
+    amnum_elems 	= 0; // (command.atf_cmdline.amnum)
+    amnum_n     	= 0; // (command.atf_cmdline.amnum)
+    amnum_max   	= 0; // (command.atf_cmdline.amnum)
+    amnum_Setary(*this, amnum_Getary(const_cast<command::atf_cmdline&>(rhs)));
+}
+
 // --- command.atf_cmdline_proc.atf_cmdline.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
@@ -16117,6 +16300,45 @@ i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
     return retval;
 }
 
+// --- command.gcache..AssignOp
+command::gcache& command::gcache::operator =(const command::gcache &rhs) {
+    in = rhs.in;
+    cmd_Setary(*this, cmd_Getary(const_cast<command::gcache&>(rhs)));
+    install = rhs.install;
+    stats = rhs.stats;
+    enable = rhs.enable;
+    disable = rhs.disable;
+    gc = rhs.gc;
+    clean = rhs.clean;
+    dir = rhs.dir;
+    hitrate = rhs.hitrate;
+    after = rhs.after;
+    report = rhs.report;
+    force = rhs.force;
+    return *this;
+}
+
+// --- command.gcache..CopyCtor
+ command::gcache::gcache(const command::gcache &rhs)
+    : in(rhs.in)
+    , install(rhs.install)
+    , stats(rhs.stats)
+    , enable(rhs.enable)
+    , disable(rhs.disable)
+    , gc(rhs.gc)
+    , clean(rhs.clean)
+    , dir(rhs.dir)
+    , hitrate(rhs.hitrate)
+    , after(rhs.after)
+    , report(rhs.report)
+    , force(rhs.force)
+ {
+    cmd_elems 	= 0; // (command.gcache.cmd)
+    cmd_n     	= 0; // (command.gcache.cmd)
+    cmd_max   	= 0; // (command.gcache.cmd)
+    cmd_Setary(*this, cmd_Getary(const_cast<command::gcache&>(rhs)));
+}
+
 // --- command.gcache_proc.gcache.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
@@ -16857,6 +17079,53 @@ i32 command::gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* ou
         retval=-1; // unrecognized
     }
     return retval;
+}
+
+// --- command.gcli..AssignOp
+command::gcli& command::gcli::operator =(const command::gcli &rhs) {
+    in = rhs.in;
+    selector = rhs.selector;
+    fields_Setary(*this, fields_Getary(const_cast<command::gcli&>(rhs)));
+    accept = rhs.accept;
+    start = rhs.start;
+    list = rhs.list;
+    create = rhs.create;
+    update = rhs.update;
+    approve = rhs.approve;
+    needs_work = rhs.needs_work;
+    stop = rhs.stop;
+    t = rhs.t;
+    e = rhs.e;
+    authdir = rhs.authdir;
+    dry_run = rhs.dry_run;
+    gitdir = rhs.gitdir;
+    show_gitlab_system_notes = rhs.show_gitlab_system_notes;
+    return *this;
+}
+
+// --- command.gcli..CopyCtor
+ command::gcli::gcli(const command::gcli &rhs)
+    : in(rhs.in)
+    , selector(rhs.selector)
+    , accept(rhs.accept)
+    , start(rhs.start)
+    , list(rhs.list)
+    , create(rhs.create)
+    , update(rhs.update)
+    , approve(rhs.approve)
+    , needs_work(rhs.needs_work)
+    , stop(rhs.stop)
+    , t(rhs.t)
+    , e(rhs.e)
+    , authdir(rhs.authdir)
+    , dry_run(rhs.dry_run)
+    , gitdir(rhs.gitdir)
+    , show_gitlab_system_notes(rhs.show_gitlab_system_notes)
+ {
+    fields_elems 	= 0; // (command.gcli.fields)
+    fields_n     	= 0; // (command.gcli.fields)
+    fields_max   	= 0; // (command.gcli.fields)
+    fields_Setary(*this, fields_Getary(const_cast<command::gcli&>(rhs)));
 }
 
 // --- command.gcli_proc.gcli.Start
@@ -17754,6 +18023,52 @@ i32 command::mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* ou
         retval=-1; // unrecognized
     }
     return retval;
+}
+
+// --- command.mdbg..AssignOp
+command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
+    target = rhs.target;
+    in = rhs.in;
+    args_Setary(*this, args_Getary(const_cast<command::mdbg&>(rhs)));
+    cfg = rhs.cfg;
+    disas = rhs.disas;
+    attach = rhs.attach;
+    b_Setary(*this, b_Getary(const_cast<command::mdbg&>(rhs)));
+    catchthrow = rhs.catchthrow;
+    tui = rhs.tui;
+    bcmd = rhs.bcmd;
+    emacs = rhs.emacs;
+    manywin = rhs.manywin;
+    follow_child = rhs.follow_child;
+    py = rhs.py;
+    dry_run = rhs.dry_run;
+    return *this;
+}
+
+// --- command.mdbg..CopyCtor
+ command::mdbg::mdbg(const command::mdbg &rhs)
+    : target(rhs.target)
+    , in(rhs.in)
+    , cfg(rhs.cfg)
+    , disas(rhs.disas)
+    , attach(rhs.attach)
+    , catchthrow(rhs.catchthrow)
+    , tui(rhs.tui)
+    , bcmd(rhs.bcmd)
+    , emacs(rhs.emacs)
+    , manywin(rhs.manywin)
+    , follow_child(rhs.follow_child)
+    , py(rhs.py)
+    , dry_run(rhs.dry_run)
+ {
+    args_elems 	= 0; // (command.mdbg.args)
+    args_n     	= 0; // (command.mdbg.args)
+    args_max   	= 0; // (command.mdbg.args)
+    args_Setary(*this, args_Getary(const_cast<command::mdbg&>(rhs)));
+    b_elems 	= 0; // (command.mdbg.b)
+    b_n     	= 0; // (command.mdbg.b)
+    b_max   	= 0; // (command.mdbg.b)
+    b_Setary(*this, b_Getary(const_cast<command::mdbg&>(rhs)));
 }
 
 // --- command.mdbg_proc.mdbg.Start
@@ -19813,6 +20128,50 @@ i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
         retval=-1; // unrecognized
     }
     return retval;
+}
+
+// --- command.sandbox..AssignOp
+command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
+    in = rhs.in;
+    name = rhs.name;
+    create = rhs.create;
+    list = rhs.list;
+    reset = rhs.reset;
+    clean = rhs.clean;
+    shell = rhs.shell;
+    del = rhs.del;
+    gc = rhs.gc;
+    cmd_Setary(*this, cmd_Getary(const_cast<command::sandbox&>(rhs)));
+    diff = rhs.diff;
+    files_Setary(*this, files_Getary(const_cast<command::sandbox&>(rhs)));
+    refs = rhs.refs;
+    q = rhs.q;
+    return *this;
+}
+
+// --- command.sandbox..CopyCtor
+ command::sandbox::sandbox(const command::sandbox &rhs)
+    : in(rhs.in)
+    , name(rhs.name)
+    , create(rhs.create)
+    , list(rhs.list)
+    , reset(rhs.reset)
+    , clean(rhs.clean)
+    , shell(rhs.shell)
+    , del(rhs.del)
+    , gc(rhs.gc)
+    , diff(rhs.diff)
+    , refs(rhs.refs)
+    , q(rhs.q)
+ {
+    cmd_elems 	= 0; // (command.sandbox.cmd)
+    cmd_n     	= 0; // (command.sandbox.cmd)
+    cmd_max   	= 0; // (command.sandbox.cmd)
+    cmd_Setary(*this, cmd_Getary(const_cast<command::sandbox&>(rhs)));
+    files_elems 	= 0; // (command.sandbox.files)
+    files_n     	= 0; // (command.sandbox.files)
+    files_max   	= 0; // (command.sandbox.files)
+    files_Setary(*this, files_Getary(const_cast<command::sandbox&>(rhs)));
 }
 
 // --- command.sandbox_proc.sandbox.Start
@@ -22942,6 +23301,36 @@ i32 command::ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
         retval=-1; // unrecognized
     }
     return retval;
+}
+
+// --- command.ssimfilt..AssignOp
+command::ssimfilt& command::ssimfilt::operator =(const command::ssimfilt &rhs) {
+    in = rhs.in;
+    typetag = rhs.typetag;
+    match_Setary(*this, match_Getary(const_cast<command::ssimfilt&>(rhs)));
+    field_Setary(*this, field_Getary(const_cast<command::ssimfilt&>(rhs)));
+    format = rhs.format;
+    t = rhs.t;
+    cmd = rhs.cmd;
+    return *this;
+}
+
+// --- command.ssimfilt..CopyCtor
+ command::ssimfilt::ssimfilt(const command::ssimfilt &rhs)
+    : in(rhs.in)
+    , typetag(rhs.typetag)
+    , format(rhs.format)
+    , t(rhs.t)
+    , cmd(rhs.cmd)
+ {
+    match_elems 	= 0; // (command.ssimfilt.match)
+    match_n     	= 0; // (command.ssimfilt.match)
+    match_max   	= 0; // (command.ssimfilt.match)
+    match_Setary(*this, match_Getary(const_cast<command::ssimfilt&>(rhs)));
+    field_elems 	= 0; // (command.ssimfilt.field)
+    field_n     	= 0; // (command.ssimfilt.field)
+    field_max   	= 0; // (command.ssimfilt.field)
+    field_Setary(*this, field_Getary(const_cast<command::ssimfilt&>(rhs)));
 }
 
 // --- command.ssimfilt_proc.ssimfilt.Start

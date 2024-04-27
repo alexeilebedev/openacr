@@ -88,7 +88,7 @@ const char *dev_Sandbox_sandbox_atf_fuzz     = "atf_fuzz";
 
 namespace dev { // gen:ns_print_proto
     // func:dev...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- dev.Arch..ReadFieldMaybe

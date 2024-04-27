@@ -103,9 +103,9 @@ namespace atf_comp { // gen:ns_print_proto
     static void          zd_sel_comptest_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:atf_comp.FDb.zd_sel_comptest.UpdateCycles
-    static void          zd_sel_comptest_UpdateCycles() __attribute__((nothrow));
+    inline static void   zd_sel_comptest_UpdateCycles() __attribute__((nothrow));
     // func:atf_comp.FDb.zd_sel_comptest.Call
-    static void          zd_sel_comptest_Call() __attribute__((nothrow));
+    inline static void   zd_sel_comptest_Call() __attribute__((nothrow));
     // func:atf_comp.FDb.targs.InputMaybe
     static bool          targs_InputMaybe(atfdb::Targs &elem) __attribute__((nothrow));
     // func:atf_comp.FDb.tmsg.InputMaybe
@@ -114,17 +114,17 @@ namespace atf_comp { // gen:ns_print_proto
     static bool          tfilt_InputMaybe(atfdb::Tfilt &elem) __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:atf_comp.FDb.zd_run_comptest.UpdateCycles
-    static void          zd_run_comptest_UpdateCycles() __attribute__((nothrow));
+    inline static void   zd_run_comptest_UpdateCycles() __attribute__((nothrow));
     // func:atf_comp.FDb.zd_run_comptest.Call
-    static void          zd_run_comptest_Call() __attribute__((nothrow));
+    inline static void   zd_run_comptest_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_comp.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_comp.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:atf_comp...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_comp.FComptest.base.CopyOut

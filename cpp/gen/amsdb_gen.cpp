@@ -32,7 +32,7 @@
 //#pragma endinclude
 namespace amsdb { // gen:ns_print_proto
     // func:amsdb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- amsdb.FieldId.value.ToCstr

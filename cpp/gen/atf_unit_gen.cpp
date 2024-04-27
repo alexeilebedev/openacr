@@ -86,22 +86,22 @@ const char *atf_unit_help =
 namespace atf_unit { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     // func:atf_unit.Cstr.val.Nextchar
-    static int           val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static int    val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Returns the child that has greater height.
     // func:atf_unit.FDb.tr_number.TallerChild
-    static atf_unit::FNumber* tr_number_TallerChild(atf_unit::FNumber& node) __attribute__((nothrow));
+    inline static atf_unit::FNumber* tr_number_TallerChild(atf_unit::FNumber& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
     // func:atf_unit.FDb.tr_number.Disconnect
     static void          tr_number_Disconnect(atf_unit::FNumber& node) __attribute__((nothrow));
     // func:atf_unit.FDb.tr_number.ElemLt
-    static bool          tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) __attribute__((nothrow));
+    inline static bool   tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) __attribute__((nothrow));
     // func:atf_unit.FDb.tr_number.UpdateDepth
     static void          tr_number_updateDepth(atf_unit::FNumber& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
     // func:atf_unit.FDb.tr_number.Turn
     static void          tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) __attribute__((nothrow));
     // func:atf_unit.FDb.tr_number.Connect
-    static void          tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
+    inline static void   tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) __attribute__((nothrow));
     // func:atf_unit.FDb.unittest.LoadStatic
     static void          unittest_LoadStatic() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
@@ -112,13 +112,13 @@ namespace atf_unit { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_unit.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Swap values elem_a and elem_b
     // func:atf_unit.FPerfSort.sorted.Swap
-    static void          sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) __attribute__((nothrow));
+    inline static void   sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_unit.FPerfSort.sorted.Rotleft
-    static void          sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) __attribute__((nothrow));
+    inline static void   sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -134,7 +134,7 @@ namespace atf_unit { // gen:ns_print_proto
     // func:atf_unit.FPerfSort.sorted.IntQuickSort
     static void          sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) __attribute__((nothrow));
     // func:atf_unit...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_unit.Cstr.val.Nextchar
@@ -2443,6 +2443,30 @@ void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) {
     orig_RemoveAll(parent);
     // free memory for Tary atf_unit.FPerfSort.orig
     algo_lib::malloc_FreeMem(parent.orig_elems, sizeof(atf_unit::Dbl)*parent.orig_max); // (atf_unit.FPerfSort.orig)
+}
+
+// --- atf_unit.FPerfSort..AssignOp
+atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &rhs) {
+    orig_Setary(*this, orig_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
+    sorted_Setary(*this, sorted_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
+    index_Setary(*this, index_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
+    return *this;
+}
+
+// --- atf_unit.FPerfSort..CopyCtor
+ atf_unit::FPerfSort::FPerfSort(const atf_unit::FPerfSort &rhs) {
+    orig_elems 	= 0; // (atf_unit.FPerfSort.orig)
+    orig_n     	= 0; // (atf_unit.FPerfSort.orig)
+    orig_max   	= 0; // (atf_unit.FPerfSort.orig)
+    orig_Setary(*this, orig_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
+    sorted_elems 	= 0; // (atf_unit.FPerfSort.sorted)
+    sorted_n     	= 0; // (atf_unit.FPerfSort.sorted)
+    sorted_max   	= 0; // (atf_unit.FPerfSort.sorted)
+    sorted_Setary(*this, sorted_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
+    index_elems 	= 0; // (atf_unit.FPerfSort.index)
+    index_n     	= 0; // (atf_unit.FPerfSort.index)
+    index_max   	= 0; // (atf_unit.FPerfSort.index)
+    index_Setary(*this, index_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
 }
 
 // --- atf_unit.FUnittest.base.CopyOut

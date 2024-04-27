@@ -28,14 +28,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline atf_cov::FCovfile::FCovfile() {
-    atf_cov::FCovfile_Init(*this);
-}
-
-inline atf_cov::FCovfile::~FCovfile() {
-    atf_cov::FCovfile_Uninit(*this);
-}
-
 
 // --- atf_cov.FCovfile..Init
 // Set all fields to initial values.
@@ -45,14 +37,16 @@ inline void atf_cov::FCovfile_Init(atf_cov::FCovfile& covfile) {
     covfile.exe = u32(0);
     covfile.hit = u32(0);
 }
-inline atf_cov::FCovline::FCovline() {
-    atf_cov::FCovline_Init(*this);
+
+// --- atf_cov.FCovfile..Ctor
+inline  atf_cov::FCovfile::FCovfile() {
+    atf_cov::FCovfile_Init(*this);
 }
 
-inline atf_cov::FCovline::~FCovline() {
-    atf_cov::FCovline_Uninit(*this);
+// --- atf_cov.FCovfile..Dtor
+inline  atf_cov::FCovfile::~FCovfile() {
+    atf_cov::FCovfile_Uninit(*this);
 }
-
 
 // --- atf_cov.FCovline..Init
 // Set all fields to initial values.
@@ -63,14 +57,16 @@ inline void atf_cov::FCovline_Init(atf_cov::FCovline& covline) {
     covline.gitfile_c_covline_in_ary = bool(false);
     covline.ind_covline_next = (atf_cov::FCovline*)-1; // (atf_cov.FDb.ind_covline) not-in-hash
 }
-inline atf_cov::FCovtarget::FCovtarget() {
-    atf_cov::FCovtarget_Init(*this);
+
+// --- atf_cov.FCovline..Ctor
+inline  atf_cov::FCovline::FCovline() {
+    atf_cov::FCovline_Init(*this);
 }
 
-inline atf_cov::FCovtarget::~FCovtarget() {
-    atf_cov::FCovtarget_Uninit(*this);
+// --- atf_cov.FCovline..Dtor
+inline  atf_cov::FCovline::~FCovline() {
+    atf_cov::FCovline_Uninit(*this);
 }
-
 
 // --- atf_cov.FCovtarget..Init
 // Set all fields to initial values.
@@ -80,9 +76,20 @@ inline void atf_cov::FCovtarget_Init(atf_cov::FCovtarget& covtarget) {
     covtarget.exe = u32(0);
     covtarget.hit = u32(0);
 }
-inline atf_cov::trace::trace() {
+
+// --- atf_cov.FCovtarget..Ctor
+inline  atf_cov::FCovtarget::FCovtarget() {
+    atf_cov::FCovtarget_Init(*this);
 }
 
+// --- atf_cov.FCovtarget..Dtor
+inline  atf_cov::FCovtarget::~FCovtarget() {
+    atf_cov::FCovtarget_Uninit(*this);
+}
+
+// --- atf_cov.trace..Ctor
+inline  atf_cov::trace::trace() {
+}
 
 // --- atf_cov.FDb.covline.EmptyQ
 // Return true if index is empty
@@ -612,14 +619,6 @@ inline void atf_cov::_db_tgtcov_curs_Next(_db_tgtcov_curs &curs) {
 inline atf_cov::FTgtcov& atf_cov::_db_tgtcov_curs_Access(_db_tgtcov_curs &curs) {
     return tgtcov_qFind(u64(curs.index));
 }
-inline atf_cov::FGitfile::FGitfile() {
-    atf_cov::FGitfile_Init(*this);
-}
-
-inline atf_cov::FGitfile::~FGitfile() {
-    atf_cov::FGitfile_Uninit(*this);
-}
-
 
 // --- atf_cov.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -754,14 +753,16 @@ inline void atf_cov::gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs) {
 inline atf_cov::FCovline& atf_cov::gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline atf_cov::FTarget::FTarget() {
-    atf_cov::FTarget_Init(*this);
+
+// --- atf_cov.FGitfile..Ctor
+inline  atf_cov::FGitfile::FGitfile() {
+    atf_cov::FGitfile_Init(*this);
 }
 
-inline atf_cov::FTarget::~FTarget() {
-    atf_cov::FTarget_Uninit(*this);
+// --- atf_cov.FGitfile..Dtor
+inline  atf_cov::FGitfile::~FGitfile() {
+    atf_cov::FGitfile_Uninit(*this);
 }
-
 
 // --- atf_cov.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
@@ -896,14 +897,16 @@ inline void atf_cov::target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) {
 inline atf_cov::FTargsrc& atf_cov::target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline atf_cov::FTargsrc::FTargsrc() {
-    atf_cov::FTargsrc_Init(*this);
+
+// --- atf_cov.FTarget..Ctor
+inline  atf_cov::FTarget::FTarget() {
+    atf_cov::FTarget_Init(*this);
 }
 
-inline atf_cov::FTargsrc::~FTargsrc() {
-    atf_cov::FTargsrc_Uninit(*this);
+// --- atf_cov.FTarget..Dtor
+inline  atf_cov::FTarget::~FTarget() {
+    atf_cov::FTarget_Uninit(*this);
 }
-
 
 // --- atf_cov.FTargsrc..Init
 // Set all fields to initial values.
@@ -913,29 +916,32 @@ inline void atf_cov::FTargsrc_Init(atf_cov::FTargsrc& targsrc) {
     targsrc.target_c_targsrc_in_ary = bool(false);
     targsrc.ind_targsrc_next = (atf_cov::FTargsrc*)-1; // (atf_cov.FDb.ind_targsrc) not-in-hash
 }
-inline atf_cov::FTgtcov::FTgtcov() {
-    atf_cov::FTgtcov_Init(*this);
+
+// --- atf_cov.FTargsrc..Ctor
+inline  atf_cov::FTargsrc::FTargsrc() {
+    atf_cov::FTargsrc_Init(*this);
 }
 
-inline atf_cov::FTgtcov::~FTgtcov() {
-    atf_cov::FTgtcov_Uninit(*this);
+// --- atf_cov.FTargsrc..Dtor
+inline  atf_cov::FTargsrc::~FTargsrc() {
+    atf_cov::FTargsrc_Uninit(*this);
 }
-
 
 // --- atf_cov.FTgtcov..Init
 // Set all fields to initial values.
 inline void atf_cov::FTgtcov_Init(atf_cov::FTgtcov& tgtcov) {
     tgtcov.ind_tgtcov_next = (atf_cov::FTgtcov*)-1; // (atf_cov.FDb.ind_tgtcov) not-in-hash
 }
-inline atf_cov::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_cov::FieldId::FieldId(atf_cov_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_cov::FieldId::FieldId() {
-    atf_cov::FieldId_Init(*this);
+
+// --- atf_cov.FTgtcov..Ctor
+inline  atf_cov::FTgtcov::FTgtcov() {
+    atf_cov::FTgtcov_Init(*this);
 }
 
+// --- atf_cov.FTgtcov..Dtor
+inline  atf_cov::FTgtcov::~FTgtcov() {
+    atf_cov::FTgtcov_Uninit(*this);
+}
 
 // --- atf_cov.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -950,7 +956,7 @@ inline void atf_cov::value_SetEnum(atf_cov::FieldId& parent, atf_cov_FieldIdEnum
 }
 
 // --- atf_cov.FieldId.value.Cast
-inline atf_cov::FieldId::operator atf_cov_FieldIdEnum () const {
+inline  atf_cov::FieldId::operator atf_cov_FieldIdEnum() const {
     return atf_cov_FieldIdEnum((*this).value);
 }
 
@@ -960,37 +966,21 @@ inline void atf_cov::FieldId_Init(atf_cov::FieldId& parent) {
     parent.value = i32(-1);
 }
 
-inline bool atf_cov::Phase::operator ==(const atf_cov::Phase &rhs) const {
-    return atf_cov::Phase_Eq(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+// --- atf_cov.FieldId..Ctor
+inline  atf_cov::FieldId::FieldId() {
+    atf_cov::FieldId_Init(*this);
 }
 
-inline bool atf_cov::Phase::operator !=(const atf_cov::Phase &rhs) const {
-    return !atf_cov::Phase_Eq(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+// --- atf_cov.FieldId..FieldwiseCtor
+inline  atf_cov::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
-inline bool atf_cov::Phase::operator <(const atf_cov::Phase &rhs) const {
-    return atf_cov::Phase_Lt(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+// --- atf_cov.FieldId..EnumCtor
+inline  atf_cov::FieldId::FieldId(atf_cov_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
-
-inline bool atf_cov::Phase::operator >(const atf_cov::Phase &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_cov::Phase::operator <=(const atf_cov::Phase &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_cov::Phase::operator >=(const atf_cov::Phase &rhs) const {
-    return !(*this < rhs);
-}
-
-inline bool atf_cov::Phase::operator ==(atf_cov_Phase_value_Enum rhs) const {
-    return atf_cov::Phase_EqEnum(const_cast<atf_cov::Phase&>(*this),rhs);
-}
-inline atf_cov::Phase::Phase() {
-    atf_cov::Phase_Init(*this);
-}
-
 
 // --- atf_cov.Phase.value.GetEnum
 // Get value of field as enum type
@@ -1002,6 +992,36 @@ inline atf_cov_Phase_value_Enum atf_cov::value_GetEnum(const atf_cov::Phase& par
 // Set value of field from enum type.
 inline void atf_cov::value_SetEnum(atf_cov::Phase& parent, atf_cov_Phase_value_Enum rhs) {
     parent.value = u8(rhs);
+}
+
+// --- atf_cov.Phase..EqOp
+inline bool atf_cov::Phase::operator ==(const atf_cov::Phase &rhs) const {
+    return atf_cov::Phase_Eq(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+}
+
+// --- atf_cov.Phase..NeOp
+inline bool atf_cov::Phase::operator !=(const atf_cov::Phase &rhs) const {
+    return !atf_cov::Phase_Eq(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+}
+
+// --- atf_cov.Phase..LtOp
+inline bool atf_cov::Phase::operator <(const atf_cov::Phase &rhs) const {
+    return atf_cov::Phase_Lt(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
+}
+
+// --- atf_cov.Phase..GtOp
+inline bool atf_cov::Phase::operator >(const atf_cov::Phase &rhs) const {
+    return atf_cov::Phase_Lt(const_cast<atf_cov::Phase&>(rhs),const_cast<atf_cov::Phase&>(*this));
+}
+
+// --- atf_cov.Phase..LeOp
+inline bool atf_cov::Phase::operator <=(const atf_cov::Phase &rhs) const {
+    return !atf_cov::Phase_Lt(const_cast<atf_cov::Phase&>(rhs),const_cast<atf_cov::Phase&>(*this));
+}
+
+// --- atf_cov.Phase..GeOp
+inline bool atf_cov::Phase::operator >=(const atf_cov::Phase &rhs) const {
+    return !atf_cov::Phase_Lt(const_cast<atf_cov::Phase&>(*this),const_cast<atf_cov::Phase&>(rhs));
 }
 
 // --- atf_cov.Phase..Lt
@@ -1073,18 +1093,19 @@ inline bool atf_cov::Phase_Update(atf_cov::Phase &lhs, atf_cov::Phase rhs) {
 
 // --- atf_cov.Phase..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool atf_cov::Phase_EqEnum(atf_cov::Phase lhs, atf_cov_Phase_value_Enum rhs) {
-    return atf_cov_Phase_value_Enum(lhs.value) == rhs;
-}
-inline atf_cov::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_cov::TableId::TableId(atf_cov_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_cov::TableId::TableId() {
-    atf_cov::TableId_Init(*this);
+inline bool atf_cov::Phase::operator ==(atf_cov_Phase_value_Enum rhs) const {
+    return atf_cov_Phase_value_Enum(value) == rhs;
 }
 
+// --- atf_cov.Phase..Ctor
+inline  atf_cov::Phase::Phase() {
+    atf_cov::Phase_Init(*this);
+}
+
+// --- atf_cov.Phase..EnumCtor
+inline  atf_cov::Phase::Phase(atf_cov_Phase_value_Enum arg) {
+    this->value = u8(arg);
+}
 
 // --- atf_cov.TableId.value.GetEnum
 // Get value of field as enum type
@@ -1099,7 +1120,7 @@ inline void atf_cov::value_SetEnum(atf_cov::TableId& parent, atf_cov_TableIdEnum
 }
 
 // --- atf_cov.TableId.value.Cast
-inline atf_cov::TableId::operator atf_cov_TableIdEnum () const {
+inline  atf_cov::TableId::operator atf_cov_TableIdEnum() const {
     return atf_cov_TableIdEnum((*this).value);
 }
 
@@ -1107,6 +1128,22 @@ inline atf_cov::TableId::operator atf_cov_TableIdEnum () const {
 // Set all fields to initial values.
 inline void atf_cov::TableId_Init(atf_cov::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_cov.TableId..Ctor
+inline  atf_cov::TableId::TableId() {
+    atf_cov::TableId_Init(*this);
+}
+
+// --- atf_cov.TableId..FieldwiseCtor
+inline  atf_cov::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_cov.TableId..EnumCtor
+inline  atf_cov::TableId::TableId(atf_cov_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_cov::FCovline &row) {// cfmt:atf_cov.FCovline.String

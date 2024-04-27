@@ -27,9 +27,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-inline orgfile::trace::trace() {
-}
 
+// --- orgfile.trace..Ctor
+inline  orgfile::trace::trace() {
+}
 
 // --- orgfile.FDb.ind_filename.EmptyQ
 // Return true if hash is empty
@@ -188,14 +189,6 @@ inline void orgfile::_db_timefmt_curs_Next(_db_timefmt_curs &curs) {
 inline orgfile::FTimefmt& orgfile::_db_timefmt_curs_Access(_db_timefmt_curs &curs) {
     return timefmt_qFind(u64(curs.index));
 }
-inline orgfile::FFilehash::FFilehash() {
-    orgfile::FFilehash_Init(*this);
-}
-
-inline orgfile::FFilehash::~FFilehash() {
-    orgfile::FFilehash_Uninit(*this);
-}
-
 
 // --- orgfile.FFilehash.c_filename.EmptyQ
 // Return true if index is empty
@@ -288,14 +281,16 @@ inline void orgfile::filehash_c_filename_curs_Next(filehash_c_filename_curs &cur
 inline orgfile::FFilename& orgfile::filehash_c_filename_curs_Access(filehash_c_filename_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline orgfile::FFilename::FFilename() {
-    orgfile::FFilename_Init(*this);
+
+// --- orgfile.FFilehash..Ctor
+inline  orgfile::FFilehash::FFilehash() {
+    orgfile::FFilehash_Init(*this);
 }
 
-inline orgfile::FFilename::~FFilename() {
-    orgfile::FFilename_Uninit(*this);
+// --- orgfile.FFilehash..Dtor
+inline  orgfile::FFilehash::~FFilehash() {
+    orgfile::FFilehash_Uninit(*this);
 }
-
 
 // --- orgfile.FFilename..Init
 // Set all fields to initial values.
@@ -305,25 +300,27 @@ inline void orgfile::FFilename_Init(orgfile::FFilename& filename) {
     filename.filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.filename) not-in-tpool's freelist
     filename.ind_filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.ind_filename) not-in-hash
 }
-inline orgfile::FTimefmt::FTimefmt() {
-    orgfile::FTimefmt_Init(*this);
+
+// --- orgfile.FFilename..Ctor
+inline  orgfile::FFilename::FFilename() {
+    orgfile::FFilename_Init(*this);
 }
 
+// --- orgfile.FFilename..Dtor
+inline  orgfile::FFilename::~FFilename() {
+    orgfile::FFilename_Uninit(*this);
+}
 
 // --- orgfile.FTimefmt..Init
 // Set all fields to initial values.
 inline void orgfile::FTimefmt_Init(orgfile::FTimefmt& timefmt) {
     timefmt.dirname = bool(false);
 }
-inline orgfile::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline orgfile::FieldId::FieldId(orgfile_FieldIdEnum arg) { this->value = i32(arg); }
-inline orgfile::FieldId::FieldId() {
-    orgfile::FieldId_Init(*this);
-}
 
+// --- orgfile.FTimefmt..Ctor
+inline  orgfile::FTimefmt::FTimefmt() {
+    orgfile::FTimefmt_Init(*this);
+}
 
 // --- orgfile.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -338,7 +335,7 @@ inline void orgfile::value_SetEnum(orgfile::FieldId& parent, orgfile_FieldIdEnum
 }
 
 // --- orgfile.FieldId.value.Cast
-inline orgfile::FieldId::operator orgfile_FieldIdEnum () const {
+inline  orgfile::FieldId::operator orgfile_FieldIdEnum() const {
     return orgfile_FieldIdEnum((*this).value);
 }
 
@@ -347,15 +344,22 @@ inline orgfile::FieldId::operator orgfile_FieldIdEnum () const {
 inline void orgfile::FieldId_Init(orgfile::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline orgfile::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline orgfile::TableId::TableId(orgfile_TableIdEnum arg) { this->value = i32(arg); }
-inline orgfile::TableId::TableId() {
-    orgfile::TableId_Init(*this);
+
+// --- orgfile.FieldId..Ctor
+inline  orgfile::FieldId::FieldId() {
+    orgfile::FieldId_Init(*this);
 }
 
+// --- orgfile.FieldId..FieldwiseCtor
+inline  orgfile::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- orgfile.FieldId..EnumCtor
+inline  orgfile::FieldId::FieldId(orgfile_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- orgfile.TableId.value.GetEnum
 // Get value of field as enum type
@@ -370,7 +374,7 @@ inline void orgfile::value_SetEnum(orgfile::TableId& parent, orgfile_TableIdEnum
 }
 
 // --- orgfile.TableId.value.Cast
-inline orgfile::TableId::operator orgfile_TableIdEnum () const {
+inline  orgfile::TableId::operator orgfile_TableIdEnum() const {
     return orgfile_TableIdEnum((*this).value);
 }
 
@@ -379,12 +383,30 @@ inline orgfile::TableId::operator orgfile_TableIdEnum () const {
 inline void orgfile::TableId_Init(orgfile::TableId& parent) {
     parent.value = i32(-1);
 }
-inline orgfile::dedup::dedup() {
+
+// --- orgfile.TableId..Ctor
+inline  orgfile::TableId::TableId() {
+    orgfile::TableId_Init(*this);
 }
 
-inline orgfile::move::move() {
+// --- orgfile.TableId..FieldwiseCtor
+inline  orgfile::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- orgfile.TableId..EnumCtor
+inline  orgfile::TableId::TableId(orgfile_TableIdEnum arg) {
+    this->value = i32(arg);
+}
+
+// --- orgfile.dedup..Ctor
+inline  orgfile::dedup::dedup() {
+}
+
+// --- orgfile.move..Ctor
+inline  orgfile::move::move() {
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const orgfile::trace &row) {// cfmt:orgfile.trace.String
     orgfile::trace_Print(const_cast<orgfile::trace&>(row), str);

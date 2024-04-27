@@ -26,15 +26,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/ams_gen.inl.h"
 //#pragma endinclude
-inline amsdb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) { this->value = i32(arg); }
-inline amsdb::FieldId::FieldId() {
-    amsdb::FieldId_Init(*this);
-}
-
 
 // --- amsdb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -49,7 +40,7 @@ inline void amsdb::value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) 
 }
 
 // --- amsdb.FieldId.value.Cast
-inline amsdb::FieldId::operator amsdb_FieldIdEnum () const {
+inline  amsdb::FieldId::operator amsdb_FieldIdEnum() const {
     return amsdb_FieldIdEnum((*this).value);
 }
 
@@ -58,19 +49,37 @@ inline amsdb::FieldId::operator amsdb_FieldIdEnum () const {
 inline void amsdb::FieldId_Init(amsdb::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline amsdb::ProcType::ProcType() {
-    amsdb::ProcType_Init(*this);
+
+// --- amsdb.FieldId..Ctor
+inline  amsdb::FieldId::FieldId() {
+    amsdb::FieldId_Init(*this);
 }
 
+// --- amsdb.FieldId..FieldwiseCtor
+inline  amsdb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amsdb.FieldId..EnumCtor
+inline  amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- amsdb.ProcType..Init
 // Set all fields to initial values.
 inline void amsdb::ProcType_Init(amsdb::ProcType& parent) {
     parent.id = u32(0);
 }
-inline amsdb::StreamType::StreamType() {
+
+// --- amsdb.ProcType..Ctor
+inline  amsdb::ProcType::ProcType() {
+    amsdb::ProcType_Init(*this);
 }
 
+// --- amsdb.StreamType..Ctor
+inline  amsdb::StreamType::StreamType() {
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::FieldId &row) {// cfmt:amsdb.FieldId.String
     amsdb::FieldId_Print(const_cast<amsdb::FieldId&>(row), str);

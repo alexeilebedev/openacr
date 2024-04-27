@@ -24,58 +24,6 @@
 
 #pragma once
 //#pragma endinclude
-inline cstring& cstring::operator =(const cstring &rhs) {
-    algo::ch_Setary(*this, (algo::cstring&)rhs);
-    return *this;
-}
-
-inline  cstring::cstring(const algo::strptr &rhs) {
-    algo::cstring_Init(*this);
-    algo::ch_Addary(*this, aryptr<char>((char*)rhs.elems, rhs.n_elems));
-}
-
-inline cstring::cstring(const tempstr &rhs) {
-    ch_elems = rhs.ch_elems;
-    ch_n     = rhs.ch_n;
-    ch_max   = rhs.ch_max;
-    cstring &r  = (cstring&) rhs;
-    r.ch_elems     = 0;
-    r.ch_n   = 0;
-    r.ch_max = 0;
-}
-
-
-inline bool algo::cstring::operator ==(const algo::cstring &rhs) const {
-    return algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
-}
-
-inline bool algo::cstring::operator !=(const algo::cstring &rhs) const {
-    return !algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
-}
-
-inline bool algo::cstring::operator <(const algo::cstring &rhs) const {
-    return algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
-}
-
-inline bool algo::cstring::operator >(const algo::cstring &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::cstring::operator <=(const algo::cstring &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::cstring::operator >=(const algo::cstring &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::cstring::cstring() {
-    algo::cstring_Init(*this);
-}
-
-inline algo::cstring::~cstring() {
-    algo::cstring_Uninit(*this);
-}
-
 
 // --- algo.cstring.ch.EmptyQ
 // Return true if index is empty
@@ -102,6 +50,20 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::cstring& parent) {
 // Return pointer to last element of array, or NULL if array is empty
 inline char* algo::ch_Last(algo::cstring& parent) {
     return ch_Find(parent, u64(parent.ch_n-1));
+}
+
+// --- algo.cstring.ch.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::cstring::operator =(const algo::aryptr<char> &rhs) {
+    ch_Setary(*this, rhs);
+}
+
+// --- algo.cstring.ch.CtorAryptr
+inline  algo::cstring::cstring(const algo::aryptr<char> &rhs) {
+    ch_elems 	= 0; // (algo.cstring.ch)
+    ch_n     	= 0; // (algo.cstring.ch)
+    ch_max   	= 0; // (algo.cstring.ch)
+    ch_Addary(*this, rhs);
 }
 
 // --- algo.cstring.ch.Max
@@ -151,7 +113,7 @@ inline u64 algo::ch_rowid_Get(algo::cstring& parent, char &elem) {
 }
 
 // --- algo.cstring.ch.Cast
-inline algo::cstring::operator algo::strptr () const {
+inline  algo::cstring::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -178,6 +140,36 @@ inline bool algo::cstring_ch_curs_ValidQ(cstring_ch_curs &curs) {
 // item access
 inline char& algo::cstring_ch_curs_Access(cstring_ch_curs &curs) {
     return curs.elems[curs.index];
+}
+
+// --- algo.cstring..EqOp
+inline bool algo::cstring::operator ==(const algo::cstring &rhs) const {
+    return algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
+}
+
+// --- algo.cstring..NeOp
+inline bool algo::cstring::operator !=(const algo::cstring &rhs) const {
+    return !algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
+}
+
+// --- algo.cstring..LtOp
+inline bool algo::cstring::operator <(const algo::cstring &rhs) const {
+    return algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
+}
+
+// --- algo.cstring..GtOp
+inline bool algo::cstring::operator >(const algo::cstring &rhs) const {
+    return algo::cstring_Lt(const_cast<algo::cstring&>(rhs),const_cast<algo::cstring&>(*this));
+}
+
+// --- algo.cstring..LeOp
+inline bool algo::cstring::operator <=(const algo::cstring &rhs) const {
+    return !algo::cstring_Lt(const_cast<algo::cstring&>(rhs),const_cast<algo::cstring&>(*this));
+}
+
+// --- algo.cstring..GeOp
+inline bool algo::cstring::operator >=(const algo::cstring &rhs) const {
+    return !algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 // --- algo.cstring..Lt
@@ -216,23 +208,26 @@ inline bool algo::cstring_Update(algo::cstring &lhs, algo::cstring& rhs) {
     }
     return ret;
 }
-inline algo::Attr::Attr(const algo::strptr&            in_name
-        ,const algo::strptr&            in_value)
-    : name(in_name)
-    , value(in_value)
-{
+
+// --- algo.cstring..Ctor
+inline  algo::cstring::cstring() {
+    algo::cstring_Init(*this);
 }
 
+// --- algo.cstring..Dtor
+inline  algo::cstring::~cstring() {
+    algo::cstring_Uninit(*this);
+}
+
+// --- algo.Attr..EqOp
 inline bool algo::Attr::operator ==(const algo::Attr &rhs) const {
     return algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
 }
 
+// --- algo.Attr..NeOp
 inline bool algo::Attr::operator !=(const algo::Attr &rhs) const {
     return !algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
 }
-inline algo::Attr::Attr() {
-}
-
 
 // --- algo.Attr..Cmp
 inline i32 algo::Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) {
@@ -255,15 +250,17 @@ inline bool algo::Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) {
     retval = algo::cstring_Eq(lhs.value, rhs.value);
     return retval;
 }
-inline algo::Bool::Bool(u8                             in_value)
-    : value(in_value)
-{
-}
-inline algo::Bool::Bool(algo_BoolEnum arg) { this->value = u8(arg); }
-inline algo::Bool::Bool() {
-    algo::Bool_Init(*this);
+
+// --- algo.Attr..Ctor
+inline  algo::Attr::Attr() {
 }
 
+// --- algo.Attr..FieldwiseCtor
+inline  algo::Attr::Attr(const algo::strptr& in_name, const algo::strptr& in_value)
+    : name(in_name)
+    , value(in_value)
+ {
+}
 
 // --- algo.Bool.value.GetEnum
 // Get value of field as enum type
@@ -278,7 +275,7 @@ inline void algo::value_SetEnum(algo::Bool& parent, algo_BoolEnum rhs) {
 }
 
 // --- algo.Bool.value.Cast
-inline algo::Bool::operator algo_BoolEnum () const {
+inline  algo::Bool::operator algo_BoolEnum() const {
     return algo_BoolEnum((*this).value);
 }
 
@@ -287,14 +284,22 @@ inline algo::Bool::operator algo_BoolEnum () const {
 inline void algo::Bool_Init(algo::Bool& parent) {
     parent.value = u8(false);
 }
-inline algo::ByteAry::ByteAry() {
-    algo::ByteAry_Init(*this);
+
+// --- algo.Bool..Ctor
+inline  algo::Bool::Bool() {
+    algo::Bool_Init(*this);
 }
 
-inline algo::ByteAry::~ByteAry() {
-    algo::ByteAry_Uninit(*this);
+// --- algo.Bool..FieldwiseCtor
+inline  algo::Bool::Bool(u8 in_value)
+    : value(in_value)
+ {
 }
 
+// --- algo.Bool..EnumCtor
+inline  algo::Bool::Bool(algo_BoolEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- algo.ByteAry.ary.EmptyQ
 // Return true if index is empty
@@ -321,6 +326,20 @@ inline algo::aryptr<u8> algo::ary_Getary(const algo::ByteAry& parent) {
 // Return pointer to last element of array, or NULL if array is empty
 inline u8* algo::ary_Last(algo::ByteAry& parent) {
     return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.ByteAry.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::ByteAry::operator =(const algo::aryptr<u8> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.ByteAry.ary.CtorAryptr
+inline  algo::ByteAry::ByteAry(const algo::aryptr<u8> &rhs) {
+    ary_elems 	= 0; // (algo.ByteAry.ary)
+    ary_n     	= 0; // (algo.ByteAry.ary)
+    ary_max   	= 0; // (algo.ByteAry.ary)
+    ary_Addary(*this, rhs);
 }
 
 // --- algo.ByteAry.ary.Max
@@ -370,7 +389,7 @@ inline u64 algo::ary_rowid_Get(algo::ByteAry& parent, u8 &elem) {
 }
 
 // --- algo.ByteAry.ary.Cast
-inline algo::ByteAry::operator algo::memptr () const {
+inline  algo::ByteAry::operator algo::memptr() const {
     return ary_Getary(*this);
 }
 
@@ -406,10 +425,16 @@ inline void algo::ByteAry_Init(algo::ByteAry& parent) {
     parent.ary_n     	= 0; // (algo.ByteAry.ary)
     parent.ary_max   	= 0; // (algo.ByteAry.ary)
 }
-inline algo::Charset::Charset() {
-    algo::Charset_Init(*this);
+
+// --- algo.ByteAry..Ctor
+inline  algo::ByteAry::ByteAry() {
+    algo::ByteAry_Init(*this);
 }
 
+// --- algo.ByteAry..Dtor
+inline  algo::ByteAry::~ByteAry() {
+    algo::ByteAry_Uninit(*this);
+}
 
 // --- algo.Charset.ch.NBits
 // Get max # of bits in the bitset
@@ -609,10 +634,8 @@ inline i32 algo::ch_N(const algo::Charset& parent) {
 // --- algo.Charset.ch.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void algo::ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs) {
-    int n = 8 < rhs.n_elems ? 8 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.ch_elems[i] = rhs[i];
-    }
+    int n = i32_Min(8, rhs.n_elems);
+    memcpy(parent.ch_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- algo.Charset.ch.qFind
@@ -674,21 +697,10 @@ inline void algo::Charset_Init(algo::Charset& parent) {
     }
 }
 
-inline bool algo::Smallstr150::operator ==(const algo::Smallstr150 &rhs) const {
-    return algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
+// --- algo.Charset..Ctor
+inline  algo::Charset::Charset() {
+    algo::Charset_Init(*this);
 }
-
-inline bool algo::Smallstr150::operator !=(const algo::Smallstr150 &rhs) const {
-    return !algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
-}
-
-inline bool algo::Smallstr150::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr150_EqStrptr(const_cast<algo::Smallstr150&>(*this),rhs);
-}
-inline algo::Smallstr150::Smallstr150() {
-    algo::Smallstr150_Init(*this);
-}
-
 
 // --- algo.Smallstr150.ch.Add
 // Append character to string.
@@ -750,27 +762,24 @@ inline void algo::Smallstr150::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr150.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr150::operator =(const algo::Smallstr150& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr150.ch.Ctor
-inline  algo::Smallstr150::Smallstr150(const algo::Smallstr150 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr150.ch.CtorStrptr
 inline  algo::Smallstr150::Smallstr150(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr150.ch.Cast
-inline algo::Smallstr150::operator algo::strptr () const {
+inline  algo::Smallstr150::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr150..EqOp
+inline bool algo::Smallstr150::operator ==(const algo::Smallstr150 &rhs) const {
+    return algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
+}
+
+// --- algo.Smallstr150..NeOp
+inline bool algo::Smallstr150::operator !=(const algo::Smallstr150 &rhs) const {
+    return !algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
 }
 
 // --- algo.Smallstr150..Cmp
@@ -793,20 +802,31 @@ inline bool algo::Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& rhs)
     return retval;
 }
 
-// --- algo.Smallstr150..EqStrptr
-inline bool algo::Smallstr150_EqStrptr(const algo::Smallstr150& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::Comment::Comment(const algo::strptr&            in_value)
-    : value(in_value)
-{
-}
-inline algo::Comment::Comment() {
+// --- algo.Smallstr150..EqOpAryptr
+inline bool algo::Smallstr150::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.Smallstr150..AssignOp
+inline algo::Smallstr150& algo::Smallstr150::operator =(const algo::Smallstr150 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr150..Ctor
+inline  algo::Smallstr150::Smallstr150() {
+    algo::Smallstr150_Init(*this);
+}
+
+// --- algo.Smallstr150..CopyCtor
+inline  algo::Smallstr150::Smallstr150(const algo::Smallstr150 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
 
 // --- algo.Comment.value.Cast
-inline algo::Comment::operator algo::strptr () const {
+inline  algo::Comment::operator algo::strptr() const {
     return algo::strptr((*this).value);
 }
 
@@ -824,21 +844,15 @@ inline bool algo::Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) {
     return retval;
 }
 
-inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
-    return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+// --- algo.Comment..Ctor
+inline  algo::Comment::Comment() {
 }
 
-inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
-    return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+// --- algo.Comment..FieldwiseCtor
+inline  algo::Comment::Comment(const algo::strptr& in_value)
+    : value(in_value)
+ {
 }
-
-inline bool algo::Smallstr250::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr250_EqStrptr(const_cast<algo::Smallstr250&>(*this),rhs);
-}
-inline algo::Smallstr250::Smallstr250() {
-    algo::Smallstr250_Init(*this);
-}
-
 
 // --- algo.Smallstr250.ch.Add
 // Append character to string.
@@ -900,27 +914,24 @@ inline void algo::Smallstr250::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr250.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr250::operator =(const algo::Smallstr250& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr250.ch.Ctor
-inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr250.ch.CtorStrptr
 inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr250.ch.Cast
-inline algo::Smallstr250::operator algo::strptr () const {
+inline  algo::Smallstr250::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr250..EqOp
+inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
+    return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
+}
+
+// --- algo.Smallstr250..NeOp
+inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
+    return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
 }
 
 // --- algo.Smallstr250..Cmp
@@ -943,54 +954,73 @@ inline bool algo::Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& rhs)
     return retval;
 }
 
-// --- algo.Smallstr250..EqStrptr
-inline bool algo::Smallstr250_EqStrptr(const algo::Smallstr250& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr250..EqOpAryptr
+inline bool algo::Smallstr250::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
-inline algo::CppExpr::CppExpr(const algo::strptr&            in_value)
+
+// --- algo.Smallstr250..AssignOp
+inline algo::Smallstr250& algo::Smallstr250::operator =(const algo::Smallstr250 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr250..Ctor
+inline  algo::Smallstr250::Smallstr250() {
+    algo::Smallstr250_Init(*this);
+}
+
+// --- algo.Smallstr250..CopyCtor
+inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
+
+// --- algo.CppExpr..Ctor
+inline  algo::CppExpr::CppExpr() {
+}
+
+// --- algo.CppExpr..FieldwiseCtor
+inline  algo::CppExpr::CppExpr(const algo::strptr& in_value)
     : value(in_value)
-{
+ {
 }
-inline algo::CppExpr::CppExpr() {
-}
-
-inline algo::UnTime::UnTime(i64                            in_value)
-    : value(in_value)
-{
-}
-
-inline bool algo::UnTime::operator ==(const algo::UnTime &rhs) const {
-    return algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
-}
-
-inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const {
-    return !algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
-}
-
-inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const {
-    return algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
-}
-
-inline bool algo::UnTime::operator >(const algo::UnTime &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::UnTime::operator <=(const algo::UnTime &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::UnTime::operator >=(const algo::UnTime &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::UnTime::UnTime() {
-    algo::UnTime_Init(*this);
-}
-
 
 // --- algo.UnTime..Hash
 inline u32 algo::UnTime_Hash(u32 prev, algo::UnTime rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.UnTime..EqOp
+inline bool algo::UnTime::operator ==(const algo::UnTime &rhs) const {
+    return algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
+}
+
+// --- algo.UnTime..NeOp
+inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const {
+    return !algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
+}
+
+// --- algo.UnTime..LtOp
+inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const {
+    return algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
+}
+
+// --- algo.UnTime..GtOp
+inline bool algo::UnTime::operator >(const algo::UnTime &rhs) const {
+    return algo::UnTime_Lt(const_cast<algo::UnTime&>(rhs),const_cast<algo::UnTime&>(*this));
+}
+
+// --- algo.UnTime..LeOp
+inline bool algo::UnTime::operator <=(const algo::UnTime &rhs) const {
+    return !algo::UnTime_Lt(const_cast<algo::UnTime&>(rhs),const_cast<algo::UnTime&>(*this));
+}
+
+// --- algo.UnTime..GeOp
+inline bool algo::UnTime::operator >=(const algo::UnTime &rhs) const {
+    return !algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 // --- algo.UnTime..Lt
@@ -1059,36 +1089,42 @@ inline bool algo::UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) {
     }
     return ret;
 }
-inline algo::DateCache::DateCache() {
+
+// --- algo.UnTime..Ctor
+inline  algo::UnTime::UnTime() {
+    algo::UnTime_Init(*this);
 }
 
-inline algo::DayRange::DayRange(algo::UnTime                   in_start
-        ,algo::UnTime                   in_end)
+// --- algo.UnTime..FieldwiseCtor
+inline  algo::UnTime::UnTime(i64 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.DateCache..Ctor
+inline  algo::DateCache::DateCache() {
+}
+
+// --- algo.DayRange..Ctor
+inline  algo::DayRange::DayRange() {
+}
+
+// --- algo.DayRange..FieldwiseCtor
+inline  algo::DayRange::DayRange(algo::UnTime in_start, algo::UnTime in_end)
     : start(in_start)
     , end(in_end)
-{
-}
-inline algo::DayRange::DayRange() {
+ {
 }
 
-inline algo::Decimal::Decimal(i32                            in_exponent
-        ,i64                            in_mantissa)
-    : exponent(in_exponent)
-    , mantissa(in_mantissa)
-{
-}
-
+// --- algo.Decimal..EqOp
 inline bool algo::Decimal::operator ==(const algo::Decimal &rhs) const {
     return algo::Decimal_Eq(const_cast<algo::Decimal&>(*this),const_cast<algo::Decimal&>(rhs));
 }
 
+// --- algo.Decimal..NeOp
 inline bool algo::Decimal::operator !=(const algo::Decimal &rhs) const {
     return !algo::Decimal_Eq(const_cast<algo::Decimal&>(*this),const_cast<algo::Decimal&>(rhs));
 }
-inline algo::Decimal::Decimal() {
-    algo::Decimal_Init(*this);
-}
-
 
 // --- algo.Decimal..Cmp
 inline i32 algo::Decimal_Cmp(algo::Decimal lhs, algo::Decimal rhs) {
@@ -1118,25 +1154,31 @@ inline bool algo::Decimal_Eq(algo::Decimal lhs, algo::Decimal rhs) {
     retval = i64_Eq(lhs.mantissa, rhs.mantissa);
     return retval;
 }
-inline algo::DirEntry::DirEntry() {
+
+// --- algo.Decimal..Ctor
+inline  algo::Decimal::Decimal() {
+    algo::Decimal_Init(*this);
+}
+
+// --- algo.Decimal..FieldwiseCtor
+inline  algo::Decimal::Decimal(i32 in_exponent, i64 in_mantissa)
+    : exponent(in_exponent)
+    , mantissa(in_mantissa)
+ {
+}
+
+// --- algo.DirEntry..Ctor
+inline  algo::DirEntry::DirEntry() {
     algo::DirEntry_Init(*this);
 }
 
-inline algo::DirEntry::~DirEntry() {
+// --- algo.DirEntry..Dtor
+inline  algo::DirEntry::~DirEntry() {
     algo::DirEntry_Uninit(*this);
 }
 
-inline algo::DryrunQ::DryrunQ(bool                           in_value)
-    : value(in_value)
-{
-}
-inline algo::DryrunQ::DryrunQ() {
-    algo::DryrunQ_Init(*this);
-}
-
-
 // --- algo.DryrunQ.value.Cast
-inline algo::DryrunQ::operator bool () const {
+inline  algo::DryrunQ::operator bool() const {
     return bool((*this).value);
 }
 
@@ -1145,15 +1187,17 @@ inline algo::DryrunQ::operator bool () const {
 inline void algo::DryrunQ_Init(algo::DryrunQ& parent) {
     parent.value = bool(false);
 }
-inline algo::EchoQ::EchoQ(bool                           in_value)
-    : value(in_value)
-{
-}
-inline algo::EchoQ::EchoQ(algo_EchoQEnum arg) { this->value = bool(arg); }
-inline algo::EchoQ::EchoQ() {
-    algo::EchoQ_Init(*this);
+
+// --- algo.DryrunQ..Ctor
+inline  algo::DryrunQ::DryrunQ() {
+    algo::DryrunQ_Init(*this);
 }
 
+// --- algo.DryrunQ..FieldwiseCtor
+inline  algo::DryrunQ::DryrunQ(bool in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.EchoQ.value.GetEnum
 // Get value of field as enum type
@@ -1168,7 +1212,7 @@ inline void algo::value_SetEnum(algo::EchoQ& parent, algo_EchoQEnum rhs) {
 }
 
 // --- algo.EchoQ.value.Cast
-inline algo::EchoQ::operator algo_EchoQEnum () const {
+inline  algo::EchoQ::operator algo_EchoQEnum() const {
     return algo_EchoQEnum((*this).value);
 }
 
@@ -1177,15 +1221,22 @@ inline algo::EchoQ::operator algo_EchoQEnum () const {
 inline void algo::EchoQ_Init(algo::EchoQ& parent) {
     parent.value = bool(false);
 }
-inline algo::Errns::Errns(u8                             in_value)
-    : value(in_value)
-{
-}
-inline algo::Errns::Errns(algo_ErrnsEnum arg) { this->value = u8(arg); }
-inline algo::Errns::Errns() {
-    algo::Errns_Init(*this);
+
+// --- algo.EchoQ..Ctor
+inline  algo::EchoQ::EchoQ() {
+    algo::EchoQ_Init(*this);
 }
 
+// --- algo.EchoQ..FieldwiseCtor
+inline  algo::EchoQ::EchoQ(bool in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.EchoQ..EnumCtor
+inline  algo::EchoQ::EchoQ(algo_EchoQEnum arg) {
+    this->value = bool(arg);
+}
 
 // --- algo.Errns.value.GetEnum
 // Get value of field as enum type
@@ -1200,7 +1251,7 @@ inline void algo::value_SetEnum(algo::Errns& parent, algo_ErrnsEnum rhs) {
 }
 
 // --- algo.Errns.value.Cast
-inline algo::Errns::operator algo_ErrnsEnum () const {
+inline  algo::Errns::operator algo_ErrnsEnum() const {
     return algo_ErrnsEnum((*this).value);
 }
 
@@ -1209,10 +1260,22 @@ inline algo::Errns::operator algo_ErrnsEnum () const {
 inline void algo::Errns_Init(algo::Errns& parent) {
     parent.value = u8(0);
 }
-inline algo::Errcode::Errcode() {
-    algo::Errcode_Init(*this);
+
+// --- algo.Errns..Ctor
+inline  algo::Errns::Errns() {
+    algo::Errns_Init(*this);
 }
 
+// --- algo.Errns..FieldwiseCtor
+inline  algo::Errns::Errns(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.Errns..EnumCtor
+inline  algo::Errns::Errns(algo_ErrnsEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- algo.Errcode.code.Get
 // Retrieve bitfield from value of field value
@@ -1251,15 +1314,11 @@ inline void algo::type_Set(algo::Errcode& parent, algo::Errns rhs) {
 inline void algo::Errcode_Init(algo::Errcode& parent) {
     parent.value = u64(0);
 }
-inline algo::FailokQ::FailokQ(bool                           in_value)
-    : value(in_value)
-{
-}
-inline algo::FailokQ::FailokQ(algo_FailokQEnum arg) { this->value = bool(arg); }
-inline algo::FailokQ::FailokQ() {
-    algo::FailokQ_Init(*this);
-}
 
+// --- algo.Errcode..Ctor
+inline  algo::Errcode::Errcode() {
+    algo::Errcode_Init(*this);
+}
 
 // --- algo.FailokQ.value.GetEnum
 // Get value of field as enum type
@@ -1274,7 +1333,7 @@ inline void algo::value_SetEnum(algo::FailokQ& parent, algo_FailokQEnum rhs) {
 }
 
 // --- algo.FailokQ.value.Cast
-inline algo::FailokQ::operator algo_FailokQEnum () const {
+inline  algo::FailokQ::operator algo_FailokQEnum() const {
     return algo_FailokQEnum((*this).value);
 }
 
@@ -1283,15 +1342,22 @@ inline algo::FailokQ::operator algo_FailokQEnum () const {
 inline void algo::FailokQ_Init(algo::FailokQ& parent) {
     parent.value = bool(false);
 }
-inline algo::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::FieldId::FieldId(algo_FieldIdEnum arg) { this->value = i32(arg); }
-inline algo::FieldId::FieldId() {
-    algo::FieldId_Init(*this);
+
+// --- algo.FailokQ..Ctor
+inline  algo::FailokQ::FailokQ() {
+    algo::FailokQ_Init(*this);
 }
 
+// --- algo.FailokQ..FieldwiseCtor
+inline  algo::FailokQ::FailokQ(bool in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.FailokQ..EnumCtor
+inline  algo::FailokQ::FailokQ(algo_FailokQEnum arg) {
+    this->value = bool(arg);
+}
 
 // --- algo.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1306,7 +1372,7 @@ inline void algo::value_SetEnum(algo::FieldId& parent, algo_FieldIdEnum rhs) {
 }
 
 // --- algo.FieldId.value.Cast
-inline algo::FieldId::operator algo_FieldIdEnum () const {
+inline  algo::FieldId::operator algo_FieldIdEnum() const {
     return algo_FieldIdEnum((*this).value);
 }
 
@@ -1315,43 +1381,57 @@ inline algo::FieldId::operator algo_FieldIdEnum () const {
 inline void algo::FieldId_Init(algo::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline algo::Fildes::Fildes(i32                            in_value)
-    : value(in_value)
-{
+
+// --- algo.FieldId..Ctor
+inline  algo::FieldId::FieldId() {
+    algo::FieldId_Init(*this);
 }
 
+// --- algo.FieldId..FieldwiseCtor
+inline  algo::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.FieldId..EnumCtor
+inline  algo::FieldId::FieldId(algo_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
+
+// --- algo.Fildes..Hash
+inline u32 algo::Fildes_Hash(u32 prev, const algo::Fildes& rhs) {
+    prev = i32_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- algo.Fildes..EqOp
 inline bool algo::Fildes::operator ==(const algo::Fildes &rhs) const {
     return algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
+// --- algo.Fildes..NeOp
 inline bool algo::Fildes::operator !=(const algo::Fildes &rhs) const {
     return !algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
+// --- algo.Fildes..LtOp
 inline bool algo::Fildes::operator <(const algo::Fildes &rhs) const {
     return algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
+// --- algo.Fildes..GtOp
 inline bool algo::Fildes::operator >(const algo::Fildes &rhs) const {
-    return rhs < *this;
+    return algo::Fildes_Lt(const_cast<algo::Fildes&>(rhs),const_cast<algo::Fildes&>(*this));
 }
 
+// --- algo.Fildes..LeOp
 inline bool algo::Fildes::operator <=(const algo::Fildes &rhs) const {
-    return !(rhs < *this);
+    return !algo::Fildes_Lt(const_cast<algo::Fildes&>(rhs),const_cast<algo::Fildes&>(*this));
 }
 
+// --- algo.Fildes..GeOp
 inline bool algo::Fildes::operator >=(const algo::Fildes &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::Fildes::Fildes() {
-    algo::Fildes_Init(*this);
-}
-
-
-// --- algo.Fildes..Hash
-inline u32 algo::Fildes_Hash(u32 prev, const algo::Fildes & rhs) {
-    prev = i32_Hash(prev, rhs.value);
-    return prev;
+    return !algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
 // --- algo.Fildes..Lt
@@ -1388,18 +1468,20 @@ inline bool algo::Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) {
     }
     return ret;
 }
-inline algo::FileFlags::FileFlags(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) { this->value = u32(arg); }
-inline algo::FileFlags::FileFlags() {
-    algo::FileFlags_Init(*this);
+
+// --- algo.Fildes..Ctor
+inline  algo::Fildes::Fildes() {
+    algo::Fildes_Init(*this);
 }
 
+// --- algo.Fildes..FieldwiseCtor
+inline  algo::Fildes::Fildes(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.FileFlags.value.Cast
-inline algo::FileFlags::operator algo_FileFlagsEnum () const {
+inline  algo::FileFlags::operator algo_FileFlagsEnum() const {
     return algo_FileFlagsEnum((*this).value);
 }
 
@@ -1536,14 +1618,22 @@ inline void algo::printerr_Set(algo::FileFlags& parent, bool rhs) {
 inline void algo::FileFlags_Init(algo::FileFlags& parent) {
     parent.value = u32(0);
 }
-inline algo::I32Dec1::I32Dec1(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I32Dec1::I32Dec1() {
-    algo::I32Dec1_Init(*this);
+
+// --- algo.FileFlags..Ctor
+inline  algo::FileFlags::FileFlags() {
+    algo::FileFlags_Init(*this);
 }
 
+// --- algo.FileFlags..FieldwiseCtor
+inline  algo::FileFlags::FileFlags(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.FileFlags..EnumCtor
+inline  algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- algo.I32Dec1.value.qSetDouble
 // Set value of field value.
@@ -1580,7 +1670,7 @@ inline i32 algo::I32Dec1_GetScale() {
 }
 
 // --- algo.I32Dec1.value.Cast
-inline algo::I32Dec1::operator i32 () const {
+inline  algo::I32Dec1::operator i32() const {
     return i32((*this).value);
 }
 
@@ -1595,14 +1685,17 @@ inline u32 algo::I32Dec1_Hash(u32 prev, algo::I32Dec1 rhs) {
 inline void algo::I32Dec1_Init(algo::I32Dec1& parent) {
     parent.value = i32(0);
 }
-inline algo::I32Dec2::I32Dec2(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I32Dec2::I32Dec2() {
-    algo::I32Dec2_Init(*this);
+
+// --- algo.I32Dec1..Ctor
+inline  algo::I32Dec1::I32Dec1() {
+    algo::I32Dec1_Init(*this);
 }
 
+// --- algo.I32Dec1..FieldwiseCtor
+inline  algo::I32Dec1::I32Dec1(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I32Dec2.value.qSetDouble
 // Set value of field value.
@@ -1639,7 +1732,7 @@ inline i32 algo::I32Dec2_GetScale() {
 }
 
 // --- algo.I32Dec2.value.Cast
-inline algo::I32Dec2::operator i32 () const {
+inline  algo::I32Dec2::operator i32() const {
     return i32((*this).value);
 }
 
@@ -1654,14 +1747,17 @@ inline u32 algo::I32Dec2_Hash(u32 prev, algo::I32Dec2 rhs) {
 inline void algo::I32Dec2_Init(algo::I32Dec2& parent) {
     parent.value = i32(0);
 }
-inline algo::I32Dec3::I32Dec3(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I32Dec3::I32Dec3() {
-    algo::I32Dec3_Init(*this);
+
+// --- algo.I32Dec2..Ctor
+inline  algo::I32Dec2::I32Dec2() {
+    algo::I32Dec2_Init(*this);
 }
 
+// --- algo.I32Dec2..FieldwiseCtor
+inline  algo::I32Dec2::I32Dec2(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I32Dec3.value.qSetDouble
 // Set value of field value.
@@ -1698,7 +1794,7 @@ inline i32 algo::I32Dec3_GetScale() {
 }
 
 // --- algo.I32Dec3.value.Cast
-inline algo::I32Dec3::operator i32 () const {
+inline  algo::I32Dec3::operator i32() const {
     return i32((*this).value);
 }
 
@@ -1713,14 +1809,17 @@ inline u32 algo::I32Dec3_Hash(u32 prev, algo::I32Dec3 rhs) {
 inline void algo::I32Dec3_Init(algo::I32Dec3& parent) {
     parent.value = i32(0);
 }
-inline algo::I32Dec4::I32Dec4(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I32Dec4::I32Dec4() {
-    algo::I32Dec4_Init(*this);
+
+// --- algo.I32Dec3..Ctor
+inline  algo::I32Dec3::I32Dec3() {
+    algo::I32Dec3_Init(*this);
 }
 
+// --- algo.I32Dec3..FieldwiseCtor
+inline  algo::I32Dec3::I32Dec3(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I32Dec4.value.qSetDouble
 // Set value of field value.
@@ -1757,7 +1856,7 @@ inline i32 algo::I32Dec4_GetScale() {
 }
 
 // --- algo.I32Dec4.value.Cast
-inline algo::I32Dec4::operator i32 () const {
+inline  algo::I32Dec4::operator i32() const {
     return i32((*this).value);
 }
 
@@ -1772,14 +1871,17 @@ inline u32 algo::I32Dec4_Hash(u32 prev, algo::I32Dec4 rhs) {
 inline void algo::I32Dec4_Init(algo::I32Dec4& parent) {
     parent.value = i32(0);
 }
-inline algo::I32Dec5::I32Dec5(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I32Dec5::I32Dec5() {
-    algo::I32Dec5_Init(*this);
+
+// --- algo.I32Dec4..Ctor
+inline  algo::I32Dec4::I32Dec4() {
+    algo::I32Dec4_Init(*this);
 }
 
+// --- algo.I32Dec4..FieldwiseCtor
+inline  algo::I32Dec4::I32Dec4(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I32Dec5.value.qSetDouble
 // Set value of field value.
@@ -1816,7 +1918,7 @@ inline i32 algo::I32Dec5_GetScale() {
 }
 
 // --- algo.I32Dec5.value.Cast
-inline algo::I32Dec5::operator i32 () const {
+inline  algo::I32Dec5::operator i32() const {
     return i32((*this).value);
 }
 
@@ -1831,14 +1933,17 @@ inline u32 algo::I32Dec5_Hash(u32 prev, algo::I32Dec5 rhs) {
 inline void algo::I32Dec5_Init(algo::I32Dec5& parent) {
     parent.value = i32(0);
 }
-inline algo::I64Dec1::I64Dec1(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec1::I64Dec1() {
-    algo::I64Dec1_Init(*this);
+
+// --- algo.I32Dec5..Ctor
+inline  algo::I32Dec5::I32Dec5() {
+    algo::I32Dec5_Init(*this);
 }
 
+// --- algo.I32Dec5..FieldwiseCtor
+inline  algo::I32Dec5::I32Dec5(i32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec1.value.qSetDouble
 // Set value of field value.
@@ -1875,7 +1980,7 @@ inline i64 algo::I64Dec1_GetScale() {
 }
 
 // --- algo.I64Dec1.value.Cast
-inline algo::I64Dec1::operator i64 () const {
+inline  algo::I64Dec1::operator i64() const {
     return i64((*this).value);
 }
 
@@ -1890,14 +1995,17 @@ inline u32 algo::I64Dec1_Hash(u32 prev, algo::I64Dec1 rhs) {
 inline void algo::I64Dec1_Init(algo::I64Dec1& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec10::I64Dec10(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec10::I64Dec10() {
-    algo::I64Dec10_Init(*this);
+
+// --- algo.I64Dec1..Ctor
+inline  algo::I64Dec1::I64Dec1() {
+    algo::I64Dec1_Init(*this);
 }
 
+// --- algo.I64Dec1..FieldwiseCtor
+inline  algo::I64Dec1::I64Dec1(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec10.value.qSetDouble
 // Set value of field value.
@@ -1934,7 +2042,7 @@ inline i64 algo::I64Dec10_GetScale() {
 }
 
 // --- algo.I64Dec10.value.Cast
-inline algo::I64Dec10::operator i64 () const {
+inline  algo::I64Dec10::operator i64() const {
     return i64((*this).value);
 }
 
@@ -1949,14 +2057,17 @@ inline u32 algo::I64Dec10_Hash(u32 prev, algo::I64Dec10 rhs) {
 inline void algo::I64Dec10_Init(algo::I64Dec10& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec2::I64Dec2(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec2::I64Dec2() {
-    algo::I64Dec2_Init(*this);
+
+// --- algo.I64Dec10..Ctor
+inline  algo::I64Dec10::I64Dec10() {
+    algo::I64Dec10_Init(*this);
 }
 
+// --- algo.I64Dec10..FieldwiseCtor
+inline  algo::I64Dec10::I64Dec10(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec2.value.qSetDouble
 // Set value of field value.
@@ -1993,7 +2104,7 @@ inline i64 algo::I64Dec2_GetScale() {
 }
 
 // --- algo.I64Dec2.value.Cast
-inline algo::I64Dec2::operator i64 () const {
+inline  algo::I64Dec2::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2008,14 +2119,17 @@ inline u32 algo::I64Dec2_Hash(u32 prev, algo::I64Dec2 rhs) {
 inline void algo::I64Dec2_Init(algo::I64Dec2& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec3::I64Dec3(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec3::I64Dec3() {
-    algo::I64Dec3_Init(*this);
+
+// --- algo.I64Dec2..Ctor
+inline  algo::I64Dec2::I64Dec2() {
+    algo::I64Dec2_Init(*this);
 }
 
+// --- algo.I64Dec2..FieldwiseCtor
+inline  algo::I64Dec2::I64Dec2(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec3.value.qSetDouble
 // Set value of field value.
@@ -2052,7 +2166,7 @@ inline i64 algo::I64Dec3_GetScale() {
 }
 
 // --- algo.I64Dec3.value.Cast
-inline algo::I64Dec3::operator i64 () const {
+inline  algo::I64Dec3::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2067,14 +2181,17 @@ inline u32 algo::I64Dec3_Hash(u32 prev, algo::I64Dec3 rhs) {
 inline void algo::I64Dec3_Init(algo::I64Dec3& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec4::I64Dec4(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec4::I64Dec4() {
-    algo::I64Dec4_Init(*this);
+
+// --- algo.I64Dec3..Ctor
+inline  algo::I64Dec3::I64Dec3() {
+    algo::I64Dec3_Init(*this);
 }
 
+// --- algo.I64Dec3..FieldwiseCtor
+inline  algo::I64Dec3::I64Dec3(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec4.value.qSetDouble
 // Set value of field value.
@@ -2111,7 +2228,7 @@ inline i64 algo::I64Dec4_GetScale() {
 }
 
 // --- algo.I64Dec4.value.Cast
-inline algo::I64Dec4::operator i64 () const {
+inline  algo::I64Dec4::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2126,14 +2243,17 @@ inline u32 algo::I64Dec4_Hash(u32 prev, algo::I64Dec4 rhs) {
 inline void algo::I64Dec4_Init(algo::I64Dec4& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec5::I64Dec5(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec5::I64Dec5() {
-    algo::I64Dec5_Init(*this);
+
+// --- algo.I64Dec4..Ctor
+inline  algo::I64Dec4::I64Dec4() {
+    algo::I64Dec4_Init(*this);
 }
 
+// --- algo.I64Dec4..FieldwiseCtor
+inline  algo::I64Dec4::I64Dec4(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec5.value.qSetDouble
 // Set value of field value.
@@ -2170,7 +2290,7 @@ inline i64 algo::I64Dec5_GetScale() {
 }
 
 // --- algo.I64Dec5.value.Cast
-inline algo::I64Dec5::operator i64 () const {
+inline  algo::I64Dec5::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2185,14 +2305,17 @@ inline u32 algo::I64Dec5_Hash(u32 prev, algo::I64Dec5 rhs) {
 inline void algo::I64Dec5_Init(algo::I64Dec5& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec6::I64Dec6(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec6::I64Dec6() {
-    algo::I64Dec6_Init(*this);
+
+// --- algo.I64Dec5..Ctor
+inline  algo::I64Dec5::I64Dec5() {
+    algo::I64Dec5_Init(*this);
 }
 
+// --- algo.I64Dec5..FieldwiseCtor
+inline  algo::I64Dec5::I64Dec5(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec6.value.qSetDouble
 // Set value of field value.
@@ -2229,7 +2352,7 @@ inline i64 algo::I64Dec6_GetScale() {
 }
 
 // --- algo.I64Dec6.value.Cast
-inline algo::I64Dec6::operator i64 () const {
+inline  algo::I64Dec6::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2244,14 +2367,17 @@ inline u32 algo::I64Dec6_Hash(u32 prev, algo::I64Dec6 rhs) {
 inline void algo::I64Dec6_Init(algo::I64Dec6& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec7::I64Dec7(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec7::I64Dec7() {
-    algo::I64Dec7_Init(*this);
+
+// --- algo.I64Dec6..Ctor
+inline  algo::I64Dec6::I64Dec6() {
+    algo::I64Dec6_Init(*this);
 }
 
+// --- algo.I64Dec6..FieldwiseCtor
+inline  algo::I64Dec6::I64Dec6(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec7.value.qSetDouble
 // Set value of field value.
@@ -2288,7 +2414,7 @@ inline i64 algo::I64Dec7_GetScale() {
 }
 
 // --- algo.I64Dec7.value.Cast
-inline algo::I64Dec7::operator i64 () const {
+inline  algo::I64Dec7::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2303,14 +2429,17 @@ inline u32 algo::I64Dec7_Hash(u32 prev, algo::I64Dec7 rhs) {
 inline void algo::I64Dec7_Init(algo::I64Dec7& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec8::I64Dec8(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec8::I64Dec8() {
-    algo::I64Dec8_Init(*this);
+
+// --- algo.I64Dec7..Ctor
+inline  algo::I64Dec7::I64Dec7() {
+    algo::I64Dec7_Init(*this);
 }
 
+// --- algo.I64Dec7..FieldwiseCtor
+inline  algo::I64Dec7::I64Dec7(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec8.value.qSetDouble
 // Set value of field value.
@@ -2347,7 +2476,7 @@ inline i64 algo::I64Dec8_GetScale() {
 }
 
 // --- algo.I64Dec8.value.Cast
-inline algo::I64Dec8::operator i64 () const {
+inline  algo::I64Dec8::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2362,14 +2491,17 @@ inline u32 algo::I64Dec8_Hash(u32 prev, algo::I64Dec8 rhs) {
 inline void algo::I64Dec8_Init(algo::I64Dec8& parent) {
     parent.value = i64(0);
 }
-inline algo::I64Dec9::I64Dec9(i64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::I64Dec9::I64Dec9() {
-    algo::I64Dec9_Init(*this);
+
+// --- algo.I64Dec8..Ctor
+inline  algo::I64Dec8::I64Dec8() {
+    algo::I64Dec8_Init(*this);
 }
 
+// --- algo.I64Dec8..FieldwiseCtor
+inline  algo::I64Dec8::I64Dec8(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.I64Dec9.value.qSetDouble
 // Set value of field value.
@@ -2406,7 +2538,7 @@ inline i64 algo::I64Dec9_GetScale() {
 }
 
 // --- algo.I64Dec9.value.Cast
-inline algo::I64Dec9::operator i64 () const {
+inline  algo::I64Dec9::operator i64() const {
     return i64((*this).value);
 }
 
@@ -2421,18 +2553,20 @@ inline u32 algo::I64Dec9_Hash(u32 prev, algo::I64Dec9 rhs) {
 inline void algo::I64Dec9_Init(algo::I64Dec9& parent) {
     parent.value = i64(0);
 }
-inline algo::IOEvtFlags::IOEvtFlags(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::IOEvtFlags::IOEvtFlags(algo_IOEvtFlagsEnum arg) { this->value = u32(arg); }
-inline algo::IOEvtFlags::IOEvtFlags() {
-    algo::IOEvtFlags_Init(*this);
+
+// --- algo.I64Dec9..Ctor
+inline  algo::I64Dec9::I64Dec9() {
+    algo::I64Dec9_Init(*this);
 }
 
+// --- algo.I64Dec9..FieldwiseCtor
+inline  algo::I64Dec9::I64Dec9(i64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.IOEvtFlags.value.Cast
-inline algo::IOEvtFlags::operator algo_IOEvtFlagsEnum () const {
+inline  algo::IOEvtFlags::operator algo_IOEvtFlagsEnum() const {
     return algo_IOEvtFlagsEnum((*this).value);
 }
 
@@ -2505,10 +2639,22 @@ inline void algo::err_Set(algo::IOEvtFlags& parent, bool rhs) {
 inline void algo::IOEvtFlags_Init(algo::IOEvtFlags& parent) {
     parent.value = u32(0);
 }
-inline algo::IPoint::IPoint() {
-    algo::IPoint_Init(*this);
+
+// --- algo.IOEvtFlags..Ctor
+inline  algo::IOEvtFlags::IOEvtFlags() {
+    algo::IOEvtFlags_Init(*this);
 }
 
+// --- algo.IOEvtFlags..FieldwiseCtor
+inline  algo::IOEvtFlags::IOEvtFlags(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.IOEvtFlags..EnumCtor
+inline  algo::IOEvtFlags::IOEvtFlags(algo_IOEvtFlagsEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- algo.IPoint..Init
 // Set all fields to initial values.
@@ -2517,37 +2663,10 @@ inline void algo::IPoint_Init(algo::IPoint& parent) {
     parent.y = i32(0);
 }
 
-inline bool algo::Smallstr50::operator ==(const algo::Smallstr50 &rhs) const {
-    return algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+// --- algo.IPoint..Ctor
+inline  algo::IPoint::IPoint() {
+    algo::IPoint_Init(*this);
 }
-
-inline bool algo::Smallstr50::operator !=(const algo::Smallstr50 &rhs) const {
-    return !algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
-}
-
-inline bool algo::Smallstr50::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr50_EqStrptr(const_cast<algo::Smallstr50&>(*this),rhs);
-}
-
-inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const {
-    return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
-}
-
-inline bool algo::Smallstr50::operator >(const algo::Smallstr50 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::Smallstr50::operator <=(const algo::Smallstr50 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::Smallstr50::operator >=(const algo::Smallstr50 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::Smallstr50::Smallstr50() {
-    algo::Smallstr50_Init(*this);
-}
-
 
 // --- algo.Smallstr50.ch.Add
 // Append character to string.
@@ -2609,27 +2728,44 @@ inline void algo::Smallstr50::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr50.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr50::operator =(const algo::Smallstr50& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr50.ch.Ctor
-inline  algo::Smallstr50::Smallstr50(const algo::Smallstr50 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr50.ch.CtorStrptr
 inline  algo::Smallstr50::Smallstr50(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr50.ch.Cast
-inline algo::Smallstr50::operator algo::strptr () const {
+inline  algo::Smallstr50::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr50..EqOp
+inline bool algo::Smallstr50::operator ==(const algo::Smallstr50 &rhs) const {
+    return algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+// --- algo.Smallstr50..NeOp
+inline bool algo::Smallstr50::operator !=(const algo::Smallstr50 &rhs) const {
+    return !algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+// --- algo.Smallstr50..LtOp
+inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const {
+    return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
+}
+
+// --- algo.Smallstr50..GtOp
+inline bool algo::Smallstr50::operator >(const algo::Smallstr50 &rhs) const {
+    return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(rhs),const_cast<algo::Smallstr50&>(*this));
+}
+
+// --- algo.Smallstr50..LeOp
+inline bool algo::Smallstr50::operator <=(const algo::Smallstr50 &rhs) const {
+    return !algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(rhs),const_cast<algo::Smallstr50&>(*this));
+}
+
+// --- algo.Smallstr50..GeOp
+inline bool algo::Smallstr50::operator >=(const algo::Smallstr50 &rhs) const {
+    return !algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 
 // --- algo.Smallstr50..Lt
@@ -2667,28 +2803,28 @@ inline bool algo::Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& rhs
     return ret;
 }
 
-// --- algo.Smallstr50..EqStrptr
-inline bool algo::Smallstr50_EqStrptr(const algo::Smallstr50& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::Imdb::Imdb(const algo::strptr&            in_imdb
-        ,const algo::ImdbInsertStrptrMaybeFcn& in_InsertStrptrMaybe
-        ,const algo::ImdbStepFcn&       in_Step
-        ,const algo::ImdbMainLoopFcn&   in_MainLoop
-        ,const algo::ImdbGetTraceFcn&   in_GetTrace
-        ,const algo::Comment&           in_comment)
-    : imdb(in_imdb)
-    , InsertStrptrMaybe(in_InsertStrptrMaybe)
-    , Step(in_Step)
-    , MainLoop(in_MainLoop)
-    , GetTrace(in_GetTrace)
-    , comment(in_comment)
-{
-}
-inline algo::Imdb::Imdb() {
-    algo::Imdb_Init(*this);
+// --- algo.Smallstr50..EqOpAryptr
+inline bool algo::Smallstr50::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.Smallstr50..AssignOp
+inline algo::Smallstr50& algo::Smallstr50::operator =(const algo::Smallstr50 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr50..Ctor
+inline  algo::Smallstr50::Smallstr50() {
+    algo::Smallstr50_Init(*this);
+}
+
+// --- algo.Smallstr50..CopyCtor
+inline  algo::Smallstr50::Smallstr50(const algo::Smallstr50 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
 
 // --- algo.Imdb..Init
 // Set all fields to initial values.
@@ -2698,17 +2834,25 @@ inline void algo::Imdb_Init(algo::Imdb& parent) {
     memset(&parent.MainLoop, 0, sizeof(parent.MainLoop));
     memset(&parent.GetTrace, 0, sizeof(parent.GetTrace));
 }
-inline algo::ImrowPtr::ImrowPtr(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::ImrowPtr::ImrowPtr() {
-    algo::ImrowPtr_Init(*this);
+
+// --- algo.Imdb..Ctor
+inline  algo::Imdb::Imdb() {
+    algo::Imdb_Init(*this);
 }
 
+// --- algo.Imdb..FieldwiseCtor
+inline  algo::Imdb::Imdb(const algo::strptr& in_imdb, const algo::ImdbInsertStrptrMaybeFcn& in_InsertStrptrMaybe, const algo::ImdbStepFcn& in_Step, const algo::ImdbMainLoopFcn& in_MainLoop, const algo::ImdbGetTraceFcn& in_GetTrace, const algo::Comment& in_comment)
+    : imdb(in_imdb)
+    , InsertStrptrMaybe(in_InsertStrptrMaybe)
+    , Step(in_Step)
+    , MainLoop(in_MainLoop)
+    , GetTrace(in_GetTrace)
+    , comment(in_comment)
+ {
+}
 
 // --- algo.ImrowPtr.value.Cast
-inline algo::ImrowPtr::operator u64 () const {
+inline  algo::ImrowPtr::operator u64() const {
     return u64((*this).value);
 }
 
@@ -2717,10 +2861,17 @@ inline algo::ImrowPtr::operator u64 () const {
 inline void algo::ImrowPtr_Init(algo::ImrowPtr& parent) {
     parent.value = u64(0);
 }
-inline algo::Smallstr100::Smallstr100() {
-    algo::Smallstr100_Init(*this);
+
+// --- algo.ImrowPtr..Ctor
+inline  algo::ImrowPtr::ImrowPtr() {
+    algo::ImrowPtr_Init(*this);
 }
 
+// --- algo.ImrowPtr..FieldwiseCtor
+inline  algo::ImrowPtr::ImrowPtr(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.Smallstr100.ch.Add
 // Append character to string.
@@ -2782,26 +2933,13 @@ inline void algo::Smallstr100::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr100.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr100::operator =(const algo::Smallstr100& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr100.ch.Ctor
-inline  algo::Smallstr100::Smallstr100(const algo::Smallstr100 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr100.ch.CtorStrptr
 inline  algo::Smallstr100::Smallstr100(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr100.ch.Cast
-inline algo::Smallstr100::operator algo::strptr () const {
+inline  algo::Smallstr100::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -2825,34 +2963,28 @@ inline bool algo::Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs)
     return retval;
 }
 
-// --- algo.Smallstr100..EqStrptr
-inline bool algo::Smallstr100_EqStrptr(const algo::Smallstr100& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::Imtable::Imtable(const algo::strptr&            in_imtable
-        ,const algo::strptr&            in_elem_type
-        ,const algo::ImrowRowidFindFcn& in_c_RowidFind
-        ,const algo::ImrowXrefXFcn&     in_XrefX
-        ,const algo::ImrowNItemsFcn&    in_NItems
-        ,const algo::ImrowPrintFcn&     in_Print
-        ,i32                            in_size
-        ,const algo::strptr&            in_ssimfile
-        ,const algo::Comment&           in_comment)
-    : imtable(in_imtable)
-    , elem_type(in_elem_type)
-    , c_RowidFind(in_c_RowidFind)
-    , XrefX(in_XrefX)
-    , NItems(in_NItems)
-    , Print(in_Print)
-    , size(in_size)
-    , ssimfile(in_ssimfile)
-    , comment(in_comment)
-{
-}
-inline algo::Imtable::Imtable() {
-    algo::Imtable_Init(*this);
+// --- algo.Smallstr100..EqOpAryptr
+inline bool algo::Smallstr100::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.Smallstr100..AssignOp
+inline algo::Smallstr100& algo::Smallstr100::operator =(const algo::Smallstr100 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr100..Ctor
+inline  algo::Smallstr100::Smallstr100() {
+    algo::Smallstr100_Init(*this);
+}
+
+// --- algo.Smallstr100..CopyCtor
+inline  algo::Smallstr100::Smallstr100(const algo::Smallstr100 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
 
 // --- algo.Imtable..Init
 // Set all fields to initial values.
@@ -2863,16 +2995,36 @@ inline void algo::Imtable_Init(algo::Imtable& parent) {
     memset(&parent.Print, 0, sizeof(parent.Print));
     parent.size = i32(0);
 }
-inline algo::Ipmask::Ipmask() {
-    algo::Ipmask_Init(*this);
+
+// --- algo.Imtable..Ctor
+inline  algo::Imtable::Imtable() {
+    algo::Imtable_Init(*this);
 }
 
+// --- algo.Imtable..FieldwiseCtor
+inline  algo::Imtable::Imtable(const algo::strptr& in_imtable, const algo::strptr& in_elem_type, const algo::ImrowRowidFindFcn& in_c_RowidFind, const algo::ImrowXrefXFcn& in_XrefX, const algo::ImrowNItemsFcn& in_NItems, const algo::ImrowPrintFcn& in_Print, i32 in_size, const algo::strptr& in_ssimfile, const algo::Comment& in_comment)
+    : imtable(in_imtable)
+    , elem_type(in_elem_type)
+    , c_RowidFind(in_c_RowidFind)
+    , XrefX(in_XrefX)
+    , NItems(in_NItems)
+    , Print(in_Print)
+    , size(in_size)
+    , ssimfile(in_ssimfile)
+    , comment(in_comment)
+ {
+}
 
 // --- algo.Ipmask..Init
 // Set all fields to initial values.
 inline void algo::Ipmask_Init(algo::Ipmask& parent) {
     parent.ip_host = u32(0);
     parent.mask = u32(0);
+}
+
+// --- algo.Ipmask..Ctor
+inline  algo::Ipmask::Ipmask() {
+    algo::Ipmask_Init(*this);
 }
 
 // --- algo.strptr..Update
@@ -2884,14 +3036,6 @@ inline bool algo::strptr_Update(algo::strptr &lhs, algo::strptr rhs) {
     }
     return ret;
 }
-inline algo::LineBuf::LineBuf() {
-    algo::LineBuf_Init(*this);
-}
-
-inline algo::LineBuf::~LineBuf() {
-    algo::LineBuf_Uninit(*this);
-}
-
 
 // --- algo.LineBuf.buf.EmptyQ
 // Return true if index is empty
@@ -3001,21 +3145,15 @@ inline void algo::LineBuf_Init(algo::LineBuf& parent) {
     parent.eof = bool(false);
 }
 
-inline bool algo::LnumStr10_U64::operator ==(const algo::LnumStr10_U64 &rhs) const {
-    return algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
+// --- algo.LineBuf..Ctor
+inline  algo::LineBuf::LineBuf() {
+    algo::LineBuf_Init(*this);
 }
 
-inline bool algo::LnumStr10_U64::operator !=(const algo::LnumStr10_U64 &rhs) const {
-    return !algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
+// --- algo.LineBuf..Dtor
+inline  algo::LineBuf::~LineBuf() {
+    algo::LineBuf_Uninit(*this);
 }
-
-inline bool algo::LnumStr10_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr10_U64_EqStrptr(const_cast<algo::LnumStr10_U64&>(*this),rhs);
-}
-inline algo::LnumStr10_U64::LnumStr10_U64() {
-    algo::LnumStr10_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr10_U64.ch.Getary
 // Access string as array of chars
@@ -3062,26 +3200,24 @@ inline void algo::LnumStr10_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr10_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr10_U64::operator =(const algo::LnumStr10_U64& parent) {
-    memcpy(ch, parent.ch, 10);
-}
-
-// --- algo.LnumStr10_U64.ch.Ctor
-inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::LnumStr10_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr10_U64.ch.CtorStrptr
 inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr10_U64.ch.Cast
-inline algo::LnumStr10_U64::operator algo::strptr () const {
+inline  algo::LnumStr10_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr10_U64..EqOp
+inline bool algo::LnumStr10_U64::operator ==(const algo::LnumStr10_U64 &rhs) const {
+    return algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
+}
+
+// --- algo.LnumStr10_U64..NeOp
+inline bool algo::LnumStr10_U64::operator !=(const algo::LnumStr10_U64 &rhs) const {
+    return !algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
 }
 
 // --- algo.LnumStr10_U64..Cmp
@@ -3108,26 +3244,28 @@ inline bool algo::LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64
     return retval;
 }
 
-// --- algo.LnumStr10_U64..EqStrptr
-inline bool algo::LnumStr10_U64_EqStrptr(const algo::LnumStr10_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr10_U64..EqOpAryptr
+inline bool algo::LnumStr10_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr11_U64::operator ==(const algo::LnumStr11_U64 &rhs) const {
-    return algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
+// --- algo.LnumStr10_U64..AssignOp
+inline algo::LnumStr10_U64& algo::LnumStr10_U64::operator =(const algo::LnumStr10_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr10_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr11_U64::operator !=(const algo::LnumStr11_U64 &rhs) const {
-    return !algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
+// --- algo.LnumStr10_U64..Ctor
+inline  algo::LnumStr10_U64::LnumStr10_U64() {
+    algo::LnumStr10_U64_Init(*this);
 }
 
-inline bool algo::LnumStr11_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr11_U64_EqStrptr(const_cast<algo::LnumStr11_U64&>(*this),rhs);
+// --- algo.LnumStr10_U64..CopyCtor
+inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::LnumStr10_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr10_U64));
 }
-inline algo::LnumStr11_U64::LnumStr11_U64() {
-    algo::LnumStr11_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr11_U64.ch.Getary
 // Access string as array of chars
@@ -3174,26 +3312,24 @@ inline void algo::LnumStr11_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr11_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr11_U64::operator =(const algo::LnumStr11_U64& parent) {
-    memcpy(ch, parent.ch, 11);
-}
-
-// --- algo.LnumStr11_U64.ch.Ctor
-inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::LnumStr11_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr11_U64.ch.CtorStrptr
 inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr11_U64.ch.Cast
-inline algo::LnumStr11_U64::operator algo::strptr () const {
+inline  algo::LnumStr11_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr11_U64..EqOp
+inline bool algo::LnumStr11_U64::operator ==(const algo::LnumStr11_U64 &rhs) const {
+    return algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
+}
+
+// --- algo.LnumStr11_U64..NeOp
+inline bool algo::LnumStr11_U64::operator !=(const algo::LnumStr11_U64 &rhs) const {
+    return !algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
 }
 
 // --- algo.LnumStr11_U64..Cmp
@@ -3221,26 +3357,28 @@ inline bool algo::LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64
     return retval;
 }
 
-// --- algo.LnumStr11_U64..EqStrptr
-inline bool algo::LnumStr11_U64_EqStrptr(const algo::LnumStr11_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr11_U64..EqOpAryptr
+inline bool algo::LnumStr11_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr12_U64::operator ==(const algo::LnumStr12_U64 &rhs) const {
-    return algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
+// --- algo.LnumStr11_U64..AssignOp
+inline algo::LnumStr11_U64& algo::LnumStr11_U64::operator =(const algo::LnumStr11_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr11_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr12_U64::operator !=(const algo::LnumStr12_U64 &rhs) const {
-    return !algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
+// --- algo.LnumStr11_U64..Ctor
+inline  algo::LnumStr11_U64::LnumStr11_U64() {
+    algo::LnumStr11_U64_Init(*this);
 }
 
-inline bool algo::LnumStr12_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr12_U64_EqStrptr(const_cast<algo::LnumStr12_U64&>(*this),rhs);
+// --- algo.LnumStr11_U64..CopyCtor
+inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::LnumStr11_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr11_U64));
 }
-inline algo::LnumStr12_U64::LnumStr12_U64() {
-    algo::LnumStr12_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr12_U64.ch.Getary
 // Access string as array of chars
@@ -3287,26 +3425,24 @@ inline void algo::LnumStr12_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr12_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr12_U64::operator =(const algo::LnumStr12_U64& parent) {
-    memcpy(ch, parent.ch, 12);
-}
-
-// --- algo.LnumStr12_U64.ch.Ctor
-inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::LnumStr12_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr12_U64.ch.CtorStrptr
 inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr12_U64.ch.Cast
-inline algo::LnumStr12_U64::operator algo::strptr () const {
+inline  algo::LnumStr12_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr12_U64..EqOp
+inline bool algo::LnumStr12_U64::operator ==(const algo::LnumStr12_U64 &rhs) const {
+    return algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
+}
+
+// --- algo.LnumStr12_U64..NeOp
+inline bool algo::LnumStr12_U64::operator !=(const algo::LnumStr12_U64 &rhs) const {
+    return !algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
 }
 
 // --- algo.LnumStr12_U64..Cmp
@@ -3333,26 +3469,28 @@ inline bool algo::LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64
     return retval;
 }
 
-// --- algo.LnumStr12_U64..EqStrptr
-inline bool algo::LnumStr12_U64_EqStrptr(const algo::LnumStr12_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr12_U64..EqOpAryptr
+inline bool algo::LnumStr12_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::LnumStr13_U64_Base36 &rhs) const {
-    return algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
+// --- algo.LnumStr12_U64..AssignOp
+inline algo::LnumStr12_U64& algo::LnumStr12_U64::operator =(const algo::LnumStr12_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr12_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr13_U64_Base36::operator !=(const algo::LnumStr13_U64_Base36 &rhs) const {
-    return !algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
+// --- algo.LnumStr12_U64..Ctor
+inline  algo::LnumStr12_U64::LnumStr12_U64() {
+    algo::LnumStr12_U64_Init(*this);
 }
 
-inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr13_U64_Base36_EqStrptr(const_cast<algo::LnumStr13_U64_Base36&>(*this),rhs);
+// --- algo.LnumStr12_U64..CopyCtor
+inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::LnumStr12_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr12_U64));
 }
-inline algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36() {
-    algo::LnumStr13_U64_Base36_Init(*this);
-}
-
 
 // --- algo.LnumStr13_U64_Base36.ch.Getary
 // Access string as array of chars
@@ -3399,26 +3537,24 @@ inline void algo::LnumStr13_U64_Base36::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr13_U64_Base36.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr13_U64_Base36::operator =(const algo::LnumStr13_U64_Base36& parent) {
-    memcpy(ch, parent.ch, 13);
-}
-
-// --- algo.LnumStr13_U64_Base36.ch.Ctor
-inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr13_U64_Base36.ch.CtorStrptr
 inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Cast
-inline algo::LnumStr13_U64_Base36::operator algo::strptr () const {
+inline  algo::LnumStr13_U64_Base36::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr13_U64_Base36..EqOp
+inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::LnumStr13_U64_Base36 &rhs) const {
+    return algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
+}
+
+// --- algo.LnumStr13_U64_Base36..NeOp
+inline bool algo::LnumStr13_U64_Base36::operator !=(const algo::LnumStr13_U64_Base36 &rhs) const {
+    return !algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
 }
 
 // --- algo.LnumStr13_U64_Base36..Cmp
@@ -3446,26 +3582,28 @@ inline bool algo::LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo:
     return retval;
 }
 
-// --- algo.LnumStr13_U64_Base36..EqStrptr
-inline bool algo::LnumStr13_U64_Base36_EqStrptr(const algo::LnumStr13_U64_Base36& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr13_U64_Base36..EqOpAryptr
+inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::LnumStr16_U64_Base16 &rhs) const {
-    return algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
+// --- algo.LnumStr13_U64_Base36..AssignOp
+inline algo::LnumStr13_U64_Base36& algo::LnumStr13_U64_Base36::operator =(const algo::LnumStr13_U64_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr13_U64_Base36));
+    return *this;
 }
 
-inline bool algo::LnumStr16_U64_Base16::operator !=(const algo::LnumStr16_U64_Base16 &rhs) const {
-    return !algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
+// --- algo.LnumStr13_U64_Base36..Ctor
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36() {
+    algo::LnumStr13_U64_Base36_Init(*this);
 }
 
-inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr16_U64_Base16_EqStrptr(const_cast<algo::LnumStr16_U64_Base16&>(*this),rhs);
+// --- algo.LnumStr13_U64_Base36..CopyCtor
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr13_U64_Base36));
 }
-inline algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16() {
-    algo::LnumStr16_U64_Base16_Init(*this);
-}
-
 
 // --- algo.LnumStr16_U64_Base16.ch.Getary
 // Access string as array of chars
@@ -3512,26 +3650,24 @@ inline void algo::LnumStr16_U64_Base16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr16_U64_Base16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr16_U64_Base16::operator =(const algo::LnumStr16_U64_Base16& parent) {
-    memcpy(ch, parent.ch, 16);
-}
-
-// --- algo.LnumStr16_U64_Base16.ch.Ctor
-inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr16_U64_Base16.ch.CtorStrptr
 inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.Cast
-inline algo::LnumStr16_U64_Base16::operator algo::strptr () const {
+inline  algo::LnumStr16_U64_Base16::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr16_U64_Base16..EqOp
+inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::LnumStr16_U64_Base16 &rhs) const {
+    return algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
+}
+
+// --- algo.LnumStr16_U64_Base16..NeOp
+inline bool algo::LnumStr16_U64_Base16::operator !=(const algo::LnumStr16_U64_Base16 &rhs) const {
+    return !algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
 }
 
 // --- algo.LnumStr16_U64_Base16..Cmp
@@ -3558,26 +3694,28 @@ inline bool algo::LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo:
     return retval;
 }
 
-// --- algo.LnumStr16_U64_Base16..EqStrptr
-inline bool algo::LnumStr16_U64_Base16_EqStrptr(const algo::LnumStr16_U64_Base16& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr16_U64_Base16..EqOpAryptr
+inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr1_U32::operator ==(const algo::LnumStr1_U32 &rhs) const {
-    return algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
+// --- algo.LnumStr16_U64_Base16..AssignOp
+inline algo::LnumStr16_U64_Base16& algo::LnumStr16_U64_Base16::operator =(const algo::LnumStr16_U64_Base16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr16_U64_Base16));
+    return *this;
 }
 
-inline bool algo::LnumStr1_U32::operator !=(const algo::LnumStr1_U32 &rhs) const {
-    return !algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
+// --- algo.LnumStr16_U64_Base16..Ctor
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16() {
+    algo::LnumStr16_U64_Base16_Init(*this);
 }
 
-inline bool algo::LnumStr1_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr1_U32_EqStrptr(const_cast<algo::LnumStr1_U32&>(*this),rhs);
+// --- algo.LnumStr16_U64_Base16..CopyCtor
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr16_U64_Base16));
 }
-inline algo::LnumStr1_U32::LnumStr1_U32() {
-    algo::LnumStr1_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr1_U32.ch.Getary
 // Access string as array of chars
@@ -3624,26 +3762,24 @@ inline void algo::LnumStr1_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr1_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr1_U32::operator =(const algo::LnumStr1_U32& parent) {
-    memcpy(ch, parent.ch, 1);
-}
-
-// --- algo.LnumStr1_U32.ch.Ctor
-inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::LnumStr1_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr1_U32.ch.CtorStrptr
 inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr1_U32.ch.Cast
-inline algo::LnumStr1_U32::operator algo::strptr () const {
+inline  algo::LnumStr1_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr1_U32..EqOp
+inline bool algo::LnumStr1_U32::operator ==(const algo::LnumStr1_U32 &rhs) const {
+    return algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
+}
+
+// --- algo.LnumStr1_U32..NeOp
+inline bool algo::LnumStr1_U32::operator !=(const algo::LnumStr1_U32 &rhs) const {
+    return !algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
 }
 
 // --- algo.LnumStr1_U32..Cmp
@@ -3669,26 +3805,28 @@ inline bool algo::LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& r
     return retval;
 }
 
-// --- algo.LnumStr1_U32..EqStrptr
-inline bool algo::LnumStr1_U32_EqStrptr(const algo::LnumStr1_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr1_U32..EqOpAryptr
+inline bool algo::LnumStr1_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr20_U64::operator ==(const algo::LnumStr20_U64 &rhs) const {
-    return algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
+// --- algo.LnumStr1_U32..AssignOp
+inline algo::LnumStr1_U32& algo::LnumStr1_U32::operator =(const algo::LnumStr1_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr1_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr20_U64::operator !=(const algo::LnumStr20_U64 &rhs) const {
-    return !algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
+// --- algo.LnumStr1_U32..Ctor
+inline  algo::LnumStr1_U32::LnumStr1_U32() {
+    algo::LnumStr1_U32_Init(*this);
 }
 
-inline bool algo::LnumStr20_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr20_U64_EqStrptr(const_cast<algo::LnumStr20_U64&>(*this),rhs);
+// --- algo.LnumStr1_U32..CopyCtor
+inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::LnumStr1_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr1_U32));
 }
-inline algo::LnumStr20_U64::LnumStr20_U64() {
-    algo::LnumStr20_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr20_U64.ch.Getary
 // Access string as array of chars
@@ -3735,26 +3873,24 @@ inline void algo::LnumStr20_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr20_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr20_U64::operator =(const algo::LnumStr20_U64& parent) {
-    memcpy(ch, parent.ch, 20);
-}
-
-// --- algo.LnumStr20_U64.ch.Ctor
-inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::LnumStr20_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr20_U64.ch.CtorStrptr
 inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr20_U64.ch.Cast
-inline algo::LnumStr20_U64::operator algo::strptr () const {
+inline  algo::LnumStr20_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr20_U64..EqOp
+inline bool algo::LnumStr20_U64::operator ==(const algo::LnumStr20_U64 &rhs) const {
+    return algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
+}
+
+// --- algo.LnumStr20_U64..NeOp
+inline bool algo::LnumStr20_U64::operator !=(const algo::LnumStr20_U64 &rhs) const {
+    return !algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
 }
 
 // --- algo.LnumStr20_U64..Cmp
@@ -3782,26 +3918,28 @@ inline bool algo::LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64
     return retval;
 }
 
-// --- algo.LnumStr20_U64..EqStrptr
-inline bool algo::LnumStr20_U64_EqStrptr(const algo::LnumStr20_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr20_U64..EqOpAryptr
+inline bool algo::LnumStr20_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr22_U64::operator ==(const algo::LnumStr22_U64 &rhs) const {
-    return algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
+// --- algo.LnumStr20_U64..AssignOp
+inline algo::LnumStr20_U64& algo::LnumStr20_U64::operator =(const algo::LnumStr20_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr20_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr22_U64::operator !=(const algo::LnumStr22_U64 &rhs) const {
-    return !algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
+// --- algo.LnumStr20_U64..Ctor
+inline  algo::LnumStr20_U64::LnumStr20_U64() {
+    algo::LnumStr20_U64_Init(*this);
 }
 
-inline bool algo::LnumStr22_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr22_U64_EqStrptr(const_cast<algo::LnumStr22_U64&>(*this),rhs);
+// --- algo.LnumStr20_U64..CopyCtor
+inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::LnumStr20_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr20_U64));
 }
-inline algo::LnumStr22_U64::LnumStr22_U64() {
-    algo::LnumStr22_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr22_U64.ch.Getary
 // Access string as array of chars
@@ -3848,26 +3986,24 @@ inline void algo::LnumStr22_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr22_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr22_U64::operator =(const algo::LnumStr22_U64& parent) {
-    memcpy(ch, parent.ch, 22);
-}
-
-// --- algo.LnumStr22_U64.ch.Ctor
-inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::LnumStr22_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr22_U64.ch.CtorStrptr
 inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr22_U64.ch.Cast
-inline algo::LnumStr22_U64::operator algo::strptr () const {
+inline  algo::LnumStr22_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr22_U64..EqOp
+inline bool algo::LnumStr22_U64::operator ==(const algo::LnumStr22_U64 &rhs) const {
+    return algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
+}
+
+// --- algo.LnumStr22_U64..NeOp
+inline bool algo::LnumStr22_U64::operator !=(const algo::LnumStr22_U64 &rhs) const {
+    return !algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
 }
 
 // --- algo.LnumStr22_U64..Cmp
@@ -3896,26 +4032,28 @@ inline bool algo::LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64
     return retval;
 }
 
-// --- algo.LnumStr22_U64..EqStrptr
-inline bool algo::LnumStr22_U64_EqStrptr(const algo::LnumStr22_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr22_U64..EqOpAryptr
+inline bool algo::LnumStr22_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr2_U32::operator ==(const algo::LnumStr2_U32 &rhs) const {
-    return algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
+// --- algo.LnumStr22_U64..AssignOp
+inline algo::LnumStr22_U64& algo::LnumStr22_U64::operator =(const algo::LnumStr22_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr22_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr2_U32::operator !=(const algo::LnumStr2_U32 &rhs) const {
-    return !algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
+// --- algo.LnumStr22_U64..Ctor
+inline  algo::LnumStr22_U64::LnumStr22_U64() {
+    algo::LnumStr22_U64_Init(*this);
 }
 
-inline bool algo::LnumStr2_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr2_U32_EqStrptr(const_cast<algo::LnumStr2_U32&>(*this),rhs);
+// --- algo.LnumStr22_U64..CopyCtor
+inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::LnumStr22_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr22_U64));
 }
-inline algo::LnumStr2_U32::LnumStr2_U32() {
-    algo::LnumStr2_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr2_U32.ch.Getary
 // Access string as array of chars
@@ -3962,26 +4100,24 @@ inline void algo::LnumStr2_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr2_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr2_U32::operator =(const algo::LnumStr2_U32& parent) {
-    memcpy(ch, parent.ch, 2);
-}
-
-// --- algo.LnumStr2_U32.ch.Ctor
-inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::LnumStr2_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr2_U32.ch.CtorStrptr
 inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr2_U32.ch.Cast
-inline algo::LnumStr2_U32::operator algo::strptr () const {
+inline  algo::LnumStr2_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr2_U32..EqOp
+inline bool algo::LnumStr2_U32::operator ==(const algo::LnumStr2_U32 &rhs) const {
+    return algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
+}
+
+// --- algo.LnumStr2_U32..NeOp
+inline bool algo::LnumStr2_U32::operator !=(const algo::LnumStr2_U32 &rhs) const {
+    return !algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
 }
 
 // --- algo.LnumStr2_U32..Cmp
@@ -4007,26 +4143,28 @@ inline bool algo::LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& r
     return retval;
 }
 
-// --- algo.LnumStr2_U32..EqStrptr
-inline bool algo::LnumStr2_U32_EqStrptr(const algo::LnumStr2_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr2_U32..EqOpAryptr
+inline bool algo::LnumStr2_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr3_U32::operator ==(const algo::LnumStr3_U32 &rhs) const {
-    return algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
+// --- algo.LnumStr2_U32..AssignOp
+inline algo::LnumStr2_U32& algo::LnumStr2_U32::operator =(const algo::LnumStr2_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr2_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr3_U32::operator !=(const algo::LnumStr3_U32 &rhs) const {
-    return !algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
+// --- algo.LnumStr2_U32..Ctor
+inline  algo::LnumStr2_U32::LnumStr2_U32() {
+    algo::LnumStr2_U32_Init(*this);
 }
 
-inline bool algo::LnumStr3_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr3_U32_EqStrptr(const_cast<algo::LnumStr3_U32&>(*this),rhs);
+// --- algo.LnumStr2_U32..CopyCtor
+inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::LnumStr2_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr2_U32));
 }
-inline algo::LnumStr3_U32::LnumStr3_U32() {
-    algo::LnumStr3_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr3_U32.ch.Getary
 // Access string as array of chars
@@ -4073,26 +4211,24 @@ inline void algo::LnumStr3_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr3_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr3_U32::operator =(const algo::LnumStr3_U32& parent) {
-    memcpy(ch, parent.ch, 3);
-}
-
-// --- algo.LnumStr3_U32.ch.Ctor
-inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::LnumStr3_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr3_U32.ch.CtorStrptr
 inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr3_U32.ch.Cast
-inline algo::LnumStr3_U32::operator algo::strptr () const {
+inline  algo::LnumStr3_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr3_U32..EqOp
+inline bool algo::LnumStr3_U32::operator ==(const algo::LnumStr3_U32 &rhs) const {
+    return algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
+}
+
+// --- algo.LnumStr3_U32..NeOp
+inline bool algo::LnumStr3_U32::operator !=(const algo::LnumStr3_U32 &rhs) const {
+    return !algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
 }
 
 // --- algo.LnumStr3_U32..Cmp
@@ -4119,26 +4255,28 @@ inline bool algo::LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& r
     return retval;
 }
 
-// --- algo.LnumStr3_U32..EqStrptr
-inline bool algo::LnumStr3_U32_EqStrptr(const algo::LnumStr3_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr3_U32..EqOpAryptr
+inline bool algo::LnumStr3_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr4_U32::operator ==(const algo::LnumStr4_U32 &rhs) const {
-    return algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
+// --- algo.LnumStr3_U32..AssignOp
+inline algo::LnumStr3_U32& algo::LnumStr3_U32::operator =(const algo::LnumStr3_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr3_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr4_U32::operator !=(const algo::LnumStr4_U32 &rhs) const {
-    return !algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
+// --- algo.LnumStr3_U32..Ctor
+inline  algo::LnumStr3_U32::LnumStr3_U32() {
+    algo::LnumStr3_U32_Init(*this);
 }
 
-inline bool algo::LnumStr4_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr4_U32_EqStrptr(const_cast<algo::LnumStr4_U32&>(*this),rhs);
+// --- algo.LnumStr3_U32..CopyCtor
+inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::LnumStr3_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr3_U32));
 }
-inline algo::LnumStr4_U32::LnumStr4_U32() {
-    algo::LnumStr4_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr4_U32.ch.Getary
 // Access string as array of chars
@@ -4185,26 +4323,24 @@ inline void algo::LnumStr4_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr4_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr4_U32::operator =(const algo::LnumStr4_U32& parent) {
-    memcpy(ch, parent.ch, 4);
-}
-
-// --- algo.LnumStr4_U32.ch.Ctor
-inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::LnumStr4_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr4_U32.ch.CtorStrptr
 inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr4_U32.ch.Cast
-inline algo::LnumStr4_U32::operator algo::strptr () const {
+inline  algo::LnumStr4_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr4_U32..EqOp
+inline bool algo::LnumStr4_U32::operator ==(const algo::LnumStr4_U32 &rhs) const {
+    return algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
+}
+
+// --- algo.LnumStr4_U32..NeOp
+inline bool algo::LnumStr4_U32::operator !=(const algo::LnumStr4_U32 &rhs) const {
+    return !algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
 }
 
 // --- algo.LnumStr4_U32..Cmp
@@ -4230,26 +4366,28 @@ inline bool algo::LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& r
     return retval;
 }
 
-// --- algo.LnumStr4_U32..EqStrptr
-inline bool algo::LnumStr4_U32_EqStrptr(const algo::LnumStr4_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr4_U32..EqOpAryptr
+inline bool algo::LnumStr4_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr5_U32::operator ==(const algo::LnumStr5_U32 &rhs) const {
-    return algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
+// --- algo.LnumStr4_U32..AssignOp
+inline algo::LnumStr4_U32& algo::LnumStr4_U32::operator =(const algo::LnumStr4_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr4_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr5_U32::operator !=(const algo::LnumStr5_U32 &rhs) const {
-    return !algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
+// --- algo.LnumStr4_U32..Ctor
+inline  algo::LnumStr4_U32::LnumStr4_U32() {
+    algo::LnumStr4_U32_Init(*this);
 }
 
-inline bool algo::LnumStr5_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr5_U32_EqStrptr(const_cast<algo::LnumStr5_U32&>(*this),rhs);
+// --- algo.LnumStr4_U32..CopyCtor
+inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::LnumStr4_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr4_U32));
 }
-inline algo::LnumStr5_U32::LnumStr5_U32() {
-    algo::LnumStr5_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr5_U32.ch.Getary
 // Access string as array of chars
@@ -4296,26 +4434,24 @@ inline void algo::LnumStr5_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr5_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr5_U32::operator =(const algo::LnumStr5_U32& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.LnumStr5_U32.ch.Ctor
-inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::LnumStr5_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr5_U32.ch.CtorStrptr
 inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr5_U32.ch.Cast
-inline algo::LnumStr5_U32::operator algo::strptr () const {
+inline  algo::LnumStr5_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr5_U32..EqOp
+inline bool algo::LnumStr5_U32::operator ==(const algo::LnumStr5_U32 &rhs) const {
+    return algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
+}
+
+// --- algo.LnumStr5_U32..NeOp
+inline bool algo::LnumStr5_U32::operator !=(const algo::LnumStr5_U32 &rhs) const {
+    return !algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
 }
 
 // --- algo.LnumStr5_U32..Cmp
@@ -4342,26 +4478,28 @@ inline bool algo::LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& r
     return retval;
 }
 
-// --- algo.LnumStr5_U32..EqStrptr
-inline bool algo::LnumStr5_U32_EqStrptr(const algo::LnumStr5_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr5_U32..EqOpAryptr
+inline bool algo::LnumStr5_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::LnumStr5_U32_Base36 &rhs) const {
-    return algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
+// --- algo.LnumStr5_U32..AssignOp
+inline algo::LnumStr5_U32& algo::LnumStr5_U32::operator =(const algo::LnumStr5_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr5_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr5_U32_Base36::operator !=(const algo::LnumStr5_U32_Base36 &rhs) const {
-    return !algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
+// --- algo.LnumStr5_U32..Ctor
+inline  algo::LnumStr5_U32::LnumStr5_U32() {
+    algo::LnumStr5_U32_Init(*this);
 }
 
-inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr5_U32_Base36_EqStrptr(const_cast<algo::LnumStr5_U32_Base36&>(*this),rhs);
+// --- algo.LnumStr5_U32..CopyCtor
+inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::LnumStr5_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr5_U32));
 }
-inline algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36() {
-    algo::LnumStr5_U32_Base36_Init(*this);
-}
-
 
 // --- algo.LnumStr5_U32_Base36.ch.Getary
 // Access string as array of chars
@@ -4408,26 +4546,24 @@ inline void algo::LnumStr5_U32_Base36::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr5_U32_Base36.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr5_U32_Base36::operator =(const algo::LnumStr5_U32_Base36& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.LnumStr5_U32_Base36.ch.Ctor
-inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr5_U32_Base36.ch.CtorStrptr
 inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.Cast
-inline algo::LnumStr5_U32_Base36::operator algo::strptr () const {
+inline  algo::LnumStr5_U32_Base36::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr5_U32_Base36..EqOp
+inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::LnumStr5_U32_Base36 &rhs) const {
+    return algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
+}
+
+// --- algo.LnumStr5_U32_Base36..NeOp
+inline bool algo::LnumStr5_U32_Base36::operator !=(const algo::LnumStr5_U32_Base36 &rhs) const {
+    return !algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr5_U32_Base36..Cmp
@@ -4454,26 +4590,28 @@ inline bool algo::LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::L
     return retval;
 }
 
-// --- algo.LnumStr5_U32_Base36..EqStrptr
-inline bool algo::LnumStr5_U32_Base36_EqStrptr(const algo::LnumStr5_U32_Base36& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr5_U32_Base36..EqOpAryptr
+inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr6_U32::operator ==(const algo::LnumStr6_U32 &rhs) const {
-    return algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
+// --- algo.LnumStr5_U32_Base36..AssignOp
+inline algo::LnumStr5_U32_Base36& algo::LnumStr5_U32_Base36::operator =(const algo::LnumStr5_U32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr5_U32_Base36));
+    return *this;
 }
 
-inline bool algo::LnumStr6_U32::operator !=(const algo::LnumStr6_U32 &rhs) const {
-    return !algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
+// --- algo.LnumStr5_U32_Base36..Ctor
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36() {
+    algo::LnumStr5_U32_Base36_Init(*this);
 }
 
-inline bool algo::LnumStr6_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr6_U32_EqStrptr(const_cast<algo::LnumStr6_U32&>(*this),rhs);
+// --- algo.LnumStr5_U32_Base36..CopyCtor
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr5_U32_Base36));
 }
-inline algo::LnumStr6_U32::LnumStr6_U32() {
-    algo::LnumStr6_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr6_U32.ch.Getary
 // Access string as array of chars
@@ -4520,26 +4658,24 @@ inline void algo::LnumStr6_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr6_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr6_U32::operator =(const algo::LnumStr6_U32& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.LnumStr6_U32.ch.Ctor
-inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::LnumStr6_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr6_U32.ch.CtorStrptr
 inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr6_U32.ch.Cast
-inline algo::LnumStr6_U32::operator algo::strptr () const {
+inline  algo::LnumStr6_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr6_U32..EqOp
+inline bool algo::LnumStr6_U32::operator ==(const algo::LnumStr6_U32 &rhs) const {
+    return algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
+}
+
+// --- algo.LnumStr6_U32..NeOp
+inline bool algo::LnumStr6_U32::operator !=(const algo::LnumStr6_U32 &rhs) const {
+    return !algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
 }
 
 // --- algo.LnumStr6_U32..Cmp
@@ -4566,26 +4702,28 @@ inline bool algo::LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& r
     return retval;
 }
 
-// --- algo.LnumStr6_U32..EqStrptr
-inline bool algo::LnumStr6_U32_EqStrptr(const algo::LnumStr6_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr6_U32..EqOpAryptr
+inline bool algo::LnumStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr7_U32::operator ==(const algo::LnumStr7_U32 &rhs) const {
-    return algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
+// --- algo.LnumStr6_U32..AssignOp
+inline algo::LnumStr6_U32& algo::LnumStr6_U32::operator =(const algo::LnumStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr6_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr7_U32::operator !=(const algo::LnumStr7_U32 &rhs) const {
-    return !algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
+// --- algo.LnumStr6_U32..Ctor
+inline  algo::LnumStr6_U32::LnumStr6_U32() {
+    algo::LnumStr6_U32_Init(*this);
 }
 
-inline bool algo::LnumStr7_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr7_U32_EqStrptr(const_cast<algo::LnumStr7_U32&>(*this),rhs);
+// --- algo.LnumStr6_U32..CopyCtor
+inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::LnumStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr6_U32));
 }
-inline algo::LnumStr7_U32::LnumStr7_U32() {
-    algo::LnumStr7_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr7_U32.ch.Getary
 // Access string as array of chars
@@ -4632,26 +4770,24 @@ inline void algo::LnumStr7_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr7_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr7_U32::operator =(const algo::LnumStr7_U32& parent) {
-    memcpy(ch, parent.ch, 7);
-}
-
-// --- algo.LnumStr7_U32.ch.Ctor
-inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::LnumStr7_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr7_U32.ch.CtorStrptr
 inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr7_U32.ch.Cast
-inline algo::LnumStr7_U32::operator algo::strptr () const {
+inline  algo::LnumStr7_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr7_U32..EqOp
+inline bool algo::LnumStr7_U32::operator ==(const algo::LnumStr7_U32 &rhs) const {
+    return algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
+}
+
+// --- algo.LnumStr7_U32..NeOp
+inline bool algo::LnumStr7_U32::operator !=(const algo::LnumStr7_U32 &rhs) const {
+    return !algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
 }
 
 // --- algo.LnumStr7_U32..Cmp
@@ -4679,26 +4815,28 @@ inline bool algo::LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& r
     return retval;
 }
 
-// --- algo.LnumStr7_U32..EqStrptr
-inline bool algo::LnumStr7_U32_EqStrptr(const algo::LnumStr7_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr7_U32..EqOpAryptr
+inline bool algo::LnumStr7_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::LnumStr7_U32_Base36 &rhs) const {
-    return algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
+// --- algo.LnumStr7_U32..AssignOp
+inline algo::LnumStr7_U32& algo::LnumStr7_U32::operator =(const algo::LnumStr7_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr7_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr7_U32_Base36::operator !=(const algo::LnumStr7_U32_Base36 &rhs) const {
-    return !algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
+// --- algo.LnumStr7_U32..Ctor
+inline  algo::LnumStr7_U32::LnumStr7_U32() {
+    algo::LnumStr7_U32_Init(*this);
 }
 
-inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr7_U32_Base36_EqStrptr(const_cast<algo::LnumStr7_U32_Base36&>(*this),rhs);
+// --- algo.LnumStr7_U32..CopyCtor
+inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::LnumStr7_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr7_U32));
 }
-inline algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36() {
-    algo::LnumStr7_U32_Base36_Init(*this);
-}
-
 
 // --- algo.LnumStr7_U32_Base36.ch.Getary
 // Access string as array of chars
@@ -4745,26 +4883,24 @@ inline void algo::LnumStr7_U32_Base36::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr7_U32_Base36.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr7_U32_Base36::operator =(const algo::LnumStr7_U32_Base36& parent) {
-    memcpy(ch, parent.ch, 7);
-}
-
-// --- algo.LnumStr7_U32_Base36.ch.Ctor
-inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr7_U32_Base36.ch.CtorStrptr
 inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Cast
-inline algo::LnumStr7_U32_Base36::operator algo::strptr () const {
+inline  algo::LnumStr7_U32_Base36::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr7_U32_Base36..EqOp
+inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::LnumStr7_U32_Base36 &rhs) const {
+    return algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
+}
+
+// --- algo.LnumStr7_U32_Base36..NeOp
+inline bool algo::LnumStr7_U32_Base36::operator !=(const algo::LnumStr7_U32_Base36 &rhs) const {
+    return !algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr7_U32_Base36..Cmp
@@ -4792,26 +4928,28 @@ inline bool algo::LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::L
     return retval;
 }
 
-// --- algo.LnumStr7_U32_Base36..EqStrptr
-inline bool algo::LnumStr7_U32_Base36_EqStrptr(const algo::LnumStr7_U32_Base36& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr7_U32_Base36..EqOpAryptr
+inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr8_U32::operator ==(const algo::LnumStr8_U32 &rhs) const {
-    return algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
+// --- algo.LnumStr7_U32_Base36..AssignOp
+inline algo::LnumStr7_U32_Base36& algo::LnumStr7_U32_Base36::operator =(const algo::LnumStr7_U32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr7_U32_Base36));
+    return *this;
 }
 
-inline bool algo::LnumStr8_U32::operator !=(const algo::LnumStr8_U32 &rhs) const {
-    return !algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
+// --- algo.LnumStr7_U32_Base36..Ctor
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36() {
+    algo::LnumStr7_U32_Base36_Init(*this);
 }
 
-inline bool algo::LnumStr8_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr8_U32_EqStrptr(const_cast<algo::LnumStr8_U32&>(*this),rhs);
+// --- algo.LnumStr7_U32_Base36..CopyCtor
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr7_U32_Base36));
 }
-inline algo::LnumStr8_U32::LnumStr8_U32() {
-    algo::LnumStr8_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr8_U32.ch.Getary
 // Access string as array of chars
@@ -4858,26 +4996,24 @@ inline void algo::LnumStr8_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr8_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr8_U32::operator =(const algo::LnumStr8_U32& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.LnumStr8_U32.ch.Ctor
-inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::LnumStr8_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr8_U32.ch.CtorStrptr
 inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U32.ch.Cast
-inline algo::LnumStr8_U32::operator algo::strptr () const {
+inline  algo::LnumStr8_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr8_U32..EqOp
+inline bool algo::LnumStr8_U32::operator ==(const algo::LnumStr8_U32 &rhs) const {
+    return algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
+}
+
+// --- algo.LnumStr8_U32..NeOp
+inline bool algo::LnumStr8_U32::operator !=(const algo::LnumStr8_U32 &rhs) const {
+    return !algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
 }
 
 // --- algo.LnumStr8_U32..Cmp
@@ -4903,26 +5039,28 @@ inline bool algo::LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& r
     return retval;
 }
 
-// --- algo.LnumStr8_U32..EqStrptr
-inline bool algo::LnumStr8_U32_EqStrptr(const algo::LnumStr8_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr8_U32..EqOpAryptr
+inline bool algo::LnumStr8_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::LnumStr8_U32_Base16 &rhs) const {
-    return algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
+// --- algo.LnumStr8_U32..AssignOp
+inline algo::LnumStr8_U32& algo::LnumStr8_U32::operator =(const algo::LnumStr8_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr8_U32_Base16::operator !=(const algo::LnumStr8_U32_Base16 &rhs) const {
-    return !algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
+// --- algo.LnumStr8_U32..Ctor
+inline  algo::LnumStr8_U32::LnumStr8_U32() {
+    algo::LnumStr8_U32_Init(*this);
 }
 
-inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr8_U32_Base16_EqStrptr(const_cast<algo::LnumStr8_U32_Base16&>(*this),rhs);
+// --- algo.LnumStr8_U32..CopyCtor
+inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::LnumStr8_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U32));
 }
-inline algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16() {
-    algo::LnumStr8_U32_Base16_Init(*this);
-}
-
 
 // --- algo.LnumStr8_U32_Base16.ch.Getary
 // Access string as array of chars
@@ -4969,26 +5107,24 @@ inline void algo::LnumStr8_U32_Base16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr8_U32_Base16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr8_U32_Base16::operator =(const algo::LnumStr8_U32_Base16& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.LnumStr8_U32_Base16.ch.Ctor
-inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr8_U32_Base16.ch.CtorStrptr
 inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Cast
-inline algo::LnumStr8_U32_Base16::operator algo::strptr () const {
+inline  algo::LnumStr8_U32_Base16::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr8_U32_Base16..EqOp
+inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::LnumStr8_U32_Base16 &rhs) const {
+    return algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
+}
+
+// --- algo.LnumStr8_U32_Base16..NeOp
+inline bool algo::LnumStr8_U32_Base16::operator !=(const algo::LnumStr8_U32_Base16 &rhs) const {
+    return !algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
 }
 
 // --- algo.LnumStr8_U32_Base16..Cmp
@@ -5014,26 +5150,28 @@ inline bool algo::LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::L
     return retval;
 }
 
-// --- algo.LnumStr8_U32_Base16..EqStrptr
-inline bool algo::LnumStr8_U32_Base16_EqStrptr(const algo::LnumStr8_U32_Base16& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr8_U32_Base16..EqOpAryptr
+inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr8_U64::operator ==(const algo::LnumStr8_U64 &rhs) const {
-    return algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
+// --- algo.LnumStr8_U32_Base16..AssignOp
+inline algo::LnumStr8_U32_Base16& algo::LnumStr8_U32_Base16::operator =(const algo::LnumStr8_U32_Base16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U32_Base16));
+    return *this;
 }
 
-inline bool algo::LnumStr8_U64::operator !=(const algo::LnumStr8_U64 &rhs) const {
-    return !algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
+// --- algo.LnumStr8_U32_Base16..Ctor
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16() {
+    algo::LnumStr8_U32_Base16_Init(*this);
 }
 
-inline bool algo::LnumStr8_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr8_U64_EqStrptr(const_cast<algo::LnumStr8_U64&>(*this),rhs);
+// --- algo.LnumStr8_U32_Base16..CopyCtor
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U32_Base16));
 }
-inline algo::LnumStr8_U64::LnumStr8_U64() {
-    algo::LnumStr8_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr8_U64.ch.Getary
 // Access string as array of chars
@@ -5080,26 +5218,24 @@ inline void algo::LnumStr8_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr8_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr8_U64::operator =(const algo::LnumStr8_U64& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.LnumStr8_U64.ch.Ctor
-inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::LnumStr8_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr8_U64.ch.CtorStrptr
 inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U64.ch.Cast
-inline algo::LnumStr8_U64::operator algo::strptr () const {
+inline  algo::LnumStr8_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr8_U64..EqOp
+inline bool algo::LnumStr8_U64::operator ==(const algo::LnumStr8_U64 &rhs) const {
+    return algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
+}
+
+// --- algo.LnumStr8_U64..NeOp
+inline bool algo::LnumStr8_U64::operator !=(const algo::LnumStr8_U64 &rhs) const {
+    return !algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
 }
 
 // --- algo.LnumStr8_U64..Cmp
@@ -5125,26 +5261,28 @@ inline bool algo::LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& r
     return retval;
 }
 
-// --- algo.LnumStr8_U64..EqStrptr
-inline bool algo::LnumStr8_U64_EqStrptr(const algo::LnumStr8_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr8_U64..EqOpAryptr
+inline bool algo::LnumStr8_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr9_U32::operator ==(const algo::LnumStr9_U32 &rhs) const {
-    return algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
+// --- algo.LnumStr8_U64..AssignOp
+inline algo::LnumStr8_U64& algo::LnumStr8_U64::operator =(const algo::LnumStr8_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U64));
+    return *this;
 }
 
-inline bool algo::LnumStr9_U32::operator !=(const algo::LnumStr9_U32 &rhs) const {
-    return !algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
+// --- algo.LnumStr8_U64..Ctor
+inline  algo::LnumStr8_U64::LnumStr8_U64() {
+    algo::LnumStr8_U64_Init(*this);
 }
 
-inline bool algo::LnumStr9_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr9_U32_EqStrptr(const_cast<algo::LnumStr9_U32&>(*this),rhs);
+// --- algo.LnumStr8_U64..CopyCtor
+inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::LnumStr8_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr8_U64));
 }
-inline algo::LnumStr9_U32::LnumStr9_U32() {
-    algo::LnumStr9_U32_Init(*this);
-}
-
 
 // --- algo.LnumStr9_U32.ch.Getary
 // Access string as array of chars
@@ -5191,26 +5329,24 @@ inline void algo::LnumStr9_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr9_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr9_U32::operator =(const algo::LnumStr9_U32& parent) {
-    memcpy(ch, parent.ch, 9);
-}
-
-// --- algo.LnumStr9_U32.ch.Ctor
-inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::LnumStr9_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr9_U32.ch.CtorStrptr
 inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr9_U32.ch.Cast
-inline algo::LnumStr9_U32::operator algo::strptr () const {
+inline  algo::LnumStr9_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr9_U32..EqOp
+inline bool algo::LnumStr9_U32::operator ==(const algo::LnumStr9_U32 &rhs) const {
+    return algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
+}
+
+// --- algo.LnumStr9_U32..NeOp
+inline bool algo::LnumStr9_U32::operator !=(const algo::LnumStr9_U32 &rhs) const {
+    return !algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
 }
 
 // --- algo.LnumStr9_U32..Cmp
@@ -5237,26 +5373,28 @@ inline bool algo::LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& r
     return retval;
 }
 
-// --- algo.LnumStr9_U32..EqStrptr
-inline bool algo::LnumStr9_U32_EqStrptr(const algo::LnumStr9_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr9_U32..EqOpAryptr
+inline bool algo::LnumStr9_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LnumStr9_U64::operator ==(const algo::LnumStr9_U64 &rhs) const {
-    return algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
+// --- algo.LnumStr9_U32..AssignOp
+inline algo::LnumStr9_U32& algo::LnumStr9_U32::operator =(const algo::LnumStr9_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr9_U32));
+    return *this;
 }
 
-inline bool algo::LnumStr9_U64::operator !=(const algo::LnumStr9_U64 &rhs) const {
-    return !algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
+// --- algo.LnumStr9_U32..Ctor
+inline  algo::LnumStr9_U32::LnumStr9_U32() {
+    algo::LnumStr9_U32_Init(*this);
 }
 
-inline bool algo::LnumStr9_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LnumStr9_U64_EqStrptr(const_cast<algo::LnumStr9_U64&>(*this),rhs);
+// --- algo.LnumStr9_U32..CopyCtor
+inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::LnumStr9_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr9_U32));
 }
-inline algo::LnumStr9_U64::LnumStr9_U64() {
-    algo::LnumStr9_U64_Init(*this);
-}
-
 
 // --- algo.LnumStr9_U64.ch.Getary
 // Access string as array of chars
@@ -5303,26 +5441,24 @@ inline void algo::LnumStr9_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LnumStr9_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LnumStr9_U64::operator =(const algo::LnumStr9_U64& parent) {
-    memcpy(ch, parent.ch, 9);
-}
-
-// --- algo.LnumStr9_U64.ch.Ctor
-inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::LnumStr9_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LnumStr9_U64.ch.CtorStrptr
 inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr9_U64.ch.Cast
-inline algo::LnumStr9_U64::operator algo::strptr () const {
+inline  algo::LnumStr9_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LnumStr9_U64..EqOp
+inline bool algo::LnumStr9_U64::operator ==(const algo::LnumStr9_U64 &rhs) const {
+    return algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
+}
+
+// --- algo.LnumStr9_U64..NeOp
+inline bool algo::LnumStr9_U64::operator !=(const algo::LnumStr9_U64 &rhs) const {
+    return !algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
 }
 
 // --- algo.LnumStr9_U64..Cmp
@@ -5349,26 +5485,28 @@ inline bool algo::LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& r
     return retval;
 }
 
-// --- algo.LnumStr9_U64..EqStrptr
-inline bool algo::LnumStr9_U64_EqStrptr(const algo::LnumStr9_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LnumStr9_U64..EqOpAryptr
+inline bool algo::LnumStr9_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr10::operator ==(const algo::LspaceStr10 &rhs) const {
-    return algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
+// --- algo.LnumStr9_U64..AssignOp
+inline algo::LnumStr9_U64& algo::LnumStr9_U64::operator =(const algo::LnumStr9_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr9_U64));
+    return *this;
 }
 
-inline bool algo::LspaceStr10::operator !=(const algo::LspaceStr10 &rhs) const {
-    return !algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
+// --- algo.LnumStr9_U64..Ctor
+inline  algo::LnumStr9_U64::LnumStr9_U64() {
+    algo::LnumStr9_U64_Init(*this);
 }
 
-inline bool algo::LspaceStr10::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr10_EqStrptr(const_cast<algo::LspaceStr10&>(*this),rhs);
+// --- algo.LnumStr9_U64..CopyCtor
+inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::LnumStr9_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LnumStr9_U64));
 }
-inline algo::LspaceStr10::LspaceStr10() {
-    algo::LspaceStr10_Init(*this);
-}
-
 
 // --- algo.LspaceStr10.ch.Getary
 // Access string as array of chars
@@ -5413,26 +5551,24 @@ inline void algo::LspaceStr10::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr10.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr10::operator =(const algo::LspaceStr10& parent) {
-    memcpy(ch, parent.ch, 10);
-}
-
-// --- algo.LspaceStr10.ch.Ctor
-inline  algo::LspaceStr10::LspaceStr10(const algo::LspaceStr10 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr10.ch.CtorStrptr
 inline  algo::LspaceStr10::LspaceStr10(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr10.ch.Cast
-inline algo::LspaceStr10::operator algo::strptr () const {
+inline  algo::LspaceStr10::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr10..EqOp
+inline bool algo::LspaceStr10::operator ==(const algo::LspaceStr10 &rhs) const {
+    return algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
+}
+
+// --- algo.LspaceStr10..NeOp
+inline bool algo::LspaceStr10::operator !=(const algo::LspaceStr10 &rhs) const {
+    return !algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
 }
 
 // --- algo.LspaceStr10..Cmp
@@ -5457,26 +5593,28 @@ inline bool algo::LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs)
     return retval;
 }
 
-// --- algo.LspaceStr10..EqStrptr
-inline bool algo::LspaceStr10_EqStrptr(const algo::LspaceStr10& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr10..EqOpAryptr
+inline bool algo::LspaceStr10::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr12::operator ==(const algo::LspaceStr12 &rhs) const {
-    return algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
+// --- algo.LspaceStr10..AssignOp
+inline algo::LspaceStr10& algo::LspaceStr10::operator =(const algo::LspaceStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr10));
+    return *this;
 }
 
-inline bool algo::LspaceStr12::operator !=(const algo::LspaceStr12 &rhs) const {
-    return !algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
+// --- algo.LspaceStr10..Ctor
+inline  algo::LspaceStr10::LspaceStr10() {
+    algo::LspaceStr10_Init(*this);
 }
 
-inline bool algo::LspaceStr12::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr12_EqStrptr(const_cast<algo::LspaceStr12&>(*this),rhs);
+// --- algo.LspaceStr10..CopyCtor
+inline  algo::LspaceStr10::LspaceStr10(const algo::LspaceStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr10));
 }
-inline algo::LspaceStr12::LspaceStr12() {
-    algo::LspaceStr12_Init(*this);
-}
-
 
 // --- algo.LspaceStr12.ch.Getary
 // Access string as array of chars
@@ -5521,26 +5659,24 @@ inline void algo::LspaceStr12::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr12.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr12::operator =(const algo::LspaceStr12& parent) {
-    memcpy(ch, parent.ch, 12);
-}
-
-// --- algo.LspaceStr12.ch.Ctor
-inline  algo::LspaceStr12::LspaceStr12(const algo::LspaceStr12 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr12.ch.CtorStrptr
 inline  algo::LspaceStr12::LspaceStr12(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr12.ch.Cast
-inline algo::LspaceStr12::operator algo::strptr () const {
+inline  algo::LspaceStr12::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr12..EqOp
+inline bool algo::LspaceStr12::operator ==(const algo::LspaceStr12 &rhs) const {
+    return algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
+}
+
+// --- algo.LspaceStr12..NeOp
+inline bool algo::LspaceStr12::operator !=(const algo::LspaceStr12 &rhs) const {
+    return !algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
 }
 
 // --- algo.LspaceStr12..Cmp
@@ -5565,26 +5701,28 @@ inline bool algo::LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs)
     return retval;
 }
 
-// --- algo.LspaceStr12..EqStrptr
-inline bool algo::LspaceStr12_EqStrptr(const algo::LspaceStr12& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr12..EqOpAryptr
+inline bool algo::LspaceStr12::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr14::operator ==(const algo::LspaceStr14 &rhs) const {
-    return algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
+// --- algo.LspaceStr12..AssignOp
+inline algo::LspaceStr12& algo::LspaceStr12::operator =(const algo::LspaceStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr12));
+    return *this;
 }
 
-inline bool algo::LspaceStr14::operator !=(const algo::LspaceStr14 &rhs) const {
-    return !algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
+// --- algo.LspaceStr12..Ctor
+inline  algo::LspaceStr12::LspaceStr12() {
+    algo::LspaceStr12_Init(*this);
 }
 
-inline bool algo::LspaceStr14::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr14_EqStrptr(const_cast<algo::LspaceStr14&>(*this),rhs);
+// --- algo.LspaceStr12..CopyCtor
+inline  algo::LspaceStr12::LspaceStr12(const algo::LspaceStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr12));
 }
-inline algo::LspaceStr14::LspaceStr14() {
-    algo::LspaceStr14_Init(*this);
-}
-
 
 // --- algo.LspaceStr14.ch.Getary
 // Access string as array of chars
@@ -5629,26 +5767,24 @@ inline void algo::LspaceStr14::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr14.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr14::operator =(const algo::LspaceStr14& parent) {
-    memcpy(ch, parent.ch, 14);
-}
-
-// --- algo.LspaceStr14.ch.Ctor
-inline  algo::LspaceStr14::LspaceStr14(const algo::LspaceStr14 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr14.ch.CtorStrptr
 inline  algo::LspaceStr14::LspaceStr14(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr14.ch.Cast
-inline algo::LspaceStr14::operator algo::strptr () const {
+inline  algo::LspaceStr14::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr14..EqOp
+inline bool algo::LspaceStr14::operator ==(const algo::LspaceStr14 &rhs) const {
+    return algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
+}
+
+// --- algo.LspaceStr14..NeOp
+inline bool algo::LspaceStr14::operator !=(const algo::LspaceStr14 &rhs) const {
+    return !algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
 }
 
 // --- algo.LspaceStr14..Cmp
@@ -5674,26 +5810,28 @@ inline bool algo::LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs)
     return retval;
 }
 
-// --- algo.LspaceStr14..EqStrptr
-inline bool algo::LspaceStr14_EqStrptr(const algo::LspaceStr14& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr14..EqOpAryptr
+inline bool algo::LspaceStr14::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr15::operator ==(const algo::LspaceStr15 &rhs) const {
-    return algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
+// --- algo.LspaceStr14..AssignOp
+inline algo::LspaceStr14& algo::LspaceStr14::operator =(const algo::LspaceStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr14));
+    return *this;
 }
 
-inline bool algo::LspaceStr15::operator !=(const algo::LspaceStr15 &rhs) const {
-    return !algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
+// --- algo.LspaceStr14..Ctor
+inline  algo::LspaceStr14::LspaceStr14() {
+    algo::LspaceStr14_Init(*this);
 }
 
-inline bool algo::LspaceStr15::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr15_EqStrptr(const_cast<algo::LspaceStr15&>(*this),rhs);
+// --- algo.LspaceStr14..CopyCtor
+inline  algo::LspaceStr14::LspaceStr14(const algo::LspaceStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr14));
 }
-inline algo::LspaceStr15::LspaceStr15() {
-    algo::LspaceStr15_Init(*this);
-}
-
 
 // --- algo.LspaceStr15.ch.Getary
 // Access string as array of chars
@@ -5738,26 +5876,24 @@ inline void algo::LspaceStr15::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr15.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr15::operator =(const algo::LspaceStr15& parent) {
-    memcpy(ch, parent.ch, 15);
-}
-
-// --- algo.LspaceStr15.ch.Ctor
-inline  algo::LspaceStr15::LspaceStr15(const algo::LspaceStr15 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr15.ch.CtorStrptr
 inline  algo::LspaceStr15::LspaceStr15(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr15.ch.Cast
-inline algo::LspaceStr15::operator algo::strptr () const {
+inline  algo::LspaceStr15::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr15..EqOp
+inline bool algo::LspaceStr15::operator ==(const algo::LspaceStr15 &rhs) const {
+    return algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
+}
+
+// --- algo.LspaceStr15..NeOp
+inline bool algo::LspaceStr15::operator !=(const algo::LspaceStr15 &rhs) const {
+    return !algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
 }
 
 // --- algo.LspaceStr15..Cmp
@@ -5784,26 +5920,28 @@ inline bool algo::LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs)
     return retval;
 }
 
-// --- algo.LspaceStr15..EqStrptr
-inline bool algo::LspaceStr15_EqStrptr(const algo::LspaceStr15& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr15..EqOpAryptr
+inline bool algo::LspaceStr15::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr20_I64::operator ==(const algo::LspaceStr20_I64 &rhs) const {
-    return algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
+// --- algo.LspaceStr15..AssignOp
+inline algo::LspaceStr15& algo::LspaceStr15::operator =(const algo::LspaceStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr15));
+    return *this;
 }
 
-inline bool algo::LspaceStr20_I64::operator !=(const algo::LspaceStr20_I64 &rhs) const {
-    return !algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
+// --- algo.LspaceStr15..Ctor
+inline  algo::LspaceStr15::LspaceStr15() {
+    algo::LspaceStr15_Init(*this);
 }
 
-inline bool algo::LspaceStr20_I64::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr20_I64_EqStrptr(const_cast<algo::LspaceStr20_I64&>(*this),rhs);
+// --- algo.LspaceStr15..CopyCtor
+inline  algo::LspaceStr15::LspaceStr15(const algo::LspaceStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr15));
 }
-inline algo::LspaceStr20_I64::LspaceStr20_I64() {
-    algo::LspaceStr20_I64_Init(*this);
-}
-
 
 // --- algo.LspaceStr20_I64.ch.Getary
 // Access string as array of chars
@@ -5848,26 +5986,24 @@ inline void algo::LspaceStr20_I64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr20_I64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr20_I64::operator =(const algo::LspaceStr20_I64& parent) {
-    memcpy(ch, parent.ch, 20);
-}
-
-// --- algo.LspaceStr20_I64.ch.Ctor
-inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr20_I64.ch.CtorStrptr
 inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr20_I64.ch.Cast
-inline algo::LspaceStr20_I64::operator algo::strptr () const {
+inline  algo::LspaceStr20_I64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr20_I64..EqOp
+inline bool algo::LspaceStr20_I64::operator ==(const algo::LspaceStr20_I64 &rhs) const {
+    return algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
+}
+
+// --- algo.LspaceStr20_I64..NeOp
+inline bool algo::LspaceStr20_I64::operator !=(const algo::LspaceStr20_I64 &rhs) const {
+    return !algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
 }
 
 // --- algo.LspaceStr20_I64..Cmp
@@ -5893,26 +6029,28 @@ inline bool algo::LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr
     return retval;
 }
 
-// --- algo.LspaceStr20_I64..EqStrptr
-inline bool algo::LspaceStr20_I64_EqStrptr(const algo::LspaceStr20_I64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr20_I64..EqOpAryptr
+inline bool algo::LspaceStr20_I64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr20_U64::operator ==(const algo::LspaceStr20_U64 &rhs) const {
-    return algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
+// --- algo.LspaceStr20_I64..AssignOp
+inline algo::LspaceStr20_I64& algo::LspaceStr20_I64::operator =(const algo::LspaceStr20_I64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr20_I64));
+    return *this;
 }
 
-inline bool algo::LspaceStr20_U64::operator !=(const algo::LspaceStr20_U64 &rhs) const {
-    return !algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
+// --- algo.LspaceStr20_I64..Ctor
+inline  algo::LspaceStr20_I64::LspaceStr20_I64() {
+    algo::LspaceStr20_I64_Init(*this);
 }
 
-inline bool algo::LspaceStr20_U64::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr20_U64_EqStrptr(const_cast<algo::LspaceStr20_U64&>(*this),rhs);
+// --- algo.LspaceStr20_I64..CopyCtor
+inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr20_I64));
 }
-inline algo::LspaceStr20_U64::LspaceStr20_U64() {
-    algo::LspaceStr20_U64_Init(*this);
-}
-
 
 // --- algo.LspaceStr20_U64.ch.Getary
 // Access string as array of chars
@@ -5957,26 +6095,24 @@ inline void algo::LspaceStr20_U64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr20_U64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr20_U64::operator =(const algo::LspaceStr20_U64& parent) {
-    memcpy(ch, parent.ch, 20);
-}
-
-// --- algo.LspaceStr20_U64.ch.Ctor
-inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr20_U64.ch.CtorStrptr
 inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr20_U64.ch.Cast
-inline algo::LspaceStr20_U64::operator algo::strptr () const {
+inline  algo::LspaceStr20_U64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr20_U64..EqOp
+inline bool algo::LspaceStr20_U64::operator ==(const algo::LspaceStr20_U64 &rhs) const {
+    return algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
+}
+
+// --- algo.LspaceStr20_U64..NeOp
+inline bool algo::LspaceStr20_U64::operator !=(const algo::LspaceStr20_U64 &rhs) const {
+    return !algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
 }
 
 // --- algo.LspaceStr20_U64..Cmp
@@ -6002,26 +6138,28 @@ inline bool algo::LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr
     return retval;
 }
 
-// --- algo.LspaceStr20_U64..EqStrptr
-inline bool algo::LspaceStr20_U64_EqStrptr(const algo::LspaceStr20_U64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr20_U64..EqOpAryptr
+inline bool algo::LspaceStr20_U64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr3::operator ==(const algo::LspaceStr3 &rhs) const {
-    return algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
+// --- algo.LspaceStr20_U64..AssignOp
+inline algo::LspaceStr20_U64& algo::LspaceStr20_U64::operator =(const algo::LspaceStr20_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr20_U64));
+    return *this;
 }
 
-inline bool algo::LspaceStr3::operator !=(const algo::LspaceStr3 &rhs) const {
-    return !algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
+// --- algo.LspaceStr20_U64..Ctor
+inline  algo::LspaceStr20_U64::LspaceStr20_U64() {
+    algo::LspaceStr20_U64_Init(*this);
 }
 
-inline bool algo::LspaceStr3::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr3_EqStrptr(const_cast<algo::LspaceStr3&>(*this),rhs);
+// --- algo.LspaceStr20_U64..CopyCtor
+inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr20_U64));
 }
-inline algo::LspaceStr3::LspaceStr3() {
-    algo::LspaceStr3_Init(*this);
-}
-
 
 // --- algo.LspaceStr3.ch.Getary
 // Access string as array of chars
@@ -6066,26 +6204,24 @@ inline void algo::LspaceStr3::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr3.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr3::operator =(const algo::LspaceStr3& parent) {
-    memcpy(ch, parent.ch, 3);
-}
-
-// --- algo.LspaceStr3.ch.Ctor
-inline  algo::LspaceStr3::LspaceStr3(const algo::LspaceStr3 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr3.ch.CtorStrptr
 inline  algo::LspaceStr3::LspaceStr3(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr3.ch.Cast
-inline algo::LspaceStr3::operator algo::strptr () const {
+inline  algo::LspaceStr3::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr3..EqOp
+inline bool algo::LspaceStr3::operator ==(const algo::LspaceStr3 &rhs) const {
+    return algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
+}
+
+// --- algo.LspaceStr3..NeOp
+inline bool algo::LspaceStr3::operator !=(const algo::LspaceStr3 &rhs) const {
+    return !algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
 }
 
 // --- algo.LspaceStr3..Cmp
@@ -6110,26 +6246,28 @@ inline bool algo::LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr3..EqStrptr
-inline bool algo::LspaceStr3_EqStrptr(const algo::LspaceStr3& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr3..EqOpAryptr
+inline bool algo::LspaceStr3::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr3_I16::operator ==(const algo::LspaceStr3_I16 &rhs) const {
-    return algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
+// --- algo.LspaceStr3..AssignOp
+inline algo::LspaceStr3& algo::LspaceStr3::operator =(const algo::LspaceStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr3));
+    return *this;
 }
 
-inline bool algo::LspaceStr3_I16::operator !=(const algo::LspaceStr3_I16 &rhs) const {
-    return !algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
+// --- algo.LspaceStr3..Ctor
+inline  algo::LspaceStr3::LspaceStr3() {
+    algo::LspaceStr3_Init(*this);
 }
 
-inline bool algo::LspaceStr3_I16::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr3_I16_EqStrptr(const_cast<algo::LspaceStr3_I16&>(*this),rhs);
+// --- algo.LspaceStr3..CopyCtor
+inline  algo::LspaceStr3::LspaceStr3(const algo::LspaceStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr3));
 }
-inline algo::LspaceStr3_I16::LspaceStr3_I16() {
-    algo::LspaceStr3_I16_Init(*this);
-}
-
 
 // --- algo.LspaceStr3_I16.ch.Getary
 // Access string as array of chars
@@ -6174,26 +6312,24 @@ inline void algo::LspaceStr3_I16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr3_I16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr3_I16::operator =(const algo::LspaceStr3_I16& parent) {
-    memcpy(ch, parent.ch, 3);
-}
-
-// --- algo.LspaceStr3_I16.ch.Ctor
-inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr3_I16.ch.CtorStrptr
 inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr3_I16.ch.Cast
-inline algo::LspaceStr3_I16::operator algo::strptr () const {
+inline  algo::LspaceStr3_I16::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr3_I16..EqOp
+inline bool algo::LspaceStr3_I16::operator ==(const algo::LspaceStr3_I16 &rhs) const {
+    return algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
+}
+
+// --- algo.LspaceStr3_I16..NeOp
+inline bool algo::LspaceStr3_I16::operator !=(const algo::LspaceStr3_I16 &rhs) const {
+    return !algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
 }
 
 // --- algo.LspaceStr3_I16..Cmp
@@ -6218,26 +6354,28 @@ inline bool algo::LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_
     return retval;
 }
 
-// --- algo.LspaceStr3_I16..EqStrptr
-inline bool algo::LspaceStr3_I16_EqStrptr(const algo::LspaceStr3_I16& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr3_I16..EqOpAryptr
+inline bool algo::LspaceStr3_I16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr4::operator ==(const algo::LspaceStr4 &rhs) const {
-    return algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
+// --- algo.LspaceStr3_I16..AssignOp
+inline algo::LspaceStr3_I16& algo::LspaceStr3_I16::operator =(const algo::LspaceStr3_I16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr3_I16));
+    return *this;
 }
 
-inline bool algo::LspaceStr4::operator !=(const algo::LspaceStr4 &rhs) const {
-    return !algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
+// --- algo.LspaceStr3_I16..Ctor
+inline  algo::LspaceStr3_I16::LspaceStr3_I16() {
+    algo::LspaceStr3_I16_Init(*this);
 }
 
-inline bool algo::LspaceStr4::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr4_EqStrptr(const_cast<algo::LspaceStr4&>(*this),rhs);
+// --- algo.LspaceStr3_I16..CopyCtor
+inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr3_I16));
 }
-inline algo::LspaceStr4::LspaceStr4() {
-    algo::LspaceStr4_Init(*this);
-}
-
 
 // --- algo.LspaceStr4.ch.Getary
 // Access string as array of chars
@@ -6282,26 +6420,24 @@ inline void algo::LspaceStr4::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr4.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr4::operator =(const algo::LspaceStr4& parent) {
-    memcpy(ch, parent.ch, 4);
-}
-
-// --- algo.LspaceStr4.ch.Ctor
-inline  algo::LspaceStr4::LspaceStr4(const algo::LspaceStr4 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr4.ch.CtorStrptr
 inline  algo::LspaceStr4::LspaceStr4(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr4.ch.Cast
-inline algo::LspaceStr4::operator algo::strptr () const {
+inline  algo::LspaceStr4::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr4..EqOp
+inline bool algo::LspaceStr4::operator ==(const algo::LspaceStr4 &rhs) const {
+    return algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
+}
+
+// --- algo.LspaceStr4..NeOp
+inline bool algo::LspaceStr4::operator !=(const algo::LspaceStr4 &rhs) const {
+    return !algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
 }
 
 // --- algo.LspaceStr4..Cmp
@@ -6325,26 +6461,28 @@ inline bool algo::LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr4..EqStrptr
-inline bool algo::LspaceStr4_EqStrptr(const algo::LspaceStr4& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr4..EqOpAryptr
+inline bool algo::LspaceStr4::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr5::operator ==(const algo::LspaceStr5 &rhs) const {
-    return algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
+// --- algo.LspaceStr4..AssignOp
+inline algo::LspaceStr4& algo::LspaceStr4::operator =(const algo::LspaceStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr4));
+    return *this;
 }
 
-inline bool algo::LspaceStr5::operator !=(const algo::LspaceStr5 &rhs) const {
-    return !algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
+// --- algo.LspaceStr4..Ctor
+inline  algo::LspaceStr4::LspaceStr4() {
+    algo::LspaceStr4_Init(*this);
 }
 
-inline bool algo::LspaceStr5::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr5_EqStrptr(const_cast<algo::LspaceStr5&>(*this),rhs);
+// --- algo.LspaceStr4..CopyCtor
+inline  algo::LspaceStr4::LspaceStr4(const algo::LspaceStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr4));
 }
-inline algo::LspaceStr5::LspaceStr5() {
-    algo::LspaceStr5_Init(*this);
-}
-
 
 // --- algo.LspaceStr5.ch.Getary
 // Access string as array of chars
@@ -6389,26 +6527,24 @@ inline void algo::LspaceStr5::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr5.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr5::operator =(const algo::LspaceStr5& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.LspaceStr5.ch.Ctor
-inline  algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr5.ch.CtorStrptr
 inline  algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr5.ch.Cast
-inline algo::LspaceStr5::operator algo::strptr () const {
+inline  algo::LspaceStr5::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr5..EqOp
+inline bool algo::LspaceStr5::operator ==(const algo::LspaceStr5 &rhs) const {
+    return algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
+}
+
+// --- algo.LspaceStr5..NeOp
+inline bool algo::LspaceStr5::operator !=(const algo::LspaceStr5 &rhs) const {
+    return !algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
 }
 
 // --- algo.LspaceStr5..Cmp
@@ -6433,26 +6569,28 @@ inline bool algo::LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr5..EqStrptr
-inline bool algo::LspaceStr5_EqStrptr(const algo::LspaceStr5& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr5..EqOpAryptr
+inline bool algo::LspaceStr5::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr5_I16::operator ==(const algo::LspaceStr5_I16 &rhs) const {
-    return algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
+// --- algo.LspaceStr5..AssignOp
+inline algo::LspaceStr5& algo::LspaceStr5::operator =(const algo::LspaceStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr5));
+    return *this;
 }
 
-inline bool algo::LspaceStr5_I16::operator !=(const algo::LspaceStr5_I16 &rhs) const {
-    return !algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
+// --- algo.LspaceStr5..Ctor
+inline  algo::LspaceStr5::LspaceStr5() {
+    algo::LspaceStr5_Init(*this);
 }
 
-inline bool algo::LspaceStr5_I16::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr5_I16_EqStrptr(const_cast<algo::LspaceStr5_I16&>(*this),rhs);
+// --- algo.LspaceStr5..CopyCtor
+inline  algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr5));
 }
-inline algo::LspaceStr5_I16::LspaceStr5_I16() {
-    algo::LspaceStr5_I16_Init(*this);
-}
-
 
 // --- algo.LspaceStr5_I16.ch.Getary
 // Access string as array of chars
@@ -6497,26 +6635,24 @@ inline void algo::LspaceStr5_I16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr5_I16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.LspaceStr5_I16.ch.Ctor
-inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr5_I16.ch.CtorStrptr
 inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr5_I16.ch.Cast
-inline algo::LspaceStr5_I16::operator algo::strptr () const {
+inline  algo::LspaceStr5_I16::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr5_I16..EqOp
+inline bool algo::LspaceStr5_I16::operator ==(const algo::LspaceStr5_I16 &rhs) const {
+    return algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
+}
+
+// --- algo.LspaceStr5_I16..NeOp
+inline bool algo::LspaceStr5_I16::operator !=(const algo::LspaceStr5_I16 &rhs) const {
+    return !algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
 }
 
 // --- algo.LspaceStr5_I16..Cmp
@@ -6541,26 +6677,28 @@ inline bool algo::LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_
     return retval;
 }
 
-// --- algo.LspaceStr5_I16..EqStrptr
-inline bool algo::LspaceStr5_I16_EqStrptr(const algo::LspaceStr5_I16& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr5_I16..EqOpAryptr
+inline bool algo::LspaceStr5_I16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr6::operator ==(const algo::LspaceStr6 &rhs) const {
-    return algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
+// --- algo.LspaceStr5_I16..AssignOp
+inline algo::LspaceStr5_I16& algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr5_I16));
+    return *this;
 }
 
-inline bool algo::LspaceStr6::operator !=(const algo::LspaceStr6 &rhs) const {
-    return !algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
+// --- algo.LspaceStr5_I16..Ctor
+inline  algo::LspaceStr5_I16::LspaceStr5_I16() {
+    algo::LspaceStr5_I16_Init(*this);
 }
 
-inline bool algo::LspaceStr6::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr6_EqStrptr(const_cast<algo::LspaceStr6&>(*this),rhs);
+// --- algo.LspaceStr5_I16..CopyCtor
+inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr5_I16));
 }
-inline algo::LspaceStr6::LspaceStr6() {
-    algo::LspaceStr6_Init(*this);
-}
-
 
 // --- algo.LspaceStr6.ch.Getary
 // Access string as array of chars
@@ -6605,26 +6743,24 @@ inline void algo::LspaceStr6::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr6.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr6::operator =(const algo::LspaceStr6& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.LspaceStr6.ch.Ctor
-inline  algo::LspaceStr6::LspaceStr6(const algo::LspaceStr6 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr6.ch.CtorStrptr
 inline  algo::LspaceStr6::LspaceStr6(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr6.ch.Cast
-inline algo::LspaceStr6::operator algo::strptr () const {
+inline  algo::LspaceStr6::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr6..EqOp
+inline bool algo::LspaceStr6::operator ==(const algo::LspaceStr6 &rhs) const {
+    return algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
+}
+
+// --- algo.LspaceStr6..NeOp
+inline bool algo::LspaceStr6::operator !=(const algo::LspaceStr6 &rhs) const {
+    return !algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
 }
 
 // --- algo.LspaceStr6..Cmp
@@ -6649,26 +6785,28 @@ inline bool algo::LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr6..EqStrptr
-inline bool algo::LspaceStr6_EqStrptr(const algo::LspaceStr6& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr6..EqOpAryptr
+inline bool algo::LspaceStr6::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr6_U32::operator ==(const algo::LspaceStr6_U32 &rhs) const {
-    return algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
+// --- algo.LspaceStr6..AssignOp
+inline algo::LspaceStr6& algo::LspaceStr6::operator =(const algo::LspaceStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr6));
+    return *this;
 }
 
-inline bool algo::LspaceStr6_U32::operator !=(const algo::LspaceStr6_U32 &rhs) const {
-    return !algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
+// --- algo.LspaceStr6..Ctor
+inline  algo::LspaceStr6::LspaceStr6() {
+    algo::LspaceStr6_Init(*this);
 }
 
-inline bool algo::LspaceStr6_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr6_U32_EqStrptr(const_cast<algo::LspaceStr6_U32&>(*this),rhs);
+// --- algo.LspaceStr6..CopyCtor
+inline  algo::LspaceStr6::LspaceStr6(const algo::LspaceStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr6));
 }
-inline algo::LspaceStr6_U32::LspaceStr6_U32() {
-    algo::LspaceStr6_U32_Init(*this);
-}
-
 
 // --- algo.LspaceStr6_U32.ch.Getary
 // Access string as array of chars
@@ -6713,26 +6851,24 @@ inline void algo::LspaceStr6_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr6_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr6_U32::operator =(const algo::LspaceStr6_U32& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.LspaceStr6_U32.ch.Ctor
-inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr6_U32.ch.CtorStrptr
 inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr6_U32.ch.Cast
-inline algo::LspaceStr6_U32::operator algo::strptr () const {
+inline  algo::LspaceStr6_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr6_U32..EqOp
+inline bool algo::LspaceStr6_U32::operator ==(const algo::LspaceStr6_U32 &rhs) const {
+    return algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
+}
+
+// --- algo.LspaceStr6_U32..NeOp
+inline bool algo::LspaceStr6_U32::operator !=(const algo::LspaceStr6_U32 &rhs) const {
+    return !algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
 }
 
 // --- algo.LspaceStr6_U32..Cmp
@@ -6757,26 +6893,28 @@ inline bool algo::LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_
     return retval;
 }
 
-// --- algo.LspaceStr6_U32..EqStrptr
-inline bool algo::LspaceStr6_U32_EqStrptr(const algo::LspaceStr6_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr6_U32..EqOpAryptr
+inline bool algo::LspaceStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const {
-    return algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
+// --- algo.LspaceStr6_U32..AssignOp
+inline algo::LspaceStr6_U32& algo::LspaceStr6_U32::operator =(const algo::LspaceStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr6_U32));
+    return *this;
 }
 
-inline bool algo::LspaceStr7_I32_Base36::operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const {
-    return !algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
+// --- algo.LspaceStr6_U32..Ctor
+inline  algo::LspaceStr6_U32::LspaceStr6_U32() {
+    algo::LspaceStr6_U32_Init(*this);
 }
 
-inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr7_I32_Base36_EqStrptr(const_cast<algo::LspaceStr7_I32_Base36&>(*this),rhs);
+// --- algo.LspaceStr6_U32..CopyCtor
+inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr6_U32));
 }
-inline algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36() {
-    algo::LspaceStr7_I32_Base36_Init(*this);
-}
-
 
 // --- algo.LspaceStr7_I32_Base36.ch.Getary
 // Access string as array of chars
@@ -6821,26 +6959,24 @@ inline void algo::LspaceStr7_I32_Base36::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr7_I32_Base36.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr7_I32_Base36::operator =(const algo::LspaceStr7_I32_Base36& parent) {
-    memcpy(ch, parent.ch, 7);
-}
-
-// --- algo.LspaceStr7_I32_Base36.ch.Ctor
-inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr7_I32_Base36.ch.CtorStrptr
 inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Cast
-inline algo::LspaceStr7_I32_Base36::operator algo::strptr () const {
+inline  algo::LspaceStr7_I32_Base36::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr7_I32_Base36..EqOp
+inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const {
+    return algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
+}
+
+// --- algo.LspaceStr7_I32_Base36..NeOp
+inline bool algo::LspaceStr7_I32_Base36::operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const {
+    return !algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
 }
 
 // --- algo.LspaceStr7_I32_Base36..Cmp
@@ -6866,26 +7002,28 @@ inline bool algo::LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, alg
     return retval;
 }
 
-// --- algo.LspaceStr7_I32_Base36..EqStrptr
-inline bool algo::LspaceStr7_I32_Base36_EqStrptr(const algo::LspaceStr7_I32_Base36& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr7_I32_Base36..EqOpAryptr
+inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr8::operator ==(const algo::LspaceStr8 &rhs) const {
-    return algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
+// --- algo.LspaceStr7_I32_Base36..AssignOp
+inline algo::LspaceStr7_I32_Base36& algo::LspaceStr7_I32_Base36::operator =(const algo::LspaceStr7_I32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr7_I32_Base36));
+    return *this;
 }
 
-inline bool algo::LspaceStr8::operator !=(const algo::LspaceStr8 &rhs) const {
-    return !algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
+// --- algo.LspaceStr7_I32_Base36..Ctor
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36() {
+    algo::LspaceStr7_I32_Base36_Init(*this);
 }
 
-inline bool algo::LspaceStr8::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr8_EqStrptr(const_cast<algo::LspaceStr8&>(*this),rhs);
+// --- algo.LspaceStr7_I32_Base36..CopyCtor
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr7_I32_Base36));
 }
-inline algo::LspaceStr8::LspaceStr8() {
-    algo::LspaceStr8_Init(*this);
-}
-
 
 // --- algo.LspaceStr8.ch.Getary
 // Access string as array of chars
@@ -6930,26 +7068,24 @@ inline void algo::LspaceStr8::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr8.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr8::operator =(const algo::LspaceStr8& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.LspaceStr8.ch.Ctor
-inline  algo::LspaceStr8::LspaceStr8(const algo::LspaceStr8 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr8.ch.CtorStrptr
 inline  algo::LspaceStr8::LspaceStr8(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr8.ch.Cast
-inline algo::LspaceStr8::operator algo::strptr () const {
+inline  algo::LspaceStr8::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr8..EqOp
+inline bool algo::LspaceStr8::operator ==(const algo::LspaceStr8 &rhs) const {
+    return algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
+}
+
+// --- algo.LspaceStr8..NeOp
+inline bool algo::LspaceStr8::operator !=(const algo::LspaceStr8 &rhs) const {
+    return !algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
 }
 
 // --- algo.LspaceStr8..Cmp
@@ -6973,26 +7109,28 @@ inline bool algo::LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr8..EqStrptr
-inline bool algo::LspaceStr8_EqStrptr(const algo::LspaceStr8& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.LspaceStr8..EqOpAryptr
+inline bool algo::LspaceStr8::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::LspaceStr9::operator ==(const algo::LspaceStr9 &rhs) const {
-    return algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
+// --- algo.LspaceStr8..AssignOp
+inline algo::LspaceStr8& algo::LspaceStr8::operator =(const algo::LspaceStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr8));
+    return *this;
 }
 
-inline bool algo::LspaceStr9::operator !=(const algo::LspaceStr9 &rhs) const {
-    return !algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
+// --- algo.LspaceStr8..Ctor
+inline  algo::LspaceStr8::LspaceStr8() {
+    algo::LspaceStr8_Init(*this);
 }
 
-inline bool algo::LspaceStr9::operator ==(const algo::strptr &rhs) const {
-    return algo::LspaceStr9_EqStrptr(const_cast<algo::LspaceStr9&>(*this),rhs);
+// --- algo.LspaceStr8..CopyCtor
+inline  algo::LspaceStr8::LspaceStr8(const algo::LspaceStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr8));
 }
-inline algo::LspaceStr9::LspaceStr9() {
-    algo::LspaceStr9_Init(*this);
-}
-
 
 // --- algo.LspaceStr9.ch.Getary
 // Access string as array of chars
@@ -7037,26 +7175,24 @@ inline void algo::LspaceStr9::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.LspaceStr9.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::LspaceStr9::operator =(const algo::LspaceStr9& parent) {
-    memcpy(ch, parent.ch, 9);
-}
-
-// --- algo.LspaceStr9.ch.Ctor
-inline  algo::LspaceStr9::LspaceStr9(const algo::LspaceStr9 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.LspaceStr9.ch.CtorStrptr
 inline  algo::LspaceStr9::LspaceStr9(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr9.ch.Cast
-inline algo::LspaceStr9::operator algo::strptr () const {
+inline  algo::LspaceStr9::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.LspaceStr9..EqOp
+inline bool algo::LspaceStr9::operator ==(const algo::LspaceStr9 &rhs) const {
+    return algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
+}
+
+// --- algo.LspaceStr9..NeOp
+inline bool algo::LspaceStr9::operator !=(const algo::LspaceStr9 &rhs) const {
+    return !algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
 }
 
 // --- algo.LspaceStr9..Cmp
@@ -7081,18 +7217,28 @@ inline bool algo::LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) {
     return retval;
 }
 
-// --- algo.LspaceStr9..EqStrptr
-inline bool algo::LspaceStr9_EqStrptr(const algo::LspaceStr9& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::Md5Digest::Md5Digest(algo::aryptr<u8 >              in_value)
-{
-    value_Setary(*this, in_value);
-}
-inline algo::Md5Digest::Md5Digest() {
-    algo::Md5Digest_Init(*this);
+// --- algo.LspaceStr9..EqOpAryptr
+inline bool algo::LspaceStr9::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.LspaceStr9..AssignOp
+inline algo::LspaceStr9& algo::LspaceStr9::operator =(const algo::LspaceStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr9));
+    return *this;
+}
+
+// --- algo.LspaceStr9..Ctor
+inline  algo::LspaceStr9::LspaceStr9() {
+    algo::LspaceStr9_Init(*this);
+}
+
+// --- algo.LspaceStr9..CopyCtor
+inline  algo::LspaceStr9::LspaceStr9(const algo::LspaceStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::LspaceStr9));
+}
 
 // --- algo.Md5Digest.value.Fill
 // Set all elements of fixed array to value RHS
@@ -7133,10 +7279,8 @@ inline i32 algo::value_N(const algo::Md5Digest& parent) {
 // --- algo.Md5Digest.value.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void algo::value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &rhs) {
-    int n = 16 < rhs.n_elems ? 16 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.value_elems[i] = rhs[i];
-    }
+    int n = i32_Min(16, rhs.n_elems);
+    memcpy(parent.value_elems, rhs.elems, sizeof(u8)*n);
 }
 
 // --- algo.Md5Digest.value.qFind
@@ -7177,15 +7321,16 @@ inline void algo::Md5Digest_Init(algo::Md5Digest& parent) {
         parent.value_elems[i] = 0;
     }
 }
-inline algo::Month::Month(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::Month::Month(algo_MonthEnum arg) { this->value = u32(arg); }
-inline algo::Month::Month() {
-    algo::Month_Init(*this);
+
+// --- algo.Md5Digest..Ctor
+inline  algo::Md5Digest::Md5Digest() {
+    algo::Md5Digest_Init(*this);
 }
 
+// --- algo.Md5Digest..FieldwiseCtor
+inline  algo::Md5Digest::Md5Digest(algo::aryptr<u8 > in_value) {
+    value_Setary(*this, in_value);
+}
 
 // --- algo.Month.value.GetEnum
 // Get value of field as enum type
@@ -7200,7 +7345,7 @@ inline void algo::value_SetEnum(algo::Month& parent, algo_MonthEnum rhs) {
 }
 
 // --- algo.Month.value.Cast
-inline algo::Month::operator algo_MonthEnum () const {
+inline  algo::Month::operator algo_MonthEnum() const {
     return algo_MonthEnum((*this).value);
 }
 
@@ -7209,18 +7354,25 @@ inline algo::Month::operator algo_MonthEnum () const {
 inline void algo::Month_Init(algo::Month& parent) {
     parent.value = u32(0);
 }
-inline algo::NumParseFlags::NumParseFlags(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::NumParseFlags::NumParseFlags(algo_NumParseFlagsEnum arg) { this->value = u32(arg); }
-inline algo::NumParseFlags::NumParseFlags() {
-    algo::NumParseFlags_Init(*this);
+
+// --- algo.Month..Ctor
+inline  algo::Month::Month() {
+    algo::Month_Init(*this);
 }
 
+// --- algo.Month..FieldwiseCtor
+inline  algo::Month::Month(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.Month..EnumCtor
+inline  algo::Month::Month(algo_MonthEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- algo.NumParseFlags.value.Cast
-inline algo::NumParseFlags::operator algo_NumParseFlagsEnum () const {
+inline  algo::NumParseFlags::operator algo_NumParseFlagsEnum() const {
     return algo_NumParseFlagsEnum((*this).value);
 }
 
@@ -7310,37 +7462,21 @@ inline void algo::NumParseFlags_Init(algo::NumParseFlags& parent) {
     parent.value = u32(0);
 }
 
-inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const {
-    return algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+// --- algo.NumParseFlags..Ctor
+inline  algo::NumParseFlags::NumParseFlags() {
+    algo::NumParseFlags_Init(*this);
 }
 
-inline bool algo::RnullStr1::operator !=(const algo::RnullStr1 &rhs) const {
-    return !algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+// --- algo.NumParseFlags..FieldwiseCtor
+inline  algo::NumParseFlags::NumParseFlags(u32 in_value)
+    : value(in_value)
+ {
 }
 
-inline bool algo::RnullStr1::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr1_EqStrptr(const_cast<algo::RnullStr1&>(*this),rhs);
+// --- algo.NumParseFlags..EnumCtor
+inline  algo::NumParseFlags::NumParseFlags(algo_NumParseFlagsEnum arg) {
+    this->value = u32(arg);
 }
-
-inline bool algo::RnullStr1::operator <(const algo::RnullStr1 &rhs) const {
-    return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
-}
-
-inline bool algo::RnullStr1::operator >(const algo::RnullStr1 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr1::operator <=(const algo::RnullStr1 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr1::operator >=(const algo::RnullStr1 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr1::RnullStr1() {
-    algo::RnullStr1_Init(*this);
-}
-
 
 // --- algo.RnullStr1.ch.Getary
 // Access string as array of chars
@@ -7383,26 +7519,44 @@ inline void algo::RnullStr1::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr1.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr1::operator =(const algo::RnullStr1& parent) {
-    memcpy(ch, parent.ch, 1);
-}
-
-// --- algo.RnullStr1.ch.Ctor
-inline  algo::RnullStr1::RnullStr1(const algo::RnullStr1 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr1.ch.CtorStrptr
 inline  algo::RnullStr1::RnullStr1(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr1.ch.Cast
-inline algo::RnullStr1::operator algo::strptr () const {
+inline  algo::RnullStr1::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr1..EqOp
+inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const {
+    return algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+}
+
+// --- algo.RnullStr1..NeOp
+inline bool algo::RnullStr1::operator !=(const algo::RnullStr1 &rhs) const {
+    return !algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+}
+
+// --- algo.RnullStr1..LtOp
+inline bool algo::RnullStr1::operator <(const algo::RnullStr1 &rhs) const {
+    return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
+}
+
+// --- algo.RnullStr1..GtOp
+inline bool algo::RnullStr1::operator >(const algo::RnullStr1 &rhs) const {
+    return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(rhs),const_cast<algo::RnullStr1&>(*this));
+}
+
+// --- algo.RnullStr1..LeOp
+inline bool algo::RnullStr1::operator <=(const algo::RnullStr1 &rhs) const {
+    return !algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(rhs),const_cast<algo::RnullStr1&>(*this));
+}
+
+// --- algo.RnullStr1..GeOp
+inline bool algo::RnullStr1::operator >=(const algo::RnullStr1 &rhs) const {
+    return !algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 // --- algo.RnullStr1..Lt
@@ -7441,42 +7595,28 @@ inline bool algo::RnullStr1_Update(algo::RnullStr1 &lhs, algo::RnullStr1 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr1..EqStrptr
-inline bool algo::RnullStr1_EqStrptr(algo::RnullStr1 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr1..EqOpAryptr
+inline bool algo::RnullStr1::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr10::operator ==(const algo::RnullStr10 &rhs) const {
-    return algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+// --- algo.RnullStr1..AssignOp
+inline algo::RnullStr1& algo::RnullStr1::operator =(const algo::RnullStr1 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr1));
+    return *this;
 }
 
-inline bool algo::RnullStr10::operator !=(const algo::RnullStr10 &rhs) const {
-    return !algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+// --- algo.RnullStr1..Ctor
+inline  algo::RnullStr1::RnullStr1() {
+    algo::RnullStr1_Init(*this);
 }
 
-inline bool algo::RnullStr10::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr10_EqStrptr(const_cast<algo::RnullStr10&>(*this),rhs);
+// --- algo.RnullStr1..CopyCtor
+inline  algo::RnullStr1::RnullStr1(const algo::RnullStr1 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr1));
 }
-
-inline bool algo::RnullStr10::operator <(const algo::RnullStr10 &rhs) const {
-    return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
-}
-
-inline bool algo::RnullStr10::operator >(const algo::RnullStr10 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr10::operator <=(const algo::RnullStr10 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr10::operator >=(const algo::RnullStr10 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr10::RnullStr10() {
-    algo::RnullStr10_Init(*this);
-}
-
 
 // --- algo.RnullStr10.ch.Getary
 // Access string as array of chars
@@ -7519,26 +7659,44 @@ inline void algo::RnullStr10::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr10.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr10::operator =(const algo::RnullStr10& parent) {
-    memcpy(ch, parent.ch, 10);
-}
-
-// --- algo.RnullStr10.ch.Ctor
-inline  algo::RnullStr10::RnullStr10(const algo::RnullStr10 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr10.ch.CtorStrptr
 inline  algo::RnullStr10::RnullStr10(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr10.ch.Cast
-inline algo::RnullStr10::operator algo::strptr () const {
+inline  algo::RnullStr10::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr10..EqOp
+inline bool algo::RnullStr10::operator ==(const algo::RnullStr10 &rhs) const {
+    return algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+}
+
+// --- algo.RnullStr10..NeOp
+inline bool algo::RnullStr10::operator !=(const algo::RnullStr10 &rhs) const {
+    return !algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+}
+
+// --- algo.RnullStr10..LtOp
+inline bool algo::RnullStr10::operator <(const algo::RnullStr10 &rhs) const {
+    return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
+}
+
+// --- algo.RnullStr10..GtOp
+inline bool algo::RnullStr10::operator >(const algo::RnullStr10 &rhs) const {
+    return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(rhs),const_cast<algo::RnullStr10&>(*this));
+}
+
+// --- algo.RnullStr10..LeOp
+inline bool algo::RnullStr10::operator <=(const algo::RnullStr10 &rhs) const {
+    return !algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(rhs),const_cast<algo::RnullStr10&>(*this));
+}
+
+// --- algo.RnullStr10..GeOp
+inline bool algo::RnullStr10::operator >=(const algo::RnullStr10 &rhs) const {
+    return !algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 // --- algo.RnullStr10..Lt
@@ -7578,14 +7736,28 @@ inline bool algo::RnullStr10_Update(algo::RnullStr10 &lhs, algo::RnullStr10 rhs)
     return ret;
 }
 
-// --- algo.RnullStr10..EqStrptr
-inline bool algo::RnullStr10_EqStrptr(algo::RnullStr10 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr100::RnullStr100() {
-    algo::RnullStr100_Init(*this);
+// --- algo.RnullStr10..EqOpAryptr
+inline bool algo::RnullStr10::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr10..AssignOp
+inline algo::RnullStr10& algo::RnullStr10::operator =(const algo::RnullStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr10));
+    return *this;
+}
+
+// --- algo.RnullStr10..Ctor
+inline  algo::RnullStr10::RnullStr10() {
+    algo::RnullStr10_Init(*this);
+}
+
+// --- algo.RnullStr10..CopyCtor
+inline  algo::RnullStr10::RnullStr10(const algo::RnullStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr10));
+}
 
 // --- algo.RnullStr100.ch.Getary
 // Access string as array of chars
@@ -7628,25 +7800,13 @@ inline void algo::RnullStr100::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr100.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr100::operator =(const algo::RnullStr100& parent) {
-    memcpy(ch, parent.ch, 100);
-}
-
-// --- algo.RnullStr100.ch.Ctor
-inline  algo::RnullStr100::RnullStr100(const algo::RnullStr100 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr100.ch.CtorStrptr
 inline  algo::RnullStr100::RnullStr100(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr100.ch.Cast
-inline algo::RnullStr100::operator algo::strptr () const {
+inline  algo::RnullStr100::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -7698,42 +7858,28 @@ inline bool algo::RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& 
     return ret;
 }
 
-// --- algo.RnullStr100..EqStrptr
-inline bool algo::RnullStr100_EqStrptr(const algo::RnullStr100& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr100..EqOpAryptr
+inline bool algo::RnullStr100::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr1000::operator ==(const algo::RnullStr1000 &rhs) const {
-    return algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+// --- algo.RnullStr100..AssignOp
+inline algo::RnullStr100& algo::RnullStr100::operator =(const algo::RnullStr100 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr100));
+    return *this;
 }
 
-inline bool algo::RnullStr1000::operator !=(const algo::RnullStr1000 &rhs) const {
-    return !algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+// --- algo.RnullStr100..Ctor
+inline  algo::RnullStr100::RnullStr100() {
+    algo::RnullStr100_Init(*this);
 }
 
-inline bool algo::RnullStr1000::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr1000_EqStrptr(const_cast<algo::RnullStr1000&>(*this),rhs);
+// --- algo.RnullStr100..CopyCtor
+inline  algo::RnullStr100::RnullStr100(const algo::RnullStr100 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr100));
 }
-
-inline bool algo::RnullStr1000::operator <(const algo::RnullStr1000 &rhs) const {
-    return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
-}
-
-inline bool algo::RnullStr1000::operator >(const algo::RnullStr1000 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr1000::operator <=(const algo::RnullStr1000 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr1000::operator >=(const algo::RnullStr1000 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr1000::RnullStr1000() {
-    algo::RnullStr1000_Init(*this);
-}
-
 
 // --- algo.RnullStr1000.ch.Getary
 // Access string as array of chars
@@ -7776,26 +7922,44 @@ inline void algo::RnullStr1000::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr1000.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr1000::operator =(const algo::RnullStr1000& parent) {
-    memcpy(ch, parent.ch, 1000);
-}
-
-// --- algo.RnullStr1000.ch.Ctor
-inline  algo::RnullStr1000::RnullStr1000(const algo::RnullStr1000 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr1000.ch.CtorStrptr
 inline  algo::RnullStr1000::RnullStr1000(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr1000.ch.Cast
-inline algo::RnullStr1000::operator algo::strptr () const {
+inline  algo::RnullStr1000::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr1000..EqOp
+inline bool algo::RnullStr1000::operator ==(const algo::RnullStr1000 &rhs) const {
+    return algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+}
+
+// --- algo.RnullStr1000..NeOp
+inline bool algo::RnullStr1000::operator !=(const algo::RnullStr1000 &rhs) const {
+    return !algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+}
+
+// --- algo.RnullStr1000..LtOp
+inline bool algo::RnullStr1000::operator <(const algo::RnullStr1000 &rhs) const {
+    return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
+}
+
+// --- algo.RnullStr1000..GtOp
+inline bool algo::RnullStr1000::operator >(const algo::RnullStr1000 &rhs) const {
+    return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(rhs),const_cast<algo::RnullStr1000&>(*this));
+}
+
+// --- algo.RnullStr1000..LeOp
+inline bool algo::RnullStr1000::operator <=(const algo::RnullStr1000 &rhs) const {
+    return !algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(rhs),const_cast<algo::RnullStr1000&>(*this));
+}
+
+// --- algo.RnullStr1000..GeOp
+inline bool algo::RnullStr1000::operator >=(const algo::RnullStr1000 &rhs) const {
+    return !algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
 // --- algo.RnullStr1000..Lt
@@ -7835,42 +7999,28 @@ inline bool algo::RnullStr1000_Update(algo::RnullStr1000 &lhs, algo::RnullStr100
     return ret;
 }
 
-// --- algo.RnullStr1000..EqStrptr
-inline bool algo::RnullStr1000_EqStrptr(const algo::RnullStr1000& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr1000..EqOpAryptr
+inline bool algo::RnullStr1000::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr11::operator ==(const algo::RnullStr11 &rhs) const {
-    return algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+// --- algo.RnullStr1000..AssignOp
+inline algo::RnullStr1000& algo::RnullStr1000::operator =(const algo::RnullStr1000 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr1000));
+    return *this;
 }
 
-inline bool algo::RnullStr11::operator !=(const algo::RnullStr11 &rhs) const {
-    return !algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+// --- algo.RnullStr1000..Ctor
+inline  algo::RnullStr1000::RnullStr1000() {
+    algo::RnullStr1000_Init(*this);
 }
 
-inline bool algo::RnullStr11::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr11_EqStrptr(const_cast<algo::RnullStr11&>(*this),rhs);
+// --- algo.RnullStr1000..CopyCtor
+inline  algo::RnullStr1000::RnullStr1000(const algo::RnullStr1000 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr1000));
 }
-
-inline bool algo::RnullStr11::operator <(const algo::RnullStr11 &rhs) const {
-    return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
-}
-
-inline bool algo::RnullStr11::operator >(const algo::RnullStr11 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr11::operator <=(const algo::RnullStr11 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr11::operator >=(const algo::RnullStr11 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr11::RnullStr11() {
-    algo::RnullStr11_Init(*this);
-}
-
 
 // --- algo.RnullStr11.ch.Getary
 // Access string as array of chars
@@ -7913,26 +8063,44 @@ inline void algo::RnullStr11::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr11.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr11::operator =(const algo::RnullStr11& parent) {
-    memcpy(ch, parent.ch, 11);
-}
-
-// --- algo.RnullStr11.ch.Ctor
-inline  algo::RnullStr11::RnullStr11(const algo::RnullStr11 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr11.ch.CtorStrptr
 inline  algo::RnullStr11::RnullStr11(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr11.ch.Cast
-inline algo::RnullStr11::operator algo::strptr () const {
+inline  algo::RnullStr11::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr11..EqOp
+inline bool algo::RnullStr11::operator ==(const algo::RnullStr11 &rhs) const {
+    return algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+}
+
+// --- algo.RnullStr11..NeOp
+inline bool algo::RnullStr11::operator !=(const algo::RnullStr11 &rhs) const {
+    return !algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+}
+
+// --- algo.RnullStr11..LtOp
+inline bool algo::RnullStr11::operator <(const algo::RnullStr11 &rhs) const {
+    return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
+}
+
+// --- algo.RnullStr11..GtOp
+inline bool algo::RnullStr11::operator >(const algo::RnullStr11 &rhs) const {
+    return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(rhs),const_cast<algo::RnullStr11&>(*this));
+}
+
+// --- algo.RnullStr11..LeOp
+inline bool algo::RnullStr11::operator <=(const algo::RnullStr11 &rhs) const {
+    return !algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(rhs),const_cast<algo::RnullStr11&>(*this));
+}
+
+// --- algo.RnullStr11..GeOp
+inline bool algo::RnullStr11::operator >=(const algo::RnullStr11 &rhs) const {
+    return !algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 // --- algo.RnullStr11..Lt
@@ -7973,42 +8141,28 @@ inline bool algo::RnullStr11_Update(algo::RnullStr11 &lhs, algo::RnullStr11& rhs
     return ret;
 }
 
-// --- algo.RnullStr11..EqStrptr
-inline bool algo::RnullStr11_EqStrptr(const algo::RnullStr11& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr11..EqOpAryptr
+inline bool algo::RnullStr11::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr12::operator ==(const algo::RnullStr12 &rhs) const {
-    return algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+// --- algo.RnullStr11..AssignOp
+inline algo::RnullStr11& algo::RnullStr11::operator =(const algo::RnullStr11 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr11));
+    return *this;
 }
 
-inline bool algo::RnullStr12::operator !=(const algo::RnullStr12 &rhs) const {
-    return !algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+// --- algo.RnullStr11..Ctor
+inline  algo::RnullStr11::RnullStr11() {
+    algo::RnullStr11_Init(*this);
 }
 
-inline bool algo::RnullStr12::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr12_EqStrptr(const_cast<algo::RnullStr12&>(*this),rhs);
+// --- algo.RnullStr11..CopyCtor
+inline  algo::RnullStr11::RnullStr11(const algo::RnullStr11 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr11));
 }
-
-inline bool algo::RnullStr12::operator <(const algo::RnullStr12 &rhs) const {
-    return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
-}
-
-inline bool algo::RnullStr12::operator >(const algo::RnullStr12 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr12::operator <=(const algo::RnullStr12 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr12::operator >=(const algo::RnullStr12 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr12::RnullStr12() {
-    algo::RnullStr12_Init(*this);
-}
-
 
 // --- algo.RnullStr12.ch.Getary
 // Access string as array of chars
@@ -8051,26 +8205,44 @@ inline void algo::RnullStr12::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr12.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr12::operator =(const algo::RnullStr12& parent) {
-    memcpy(ch, parent.ch, 12);
-}
-
-// --- algo.RnullStr12.ch.Ctor
-inline  algo::RnullStr12::RnullStr12(const algo::RnullStr12 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr12.ch.CtorStrptr
 inline  algo::RnullStr12::RnullStr12(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr12.ch.Cast
-inline algo::RnullStr12::operator algo::strptr () const {
+inline  algo::RnullStr12::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr12..EqOp
+inline bool algo::RnullStr12::operator ==(const algo::RnullStr12 &rhs) const {
+    return algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+}
+
+// --- algo.RnullStr12..NeOp
+inline bool algo::RnullStr12::operator !=(const algo::RnullStr12 &rhs) const {
+    return !algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+}
+
+// --- algo.RnullStr12..LtOp
+inline bool algo::RnullStr12::operator <(const algo::RnullStr12 &rhs) const {
+    return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
+}
+
+// --- algo.RnullStr12..GtOp
+inline bool algo::RnullStr12::operator >(const algo::RnullStr12 &rhs) const {
+    return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(rhs),const_cast<algo::RnullStr12&>(*this));
+}
+
+// --- algo.RnullStr12..LeOp
+inline bool algo::RnullStr12::operator <=(const algo::RnullStr12 &rhs) const {
+    return !algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(rhs),const_cast<algo::RnullStr12&>(*this));
+}
+
+// --- algo.RnullStr12..GeOp
+inline bool algo::RnullStr12::operator >=(const algo::RnullStr12 &rhs) const {
+    return !algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
 // --- algo.RnullStr12..Lt
@@ -8110,42 +8282,28 @@ inline bool algo::RnullStr12_Update(algo::RnullStr12 &lhs, algo::RnullStr12& rhs
     return ret;
 }
 
-// --- algo.RnullStr12..EqStrptr
-inline bool algo::RnullStr12_EqStrptr(const algo::RnullStr12& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr12..EqOpAryptr
+inline bool algo::RnullStr12::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr129::operator ==(const algo::RnullStr129 &rhs) const {
-    return algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+// --- algo.RnullStr12..AssignOp
+inline algo::RnullStr12& algo::RnullStr12::operator =(const algo::RnullStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr12));
+    return *this;
 }
 
-inline bool algo::RnullStr129::operator !=(const algo::RnullStr129 &rhs) const {
-    return !algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+// --- algo.RnullStr12..Ctor
+inline  algo::RnullStr12::RnullStr12() {
+    algo::RnullStr12_Init(*this);
 }
 
-inline bool algo::RnullStr129::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr129_EqStrptr(const_cast<algo::RnullStr129&>(*this),rhs);
+// --- algo.RnullStr12..CopyCtor
+inline  algo::RnullStr12::RnullStr12(const algo::RnullStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr12));
 }
-
-inline bool algo::RnullStr129::operator <(const algo::RnullStr129 &rhs) const {
-    return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
-}
-
-inline bool algo::RnullStr129::operator >(const algo::RnullStr129 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr129::operator <=(const algo::RnullStr129 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr129::operator >=(const algo::RnullStr129 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr129::RnullStr129() {
-    algo::RnullStr129_Init(*this);
-}
-
 
 // --- algo.RnullStr129.ch.Getary
 // Access string as array of chars
@@ -8188,26 +8346,44 @@ inline void algo::RnullStr129::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr129.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr129::operator =(const algo::RnullStr129& parent) {
-    memcpy(ch, parent.ch, 129);
-}
-
-// --- algo.RnullStr129.ch.Ctor
-inline  algo::RnullStr129::RnullStr129(const algo::RnullStr129 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr129.ch.CtorStrptr
 inline  algo::RnullStr129::RnullStr129(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr129.ch.Cast
-inline algo::RnullStr129::operator algo::strptr () const {
+inline  algo::RnullStr129::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr129..EqOp
+inline bool algo::RnullStr129::operator ==(const algo::RnullStr129 &rhs) const {
+    return algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+}
+
+// --- algo.RnullStr129..NeOp
+inline bool algo::RnullStr129::operator !=(const algo::RnullStr129 &rhs) const {
+    return !algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+}
+
+// --- algo.RnullStr129..LtOp
+inline bool algo::RnullStr129::operator <(const algo::RnullStr129 &rhs) const {
+    return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
+}
+
+// --- algo.RnullStr129..GtOp
+inline bool algo::RnullStr129::operator >(const algo::RnullStr129 &rhs) const {
+    return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(rhs),const_cast<algo::RnullStr129&>(*this));
+}
+
+// --- algo.RnullStr129..LeOp
+inline bool algo::RnullStr129::operator <=(const algo::RnullStr129 &rhs) const {
+    return !algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(rhs),const_cast<algo::RnullStr129&>(*this));
+}
+
+// --- algo.RnullStr129..GeOp
+inline bool algo::RnullStr129::operator >=(const algo::RnullStr129 &rhs) const {
+    return !algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 // --- algo.RnullStr129..Lt
@@ -8249,42 +8425,28 @@ inline bool algo::RnullStr129_Update(algo::RnullStr129 &lhs, algo::RnullStr129& 
     return ret;
 }
 
-// --- algo.RnullStr129..EqStrptr
-inline bool algo::RnullStr129_EqStrptr(const algo::RnullStr129& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr129..EqOpAryptr
+inline bool algo::RnullStr129::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr13::operator ==(const algo::RnullStr13 &rhs) const {
-    return algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+// --- algo.RnullStr129..AssignOp
+inline algo::RnullStr129& algo::RnullStr129::operator =(const algo::RnullStr129 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr129));
+    return *this;
 }
 
-inline bool algo::RnullStr13::operator !=(const algo::RnullStr13 &rhs) const {
-    return !algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+// --- algo.RnullStr129..Ctor
+inline  algo::RnullStr129::RnullStr129() {
+    algo::RnullStr129_Init(*this);
 }
 
-inline bool algo::RnullStr13::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr13_EqStrptr(const_cast<algo::RnullStr13&>(*this),rhs);
+// --- algo.RnullStr129..CopyCtor
+inline  algo::RnullStr129::RnullStr129(const algo::RnullStr129 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr129));
 }
-
-inline bool algo::RnullStr13::operator <(const algo::RnullStr13 &rhs) const {
-    return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
-}
-
-inline bool algo::RnullStr13::operator >(const algo::RnullStr13 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr13::operator <=(const algo::RnullStr13 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr13::operator >=(const algo::RnullStr13 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr13::RnullStr13() {
-    algo::RnullStr13_Init(*this);
-}
-
 
 // --- algo.RnullStr13.ch.Getary
 // Access string as array of chars
@@ -8327,26 +8489,44 @@ inline void algo::RnullStr13::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr13.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr13::operator =(const algo::RnullStr13& parent) {
-    memcpy(ch, parent.ch, 13);
-}
-
-// --- algo.RnullStr13.ch.Ctor
-inline  algo::RnullStr13::RnullStr13(const algo::RnullStr13 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr13.ch.CtorStrptr
 inline  algo::RnullStr13::RnullStr13(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr13.ch.Cast
-inline algo::RnullStr13::operator algo::strptr () const {
+inline  algo::RnullStr13::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr13..EqOp
+inline bool algo::RnullStr13::operator ==(const algo::RnullStr13 &rhs) const {
+    return algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+}
+
+// --- algo.RnullStr13..NeOp
+inline bool algo::RnullStr13::operator !=(const algo::RnullStr13 &rhs) const {
+    return !algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+}
+
+// --- algo.RnullStr13..LtOp
+inline bool algo::RnullStr13::operator <(const algo::RnullStr13 &rhs) const {
+    return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
+}
+
+// --- algo.RnullStr13..GtOp
+inline bool algo::RnullStr13::operator >(const algo::RnullStr13 &rhs) const {
+    return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(rhs),const_cast<algo::RnullStr13&>(*this));
+}
+
+// --- algo.RnullStr13..LeOp
+inline bool algo::RnullStr13::operator <=(const algo::RnullStr13 &rhs) const {
+    return !algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(rhs),const_cast<algo::RnullStr13&>(*this));
+}
+
+// --- algo.RnullStr13..GeOp
+inline bool algo::RnullStr13::operator >=(const algo::RnullStr13 &rhs) const {
+    return !algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
 // --- algo.RnullStr13..Lt
@@ -8387,42 +8567,28 @@ inline bool algo::RnullStr13_Update(algo::RnullStr13 &lhs, algo::RnullStr13& rhs
     return ret;
 }
 
-// --- algo.RnullStr13..EqStrptr
-inline bool algo::RnullStr13_EqStrptr(const algo::RnullStr13& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr13..EqOpAryptr
+inline bool algo::RnullStr13::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr14::operator ==(const algo::RnullStr14 &rhs) const {
-    return algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+// --- algo.RnullStr13..AssignOp
+inline algo::RnullStr13& algo::RnullStr13::operator =(const algo::RnullStr13 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr13));
+    return *this;
 }
 
-inline bool algo::RnullStr14::operator !=(const algo::RnullStr14 &rhs) const {
-    return !algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+// --- algo.RnullStr13..Ctor
+inline  algo::RnullStr13::RnullStr13() {
+    algo::RnullStr13_Init(*this);
 }
 
-inline bool algo::RnullStr14::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr14_EqStrptr(const_cast<algo::RnullStr14&>(*this),rhs);
+// --- algo.RnullStr13..CopyCtor
+inline  algo::RnullStr13::RnullStr13(const algo::RnullStr13 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr13));
 }
-
-inline bool algo::RnullStr14::operator <(const algo::RnullStr14 &rhs) const {
-    return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
-}
-
-inline bool algo::RnullStr14::operator >(const algo::RnullStr14 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr14::operator <=(const algo::RnullStr14 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr14::operator >=(const algo::RnullStr14 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr14::RnullStr14() {
-    algo::RnullStr14_Init(*this);
-}
-
 
 // --- algo.RnullStr14.ch.Getary
 // Access string as array of chars
@@ -8465,26 +8631,44 @@ inline void algo::RnullStr14::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr14.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr14::operator =(const algo::RnullStr14& parent) {
-    memcpy(ch, parent.ch, 14);
-}
-
-// --- algo.RnullStr14.ch.Ctor
-inline  algo::RnullStr14::RnullStr14(const algo::RnullStr14 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr14.ch.CtorStrptr
 inline  algo::RnullStr14::RnullStr14(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr14.ch.Cast
-inline algo::RnullStr14::operator algo::strptr () const {
+inline  algo::RnullStr14::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr14..EqOp
+inline bool algo::RnullStr14::operator ==(const algo::RnullStr14 &rhs) const {
+    return algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+}
+
+// --- algo.RnullStr14..NeOp
+inline bool algo::RnullStr14::operator !=(const algo::RnullStr14 &rhs) const {
+    return !algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+}
+
+// --- algo.RnullStr14..LtOp
+inline bool algo::RnullStr14::operator <(const algo::RnullStr14 &rhs) const {
+    return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
+}
+
+// --- algo.RnullStr14..GtOp
+inline bool algo::RnullStr14::operator >(const algo::RnullStr14 &rhs) const {
+    return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(rhs),const_cast<algo::RnullStr14&>(*this));
+}
+
+// --- algo.RnullStr14..LeOp
+inline bool algo::RnullStr14::operator <=(const algo::RnullStr14 &rhs) const {
+    return !algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(rhs),const_cast<algo::RnullStr14&>(*this));
+}
+
+// --- algo.RnullStr14..GeOp
+inline bool algo::RnullStr14::operator >=(const algo::RnullStr14 &rhs) const {
+    return !algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 // --- algo.RnullStr14..Lt
@@ -8525,42 +8709,28 @@ inline bool algo::RnullStr14_Update(algo::RnullStr14 &lhs, algo::RnullStr14& rhs
     return ret;
 }
 
-// --- algo.RnullStr14..EqStrptr
-inline bool algo::RnullStr14_EqStrptr(const algo::RnullStr14& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr14..EqOpAryptr
+inline bool algo::RnullStr14::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr15::operator ==(const algo::RnullStr15 &rhs) const {
-    return algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+// --- algo.RnullStr14..AssignOp
+inline algo::RnullStr14& algo::RnullStr14::operator =(const algo::RnullStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr14));
+    return *this;
 }
 
-inline bool algo::RnullStr15::operator !=(const algo::RnullStr15 &rhs) const {
-    return !algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+// --- algo.RnullStr14..Ctor
+inline  algo::RnullStr14::RnullStr14() {
+    algo::RnullStr14_Init(*this);
 }
 
-inline bool algo::RnullStr15::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr15_EqStrptr(const_cast<algo::RnullStr15&>(*this),rhs);
+// --- algo.RnullStr14..CopyCtor
+inline  algo::RnullStr14::RnullStr14(const algo::RnullStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr14));
 }
-
-inline bool algo::RnullStr15::operator <(const algo::RnullStr15 &rhs) const {
-    return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
-}
-
-inline bool algo::RnullStr15::operator >(const algo::RnullStr15 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr15::operator <=(const algo::RnullStr15 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr15::operator >=(const algo::RnullStr15 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr15::RnullStr15() {
-    algo::RnullStr15_Init(*this);
-}
-
 
 // --- algo.RnullStr15.ch.Getary
 // Access string as array of chars
@@ -8603,26 +8773,44 @@ inline void algo::RnullStr15::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr15.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr15::operator =(const algo::RnullStr15& parent) {
-    memcpy(ch, parent.ch, 15);
-}
-
-// --- algo.RnullStr15.ch.Ctor
-inline  algo::RnullStr15::RnullStr15(const algo::RnullStr15 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr15.ch.CtorStrptr
 inline  algo::RnullStr15::RnullStr15(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr15.ch.Cast
-inline algo::RnullStr15::operator algo::strptr () const {
+inline  algo::RnullStr15::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr15..EqOp
+inline bool algo::RnullStr15::operator ==(const algo::RnullStr15 &rhs) const {
+    return algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+}
+
+// --- algo.RnullStr15..NeOp
+inline bool algo::RnullStr15::operator !=(const algo::RnullStr15 &rhs) const {
+    return !algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+}
+
+// --- algo.RnullStr15..LtOp
+inline bool algo::RnullStr15::operator <(const algo::RnullStr15 &rhs) const {
+    return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
+}
+
+// --- algo.RnullStr15..GtOp
+inline bool algo::RnullStr15::operator >(const algo::RnullStr15 &rhs) const {
+    return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(rhs),const_cast<algo::RnullStr15&>(*this));
+}
+
+// --- algo.RnullStr15..LeOp
+inline bool algo::RnullStr15::operator <=(const algo::RnullStr15 &rhs) const {
+    return !algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(rhs),const_cast<algo::RnullStr15&>(*this));
+}
+
+// --- algo.RnullStr15..GeOp
+inline bool algo::RnullStr15::operator >=(const algo::RnullStr15 &rhs) const {
+    return !algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
 // --- algo.RnullStr15..Lt
@@ -8664,42 +8852,28 @@ inline bool algo::RnullStr15_Update(algo::RnullStr15 &lhs, algo::RnullStr15& rhs
     return ret;
 }
 
-// --- algo.RnullStr15..EqStrptr
-inline bool algo::RnullStr15_EqStrptr(const algo::RnullStr15& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr15..EqOpAryptr
+inline bool algo::RnullStr15::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr151::operator ==(const algo::RnullStr151 &rhs) const {
-    return algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+// --- algo.RnullStr15..AssignOp
+inline algo::RnullStr15& algo::RnullStr15::operator =(const algo::RnullStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr15));
+    return *this;
 }
 
-inline bool algo::RnullStr151::operator !=(const algo::RnullStr151 &rhs) const {
-    return !algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+// --- algo.RnullStr15..Ctor
+inline  algo::RnullStr15::RnullStr15() {
+    algo::RnullStr15_Init(*this);
 }
 
-inline bool algo::RnullStr151::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr151_EqStrptr(const_cast<algo::RnullStr151&>(*this),rhs);
+// --- algo.RnullStr15..CopyCtor
+inline  algo::RnullStr15::RnullStr15(const algo::RnullStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr15));
 }
-
-inline bool algo::RnullStr151::operator <(const algo::RnullStr151 &rhs) const {
-    return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
-}
-
-inline bool algo::RnullStr151::operator >(const algo::RnullStr151 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr151::operator <=(const algo::RnullStr151 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr151::operator >=(const algo::RnullStr151 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr151::RnullStr151() {
-    algo::RnullStr151_Init(*this);
-}
-
 
 // --- algo.RnullStr151.ch.Getary
 // Access string as array of chars
@@ -8742,26 +8916,44 @@ inline void algo::RnullStr151::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr151.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr151::operator =(const algo::RnullStr151& parent) {
-    memcpy(ch, parent.ch, 151);
-}
-
-// --- algo.RnullStr151.ch.Ctor
-inline  algo::RnullStr151::RnullStr151(const algo::RnullStr151 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr151.ch.CtorStrptr
 inline  algo::RnullStr151::RnullStr151(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr151.ch.Cast
-inline algo::RnullStr151::operator algo::strptr () const {
+inline  algo::RnullStr151::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr151..EqOp
+inline bool algo::RnullStr151::operator ==(const algo::RnullStr151 &rhs) const {
+    return algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+}
+
+// --- algo.RnullStr151..NeOp
+inline bool algo::RnullStr151::operator !=(const algo::RnullStr151 &rhs) const {
+    return !algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+}
+
+// --- algo.RnullStr151..LtOp
+inline bool algo::RnullStr151::operator <(const algo::RnullStr151 &rhs) const {
+    return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
+}
+
+// --- algo.RnullStr151..GtOp
+inline bool algo::RnullStr151::operator >(const algo::RnullStr151 &rhs) const {
+    return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(rhs),const_cast<algo::RnullStr151&>(*this));
+}
+
+// --- algo.RnullStr151..LeOp
+inline bool algo::RnullStr151::operator <=(const algo::RnullStr151 &rhs) const {
+    return !algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(rhs),const_cast<algo::RnullStr151&>(*this));
+}
+
+// --- algo.RnullStr151..GeOp
+inline bool algo::RnullStr151::operator >=(const algo::RnullStr151 &rhs) const {
+    return !algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 // --- algo.RnullStr151..Lt
@@ -8805,14 +8997,28 @@ inline bool algo::RnullStr151_Update(algo::RnullStr151 &lhs, algo::RnullStr151& 
     return ret;
 }
 
-// --- algo.RnullStr151..EqStrptr
-inline bool algo::RnullStr151_EqStrptr(const algo::RnullStr151& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr16::RnullStr16() {
-    algo::RnullStr16_Init(*this);
+// --- algo.RnullStr151..EqOpAryptr
+inline bool algo::RnullStr151::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr151..AssignOp
+inline algo::RnullStr151& algo::RnullStr151::operator =(const algo::RnullStr151 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr151));
+    return *this;
+}
+
+// --- algo.RnullStr151..Ctor
+inline  algo::RnullStr151::RnullStr151() {
+    algo::RnullStr151_Init(*this);
+}
+
+// --- algo.RnullStr151..CopyCtor
+inline  algo::RnullStr151::RnullStr151(const algo::RnullStr151 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr151));
+}
 
 // --- algo.RnullStr16.ch.Getary
 // Access string as array of chars
@@ -8855,25 +9061,13 @@ inline void algo::RnullStr16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr16::operator =(const algo::RnullStr16& parent) {
-    memcpy(ch, parent.ch, 16);
-}
-
-// --- algo.RnullStr16.ch.Ctor
-inline  algo::RnullStr16::RnullStr16(const algo::RnullStr16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr16.ch.CtorStrptr
 inline  algo::RnullStr16::RnullStr16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr16.ch.Cast
-inline algo::RnullStr16::operator algo::strptr () const {
+inline  algo::RnullStr16::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -8914,42 +9108,28 @@ inline bool algo::RnullStr16_Update(algo::RnullStr16 &lhs, algo::RnullStr16 rhs)
     return ret;
 }
 
-// --- algo.RnullStr16..EqStrptr
-inline bool algo::RnullStr16_EqStrptr(algo::RnullStr16 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr16..EqOpAryptr
+inline bool algo::RnullStr16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr17::operator ==(const algo::RnullStr17 &rhs) const {
-    return algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+// --- algo.RnullStr16..AssignOp
+inline algo::RnullStr16& algo::RnullStr16::operator =(const algo::RnullStr16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr16));
+    return *this;
 }
 
-inline bool algo::RnullStr17::operator !=(const algo::RnullStr17 &rhs) const {
-    return !algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+// --- algo.RnullStr16..Ctor
+inline  algo::RnullStr16::RnullStr16() {
+    algo::RnullStr16_Init(*this);
 }
 
-inline bool algo::RnullStr17::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr17_EqStrptr(const_cast<algo::RnullStr17&>(*this),rhs);
+// --- algo.RnullStr16..CopyCtor
+inline  algo::RnullStr16::RnullStr16(const algo::RnullStr16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr16));
 }
-
-inline bool algo::RnullStr17::operator <(const algo::RnullStr17 &rhs) const {
-    return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
-}
-
-inline bool algo::RnullStr17::operator >(const algo::RnullStr17 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr17::operator <=(const algo::RnullStr17 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr17::operator >=(const algo::RnullStr17 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr17::RnullStr17() {
-    algo::RnullStr17_Init(*this);
-}
-
 
 // --- algo.RnullStr17.ch.Getary
 // Access string as array of chars
@@ -8992,26 +9172,44 @@ inline void algo::RnullStr17::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr17.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr17::operator =(const algo::RnullStr17& parent) {
-    memcpy(ch, parent.ch, 17);
-}
-
-// --- algo.RnullStr17.ch.Ctor
-inline  algo::RnullStr17::RnullStr17(const algo::RnullStr17 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr17.ch.CtorStrptr
 inline  algo::RnullStr17::RnullStr17(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr17.ch.Cast
-inline algo::RnullStr17::operator algo::strptr () const {
+inline  algo::RnullStr17::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr17..EqOp
+inline bool algo::RnullStr17::operator ==(const algo::RnullStr17 &rhs) const {
+    return algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+}
+
+// --- algo.RnullStr17..NeOp
+inline bool algo::RnullStr17::operator !=(const algo::RnullStr17 &rhs) const {
+    return !algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+}
+
+// --- algo.RnullStr17..LtOp
+inline bool algo::RnullStr17::operator <(const algo::RnullStr17 &rhs) const {
+    return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
+}
+
+// --- algo.RnullStr17..GtOp
+inline bool algo::RnullStr17::operator >(const algo::RnullStr17 &rhs) const {
+    return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(rhs),const_cast<algo::RnullStr17&>(*this));
+}
+
+// --- algo.RnullStr17..LeOp
+inline bool algo::RnullStr17::operator <=(const algo::RnullStr17 &rhs) const {
+    return !algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(rhs),const_cast<algo::RnullStr17&>(*this));
+}
+
+// --- algo.RnullStr17..GeOp
+inline bool algo::RnullStr17::operator >=(const algo::RnullStr17 &rhs) const {
+    return !algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
 // --- algo.RnullStr17..Lt
@@ -9052,42 +9250,28 @@ inline bool algo::RnullStr17_Update(algo::RnullStr17 &lhs, algo::RnullStr17& rhs
     return ret;
 }
 
-// --- algo.RnullStr17..EqStrptr
-inline bool algo::RnullStr17_EqStrptr(const algo::RnullStr17& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr17..EqOpAryptr
+inline bool algo::RnullStr17::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr18::operator ==(const algo::RnullStr18 &rhs) const {
-    return algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+// --- algo.RnullStr17..AssignOp
+inline algo::RnullStr17& algo::RnullStr17::operator =(const algo::RnullStr17 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr17));
+    return *this;
 }
 
-inline bool algo::RnullStr18::operator !=(const algo::RnullStr18 &rhs) const {
-    return !algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+// --- algo.RnullStr17..Ctor
+inline  algo::RnullStr17::RnullStr17() {
+    algo::RnullStr17_Init(*this);
 }
 
-inline bool algo::RnullStr18::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr18_EqStrptr(const_cast<algo::RnullStr18&>(*this),rhs);
+// --- algo.RnullStr17..CopyCtor
+inline  algo::RnullStr17::RnullStr17(const algo::RnullStr17 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr17));
 }
-
-inline bool algo::RnullStr18::operator <(const algo::RnullStr18 &rhs) const {
-    return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
-}
-
-inline bool algo::RnullStr18::operator >(const algo::RnullStr18 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr18::operator <=(const algo::RnullStr18 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr18::operator >=(const algo::RnullStr18 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr18::RnullStr18() {
-    algo::RnullStr18_Init(*this);
-}
-
 
 // --- algo.RnullStr18.ch.Getary
 // Access string as array of chars
@@ -9130,26 +9314,44 @@ inline void algo::RnullStr18::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr18.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr18::operator =(const algo::RnullStr18& parent) {
-    memcpy(ch, parent.ch, 18);
-}
-
-// --- algo.RnullStr18.ch.Ctor
-inline  algo::RnullStr18::RnullStr18(const algo::RnullStr18 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr18.ch.CtorStrptr
 inline  algo::RnullStr18::RnullStr18(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr18.ch.Cast
-inline algo::RnullStr18::operator algo::strptr () const {
+inline  algo::RnullStr18::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr18..EqOp
+inline bool algo::RnullStr18::operator ==(const algo::RnullStr18 &rhs) const {
+    return algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+}
+
+// --- algo.RnullStr18..NeOp
+inline bool algo::RnullStr18::operator !=(const algo::RnullStr18 &rhs) const {
+    return !algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+}
+
+// --- algo.RnullStr18..LtOp
+inline bool algo::RnullStr18::operator <(const algo::RnullStr18 &rhs) const {
+    return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
+}
+
+// --- algo.RnullStr18..GtOp
+inline bool algo::RnullStr18::operator >(const algo::RnullStr18 &rhs) const {
+    return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(rhs),const_cast<algo::RnullStr18&>(*this));
+}
+
+// --- algo.RnullStr18..LeOp
+inline bool algo::RnullStr18::operator <=(const algo::RnullStr18 &rhs) const {
+    return !algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(rhs),const_cast<algo::RnullStr18&>(*this));
+}
+
+// --- algo.RnullStr18..GeOp
+inline bool algo::RnullStr18::operator >=(const algo::RnullStr18 &rhs) const {
+    return !algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 // --- algo.RnullStr18..Lt
@@ -9190,14 +9392,28 @@ inline bool algo::RnullStr18_Update(algo::RnullStr18 &lhs, algo::RnullStr18 rhs)
     return ret;
 }
 
-// --- algo.RnullStr18..EqStrptr
-inline bool algo::RnullStr18_EqStrptr(algo::RnullStr18 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr19::RnullStr19() {
-    algo::RnullStr19_Init(*this);
+// --- algo.RnullStr18..EqOpAryptr
+inline bool algo::RnullStr18::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr18..AssignOp
+inline algo::RnullStr18& algo::RnullStr18::operator =(const algo::RnullStr18 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr18));
+    return *this;
+}
+
+// --- algo.RnullStr18..Ctor
+inline  algo::RnullStr18::RnullStr18() {
+    algo::RnullStr18_Init(*this);
+}
+
+// --- algo.RnullStr18..CopyCtor
+inline  algo::RnullStr18::RnullStr18(const algo::RnullStr18 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr18));
+}
 
 // --- algo.RnullStr19.ch.Getary
 // Access string as array of chars
@@ -9240,25 +9456,13 @@ inline void algo::RnullStr19::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr19.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr19::operator =(const algo::RnullStr19& parent) {
-    memcpy(ch, parent.ch, 19);
-}
-
-// --- algo.RnullStr19.ch.Ctor
-inline  algo::RnullStr19::RnullStr19(const algo::RnullStr19 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr19.ch.CtorStrptr
 inline  algo::RnullStr19::RnullStr19(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr19.ch.Cast
-inline algo::RnullStr19::operator algo::strptr () const {
+inline  algo::RnullStr19::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -9301,42 +9505,28 @@ inline bool algo::RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs
     return ret;
 }
 
-// --- algo.RnullStr19..EqStrptr
-inline bool algo::RnullStr19_EqStrptr(const algo::RnullStr19& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr19..EqOpAryptr
+inline bool algo::RnullStr19::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr2::operator ==(const algo::RnullStr2 &rhs) const {
-    return algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+// --- algo.RnullStr19..AssignOp
+inline algo::RnullStr19& algo::RnullStr19::operator =(const algo::RnullStr19 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr19));
+    return *this;
 }
 
-inline bool algo::RnullStr2::operator !=(const algo::RnullStr2 &rhs) const {
-    return !algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+// --- algo.RnullStr19..Ctor
+inline  algo::RnullStr19::RnullStr19() {
+    algo::RnullStr19_Init(*this);
 }
 
-inline bool algo::RnullStr2::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr2_EqStrptr(const_cast<algo::RnullStr2&>(*this),rhs);
+// --- algo.RnullStr19..CopyCtor
+inline  algo::RnullStr19::RnullStr19(const algo::RnullStr19 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr19));
 }
-
-inline bool algo::RnullStr2::operator <(const algo::RnullStr2 &rhs) const {
-    return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
-}
-
-inline bool algo::RnullStr2::operator >(const algo::RnullStr2 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr2::operator <=(const algo::RnullStr2 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr2::operator >=(const algo::RnullStr2 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr2::RnullStr2() {
-    algo::RnullStr2_Init(*this);
-}
-
 
 // --- algo.RnullStr2.ch.Getary
 // Access string as array of chars
@@ -9379,26 +9569,44 @@ inline void algo::RnullStr2::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr2.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr2::operator =(const algo::RnullStr2& parent) {
-    memcpy(ch, parent.ch, 2);
-}
-
-// --- algo.RnullStr2.ch.Ctor
-inline  algo::RnullStr2::RnullStr2(const algo::RnullStr2 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr2.ch.CtorStrptr
 inline  algo::RnullStr2::RnullStr2(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr2.ch.Cast
-inline algo::RnullStr2::operator algo::strptr () const {
+inline  algo::RnullStr2::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr2..EqOp
+inline bool algo::RnullStr2::operator ==(const algo::RnullStr2 &rhs) const {
+    return algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+}
+
+// --- algo.RnullStr2..NeOp
+inline bool algo::RnullStr2::operator !=(const algo::RnullStr2 &rhs) const {
+    return !algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+}
+
+// --- algo.RnullStr2..LtOp
+inline bool algo::RnullStr2::operator <(const algo::RnullStr2 &rhs) const {
+    return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
+}
+
+// --- algo.RnullStr2..GtOp
+inline bool algo::RnullStr2::operator >(const algo::RnullStr2 &rhs) const {
+    return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(rhs),const_cast<algo::RnullStr2&>(*this));
+}
+
+// --- algo.RnullStr2..LeOp
+inline bool algo::RnullStr2::operator <=(const algo::RnullStr2 &rhs) const {
+    return !algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(rhs),const_cast<algo::RnullStr2&>(*this));
+}
+
+// --- algo.RnullStr2..GeOp
+inline bool algo::RnullStr2::operator >=(const algo::RnullStr2 &rhs) const {
+    return !algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
 // --- algo.RnullStr2..Lt
@@ -9437,42 +9645,28 @@ inline bool algo::RnullStr2_Update(algo::RnullStr2 &lhs, algo::RnullStr2 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr2..EqStrptr
-inline bool algo::RnullStr2_EqStrptr(algo::RnullStr2 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr2..EqOpAryptr
+inline bool algo::RnullStr2::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr20::operator ==(const algo::RnullStr20 &rhs) const {
-    return algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+// --- algo.RnullStr2..AssignOp
+inline algo::RnullStr2& algo::RnullStr2::operator =(const algo::RnullStr2 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr2));
+    return *this;
 }
 
-inline bool algo::RnullStr20::operator !=(const algo::RnullStr20 &rhs) const {
-    return !algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+// --- algo.RnullStr2..Ctor
+inline  algo::RnullStr2::RnullStr2() {
+    algo::RnullStr2_Init(*this);
 }
 
-inline bool algo::RnullStr20::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr20_EqStrptr(const_cast<algo::RnullStr20&>(*this),rhs);
+// --- algo.RnullStr2..CopyCtor
+inline  algo::RnullStr2::RnullStr2(const algo::RnullStr2 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr2));
 }
-
-inline bool algo::RnullStr20::operator <(const algo::RnullStr20 &rhs) const {
-    return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
-}
-
-inline bool algo::RnullStr20::operator >(const algo::RnullStr20 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr20::operator <=(const algo::RnullStr20 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr20::operator >=(const algo::RnullStr20 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr20::RnullStr20() {
-    algo::RnullStr20_Init(*this);
-}
-
 
 // --- algo.RnullStr20.ch.Getary
 // Access string as array of chars
@@ -9515,26 +9709,44 @@ inline void algo::RnullStr20::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr20.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr20::operator =(const algo::RnullStr20& parent) {
-    memcpy(ch, parent.ch, 20);
-}
-
-// --- algo.RnullStr20.ch.Ctor
-inline  algo::RnullStr20::RnullStr20(const algo::RnullStr20 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr20.ch.CtorStrptr
 inline  algo::RnullStr20::RnullStr20(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr20.ch.Cast
-inline algo::RnullStr20::operator algo::strptr () const {
+inline  algo::RnullStr20::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr20..EqOp
+inline bool algo::RnullStr20::operator ==(const algo::RnullStr20 &rhs) const {
+    return algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+}
+
+// --- algo.RnullStr20..NeOp
+inline bool algo::RnullStr20::operator !=(const algo::RnullStr20 &rhs) const {
+    return !algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+}
+
+// --- algo.RnullStr20..LtOp
+inline bool algo::RnullStr20::operator <(const algo::RnullStr20 &rhs) const {
+    return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
+}
+
+// --- algo.RnullStr20..GtOp
+inline bool algo::RnullStr20::operator >(const algo::RnullStr20 &rhs) const {
+    return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(rhs),const_cast<algo::RnullStr20&>(*this));
+}
+
+// --- algo.RnullStr20..LeOp
+inline bool algo::RnullStr20::operator <=(const algo::RnullStr20 &rhs) const {
+    return !algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(rhs),const_cast<algo::RnullStr20&>(*this));
+}
+
+// --- algo.RnullStr20..GeOp
+inline bool algo::RnullStr20::operator >=(const algo::RnullStr20 &rhs) const {
+    return !algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 // --- algo.RnullStr20..Lt
@@ -9575,14 +9787,28 @@ inline bool algo::RnullStr20_Update(algo::RnullStr20 &lhs, algo::RnullStr20 rhs)
     return ret;
 }
 
-// --- algo.RnullStr20..EqStrptr
-inline bool algo::RnullStr20_EqStrptr(algo::RnullStr20 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr21::RnullStr21() {
-    algo::RnullStr21_Init(*this);
+// --- algo.RnullStr20..EqOpAryptr
+inline bool algo::RnullStr20::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr20..AssignOp
+inline algo::RnullStr20& algo::RnullStr20::operator =(const algo::RnullStr20 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr20));
+    return *this;
+}
+
+// --- algo.RnullStr20..Ctor
+inline  algo::RnullStr20::RnullStr20() {
+    algo::RnullStr20_Init(*this);
+}
+
+// --- algo.RnullStr20..CopyCtor
+inline  algo::RnullStr20::RnullStr20(const algo::RnullStr20 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr20));
+}
 
 // --- algo.RnullStr21.ch.Getary
 // Access string as array of chars
@@ -9625,25 +9851,13 @@ inline void algo::RnullStr21::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr21.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr21::operator =(const algo::RnullStr21& parent) {
-    memcpy(ch, parent.ch, 21);
-}
-
-// --- algo.RnullStr21.ch.Ctor
-inline  algo::RnullStr21::RnullStr21(const algo::RnullStr21 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr21.ch.CtorStrptr
 inline  algo::RnullStr21::RnullStr21(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr21.ch.Cast
-inline algo::RnullStr21::operator algo::strptr () const {
+inline  algo::RnullStr21::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -9686,42 +9900,28 @@ inline bool algo::RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs
     return ret;
 }
 
-// --- algo.RnullStr21..EqStrptr
-inline bool algo::RnullStr21_EqStrptr(const algo::RnullStr21& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr21..EqOpAryptr
+inline bool algo::RnullStr21::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr24::operator ==(const algo::RnullStr24 &rhs) const {
-    return algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+// --- algo.RnullStr21..AssignOp
+inline algo::RnullStr21& algo::RnullStr21::operator =(const algo::RnullStr21 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr21));
+    return *this;
 }
 
-inline bool algo::RnullStr24::operator !=(const algo::RnullStr24 &rhs) const {
-    return !algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+// --- algo.RnullStr21..Ctor
+inline  algo::RnullStr21::RnullStr21() {
+    algo::RnullStr21_Init(*this);
 }
 
-inline bool algo::RnullStr24::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr24_EqStrptr(const_cast<algo::RnullStr24&>(*this),rhs);
+// --- algo.RnullStr21..CopyCtor
+inline  algo::RnullStr21::RnullStr21(const algo::RnullStr21 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr21));
 }
-
-inline bool algo::RnullStr24::operator <(const algo::RnullStr24 &rhs) const {
-    return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
-}
-
-inline bool algo::RnullStr24::operator >(const algo::RnullStr24 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr24::operator <=(const algo::RnullStr24 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr24::operator >=(const algo::RnullStr24 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr24::RnullStr24() {
-    algo::RnullStr24_Init(*this);
-}
-
 
 // --- algo.RnullStr24.ch.Getary
 // Access string as array of chars
@@ -9764,26 +9964,44 @@ inline void algo::RnullStr24::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr24.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr24::operator =(const algo::RnullStr24& parent) {
-    memcpy(ch, parent.ch, 24);
-}
-
-// --- algo.RnullStr24.ch.Ctor
-inline  algo::RnullStr24::RnullStr24(const algo::RnullStr24 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr24.ch.CtorStrptr
 inline  algo::RnullStr24::RnullStr24(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr24.ch.Cast
-inline algo::RnullStr24::operator algo::strptr () const {
+inline  algo::RnullStr24::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr24..EqOp
+inline bool algo::RnullStr24::operator ==(const algo::RnullStr24 &rhs) const {
+    return algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+}
+
+// --- algo.RnullStr24..NeOp
+inline bool algo::RnullStr24::operator !=(const algo::RnullStr24 &rhs) const {
+    return !algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+}
+
+// --- algo.RnullStr24..LtOp
+inline bool algo::RnullStr24::operator <(const algo::RnullStr24 &rhs) const {
+    return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
+}
+
+// --- algo.RnullStr24..GtOp
+inline bool algo::RnullStr24::operator >(const algo::RnullStr24 &rhs) const {
+    return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(rhs),const_cast<algo::RnullStr24&>(*this));
+}
+
+// --- algo.RnullStr24..LeOp
+inline bool algo::RnullStr24::operator <=(const algo::RnullStr24 &rhs) const {
+    return !algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(rhs),const_cast<algo::RnullStr24&>(*this));
+}
+
+// --- algo.RnullStr24..GeOp
+inline bool algo::RnullStr24::operator >=(const algo::RnullStr24 &rhs) const {
+    return !algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
 // --- algo.RnullStr24..Lt
@@ -9824,42 +10042,28 @@ inline bool algo::RnullStr24_Update(algo::RnullStr24 &lhs, algo::RnullStr24& rhs
     return ret;
 }
 
-// --- algo.RnullStr24..EqStrptr
-inline bool algo::RnullStr24_EqStrptr(const algo::RnullStr24& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr24..EqOpAryptr
+inline bool algo::RnullStr24::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr25::operator ==(const algo::RnullStr25 &rhs) const {
-    return algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+// --- algo.RnullStr24..AssignOp
+inline algo::RnullStr24& algo::RnullStr24::operator =(const algo::RnullStr24 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr24));
+    return *this;
 }
 
-inline bool algo::RnullStr25::operator !=(const algo::RnullStr25 &rhs) const {
-    return !algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+// --- algo.RnullStr24..Ctor
+inline  algo::RnullStr24::RnullStr24() {
+    algo::RnullStr24_Init(*this);
 }
 
-inline bool algo::RnullStr25::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr25_EqStrptr(const_cast<algo::RnullStr25&>(*this),rhs);
+// --- algo.RnullStr24..CopyCtor
+inline  algo::RnullStr24::RnullStr24(const algo::RnullStr24 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr24));
 }
-
-inline bool algo::RnullStr25::operator <(const algo::RnullStr25 &rhs) const {
-    return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
-}
-
-inline bool algo::RnullStr25::operator >(const algo::RnullStr25 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr25::operator <=(const algo::RnullStr25 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr25::operator >=(const algo::RnullStr25 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr25::RnullStr25() {
-    algo::RnullStr25_Init(*this);
-}
-
 
 // --- algo.RnullStr25.ch.Getary
 // Access string as array of chars
@@ -9902,26 +10106,44 @@ inline void algo::RnullStr25::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr25.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr25::operator =(const algo::RnullStr25& parent) {
-    memcpy(ch, parent.ch, 25);
-}
-
-// --- algo.RnullStr25.ch.Ctor
-inline  algo::RnullStr25::RnullStr25(const algo::RnullStr25 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr25.ch.CtorStrptr
 inline  algo::RnullStr25::RnullStr25(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr25.ch.Cast
-inline algo::RnullStr25::operator algo::strptr () const {
+inline  algo::RnullStr25::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr25..EqOp
+inline bool algo::RnullStr25::operator ==(const algo::RnullStr25 &rhs) const {
+    return algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+}
+
+// --- algo.RnullStr25..NeOp
+inline bool algo::RnullStr25::operator !=(const algo::RnullStr25 &rhs) const {
+    return !algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+}
+
+// --- algo.RnullStr25..LtOp
+inline bool algo::RnullStr25::operator <(const algo::RnullStr25 &rhs) const {
+    return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
+}
+
+// --- algo.RnullStr25..GtOp
+inline bool algo::RnullStr25::operator >(const algo::RnullStr25 &rhs) const {
+    return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(rhs),const_cast<algo::RnullStr25&>(*this));
+}
+
+// --- algo.RnullStr25..LeOp
+inline bool algo::RnullStr25::operator <=(const algo::RnullStr25 &rhs) const {
+    return !algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(rhs),const_cast<algo::RnullStr25&>(*this));
+}
+
+// --- algo.RnullStr25..GeOp
+inline bool algo::RnullStr25::operator >=(const algo::RnullStr25 &rhs) const {
+    return !algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 // --- algo.RnullStr25..Lt
@@ -9963,42 +10185,28 @@ inline bool algo::RnullStr25_Update(algo::RnullStr25 &lhs, algo::RnullStr25& rhs
     return ret;
 }
 
-// --- algo.RnullStr25..EqStrptr
-inline bool algo::RnullStr25_EqStrptr(const algo::RnullStr25& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr25..EqOpAryptr
+inline bool algo::RnullStr25::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr28::operator ==(const algo::RnullStr28 &rhs) const {
-    return algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+// --- algo.RnullStr25..AssignOp
+inline algo::RnullStr25& algo::RnullStr25::operator =(const algo::RnullStr25 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr25));
+    return *this;
 }
 
-inline bool algo::RnullStr28::operator !=(const algo::RnullStr28 &rhs) const {
-    return !algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+// --- algo.RnullStr25..Ctor
+inline  algo::RnullStr25::RnullStr25() {
+    algo::RnullStr25_Init(*this);
 }
 
-inline bool algo::RnullStr28::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr28_EqStrptr(const_cast<algo::RnullStr28&>(*this),rhs);
+// --- algo.RnullStr25..CopyCtor
+inline  algo::RnullStr25::RnullStr25(const algo::RnullStr25 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr25));
 }
-
-inline bool algo::RnullStr28::operator <(const algo::RnullStr28 &rhs) const {
-    return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
-}
-
-inline bool algo::RnullStr28::operator >(const algo::RnullStr28 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr28::operator <=(const algo::RnullStr28 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr28::operator >=(const algo::RnullStr28 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr28::RnullStr28() {
-    algo::RnullStr28_Init(*this);
-}
-
 
 // --- algo.RnullStr28.ch.Getary
 // Access string as array of chars
@@ -10041,26 +10249,44 @@ inline void algo::RnullStr28::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr28.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr28::operator =(const algo::RnullStr28& parent) {
-    memcpy(ch, parent.ch, 28);
-}
-
-// --- algo.RnullStr28.ch.Ctor
-inline  algo::RnullStr28::RnullStr28(const algo::RnullStr28 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr28.ch.CtorStrptr
 inline  algo::RnullStr28::RnullStr28(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr28.ch.Cast
-inline algo::RnullStr28::operator algo::strptr () const {
+inline  algo::RnullStr28::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr28..EqOp
+inline bool algo::RnullStr28::operator ==(const algo::RnullStr28 &rhs) const {
+    return algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+}
+
+// --- algo.RnullStr28..NeOp
+inline bool algo::RnullStr28::operator !=(const algo::RnullStr28 &rhs) const {
+    return !algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+}
+
+// --- algo.RnullStr28..LtOp
+inline bool algo::RnullStr28::operator <(const algo::RnullStr28 &rhs) const {
+    return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
+}
+
+// --- algo.RnullStr28..GtOp
+inline bool algo::RnullStr28::operator >(const algo::RnullStr28 &rhs) const {
+    return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(rhs),const_cast<algo::RnullStr28&>(*this));
+}
+
+// --- algo.RnullStr28..LeOp
+inline bool algo::RnullStr28::operator <=(const algo::RnullStr28 &rhs) const {
+    return !algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(rhs),const_cast<algo::RnullStr28&>(*this));
+}
+
+// --- algo.RnullStr28..GeOp
+inline bool algo::RnullStr28::operator >=(const algo::RnullStr28 &rhs) const {
+    return !algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
 // --- algo.RnullStr28..Lt
@@ -10102,42 +10328,28 @@ inline bool algo::RnullStr28_Update(algo::RnullStr28 &lhs, algo::RnullStr28& rhs
     return ret;
 }
 
-// --- algo.RnullStr28..EqStrptr
-inline bool algo::RnullStr28_EqStrptr(const algo::RnullStr28& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr28..EqOpAryptr
+inline bool algo::RnullStr28::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr3::operator ==(const algo::RnullStr3 &rhs) const {
-    return algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+// --- algo.RnullStr28..AssignOp
+inline algo::RnullStr28& algo::RnullStr28::operator =(const algo::RnullStr28 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr28));
+    return *this;
 }
 
-inline bool algo::RnullStr3::operator !=(const algo::RnullStr3 &rhs) const {
-    return !algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+// --- algo.RnullStr28..Ctor
+inline  algo::RnullStr28::RnullStr28() {
+    algo::RnullStr28_Init(*this);
 }
 
-inline bool algo::RnullStr3::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr3_EqStrptr(const_cast<algo::RnullStr3&>(*this),rhs);
+// --- algo.RnullStr28..CopyCtor
+inline  algo::RnullStr28::RnullStr28(const algo::RnullStr28 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr28));
 }
-
-inline bool algo::RnullStr3::operator <(const algo::RnullStr3 &rhs) const {
-    return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
-}
-
-inline bool algo::RnullStr3::operator >(const algo::RnullStr3 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr3::operator <=(const algo::RnullStr3 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr3::operator >=(const algo::RnullStr3 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr3::RnullStr3() {
-    algo::RnullStr3_Init(*this);
-}
-
 
 // --- algo.RnullStr3.ch.Getary
 // Access string as array of chars
@@ -10180,26 +10392,44 @@ inline void algo::RnullStr3::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr3.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr3::operator =(const algo::RnullStr3& parent) {
-    memcpy(ch, parent.ch, 3);
-}
-
-// --- algo.RnullStr3.ch.Ctor
-inline  algo::RnullStr3::RnullStr3(const algo::RnullStr3 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr3.ch.CtorStrptr
 inline  algo::RnullStr3::RnullStr3(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr3.ch.Cast
-inline algo::RnullStr3::operator algo::strptr () const {
+inline  algo::RnullStr3::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr3..EqOp
+inline bool algo::RnullStr3::operator ==(const algo::RnullStr3 &rhs) const {
+    return algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+}
+
+// --- algo.RnullStr3..NeOp
+inline bool algo::RnullStr3::operator !=(const algo::RnullStr3 &rhs) const {
+    return !algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+}
+
+// --- algo.RnullStr3..LtOp
+inline bool algo::RnullStr3::operator <(const algo::RnullStr3 &rhs) const {
+    return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
+}
+
+// --- algo.RnullStr3..GtOp
+inline bool algo::RnullStr3::operator >(const algo::RnullStr3 &rhs) const {
+    return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(rhs),const_cast<algo::RnullStr3&>(*this));
+}
+
+// --- algo.RnullStr3..LeOp
+inline bool algo::RnullStr3::operator <=(const algo::RnullStr3 &rhs) const {
+    return !algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(rhs),const_cast<algo::RnullStr3&>(*this));
+}
+
+// --- algo.RnullStr3..GeOp
+inline bool algo::RnullStr3::operator >=(const algo::RnullStr3 &rhs) const {
+    return !algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 // --- algo.RnullStr3..Lt
@@ -10239,14 +10469,28 @@ inline bool algo::RnullStr3_Update(algo::RnullStr3 &lhs, algo::RnullStr3 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr3..EqStrptr
-inline bool algo::RnullStr3_EqStrptr(algo::RnullStr3 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr30::RnullStr30() {
-    algo::RnullStr30_Init(*this);
+// --- algo.RnullStr3..EqOpAryptr
+inline bool algo::RnullStr3::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr3..AssignOp
+inline algo::RnullStr3& algo::RnullStr3::operator =(const algo::RnullStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr3));
+    return *this;
+}
+
+// --- algo.RnullStr3..Ctor
+inline  algo::RnullStr3::RnullStr3() {
+    algo::RnullStr3_Init(*this);
+}
+
+// --- algo.RnullStr3..CopyCtor
+inline  algo::RnullStr3::RnullStr3(const algo::RnullStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr3));
+}
 
 // --- algo.RnullStr30.ch.Getary
 // Access string as array of chars
@@ -10289,25 +10533,13 @@ inline void algo::RnullStr30::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr30.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr30::operator =(const algo::RnullStr30& parent) {
-    memcpy(ch, parent.ch, 30);
-}
-
-// --- algo.RnullStr30.ch.Ctor
-inline  algo::RnullStr30::RnullStr30(const algo::RnullStr30 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr30.ch.CtorStrptr
 inline  algo::RnullStr30::RnullStr30(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr30.ch.Cast
-inline algo::RnullStr30::operator algo::strptr () const {
+inline  algo::RnullStr30::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -10351,42 +10583,28 @@ inline bool algo::RnullStr30_Update(algo::RnullStr30 &lhs, algo::RnullStr30 rhs)
     return ret;
 }
 
-// --- algo.RnullStr30..EqStrptr
-inline bool algo::RnullStr30_EqStrptr(algo::RnullStr30 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr30..EqOpAryptr
+inline bool algo::RnullStr30::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr32::operator ==(const algo::RnullStr32 &rhs) const {
-    return algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+// --- algo.RnullStr30..AssignOp
+inline algo::RnullStr30& algo::RnullStr30::operator =(const algo::RnullStr30 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr30));
+    return *this;
 }
 
-inline bool algo::RnullStr32::operator !=(const algo::RnullStr32 &rhs) const {
-    return !algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+// --- algo.RnullStr30..Ctor
+inline  algo::RnullStr30::RnullStr30() {
+    algo::RnullStr30_Init(*this);
 }
 
-inline bool algo::RnullStr32::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr32_EqStrptr(const_cast<algo::RnullStr32&>(*this),rhs);
+// --- algo.RnullStr30..CopyCtor
+inline  algo::RnullStr30::RnullStr30(const algo::RnullStr30 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr30));
 }
-
-inline bool algo::RnullStr32::operator <(const algo::RnullStr32 &rhs) const {
-    return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
-}
-
-inline bool algo::RnullStr32::operator >(const algo::RnullStr32 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr32::operator <=(const algo::RnullStr32 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr32::operator >=(const algo::RnullStr32 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr32::RnullStr32() {
-    algo::RnullStr32_Init(*this);
-}
-
 
 // --- algo.RnullStr32.ch.Getary
 // Access string as array of chars
@@ -10429,26 +10647,44 @@ inline void algo::RnullStr32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr32::operator =(const algo::RnullStr32& parent) {
-    memcpy(ch, parent.ch, 32);
-}
-
-// --- algo.RnullStr32.ch.Ctor
-inline  algo::RnullStr32::RnullStr32(const algo::RnullStr32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr32.ch.CtorStrptr
 inline  algo::RnullStr32::RnullStr32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr32.ch.Cast
-inline algo::RnullStr32::operator algo::strptr () const {
+inline  algo::RnullStr32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr32..EqOp
+inline bool algo::RnullStr32::operator ==(const algo::RnullStr32 &rhs) const {
+    return algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+}
+
+// --- algo.RnullStr32..NeOp
+inline bool algo::RnullStr32::operator !=(const algo::RnullStr32 &rhs) const {
+    return !algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+}
+
+// --- algo.RnullStr32..LtOp
+inline bool algo::RnullStr32::operator <(const algo::RnullStr32 &rhs) const {
+    return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
+}
+
+// --- algo.RnullStr32..GtOp
+inline bool algo::RnullStr32::operator >(const algo::RnullStr32 &rhs) const {
+    return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(rhs),const_cast<algo::RnullStr32&>(*this));
+}
+
+// --- algo.RnullStr32..LeOp
+inline bool algo::RnullStr32::operator <=(const algo::RnullStr32 &rhs) const {
+    return !algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(rhs),const_cast<algo::RnullStr32&>(*this));
+}
+
+// --- algo.RnullStr32..GeOp
+inline bool algo::RnullStr32::operator >=(const algo::RnullStr32 &rhs) const {
+    return !algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
 // --- algo.RnullStr32..Lt
@@ -10490,42 +10726,28 @@ inline bool algo::RnullStr32_Update(algo::RnullStr32 &lhs, algo::RnullStr32 rhs)
     return ret;
 }
 
-// --- algo.RnullStr32..EqStrptr
-inline bool algo::RnullStr32_EqStrptr(algo::RnullStr32 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr32..EqOpAryptr
+inline bool algo::RnullStr32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr33::operator ==(const algo::RnullStr33 &rhs) const {
-    return algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+// --- algo.RnullStr32..AssignOp
+inline algo::RnullStr32& algo::RnullStr32::operator =(const algo::RnullStr32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr32));
+    return *this;
 }
 
-inline bool algo::RnullStr33::operator !=(const algo::RnullStr33 &rhs) const {
-    return !algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+// --- algo.RnullStr32..Ctor
+inline  algo::RnullStr32::RnullStr32() {
+    algo::RnullStr32_Init(*this);
 }
 
-inline bool algo::RnullStr33::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr33_EqStrptr(const_cast<algo::RnullStr33&>(*this),rhs);
+// --- algo.RnullStr32..CopyCtor
+inline  algo::RnullStr32::RnullStr32(const algo::RnullStr32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr32));
 }
-
-inline bool algo::RnullStr33::operator <(const algo::RnullStr33 &rhs) const {
-    return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
-}
-
-inline bool algo::RnullStr33::operator >(const algo::RnullStr33 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr33::operator <=(const algo::RnullStr33 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr33::operator >=(const algo::RnullStr33 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr33::RnullStr33() {
-    algo::RnullStr33_Init(*this);
-}
-
 
 // --- algo.RnullStr33.ch.Getary
 // Access string as array of chars
@@ -10568,26 +10790,44 @@ inline void algo::RnullStr33::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr33.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr33::operator =(const algo::RnullStr33& parent) {
-    memcpy(ch, parent.ch, 33);
-}
-
-// --- algo.RnullStr33.ch.Ctor
-inline  algo::RnullStr33::RnullStr33(const algo::RnullStr33 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr33.ch.CtorStrptr
 inline  algo::RnullStr33::RnullStr33(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr33.ch.Cast
-inline algo::RnullStr33::operator algo::strptr () const {
+inline  algo::RnullStr33::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr33..EqOp
+inline bool algo::RnullStr33::operator ==(const algo::RnullStr33 &rhs) const {
+    return algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+}
+
+// --- algo.RnullStr33..NeOp
+inline bool algo::RnullStr33::operator !=(const algo::RnullStr33 &rhs) const {
+    return !algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+}
+
+// --- algo.RnullStr33..LtOp
+inline bool algo::RnullStr33::operator <(const algo::RnullStr33 &rhs) const {
+    return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
+}
+
+// --- algo.RnullStr33..GtOp
+inline bool algo::RnullStr33::operator >(const algo::RnullStr33 &rhs) const {
+    return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(rhs),const_cast<algo::RnullStr33&>(*this));
+}
+
+// --- algo.RnullStr33..LeOp
+inline bool algo::RnullStr33::operator <=(const algo::RnullStr33 &rhs) const {
+    return !algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(rhs),const_cast<algo::RnullStr33&>(*this));
+}
+
+// --- algo.RnullStr33..GeOp
+inline bool algo::RnullStr33::operator >=(const algo::RnullStr33 &rhs) const {
+    return !algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 // --- algo.RnullStr33..Lt
@@ -10630,42 +10870,28 @@ inline bool algo::RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& rhs
     return ret;
 }
 
-// --- algo.RnullStr33..EqStrptr
-inline bool algo::RnullStr33_EqStrptr(const algo::RnullStr33& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr33..EqOpAryptr
+inline bool algo::RnullStr33::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr35::operator ==(const algo::RnullStr35 &rhs) const {
-    return algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+// --- algo.RnullStr33..AssignOp
+inline algo::RnullStr33& algo::RnullStr33::operator =(const algo::RnullStr33 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr33));
+    return *this;
 }
 
-inline bool algo::RnullStr35::operator !=(const algo::RnullStr35 &rhs) const {
-    return !algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+// --- algo.RnullStr33..Ctor
+inline  algo::RnullStr33::RnullStr33() {
+    algo::RnullStr33_Init(*this);
 }
 
-inline bool algo::RnullStr35::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr35_EqStrptr(const_cast<algo::RnullStr35&>(*this),rhs);
+// --- algo.RnullStr33..CopyCtor
+inline  algo::RnullStr33::RnullStr33(const algo::RnullStr33 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr33));
 }
-
-inline bool algo::RnullStr35::operator <(const algo::RnullStr35 &rhs) const {
-    return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
-}
-
-inline bool algo::RnullStr35::operator >(const algo::RnullStr35 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr35::operator <=(const algo::RnullStr35 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr35::operator >=(const algo::RnullStr35 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr35::RnullStr35() {
-    algo::RnullStr35_Init(*this);
-}
-
 
 // --- algo.RnullStr35.ch.Getary
 // Access string as array of chars
@@ -10708,26 +10934,44 @@ inline void algo::RnullStr35::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr35.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr35::operator =(const algo::RnullStr35& parent) {
-    memcpy(ch, parent.ch, 35);
-}
-
-// --- algo.RnullStr35.ch.Ctor
-inline  algo::RnullStr35::RnullStr35(const algo::RnullStr35 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr35.ch.CtorStrptr
 inline  algo::RnullStr35::RnullStr35(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr35.ch.Cast
-inline algo::RnullStr35::operator algo::strptr () const {
+inline  algo::RnullStr35::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr35..EqOp
+inline bool algo::RnullStr35::operator ==(const algo::RnullStr35 &rhs) const {
+    return algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+}
+
+// --- algo.RnullStr35..NeOp
+inline bool algo::RnullStr35::operator !=(const algo::RnullStr35 &rhs) const {
+    return !algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+}
+
+// --- algo.RnullStr35..LtOp
+inline bool algo::RnullStr35::operator <(const algo::RnullStr35 &rhs) const {
+    return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
+}
+
+// --- algo.RnullStr35..GtOp
+inline bool algo::RnullStr35::operator >(const algo::RnullStr35 &rhs) const {
+    return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(rhs),const_cast<algo::RnullStr35&>(*this));
+}
+
+// --- algo.RnullStr35..LeOp
+inline bool algo::RnullStr35::operator <=(const algo::RnullStr35 &rhs) const {
+    return !algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(rhs),const_cast<algo::RnullStr35&>(*this));
+}
+
+// --- algo.RnullStr35..GeOp
+inline bool algo::RnullStr35::operator >=(const algo::RnullStr35 &rhs) const {
+    return !algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
 // --- algo.RnullStr35..Lt
@@ -10771,42 +11015,28 @@ inline bool algo::RnullStr35_Update(algo::RnullStr35 &lhs, algo::RnullStr35& rhs
     return ret;
 }
 
-// --- algo.RnullStr35..EqStrptr
-inline bool algo::RnullStr35_EqStrptr(const algo::RnullStr35& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr35..EqOpAryptr
+inline bool algo::RnullStr35::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr36::operator ==(const algo::RnullStr36 &rhs) const {
-    return algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+// --- algo.RnullStr35..AssignOp
+inline algo::RnullStr35& algo::RnullStr35::operator =(const algo::RnullStr35 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr35));
+    return *this;
 }
 
-inline bool algo::RnullStr36::operator !=(const algo::RnullStr36 &rhs) const {
-    return !algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+// --- algo.RnullStr35..Ctor
+inline  algo::RnullStr35::RnullStr35() {
+    algo::RnullStr35_Init(*this);
 }
 
-inline bool algo::RnullStr36::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr36_EqStrptr(const_cast<algo::RnullStr36&>(*this),rhs);
+// --- algo.RnullStr35..CopyCtor
+inline  algo::RnullStr35::RnullStr35(const algo::RnullStr35 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr35));
 }
-
-inline bool algo::RnullStr36::operator <(const algo::RnullStr36 &rhs) const {
-    return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
-}
-
-inline bool algo::RnullStr36::operator >(const algo::RnullStr36 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr36::operator <=(const algo::RnullStr36 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr36::operator >=(const algo::RnullStr36 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr36::RnullStr36() {
-    algo::RnullStr36_Init(*this);
-}
-
 
 // --- algo.RnullStr36.ch.Getary
 // Access string as array of chars
@@ -10849,26 +11079,44 @@ inline void algo::RnullStr36::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr36.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr36::operator =(const algo::RnullStr36& parent) {
-    memcpy(ch, parent.ch, 36);
-}
-
-// --- algo.RnullStr36.ch.Ctor
-inline  algo::RnullStr36::RnullStr36(const algo::RnullStr36 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr36.ch.CtorStrptr
 inline  algo::RnullStr36::RnullStr36(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr36.ch.Cast
-inline algo::RnullStr36::operator algo::strptr () const {
+inline  algo::RnullStr36::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr36..EqOp
+inline bool algo::RnullStr36::operator ==(const algo::RnullStr36 &rhs) const {
+    return algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+}
+
+// --- algo.RnullStr36..NeOp
+inline bool algo::RnullStr36::operator !=(const algo::RnullStr36 &rhs) const {
+    return !algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+}
+
+// --- algo.RnullStr36..LtOp
+inline bool algo::RnullStr36::operator <(const algo::RnullStr36 &rhs) const {
+    return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
+}
+
+// --- algo.RnullStr36..GtOp
+inline bool algo::RnullStr36::operator >(const algo::RnullStr36 &rhs) const {
+    return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(rhs),const_cast<algo::RnullStr36&>(*this));
+}
+
+// --- algo.RnullStr36..LeOp
+inline bool algo::RnullStr36::operator <=(const algo::RnullStr36 &rhs) const {
+    return !algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(rhs),const_cast<algo::RnullStr36&>(*this));
+}
+
+// --- algo.RnullStr36..GeOp
+inline bool algo::RnullStr36::operator >=(const algo::RnullStr36 &rhs) const {
+    return !algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 // --- algo.RnullStr36..Lt
@@ -10911,14 +11159,28 @@ inline bool algo::RnullStr36_Update(algo::RnullStr36 &lhs, algo::RnullStr36& rhs
     return ret;
 }
 
-// --- algo.RnullStr36..EqStrptr
-inline bool algo::RnullStr36_EqStrptr(const algo::RnullStr36& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr4::RnullStr4() {
-    algo::RnullStr4_Init(*this);
+// --- algo.RnullStr36..EqOpAryptr
+inline bool algo::RnullStr36::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr36..AssignOp
+inline algo::RnullStr36& algo::RnullStr36::operator =(const algo::RnullStr36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr36));
+    return *this;
+}
+
+// --- algo.RnullStr36..Ctor
+inline  algo::RnullStr36::RnullStr36() {
+    algo::RnullStr36_Init(*this);
+}
+
+// --- algo.RnullStr36..CopyCtor
+inline  algo::RnullStr36::RnullStr36(const algo::RnullStr36 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr36));
+}
 
 // --- algo.RnullStr4.ch.Getary
 // Access string as array of chars
@@ -10961,25 +11223,13 @@ inline void algo::RnullStr4::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr4.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr4::operator =(const algo::RnullStr4& parent) {
-    memcpy(ch, parent.ch, 4);
-}
-
-// --- algo.RnullStr4.ch.Ctor
-inline  algo::RnullStr4::RnullStr4(const algo::RnullStr4 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr4.ch.CtorStrptr
 inline  algo::RnullStr4::RnullStr4(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr4.ch.Cast
-inline algo::RnullStr4::operator algo::strptr () const {
+inline  algo::RnullStr4::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11019,42 +11269,28 @@ inline bool algo::RnullStr4_Update(algo::RnullStr4 &lhs, algo::RnullStr4 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr4..EqStrptr
-inline bool algo::RnullStr4_EqStrptr(algo::RnullStr4 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr4..EqOpAryptr
+inline bool algo::RnullStr4::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr40::operator ==(const algo::RnullStr40 &rhs) const {
-    return algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+// --- algo.RnullStr4..AssignOp
+inline algo::RnullStr4& algo::RnullStr4::operator =(const algo::RnullStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr4));
+    return *this;
 }
 
-inline bool algo::RnullStr40::operator !=(const algo::RnullStr40 &rhs) const {
-    return !algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+// --- algo.RnullStr4..Ctor
+inline  algo::RnullStr4::RnullStr4() {
+    algo::RnullStr4_Init(*this);
 }
 
-inline bool algo::RnullStr40::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr40_EqStrptr(const_cast<algo::RnullStr40&>(*this),rhs);
+// --- algo.RnullStr4..CopyCtor
+inline  algo::RnullStr4::RnullStr4(const algo::RnullStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr4));
 }
-
-inline bool algo::RnullStr40::operator <(const algo::RnullStr40 &rhs) const {
-    return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
-}
-
-inline bool algo::RnullStr40::operator >(const algo::RnullStr40 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr40::operator <=(const algo::RnullStr40 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr40::operator >=(const algo::RnullStr40 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr40::RnullStr40() {
-    algo::RnullStr40_Init(*this);
-}
-
 
 // --- algo.RnullStr40.ch.Getary
 // Access string as array of chars
@@ -11097,26 +11333,44 @@ inline void algo::RnullStr40::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr40.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr40::operator =(const algo::RnullStr40& parent) {
-    memcpy(ch, parent.ch, 40);
-}
-
-// --- algo.RnullStr40.ch.Ctor
-inline  algo::RnullStr40::RnullStr40(const algo::RnullStr40 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr40.ch.CtorStrptr
 inline  algo::RnullStr40::RnullStr40(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr40.ch.Cast
-inline algo::RnullStr40::operator algo::strptr () const {
+inline  algo::RnullStr40::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr40..EqOp
+inline bool algo::RnullStr40::operator ==(const algo::RnullStr40 &rhs) const {
+    return algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+}
+
+// --- algo.RnullStr40..NeOp
+inline bool algo::RnullStr40::operator !=(const algo::RnullStr40 &rhs) const {
+    return !algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+}
+
+// --- algo.RnullStr40..LtOp
+inline bool algo::RnullStr40::operator <(const algo::RnullStr40 &rhs) const {
+    return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
+}
+
+// --- algo.RnullStr40..GtOp
+inline bool algo::RnullStr40::operator >(const algo::RnullStr40 &rhs) const {
+    return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(rhs),const_cast<algo::RnullStr40&>(*this));
+}
+
+// --- algo.RnullStr40..LeOp
+inline bool algo::RnullStr40::operator <=(const algo::RnullStr40 &rhs) const {
+    return !algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(rhs),const_cast<algo::RnullStr40&>(*this));
+}
+
+// --- algo.RnullStr40..GeOp
+inline bool algo::RnullStr40::operator >=(const algo::RnullStr40 &rhs) const {
+    return !algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
 // --- algo.RnullStr40..Lt
@@ -11159,42 +11413,28 @@ inline bool algo::RnullStr40_Update(algo::RnullStr40 &lhs, algo::RnullStr40& rhs
     return ret;
 }
 
-// --- algo.RnullStr40..EqStrptr
-inline bool algo::RnullStr40_EqStrptr(const algo::RnullStr40& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr40..EqOpAryptr
+inline bool algo::RnullStr40::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr41::operator ==(const algo::RnullStr41 &rhs) const {
-    return algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+// --- algo.RnullStr40..AssignOp
+inline algo::RnullStr40& algo::RnullStr40::operator =(const algo::RnullStr40 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr40));
+    return *this;
 }
 
-inline bool algo::RnullStr41::operator !=(const algo::RnullStr41 &rhs) const {
-    return !algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+// --- algo.RnullStr40..Ctor
+inline  algo::RnullStr40::RnullStr40() {
+    algo::RnullStr40_Init(*this);
 }
 
-inline bool algo::RnullStr41::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr41_EqStrptr(const_cast<algo::RnullStr41&>(*this),rhs);
+// --- algo.RnullStr40..CopyCtor
+inline  algo::RnullStr40::RnullStr40(const algo::RnullStr40 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr40));
 }
-
-inline bool algo::RnullStr41::operator <(const algo::RnullStr41 &rhs) const {
-    return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
-}
-
-inline bool algo::RnullStr41::operator >(const algo::RnullStr41 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr41::operator <=(const algo::RnullStr41 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr41::operator >=(const algo::RnullStr41 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr41::RnullStr41() {
-    algo::RnullStr41_Init(*this);
-}
-
 
 // --- algo.RnullStr41.ch.Getary
 // Access string as array of chars
@@ -11237,26 +11477,44 @@ inline void algo::RnullStr41::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr41.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr41::operator =(const algo::RnullStr41& parent) {
-    memcpy(ch, parent.ch, 41);
-}
-
-// --- algo.RnullStr41.ch.Ctor
-inline  algo::RnullStr41::RnullStr41(const algo::RnullStr41 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr41.ch.CtorStrptr
 inline  algo::RnullStr41::RnullStr41(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr41.ch.Cast
-inline algo::RnullStr41::operator algo::strptr () const {
+inline  algo::RnullStr41::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr41..EqOp
+inline bool algo::RnullStr41::operator ==(const algo::RnullStr41 &rhs) const {
+    return algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+}
+
+// --- algo.RnullStr41..NeOp
+inline bool algo::RnullStr41::operator !=(const algo::RnullStr41 &rhs) const {
+    return !algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+}
+
+// --- algo.RnullStr41..LtOp
+inline bool algo::RnullStr41::operator <(const algo::RnullStr41 &rhs) const {
+    return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
+}
+
+// --- algo.RnullStr41..GtOp
+inline bool algo::RnullStr41::operator >(const algo::RnullStr41 &rhs) const {
+    return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(rhs),const_cast<algo::RnullStr41&>(*this));
+}
+
+// --- algo.RnullStr41..LeOp
+inline bool algo::RnullStr41::operator <=(const algo::RnullStr41 &rhs) const {
+    return !algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(rhs),const_cast<algo::RnullStr41&>(*this));
+}
+
+// --- algo.RnullStr41..GeOp
+inline bool algo::RnullStr41::operator >=(const algo::RnullStr41 &rhs) const {
+    return !algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 // --- algo.RnullStr41..Lt
@@ -11300,14 +11558,28 @@ inline bool algo::RnullStr41_Update(algo::RnullStr41 &lhs, algo::RnullStr41& rhs
     return ret;
 }
 
-// --- algo.RnullStr41..EqStrptr
-inline bool algo::RnullStr41_EqStrptr(const algo::RnullStr41& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr43::RnullStr43() {
-    algo::RnullStr43_Init(*this);
+// --- algo.RnullStr41..EqOpAryptr
+inline bool algo::RnullStr41::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr41..AssignOp
+inline algo::RnullStr41& algo::RnullStr41::operator =(const algo::RnullStr41 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr41));
+    return *this;
+}
+
+// --- algo.RnullStr41..Ctor
+inline  algo::RnullStr41::RnullStr41() {
+    algo::RnullStr41_Init(*this);
+}
+
+// --- algo.RnullStr41..CopyCtor
+inline  algo::RnullStr41::RnullStr41(const algo::RnullStr41 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr41));
+}
 
 // --- algo.RnullStr43.ch.Getary
 // Access string as array of chars
@@ -11350,25 +11622,13 @@ inline void algo::RnullStr43::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr43.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr43::operator =(const algo::RnullStr43& parent) {
-    memcpy(ch, parent.ch, 43);
-}
-
-// --- algo.RnullStr43.ch.Ctor
-inline  algo::RnullStr43::RnullStr43(const algo::RnullStr43 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr43.ch.CtorStrptr
 inline  algo::RnullStr43::RnullStr43(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr43.ch.Cast
-inline algo::RnullStr43::operator algo::strptr () const {
+inline  algo::RnullStr43::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11414,14 +11674,28 @@ inline bool algo::RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs
     return ret;
 }
 
-// --- algo.RnullStr43..EqStrptr
-inline bool algo::RnullStr43_EqStrptr(const algo::RnullStr43& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr44::RnullStr44() {
-    algo::RnullStr44_Init(*this);
+// --- algo.RnullStr43..EqOpAryptr
+inline bool algo::RnullStr43::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr43..AssignOp
+inline algo::RnullStr43& algo::RnullStr43::operator =(const algo::RnullStr43 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr43));
+    return *this;
+}
+
+// --- algo.RnullStr43..Ctor
+inline  algo::RnullStr43::RnullStr43() {
+    algo::RnullStr43_Init(*this);
+}
+
+// --- algo.RnullStr43..CopyCtor
+inline  algo::RnullStr43::RnullStr43(const algo::RnullStr43 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr43));
+}
 
 // --- algo.RnullStr44.ch.Getary
 // Access string as array of chars
@@ -11464,25 +11738,13 @@ inline void algo::RnullStr44::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr44.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr44::operator =(const algo::RnullStr44& parent) {
-    memcpy(ch, parent.ch, 44);
-}
-
-// --- algo.RnullStr44.ch.Ctor
-inline  algo::RnullStr44::RnullStr44(const algo::RnullStr44 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr44.ch.CtorStrptr
 inline  algo::RnullStr44::RnullStr44(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr44.ch.Cast
-inline algo::RnullStr44::operator algo::strptr () const {
+inline  algo::RnullStr44::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11527,14 +11789,28 @@ inline bool algo::RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs
     return ret;
 }
 
-// --- algo.RnullStr44..EqStrptr
-inline bool algo::RnullStr44_EqStrptr(const algo::RnullStr44& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr48::RnullStr48() {
-    algo::RnullStr48_Init(*this);
+// --- algo.RnullStr44..EqOpAryptr
+inline bool algo::RnullStr44::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr44..AssignOp
+inline algo::RnullStr44& algo::RnullStr44::operator =(const algo::RnullStr44 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr44));
+    return *this;
+}
+
+// --- algo.RnullStr44..Ctor
+inline  algo::RnullStr44::RnullStr44() {
+    algo::RnullStr44_Init(*this);
+}
+
+// --- algo.RnullStr44..CopyCtor
+inline  algo::RnullStr44::RnullStr44(const algo::RnullStr44 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr44));
+}
 
 // --- algo.RnullStr48.ch.Getary
 // Access string as array of chars
@@ -11577,25 +11853,13 @@ inline void algo::RnullStr48::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr48.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr48::operator =(const algo::RnullStr48& parent) {
-    memcpy(ch, parent.ch, 48);
-}
-
-// --- algo.RnullStr48.ch.Ctor
-inline  algo::RnullStr48::RnullStr48(const algo::RnullStr48 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr48.ch.CtorStrptr
 inline  algo::RnullStr48::RnullStr48(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr48.ch.Cast
-inline algo::RnullStr48::operator algo::strptr () const {
+inline  algo::RnullStr48::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11640,14 +11904,28 @@ inline bool algo::RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs
     return ret;
 }
 
-// --- algo.RnullStr48..EqStrptr
-inline bool algo::RnullStr48_EqStrptr(const algo::RnullStr48& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr5::RnullStr5() {
-    algo::RnullStr5_Init(*this);
+// --- algo.RnullStr48..EqOpAryptr
+inline bool algo::RnullStr48::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr48..AssignOp
+inline algo::RnullStr48& algo::RnullStr48::operator =(const algo::RnullStr48 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr48));
+    return *this;
+}
+
+// --- algo.RnullStr48..Ctor
+inline  algo::RnullStr48::RnullStr48() {
+    algo::RnullStr48_Init(*this);
+}
+
+// --- algo.RnullStr48..CopyCtor
+inline  algo::RnullStr48::RnullStr48(const algo::RnullStr48 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr48));
+}
 
 // --- algo.RnullStr5.ch.Getary
 // Access string as array of chars
@@ -11690,25 +11968,13 @@ inline void algo::RnullStr5::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr5.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr5::operator =(const algo::RnullStr5& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.RnullStr5.ch.Ctor
-inline  algo::RnullStr5::RnullStr5(const algo::RnullStr5 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr5.ch.CtorStrptr
 inline  algo::RnullStr5::RnullStr5(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr5.ch.Cast
-inline algo::RnullStr5::operator algo::strptr () const {
+inline  algo::RnullStr5::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11749,14 +12015,28 @@ inline bool algo::RnullStr5_Update(algo::RnullStr5 &lhs, algo::RnullStr5 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr5..EqStrptr
-inline bool algo::RnullStr5_EqStrptr(algo::RnullStr5 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr50::RnullStr50() {
-    algo::RnullStr50_Init(*this);
+// --- algo.RnullStr5..EqOpAryptr
+inline bool algo::RnullStr5::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr5..AssignOp
+inline algo::RnullStr5& algo::RnullStr5::operator =(const algo::RnullStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr5));
+    return *this;
+}
+
+// --- algo.RnullStr5..Ctor
+inline  algo::RnullStr5::RnullStr5() {
+    algo::RnullStr5_Init(*this);
+}
+
+// --- algo.RnullStr5..CopyCtor
+inline  algo::RnullStr5::RnullStr5(const algo::RnullStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr5));
+}
 
 // --- algo.RnullStr50.ch.Getary
 // Access string as array of chars
@@ -11799,25 +12079,13 @@ inline void algo::RnullStr50::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr50.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr50::operator =(const algo::RnullStr50& parent) {
-    memcpy(ch, parent.ch, 50);
-}
-
-// --- algo.RnullStr50.ch.Ctor
-inline  algo::RnullStr50::RnullStr50(const algo::RnullStr50 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr50.ch.CtorStrptr
 inline  algo::RnullStr50::RnullStr50(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr50.ch.Cast
-inline algo::RnullStr50::operator algo::strptr () const {
+inline  algo::RnullStr50::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -11863,42 +12131,28 @@ inline bool algo::RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs
     return ret;
 }
 
-// --- algo.RnullStr50..EqStrptr
-inline bool algo::RnullStr50_EqStrptr(const algo::RnullStr50& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr50..EqOpAryptr
+inline bool algo::RnullStr50::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr54::operator ==(const algo::RnullStr54 &rhs) const {
-    return algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+// --- algo.RnullStr50..AssignOp
+inline algo::RnullStr50& algo::RnullStr50::operator =(const algo::RnullStr50 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr50));
+    return *this;
 }
 
-inline bool algo::RnullStr54::operator !=(const algo::RnullStr54 &rhs) const {
-    return !algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+// --- algo.RnullStr50..Ctor
+inline  algo::RnullStr50::RnullStr50() {
+    algo::RnullStr50_Init(*this);
 }
 
-inline bool algo::RnullStr54::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr54_EqStrptr(const_cast<algo::RnullStr54&>(*this),rhs);
+// --- algo.RnullStr50..CopyCtor
+inline  algo::RnullStr50::RnullStr50(const algo::RnullStr50 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr50));
 }
-
-inline bool algo::RnullStr54::operator <(const algo::RnullStr54 &rhs) const {
-    return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
-}
-
-inline bool algo::RnullStr54::operator >(const algo::RnullStr54 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr54::operator <=(const algo::RnullStr54 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr54::operator >=(const algo::RnullStr54 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr54::RnullStr54() {
-    algo::RnullStr54_Init(*this);
-}
-
 
 // --- algo.RnullStr54.ch.Getary
 // Access string as array of chars
@@ -11941,26 +12195,44 @@ inline void algo::RnullStr54::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr54.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr54::operator =(const algo::RnullStr54& parent) {
-    memcpy(ch, parent.ch, 54);
-}
-
-// --- algo.RnullStr54.ch.Ctor
-inline  algo::RnullStr54::RnullStr54(const algo::RnullStr54 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr54.ch.CtorStrptr
 inline  algo::RnullStr54::RnullStr54(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr54.ch.Cast
-inline algo::RnullStr54::operator algo::strptr () const {
+inline  algo::RnullStr54::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr54..EqOp
+inline bool algo::RnullStr54::operator ==(const algo::RnullStr54 &rhs) const {
+    return algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+}
+
+// --- algo.RnullStr54..NeOp
+inline bool algo::RnullStr54::operator !=(const algo::RnullStr54 &rhs) const {
+    return !algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+}
+
+// --- algo.RnullStr54..LtOp
+inline bool algo::RnullStr54::operator <(const algo::RnullStr54 &rhs) const {
+    return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
+}
+
+// --- algo.RnullStr54..GtOp
+inline bool algo::RnullStr54::operator >(const algo::RnullStr54 &rhs) const {
+    return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(rhs),const_cast<algo::RnullStr54&>(*this));
+}
+
+// --- algo.RnullStr54..LeOp
+inline bool algo::RnullStr54::operator <=(const algo::RnullStr54 &rhs) const {
+    return !algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(rhs),const_cast<algo::RnullStr54&>(*this));
+}
+
+// --- algo.RnullStr54..GeOp
+inline bool algo::RnullStr54::operator >=(const algo::RnullStr54 &rhs) const {
+    return !algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
 // --- algo.RnullStr54..Lt
@@ -12006,14 +12278,28 @@ inline bool algo::RnullStr54_Update(algo::RnullStr54 &lhs, algo::RnullStr54& rhs
     return ret;
 }
 
-// --- algo.RnullStr54..EqStrptr
-inline bool algo::RnullStr54_EqStrptr(const algo::RnullStr54& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr55::RnullStr55() {
-    algo::RnullStr55_Init(*this);
+// --- algo.RnullStr54..EqOpAryptr
+inline bool algo::RnullStr54::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr54..AssignOp
+inline algo::RnullStr54& algo::RnullStr54::operator =(const algo::RnullStr54 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr54));
+    return *this;
+}
+
+// --- algo.RnullStr54..Ctor
+inline  algo::RnullStr54::RnullStr54() {
+    algo::RnullStr54_Init(*this);
+}
+
+// --- algo.RnullStr54..CopyCtor
+inline  algo::RnullStr54::RnullStr54(const algo::RnullStr54 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr54));
+}
 
 // --- algo.RnullStr55.ch.Getary
 // Access string as array of chars
@@ -12056,25 +12342,13 @@ inline void algo::RnullStr55::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr55.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr55::operator =(const algo::RnullStr55& parent) {
-    memcpy(ch, parent.ch, 55);
-}
-
-// --- algo.RnullStr55.ch.Ctor
-inline  algo::RnullStr55::RnullStr55(const algo::RnullStr55 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr55.ch.CtorStrptr
 inline  algo::RnullStr55::RnullStr55(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr55.ch.Cast
-inline algo::RnullStr55::operator algo::strptr () const {
+inline  algo::RnullStr55::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -12122,42 +12396,28 @@ inline bool algo::RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs
     return ret;
 }
 
-// --- algo.RnullStr55..EqStrptr
-inline bool algo::RnullStr55_EqStrptr(const algo::RnullStr55& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr55..EqOpAryptr
+inline bool algo::RnullStr55::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr6::operator ==(const algo::RnullStr6 &rhs) const {
-    return algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+// --- algo.RnullStr55..AssignOp
+inline algo::RnullStr55& algo::RnullStr55::operator =(const algo::RnullStr55 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr55));
+    return *this;
 }
 
-inline bool algo::RnullStr6::operator !=(const algo::RnullStr6 &rhs) const {
-    return !algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+// --- algo.RnullStr55..Ctor
+inline  algo::RnullStr55::RnullStr55() {
+    algo::RnullStr55_Init(*this);
 }
 
-inline bool algo::RnullStr6::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr6_EqStrptr(const_cast<algo::RnullStr6&>(*this),rhs);
+// --- algo.RnullStr55..CopyCtor
+inline  algo::RnullStr55::RnullStr55(const algo::RnullStr55 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr55));
 }
-
-inline bool algo::RnullStr6::operator <(const algo::RnullStr6 &rhs) const {
-    return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
-}
-
-inline bool algo::RnullStr6::operator >(const algo::RnullStr6 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr6::operator <=(const algo::RnullStr6 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr6::operator >=(const algo::RnullStr6 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr6::RnullStr6() {
-    algo::RnullStr6_Init(*this);
-}
-
 
 // --- algo.RnullStr6.ch.Getary
 // Access string as array of chars
@@ -12200,26 +12460,44 @@ inline void algo::RnullStr6::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr6.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr6::operator =(const algo::RnullStr6& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.RnullStr6.ch.Ctor
-inline  algo::RnullStr6::RnullStr6(const algo::RnullStr6 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr6.ch.CtorStrptr
 inline  algo::RnullStr6::RnullStr6(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr6.ch.Cast
-inline algo::RnullStr6::operator algo::strptr () const {
+inline  algo::RnullStr6::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr6..EqOp
+inline bool algo::RnullStr6::operator ==(const algo::RnullStr6 &rhs) const {
+    return algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+}
+
+// --- algo.RnullStr6..NeOp
+inline bool algo::RnullStr6::operator !=(const algo::RnullStr6 &rhs) const {
+    return !algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+}
+
+// --- algo.RnullStr6..LtOp
+inline bool algo::RnullStr6::operator <(const algo::RnullStr6 &rhs) const {
+    return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
+}
+
+// --- algo.RnullStr6..GtOp
+inline bool algo::RnullStr6::operator >(const algo::RnullStr6 &rhs) const {
+    return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(rhs),const_cast<algo::RnullStr6&>(*this));
+}
+
+// --- algo.RnullStr6..LeOp
+inline bool algo::RnullStr6::operator <=(const algo::RnullStr6 &rhs) const {
+    return !algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(rhs),const_cast<algo::RnullStr6&>(*this));
+}
+
+// --- algo.RnullStr6..GeOp
+inline bool algo::RnullStr6::operator >=(const algo::RnullStr6 &rhs) const {
+    return !algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
 // --- algo.RnullStr6..Lt
@@ -12259,42 +12537,28 @@ inline bool algo::RnullStr6_Update(algo::RnullStr6 &lhs, algo::RnullStr6 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr6..EqStrptr
-inline bool algo::RnullStr6_EqStrptr(algo::RnullStr6 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr6..EqOpAryptr
+inline bool algo::RnullStr6::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr60::operator ==(const algo::RnullStr60 &rhs) const {
-    return algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+// --- algo.RnullStr6..AssignOp
+inline algo::RnullStr6& algo::RnullStr6::operator =(const algo::RnullStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr6));
+    return *this;
 }
 
-inline bool algo::RnullStr60::operator !=(const algo::RnullStr60 &rhs) const {
-    return !algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+// --- algo.RnullStr6..Ctor
+inline  algo::RnullStr6::RnullStr6() {
+    algo::RnullStr6_Init(*this);
 }
 
-inline bool algo::RnullStr60::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr60_EqStrptr(const_cast<algo::RnullStr60&>(*this),rhs);
+// --- algo.RnullStr6..CopyCtor
+inline  algo::RnullStr6::RnullStr6(const algo::RnullStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr6));
 }
-
-inline bool algo::RnullStr60::operator <(const algo::RnullStr60 &rhs) const {
-    return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
-}
-
-inline bool algo::RnullStr60::operator >(const algo::RnullStr60 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr60::operator <=(const algo::RnullStr60 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr60::operator >=(const algo::RnullStr60 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr60::RnullStr60() {
-    algo::RnullStr60_Init(*this);
-}
-
 
 // --- algo.RnullStr60.ch.Getary
 // Access string as array of chars
@@ -12337,26 +12601,44 @@ inline void algo::RnullStr60::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr60.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr60::operator =(const algo::RnullStr60& parent) {
-    memcpy(ch, parent.ch, 60);
-}
-
-// --- algo.RnullStr60.ch.Ctor
-inline  algo::RnullStr60::RnullStr60(const algo::RnullStr60 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr60.ch.CtorStrptr
 inline  algo::RnullStr60::RnullStr60(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr60.ch.Cast
-inline algo::RnullStr60::operator algo::strptr () const {
+inline  algo::RnullStr60::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr60..EqOp
+inline bool algo::RnullStr60::operator ==(const algo::RnullStr60 &rhs) const {
+    return algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+}
+
+// --- algo.RnullStr60..NeOp
+inline bool algo::RnullStr60::operator !=(const algo::RnullStr60 &rhs) const {
+    return !algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+}
+
+// --- algo.RnullStr60..LtOp
+inline bool algo::RnullStr60::operator <(const algo::RnullStr60 &rhs) const {
+    return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
+}
+
+// --- algo.RnullStr60..GtOp
+inline bool algo::RnullStr60::operator >(const algo::RnullStr60 &rhs) const {
+    return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(rhs),const_cast<algo::RnullStr60&>(*this));
+}
+
+// --- algo.RnullStr60..LeOp
+inline bool algo::RnullStr60::operator <=(const algo::RnullStr60 &rhs) const {
+    return !algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(rhs),const_cast<algo::RnullStr60&>(*this));
+}
+
+// --- algo.RnullStr60..GeOp
+inline bool algo::RnullStr60::operator >=(const algo::RnullStr60 &rhs) const {
+    return !algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
 // --- algo.RnullStr60..Lt
@@ -12402,42 +12684,28 @@ inline bool algo::RnullStr60_Update(algo::RnullStr60 &lhs, algo::RnullStr60& rhs
     return ret;
 }
 
-// --- algo.RnullStr60..EqStrptr
-inline bool algo::RnullStr60_EqStrptr(const algo::RnullStr60& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr60..EqOpAryptr
+inline bool algo::RnullStr60::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr62::operator ==(const algo::RnullStr62 &rhs) const {
-    return algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+// --- algo.RnullStr60..AssignOp
+inline algo::RnullStr60& algo::RnullStr60::operator =(const algo::RnullStr60 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr60));
+    return *this;
 }
 
-inline bool algo::RnullStr62::operator !=(const algo::RnullStr62 &rhs) const {
-    return !algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+// --- algo.RnullStr60..Ctor
+inline  algo::RnullStr60::RnullStr60() {
+    algo::RnullStr60_Init(*this);
 }
 
-inline bool algo::RnullStr62::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr62_EqStrptr(const_cast<algo::RnullStr62&>(*this),rhs);
+// --- algo.RnullStr60..CopyCtor
+inline  algo::RnullStr60::RnullStr60(const algo::RnullStr60 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr60));
 }
-
-inline bool algo::RnullStr62::operator <(const algo::RnullStr62 &rhs) const {
-    return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
-}
-
-inline bool algo::RnullStr62::operator >(const algo::RnullStr62 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr62::operator <=(const algo::RnullStr62 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr62::operator >=(const algo::RnullStr62 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr62::RnullStr62() {
-    algo::RnullStr62_Init(*this);
-}
-
 
 // --- algo.RnullStr62.ch.Getary
 // Access string as array of chars
@@ -12480,26 +12748,44 @@ inline void algo::RnullStr62::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr62.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr62::operator =(const algo::RnullStr62& parent) {
-    memcpy(ch, parent.ch, 62);
-}
-
-// --- algo.RnullStr62.ch.Ctor
-inline  algo::RnullStr62::RnullStr62(const algo::RnullStr62 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr62.ch.CtorStrptr
 inline  algo::RnullStr62::RnullStr62(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr62.ch.Cast
-inline algo::RnullStr62::operator algo::strptr () const {
+inline  algo::RnullStr62::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr62..EqOp
+inline bool algo::RnullStr62::operator ==(const algo::RnullStr62 &rhs) const {
+    return algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+}
+
+// --- algo.RnullStr62..NeOp
+inline bool algo::RnullStr62::operator !=(const algo::RnullStr62 &rhs) const {
+    return !algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+}
+
+// --- algo.RnullStr62..LtOp
+inline bool algo::RnullStr62::operator <(const algo::RnullStr62 &rhs) const {
+    return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
+}
+
+// --- algo.RnullStr62..GtOp
+inline bool algo::RnullStr62::operator >(const algo::RnullStr62 &rhs) const {
+    return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(rhs),const_cast<algo::RnullStr62&>(*this));
+}
+
+// --- algo.RnullStr62..LeOp
+inline bool algo::RnullStr62::operator <=(const algo::RnullStr62 &rhs) const {
+    return !algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(rhs),const_cast<algo::RnullStr62&>(*this));
+}
+
+// --- algo.RnullStr62..GeOp
+inline bool algo::RnullStr62::operator >=(const algo::RnullStr62 &rhs) const {
+    return !algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 // --- algo.RnullStr62..Lt
@@ -12546,14 +12832,28 @@ inline bool algo::RnullStr62_Update(algo::RnullStr62 &lhs, algo::RnullStr62& rhs
     return ret;
 }
 
-// --- algo.RnullStr62..EqStrptr
-inline bool algo::RnullStr62_EqStrptr(const algo::RnullStr62& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr66::RnullStr66() {
-    algo::RnullStr66_Init(*this);
+// --- algo.RnullStr62..EqOpAryptr
+inline bool algo::RnullStr62::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr62..AssignOp
+inline algo::RnullStr62& algo::RnullStr62::operator =(const algo::RnullStr62 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr62));
+    return *this;
+}
+
+// --- algo.RnullStr62..Ctor
+inline  algo::RnullStr62::RnullStr62() {
+    algo::RnullStr62_Init(*this);
+}
+
+// --- algo.RnullStr62..CopyCtor
+inline  algo::RnullStr62::RnullStr62(const algo::RnullStr62 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr62));
+}
 
 // --- algo.RnullStr66.ch.Getary
 // Access string as array of chars
@@ -12596,25 +12896,13 @@ inline void algo::RnullStr66::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr66.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr66::operator =(const algo::RnullStr66& parent) {
-    memcpy(ch, parent.ch, 66);
-}
-
-// --- algo.RnullStr66.ch.Ctor
-inline  algo::RnullStr66::RnullStr66(const algo::RnullStr66 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr66.ch.CtorStrptr
 inline  algo::RnullStr66::RnullStr66(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr66.ch.Cast
-inline algo::RnullStr66::operator algo::strptr () const {
+inline  algo::RnullStr66::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -12662,26 +12950,28 @@ inline bool algo::RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs
     return ret;
 }
 
-// --- algo.RnullStr66..EqStrptr
-inline bool algo::RnullStr66_EqStrptr(const algo::RnullStr66& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr66..EqOpAryptr
+inline bool algo::RnullStr66::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr6_U32::operator ==(const algo::RnullStr6_U32 &rhs) const {
-    return algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
+// --- algo.RnullStr66..AssignOp
+inline algo::RnullStr66& algo::RnullStr66::operator =(const algo::RnullStr66 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr66));
+    return *this;
 }
 
-inline bool algo::RnullStr6_U32::operator !=(const algo::RnullStr6_U32 &rhs) const {
-    return !algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
+// --- algo.RnullStr66..Ctor
+inline  algo::RnullStr66::RnullStr66() {
+    algo::RnullStr66_Init(*this);
 }
 
-inline bool algo::RnullStr6_U32::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr6_U32_EqStrptr(const_cast<algo::RnullStr6_U32&>(*this),rhs);
+// --- algo.RnullStr66..CopyCtor
+inline  algo::RnullStr66::RnullStr66(const algo::RnullStr66 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr66));
 }
-inline algo::RnullStr6_U32::RnullStr6_U32() {
-    algo::RnullStr6_U32_Init(*this);
-}
-
 
 // --- algo.RnullStr6_U32.ch.Getary
 // Access string as array of chars
@@ -12724,26 +13014,24 @@ inline void algo::RnullStr6_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr6_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr6_U32::operator =(const algo::RnullStr6_U32& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.RnullStr6_U32.ch.Ctor
-inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::RnullStr6_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr6_U32.ch.CtorStrptr
 inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr6_U32.ch.Cast
-inline algo::RnullStr6_U32::operator algo::strptr () const {
+inline  algo::RnullStr6_U32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr6_U32..EqOp
+inline bool algo::RnullStr6_U32::operator ==(const algo::RnullStr6_U32 &rhs) const {
+    return algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
+}
+
+// --- algo.RnullStr6_U32..NeOp
+inline bool algo::RnullStr6_U32::operator !=(const algo::RnullStr6_U32 &rhs) const {
+    return !algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
 }
 
 // --- algo.RnullStr6_U32..Cmp
@@ -12768,42 +13056,28 @@ inline bool algo::RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32
     return retval;
 }
 
-// --- algo.RnullStr6_U32..EqStrptr
-inline bool algo::RnullStr6_U32_EqStrptr(const algo::RnullStr6_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr6_U32..EqOpAryptr
+inline bool algo::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr7::operator ==(const algo::RnullStr7 &rhs) const {
-    return algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+// --- algo.RnullStr6_U32..AssignOp
+inline algo::RnullStr6_U32& algo::RnullStr6_U32::operator =(const algo::RnullStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr6_U32));
+    return *this;
 }
 
-inline bool algo::RnullStr7::operator !=(const algo::RnullStr7 &rhs) const {
-    return !algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+// --- algo.RnullStr6_U32..Ctor
+inline  algo::RnullStr6_U32::RnullStr6_U32() {
+    algo::RnullStr6_U32_Init(*this);
 }
 
-inline bool algo::RnullStr7::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr7_EqStrptr(const_cast<algo::RnullStr7&>(*this),rhs);
+// --- algo.RnullStr6_U32..CopyCtor
+inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::RnullStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr6_U32));
 }
-
-inline bool algo::RnullStr7::operator <(const algo::RnullStr7 &rhs) const {
-    return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
-}
-
-inline bool algo::RnullStr7::operator >(const algo::RnullStr7 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr7::operator <=(const algo::RnullStr7 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr7::operator >=(const algo::RnullStr7 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr7::RnullStr7() {
-    algo::RnullStr7_Init(*this);
-}
-
 
 // --- algo.RnullStr7.ch.Getary
 // Access string as array of chars
@@ -12846,26 +13120,44 @@ inline void algo::RnullStr7::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr7.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr7::operator =(const algo::RnullStr7& parent) {
-    memcpy(ch, parent.ch, 7);
-}
-
-// --- algo.RnullStr7.ch.Ctor
-inline  algo::RnullStr7::RnullStr7(const algo::RnullStr7 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr7.ch.CtorStrptr
 inline  algo::RnullStr7::RnullStr7(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr7.ch.Cast
-inline algo::RnullStr7::operator algo::strptr () const {
+inline  algo::RnullStr7::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr7..EqOp
+inline bool algo::RnullStr7::operator ==(const algo::RnullStr7 &rhs) const {
+    return algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+}
+
+// --- algo.RnullStr7..NeOp
+inline bool algo::RnullStr7::operator !=(const algo::RnullStr7 &rhs) const {
+    return !algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+}
+
+// --- algo.RnullStr7..LtOp
+inline bool algo::RnullStr7::operator <(const algo::RnullStr7 &rhs) const {
+    return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
+}
+
+// --- algo.RnullStr7..GtOp
+inline bool algo::RnullStr7::operator >(const algo::RnullStr7 &rhs) const {
+    return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(rhs),const_cast<algo::RnullStr7&>(*this));
+}
+
+// --- algo.RnullStr7..LeOp
+inline bool algo::RnullStr7::operator <=(const algo::RnullStr7 &rhs) const {
+    return !algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(rhs),const_cast<algo::RnullStr7&>(*this));
+}
+
+// --- algo.RnullStr7..GeOp
+inline bool algo::RnullStr7::operator >=(const algo::RnullStr7 &rhs) const {
+    return !algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 // --- algo.RnullStr7..Lt
@@ -12906,14 +13198,28 @@ inline bool algo::RnullStr7_Update(algo::RnullStr7 &lhs, algo::RnullStr7 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr7..EqStrptr
-inline bool algo::RnullStr7_EqStrptr(algo::RnullStr7 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr8::RnullStr8() {
-    algo::RnullStr8_Init(*this);
+// --- algo.RnullStr7..EqOpAryptr
+inline bool algo::RnullStr7::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr7..AssignOp
+inline algo::RnullStr7& algo::RnullStr7::operator =(const algo::RnullStr7 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr7));
+    return *this;
+}
+
+// --- algo.RnullStr7..Ctor
+inline  algo::RnullStr7::RnullStr7() {
+    algo::RnullStr7_Init(*this);
+}
+
+// --- algo.RnullStr7..CopyCtor
+inline  algo::RnullStr7::RnullStr7(const algo::RnullStr7 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr7));
+}
 
 // --- algo.RnullStr8.ch.Getary
 // Access string as array of chars
@@ -12956,25 +13262,13 @@ inline void algo::RnullStr8::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr8.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr8::operator =(const algo::RnullStr8& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.RnullStr8.ch.Ctor
-inline  algo::RnullStr8::RnullStr8(const algo::RnullStr8 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr8.ch.CtorStrptr
 inline  algo::RnullStr8::RnullStr8(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr8.ch.Cast
-inline algo::RnullStr8::operator algo::strptr () const {
+inline  algo::RnullStr8::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -13014,14 +13308,28 @@ inline bool algo::RnullStr8_Update(algo::RnullStr8 &lhs, algo::RnullStr8 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr8..EqStrptr
-inline bool algo::RnullStr8_EqStrptr(algo::RnullStr8 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RnullStr80::RnullStr80() {
-    algo::RnullStr80_Init(*this);
+// --- algo.RnullStr8..EqOpAryptr
+inline bool algo::RnullStr8::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RnullStr8..AssignOp
+inline algo::RnullStr8& algo::RnullStr8::operator =(const algo::RnullStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr8));
+    return *this;
+}
+
+// --- algo.RnullStr8..Ctor
+inline  algo::RnullStr8::RnullStr8() {
+    algo::RnullStr8_Init(*this);
+}
+
+// --- algo.RnullStr8..CopyCtor
+inline  algo::RnullStr8::RnullStr8(const algo::RnullStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr8));
+}
 
 // --- algo.RnullStr80.ch.Getary
 // Access string as array of chars
@@ -13064,25 +13372,13 @@ inline void algo::RnullStr80::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr80.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr80::operator =(const algo::RnullStr80& parent) {
-    memcpy(ch, parent.ch, 80);
-}
-
-// --- algo.RnullStr80.ch.Ctor
-inline  algo::RnullStr80::RnullStr80(const algo::RnullStr80 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr80.ch.CtorStrptr
 inline  algo::RnullStr80::RnullStr80(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr80.ch.Cast
-inline algo::RnullStr80::operator algo::strptr () const {
+inline  algo::RnullStr80::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -13131,42 +13427,28 @@ inline bool algo::RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs
     return ret;
 }
 
-// --- algo.RnullStr80..EqStrptr
-inline bool algo::RnullStr80_EqStrptr(const algo::RnullStr80& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr80..EqOpAryptr
+inline bool algo::RnullStr80::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RnullStr9::operator ==(const algo::RnullStr9 &rhs) const {
-    return algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+// --- algo.RnullStr80..AssignOp
+inline algo::RnullStr80& algo::RnullStr80::operator =(const algo::RnullStr80 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr80));
+    return *this;
 }
 
-inline bool algo::RnullStr9::operator !=(const algo::RnullStr9 &rhs) const {
-    return !algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+// --- algo.RnullStr80..Ctor
+inline  algo::RnullStr80::RnullStr80() {
+    algo::RnullStr80_Init(*this);
 }
 
-inline bool algo::RnullStr9::operator ==(const algo::strptr &rhs) const {
-    return algo::RnullStr9_EqStrptr(const_cast<algo::RnullStr9&>(*this),rhs);
+// --- algo.RnullStr80..CopyCtor
+inline  algo::RnullStr80::RnullStr80(const algo::RnullStr80 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr80));
 }
-
-inline bool algo::RnullStr9::operator <(const algo::RnullStr9 &rhs) const {
-    return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
-}
-
-inline bool algo::RnullStr9::operator >(const algo::RnullStr9 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RnullStr9::operator <=(const algo::RnullStr9 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RnullStr9::operator >=(const algo::RnullStr9 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RnullStr9::RnullStr9() {
-    algo::RnullStr9_Init(*this);
-}
-
 
 // --- algo.RnullStr9.ch.Getary
 // Access string as array of chars
@@ -13209,26 +13491,44 @@ inline void algo::RnullStr9::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RnullStr9.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RnullStr9::operator =(const algo::RnullStr9& parent) {
-    memcpy(ch, parent.ch, 9);
-}
-
-// --- algo.RnullStr9.ch.Ctor
-inline  algo::RnullStr9::RnullStr9(const algo::RnullStr9 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RnullStr9.ch.CtorStrptr
 inline  algo::RnullStr9::RnullStr9(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr9.ch.Cast
-inline algo::RnullStr9::operator algo::strptr () const {
+inline  algo::RnullStr9::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RnullStr9..EqOp
+inline bool algo::RnullStr9::operator ==(const algo::RnullStr9 &rhs) const {
+    return algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+}
+
+// --- algo.RnullStr9..NeOp
+inline bool algo::RnullStr9::operator !=(const algo::RnullStr9 &rhs) const {
+    return !algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+}
+
+// --- algo.RnullStr9..LtOp
+inline bool algo::RnullStr9::operator <(const algo::RnullStr9 &rhs) const {
+    return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
+}
+
+// --- algo.RnullStr9..GtOp
+inline bool algo::RnullStr9::operator >(const algo::RnullStr9 &rhs) const {
+    return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(rhs),const_cast<algo::RnullStr9&>(*this));
+}
+
+// --- algo.RnullStr9..LeOp
+inline bool algo::RnullStr9::operator <=(const algo::RnullStr9 &rhs) const {
+    return !algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(rhs),const_cast<algo::RnullStr9&>(*this));
+}
+
+// --- algo.RnullStr9..GeOp
+inline bool algo::RnullStr9::operator >=(const algo::RnullStr9 &rhs) const {
+    return !algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
 // --- algo.RnullStr9..Lt
@@ -13268,26 +13568,28 @@ inline bool algo::RnullStr9_Update(algo::RnullStr9 &lhs, algo::RnullStr9& rhs) {
     return ret;
 }
 
-// --- algo.RnullStr9..EqStrptr
-inline bool algo::RnullStr9_EqStrptr(const algo::RnullStr9& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RnullStr9..EqOpAryptr
+inline bool algo::RnullStr9::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr10::operator ==(const algo::RspaceStr10 &rhs) const {
-    return algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
+// --- algo.RnullStr9..AssignOp
+inline algo::RnullStr9& algo::RnullStr9::operator =(const algo::RnullStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr9));
+    return *this;
 }
 
-inline bool algo::RspaceStr10::operator !=(const algo::RspaceStr10 &rhs) const {
-    return !algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
+// --- algo.RnullStr9..Ctor
+inline  algo::RnullStr9::RnullStr9() {
+    algo::RnullStr9_Init(*this);
 }
 
-inline bool algo::RspaceStr10::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr10_EqStrptr(const_cast<algo::RspaceStr10&>(*this),rhs);
+// --- algo.RnullStr9..CopyCtor
+inline  algo::RnullStr9::RnullStr9(const algo::RnullStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RnullStr9));
 }
-inline algo::RspaceStr10::RspaceStr10() {
-    algo::RspaceStr10_Init(*this);
-}
-
 
 // --- algo.RspaceStr10.ch.Getary
 // Access string as array of chars
@@ -13330,26 +13632,24 @@ inline void algo::RspaceStr10::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr10.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr10::operator =(const algo::RspaceStr10& parent) {
-    memcpy(ch, parent.ch, 10);
-}
-
-// --- algo.RspaceStr10.ch.Ctor
-inline  algo::RspaceStr10::RspaceStr10(const algo::RspaceStr10 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr10.ch.CtorStrptr
 inline  algo::RspaceStr10::RspaceStr10(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr10.ch.Cast
-inline algo::RspaceStr10::operator algo::strptr () const {
+inline  algo::RspaceStr10::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr10..EqOp
+inline bool algo::RspaceStr10::operator ==(const algo::RspaceStr10 &rhs) const {
+    return algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
+}
+
+// --- algo.RspaceStr10..NeOp
+inline bool algo::RspaceStr10::operator !=(const algo::RspaceStr10 &rhs) const {
+    return !algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
 }
 
 // --- algo.RspaceStr10..Cmp
@@ -13374,26 +13674,28 @@ inline bool algo::RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr10..EqStrptr
-inline bool algo::RspaceStr10_EqStrptr(algo::RspaceStr10 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr10..EqOpAryptr
+inline bool algo::RspaceStr10::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr100::operator ==(const algo::RspaceStr100 &rhs) const {
-    return algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
+// --- algo.RspaceStr10..AssignOp
+inline algo::RspaceStr10& algo::RspaceStr10::operator =(const algo::RspaceStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr10));
+    return *this;
 }
 
-inline bool algo::RspaceStr100::operator !=(const algo::RspaceStr100 &rhs) const {
-    return !algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
+// --- algo.RspaceStr10..Ctor
+inline  algo::RspaceStr10::RspaceStr10() {
+    algo::RspaceStr10_Init(*this);
 }
 
-inline bool algo::RspaceStr100::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr100_EqStrptr(const_cast<algo::RspaceStr100&>(*this),rhs);
+// --- algo.RspaceStr10..CopyCtor
+inline  algo::RspaceStr10::RspaceStr10(const algo::RspaceStr10 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr10));
 }
-inline algo::RspaceStr100::RspaceStr100() {
-    algo::RspaceStr100_Init(*this);
-}
-
 
 // --- algo.RspaceStr100.ch.Getary
 // Access string as array of chars
@@ -13436,26 +13738,24 @@ inline void algo::RspaceStr100::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr100.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr100::operator =(const algo::RspaceStr100& parent) {
-    memcpy(ch, parent.ch, 100);
-}
-
-// --- algo.RspaceStr100.ch.Ctor
-inline  algo::RspaceStr100::RspaceStr100(const algo::RspaceStr100 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr100.ch.CtorStrptr
 inline  algo::RspaceStr100::RspaceStr100(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr100.ch.Cast
-inline algo::RspaceStr100::operator algo::strptr () const {
+inline  algo::RspaceStr100::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr100..EqOp
+inline bool algo::RspaceStr100::operator ==(const algo::RspaceStr100 &rhs) const {
+    return algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
+}
+
+// --- algo.RspaceStr100..NeOp
+inline bool algo::RspaceStr100::operator !=(const algo::RspaceStr100 &rhs) const {
+    return !algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
 }
 
 // --- algo.RspaceStr100..Cmp
@@ -13491,26 +13791,28 @@ inline bool algo::RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& r
     return retval;
 }
 
-// --- algo.RspaceStr100..EqStrptr
-inline bool algo::RspaceStr100_EqStrptr(const algo::RspaceStr100& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr100..EqOpAryptr
+inline bool algo::RspaceStr100::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr11::operator ==(const algo::RspaceStr11 &rhs) const {
-    return algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
+// --- algo.RspaceStr100..AssignOp
+inline algo::RspaceStr100& algo::RspaceStr100::operator =(const algo::RspaceStr100 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr100));
+    return *this;
 }
 
-inline bool algo::RspaceStr11::operator !=(const algo::RspaceStr11 &rhs) const {
-    return !algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
+// --- algo.RspaceStr100..Ctor
+inline  algo::RspaceStr100::RspaceStr100() {
+    algo::RspaceStr100_Init(*this);
 }
 
-inline bool algo::RspaceStr11::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr11_EqStrptr(const_cast<algo::RspaceStr11&>(*this),rhs);
+// --- algo.RspaceStr100..CopyCtor
+inline  algo::RspaceStr100::RspaceStr100(const algo::RspaceStr100 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr100));
 }
-inline algo::RspaceStr11::RspaceStr11() {
-    algo::RspaceStr11_Init(*this);
-}
-
 
 // --- algo.RspaceStr11.ch.Getary
 // Access string as array of chars
@@ -13553,26 +13855,24 @@ inline void algo::RspaceStr11::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr11.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr11::operator =(const algo::RspaceStr11& parent) {
-    memcpy(ch, parent.ch, 11);
-}
-
-// --- algo.RspaceStr11.ch.Ctor
-inline  algo::RspaceStr11::RspaceStr11(const algo::RspaceStr11 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr11.ch.CtorStrptr
 inline  algo::RspaceStr11::RspaceStr11(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr11.ch.Cast
-inline algo::RspaceStr11::operator algo::strptr () const {
+inline  algo::RspaceStr11::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr11..EqOp
+inline bool algo::RspaceStr11::operator ==(const algo::RspaceStr11 &rhs) const {
+    return algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
+}
+
+// --- algo.RspaceStr11..NeOp
+inline bool algo::RspaceStr11::operator !=(const algo::RspaceStr11 &rhs) const {
+    return !algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
 }
 
 // --- algo.RspaceStr11..Cmp
@@ -13598,26 +13898,28 @@ inline bool algo::RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs)
     return retval;
 }
 
-// --- algo.RspaceStr11..EqStrptr
-inline bool algo::RspaceStr11_EqStrptr(const algo::RspaceStr11& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr11..EqOpAryptr
+inline bool algo::RspaceStr11::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr12::operator ==(const algo::RspaceStr12 &rhs) const {
-    return algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
+// --- algo.RspaceStr11..AssignOp
+inline algo::RspaceStr11& algo::RspaceStr11::operator =(const algo::RspaceStr11 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr11));
+    return *this;
 }
 
-inline bool algo::RspaceStr12::operator !=(const algo::RspaceStr12 &rhs) const {
-    return !algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
+// --- algo.RspaceStr11..Ctor
+inline  algo::RspaceStr11::RspaceStr11() {
+    algo::RspaceStr11_Init(*this);
 }
 
-inline bool algo::RspaceStr12::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr12_EqStrptr(const_cast<algo::RspaceStr12&>(*this),rhs);
+// --- algo.RspaceStr11..CopyCtor
+inline  algo::RspaceStr11::RspaceStr11(const algo::RspaceStr11 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr11));
 }
-inline algo::RspaceStr12::RspaceStr12() {
-    algo::RspaceStr12_Init(*this);
-}
-
 
 // --- algo.RspaceStr12.ch.Getary
 // Access string as array of chars
@@ -13660,26 +13962,24 @@ inline void algo::RspaceStr12::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr12.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr12::operator =(const algo::RspaceStr12& parent) {
-    memcpy(ch, parent.ch, 12);
-}
-
-// --- algo.RspaceStr12.ch.Ctor
-inline  algo::RspaceStr12::RspaceStr12(const algo::RspaceStr12 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr12.ch.CtorStrptr
 inline  algo::RspaceStr12::RspaceStr12(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr12.ch.Cast
-inline algo::RspaceStr12::operator algo::strptr () const {
+inline  algo::RspaceStr12::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr12..EqOp
+inline bool algo::RspaceStr12::operator ==(const algo::RspaceStr12 &rhs) const {
+    return algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
+}
+
+// --- algo.RspaceStr12..NeOp
+inline bool algo::RspaceStr12::operator !=(const algo::RspaceStr12 &rhs) const {
+    return !algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
 }
 
 // --- algo.RspaceStr12..Cmp
@@ -13704,26 +14004,28 @@ inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr12..EqStrptr
-inline bool algo::RspaceStr12_EqStrptr(algo::RspaceStr12 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr12..EqOpAryptr
+inline bool algo::RspaceStr12::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr128::operator ==(const algo::RspaceStr128 &rhs) const {
-    return algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
+// --- algo.RspaceStr12..AssignOp
+inline algo::RspaceStr12& algo::RspaceStr12::operator =(const algo::RspaceStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr12));
+    return *this;
 }
 
-inline bool algo::RspaceStr128::operator !=(const algo::RspaceStr128 &rhs) const {
-    return !algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
+// --- algo.RspaceStr12..Ctor
+inline  algo::RspaceStr12::RspaceStr12() {
+    algo::RspaceStr12_Init(*this);
 }
 
-inline bool algo::RspaceStr128::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr128_EqStrptr(const_cast<algo::RspaceStr128&>(*this),rhs);
+// --- algo.RspaceStr12..CopyCtor
+inline  algo::RspaceStr12::RspaceStr12(const algo::RspaceStr12 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr12));
 }
-inline algo::RspaceStr128::RspaceStr128() {
-    algo::RspaceStr128_Init(*this);
-}
-
 
 // --- algo.RspaceStr128.ch.Getary
 // Access string as array of chars
@@ -13766,26 +14068,24 @@ inline void algo::RspaceStr128::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr128.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr128::operator =(const algo::RspaceStr128& parent) {
-    memcpy(ch, parent.ch, 128);
-}
-
-// --- algo.RspaceStr128.ch.Ctor
-inline  algo::RspaceStr128::RspaceStr128(const algo::RspaceStr128 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr128.ch.CtorStrptr
 inline  algo::RspaceStr128::RspaceStr128(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr128.ch.Cast
-inline algo::RspaceStr128::operator algo::strptr () const {
+inline  algo::RspaceStr128::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr128..EqOp
+inline bool algo::RspaceStr128::operator ==(const algo::RspaceStr128 &rhs) const {
+    return algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
+}
+
+// --- algo.RspaceStr128..NeOp
+inline bool algo::RspaceStr128::operator !=(const algo::RspaceStr128 &rhs) const {
+    return !algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
 }
 
 // --- algo.RspaceStr128..Cmp
@@ -13824,26 +14124,28 @@ inline bool algo::RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs
     return retval;
 }
 
-// --- algo.RspaceStr128..EqStrptr
-inline bool algo::RspaceStr128_EqStrptr(algo::RspaceStr128 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr128..EqOpAryptr
+inline bool algo::RspaceStr128::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr14::operator ==(const algo::RspaceStr14 &rhs) const {
-    return algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
+// --- algo.RspaceStr128..AssignOp
+inline algo::RspaceStr128& algo::RspaceStr128::operator =(const algo::RspaceStr128 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr128));
+    return *this;
 }
 
-inline bool algo::RspaceStr14::operator !=(const algo::RspaceStr14 &rhs) const {
-    return !algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
+// --- algo.RspaceStr128..Ctor
+inline  algo::RspaceStr128::RspaceStr128() {
+    algo::RspaceStr128_Init(*this);
 }
 
-inline bool algo::RspaceStr14::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr14_EqStrptr(const_cast<algo::RspaceStr14&>(*this),rhs);
+// --- algo.RspaceStr128..CopyCtor
+inline  algo::RspaceStr128::RspaceStr128(const algo::RspaceStr128 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr128));
 }
-inline algo::RspaceStr14::RspaceStr14() {
-    algo::RspaceStr14_Init(*this);
-}
-
 
 // --- algo.RspaceStr14.ch.Getary
 // Access string as array of chars
@@ -13886,26 +14188,24 @@ inline void algo::RspaceStr14::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr14.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr14::operator =(const algo::RspaceStr14& parent) {
-    memcpy(ch, parent.ch, 14);
-}
-
-// --- algo.RspaceStr14.ch.Ctor
-inline  algo::RspaceStr14::RspaceStr14(const algo::RspaceStr14 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr14.ch.CtorStrptr
 inline  algo::RspaceStr14::RspaceStr14(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr14.ch.Cast
-inline algo::RspaceStr14::operator algo::strptr () const {
+inline  algo::RspaceStr14::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr14..EqOp
+inline bool algo::RspaceStr14::operator ==(const algo::RspaceStr14 &rhs) const {
+    return algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
+}
+
+// --- algo.RspaceStr14..NeOp
+inline bool algo::RspaceStr14::operator !=(const algo::RspaceStr14 &rhs) const {
+    return !algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
 }
 
 // --- algo.RspaceStr14..Cmp
@@ -13931,26 +14231,28 @@ inline bool algo::RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr14..EqStrptr
-inline bool algo::RspaceStr14_EqStrptr(algo::RspaceStr14 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr14..EqOpAryptr
+inline bool algo::RspaceStr14::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr15::operator ==(const algo::RspaceStr15 &rhs) const {
-    return algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
+// --- algo.RspaceStr14..AssignOp
+inline algo::RspaceStr14& algo::RspaceStr14::operator =(const algo::RspaceStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr14));
+    return *this;
 }
 
-inline bool algo::RspaceStr15::operator !=(const algo::RspaceStr15 &rhs) const {
-    return !algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
+// --- algo.RspaceStr14..Ctor
+inline  algo::RspaceStr14::RspaceStr14() {
+    algo::RspaceStr14_Init(*this);
 }
 
-inline bool algo::RspaceStr15::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr15_EqStrptr(const_cast<algo::RspaceStr15&>(*this),rhs);
+// --- algo.RspaceStr14..CopyCtor
+inline  algo::RspaceStr14::RspaceStr14(const algo::RspaceStr14 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr14));
 }
-inline algo::RspaceStr15::RspaceStr15() {
-    algo::RspaceStr15_Init(*this);
-}
-
 
 // --- algo.RspaceStr15.ch.Getary
 // Access string as array of chars
@@ -13993,26 +14295,24 @@ inline void algo::RspaceStr15::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr15.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr15::operator =(const algo::RspaceStr15& parent) {
-    memcpy(ch, parent.ch, 15);
-}
-
-// --- algo.RspaceStr15.ch.Ctor
-inline  algo::RspaceStr15::RspaceStr15(const algo::RspaceStr15 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr15.ch.CtorStrptr
 inline  algo::RspaceStr15::RspaceStr15(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr15.ch.Cast
-inline algo::RspaceStr15::operator algo::strptr () const {
+inline  algo::RspaceStr15::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr15..EqOp
+inline bool algo::RspaceStr15::operator ==(const algo::RspaceStr15 &rhs) const {
+    return algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
+}
+
+// --- algo.RspaceStr15..NeOp
+inline bool algo::RspaceStr15::operator !=(const algo::RspaceStr15 &rhs) const {
+    return !algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
 }
 
 // --- algo.RspaceStr15..Cmp
@@ -14039,14 +14339,28 @@ inline bool algo::RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr15..EqStrptr
-inline bool algo::RspaceStr15_EqStrptr(algo::RspaceStr15 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RspaceStr16::RspaceStr16() {
-    algo::RspaceStr16_Init(*this);
+// --- algo.RspaceStr15..EqOpAryptr
+inline bool algo::RspaceStr15::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr15..AssignOp
+inline algo::RspaceStr15& algo::RspaceStr15::operator =(const algo::RspaceStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr15));
+    return *this;
+}
+
+// --- algo.RspaceStr15..Ctor
+inline  algo::RspaceStr15::RspaceStr15() {
+    algo::RspaceStr15_Init(*this);
+}
+
+// --- algo.RspaceStr15..CopyCtor
+inline  algo::RspaceStr15::RspaceStr15(const algo::RspaceStr15 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr15));
+}
 
 // --- algo.RspaceStr16.ch.Getary
 // Access string as array of chars
@@ -14089,25 +14403,13 @@ inline void algo::RspaceStr16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr16::operator =(const algo::RspaceStr16& parent) {
-    memcpy(ch, parent.ch, 16);
-}
-
-// --- algo.RspaceStr16.ch.Ctor
-inline  algo::RspaceStr16::RspaceStr16(const algo::RspaceStr16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr16.ch.CtorStrptr
 inline  algo::RspaceStr16::RspaceStr16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr16.ch.Cast
-inline algo::RspaceStr16::operator algo::strptr () const {
+inline  algo::RspaceStr16::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -14148,26 +14450,28 @@ inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 r
     return ret;
 }
 
-// --- algo.RspaceStr16..EqStrptr
-inline bool algo::RspaceStr16_EqStrptr(algo::RspaceStr16 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr16..EqOpAryptr
+inline bool algo::RspaceStr16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr18::operator ==(const algo::RspaceStr18 &rhs) const {
-    return algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
+// --- algo.RspaceStr16..AssignOp
+inline algo::RspaceStr16& algo::RspaceStr16::operator =(const algo::RspaceStr16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr16));
+    return *this;
 }
 
-inline bool algo::RspaceStr18::operator !=(const algo::RspaceStr18 &rhs) const {
-    return !algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
+// --- algo.RspaceStr16..Ctor
+inline  algo::RspaceStr16::RspaceStr16() {
+    algo::RspaceStr16_Init(*this);
 }
 
-inline bool algo::RspaceStr18::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr18_EqStrptr(const_cast<algo::RspaceStr18&>(*this),rhs);
+// --- algo.RspaceStr16..CopyCtor
+inline  algo::RspaceStr16::RspaceStr16(const algo::RspaceStr16 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr16));
 }
-inline algo::RspaceStr18::RspaceStr18() {
-    algo::RspaceStr18_Init(*this);
-}
-
 
 // --- algo.RspaceStr18.ch.Getary
 // Access string as array of chars
@@ -14210,26 +14514,24 @@ inline void algo::RspaceStr18::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr18.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr18::operator =(const algo::RspaceStr18& parent) {
-    memcpy(ch, parent.ch, 18);
-}
-
-// --- algo.RspaceStr18.ch.Ctor
-inline  algo::RspaceStr18::RspaceStr18(const algo::RspaceStr18 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr18.ch.CtorStrptr
 inline  algo::RspaceStr18::RspaceStr18(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr18.ch.Cast
-inline algo::RspaceStr18::operator algo::strptr () const {
+inline  algo::RspaceStr18::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr18..EqOp
+inline bool algo::RspaceStr18::operator ==(const algo::RspaceStr18 &rhs) const {
+    return algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
+}
+
+// --- algo.RspaceStr18..NeOp
+inline bool algo::RspaceStr18::operator !=(const algo::RspaceStr18 &rhs) const {
+    return !algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
 }
 
 // --- algo.RspaceStr18..Cmp
@@ -14255,26 +14557,28 @@ inline bool algo::RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr18..EqStrptr
-inline bool algo::RspaceStr18_EqStrptr(algo::RspaceStr18 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr18..EqOpAryptr
+inline bool algo::RspaceStr18::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr2::operator ==(const algo::RspaceStr2 &rhs) const {
-    return algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
+// --- algo.RspaceStr18..AssignOp
+inline algo::RspaceStr18& algo::RspaceStr18::operator =(const algo::RspaceStr18 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr18));
+    return *this;
 }
 
-inline bool algo::RspaceStr2::operator !=(const algo::RspaceStr2 &rhs) const {
-    return !algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
+// --- algo.RspaceStr18..Ctor
+inline  algo::RspaceStr18::RspaceStr18() {
+    algo::RspaceStr18_Init(*this);
 }
 
-inline bool algo::RspaceStr2::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr2_EqStrptr(const_cast<algo::RspaceStr2&>(*this),rhs);
+// --- algo.RspaceStr18..CopyCtor
+inline  algo::RspaceStr18::RspaceStr18(const algo::RspaceStr18 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr18));
 }
-inline algo::RspaceStr2::RspaceStr2() {
-    algo::RspaceStr2_Init(*this);
-}
-
 
 // --- algo.RspaceStr2.ch.Getary
 // Access string as array of chars
@@ -14317,26 +14621,24 @@ inline void algo::RspaceStr2::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr2.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr2::operator =(const algo::RspaceStr2& parent) {
-    memcpy(ch, parent.ch, 2);
-}
-
-// --- algo.RspaceStr2.ch.Ctor
-inline  algo::RspaceStr2::RspaceStr2(const algo::RspaceStr2 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr2.ch.CtorStrptr
 inline  algo::RspaceStr2::RspaceStr2(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr2.ch.Cast
-inline algo::RspaceStr2::operator algo::strptr () const {
+inline  algo::RspaceStr2::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr2..EqOp
+inline bool algo::RspaceStr2::operator ==(const algo::RspaceStr2 &rhs) const {
+    return algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
+}
+
+// --- algo.RspaceStr2..NeOp
+inline bool algo::RspaceStr2::operator !=(const algo::RspaceStr2 &rhs) const {
+    return !algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
 }
 
 // --- algo.RspaceStr2..Cmp
@@ -14360,26 +14662,28 @@ inline bool algo::RspaceStr2_Eq(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr2..EqStrptr
-inline bool algo::RspaceStr2_EqStrptr(algo::RspaceStr2 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr2..EqOpAryptr
+inline bool algo::RspaceStr2::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr20::operator ==(const algo::RspaceStr20 &rhs) const {
-    return algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
+// --- algo.RspaceStr2..AssignOp
+inline algo::RspaceStr2& algo::RspaceStr2::operator =(const algo::RspaceStr2 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr2));
+    return *this;
 }
 
-inline bool algo::RspaceStr20::operator !=(const algo::RspaceStr20 &rhs) const {
-    return !algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
+// --- algo.RspaceStr2..Ctor
+inline  algo::RspaceStr2::RspaceStr2() {
+    algo::RspaceStr2_Init(*this);
 }
 
-inline bool algo::RspaceStr20::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr20_EqStrptr(const_cast<algo::RspaceStr20&>(*this),rhs);
+// --- algo.RspaceStr2..CopyCtor
+inline  algo::RspaceStr2::RspaceStr2(const algo::RspaceStr2 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr2));
 }
-inline algo::RspaceStr20::RspaceStr20() {
-    algo::RspaceStr20_Init(*this);
-}
-
 
 // --- algo.RspaceStr20.ch.Getary
 // Access string as array of chars
@@ -14422,26 +14726,24 @@ inline void algo::RspaceStr20::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr20.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr20::operator =(const algo::RspaceStr20& parent) {
-    memcpy(ch, parent.ch, 20);
-}
-
-// --- algo.RspaceStr20.ch.Ctor
-inline  algo::RspaceStr20::RspaceStr20(const algo::RspaceStr20 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr20.ch.CtorStrptr
 inline  algo::RspaceStr20::RspaceStr20(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr20.ch.Cast
-inline algo::RspaceStr20::operator algo::strptr () const {
+inline  algo::RspaceStr20::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr20..EqOp
+inline bool algo::RspaceStr20::operator ==(const algo::RspaceStr20 &rhs) const {
+    return algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
+}
+
+// --- algo.RspaceStr20..NeOp
+inline bool algo::RspaceStr20::operator !=(const algo::RspaceStr20 &rhs) const {
+    return !algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
 }
 
 // --- algo.RspaceStr20..Cmp
@@ -14467,26 +14769,28 @@ inline bool algo::RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr20..EqStrptr
-inline bool algo::RspaceStr20_EqStrptr(algo::RspaceStr20 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr20..EqOpAryptr
+inline bool algo::RspaceStr20::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr200::operator ==(const algo::RspaceStr200 &rhs) const {
-    return algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
+// --- algo.RspaceStr20..AssignOp
+inline algo::RspaceStr20& algo::RspaceStr20::operator =(const algo::RspaceStr20 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr20));
+    return *this;
 }
 
-inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const {
-    return !algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
+// --- algo.RspaceStr20..Ctor
+inline  algo::RspaceStr20::RspaceStr20() {
+    algo::RspaceStr20_Init(*this);
 }
 
-inline bool algo::RspaceStr200::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr200_EqStrptr(const_cast<algo::RspaceStr200&>(*this),rhs);
+// --- algo.RspaceStr20..CopyCtor
+inline  algo::RspaceStr20::RspaceStr20(const algo::RspaceStr20 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr20));
 }
-inline algo::RspaceStr200::RspaceStr200() {
-    algo::RspaceStr200_Init(*this);
-}
-
 
 // --- algo.RspaceStr200.ch.Getary
 // Access string as array of chars
@@ -14529,26 +14833,24 @@ inline void algo::RspaceStr200::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr200.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr200::operator =(const algo::RspaceStr200& parent) {
-    memcpy(ch, parent.ch, 200);
-}
-
-// --- algo.RspaceStr200.ch.Ctor
-inline  algo::RspaceStr200::RspaceStr200(const algo::RspaceStr200 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr200.ch.CtorStrptr
 inline  algo::RspaceStr200::RspaceStr200(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr200.ch.Cast
-inline algo::RspaceStr200::operator algo::strptr () const {
+inline  algo::RspaceStr200::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr200..EqOp
+inline bool algo::RspaceStr200::operator ==(const algo::RspaceStr200 &rhs) const {
+    return algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
+}
+
+// --- algo.RspaceStr200..NeOp
+inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const {
+    return !algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
 }
 
 // --- algo.RspaceStr200..Cmp
@@ -14573,26 +14875,28 @@ inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& r
     return retval;
 }
 
-// --- algo.RspaceStr200..EqStrptr
-inline bool algo::RspaceStr200_EqStrptr(const algo::RspaceStr200& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr200..EqOpAryptr
+inline bool algo::RspaceStr200::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr21::operator ==(const algo::RspaceStr21 &rhs) const {
-    return algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
+// --- algo.RspaceStr200..AssignOp
+inline algo::RspaceStr200& algo::RspaceStr200::operator =(const algo::RspaceStr200 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr200));
+    return *this;
 }
 
-inline bool algo::RspaceStr21::operator !=(const algo::RspaceStr21 &rhs) const {
-    return !algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
+// --- algo.RspaceStr200..Ctor
+inline  algo::RspaceStr200::RspaceStr200() {
+    algo::RspaceStr200_Init(*this);
 }
 
-inline bool algo::RspaceStr21::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr21_EqStrptr(const_cast<algo::RspaceStr21&>(*this),rhs);
+// --- algo.RspaceStr200..CopyCtor
+inline  algo::RspaceStr200::RspaceStr200(const algo::RspaceStr200 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr200));
 }
-inline algo::RspaceStr21::RspaceStr21() {
-    algo::RspaceStr21_Init(*this);
-}
-
 
 // --- algo.RspaceStr21.ch.Getary
 // Access string as array of chars
@@ -14635,26 +14939,24 @@ inline void algo::RspaceStr21::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr21.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr21::operator =(const algo::RspaceStr21& parent) {
-    memcpy(ch, parent.ch, 21);
-}
-
-// --- algo.RspaceStr21.ch.Ctor
-inline  algo::RspaceStr21::RspaceStr21(const algo::RspaceStr21 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr21.ch.CtorStrptr
 inline  algo::RspaceStr21::RspaceStr21(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr21.ch.Cast
-inline algo::RspaceStr21::operator algo::strptr () const {
+inline  algo::RspaceStr21::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr21..EqOp
+inline bool algo::RspaceStr21::operator ==(const algo::RspaceStr21 &rhs) const {
+    return algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
+}
+
+// --- algo.RspaceStr21..NeOp
+inline bool algo::RspaceStr21::operator !=(const algo::RspaceStr21 &rhs) const {
+    return !algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
 }
 
 // --- algo.RspaceStr21..Cmp
@@ -14681,14 +14983,28 @@ inline bool algo::RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs)
     return retval;
 }
 
-// --- algo.RspaceStr21..EqStrptr
-inline bool algo::RspaceStr21_EqStrptr(const algo::RspaceStr21& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RspaceStr24::RspaceStr24() {
-    algo::RspaceStr24_Init(*this);
+// --- algo.RspaceStr21..EqOpAryptr
+inline bool algo::RspaceStr21::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr21..AssignOp
+inline algo::RspaceStr21& algo::RspaceStr21::operator =(const algo::RspaceStr21 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr21));
+    return *this;
+}
+
+// --- algo.RspaceStr21..Ctor
+inline  algo::RspaceStr21::RspaceStr21() {
+    algo::RspaceStr21_Init(*this);
+}
+
+// --- algo.RspaceStr21..CopyCtor
+inline  algo::RspaceStr21::RspaceStr21(const algo::RspaceStr21 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr21));
+}
 
 // --- algo.RspaceStr24.ch.Getary
 // Access string as array of chars
@@ -14731,25 +15047,13 @@ inline void algo::RspaceStr24::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr24.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr24::operator =(const algo::RspaceStr24& parent) {
-    memcpy(ch, parent.ch, 24);
-}
-
-// --- algo.RspaceStr24.ch.Ctor
-inline  algo::RspaceStr24::RspaceStr24(const algo::RspaceStr24 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr24.ch.CtorStrptr
 inline  algo::RspaceStr24::RspaceStr24(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr24.ch.Cast
-inline algo::RspaceStr24::operator algo::strptr () const {
+inline  algo::RspaceStr24::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -14791,26 +15095,28 @@ inline bool algo::RspaceStr24_Update(algo::RspaceStr24 &lhs, algo::RspaceStr24 r
     return ret;
 }
 
-// --- algo.RspaceStr24..EqStrptr
-inline bool algo::RspaceStr24_EqStrptr(algo::RspaceStr24 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr24..EqOpAryptr
+inline bool algo::RspaceStr24::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr240::operator ==(const algo::RspaceStr240 &rhs) const {
-    return algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
+// --- algo.RspaceStr24..AssignOp
+inline algo::RspaceStr24& algo::RspaceStr24::operator =(const algo::RspaceStr24 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr24));
+    return *this;
 }
 
-inline bool algo::RspaceStr240::operator !=(const algo::RspaceStr240 &rhs) const {
-    return !algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
+// --- algo.RspaceStr24..Ctor
+inline  algo::RspaceStr24::RspaceStr24() {
+    algo::RspaceStr24_Init(*this);
 }
 
-inline bool algo::RspaceStr240::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr240_EqStrptr(const_cast<algo::RspaceStr240&>(*this),rhs);
+// --- algo.RspaceStr24..CopyCtor
+inline  algo::RspaceStr24::RspaceStr24(const algo::RspaceStr24 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr24));
 }
-inline algo::RspaceStr240::RspaceStr240() {
-    algo::RspaceStr240_Init(*this);
-}
-
 
 // --- algo.RspaceStr240.ch.Getary
 // Access string as array of chars
@@ -14853,26 +15159,24 @@ inline void algo::RspaceStr240::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr240.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr240::operator =(const algo::RspaceStr240& parent) {
-    memcpy(ch, parent.ch, 240);
-}
-
-// --- algo.RspaceStr240.ch.Ctor
-inline  algo::RspaceStr240::RspaceStr240(const algo::RspaceStr240 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr240.ch.CtorStrptr
 inline  algo::RspaceStr240::RspaceStr240(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr240.ch.Cast
-inline algo::RspaceStr240::operator algo::strptr () const {
+inline  algo::RspaceStr240::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr240..EqOp
+inline bool algo::RspaceStr240::operator ==(const algo::RspaceStr240 &rhs) const {
+    return algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
+}
+
+// --- algo.RspaceStr240..NeOp
+inline bool algo::RspaceStr240::operator !=(const algo::RspaceStr240 &rhs) const {
+    return !algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
 }
 
 // --- algo.RspaceStr240..Cmp
@@ -14897,14 +15201,28 @@ inline bool algo::RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& r
     return retval;
 }
 
-// --- algo.RspaceStr240..EqStrptr
-inline bool algo::RspaceStr240_EqStrptr(const algo::RspaceStr240& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RspaceStr25::RspaceStr25() {
-    algo::RspaceStr25_Init(*this);
+// --- algo.RspaceStr240..EqOpAryptr
+inline bool algo::RspaceStr240::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr240..AssignOp
+inline algo::RspaceStr240& algo::RspaceStr240::operator =(const algo::RspaceStr240 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr240));
+    return *this;
+}
+
+// --- algo.RspaceStr240..Ctor
+inline  algo::RspaceStr240::RspaceStr240() {
+    algo::RspaceStr240_Init(*this);
+}
+
+// --- algo.RspaceStr240..CopyCtor
+inline  algo::RspaceStr240::RspaceStr240(const algo::RspaceStr240 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr240));
+}
 
 // --- algo.RspaceStr25.ch.Getary
 // Access string as array of chars
@@ -14947,25 +15265,13 @@ inline void algo::RspaceStr25::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr25.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr25::operator =(const algo::RspaceStr25& parent) {
-    memcpy(ch, parent.ch, 25);
-}
-
-// --- algo.RspaceStr25.ch.Ctor
-inline  algo::RspaceStr25::RspaceStr25(const algo::RspaceStr25 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr25.ch.CtorStrptr
 inline  algo::RspaceStr25::RspaceStr25(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr25.ch.Cast
-inline algo::RspaceStr25::operator algo::strptr () const {
+inline  algo::RspaceStr25::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -15008,26 +15314,28 @@ inline bool algo::RspaceStr25_Update(algo::RspaceStr25 &lhs, algo::RspaceStr25 r
     return ret;
 }
 
-// --- algo.RspaceStr25..EqStrptr
-inline bool algo::RspaceStr25_EqStrptr(algo::RspaceStr25 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr25..EqOpAryptr
+inline bool algo::RspaceStr25::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr26::operator ==(const algo::RspaceStr26 &rhs) const {
-    return algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
+// --- algo.RspaceStr25..AssignOp
+inline algo::RspaceStr25& algo::RspaceStr25::operator =(const algo::RspaceStr25 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr25));
+    return *this;
 }
 
-inline bool algo::RspaceStr26::operator !=(const algo::RspaceStr26 &rhs) const {
-    return !algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
+// --- algo.RspaceStr25..Ctor
+inline  algo::RspaceStr25::RspaceStr25() {
+    algo::RspaceStr25_Init(*this);
 }
 
-inline bool algo::RspaceStr26::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr26_EqStrptr(const_cast<algo::RspaceStr26&>(*this),rhs);
+// --- algo.RspaceStr25..CopyCtor
+inline  algo::RspaceStr25::RspaceStr25(const algo::RspaceStr25 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr25));
 }
-inline algo::RspaceStr26::RspaceStr26() {
-    algo::RspaceStr26_Init(*this);
-}
-
 
 // --- algo.RspaceStr26.ch.Getary
 // Access string as array of chars
@@ -15070,26 +15378,24 @@ inline void algo::RspaceStr26::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr26.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr26::operator =(const algo::RspaceStr26& parent) {
-    memcpy(ch, parent.ch, 26);
-}
-
-// --- algo.RspaceStr26.ch.Ctor
-inline  algo::RspaceStr26::RspaceStr26(const algo::RspaceStr26 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr26.ch.CtorStrptr
 inline  algo::RspaceStr26::RspaceStr26(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr26.ch.Cast
-inline algo::RspaceStr26::operator algo::strptr () const {
+inline  algo::RspaceStr26::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr26..EqOp
+inline bool algo::RspaceStr26::operator ==(const algo::RspaceStr26 &rhs) const {
+    return algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
+}
+
+// --- algo.RspaceStr26..NeOp
+inline bool algo::RspaceStr26::operator !=(const algo::RspaceStr26 &rhs) const {
+    return !algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
 }
 
 // --- algo.RspaceStr26..Cmp
@@ -15116,26 +15422,28 @@ inline bool algo::RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs)
     return retval;
 }
 
-// --- algo.RspaceStr26..EqStrptr
-inline bool algo::RspaceStr26_EqStrptr(const algo::RspaceStr26& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr26..EqOpAryptr
+inline bool algo::RspaceStr26::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr3::operator ==(const algo::RspaceStr3 &rhs) const {
-    return algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
+// --- algo.RspaceStr26..AssignOp
+inline algo::RspaceStr26& algo::RspaceStr26::operator =(const algo::RspaceStr26 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr26));
+    return *this;
 }
 
-inline bool algo::RspaceStr3::operator !=(const algo::RspaceStr3 &rhs) const {
-    return !algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
+// --- algo.RspaceStr26..Ctor
+inline  algo::RspaceStr26::RspaceStr26() {
+    algo::RspaceStr26_Init(*this);
 }
 
-inline bool algo::RspaceStr3::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr3_EqStrptr(const_cast<algo::RspaceStr3&>(*this),rhs);
+// --- algo.RspaceStr26..CopyCtor
+inline  algo::RspaceStr26::RspaceStr26(const algo::RspaceStr26 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr26));
 }
-inline algo::RspaceStr3::RspaceStr3() {
-    algo::RspaceStr3_Init(*this);
-}
-
 
 // --- algo.RspaceStr3.ch.Getary
 // Access string as array of chars
@@ -15178,26 +15486,24 @@ inline void algo::RspaceStr3::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr3.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr3::operator =(const algo::RspaceStr3& parent) {
-    memcpy(ch, parent.ch, 3);
-}
-
-// --- algo.RspaceStr3.ch.Ctor
-inline  algo::RspaceStr3::RspaceStr3(const algo::RspaceStr3 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr3.ch.CtorStrptr
 inline  algo::RspaceStr3::RspaceStr3(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr3.ch.Cast
-inline algo::RspaceStr3::operator algo::strptr () const {
+inline  algo::RspaceStr3::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr3..EqOp
+inline bool algo::RspaceStr3::operator ==(const algo::RspaceStr3 &rhs) const {
+    return algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
+}
+
+// --- algo.RspaceStr3..NeOp
+inline bool algo::RspaceStr3::operator !=(const algo::RspaceStr3 &rhs) const {
+    return !algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
 }
 
 // --- algo.RspaceStr3..Cmp
@@ -15222,26 +15528,28 @@ inline bool algo::RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr3..EqStrptr
-inline bool algo::RspaceStr3_EqStrptr(algo::RspaceStr3 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr3..EqOpAryptr
+inline bool algo::RspaceStr3::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr31::operator ==(const algo::RspaceStr31 &rhs) const {
-    return algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
+// --- algo.RspaceStr3..AssignOp
+inline algo::RspaceStr3& algo::RspaceStr3::operator =(const algo::RspaceStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr3));
+    return *this;
 }
 
-inline bool algo::RspaceStr31::operator !=(const algo::RspaceStr31 &rhs) const {
-    return !algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
+// --- algo.RspaceStr3..Ctor
+inline  algo::RspaceStr3::RspaceStr3() {
+    algo::RspaceStr3_Init(*this);
 }
 
-inline bool algo::RspaceStr31::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr31_EqStrptr(const_cast<algo::RspaceStr31&>(*this),rhs);
+// --- algo.RspaceStr3..CopyCtor
+inline  algo::RspaceStr3::RspaceStr3(const algo::RspaceStr3 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr3));
 }
-inline algo::RspaceStr31::RspaceStr31() {
-    algo::RspaceStr31_Init(*this);
-}
-
 
 // --- algo.RspaceStr31.ch.Getary
 // Access string as array of chars
@@ -15284,26 +15592,24 @@ inline void algo::RspaceStr31::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr31.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr31::operator =(const algo::RspaceStr31& parent) {
-    memcpy(ch, parent.ch, 31);
-}
-
-// --- algo.RspaceStr31.ch.Ctor
-inline  algo::RspaceStr31::RspaceStr31(const algo::RspaceStr31 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr31.ch.CtorStrptr
 inline  algo::RspaceStr31::RspaceStr31(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr31.ch.Cast
-inline algo::RspaceStr31::operator algo::strptr () const {
+inline  algo::RspaceStr31::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr31..EqOp
+inline bool algo::RspaceStr31::operator ==(const algo::RspaceStr31 &rhs) const {
+    return algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
+}
+
+// --- algo.RspaceStr31..NeOp
+inline bool algo::RspaceStr31::operator !=(const algo::RspaceStr31 &rhs) const {
+    return !algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
 }
 
 // --- algo.RspaceStr31..Cmp
@@ -15332,26 +15638,28 @@ inline bool algo::RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs)
     return retval;
 }
 
-// --- algo.RspaceStr31..EqStrptr
-inline bool algo::RspaceStr31_EqStrptr(const algo::RspaceStr31& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr31..EqOpAryptr
+inline bool algo::RspaceStr31::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr32::operator ==(const algo::RspaceStr32 &rhs) const {
-    return algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
+// --- algo.RspaceStr31..AssignOp
+inline algo::RspaceStr31& algo::RspaceStr31::operator =(const algo::RspaceStr31 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr31));
+    return *this;
 }
 
-inline bool algo::RspaceStr32::operator !=(const algo::RspaceStr32 &rhs) const {
-    return !algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
+// --- algo.RspaceStr31..Ctor
+inline  algo::RspaceStr31::RspaceStr31() {
+    algo::RspaceStr31_Init(*this);
 }
 
-inline bool algo::RspaceStr32::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr32_EqStrptr(const_cast<algo::RspaceStr32&>(*this),rhs);
+// --- algo.RspaceStr31..CopyCtor
+inline  algo::RspaceStr31::RspaceStr31(const algo::RspaceStr31 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr31));
 }
-inline algo::RspaceStr32::RspaceStr32() {
-    algo::RspaceStr32_Init(*this);
-}
-
 
 // --- algo.RspaceStr32.ch.Getary
 // Access string as array of chars
@@ -15394,26 +15702,24 @@ inline void algo::RspaceStr32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr32::operator =(const algo::RspaceStr32& parent) {
-    memcpy(ch, parent.ch, 32);
-}
-
-// --- algo.RspaceStr32.ch.Ctor
-inline  algo::RspaceStr32::RspaceStr32(const algo::RspaceStr32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr32.ch.CtorStrptr
 inline  algo::RspaceStr32::RspaceStr32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr32.ch.Cast
-inline algo::RspaceStr32::operator algo::strptr () const {
+inline  algo::RspaceStr32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr32..EqOp
+inline bool algo::RspaceStr32::operator ==(const algo::RspaceStr32 &rhs) const {
+    return algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
+}
+
+// --- algo.RspaceStr32..NeOp
+inline bool algo::RspaceStr32::operator !=(const algo::RspaceStr32 &rhs) const {
+    return !algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
 }
 
 // --- algo.RspaceStr32..Cmp
@@ -15440,26 +15746,28 @@ inline bool algo::RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr32..EqStrptr
-inline bool algo::RspaceStr32_EqStrptr(algo::RspaceStr32 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr32..EqOpAryptr
+inline bool algo::RspaceStr32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr4::operator ==(const algo::RspaceStr4 &rhs) const {
-    return algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
+// --- algo.RspaceStr32..AssignOp
+inline algo::RspaceStr32& algo::RspaceStr32::operator =(const algo::RspaceStr32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr32));
+    return *this;
 }
 
-inline bool algo::RspaceStr4::operator !=(const algo::RspaceStr4 &rhs) const {
-    return !algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
+// --- algo.RspaceStr32..Ctor
+inline  algo::RspaceStr32::RspaceStr32() {
+    algo::RspaceStr32_Init(*this);
 }
 
-inline bool algo::RspaceStr4::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr4_EqStrptr(const_cast<algo::RspaceStr4&>(*this),rhs);
+// --- algo.RspaceStr32..CopyCtor
+inline  algo::RspaceStr32::RspaceStr32(const algo::RspaceStr32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr32));
 }
-inline algo::RspaceStr4::RspaceStr4() {
-    algo::RspaceStr4_Init(*this);
-}
-
 
 // --- algo.RspaceStr4.ch.Getary
 // Access string as array of chars
@@ -15502,26 +15810,24 @@ inline void algo::RspaceStr4::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr4.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr4::operator =(const algo::RspaceStr4& parent) {
-    memcpy(ch, parent.ch, 4);
-}
-
-// --- algo.RspaceStr4.ch.Ctor
-inline  algo::RspaceStr4::RspaceStr4(const algo::RspaceStr4 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr4.ch.CtorStrptr
 inline  algo::RspaceStr4::RspaceStr4(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr4.ch.Cast
-inline algo::RspaceStr4::operator algo::strptr () const {
+inline  algo::RspaceStr4::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr4..EqOp
+inline bool algo::RspaceStr4::operator ==(const algo::RspaceStr4 &rhs) const {
+    return algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
+}
+
+// --- algo.RspaceStr4..NeOp
+inline bool algo::RspaceStr4::operator !=(const algo::RspaceStr4 &rhs) const {
+    return !algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
 }
 
 // --- algo.RspaceStr4..Cmp
@@ -15545,14 +15851,28 @@ inline bool algo::RspaceStr4_Eq(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr4..EqStrptr
-inline bool algo::RspaceStr4_EqStrptr(algo::RspaceStr4 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RspaceStr40::RspaceStr40() {
-    algo::RspaceStr40_Init(*this);
+// --- algo.RspaceStr4..EqOpAryptr
+inline bool algo::RspaceStr4::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr4..AssignOp
+inline algo::RspaceStr4& algo::RspaceStr4::operator =(const algo::RspaceStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr4));
+    return *this;
+}
+
+// --- algo.RspaceStr4..Ctor
+inline  algo::RspaceStr4::RspaceStr4() {
+    algo::RspaceStr4_Init(*this);
+}
+
+// --- algo.RspaceStr4..CopyCtor
+inline  algo::RspaceStr4::RspaceStr4(const algo::RspaceStr4 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr4));
+}
 
 // --- algo.RspaceStr40.ch.Getary
 // Access string as array of chars
@@ -15595,25 +15915,13 @@ inline void algo::RspaceStr40::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr40.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr40::operator =(const algo::RspaceStr40& parent) {
-    memcpy(ch, parent.ch, 40);
-}
-
-// --- algo.RspaceStr40.ch.Ctor
-inline  algo::RspaceStr40::RspaceStr40(const algo::RspaceStr40 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr40.ch.CtorStrptr
 inline  algo::RspaceStr40::RspaceStr40(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr40.ch.Cast
-inline algo::RspaceStr40::operator algo::strptr () const {
+inline  algo::RspaceStr40::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -15642,26 +15950,28 @@ inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr40..EqStrptr
-inline bool algo::RspaceStr40_EqStrptr(algo::RspaceStr40 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr40..EqOpAryptr
+inline bool algo::RspaceStr40::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr5::operator ==(const algo::RspaceStr5 &rhs) const {
-    return algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
+// --- algo.RspaceStr40..AssignOp
+inline algo::RspaceStr40& algo::RspaceStr40::operator =(const algo::RspaceStr40 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr40));
+    return *this;
 }
 
-inline bool algo::RspaceStr5::operator !=(const algo::RspaceStr5 &rhs) const {
-    return !algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
+// --- algo.RspaceStr40..Ctor
+inline  algo::RspaceStr40::RspaceStr40() {
+    algo::RspaceStr40_Init(*this);
 }
 
-inline bool algo::RspaceStr5::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr5_EqStrptr(const_cast<algo::RspaceStr5&>(*this),rhs);
+// --- algo.RspaceStr40..CopyCtor
+inline  algo::RspaceStr40::RspaceStr40(const algo::RspaceStr40 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr40));
 }
-inline algo::RspaceStr5::RspaceStr5() {
-    algo::RspaceStr5_Init(*this);
-}
-
 
 // --- algo.RspaceStr5.ch.Getary
 // Access string as array of chars
@@ -15704,26 +16014,24 @@ inline void algo::RspaceStr5::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr5.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr5::operator =(const algo::RspaceStr5& parent) {
-    memcpy(ch, parent.ch, 5);
-}
-
-// --- algo.RspaceStr5.ch.Ctor
-inline  algo::RspaceStr5::RspaceStr5(const algo::RspaceStr5 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr5.ch.CtorStrptr
 inline  algo::RspaceStr5::RspaceStr5(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr5.ch.Cast
-inline algo::RspaceStr5::operator algo::strptr () const {
+inline  algo::RspaceStr5::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr5..EqOp
+inline bool algo::RspaceStr5::operator ==(const algo::RspaceStr5 &rhs) const {
+    return algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
+}
+
+// --- algo.RspaceStr5..NeOp
+inline bool algo::RspaceStr5::operator !=(const algo::RspaceStr5 &rhs) const {
+    return !algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
 }
 
 // --- algo.RspaceStr5..Cmp
@@ -15748,26 +16056,28 @@ inline bool algo::RspaceStr5_Eq(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr5..EqStrptr
-inline bool algo::RspaceStr5_EqStrptr(algo::RspaceStr5 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr5..EqOpAryptr
+inline bool algo::RspaceStr5::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr50::operator ==(const algo::RspaceStr50 &rhs) const {
-    return algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
+// --- algo.RspaceStr5..AssignOp
+inline algo::RspaceStr5& algo::RspaceStr5::operator =(const algo::RspaceStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr5));
+    return *this;
 }
 
-inline bool algo::RspaceStr50::operator !=(const algo::RspaceStr50 &rhs) const {
-    return !algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
+// --- algo.RspaceStr5..Ctor
+inline  algo::RspaceStr5::RspaceStr5() {
+    algo::RspaceStr5_Init(*this);
 }
 
-inline bool algo::RspaceStr50::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr50_EqStrptr(const_cast<algo::RspaceStr50&>(*this),rhs);
+// --- algo.RspaceStr5..CopyCtor
+inline  algo::RspaceStr5::RspaceStr5(const algo::RspaceStr5 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr5));
 }
-inline algo::RspaceStr50::RspaceStr50() {
-    algo::RspaceStr50_Init(*this);
-}
-
 
 // --- algo.RspaceStr50.ch.Getary
 // Access string as array of chars
@@ -15810,26 +16120,24 @@ inline void algo::RspaceStr50::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr50.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr50::operator =(const algo::RspaceStr50& parent) {
-    memcpy(ch, parent.ch, 50);
-}
-
-// --- algo.RspaceStr50.ch.Ctor
-inline  algo::RspaceStr50::RspaceStr50(const algo::RspaceStr50 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr50.ch.CtorStrptr
 inline  algo::RspaceStr50::RspaceStr50(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr50.ch.Cast
-inline algo::RspaceStr50::operator algo::strptr () const {
+inline  algo::RspaceStr50::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr50..EqOp
+inline bool algo::RspaceStr50::operator ==(const algo::RspaceStr50 &rhs) const {
+    return algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
+}
+
+// --- algo.RspaceStr50..NeOp
+inline bool algo::RspaceStr50::operator !=(const algo::RspaceStr50 &rhs) const {
+    return !algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
 }
 
 // --- algo.RspaceStr50..Cmp
@@ -15859,42 +16167,28 @@ inline bool algo::RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr50..EqStrptr
-inline bool algo::RspaceStr50_EqStrptr(algo::RspaceStr50 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr50..EqOpAryptr
+inline bool algo::RspaceStr50::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr6::operator ==(const algo::RspaceStr6 &rhs) const {
-    return algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+// --- algo.RspaceStr50..AssignOp
+inline algo::RspaceStr50& algo::RspaceStr50::operator =(const algo::RspaceStr50 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr50));
+    return *this;
 }
 
-inline bool algo::RspaceStr6::operator !=(const algo::RspaceStr6 &rhs) const {
-    return !algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+// --- algo.RspaceStr50..Ctor
+inline  algo::RspaceStr50::RspaceStr50() {
+    algo::RspaceStr50_Init(*this);
 }
 
-inline bool algo::RspaceStr6::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr6_EqStrptr(const_cast<algo::RspaceStr6&>(*this),rhs);
+// --- algo.RspaceStr50..CopyCtor
+inline  algo::RspaceStr50::RspaceStr50(const algo::RspaceStr50 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr50));
 }
-
-inline bool algo::RspaceStr6::operator <(const algo::RspaceStr6 &rhs) const {
-    return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
-}
-
-inline bool algo::RspaceStr6::operator >(const algo::RspaceStr6 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::RspaceStr6::operator <=(const algo::RspaceStr6 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::RspaceStr6::operator >=(const algo::RspaceStr6 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::RspaceStr6::RspaceStr6() {
-    algo::RspaceStr6_Init(*this);
-}
-
 
 // --- algo.RspaceStr6.ch.Getary
 // Access string as array of chars
@@ -15937,26 +16231,44 @@ inline void algo::RspaceStr6::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr6.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr6::operator =(const algo::RspaceStr6& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- algo.RspaceStr6.ch.Ctor
-inline  algo::RspaceStr6::RspaceStr6(const algo::RspaceStr6 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr6.ch.CtorStrptr
 inline  algo::RspaceStr6::RspaceStr6(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr6.ch.Cast
-inline algo::RspaceStr6::operator algo::strptr () const {
+inline  algo::RspaceStr6::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr6..EqOp
+inline bool algo::RspaceStr6::operator ==(const algo::RspaceStr6 &rhs) const {
+    return algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+}
+
+// --- algo.RspaceStr6..NeOp
+inline bool algo::RspaceStr6::operator !=(const algo::RspaceStr6 &rhs) const {
+    return !algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+}
+
+// --- algo.RspaceStr6..LtOp
+inline bool algo::RspaceStr6::operator <(const algo::RspaceStr6 &rhs) const {
+    return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
+}
+
+// --- algo.RspaceStr6..GtOp
+inline bool algo::RspaceStr6::operator >(const algo::RspaceStr6 &rhs) const {
+    return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(rhs),const_cast<algo::RspaceStr6&>(*this));
+}
+
+// --- algo.RspaceStr6..LeOp
+inline bool algo::RspaceStr6::operator <=(const algo::RspaceStr6 &rhs) const {
+    return !algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(rhs),const_cast<algo::RspaceStr6&>(*this));
+}
+
+// --- algo.RspaceStr6..GeOp
+inline bool algo::RspaceStr6::operator >=(const algo::RspaceStr6 &rhs) const {
+    return !algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 // --- algo.RspaceStr6..Lt
@@ -15996,26 +16308,28 @@ inline bool algo::RspaceStr6_Update(algo::RspaceStr6 &lhs, algo::RspaceStr6 rhs)
     return ret;
 }
 
-// --- algo.RspaceStr6..EqStrptr
-inline bool algo::RspaceStr6_EqStrptr(algo::RspaceStr6 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr6..EqOpAryptr
+inline bool algo::RspaceStr6::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr64::operator ==(const algo::RspaceStr64 &rhs) const {
-    return algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
+// --- algo.RspaceStr6..AssignOp
+inline algo::RspaceStr6& algo::RspaceStr6::operator =(const algo::RspaceStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr6));
+    return *this;
 }
 
-inline bool algo::RspaceStr64::operator !=(const algo::RspaceStr64 &rhs) const {
-    return !algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
+// --- algo.RspaceStr6..Ctor
+inline  algo::RspaceStr6::RspaceStr6() {
+    algo::RspaceStr6_Init(*this);
 }
 
-inline bool algo::RspaceStr64::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr64_EqStrptr(const_cast<algo::RspaceStr64&>(*this),rhs);
+// --- algo.RspaceStr6..CopyCtor
+inline  algo::RspaceStr6::RspaceStr6(const algo::RspaceStr6 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr6));
 }
-inline algo::RspaceStr64::RspaceStr64() {
-    algo::RspaceStr64_Init(*this);
-}
-
 
 // --- algo.RspaceStr64.ch.Getary
 // Access string as array of chars
@@ -16058,26 +16372,24 @@ inline void algo::RspaceStr64::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr64.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr64::operator =(const algo::RspaceStr64& parent) {
-    memcpy(ch, parent.ch, 64);
-}
-
-// --- algo.RspaceStr64.ch.Ctor
-inline  algo::RspaceStr64::RspaceStr64(const algo::RspaceStr64 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr64.ch.CtorStrptr
 inline  algo::RspaceStr64::RspaceStr64(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr64.ch.Cast
-inline algo::RspaceStr64::operator algo::strptr () const {
+inline  algo::RspaceStr64::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr64..EqOp
+inline bool algo::RspaceStr64::operator ==(const algo::RspaceStr64 &rhs) const {
+    return algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
+}
+
+// --- algo.RspaceStr64..NeOp
+inline bool algo::RspaceStr64::operator !=(const algo::RspaceStr64 &rhs) const {
+    return !algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
 }
 
 // --- algo.RspaceStr64..Cmp
@@ -16108,26 +16420,28 @@ inline bool algo::RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs)
     return retval;
 }
 
-// --- algo.RspaceStr64..EqStrptr
-inline bool algo::RspaceStr64_EqStrptr(const algo::RspaceStr64& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr64..EqOpAryptr
+inline bool algo::RspaceStr64::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr7::operator ==(const algo::RspaceStr7 &rhs) const {
-    return algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
+// --- algo.RspaceStr64..AssignOp
+inline algo::RspaceStr64& algo::RspaceStr64::operator =(const algo::RspaceStr64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr64));
+    return *this;
 }
 
-inline bool algo::RspaceStr7::operator !=(const algo::RspaceStr7 &rhs) const {
-    return !algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
+// --- algo.RspaceStr64..Ctor
+inline  algo::RspaceStr64::RspaceStr64() {
+    algo::RspaceStr64_Init(*this);
 }
 
-inline bool algo::RspaceStr7::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr7_EqStrptr(const_cast<algo::RspaceStr7&>(*this),rhs);
+// --- algo.RspaceStr64..CopyCtor
+inline  algo::RspaceStr64::RspaceStr64(const algo::RspaceStr64 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr64));
 }
-inline algo::RspaceStr7::RspaceStr7() {
-    algo::RspaceStr7_Init(*this);
-}
-
 
 // --- algo.RspaceStr7.ch.Getary
 // Access string as array of chars
@@ -16170,26 +16484,24 @@ inline void algo::RspaceStr7::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr7.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr7::operator =(const algo::RspaceStr7& parent) {
-    memcpy(ch, parent.ch, 7);
-}
-
-// --- algo.RspaceStr7.ch.Ctor
-inline  algo::RspaceStr7::RspaceStr7(const algo::RspaceStr7 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr7.ch.CtorStrptr
 inline  algo::RspaceStr7::RspaceStr7(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr7.ch.Cast
-inline algo::RspaceStr7::operator algo::strptr () const {
+inline  algo::RspaceStr7::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr7..EqOp
+inline bool algo::RspaceStr7::operator ==(const algo::RspaceStr7 &rhs) const {
+    return algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
+}
+
+// --- algo.RspaceStr7..NeOp
+inline bool algo::RspaceStr7::operator !=(const algo::RspaceStr7 &rhs) const {
+    return !algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
 }
 
 // --- algo.RspaceStr7..Cmp
@@ -16215,26 +16527,28 @@ inline bool algo::RspaceStr7_Eq(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr7..EqStrptr
-inline bool algo::RspaceStr7_EqStrptr(algo::RspaceStr7 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr7..EqOpAryptr
+inline bool algo::RspaceStr7::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr75::operator ==(const algo::RspaceStr75 &rhs) const {
-    return algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
+// --- algo.RspaceStr7..AssignOp
+inline algo::RspaceStr7& algo::RspaceStr7::operator =(const algo::RspaceStr7 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr7));
+    return *this;
 }
 
-inline bool algo::RspaceStr75::operator !=(const algo::RspaceStr75 &rhs) const {
-    return !algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
+// --- algo.RspaceStr7..Ctor
+inline  algo::RspaceStr7::RspaceStr7() {
+    algo::RspaceStr7_Init(*this);
 }
 
-inline bool algo::RspaceStr75::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr75_EqStrptr(const_cast<algo::RspaceStr75&>(*this),rhs);
+// --- algo.RspaceStr7..CopyCtor
+inline  algo::RspaceStr7::RspaceStr7(const algo::RspaceStr7 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr7));
 }
-inline algo::RspaceStr75::RspaceStr75() {
-    algo::RspaceStr75_Init(*this);
-}
-
 
 // --- algo.RspaceStr75.ch.Getary
 // Access string as array of chars
@@ -16277,26 +16591,24 @@ inline void algo::RspaceStr75::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr75.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr75::operator =(const algo::RspaceStr75& parent) {
-    memcpy(ch, parent.ch, 75);
-}
-
-// --- algo.RspaceStr75.ch.Ctor
-inline  algo::RspaceStr75::RspaceStr75(const algo::RspaceStr75 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr75.ch.CtorStrptr
 inline  algo::RspaceStr75::RspaceStr75(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr75.ch.Cast
-inline algo::RspaceStr75::operator algo::strptr () const {
+inline  algo::RspaceStr75::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr75..EqOp
+inline bool algo::RspaceStr75::operator ==(const algo::RspaceStr75 &rhs) const {
+    return algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
+}
+
+// --- algo.RspaceStr75..NeOp
+inline bool algo::RspaceStr75::operator !=(const algo::RspaceStr75 &rhs) const {
+    return !algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
 }
 
 // --- algo.RspaceStr75..Cmp
@@ -16330,14 +16642,28 @@ inline bool algo::RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr75..EqStrptr
-inline bool algo::RspaceStr75_EqStrptr(algo::RspaceStr75 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::RspaceStr8::RspaceStr8() {
-    algo::RspaceStr8_Init(*this);
+// --- algo.RspaceStr75..EqOpAryptr
+inline bool algo::RspaceStr75::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr75..AssignOp
+inline algo::RspaceStr75& algo::RspaceStr75::operator =(const algo::RspaceStr75 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr75));
+    return *this;
+}
+
+// --- algo.RspaceStr75..Ctor
+inline  algo::RspaceStr75::RspaceStr75() {
+    algo::RspaceStr75_Init(*this);
+}
+
+// --- algo.RspaceStr75..CopyCtor
+inline  algo::RspaceStr75::RspaceStr75(const algo::RspaceStr75 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr75));
+}
 
 // --- algo.RspaceStr8.ch.Getary
 // Access string as array of chars
@@ -16380,25 +16706,13 @@ inline void algo::RspaceStr8::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr8.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr8::operator =(const algo::RspaceStr8& parent) {
-    memcpy(ch, parent.ch, 8);
-}
-
-// --- algo.RspaceStr8.ch.Ctor
-inline  algo::RspaceStr8::RspaceStr8(const algo::RspaceStr8 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr8.ch.CtorStrptr
 inline  algo::RspaceStr8::RspaceStr8(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr8.ch.Cast
-inline algo::RspaceStr8::operator algo::strptr () const {
+inline  algo::RspaceStr8::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
@@ -16438,26 +16752,28 @@ inline bool algo::RspaceStr8_Update(algo::RspaceStr8 &lhs, algo::RspaceStr8 rhs)
     return ret;
 }
 
-// --- algo.RspaceStr8..EqStrptr
-inline bool algo::RspaceStr8_EqStrptr(algo::RspaceStr8 lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.RspaceStr8..EqOpAryptr
+inline bool algo::RspaceStr8::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::RspaceStr9::operator ==(const algo::RspaceStr9 &rhs) const {
-    return algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
+// --- algo.RspaceStr8..AssignOp
+inline algo::RspaceStr8& algo::RspaceStr8::operator =(const algo::RspaceStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr8));
+    return *this;
 }
 
-inline bool algo::RspaceStr9::operator !=(const algo::RspaceStr9 &rhs) const {
-    return !algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
+// --- algo.RspaceStr8..Ctor
+inline  algo::RspaceStr8::RspaceStr8() {
+    algo::RspaceStr8_Init(*this);
 }
 
-inline bool algo::RspaceStr9::operator ==(const algo::strptr &rhs) const {
-    return algo::RspaceStr9_EqStrptr(const_cast<algo::RspaceStr9&>(*this),rhs);
+// --- algo.RspaceStr8..CopyCtor
+inline  algo::RspaceStr8::RspaceStr8(const algo::RspaceStr8 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr8));
 }
-inline algo::RspaceStr9::RspaceStr9() {
-    algo::RspaceStr9_Init(*this);
-}
-
 
 // --- algo.RspaceStr9.ch.Getary
 // Access string as array of chars
@@ -16500,26 +16816,24 @@ inline void algo::RspaceStr9::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.RspaceStr9.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::RspaceStr9::operator =(const algo::RspaceStr9& parent) {
-    memcpy(ch, parent.ch, 9);
-}
-
-// --- algo.RspaceStr9.ch.Ctor
-inline  algo::RspaceStr9::RspaceStr9(const algo::RspaceStr9 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.RspaceStr9.ch.CtorStrptr
 inline  algo::RspaceStr9::RspaceStr9(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr9.ch.Cast
-inline algo::RspaceStr9::operator algo::strptr () const {
+inline  algo::RspaceStr9::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.RspaceStr9..EqOp
+inline bool algo::RspaceStr9::operator ==(const algo::RspaceStr9 &rhs) const {
+    return algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
+}
+
+// --- algo.RspaceStr9..NeOp
+inline bool algo::RspaceStr9::operator !=(const algo::RspaceStr9 &rhs) const {
+    return !algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
 }
 
 // --- algo.RspaceStr9..Cmp
@@ -16544,21 +16858,31 @@ inline bool algo::RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) {
     return retval;
 }
 
-// --- algo.RspaceStr9..EqStrptr
-inline bool algo::RspaceStr9_EqStrptr(const algo::RspaceStr9& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::SchedTime::SchedTime(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::SchedTime::SchedTime() {
-    algo::SchedTime_Init(*this);
+// --- algo.RspaceStr9..EqOpAryptr
+inline bool algo::RspaceStr9::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
+// --- algo.RspaceStr9..AssignOp
+inline algo::RspaceStr9& algo::RspaceStr9::operator =(const algo::RspaceStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr9));
+    return *this;
+}
+
+// --- algo.RspaceStr9..Ctor
+inline  algo::RspaceStr9::RspaceStr9() {
+    algo::RspaceStr9_Init(*this);
+}
+
+// --- algo.RspaceStr9..CopyCtor
+inline  algo::RspaceStr9::RspaceStr9(const algo::RspaceStr9 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(algo::RspaceStr9));
+}
 
 // --- algo.SchedTime.value.Cast
-inline algo::SchedTime::operator u64 () const {
+inline  algo::SchedTime::operator u64() const {
     return u64((*this).value);
 }
 
@@ -16596,17 +16920,20 @@ inline bool algo::SchedTime_Update(algo::SchedTime &lhs, algo::SchedTime rhs) {
     }
     return ret;
 }
-inline algo::SeqType::SeqType(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::SeqType::SeqType() {
-    algo::SeqType_Init(*this);
+
+// --- algo.SchedTime..Ctor
+inline  algo::SchedTime::SchedTime() {
+    algo::SchedTime_Init(*this);
 }
 
+// --- algo.SchedTime..FieldwiseCtor
+inline  algo::SchedTime::SchedTime(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.SeqType.value.Cast
-inline algo::SeqType::operator u64 () const {
+inline  algo::SeqType::operator u64() const {
     return u64((*this).value);
 }
 
@@ -16651,33 +16978,16 @@ inline bool algo::SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) {
     return ret;
 }
 
-inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const {
-    return algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.SeqType..Ctor
+inline  algo::SeqType::SeqType() {
+    algo::SeqType_Init(*this);
 }
 
-inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
-    return !algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+// --- algo.SeqType..FieldwiseCtor
+inline  algo::SeqType::SeqType(u64 in_value)
+    : value(in_value)
+ {
 }
-
-inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
-    return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
-}
-
-inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::Sha1sig::Sha1sig() {
-    algo::Sha1sig_Init(*this);
-}
-
 
 // --- algo.Sha1sig.sha1sig.Fill
 // Set all elements of fixed array to value RHS
@@ -16718,10 +17028,8 @@ inline i32 algo::sha1sig_N(const algo::Sha1sig& parent) {
 // --- algo.Sha1sig.sha1sig.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void algo::sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &rhs) {
-    int n = 20 < rhs.n_elems ? 20 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.sha1sig_elems[i] = rhs[i];
-    }
+    int n = i32_Min(20, rhs.n_elems);
+    memcpy(parent.sha1sig_elems, rhs.elems, sizeof(u8)*n);
 }
 
 // --- algo.Sha1sig.sha1sig.qFind
@@ -16753,6 +17061,36 @@ inline void algo::Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) {
 // item access
 inline u8& algo::Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) {
     return sha1sig_qFind((*curs.parent), u64(curs.index));
+}
+
+// --- algo.Sha1sig..EqOp
+inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const {
+    return algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+}
+
+// --- algo.Sha1sig..NeOp
+inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
+    return !algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+}
+
+// --- algo.Sha1sig..LtOp
+inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
+    return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
+}
+
+// --- algo.Sha1sig..GtOp
+inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const {
+    return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
+}
+
+// --- algo.Sha1sig..LeOp
+inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const {
+    return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
+}
+
+// --- algo.Sha1sig..GeOp
+inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const {
+    return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
 // --- algo.Sha1sig..Lt
@@ -16792,21 +17130,10 @@ inline bool algo::Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) {
     return ret;
 }
 
-inline bool algo::Smallstr1::operator ==(const algo::Smallstr1 &rhs) const {
-    return algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
+// --- algo.Sha1sig..Ctor
+inline  algo::Sha1sig::Sha1sig() {
+    algo::Sha1sig_Init(*this);
 }
-
-inline bool algo::Smallstr1::operator !=(const algo::Smallstr1 &rhs) const {
-    return !algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
-}
-
-inline bool algo::Smallstr1::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr1_EqStrptr(const_cast<algo::Smallstr1&>(*this),rhs);
-}
-inline algo::Smallstr1::Smallstr1() {
-    algo::Smallstr1_Init(*this);
-}
-
 
 // --- algo.Smallstr1.ch.Add
 // Append character to string.
@@ -16868,27 +17195,24 @@ inline void algo::Smallstr1::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr1.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr1::operator =(const algo::Smallstr1& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr1.ch.Ctor
-inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr1.ch.CtorStrptr
 inline  algo::Smallstr1::Smallstr1(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr1.ch.Cast
-inline algo::Smallstr1::operator algo::strptr () const {
+inline  algo::Smallstr1::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr1..EqOp
+inline bool algo::Smallstr1::operator ==(const algo::Smallstr1 &rhs) const {
+    return algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
+}
+
+// --- algo.Smallstr1..NeOp
+inline bool algo::Smallstr1::operator !=(const algo::Smallstr1 &rhs) const {
+    return !algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
 }
 
 // --- algo.Smallstr1..Cmp
@@ -16911,26 +17235,28 @@ inline bool algo::Smallstr1_Eq(algo::Smallstr1& lhs, algo::Smallstr1& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr1..EqStrptr
-inline bool algo::Smallstr1_EqStrptr(const algo::Smallstr1& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr1..EqOpAryptr
+inline bool algo::Smallstr1::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr10::operator ==(const algo::Smallstr10 &rhs) const {
-    return algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
+// --- algo.Smallstr1..AssignOp
+inline algo::Smallstr1& algo::Smallstr1::operator =(const algo::Smallstr1 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr10::operator !=(const algo::Smallstr10 &rhs) const {
-    return !algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
+// --- algo.Smallstr1..Ctor
+inline  algo::Smallstr1::Smallstr1() {
+    algo::Smallstr1_Init(*this);
 }
 
-inline bool algo::Smallstr10::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr10_EqStrptr(const_cast<algo::Smallstr10&>(*this),rhs);
+// --- algo.Smallstr1..CopyCtor
+inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr10::Smallstr10() {
-    algo::Smallstr10_Init(*this);
-}
-
 
 // --- algo.Smallstr10.ch.Add
 // Append character to string.
@@ -16992,27 +17318,24 @@ inline void algo::Smallstr10::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr10.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr10::operator =(const algo::Smallstr10& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr10.ch.Ctor
-inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr10.ch.CtorStrptr
 inline  algo::Smallstr10::Smallstr10(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr10.ch.Cast
-inline algo::Smallstr10::operator algo::strptr () const {
+inline  algo::Smallstr10::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr10..EqOp
+inline bool algo::Smallstr10::operator ==(const algo::Smallstr10 &rhs) const {
+    return algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
+}
+
+// --- algo.Smallstr10..NeOp
+inline bool algo::Smallstr10::operator !=(const algo::Smallstr10 &rhs) const {
+    return !algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
 }
 
 // --- algo.Smallstr10..Cmp
@@ -17035,26 +17358,28 @@ inline bool algo::Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr10..EqStrptr
-inline bool algo::Smallstr10_EqStrptr(const algo::Smallstr10& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr10..EqOpAryptr
+inline bool algo::Smallstr10::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr16::operator ==(const algo::Smallstr16 &rhs) const {
-    return algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
+// --- algo.Smallstr10..AssignOp
+inline algo::Smallstr10& algo::Smallstr10::operator =(const algo::Smallstr10 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr16::operator !=(const algo::Smallstr16 &rhs) const {
-    return !algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
+// --- algo.Smallstr10..Ctor
+inline  algo::Smallstr10::Smallstr10() {
+    algo::Smallstr10_Init(*this);
 }
 
-inline bool algo::Smallstr16::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr16_EqStrptr(const_cast<algo::Smallstr16&>(*this),rhs);
+// --- algo.Smallstr10..CopyCtor
+inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr16::Smallstr16() {
-    algo::Smallstr16_Init(*this);
-}
-
 
 // --- algo.Smallstr16.ch.Add
 // Append character to string.
@@ -17116,27 +17441,24 @@ inline void algo::Smallstr16::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr16.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr16::operator =(const algo::Smallstr16& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr16.ch.Ctor
-inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr16.ch.CtorStrptr
 inline  algo::Smallstr16::Smallstr16(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr16.ch.Cast
-inline algo::Smallstr16::operator algo::strptr () const {
+inline  algo::Smallstr16::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr16..EqOp
+inline bool algo::Smallstr16::operator ==(const algo::Smallstr16 &rhs) const {
+    return algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
+}
+
+// --- algo.Smallstr16..NeOp
+inline bool algo::Smallstr16::operator !=(const algo::Smallstr16 &rhs) const {
+    return !algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
 }
 
 // --- algo.Smallstr16..Cmp
@@ -17159,26 +17481,28 @@ inline bool algo::Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr16..EqStrptr
-inline bool algo::Smallstr16_EqStrptr(const algo::Smallstr16& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr16..EqOpAryptr
+inline bool algo::Smallstr16::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr2::operator ==(const algo::Smallstr2 &rhs) const {
-    return algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
+// --- algo.Smallstr16..AssignOp
+inline algo::Smallstr16& algo::Smallstr16::operator =(const algo::Smallstr16 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr2::operator !=(const algo::Smallstr2 &rhs) const {
-    return !algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
+// --- algo.Smallstr16..Ctor
+inline  algo::Smallstr16::Smallstr16() {
+    algo::Smallstr16_Init(*this);
 }
 
-inline bool algo::Smallstr2::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr2_EqStrptr(const_cast<algo::Smallstr2&>(*this),rhs);
+// --- algo.Smallstr16..CopyCtor
+inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr2::Smallstr2() {
-    algo::Smallstr2_Init(*this);
-}
-
 
 // --- algo.Smallstr2.ch.Add
 // Append character to string.
@@ -17240,27 +17564,24 @@ inline void algo::Smallstr2::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr2.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr2::operator =(const algo::Smallstr2& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr2.ch.Ctor
-inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr2.ch.CtorStrptr
 inline  algo::Smallstr2::Smallstr2(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr2.ch.Cast
-inline algo::Smallstr2::operator algo::strptr () const {
+inline  algo::Smallstr2::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr2..EqOp
+inline bool algo::Smallstr2::operator ==(const algo::Smallstr2 &rhs) const {
+    return algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
+}
+
+// --- algo.Smallstr2..NeOp
+inline bool algo::Smallstr2::operator !=(const algo::Smallstr2 &rhs) const {
+    return !algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
 }
 
 // --- algo.Smallstr2..Cmp
@@ -17283,42 +17604,28 @@ inline bool algo::Smallstr2_Eq(algo::Smallstr2& lhs, algo::Smallstr2& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr2..EqStrptr
-inline bool algo::Smallstr2_EqStrptr(const algo::Smallstr2& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr2..EqOpAryptr
+inline bool algo::Smallstr2::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr20::operator ==(const algo::Smallstr20 &rhs) const {
-    return algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+// --- algo.Smallstr2..AssignOp
+inline algo::Smallstr2& algo::Smallstr2::operator =(const algo::Smallstr2 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr20::operator !=(const algo::Smallstr20 &rhs) const {
-    return !algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+// --- algo.Smallstr2..Ctor
+inline  algo::Smallstr2::Smallstr2() {
+    algo::Smallstr2_Init(*this);
 }
 
-inline bool algo::Smallstr20::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr20_EqStrptr(const_cast<algo::Smallstr20&>(*this),rhs);
+// --- algo.Smallstr2..CopyCtor
+inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-
-inline bool algo::Smallstr20::operator <(const algo::Smallstr20 &rhs) const {
-    return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
-}
-
-inline bool algo::Smallstr20::operator >(const algo::Smallstr20 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::Smallstr20::operator <=(const algo::Smallstr20 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::Smallstr20::operator >=(const algo::Smallstr20 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::Smallstr20::Smallstr20() {
-    algo::Smallstr20_Init(*this);
-}
-
 
 // --- algo.Smallstr20.ch.Add
 // Append character to string.
@@ -17380,27 +17687,44 @@ inline void algo::Smallstr20::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr20.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr20::operator =(const algo::Smallstr20& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr20.ch.Ctor
-inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr20.ch.CtorStrptr
 inline  algo::Smallstr20::Smallstr20(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr20.ch.Cast
-inline algo::Smallstr20::operator algo::strptr () const {
+inline  algo::Smallstr20::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr20..EqOp
+inline bool algo::Smallstr20::operator ==(const algo::Smallstr20 &rhs) const {
+    return algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+}
+
+// --- algo.Smallstr20..NeOp
+inline bool algo::Smallstr20::operator !=(const algo::Smallstr20 &rhs) const {
+    return !algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+}
+
+// --- algo.Smallstr20..LtOp
+inline bool algo::Smallstr20::operator <(const algo::Smallstr20 &rhs) const {
+    return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
+}
+
+// --- algo.Smallstr20..GtOp
+inline bool algo::Smallstr20::operator >(const algo::Smallstr20 &rhs) const {
+    return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(rhs),const_cast<algo::Smallstr20&>(*this));
+}
+
+// --- algo.Smallstr20..LeOp
+inline bool algo::Smallstr20::operator <=(const algo::Smallstr20 &rhs) const {
+    return !algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(rhs),const_cast<algo::Smallstr20&>(*this));
+}
+
+// --- algo.Smallstr20..GeOp
+inline bool algo::Smallstr20::operator >=(const algo::Smallstr20 &rhs) const {
+    return !algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 // --- algo.Smallstr20..Lt
@@ -17438,26 +17762,28 @@ inline bool algo::Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& rhs
     return ret;
 }
 
-// --- algo.Smallstr20..EqStrptr
-inline bool algo::Smallstr20_EqStrptr(const algo::Smallstr20& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr20..EqOpAryptr
+inline bool algo::Smallstr20::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr200::operator ==(const algo::Smallstr200 &rhs) const {
-    return algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
+// --- algo.Smallstr20..AssignOp
+inline algo::Smallstr20& algo::Smallstr20::operator =(const algo::Smallstr20 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr200::operator !=(const algo::Smallstr200 &rhs) const {
-    return !algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
+// --- algo.Smallstr20..Ctor
+inline  algo::Smallstr20::Smallstr20() {
+    algo::Smallstr20_Init(*this);
 }
 
-inline bool algo::Smallstr200::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr200_EqStrptr(const_cast<algo::Smallstr200&>(*this),rhs);
+// --- algo.Smallstr20..CopyCtor
+inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr200::Smallstr200() {
-    algo::Smallstr200_Init(*this);
-}
-
 
 // --- algo.Smallstr200.ch.Add
 // Append character to string.
@@ -17519,27 +17845,24 @@ inline void algo::Smallstr200::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr200.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr200::operator =(const algo::Smallstr200& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr200.ch.Ctor
-inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr200.ch.CtorStrptr
 inline  algo::Smallstr200::Smallstr200(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr200.ch.Cast
-inline algo::Smallstr200::operator algo::strptr () const {
+inline  algo::Smallstr200::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr200..EqOp
+inline bool algo::Smallstr200::operator ==(const algo::Smallstr200 &rhs) const {
+    return algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
+}
+
+// --- algo.Smallstr200..NeOp
+inline bool algo::Smallstr200::operator !=(const algo::Smallstr200 &rhs) const {
+    return !algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
 }
 
 // --- algo.Smallstr200..Cmp
@@ -17562,26 +17885,28 @@ inline bool algo::Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& rhs)
     return retval;
 }
 
-// --- algo.Smallstr200..EqStrptr
-inline bool algo::Smallstr200_EqStrptr(const algo::Smallstr200& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr200..EqOpAryptr
+inline bool algo::Smallstr200::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr25::operator ==(const algo::Smallstr25 &rhs) const {
-    return algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
+// --- algo.Smallstr200..AssignOp
+inline algo::Smallstr200& algo::Smallstr200::operator =(const algo::Smallstr200 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr25::operator !=(const algo::Smallstr25 &rhs) const {
-    return !algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
+// --- algo.Smallstr200..Ctor
+inline  algo::Smallstr200::Smallstr200() {
+    algo::Smallstr200_Init(*this);
 }
 
-inline bool algo::Smallstr25::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr25_EqStrptr(const_cast<algo::Smallstr25&>(*this),rhs);
+// --- algo.Smallstr200..CopyCtor
+inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr25::Smallstr25() {
-    algo::Smallstr25_Init(*this);
-}
-
 
 // --- algo.Smallstr25.ch.Add
 // Append character to string.
@@ -17643,27 +17968,24 @@ inline void algo::Smallstr25::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr25.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr25::operator =(const algo::Smallstr25& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr25.ch.Ctor
-inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr25.ch.CtorStrptr
 inline  algo::Smallstr25::Smallstr25(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr25.ch.Cast
-inline algo::Smallstr25::operator algo::strptr () const {
+inline  algo::Smallstr25::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr25..EqOp
+inline bool algo::Smallstr25::operator ==(const algo::Smallstr25 &rhs) const {
+    return algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
+}
+
+// --- algo.Smallstr25..NeOp
+inline bool algo::Smallstr25::operator !=(const algo::Smallstr25 &rhs) const {
+    return !algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
 }
 
 // --- algo.Smallstr25..Cmp
@@ -17686,26 +18008,28 @@ inline bool algo::Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr25..EqStrptr
-inline bool algo::Smallstr25_EqStrptr(const algo::Smallstr25& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr25..EqOpAryptr
+inline bool algo::Smallstr25::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const {
-    return algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
+// --- algo.Smallstr25..AssignOp
+inline algo::Smallstr25& algo::Smallstr25::operator =(const algo::Smallstr25 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr3::operator !=(const algo::Smallstr3 &rhs) const {
-    return !algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
+// --- algo.Smallstr25..Ctor
+inline  algo::Smallstr25::Smallstr25() {
+    algo::Smallstr25_Init(*this);
 }
 
-inline bool algo::Smallstr3::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr3_EqStrptr(const_cast<algo::Smallstr3&>(*this),rhs);
+// --- algo.Smallstr25..CopyCtor
+inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr3::Smallstr3() {
-    algo::Smallstr3_Init(*this);
-}
-
 
 // --- algo.Smallstr3.ch.Add
 // Append character to string.
@@ -17767,27 +18091,24 @@ inline void algo::Smallstr3::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr3.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr3::operator =(const algo::Smallstr3& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr3.ch.Ctor
-inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr3.ch.CtorStrptr
 inline  algo::Smallstr3::Smallstr3(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr3.ch.Cast
-inline algo::Smallstr3::operator algo::strptr () const {
+inline  algo::Smallstr3::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr3..EqOp
+inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const {
+    return algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
+}
+
+// --- algo.Smallstr3..NeOp
+inline bool algo::Smallstr3::operator !=(const algo::Smallstr3 &rhs) const {
+    return !algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
 }
 
 // --- algo.Smallstr3..Cmp
@@ -17810,42 +18131,28 @@ inline bool algo::Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr3..EqStrptr
-inline bool algo::Smallstr3_EqStrptr(const algo::Smallstr3& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr3..EqOpAryptr
+inline bool algo::Smallstr3::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr30::operator ==(const algo::Smallstr30 &rhs) const {
-    return algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+// --- algo.Smallstr3..AssignOp
+inline algo::Smallstr3& algo::Smallstr3::operator =(const algo::Smallstr3 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr30::operator !=(const algo::Smallstr30 &rhs) const {
-    return !algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+// --- algo.Smallstr3..Ctor
+inline  algo::Smallstr3::Smallstr3() {
+    algo::Smallstr3_Init(*this);
 }
 
-inline bool algo::Smallstr30::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr30_EqStrptr(const_cast<algo::Smallstr30&>(*this),rhs);
+// --- algo.Smallstr3..CopyCtor
+inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-
-inline bool algo::Smallstr30::operator <(const algo::Smallstr30 &rhs) const {
-    return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
-}
-
-inline bool algo::Smallstr30::operator >(const algo::Smallstr30 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::Smallstr30::operator <=(const algo::Smallstr30 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::Smallstr30::operator >=(const algo::Smallstr30 &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::Smallstr30::Smallstr30() {
-    algo::Smallstr30_Init(*this);
-}
-
 
 // --- algo.Smallstr30.ch.Add
 // Append character to string.
@@ -17907,27 +18214,44 @@ inline void algo::Smallstr30::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr30.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr30::operator =(const algo::Smallstr30& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr30.ch.Ctor
-inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr30.ch.CtorStrptr
 inline  algo::Smallstr30::Smallstr30(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr30.ch.Cast
-inline algo::Smallstr30::operator algo::strptr () const {
+inline  algo::Smallstr30::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr30..EqOp
+inline bool algo::Smallstr30::operator ==(const algo::Smallstr30 &rhs) const {
+    return algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+}
+
+// --- algo.Smallstr30..NeOp
+inline bool algo::Smallstr30::operator !=(const algo::Smallstr30 &rhs) const {
+    return !algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+}
+
+// --- algo.Smallstr30..LtOp
+inline bool algo::Smallstr30::operator <(const algo::Smallstr30 &rhs) const {
+    return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
+}
+
+// --- algo.Smallstr30..GtOp
+inline bool algo::Smallstr30::operator >(const algo::Smallstr30 &rhs) const {
+    return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(rhs),const_cast<algo::Smallstr30&>(*this));
+}
+
+// --- algo.Smallstr30..LeOp
+inline bool algo::Smallstr30::operator <=(const algo::Smallstr30 &rhs) const {
+    return !algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(rhs),const_cast<algo::Smallstr30&>(*this));
+}
+
+// --- algo.Smallstr30..GeOp
+inline bool algo::Smallstr30::operator >=(const algo::Smallstr30 &rhs) const {
+    return !algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 // --- algo.Smallstr30..Lt
@@ -17965,26 +18289,28 @@ inline bool algo::Smallstr30_Update(algo::Smallstr30 &lhs, algo::Smallstr30& rhs
     return ret;
 }
 
-// --- algo.Smallstr30..EqStrptr
-inline bool algo::Smallstr30_EqStrptr(const algo::Smallstr30& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr30..EqOpAryptr
+inline bool algo::Smallstr30::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr32::operator ==(const algo::Smallstr32 &rhs) const {
-    return algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
+// --- algo.Smallstr30..AssignOp
+inline algo::Smallstr30& algo::Smallstr30::operator =(const algo::Smallstr30 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr32::operator !=(const algo::Smallstr32 &rhs) const {
-    return !algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
+// --- algo.Smallstr30..Ctor
+inline  algo::Smallstr30::Smallstr30() {
+    algo::Smallstr30_Init(*this);
 }
 
-inline bool algo::Smallstr32::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr32_EqStrptr(const_cast<algo::Smallstr32&>(*this),rhs);
+// --- algo.Smallstr30..CopyCtor
+inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr32::Smallstr32() {
-    algo::Smallstr32_Init(*this);
-}
-
 
 // --- algo.Smallstr32.ch.Add
 // Append character to string.
@@ -18046,27 +18372,24 @@ inline void algo::Smallstr32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr32::operator =(const algo::Smallstr32& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr32.ch.Ctor
-inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr32.ch.CtorStrptr
 inline  algo::Smallstr32::Smallstr32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr32.ch.Cast
-inline algo::Smallstr32::operator algo::strptr () const {
+inline  algo::Smallstr32::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr32..EqOp
+inline bool algo::Smallstr32::operator ==(const algo::Smallstr32 &rhs) const {
+    return algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
+}
+
+// --- algo.Smallstr32..NeOp
+inline bool algo::Smallstr32::operator !=(const algo::Smallstr32 &rhs) const {
+    return !algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
 }
 
 // --- algo.Smallstr32..Cmp
@@ -18089,26 +18412,28 @@ inline bool algo::Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr32..EqStrptr
-inline bool algo::Smallstr32_EqStrptr(const algo::Smallstr32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr32..EqOpAryptr
+inline bool algo::Smallstr32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr4::operator ==(const algo::Smallstr4 &rhs) const {
-    return algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
+// --- algo.Smallstr32..AssignOp
+inline algo::Smallstr32& algo::Smallstr32::operator =(const algo::Smallstr32 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr4::operator !=(const algo::Smallstr4 &rhs) const {
-    return !algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
+// --- algo.Smallstr32..Ctor
+inline  algo::Smallstr32::Smallstr32() {
+    algo::Smallstr32_Init(*this);
 }
 
-inline bool algo::Smallstr4::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr4_EqStrptr(const_cast<algo::Smallstr4&>(*this),rhs);
+// --- algo.Smallstr32..CopyCtor
+inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr4::Smallstr4() {
-    algo::Smallstr4_Init(*this);
-}
-
 
 // --- algo.Smallstr4.ch.Add
 // Append character to string.
@@ -18170,27 +18495,24 @@ inline void algo::Smallstr4::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr4.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr4::operator =(const algo::Smallstr4& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr4.ch.Ctor
-inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr4.ch.CtorStrptr
 inline  algo::Smallstr4::Smallstr4(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr4.ch.Cast
-inline algo::Smallstr4::operator algo::strptr () const {
+inline  algo::Smallstr4::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr4..EqOp
+inline bool algo::Smallstr4::operator ==(const algo::Smallstr4 &rhs) const {
+    return algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
+}
+
+// --- algo.Smallstr4..NeOp
+inline bool algo::Smallstr4::operator !=(const algo::Smallstr4 &rhs) const {
+    return !algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
 }
 
 // --- algo.Smallstr4..Cmp
@@ -18213,26 +18535,28 @@ inline bool algo::Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr4..EqStrptr
-inline bool algo::Smallstr4_EqStrptr(const algo::Smallstr4& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr4..EqOpAryptr
+inline bool algo::Smallstr4::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr40::operator ==(const algo::Smallstr40 &rhs) const {
-    return algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
+// --- algo.Smallstr4..AssignOp
+inline algo::Smallstr4& algo::Smallstr4::operator =(const algo::Smallstr4 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr40::operator !=(const algo::Smallstr40 &rhs) const {
-    return !algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
+// --- algo.Smallstr4..Ctor
+inline  algo::Smallstr4::Smallstr4() {
+    algo::Smallstr4_Init(*this);
 }
 
-inline bool algo::Smallstr40::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr40_EqStrptr(const_cast<algo::Smallstr40&>(*this),rhs);
+// --- algo.Smallstr4..CopyCtor
+inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr40::Smallstr40() {
-    algo::Smallstr40_Init(*this);
-}
-
 
 // --- algo.Smallstr40.ch.Add
 // Append character to string.
@@ -18294,27 +18618,24 @@ inline void algo::Smallstr40::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr40.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr40::operator =(const algo::Smallstr40& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr40.ch.Ctor
-inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr40.ch.CtorStrptr
 inline  algo::Smallstr40::Smallstr40(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr40.ch.Cast
-inline algo::Smallstr40::operator algo::strptr () const {
+inline  algo::Smallstr40::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr40..EqOp
+inline bool algo::Smallstr40::operator ==(const algo::Smallstr40 &rhs) const {
+    return algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
+}
+
+// --- algo.Smallstr40..NeOp
+inline bool algo::Smallstr40::operator !=(const algo::Smallstr40 &rhs) const {
+    return !algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
 }
 
 // --- algo.Smallstr40..Cmp
@@ -18337,26 +18658,28 @@ inline bool algo::Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr40..EqStrptr
-inline bool algo::Smallstr40_EqStrptr(const algo::Smallstr40& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- algo.Smallstr40..EqOpAryptr
+inline bool algo::Smallstr40::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool algo::Smallstr5::operator ==(const algo::Smallstr5 &rhs) const {
-    return algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
+// --- algo.Smallstr40..AssignOp
+inline algo::Smallstr40& algo::Smallstr40::operator =(const algo::Smallstr40 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool algo::Smallstr5::operator !=(const algo::Smallstr5 &rhs) const {
-    return !algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
+// --- algo.Smallstr40..Ctor
+inline  algo::Smallstr40::Smallstr40() {
+    algo::Smallstr40_Init(*this);
 }
 
-inline bool algo::Smallstr5::operator ==(const algo::strptr &rhs) const {
-    return algo::Smallstr5_EqStrptr(const_cast<algo::Smallstr5&>(*this),rhs);
+// --- algo.Smallstr40..CopyCtor
+inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-inline algo::Smallstr5::Smallstr5() {
-    algo::Smallstr5_Init(*this);
-}
-
 
 // --- algo.Smallstr5.ch.Add
 // Append character to string.
@@ -18418,27 +18741,24 @@ inline void algo::Smallstr5::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- algo.Smallstr5.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void algo::Smallstr5::operator =(const algo::Smallstr5& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- algo.Smallstr5.ch.Ctor
-inline  algo::Smallstr5::Smallstr5(const algo::Smallstr5 &rhs) {
-    operator =(rhs);
-}
-
 // --- algo.Smallstr5.ch.CtorStrptr
 inline  algo::Smallstr5::Smallstr5(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr5.ch.Cast
-inline algo::Smallstr5::operator algo::strptr () const {
+inline  algo::Smallstr5::operator algo::strptr() const {
     return ch_Getary(*this);
+}
+
+// --- algo.Smallstr5..EqOp
+inline bool algo::Smallstr5::operator ==(const algo::Smallstr5 &rhs) const {
+    return algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
+}
+
+// --- algo.Smallstr5..NeOp
+inline bool algo::Smallstr5::operator !=(const algo::Smallstr5 &rhs) const {
+    return !algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
 }
 
 // --- algo.Smallstr5..Cmp
@@ -18461,18 +18781,28 @@ inline bool algo::Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) {
     return retval;
 }
 
-// --- algo.Smallstr5..EqStrptr
-inline bool algo::Smallstr5_EqStrptr(const algo::Smallstr5& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline algo::StringAry::StringAry() {
-    algo::StringAry_Init(*this);
+// --- algo.Smallstr5..EqOpAryptr
+inline bool algo::Smallstr5::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline algo::StringAry::~StringAry() {
-    algo::StringAry_Uninit(*this);
+// --- algo.Smallstr5..AssignOp
+inline algo::Smallstr5& algo::Smallstr5::operator =(const algo::Smallstr5 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
+// --- algo.Smallstr5..Ctor
+inline  algo::Smallstr5::Smallstr5() {
+    algo::Smallstr5_Init(*this);
+}
+
+// --- algo.Smallstr5..CopyCtor
+inline  algo::Smallstr5::Smallstr5(const algo::Smallstr5 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
 
 // --- algo.StringAry.ary.EmptyQ
 // Return true if index is empty
@@ -18499,6 +18829,20 @@ inline algo::aryptr<algo::cstring> algo::ary_Getary(const algo::StringAry& paren
 // Return pointer to last element of array, or NULL if array is empty
 inline algo::cstring* algo::ary_Last(algo::StringAry& parent) {
     return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.StringAry.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::StringAry::operator =(const algo::aryptr<algo::cstring> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.StringAry.ary.CtorAryptr
+inline  algo::StringAry::StringAry(const algo::aryptr<algo::cstring> &rhs) {
+    ary_elems 	= 0; // (algo.StringAry.ary)
+    ary_n     	= 0; // (algo.StringAry.ary)
+    ary_max   	= 0; // (algo.StringAry.ary)
+    ary_Addary(*this, rhs);
 }
 
 // --- algo.StringAry.ary.Max
@@ -18574,15 +18918,16 @@ inline void algo::StringAry_Init(algo::StringAry& parent) {
     parent.ary_n     	= 0; // (algo.StringAry.ary)
     parent.ary_max   	= 0; // (algo.StringAry.ary)
 }
-inline algo::TermStyle::TermStyle(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::TermStyle::TermStyle(algo_TermStyleEnum arg) { this->value = u32(arg); }
-inline algo::TermStyle::TermStyle() {
-    algo::TermStyle_Init(*this);
+
+// --- algo.StringAry..Ctor
+inline  algo::StringAry::StringAry() {
+    algo::StringAry_Init(*this);
 }
 
+// --- algo.StringAry..Dtor
+inline  algo::StringAry::~StringAry() {
+    algo::StringAry_Uninit(*this);
+}
 
 // --- algo.TermStyle.value.GetEnum
 // Get value of field as enum type
@@ -18597,7 +18942,7 @@ inline void algo::value_SetEnum(algo::TermStyle& parent, algo_TermStyleEnum rhs)
 }
 
 // --- algo.TermStyle.value.Cast
-inline algo::TermStyle::operator algo_TermStyleEnum () const {
+inline  algo::TermStyle::operator algo_TermStyleEnum() const {
     return algo_TermStyleEnum((*this).value);
 }
 
@@ -18606,15 +18951,22 @@ inline algo::TermStyle::operator algo_TermStyleEnum () const {
 inline void algo::TermStyle_Init(algo::TermStyle& parent) {
     parent.value = u32(0);
 }
-inline algo::TextJust::TextJust(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::TextJust::TextJust(algo_TextJustEnum arg) { this->value = i32(arg); }
-inline algo::TextJust::TextJust() {
-    algo::TextJust_Init(*this);
+
+// --- algo.TermStyle..Ctor
+inline  algo::TermStyle::TermStyle() {
+    algo::TermStyle_Init(*this);
 }
 
+// --- algo.TermStyle..FieldwiseCtor
+inline  algo::TermStyle::TermStyle(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.TermStyle..EnumCtor
+inline  algo::TermStyle::TermStyle(algo_TermStyleEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- algo.TextJust.value.GetEnum
 // Get value of field as enum type
@@ -18629,7 +18981,7 @@ inline void algo::value_SetEnum(algo::TextJust& parent, algo_TextJustEnum rhs) {
 }
 
 // --- algo.TextJust.value.Cast
-inline algo::TextJust::operator algo_TextJustEnum () const {
+inline  algo::TextJust::operator algo_TextJustEnum() const {
     return algo_TextJustEnum((*this).value);
 }
 
@@ -18638,18 +18990,27 @@ inline algo::TextJust::operator algo_TextJustEnum () const {
 inline void algo::TextJust_Init(algo::TextJust& parent) {
     parent.value = i32(0);
 }
-inline algo::TstampCache::TstampCache() {
+
+// --- algo.TextJust..Ctor
+inline  algo::TextJust::TextJust() {
+    algo::TextJust_Init(*this);
+}
+
+// --- algo.TextJust..FieldwiseCtor
+inline  algo::TextJust::TextJust(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.TextJust..EnumCtor
+inline  algo::TextJust::TextJust(algo_TextJustEnum arg) {
+    this->value = i32(arg);
+}
+
+// --- algo.TstampCache..Ctor
+inline  algo::TstampCache::TstampCache() {
     algo::TstampCache_Init(*this);
 }
-
-inline algo::Tuple::Tuple() {
-    algo::Tuple_Init(*this);
-}
-
-inline algo::Tuple::~Tuple() {
-    algo::Tuple_Uninit(*this);
-}
-
 
 // --- algo.Tuple.attrs.EmptyQ
 // Return true if index is empty
@@ -18751,14 +19112,16 @@ inline void algo::Tuple_Init(algo::Tuple& parent) {
     parent.attrs_n     	= 0; // (algo.Tuple.attrs)
     parent.attrs_max   	= 0; // (algo.Tuple.attrs)
 }
-inline algo::U16Dec2::U16Dec2(u16                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U16Dec2::U16Dec2() {
-    algo::U16Dec2_Init(*this);
+
+// --- algo.Tuple..Ctor
+inline  algo::Tuple::Tuple() {
+    algo::Tuple_Init(*this);
 }
 
+// --- algo.Tuple..Dtor
+inline  algo::Tuple::~Tuple() {
+    algo::Tuple_Uninit(*this);
+}
 
 // --- algo.U16Dec2.value.qSetDouble
 // Set value of field value.
@@ -18795,7 +19158,7 @@ inline u16 algo::U16Dec2_GetScale() {
 }
 
 // --- algo.U16Dec2.value.Cast
-inline algo::U16Dec2::operator u16 () const {
+inline  algo::U16Dec2::operator u16() const {
     return u16((*this).value);
 }
 
@@ -18810,14 +19173,17 @@ inline u32 algo::U16Dec2_Hash(u32 prev, algo::U16Dec2 rhs) {
 inline void algo::U16Dec2_Init(algo::U16Dec2& parent) {
     parent.value = u16(0);
 }
-inline algo::U32Dec1::U32Dec1(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U32Dec1::U32Dec1() {
-    algo::U32Dec1_Init(*this);
+
+// --- algo.U16Dec2..Ctor
+inline  algo::U16Dec2::U16Dec2() {
+    algo::U16Dec2_Init(*this);
 }
 
+// --- algo.U16Dec2..FieldwiseCtor
+inline  algo::U16Dec2::U16Dec2(u16 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U32Dec1.value.qSetDouble
 // Set value of field value.
@@ -18854,7 +19220,7 @@ inline u32 algo::U32Dec1_GetScale() {
 }
 
 // --- algo.U32Dec1.value.Cast
-inline algo::U32Dec1::operator u32 () const {
+inline  algo::U32Dec1::operator u32() const {
     return u32((*this).value);
 }
 
@@ -18869,14 +19235,17 @@ inline u32 algo::U32Dec1_Hash(u32 prev, algo::U32Dec1 rhs) {
 inline void algo::U32Dec1_Init(algo::U32Dec1& parent) {
     parent.value = u32(0);
 }
-inline algo::U32Dec2::U32Dec2(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U32Dec2::U32Dec2() {
-    algo::U32Dec2_Init(*this);
+
+// --- algo.U32Dec1..Ctor
+inline  algo::U32Dec1::U32Dec1() {
+    algo::U32Dec1_Init(*this);
 }
 
+// --- algo.U32Dec1..FieldwiseCtor
+inline  algo::U32Dec1::U32Dec1(u32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U32Dec2.value.qSetDouble
 // Set value of field value.
@@ -18913,7 +19282,7 @@ inline u32 algo::U32Dec2_GetScale() {
 }
 
 // --- algo.U32Dec2.value.Cast
-inline algo::U32Dec2::operator u32 () const {
+inline  algo::U32Dec2::operator u32() const {
     return u32((*this).value);
 }
 
@@ -18928,14 +19297,17 @@ inline u32 algo::U32Dec2_Hash(u32 prev, algo::U32Dec2 rhs) {
 inline void algo::U32Dec2_Init(algo::U32Dec2& parent) {
     parent.value = u32(0);
 }
-inline algo::U32Dec3::U32Dec3(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U32Dec3::U32Dec3() {
-    algo::U32Dec3_Init(*this);
+
+// --- algo.U32Dec2..Ctor
+inline  algo::U32Dec2::U32Dec2() {
+    algo::U32Dec2_Init(*this);
 }
 
+// --- algo.U32Dec2..FieldwiseCtor
+inline  algo::U32Dec2::U32Dec2(u32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U32Dec3.value.qSetDouble
 // Set value of field value.
@@ -18972,7 +19344,7 @@ inline u32 algo::U32Dec3_GetScale() {
 }
 
 // --- algo.U32Dec3.value.Cast
-inline algo::U32Dec3::operator u32 () const {
+inline  algo::U32Dec3::operator u32() const {
     return u32((*this).value);
 }
 
@@ -18987,14 +19359,17 @@ inline u32 algo::U32Dec3_Hash(u32 prev, algo::U32Dec3 rhs) {
 inline void algo::U32Dec3_Init(algo::U32Dec3& parent) {
     parent.value = u32(0);
 }
-inline algo::U32Dec4::U32Dec4(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U32Dec4::U32Dec4() {
-    algo::U32Dec4_Init(*this);
+
+// --- algo.U32Dec3..Ctor
+inline  algo::U32Dec3::U32Dec3() {
+    algo::U32Dec3_Init(*this);
 }
 
+// --- algo.U32Dec3..FieldwiseCtor
+inline  algo::U32Dec3::U32Dec3(u32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U32Dec4.value.qSetDouble
 // Set value of field value.
@@ -19031,7 +19406,7 @@ inline u32 algo::U32Dec4_GetScale() {
 }
 
 // --- algo.U32Dec4.value.Cast
-inline algo::U32Dec4::operator u32 () const {
+inline  algo::U32Dec4::operator u32() const {
     return u32((*this).value);
 }
 
@@ -19046,14 +19421,17 @@ inline u32 algo::U32Dec4_Hash(u32 prev, algo::U32Dec4 rhs) {
 inline void algo::U32Dec4_Init(algo::U32Dec4& parent) {
     parent.value = u32(0);
 }
-inline algo::U32Dec5::U32Dec5(u32                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U32Dec5::U32Dec5() {
-    algo::U32Dec5_Init(*this);
+
+// --- algo.U32Dec4..Ctor
+inline  algo::U32Dec4::U32Dec4() {
+    algo::U32Dec4_Init(*this);
 }
 
+// --- algo.U32Dec4..FieldwiseCtor
+inline  algo::U32Dec4::U32Dec4(u32 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U32Dec5.value.qSetDouble
 // Set value of field value.
@@ -19090,7 +19468,7 @@ inline u32 algo::U32Dec5_GetScale() {
 }
 
 // --- algo.U32Dec5.value.Cast
-inline algo::U32Dec5::operator u32 () const {
+inline  algo::U32Dec5::operator u32() const {
     return u32((*this).value);
 }
 
@@ -19105,14 +19483,17 @@ inline u32 algo::U32Dec5_Hash(u32 prev, algo::U32Dec5 rhs) {
 inline void algo::U32Dec5_Init(algo::U32Dec5& parent) {
     parent.value = u32(0);
 }
-inline algo::U64Ary::U64Ary() {
-    algo::U64Ary_Init(*this);
+
+// --- algo.U32Dec5..Ctor
+inline  algo::U32Dec5::U32Dec5() {
+    algo::U32Dec5_Init(*this);
 }
 
-inline algo::U64Ary::~U64Ary() {
-    algo::U64Ary_Uninit(*this);
+// --- algo.U32Dec5..FieldwiseCtor
+inline  algo::U32Dec5::U32Dec5(u32 in_value)
+    : value(in_value)
+ {
 }
-
 
 // --- algo.U64Ary.ary.EmptyQ
 // Return true if index is empty
@@ -19139,6 +19520,20 @@ inline algo::aryptr<u64> algo::ary_Getary(const algo::U64Ary& parent) {
 // Return pointer to last element of array, or NULL if array is empty
 inline u64* algo::ary_Last(algo::U64Ary& parent) {
     return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.U64Ary.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::U64Ary::operator =(const algo::aryptr<u64> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.U64Ary.ary.CtorAryptr
+inline  algo::U64Ary::U64Ary(const algo::aryptr<u64> &rhs) {
+    ary_elems 	= 0; // (algo.U64Ary.ary)
+    ary_n     	= 0; // (algo.U64Ary.ary)
+    ary_max   	= 0; // (algo.U64Ary.ary)
+    ary_Addary(*this, rhs);
 }
 
 // --- algo.U64Ary.ary.Max
@@ -19219,14 +19614,16 @@ inline void algo::U64Ary_Init(algo::U64Ary& parent) {
     parent.ary_n     	= 0; // (algo.U64Ary.ary)
     parent.ary_max   	= 0; // (algo.U64Ary.ary)
 }
-inline algo::U64Dec10::U64Dec10(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec10::U64Dec10() {
-    algo::U64Dec10_Init(*this);
+
+// --- algo.U64Ary..Ctor
+inline  algo::U64Ary::U64Ary() {
+    algo::U64Ary_Init(*this);
 }
 
+// --- algo.U64Ary..Dtor
+inline  algo::U64Ary::~U64Ary() {
+    algo::U64Ary_Uninit(*this);
+}
 
 // --- algo.U64Dec10.value.qSetDouble
 // Set value of field value.
@@ -19263,7 +19660,7 @@ inline u64 algo::U64Dec10_GetScale() {
 }
 
 // --- algo.U64Dec10.value.Cast
-inline algo::U64Dec10::operator u64 () const {
+inline  algo::U64Dec10::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19278,14 +19675,17 @@ inline u32 algo::U64Dec10_Hash(u32 prev, algo::U64Dec10 rhs) {
 inline void algo::U64Dec10_Init(algo::U64Dec10& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec2::U64Dec2(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec2::U64Dec2() {
-    algo::U64Dec2_Init(*this);
+
+// --- algo.U64Dec10..Ctor
+inline  algo::U64Dec10::U64Dec10() {
+    algo::U64Dec10_Init(*this);
 }
 
+// --- algo.U64Dec10..FieldwiseCtor
+inline  algo::U64Dec10::U64Dec10(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec2.value.qSetDouble
 // Set value of field value.
@@ -19322,7 +19722,7 @@ inline u64 algo::U64Dec2_GetScale() {
 }
 
 // --- algo.U64Dec2.value.Cast
-inline algo::U64Dec2::operator u64 () const {
+inline  algo::U64Dec2::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19337,14 +19737,17 @@ inline u32 algo::U64Dec2_Hash(u32 prev, algo::U64Dec2 rhs) {
 inline void algo::U64Dec2_Init(algo::U64Dec2& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec4::U64Dec4(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec4::U64Dec4() {
-    algo::U64Dec4_Init(*this);
+
+// --- algo.U64Dec2..Ctor
+inline  algo::U64Dec2::U64Dec2() {
+    algo::U64Dec2_Init(*this);
 }
 
+// --- algo.U64Dec2..FieldwiseCtor
+inline  algo::U64Dec2::U64Dec2(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec4.value.qSetDouble
 // Set value of field value.
@@ -19381,7 +19784,7 @@ inline u64 algo::U64Dec4_GetScale() {
 }
 
 // --- algo.U64Dec4.value.Cast
-inline algo::U64Dec4::operator u64 () const {
+inline  algo::U64Dec4::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19396,14 +19799,17 @@ inline u32 algo::U64Dec4_Hash(u32 prev, algo::U64Dec4 rhs) {
 inline void algo::U64Dec4_Init(algo::U64Dec4& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec5::U64Dec5(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec5::U64Dec5() {
-    algo::U64Dec5_Init(*this);
+
+// --- algo.U64Dec4..Ctor
+inline  algo::U64Dec4::U64Dec4() {
+    algo::U64Dec4_Init(*this);
 }
 
+// --- algo.U64Dec4..FieldwiseCtor
+inline  algo::U64Dec4::U64Dec4(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec5.value.qSetDouble
 // Set value of field value.
@@ -19440,7 +19846,7 @@ inline u64 algo::U64Dec5_GetScale() {
 }
 
 // --- algo.U64Dec5.value.Cast
-inline algo::U64Dec5::operator u64 () const {
+inline  algo::U64Dec5::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19455,14 +19861,17 @@ inline u32 algo::U64Dec5_Hash(u32 prev, algo::U64Dec5 rhs) {
 inline void algo::U64Dec5_Init(algo::U64Dec5& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec6::U64Dec6(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec6::U64Dec6() {
-    algo::U64Dec6_Init(*this);
+
+// --- algo.U64Dec5..Ctor
+inline  algo::U64Dec5::U64Dec5() {
+    algo::U64Dec5_Init(*this);
 }
 
+// --- algo.U64Dec5..FieldwiseCtor
+inline  algo::U64Dec5::U64Dec5(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec6.value.qSetDouble
 // Set value of field value.
@@ -19499,7 +19908,7 @@ inline u64 algo::U64Dec6_GetScale() {
 }
 
 // --- algo.U64Dec6.value.Cast
-inline algo::U64Dec6::operator u64 () const {
+inline  algo::U64Dec6::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19514,14 +19923,17 @@ inline u32 algo::U64Dec6_Hash(u32 prev, algo::U64Dec6 rhs) {
 inline void algo::U64Dec6_Init(algo::U64Dec6& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec7::U64Dec7(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec7::U64Dec7() {
-    algo::U64Dec7_Init(*this);
+
+// --- algo.U64Dec6..Ctor
+inline  algo::U64Dec6::U64Dec6() {
+    algo::U64Dec6_Init(*this);
 }
 
+// --- algo.U64Dec6..FieldwiseCtor
+inline  algo::U64Dec6::U64Dec6(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec7.value.qSetDouble
 // Set value of field value.
@@ -19558,7 +19970,7 @@ inline u64 algo::U64Dec7_GetScale() {
 }
 
 // --- algo.U64Dec7.value.Cast
-inline algo::U64Dec7::operator u64 () const {
+inline  algo::U64Dec7::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19573,14 +19985,17 @@ inline u32 algo::U64Dec7_Hash(u32 prev, algo::U64Dec7 rhs) {
 inline void algo::U64Dec7_Init(algo::U64Dec7& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec8::U64Dec8(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec8::U64Dec8() {
-    algo::U64Dec8_Init(*this);
+
+// --- algo.U64Dec7..Ctor
+inline  algo::U64Dec7::U64Dec7() {
+    algo::U64Dec7_Init(*this);
 }
 
+// --- algo.U64Dec7..FieldwiseCtor
+inline  algo::U64Dec7::U64Dec7(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec8.value.qSetDouble
 // Set value of field value.
@@ -19627,14 +20042,17 @@ inline u32 algo::U64Dec8_Hash(u32 prev, algo::U64Dec8 rhs) {
 inline void algo::U64Dec8_Init(algo::U64Dec8& parent) {
     parent.value = u64(0);
 }
-inline algo::U64Dec9::U64Dec9(u64                            in_value)
-    : value(in_value)
-{
-}
-inline algo::U64Dec9::U64Dec9() {
-    algo::U64Dec9_Init(*this);
+
+// --- algo.U64Dec8..Ctor
+inline  algo::U64Dec8::U64Dec8() {
+    algo::U64Dec8_Init(*this);
 }
 
+// --- algo.U64Dec8..FieldwiseCtor
+inline  algo::U64Dec8::U64Dec8(u64 in_value)
+    : value(in_value)
+ {
+}
 
 // --- algo.U64Dec9.value.qSetDouble
 // Set value of field value.
@@ -19671,7 +20089,7 @@ inline u64 algo::U64Dec9_GetScale() {
 }
 
 // --- algo.U64Dec9.value.Cast
-inline algo::U64Dec9::operator u64 () const {
+inline  algo::U64Dec9::operator u64() const {
     return u64((*this).value);
 }
 
@@ -19686,14 +20104,32 @@ inline u32 algo::U64Dec9_Hash(u32 prev, algo::U64Dec9 rhs) {
 inline void algo::U64Dec9_Init(algo::U64Dec9& parent) {
     parent.value = u64(0);
 }
-inline algo::URL::URL(const algo::strptr&            in_protocol
-        ,const algo::strptr&            in_username
-        ,const algo::strptr&            in_password
-        ,const algo::strptr&            in_server
-        ,const algo::strptr&            in_dir
-        ,i32                            in_port
-        ,u32                            in_source_addr_host
-        ,const algo::strptr&            in_host)
+
+// --- algo.U64Dec9..Ctor
+inline  algo::U64Dec9::U64Dec9() {
+    algo::U64Dec9_Init(*this);
+}
+
+// --- algo.U64Dec9..FieldwiseCtor
+inline  algo::U64Dec9::U64Dec9(u64 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.URL..Init
+// Set all fields to initial values.
+inline void algo::URL_Init(algo::URL& parent) {
+    parent.port = i32(-1);
+    parent.source_addr_host = u32(0);
+}
+
+// --- algo.URL..Ctor
+inline  algo::URL::URL() {
+    algo::URL_Init(*this);
+}
+
+// --- algo.URL..FieldwiseCtor
+inline  algo::URL::URL(const algo::strptr& in_protocol, const algo::strptr& in_username, const algo::strptr& in_password, const algo::strptr& in_server, const algo::strptr& in_dir, i32 in_port, u32 in_source_addr_host, const algo::strptr& in_host)
     : protocol(in_protocol)
     , username(in_username)
     , password(in_password)
@@ -19702,56 +20138,43 @@ inline algo::URL::URL(const algo::strptr&            in_protocol
     , port(in_port)
     , source_addr_host(in_source_addr_host)
     , host(in_host)
-{
+ {
 }
-inline algo::URL::URL() {
-    algo::URL_Init(*this);
-}
-
-
-// --- algo.URL..Init
-// Set all fields to initial values.
-inline void algo::URL_Init(algo::URL& parent) {
-    parent.port = i32(-1);
-    parent.source_addr_host = u32(0);
-}
-inline algo::UnDiff::UnDiff(i64                            in_value)
-    : value(in_value)
-{
-}
-
-inline bool algo::UnDiff::operator ==(const algo::UnDiff &rhs) const {
-    return algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
-}
-
-inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const {
-    return !algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
-}
-
-inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const {
-    return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
-}
-
-inline bool algo::UnDiff::operator >(const algo::UnDiff &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::UnDiff::operator <=(const algo::UnDiff &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::UnDiff::operator >=(const algo::UnDiff &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::UnDiff::UnDiff() {
-    algo::UnDiff_Init(*this);
-}
-
 
 // --- algo.UnDiff..Hash
 inline u32 algo::UnDiff_Hash(u32 prev, algo::UnDiff rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.UnDiff..EqOp
+inline bool algo::UnDiff::operator ==(const algo::UnDiff &rhs) const {
+    return algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
+}
+
+// --- algo.UnDiff..NeOp
+inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const {
+    return !algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
+}
+
+// --- algo.UnDiff..LtOp
+inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const {
+    return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
+}
+
+// --- algo.UnDiff..GtOp
+inline bool algo::UnDiff::operator >(const algo::UnDiff &rhs) const {
+    return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(rhs),const_cast<algo::UnDiff&>(*this));
+}
+
+// --- algo.UnDiff..LeOp
+inline bool algo::UnDiff::operator <=(const algo::UnDiff &rhs) const {
+    return !algo::UnDiff_Lt(const_cast<algo::UnDiff&>(rhs),const_cast<algo::UnDiff&>(*this));
+}
+
+// --- algo.UnDiff..GeOp
+inline bool algo::UnDiff::operator >=(const algo::UnDiff &rhs) const {
+    return !algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 // --- algo.UnDiff..Lt
@@ -19820,43 +20243,52 @@ inline bool algo::UnDiff_Update(algo::UnDiff &lhs, algo::UnDiff rhs) {
     }
     return ret;
 }
-inline algo::UnixDiff::UnixDiff(i64                            in_value)
+
+// --- algo.UnDiff..Ctor
+inline  algo::UnDiff::UnDiff() {
+    algo::UnDiff_Init(*this);
+}
+
+// --- algo.UnDiff..FieldwiseCtor
+inline  algo::UnDiff::UnDiff(i64 in_value)
     : value(in_value)
-{
+ {
 }
-
-inline bool algo::UnixDiff::operator ==(const algo::UnixDiff &rhs) const {
-    return algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
-}
-
-inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const {
-    return !algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
-}
-
-inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const {
-    return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
-}
-
-inline bool algo::UnixDiff::operator >(const algo::UnixDiff &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::UnixDiff::operator <=(const algo::UnixDiff &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::UnixDiff::operator >=(const algo::UnixDiff &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::UnixDiff::UnixDiff() {
-    algo::UnixDiff_Init(*this);
-}
-
 
 // --- algo.UnixDiff..Hash
 inline u32 algo::UnixDiff_Hash(u32 prev, algo::UnixDiff rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.UnixDiff..EqOp
+inline bool algo::UnixDiff::operator ==(const algo::UnixDiff &rhs) const {
+    return algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
+}
+
+// --- algo.UnixDiff..NeOp
+inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const {
+    return !algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
+}
+
+// --- algo.UnixDiff..LtOp
+inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const {
+    return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
+}
+
+// --- algo.UnixDiff..GtOp
+inline bool algo::UnixDiff::operator >(const algo::UnixDiff &rhs) const {
+    return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(rhs),const_cast<algo::UnixDiff&>(*this));
+}
+
+// --- algo.UnixDiff..LeOp
+inline bool algo::UnixDiff::operator <=(const algo::UnixDiff &rhs) const {
+    return !algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(rhs),const_cast<algo::UnixDiff&>(*this));
+}
+
+// --- algo.UnixDiff..GeOp
+inline bool algo::UnixDiff::operator >=(const algo::UnixDiff &rhs) const {
+    return !algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
 // --- algo.UnixDiff..Lt
@@ -19925,43 +20357,52 @@ inline bool algo::UnixDiff_Update(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
     }
     return ret;
 }
-inline algo::UnixTime::UnixTime(i64                            in_value)
+
+// --- algo.UnixDiff..Ctor
+inline  algo::UnixDiff::UnixDiff() {
+    algo::UnixDiff_Init(*this);
+}
+
+// --- algo.UnixDiff..FieldwiseCtor
+inline  algo::UnixDiff::UnixDiff(i64 in_value)
     : value(in_value)
-{
+ {
 }
-
-inline bool algo::UnixTime::operator ==(const algo::UnixTime &rhs) const {
-    return algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
-}
-
-inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const {
-    return !algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
-}
-
-inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const {
-    return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
-}
-
-inline bool algo::UnixTime::operator >(const algo::UnixTime &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::UnixTime::operator <=(const algo::UnixTime &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::UnixTime::operator >=(const algo::UnixTime &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::UnixTime::UnixTime() {
-    algo::UnixTime_Init(*this);
-}
-
 
 // --- algo.UnixTime..Hash
 inline u32 algo::UnixTime_Hash(u32 prev, algo::UnixTime rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.UnixTime..EqOp
+inline bool algo::UnixTime::operator ==(const algo::UnixTime &rhs) const {
+    return algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
+}
+
+// --- algo.UnixTime..NeOp
+inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const {
+    return !algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
+}
+
+// --- algo.UnixTime..LtOp
+inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const {
+    return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
+}
+
+// --- algo.UnixTime..GtOp
+inline bool algo::UnixTime::operator >(const algo::UnixTime &rhs) const {
+    return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(rhs),const_cast<algo::UnixTime&>(*this));
+}
+
+// --- algo.UnixTime..LeOp
+inline bool algo::UnixTime::operator <=(const algo::UnixTime &rhs) const {
+    return !algo::UnixTime_Lt(const_cast<algo::UnixTime&>(rhs),const_cast<algo::UnixTime&>(*this));
+}
+
+// --- algo.UnixTime..GeOp
+inline bool algo::UnixTime::operator >=(const algo::UnixTime &rhs) const {
+    return !algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
 // --- algo.UnixTime..Lt
@@ -20030,43 +20471,52 @@ inline bool algo::UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) {
     }
     return ret;
 }
-inline algo::WDiff::WDiff(i64                            in_value)
+
+// --- algo.UnixTime..Ctor
+inline  algo::UnixTime::UnixTime() {
+    algo::UnixTime_Init(*this);
+}
+
+// --- algo.UnixTime..FieldwiseCtor
+inline  algo::UnixTime::UnixTime(i64 in_value)
     : value(in_value)
-{
+ {
 }
-
-inline bool algo::WDiff::operator ==(const algo::WDiff &rhs) const {
-    return algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
-}
-
-inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const {
-    return !algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
-}
-
-inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const {
-    return algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
-}
-
-inline bool algo::WDiff::operator >(const algo::WDiff &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::WDiff::operator <=(const algo::WDiff &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::WDiff::operator >=(const algo::WDiff &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::WDiff::WDiff() {
-    algo::WDiff_Init(*this);
-}
-
 
 // --- algo.WDiff..Hash
 inline u32 algo::WDiff_Hash(u32 prev, algo::WDiff rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.WDiff..EqOp
+inline bool algo::WDiff::operator ==(const algo::WDiff &rhs) const {
+    return algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+
+// --- algo.WDiff..NeOp
+inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const {
+    return !algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+
+// --- algo.WDiff..LtOp
+inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const {
+    return algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
+}
+
+// --- algo.WDiff..GtOp
+inline bool algo::WDiff::operator >(const algo::WDiff &rhs) const {
+    return algo::WDiff_Lt(const_cast<algo::WDiff&>(rhs),const_cast<algo::WDiff&>(*this));
+}
+
+// --- algo.WDiff..LeOp
+inline bool algo::WDiff::operator <=(const algo::WDiff &rhs) const {
+    return !algo::WDiff_Lt(const_cast<algo::WDiff&>(rhs),const_cast<algo::WDiff&>(*this));
+}
+
+// --- algo.WDiff..GeOp
+inline bool algo::WDiff::operator >=(const algo::WDiff &rhs) const {
+    return !algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
 
 // --- algo.WDiff..Lt
@@ -20135,43 +20585,52 @@ inline bool algo::WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) {
     }
     return ret;
 }
-inline algo::WTime::WTime(i64                            in_value)
+
+// --- algo.WDiff..Ctor
+inline  algo::WDiff::WDiff() {
+    algo::WDiff_Init(*this);
+}
+
+// --- algo.WDiff..FieldwiseCtor
+inline  algo::WDiff::WDiff(i64 in_value)
     : value(in_value)
-{
+ {
 }
-
-inline bool algo::WTime::operator ==(const algo::WTime &rhs) const {
-    return algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
-}
-
-inline bool algo::WTime::operator !=(const algo::WTime &rhs) const {
-    return !algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
-}
-
-inline bool algo::WTime::operator <(const algo::WTime &rhs) const {
-    return algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
-}
-
-inline bool algo::WTime::operator >(const algo::WTime &rhs) const {
-    return rhs < *this;
-}
-
-inline bool algo::WTime::operator <=(const algo::WTime &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool algo::WTime::operator >=(const algo::WTime &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::WTime::WTime() {
-    algo::WTime_Init(*this);
-}
-
 
 // --- algo.WTime..Hash
 inline u32 algo::WTime_Hash(u32 prev, algo::WTime rhs) {
     prev = i64_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- algo.WTime..EqOp
+inline bool algo::WTime::operator ==(const algo::WTime &rhs) const {
+    return algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+// --- algo.WTime..NeOp
+inline bool algo::WTime::operator !=(const algo::WTime &rhs) const {
+    return !algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+// --- algo.WTime..LtOp
+inline bool algo::WTime::operator <(const algo::WTime &rhs) const {
+    return algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
+}
+
+// --- algo.WTime..GtOp
+inline bool algo::WTime::operator >(const algo::WTime &rhs) const {
+    return algo::WTime_Lt(const_cast<algo::WTime&>(rhs),const_cast<algo::WTime&>(*this));
+}
+
+// --- algo.WTime..LeOp
+inline bool algo::WTime::operator <=(const algo::WTime &rhs) const {
+    return !algo::WTime_Lt(const_cast<algo::WTime&>(rhs),const_cast<algo::WTime&>(*this));
+}
+
+// --- algo.WTime..GeOp
+inline bool algo::WTime::operator >=(const algo::WTime &rhs) const {
+    return !algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
 }
 
 // --- algo.WTime..Lt
@@ -20240,46 +20699,53 @@ inline bool algo::WTime_Update(algo::WTime &lhs, algo::WTime rhs) {
     }
     return ret;
 }
-inline algo::i32_Range::i32_Range(i32                            in_beg
-        ,i32                            in_end)
-    : beg(in_beg)
-    , end(in_end)
-{
+
+// --- algo.WTime..Ctor
+inline  algo::WTime::WTime() {
+    algo::WTime_Init(*this);
 }
 
+// --- algo.WTime..FieldwiseCtor
+inline  algo::WTime::WTime(i64 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.i32_Range..Hash
+inline u32 algo::i32_Range_Hash(u32 prev, const algo::i32_Range& rhs) {
+    prev = i32_Hash(prev, rhs.beg);
+    prev = i32_Hash(prev, rhs.end);
+    return prev;
+}
+
+// --- algo.i32_Range..EqOp
 inline bool algo::i32_Range::operator ==(const algo::i32_Range &rhs) const {
     return algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
+// --- algo.i32_Range..NeOp
 inline bool algo::i32_Range::operator !=(const algo::i32_Range &rhs) const {
     return !algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
+// --- algo.i32_Range..LtOp
 inline bool algo::i32_Range::operator <(const algo::i32_Range &rhs) const {
     return algo::i32_Range_Lt(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
+// --- algo.i32_Range..GtOp
 inline bool algo::i32_Range::operator >(const algo::i32_Range &rhs) const {
-    return rhs < *this;
+    return algo::i32_Range_Lt(const_cast<algo::i32_Range&>(rhs),const_cast<algo::i32_Range&>(*this));
 }
 
+// --- algo.i32_Range..LeOp
 inline bool algo::i32_Range::operator <=(const algo::i32_Range &rhs) const {
-    return !(rhs < *this);
+    return !algo::i32_Range_Lt(const_cast<algo::i32_Range&>(rhs),const_cast<algo::i32_Range&>(*this));
 }
 
+// --- algo.i32_Range..GeOp
 inline bool algo::i32_Range::operator >=(const algo::i32_Range &rhs) const {
-    return !(*this < rhs);
-}
-inline algo::i32_Range::i32_Range() {
-    algo::i32_Range_Init(*this);
-}
-
-
-// --- algo.i32_Range..Hash
-inline u32 algo::i32_Range_Hash(u32 prev, const algo::i32_Range & rhs) {
-    prev = i32_Hash(prev, rhs.beg);
-    prev = i32_Hash(prev, rhs.end);
-    return prev;
+    return !algo::i32_Range_Lt(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 // --- algo.i32_Range..Lt
@@ -20324,6 +20790,18 @@ inline bool algo::i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range& rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- algo.i32_Range..Ctor
+inline  algo::i32_Range::i32_Range() {
+    algo::i32_Range_Init(*this);
+}
+
+// --- algo.i32_Range..FieldwiseCtor
+inline  algo::i32_Range::i32_Range(i32 in_beg, i32 in_end)
+    : beg(in_beg)
+    , end(in_end)
+ {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Attr &row) {// cfmt:algo.Attr.String

@@ -50,32 +50,38 @@ namespace lib_sql { // gen:ns_print_struct
 
 // --- lib_sql.FAttr
 // create: lib_sql.FDb.attr (Lary)
-// global access: ind_attr (Thash)
+// global access: attr (Lary, by rowid)
+// global access: ind_attr (Thash, hash field attr)
 struct FAttr { // lib_sql.FAttr
     algo::cstring     attr;            //
     bool              isbool;          //   false
     lib_sql::FAttr*   ind_attr_next;   // hash next
+    // func:lib_sql.FAttr..AssignOp
+    inline lib_sql::FAttr& operator =(const lib_sql::FAttr &rhs) = delete;
+    // func:lib_sql.FAttr..CopyCtor
+    inline               FAttr(const lib_sql::FAttr &rhs) = delete;
 private:
+    // func:lib_sql.FAttr..Ctor
+    inline               FAttr() __attribute__((nothrow));
+    // func:lib_sql.FAttr..Dtor
+    inline               ~FAttr() __attribute__((nothrow));
     friend lib_sql::FAttr&      attr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_sql::FAttr*      attr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 attr_RemoveAll() __attribute__((nothrow));
     friend void                 attr_RemoveLast() __attribute__((nothrow));
-    FAttr();
-    ~FAttr();
-    FAttr(const FAttr&){ /*disallow copy constructor */}
-    void operator =(const FAttr&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:lib_sql.FAttr..Init
-void                 FAttr_Init(lib_sql::FAttr& attr);
+inline void          FAttr_Init(lib_sql::FAttr& attr);
 // func:lib_sql.FAttr..Uninit
 void                 FAttr_Uninit(lib_sql::FAttr& attr) __attribute__((nothrow));
 
 // --- lib_sql.trace
 #pragma pack(push,1)
 struct trace { // lib_sql.trace
-    trace();
+    // func:lib_sql.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -136,16 +142,16 @@ lib_sql::FAttr*      attr_AllocMaybe() __attribute__((__warn_unused_result__, no
 void*                attr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:lib_sql.FDb.attr.EmptyQ
-bool                 attr_EmptyQ() __attribute__((nothrow, pure));
+inline bool          attr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:lib_sql.FDb.attr.Find
-lib_sql::FAttr*      attr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline lib_sql::FAttr* attr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_sql.FDb.attr.Last
-lib_sql::FAttr*      attr_Last() __attribute__((nothrow, pure));
+inline lib_sql::FAttr* attr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_sql.FDb.attr.N
-i32                  attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_sql.FDb.attr.RemoveAll
 void                 attr_RemoveAll() __attribute__((nothrow));
@@ -154,7 +160,7 @@ void                 attr_RemoveAll() __attribute__((nothrow));
 void                 attr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_sql.FDb.attr.qFind
-lib_sql::FAttr&      attr_qFind(u64 t) __attribute__((nothrow, pure));
+inline lib_sql::FAttr& attr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_sql.FDb.attr.XrefMaybe
@@ -162,7 +168,7 @@ bool                 attr_XrefMaybe(lib_sql::FAttr &row);
 
 // Return true if hash is empty
 // func:lib_sql.FDb.ind_attr.EmptyQ
-bool                 ind_attr_EmptyQ() __attribute__((nothrow));
+inline bool          ind_attr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_sql.FDb.ind_attr.Find
 lib_sql::FAttr*      ind_attr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -174,7 +180,7 @@ lib_sql::FAttr&      ind_attr_FindX(const algo::strptr& key);
 lib_sql::FAttr&      ind_attr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_sql.FDb.ind_attr.N
-i32                  ind_attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_sql.FDb.ind_attr.InsertMaybe
 bool                 ind_attr_InsertMaybe(lib_sql::FAttr& row) __attribute__((nothrow));
@@ -187,16 +193,16 @@ void                 ind_attr_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:lib_sql.FDb.attr_curs.Reset
-void                 _db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent) __attribute__((nothrow));
+inline void          _db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_sql.FDb.attr_curs.ValidQ
-bool                 _db_attr_curs_ValidQ(_db_attr_curs &curs) __attribute__((nothrow));
+inline bool          _db_attr_curs_ValidQ(_db_attr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_sql.FDb.attr_curs.Next
-void                 _db_attr_curs_Next(_db_attr_curs &curs) __attribute__((nothrow));
+inline void          _db_attr_curs_Next(_db_attr_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_sql.FDb.attr_curs.Access
-lib_sql::FAttr&      _db_attr_curs_Access(_db_attr_curs &curs) __attribute__((nothrow));
+inline lib_sql::FAttr& _db_attr_curs_Access(_db_attr_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sql.FDb..Init
 void                 FDb_Init();
@@ -207,19 +213,23 @@ void                 FDb_Uninit() __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // lib_sql.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_sql_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_sql_FieldIdEnum arg);
-    FieldId();
+    // func:lib_sql.FieldId.value.Cast
+    inline               operator lib_sql_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_sql.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_sql.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_sql.FieldId..EnumCtor
+    inline               FieldId(lib_sql_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_sql.FieldId.value.GetEnum
-lib_sql_FieldIdEnum  value_GetEnum(const lib_sql::FieldId& parent) __attribute__((nothrow));
+inline lib_sql_FieldIdEnum value_GetEnum(const lib_sql::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_sql.FieldId.value.SetEnum
-void                 value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_sql.FieldId.value.ToCstr
@@ -247,7 +257,7 @@ bool                 value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sql.FieldId..Init
-void                 FieldId_Init(lib_sql::FieldId& parent);
+inline void          FieldId_Init(lib_sql::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_sql.FieldId.String  printfmt:Raw
 // func:lib_sql.FieldId..Print

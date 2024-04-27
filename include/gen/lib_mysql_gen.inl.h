@@ -24,18 +24,16 @@
 
 #pragma once
 //#pragma endinclude
-inline lib_mysql::trace::trace() {
+
+// --- lib_mysql.trace..Ctor
+inline  lib_mysql::trace::trace() {
 }
 
-inline lib_mysql::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- lib_mysql.FDb..Uninit
+inline void lib_mysql::FDb_Uninit() {
+    lib_mysql::FDb &row = _db; (void)row;
+    mysql_Cleanup(); // dmmeta.fcleanup:lib_mysql.FDb.mysql
 }
-inline lib_mysql::FieldId::FieldId(lib_mysql_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_mysql::FieldId::FieldId() {
-    lib_mysql::FieldId_Init(*this);
-}
-
 
 // --- lib_mysql.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -50,7 +48,7 @@ inline void lib_mysql::value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_Field
 }
 
 // --- lib_mysql.FieldId.value.Cast
-inline lib_mysql::FieldId::operator lib_mysql_FieldIdEnum () const {
+inline  lib_mysql::FieldId::operator lib_mysql_FieldIdEnum() const {
     return lib_mysql_FieldIdEnum((*this).value);
 }
 
@@ -59,19 +57,43 @@ inline lib_mysql::FieldId::operator lib_mysql_FieldIdEnum () const {
 inline void lib_mysql::FieldId_Init(lib_mysql::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline lib_mysql::Res::Res() {
-    lib_mysql::Res_Init(*this);
+
+// --- lib_mysql.FieldId..Ctor
+inline  lib_mysql::FieldId::FieldId() {
+    lib_mysql::FieldId_Init(*this);
 }
 
-inline lib_mysql::Res::~Res() {
-    lib_mysql::Res_Uninit(*this);
+// --- lib_mysql.FieldId..FieldwiseCtor
+inline  lib_mysql::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- lib_mysql.FieldId..EnumCtor
+inline  lib_mysql::FieldId::FieldId(lib_mysql_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_mysql.Res..Init
 // Set all fields to initial values.
 inline void lib_mysql::Res_Init(lib_mysql::Res& res) {
     res.res = NULL;
+}
+
+// --- lib_mysql.Res..Uninit
+inline void lib_mysql::Res_Uninit(lib_mysql::Res& res) {
+    lib_mysql::Res &row = res; (void)row;
+    res_Cleanup(res); // dmmeta.fcleanup:lib_mysql.Res.res
+}
+
+// --- lib_mysql.Res..Ctor
+inline  lib_mysql::Res::Res() {
+    lib_mysql::Res_Init(*this);
+}
+
+// --- lib_mysql.Res..Dtor
+inline  lib_mysql::Res::~Res() {
+    lib_mysql::Res_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_mysql::trace &row) {// cfmt:lib_mysql.trace.String

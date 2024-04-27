@@ -139,7 +139,7 @@ namespace abt { // gen:ns_print_proto
     // func:abt.FDb.bh_syscmd.Upheap
     static int           bh_syscmd_Upheap(abt::FSyscmd& row, int idx) __attribute__((nothrow));
     // func:abt.FDb.bh_syscmd.ElemLt
-    static bool          bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
+    inline static bool   bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) __attribute__((nothrow));
     // func:abt.FDb.bh_syscmd_curs.Add
     static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, abt::FSyscmd& row);
     // func:abt.FDb.targsyslib.InputMaybe
@@ -155,9 +155,9 @@ namespace abt { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:abt.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:abt...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- abt.FArch.msghdr.CopyOut

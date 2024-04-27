@@ -26,9 +26,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline ssimfilt::trace::trace() {
-}
 
+// --- ssimfilt.trace..Ctor
+inline  ssimfilt::trace::trace() {
+}
 
 // --- ssimfilt.FDb.tuple.EmptyQ
 // Return true if index is empty
@@ -230,15 +231,6 @@ inline void ssimfilt::_db_selfield_curs_Next(_db_selfield_curs &curs) {
 inline ssimfilt::KVRegx& ssimfilt::_db_selfield_curs_Access(_db_selfield_curs &curs) {
     return selfield_qFind(u64(curs.index));
 }
-inline ssimfilt::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ssimfilt::FieldId::FieldId(ssimfilt_FieldIdEnum arg) { this->value = i32(arg); }
-inline ssimfilt::FieldId::FieldId() {
-    ssimfilt::FieldId_Init(*this);
-}
-
 
 // --- ssimfilt.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -253,7 +245,7 @@ inline void ssimfilt::value_SetEnum(ssimfilt::FieldId& parent, ssimfilt_FieldIdE
 }
 
 // --- ssimfilt.FieldId.value.Cast
-inline ssimfilt::FieldId::operator ssimfilt_FieldIdEnum () const {
+inline  ssimfilt::FieldId::operator ssimfilt_FieldIdEnum() const {
     return ssimfilt_FieldIdEnum((*this).value);
 }
 
@@ -262,9 +254,26 @@ inline ssimfilt::FieldId::operator ssimfilt_FieldIdEnum () const {
 inline void ssimfilt::FieldId_Init(ssimfilt::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline ssimfilt::KVRegx::KVRegx() {
+
+// --- ssimfilt.FieldId..Ctor
+inline  ssimfilt::FieldId::FieldId() {
+    ssimfilt::FieldId_Init(*this);
 }
 
+// --- ssimfilt.FieldId..FieldwiseCtor
+inline  ssimfilt::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ssimfilt.FieldId..EnumCtor
+inline  ssimfilt::FieldId::FieldId(ssimfilt_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
+
+// --- ssimfilt.KVRegx..Ctor
+inline  ssimfilt::KVRegx::KVRegx() {
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssimfilt::trace &row) {// cfmt:ssimfilt.trace.String
     ssimfilt::trace_Print(const_cast<ssimfilt::trace&>(row), str);

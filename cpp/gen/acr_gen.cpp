@@ -133,7 +133,7 @@ namespace acr { // gen:ns_print_proto
     // func:acr.FDb.bh_pline.Upheap
     static int           bh_pline_Upheap(acr::FPline& row, int idx) __attribute__((nothrow));
     // func:acr.FDb.bh_pline.ElemLt
-    static bool          bh_pline_ElemLt(acr::FPline &a, acr::FPline &b) __attribute__((nothrow));
+    inline static bool   bh_pline_ElemLt(acr::FPline &a, acr::FPline &b) __attribute__((nothrow));
     // func:acr.FDb.bh_pline_curs.Add
     static void          _db_bh_pline_curs_Add(_db_bh_pline_curs &curs, acr::FPline& row);
     // func:acr.FDb.substr.InputMaybe
@@ -157,7 +157,7 @@ namespace acr { // gen:ns_print_proto
     // func:acr.FDb.bh_ctype_topo.Upheap
     static int           bh_ctype_topo_Upheap(acr::FCtype& row, int idx) __attribute__((nothrow));
     // func:acr.FDb.bh_ctype_topo.ElemLt
-    static bool          bh_ctype_topo_ElemLt(acr::FCtype &a, acr::FCtype &b) __attribute__((nothrow));
+    inline static bool   bh_ctype_topo_ElemLt(acr::FCtype &a, acr::FCtype &b) __attribute__((nothrow));
     // func:acr.FDb.bh_ctype_topo_curs.Add
     static void          _db_bh_ctype_topo_curs_Add(_db_bh_ctype_topo_curs &curs, acr::FCtype& row);
     // func:acr.FDb.cppfunc.InputMaybe
@@ -169,13 +169,13 @@ namespace acr { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:acr.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Swap values elem_a and elem_b
     // func:acr.FWrite.c_cmtrec.Swap
-    static void          c_cmtrec_Swap(acr::FRec* &elem_a, acr::FRec* &elem_b) __attribute__((nothrow));
+    inline static void   c_cmtrec_Swap(acr::FRec* &elem_a, acr::FRec* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:acr.FWrite.c_cmtrec.Rotleft
-    static void          c_cmtrec_Rotleft(acr::FRec* &elem_a, acr::FRec* &elem_b, acr::FRec* &elem_c) __attribute__((nothrow));
+    inline static void   c_cmtrec_Rotleft(acr::FRec* &elem_a, acr::FRec* &elem_b, acr::FRec* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -191,7 +191,7 @@ namespace acr { // gen:ns_print_proto
     // func:acr.FWrite.c_cmtrec.IntQuickSort
     static void          c_cmtrec_IntQuickSort(acr::FRec* *elems, int n, int depth) __attribute__((nothrow));
     // func:acr...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- acr.AttrRegx.name.Print
@@ -6918,6 +6918,25 @@ void acr::Queryop_Print(acr::Queryop& row, algo::cstring& str) {
     acr::value_Print(row, str);
 }
 
+// --- acr.FQuery.where.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr::AttrRegx> acr::where_Addary(acr::FQuery& query, algo::aryptr<acr::AttrRegx> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= query.where_elems && rhs.elems < query.where_elems + query.where_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr.tary_alias  field:acr.FQuery.where  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    where_Reserve(query, nnew); // reserve space
+    int at = query.where_n;
+    for (int i = 0; i < nnew; i++) {
+        new (query.where_elems + at + i) acr::AttrRegx(rhs[i]);
+        query.where_n++;
+    }
+    return algo::aryptr<acr::AttrRegx>(query.where_elems + at, nnew);
+}
+
 // --- acr.FQuery.where.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -7007,6 +7026,40 @@ void acr::where_AbsReserve(acr::FQuery& query, int n) {
         query.where_elems = (acr::AttrRegx*)new_mem;
         query.where_max = new_max;
     }
+}
+
+// --- acr.FQuery.where.Setary
+// Copy contents of RHS to PARENT.
+void acr::where_Setary(acr::FQuery& query, acr::FQuery &rhs) {
+    where_RemoveAll(query);
+    int nnew = rhs.where_n;
+    where_Reserve(query, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (query.where_elems + i) acr::AttrRegx(where_qFind(rhs, i));
+        query.where_n = i + 1;
+    }
+}
+
+// --- acr.FQuery.where.Setary2
+// Copy specified array into where, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void acr::where_Setary(acr::FQuery& query, const algo::aryptr<acr::AttrRegx> &rhs) {
+    where_RemoveAll(query);
+    where_Addary(query, rhs);
+}
+
+// --- acr.FQuery.where.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr::AttrRegx> acr::where_AllocNVal(acr::FQuery& query, int n_elems, const acr::AttrRegx& val) {
+    where_Reserve(query, n_elems);
+    int old_n  = query.where_n;
+    int new_n = old_n + n_elems;
+    acr::AttrRegx *elems = query.where_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr::AttrRegx(val);
+    }
+    query.where_n = new_n;
+    return algo::aryptr<acr::AttrRegx>(elems + old_n, n_elems);
 }
 
 // --- acr.FQuery.ssimfile.Print

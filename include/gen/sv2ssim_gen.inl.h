@@ -28,14 +28,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-inline sv2ssim::FBltin::FBltin() {
-    sv2ssim::FBltin_Init(*this);
-}
-
-inline sv2ssim::FBltin::~FBltin() {
-    sv2ssim::FBltin_Uninit(*this);
-}
-
 
 // --- sv2ssim.FBltin..Init
 // Set all fields to initial values.
@@ -45,9 +37,20 @@ inline void sv2ssim::FBltin_Init(sv2ssim::FBltin& bltin) {
     bltin.issigned = bool(false);
     bltin.ind_bltin_next = (sv2ssim::FBltin*)-1; // (sv2ssim.FDb.ind_bltin) not-in-hash
 }
-inline sv2ssim::trace::trace() {
+
+// --- sv2ssim.FBltin..Ctor
+inline  sv2ssim::FBltin::FBltin() {
+    sv2ssim::FBltin_Init(*this);
 }
 
+// --- sv2ssim.FBltin..Dtor
+inline  sv2ssim::FBltin::~FBltin() {
+    sv2ssim::FBltin_Uninit(*this);
+}
+
+// --- sv2ssim.trace..Ctor
+inline  sv2ssim::trace::trace() {
+}
 
 // --- sv2ssim.FDb.field.EmptyQ
 // Return true if index is empty
@@ -446,18 +449,16 @@ inline void sv2ssim::_db_bltin_curs_Next(_db_bltin_curs &curs) {
 inline sv2ssim::FBltin& sv2ssim::_db_bltin_curs_Access(_db_bltin_curs &curs) {
     return bltin_qFind(u64(curs.index));
 }
-inline sv2ssim::FField::FField() {
+
+// --- sv2ssim.FField..Ctor
+inline  sv2ssim::FField::FField() {
     sv2ssim::FField_Init(*this);
 }
 
-inline sv2ssim::FField::~FField() {
+// --- sv2ssim.FField..Dtor
+inline  sv2ssim::FField::~FField() {
     sv2ssim::FField_Uninit(*this);
 }
-
-inline sv2ssim::FSvtype::FSvtype() {
-    sv2ssim::FSvtype_Init(*this);
-}
-
 
 // --- sv2ssim.FSvtype..Init
 // Set all fields to initial values.
@@ -466,15 +467,11 @@ inline void sv2ssim::FSvtype_Init(sv2ssim::FSvtype& svtype) {
     svtype.fixedwid1 = i32(0);
     svtype.fixedwid2 = i32(0);
 }
-inline sv2ssim::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline sv2ssim::FieldId::FieldId(sv2ssim_FieldIdEnum arg) { this->value = i32(arg); }
-inline sv2ssim::FieldId::FieldId() {
-    sv2ssim::FieldId_Init(*this);
-}
 
+// --- sv2ssim.FSvtype..Ctor
+inline  sv2ssim::FSvtype::FSvtype() {
+    sv2ssim::FSvtype_Init(*this);
+}
 
 // --- sv2ssim.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -489,7 +486,7 @@ inline void sv2ssim::value_SetEnum(sv2ssim::FieldId& parent, sv2ssim_FieldIdEnum
 }
 
 // --- sv2ssim.FieldId.value.Cast
-inline sv2ssim::FieldId::operator sv2ssim_FieldIdEnum () const {
+inline  sv2ssim::FieldId::operator sv2ssim_FieldIdEnum() const {
     return sv2ssim_FieldIdEnum((*this).value);
 }
 
@@ -498,15 +495,22 @@ inline sv2ssim::FieldId::operator sv2ssim_FieldIdEnum () const {
 inline void sv2ssim::FieldId_Init(sv2ssim::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline sv2ssim::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline sv2ssim::TableId::TableId(sv2ssim_TableIdEnum arg) { this->value = i32(arg); }
-inline sv2ssim::TableId::TableId() {
-    sv2ssim::TableId_Init(*this);
+
+// --- sv2ssim.FieldId..Ctor
+inline  sv2ssim::FieldId::FieldId() {
+    sv2ssim::FieldId_Init(*this);
 }
 
+// --- sv2ssim.FieldId..FieldwiseCtor
+inline  sv2ssim::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- sv2ssim.FieldId..EnumCtor
+inline  sv2ssim::FieldId::FieldId(sv2ssim_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- sv2ssim.TableId.value.GetEnum
 // Get value of field as enum type
@@ -521,7 +525,7 @@ inline void sv2ssim::value_SetEnum(sv2ssim::TableId& parent, sv2ssim_TableIdEnum
 }
 
 // --- sv2ssim.TableId.value.Cast
-inline sv2ssim::TableId::operator sv2ssim_TableIdEnum () const {
+inline  sv2ssim::TableId::operator sv2ssim_TableIdEnum() const {
     return sv2ssim_TableIdEnum((*this).value);
 }
 
@@ -529,6 +533,22 @@ inline sv2ssim::TableId::operator sv2ssim_TableIdEnum () const {
 // Set all fields to initial values.
 inline void sv2ssim::TableId_Init(sv2ssim::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- sv2ssim.TableId..Ctor
+inline  sv2ssim::TableId::TableId() {
+    sv2ssim::TableId_Init(*this);
+}
+
+// --- sv2ssim.TableId..FieldwiseCtor
+inline  sv2ssim::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- sv2ssim.TableId..EnumCtor
+inline  sv2ssim::TableId::TableId(sv2ssim_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const sv2ssim::trace &row) {// cfmt:sv2ssim.trace.String

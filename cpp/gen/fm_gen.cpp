@@ -32,7 +32,7 @@
 //#pragma endinclude
 namespace fm { // gen:ns_print_proto
     // func:fm...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- fm.Code.ch.Print
@@ -71,7 +71,7 @@ void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Code..Hash
-u32 fm::Code_Hash(u32 prev, const fm::Code & rhs) {
+u32 fm::Code_Hash(u32 prev, const fm::Code& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -129,7 +129,7 @@ void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Objtype..Hash
-u32 fm::Objtype_Hash(u32 prev, const fm::Objtype & rhs) {
+u32 fm::Objtype_Hash(u32 prev, const fm::Objtype& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -187,7 +187,7 @@ void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Objinst..Hash
-u32 fm::Objinst_Hash(u32 prev, const fm::Objinst & rhs) {
+u32 fm::Objinst_Hash(u32 prev, const fm::Objinst& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -419,7 +419,7 @@ void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Summary..Hash
-u32 fm::Summary_Hash(u32 prev, const fm::Summary & rhs) {
+u32 fm::Summary_Hash(u32 prev, const fm::Summary& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -477,7 +477,7 @@ void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Description..Hash
-u32 fm::Description_Hash(u32 prev, const fm::Description & rhs) {
+u32 fm::Description_Hash(u32 prev, const fm::Description& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -535,7 +535,7 @@ void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Source..Hash
-u32 fm::Source_Hash(u32 prev, const fm::Source & rhs) {
+u32 fm::Source_Hash(u32 prev, const fm::Source& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;

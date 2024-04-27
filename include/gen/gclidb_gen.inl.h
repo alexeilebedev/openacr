@@ -25,15 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline gclidb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline gclidb::FieldId::FieldId(gclidb_FieldIdEnum arg) { this->value = i32(arg); }
-inline gclidb::FieldId::FieldId() {
-    gclidb::FieldId_Init(*this);
-}
-
 
 // --- gclidb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -48,7 +39,7 @@ inline void gclidb::value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rh
 }
 
 // --- gclidb.FieldId.value.Cast
-inline gclidb::FieldId::operator gclidb_FieldIdEnum () const {
+inline  gclidb::FieldId::operator gclidb_FieldIdEnum() const {
     return gclidb_FieldIdEnum((*this).value);
 }
 
@@ -57,42 +48,60 @@ inline gclidb::FieldId::operator gclidb_FieldIdEnum () const {
 inline void gclidb::FieldId_Init(gclidb::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline gclidb::Gact::Gact() {
+
+// --- gclidb.FieldId..Ctor
+inline  gclidb::FieldId::FieldId() {
+    gclidb::FieldId_Init(*this);
 }
 
-inline gclidb::Gatv::Gatv() {
+// --- gclidb.FieldId..FieldwiseCtor
+inline  gclidb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
-inline gclidb::Gclicmd::Gclicmd() {
+// --- gclidb.FieldId..EnumCtor
+inline  gclidb::FieldId::FieldId(gclidb_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
-inline gclidb::Gclicmdf2j::Gclicmdf2j() {
-    gclidb::Gclicmdf2j_Init(*this);
+// --- gclidb.Gact..Ctor
+inline  gclidb::Gact::Gact() {
 }
 
+// --- gclidb.Gatv..Ctor
+inline  gclidb::Gatv::Gatv() {
+}
+
+// --- gclidb.Gclicmd..Ctor
+inline  gclidb::Gclicmd::Gclicmd() {
+}
 
 // --- gclidb.Gclicmdf2j..Init
 // Set all fields to initial values.
 inline void gclidb::Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent) {
     parent.dup = bool(false);
 }
-inline gclidb::Gclicmdt::Gclicmdt() {
-    gclidb::Gclicmdt_Init(*this);
-}
 
+// --- gclidb.Gclicmdf2j..Ctor
+inline  gclidb::Gclicmdf2j::Gclicmdf2j() {
+    gclidb::Gclicmdf2j_Init(*this);
+}
 
 // --- gclidb.Gclicmdt..Init
 // Set all fields to initial values.
 inline void gclidb::Gclicmdt_Init(gclidb::Gclicmdt& parent) {
     parent.gmethod = algo::strptr("GET");
 }
-inline gclidb::Gclienv::Gclienv() {
+
+// --- gclidb.Gclicmdt..Ctor
+inline  gclidb::Gclicmdt::Gclicmdt() {
+    gclidb::Gclicmdt_Init(*this);
 }
 
-inline gclidb::Gclienvsub::Gclienvsub() {
-    gclidb::Gclienvsub_Init(*this);
+// --- gclidb.Gclienv..Ctor
+inline  gclidb::Gclienv::Gclienv() {
 }
-
 
 // --- gclidb.Gclienvsub..Init
 // Set all fields to initial values.
@@ -100,48 +109,59 @@ inline void gclidb::Gclienvsub_Init(gclidb::Gclienvsub& parent) {
     parent.fwd = bool(false);
     parent.rev = bool(false);
 }
-inline gclidb::Gclisub::Gclisub() {
+
+// --- gclidb.Gclienvsub..Ctor
+inline  gclidb::Gclienvsub::Gclienvsub() {
+    gclidb::Gclienvsub_Init(*this);
 }
 
-inline gclidb::Gfld::Gfld() {
+// --- gclidb.Gclisub..Ctor
+inline  gclidb::Gclisub::Gclisub() {
 }
 
-inline gclidb::Githost::Githost() {
+// --- gclidb.Gfld..Ctor
+inline  gclidb::Gfld::Gfld() {
 }
 
-inline gclidb::Gmethod::Gmethod() {
-    gclidb::Gmethod_Init(*this);
+// --- gclidb.Githost..Ctor
+inline  gclidb::Githost::Githost() {
 }
-
 
 // --- gclidb.Gmethod..Init
 // Set all fields to initial values.
 inline void gclidb::Gmethod_Init(gclidb::Gmethod& parent) {
     parent.val = u32(0);
 }
-inline gclidb::Grepo::Grepo() {
+
+// --- gclidb.Gmethod..Ctor
+inline  gclidb::Gmethod::Gmethod() {
+    gclidb::Gmethod_Init(*this);
+}
+
+// --- gclidb.Grepo..Ctor
+inline  gclidb::Grepo::Grepo() {
     gclidb::Grepo_Init(*this);
 }
 
-inline gclidb::Grepogitport::Grepogitport() {
+// --- gclidb.Grepogitport..Ctor
+inline  gclidb::Grepogitport::Grepogitport() {
 }
 
-inline gclidb::Grepossh::Grepossh() {
+// --- gclidb.Grepossh..Ctor
+inline  gclidb::Grepossh::Grepossh() {
 }
 
-inline gclidb::Gstate::Gstate() {
+// --- gclidb.Gstate..Ctor
+inline  gclidb::Gstate::Gstate() {
 }
 
-inline gclidb::Gstatet::Gstatet() {
+// --- gclidb.Gstatet..Ctor
+inline  gclidb::Gstatet::Gstatet() {
 }
 
-inline gclidb::Gtbl::Gtbl() {
+// --- gclidb.Gtbl..Ctor
+inline  gclidb::Gtbl::Gtbl() {
 }
-
-inline gclidb::Gtblact::Gtblact() {
-    gclidb::Gtblact_Init(*this);
-}
-
 
 // --- gclidb.Gtblact..Init
 // Set all fields to initial values.
@@ -150,10 +170,11 @@ inline void gclidb::Gtblact_Init(gclidb::Gtblact& parent) {
     parent.e = bool(false);
     parent.auth = bool(false);
 }
-inline gclidb::Gtblactfld::Gtblactfld() {
-    gclidb::Gtblactfld_Init(*this);
-}
 
+// --- gclidb.Gtblact..Ctor
+inline  gclidb::Gtblact::Gtblact() {
+    gclidb::Gtblact_Init(*this);
+}
 
 // --- gclidb.Gtblactfld..Init
 // Set all fields to initial values.
@@ -162,64 +183,84 @@ inline void gclidb::Gtblactfld_Init(gclidb::Gtblactfld& parent) {
     parent.optional = bool(false);
     parent.regx = bool(false);
 }
-inline gclidb::Gtblacttst::Gtblacttst() {
-    gclidb::Gtblacttst_Init(*this);
-}
 
+// --- gclidb.Gtblactfld..Ctor
+inline  gclidb::Gtblactfld::Gtblactfld() {
+    gclidb::Gtblactfld_Init(*this);
+}
 
 // --- gclidb.Gtblacttst..Init
 // Set all fields to initial values.
 inline void gclidb::Gtblacttst_Init(gclidb::Gtblacttst& parent) {
     parent.working = bool(true);
 }
-inline gclidb::Gtblacttstout::Gtblacttstout() {
+
+// --- gclidb.Gtblacttst..Ctor
+inline  gclidb::Gtblacttst::Gtblacttst() {
+    gclidb::Gtblacttst_Init(*this);
 }
 
-inline gclidb::Gtype::Gtype() {
+// --- gclidb.Gtblacttstout..Ctor
+inline  gclidb::Gtblacttstout::Gtblacttstout() {
 }
 
-inline gclidb::Gtypeh::Gtypeh() {
+// --- gclidb.Gtype..Ctor
+inline  gclidb::Gtype::Gtype() {
 }
 
-inline gclidb::Gtypeprefix::Gtypeprefix() {
+// --- gclidb.Gtypeh..Ctor
+inline  gclidb::Gtypeh::Gtypeh() {
 }
 
-inline gclidb::Issue::Issue() {
+// --- gclidb.Gtypeprefix..Ctor
+inline  gclidb::Gtypeprefix::Gtypeprefix() {
 }
 
-inline gclidb::Issuenote::Issuenote() {
+// --- gclidb.Issue..Ctor
+inline  gclidb::Issue::Issue() {
 }
 
-inline gclidb::Issuepipeline::Issuepipeline() {
+// --- gclidb.Issuenote..Ctor
+inline  gclidb::Issuenote::Issuenote() {
 }
 
-inline gclidb::Label::Label() {
+// --- gclidb.Issuepipeline..Ctor
+inline  gclidb::Issuepipeline::Issuepipeline() {
 }
 
-inline gclidb::Milestone::Milestone() {
+// --- gclidb.Label..Ctor
+inline  gclidb::Label::Label() {
 }
 
-inline gclidb::Mr::Mr() {
+// --- gclidb.Milestone..Ctor
+inline  gclidb::Milestone::Milestone() {
 }
 
-inline gclidb::Mrjob::Mrjob() {
+// --- gclidb.Mr..Ctor
+inline  gclidb::Mr::Mr() {
 }
 
-inline gclidb::Mrnote::Mrnote() {
+// --- gclidb.Mrjob..Ctor
+inline  gclidb::Mrjob::Mrjob() {
 }
 
-inline gclidb::Project::Project() {
+// --- gclidb.Mrnote..Ctor
+inline  gclidb::Mrnote::Mrnote() {
 }
 
-inline gclidb::User::User() {
-    gclidb::User_Init(*this);
+// --- gclidb.Project..Ctor
+inline  gclidb::Project::Project() {
 }
-
 
 // --- gclidb.User..Init
 // Set all fields to initial values.
 inline void gclidb::User_Init(gclidb::User& parent) {
     parent.id = u32(0);
+}
+
+// --- gclidb.User..Ctor
+inline  gclidb::User::User() {
+    gclidb::User_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::FieldId &row) {// cfmt:gclidb.FieldId.String

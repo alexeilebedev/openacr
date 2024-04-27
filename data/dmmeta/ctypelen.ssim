@@ -573,8 +573,8 @@ dmmeta.ctypelen  ctype:atf_amc.BitfldType2  len:16  alignment:8  padbytes:7  pla
 dmmeta.ctypelen  ctype:atf_amc.BitfldU128  len:16  alignment:16  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:atf_amc.BitfldU16  len:2  alignment:2  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:atf_amc.Bitset  len:48  alignment:16  padbytes:15  plaindata:Y
-dmmeta.ctypelen  ctype:atf_amc.Bytebuf  len:96  alignment:8  padbytes:14  plaindata:N
-dmmeta.ctypelen  ctype:atf_amc.BytebufDyn  len:40  alignment:8  padbytes:10  plaindata:N
+dmmeta.ctypelen  ctype:atf_amc.Bytebuf  len:104  alignment:8  padbytes:17  plaindata:N
+dmmeta.ctypelen  ctype:atf_amc.BytebufDyn  len:48  alignment:8  padbytes:13  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.Cstr  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.Cstring  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.Ctype1Attr  len:4  alignment:4  padbytes:0  plaindata:Y
@@ -613,7 +613,7 @@ dmmeta.ctypelen  ctype:atf_amc.MsgLTO  len:2  alignment:1  padbytes:0  plaindata
 dmmeta.ctypelen  ctype:atf_amc.MsgLTV  len:2  alignment:1  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.MsgLength  len:2  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:atf_amc.MsgType  len:2  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:atf_amc.Msgbuf  len:336  alignment:8  padbytes:32  plaindata:N
+dmmeta.ctypelen  ctype:atf_amc.Msgbuf  len:344  alignment:8  padbytes:35  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.NetBitfld1  len:2  alignment:2  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:atf_amc.OptAlloc  len:4  alignment:1  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_amc.OptG  len:4  alignment:1  padbytes:0  plaindata:N

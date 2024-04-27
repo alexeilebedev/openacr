@@ -25,16 +25,17 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline lib_json::trace::trace() {
-    lib_json::trace_Init(*this);
-}
-
 
 // --- lib_json.trace..Init
 // Set all fields to initial values.
 inline void lib_json::trace_Init(lib_json::trace& parent) {
     parent.alloc__db_node = u64(0);
     parent.del__db_node = u64(0);
+}
+
+// --- lib_json.trace..Ctor
+inline  lib_json::trace::trace() {
+    lib_json::trace_Init(*this);
 }
 
 // --- lib_json.FDb.ind_objfld.EmptyQ
@@ -67,46 +68,42 @@ inline bool lib_json::JsonFirstNumCharQ(u32 ch) {
     ret |= (ch - u32('0')) < u32(10);
     return ret;
 }
-inline lib_json::FldKey::FldKey(lib_json::FNode*               in_object
-        ,algo::strptr                   in_field)
-    : object(in_object)
-    , field(in_field)
-{
+
+// --- lib_json.FldKey..Hash
+inline u32 lib_json::FldKey_Hash(u32 prev, const lib_json::FldKey& rhs) {
+    prev = u64_Hash(prev, u64(rhs.object));
+    prev = strptr_Hash(prev, rhs.field);
+    return prev;
 }
 
+// --- lib_json.FldKey..EqOp
 inline bool lib_json::FldKey::operator ==(const lib_json::FldKey &rhs) const {
     return lib_json::FldKey_Eq(const_cast<lib_json::FldKey&>(*this),const_cast<lib_json::FldKey&>(rhs));
 }
 
+// --- lib_json.FldKey..NeOp
 inline bool lib_json::FldKey::operator !=(const lib_json::FldKey &rhs) const {
     return !lib_json::FldKey_Eq(const_cast<lib_json::FldKey&>(*this),const_cast<lib_json::FldKey&>(rhs));
 }
 
+// --- lib_json.FldKey..LtOp
 inline bool lib_json::FldKey::operator <(const lib_json::FldKey &rhs) const {
     return lib_json::FldKey_Lt(const_cast<lib_json::FldKey&>(*this),const_cast<lib_json::FldKey&>(rhs));
 }
 
+// --- lib_json.FldKey..GtOp
 inline bool lib_json::FldKey::operator >(const lib_json::FldKey &rhs) const {
-    return rhs < *this;
+    return lib_json::FldKey_Lt(const_cast<lib_json::FldKey&>(rhs),const_cast<lib_json::FldKey&>(*this));
 }
 
+// --- lib_json.FldKey..LeOp
 inline bool lib_json::FldKey::operator <=(const lib_json::FldKey &rhs) const {
-    return !(rhs < *this);
+    return !lib_json::FldKey_Lt(const_cast<lib_json::FldKey&>(rhs),const_cast<lib_json::FldKey&>(*this));
 }
 
+// --- lib_json.FldKey..GeOp
 inline bool lib_json::FldKey::operator >=(const lib_json::FldKey &rhs) const {
-    return !(*this < rhs);
-}
-inline lib_json::FldKey::FldKey() {
-    lib_json::FldKey_Init(*this);
-}
-
-
-// --- lib_json.FldKey..Hash
-inline u32 lib_json::FldKey_Hash(u32 prev, const lib_json::FldKey & rhs) {
-    prev = u64_Hash(prev, u64(rhs.object));
-    prev = strptr_Hash(prev, rhs.field);
-    return prev;
+    return !lib_json::FldKey_Lt(const_cast<lib_json::FldKey&>(*this),const_cast<lib_json::FldKey&>(rhs));
 }
 
 // --- lib_json.FldKey..Lt
@@ -151,14 +148,18 @@ inline bool lib_json::FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey& rhs
     }
     return ret;
 }
-inline lib_json::FNode::FNode() {
-    lib_json::FNode_Init(*this);
+
+// --- lib_json.FldKey..Ctor
+inline  lib_json::FldKey::FldKey() {
+    lib_json::FldKey_Init(*this);
 }
 
-inline lib_json::FNode::~FNode() {
-    lib_json::FNode_Uninit(*this);
+// --- lib_json.FldKey..FieldwiseCtor
+inline  lib_json::FldKey::FldKey(lib_json::FNode* in_object, algo::strptr in_field)
+    : object(in_object)
+    , field(in_field)
+ {
 }
-
 
 // --- lib_json.FNode.c_child.EmptyQ
 // Return true if index is empty
@@ -267,14 +268,16 @@ inline void lib_json::node_c_child_curs_Next(node_c_child_curs &curs) {
 inline lib_json::FNode& lib_json::node_c_child_curs_Access(node_c_child_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline lib_json::FParser::FParser() {
-    lib_json::FParser_Init(*this);
+
+// --- lib_json.FNode..Ctor
+inline  lib_json::FNode::FNode() {
+    lib_json::FNode_Init(*this);
 }
 
-inline lib_json::FParser::~FParser() {
-    lib_json::FParser_Uninit(*this);
+// --- lib_json.FNode..Dtor
+inline  lib_json::FNode::~FNode() {
+    lib_json::FNode_Uninit(*this);
 }
-
 
 // --- lib_json.FParser.state.GetEnum
 // Get value of field as enum type
@@ -287,15 +290,16 @@ inline lib_json_FParser_state_Enum lib_json::state_GetEnum(const lib_json::FPars
 inline void lib_json::state_SetEnum(lib_json::FParser& parent, lib_json_FParser_state_Enum rhs) {
     parent.state = u32(rhs);
 }
-inline lib_json::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_json::FieldId::FieldId(lib_json_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_json::FieldId::FieldId() {
-    lib_json::FieldId_Init(*this);
+
+// --- lib_json.FParser..Ctor
+inline  lib_json::FParser::FParser() {
+    lib_json::FParser_Init(*this);
 }
 
+// --- lib_json.FParser..Dtor
+inline  lib_json::FParser::~FParser() {
+    lib_json::FParser_Uninit(*this);
+}
 
 // --- lib_json.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -310,7 +314,7 @@ inline void lib_json::value_SetEnum(lib_json::FieldId& parent, lib_json_FieldIdE
 }
 
 // --- lib_json.FieldId.value.Cast
-inline lib_json::FieldId::operator lib_json_FieldIdEnum () const {
+inline  lib_json::FieldId::operator lib_json_FieldIdEnum() const {
     return lib_json_FieldIdEnum((*this).value);
 }
 
@@ -318,6 +322,22 @@ inline lib_json::FieldId::operator lib_json_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_json::FieldId_Init(lib_json::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_json.FieldId..Ctor
+inline  lib_json::FieldId::FieldId() {
+    lib_json::FieldId_Init(*this);
+}
+
+// --- lib_json.FieldId..FieldwiseCtor
+inline  lib_json::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_json.FieldId..EnumCtor
+inline  lib_json::FieldId::FieldId(lib_json_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_json::trace &row) {// cfmt:lib_json.trace.String

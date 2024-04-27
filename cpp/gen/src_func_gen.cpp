@@ -104,7 +104,7 @@ namespace src_func { // gen:ns_print_proto
     // func:src_func.FDb.bh_func.Upheap
     static int           bh_func_Upheap(src_func::FFunc& row, int idx) __attribute__((nothrow));
     // func:src_func.FDb.bh_func.ElemLt
-    static bool          bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) __attribute__((nothrow));
+    inline static bool   bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) __attribute__((nothrow));
     // func:src_func.FDb.bh_func_curs.Add
     static void          _db_bh_func_curs_Add(_db_bh_func_curs &curs, src_func::FFunc& row);
     // func:src_func.FDb.dispatch.InputMaybe
@@ -120,12 +120,12 @@ namespace src_func { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:src_func.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
     // func:src_func.FFunc.sortkey.Nextchar
-    static u64           sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static u64    sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:src_func...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- src_func.FCtypelen.base.CopyOut

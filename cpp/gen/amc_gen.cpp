@@ -99,13 +99,13 @@ namespace amc { // gen:ns_gsymbol
 namespace amc { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     // func:amc.Enumstr.str.Nextchar
-    static int           str_Nextchar(const amc::Enumstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static int    str_Nextchar(const amc::Enumstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FCtype.c_field.Swap
-    static void          c_field_Swap(amc::FField* &elem_a, amc::FField* &elem_b) __attribute__((nothrow));
+    inline static void   c_field_Swap(amc::FField* &elem_a, amc::FField* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FCtype.c_field.Rotleft
-    static void          c_field_Rotleft(amc::FField* &elem_a, amc::FField* &elem_b, amc::FField* &elem_c) __attribute__((nothrow));
+    inline static void   c_field_Rotleft(amc::FField* &elem_a, amc::FField* &elem_b, amc::FField* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -122,10 +122,10 @@ namespace amc { // gen:ns_print_proto
     static void          c_field_IntQuickSort(amc::FField* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FCtype.c_ffast.Swap
-    static void          c_ffast_Swap(amc::FFfast* &elem_a, amc::FFfast* &elem_b) __attribute__((nothrow));
+    inline static void   c_ffast_Swap(amc::FFfast* &elem_a, amc::FFfast* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FCtype.c_ffast.Rotleft
-    static void          c_ffast_Rotleft(amc::FFfast* &elem_a, amc::FFfast* &elem_b, amc::FFfast* &elem_c) __attribute__((nothrow));
+    inline static void   c_ffast_Rotleft(amc::FFfast* &elem_a, amc::FFfast* &elem_b, amc::FFfast* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -221,10 +221,10 @@ namespace amc { // gen:ns_print_proto
     static bool          ptrary_InputMaybe(dmmeta::Ptrary &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FDb.c_ctype_sorted.Swap
-    static void          c_ctype_sorted_Swap(amc::FCtype* &elem_a, amc::FCtype* &elem_b) __attribute__((nothrow));
+    inline static void   c_ctype_sorted_Swap(amc::FCtype* &elem_a, amc::FCtype* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FDb.c_ctype_sorted.Rotleft
-    static void          c_ctype_sorted_Rotleft(amc::FCtype* &elem_a, amc::FCtype* &elem_b, amc::FCtype* &elem_c) __attribute__((nothrow));
+    inline static void   c_ctype_sorted_Rotleft(amc::FCtype* &elem_a, amc::FCtype* &elem_b, amc::FCtype* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -248,7 +248,7 @@ namespace amc { // gen:ns_print_proto
     // func:amc.FDb.bh_enumstr_len.Upheap
     static int           bh_enumstr_len_Upheap(amc::FEnumstrLen& row, int idx) __attribute__((nothrow));
     // func:amc.FDb.bh_enumstr_len.ElemLt
-    static bool          bh_enumstr_len_ElemLt(amc::FEnumstrLen &a, amc::FEnumstrLen &b) __attribute__((nothrow));
+    inline static bool   bh_enumstr_len_ElemLt(amc::FEnumstrLen &a, amc::FEnumstrLen &b) __attribute__((nothrow));
     // func:amc.FDb.bh_enumstr_len_curs.Add
     static void          _db_bh_enumstr_len_curs_Add(_db_bh_enumstr_len_curs &curs, amc::FEnumstrLen& row);
     // func:amc.FDb.fbitset.InputMaybe
@@ -285,10 +285,10 @@ namespace amc { // gen:ns_print_proto
     static bool          disptrace_InputMaybe(dmmeta::Disptrace &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FDb.c_dispsig_sorted.Swap
-    static void          c_dispsig_sorted_Swap(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b) __attribute__((nothrow));
+    inline static void   c_dispsig_sorted_Swap(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FDb.c_dispsig_sorted.Rotleft
-    static void          c_dispsig_sorted_Rotleft(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b, amc::FDispsig* &elem_c) __attribute__((nothrow));
+    inline static void   c_dispsig_sorted_Rotleft(amc::FDispsig* &elem_a, amc::FDispsig* &elem_b, amc::FDispsig* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -363,10 +363,10 @@ namespace amc { // gen:ns_print_proto
     static bool          fnoremove_InputMaybe(dmmeta::Fnoremove &elem) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FDb.c_substr_field.Swap
-    static void          c_substr_field_Swap(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b) __attribute__((nothrow));
+    inline static void   c_substr_field_Swap(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FDb.c_substr_field.Rotleft
-    static void          c_substr_field_Rotleft(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b, amc::FSubstr* &elem_c) __attribute__((nothrow));
+    inline static void   c_substr_field_Rotleft(amc::FSubstr* &elem_a, amc::FSubstr* &elem_b, amc::FSubstr* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -383,10 +383,10 @@ namespace amc { // gen:ns_print_proto
     static void          c_substr_field_IntQuickSort(amc::FSubstr* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:amc.FDb.c_ctypelen.Swap
-    static void          c_ctypelen_Swap(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b) __attribute__((nothrow));
+    inline static void   c_ctypelen_Swap(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:amc.FDb.c_ctypelen.Rotleft
-    static void          c_ctypelen_Rotleft(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b, amc::FCtypelen* &elem_c) __attribute__((nothrow));
+    inline static void   c_ctypelen_Rotleft(amc::FCtypelen* &elem_a, amc::FCtypelen* &elem_b, amc::FCtypelen* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -446,7 +446,7 @@ namespace amc { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:amc.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:amc.FEnumstrLen.bh_enumstr.Downheap
@@ -456,7 +456,7 @@ namespace amc { // gen:ns_print_proto
     // func:amc.FEnumstrLen.bh_enumstr.Upheap
     static int           bh_enumstr_Upheap(amc::FEnumstrLen& enumstr_len, amc::FEnumstr& row, int idx) __attribute__((nothrow));
     // func:amc.FEnumstrLen.bh_enumstr.ElemLt
-    static bool          bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
+    inline static bool   bh_enumstr_ElemLt(amc::FEnumstrLen& enumstr_len, amc::FEnumstr &a, amc::FEnumstr &b) __attribute__((nothrow));
     // func:amc.FEnumstrLen.bh_enumstr_curs.Add
     static void          enumstr_len_bh_enumstr_curs_Add(enumstr_len_bh_enumstr_curs &curs, amc::FEnumstr& row);
     // Find new location for ROW starting at IDX
@@ -468,11 +468,11 @@ namespace amc { // gen:ns_print_proto
     // func:amc.FField.bh_bitfld.Upheap
     static int           bh_bitfld_Upheap(amc::FField& field, amc::FBitfld& row, int idx) __attribute__((nothrow));
     // func:amc.FField.bh_bitfld.ElemLt
-    static bool          bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
+    inline static bool   bh_bitfld_ElemLt(amc::FField& field, amc::FBitfld &a, amc::FBitfld &b) __attribute__((nothrow));
     // func:amc.FField.bh_bitfld_curs.Add
     static void          field_bh_bitfld_curs_Add(field_bh_bitfld_curs &curs, amc::FBitfld& row);
     // func:amc...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- amc.BltinId.value.ToCstr

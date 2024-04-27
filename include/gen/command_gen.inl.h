@@ -25,15 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline command::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline command::FieldId::FieldId(command_FieldIdEnum arg) { this->value = i32(arg); }
-inline command::FieldId::FieldId() {
-    command::FieldId_Init(*this);
-}
-
 
 // --- command.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -48,7 +39,7 @@ inline void command::value_SetEnum(command::FieldId& parent, command_FieldIdEnum
 }
 
 // --- command.FieldId.value.Cast
-inline command::FieldId::operator command_FieldIdEnum () const {
+inline  command::FieldId::operator command_FieldIdEnum() const {
     return command_FieldIdEnum((*this).value);
 }
 
@@ -57,10 +48,22 @@ inline command::FieldId::operator command_FieldIdEnum () const {
 inline void command::FieldId_Init(command::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline command::abt::abt() {
-    command::abt_Init(*this);
+
+// --- command.FieldId..Ctor
+inline  command::FieldId::FieldId() {
+    command::FieldId_Init(*this);
 }
 
+// --- command.FieldId..FieldwiseCtor
+inline  command::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- command.FieldId..EnumCtor
+inline  command::FieldId::FieldId(command_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- command.abt.cache.GetEnum
 // Get value of field as enum type
@@ -73,18 +76,16 @@ inline command_abt_cache_Enum command::cache_GetEnum(const command::abt& parent)
 inline void command::cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) {
     parent.cache = u8(rhs);
 }
-inline command::abt_md::abt_md() {
+
+// --- command.abt..Ctor
+inline  command::abt::abt() {
+    command::abt_Init(*this);
+}
+
+// --- command.abt_md..Ctor
+inline  command::abt_md::abt_md() {
     command::abt_md_Init(*this);
 }
-
-inline command::abt_md_proc::abt_md_proc() {
-    command::abt_md_proc_Init(*this);
-}
-
-inline command::abt_md_proc::~abt_md_proc() {
-    command::abt_md_proc_Uninit(*this);
-}
-
 
 // --- command.abt_md_proc..Init
 // Set all fields to initial values.
@@ -94,14 +95,16 @@ inline void command::abt_md_proc_Init(command::abt_md_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::abt_proc::abt_proc() {
-    command::abt_proc_Init(*this);
+
+// --- command.abt_md_proc..Ctor
+inline  command::abt_md_proc::abt_md_proc() {
+    command::abt_md_proc_Init(*this);
 }
 
-inline command::abt_proc::~abt_proc() {
-    command::abt_proc_Uninit(*this);
+// --- command.abt_md_proc..Dtor
+inline  command::abt_md_proc::~abt_md_proc() {
+    command::abt_md_proc_Uninit(*this);
 }
-
 
 // --- command.abt_proc..Init
 // Set all fields to initial values.
@@ -111,14 +114,16 @@ inline void command::abt_proc_Init(command::abt_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr::acr() {
-    command::acr_Init(*this);
+
+// --- command.abt_proc..Ctor
+inline  command::abt_proc::abt_proc() {
+    command::abt_proc_Init(*this);
 }
 
-inline command::acr::~acr() {
-    command::acr_Uninit(*this);
+// --- command.abt_proc..Dtor
+inline  command::abt_proc::~abt_proc() {
+    command::abt_proc_Uninit(*this);
 }
-
 
 // --- command.acr.where.EmptyQ
 // Return true if index is empty
@@ -305,10 +310,16 @@ inline bool command::acr_field_curs_ValidQ(acr_field_curs &curs) {
 inline algo::cstring& command::acr_field_curs_Access(acr_field_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::acr_compl::acr_compl() {
-    command::acr_compl_Init(*this);
+
+// --- command.acr..Ctor
+inline  command::acr::acr() {
+    command::acr_Init(*this);
 }
 
+// --- command.acr..Dtor
+inline  command::acr::~acr() {
+    command::acr_Uninit(*this);
+}
 
 // --- command.acr_compl..Init
 // Set all fields to initial values.
@@ -321,14 +332,11 @@ inline void command::acr_compl_Init(command::acr_compl& parent) {
     parent.install = bool(false);
     parent.debug_log = algo::strptr("");
 }
-inline command::acr_compl_proc::acr_compl_proc() {
-    command::acr_compl_proc_Init(*this);
-}
 
-inline command::acr_compl_proc::~acr_compl_proc() {
-    command::acr_compl_proc_Uninit(*this);
+// --- command.acr_compl..Ctor
+inline  command::acr_compl::acr_compl() {
+    command::acr_compl_Init(*this);
 }
-
 
 // --- command.acr_compl_proc..Init
 // Set all fields to initial values.
@@ -338,14 +346,16 @@ inline void command::acr_compl_proc_Init(command::acr_compl_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr_dm::acr_dm() {
-    command::acr_dm_Init(*this);
+
+// --- command.acr_compl_proc..Ctor
+inline  command::acr_compl_proc::acr_compl_proc() {
+    command::acr_compl_proc_Init(*this);
 }
 
-inline command::acr_dm::~acr_dm() {
-    command::acr_dm_Uninit(*this);
+// --- command.acr_compl_proc..Dtor
+inline  command::acr_compl_proc::~acr_compl_proc() {
+    command::acr_compl_proc_Uninit(*this);
 }
-
 
 // --- command.acr_dm.arg.EmptyQ
 // Return true if index is empty
@@ -451,14 +461,16 @@ inline void command::acr_dm_Init(command::acr_dm& parent) {
     parent.msize = u8(7);
     parent.rowid = bool(false);
 }
-inline command::acr_dm_proc::acr_dm_proc() {
-    command::acr_dm_proc_Init(*this);
+
+// --- command.acr_dm..Ctor
+inline  command::acr_dm::acr_dm() {
+    command::acr_dm_Init(*this);
 }
 
-inline command::acr_dm_proc::~acr_dm_proc() {
-    command::acr_dm_proc_Uninit(*this);
+// --- command.acr_dm..Dtor
+inline  command::acr_dm::~acr_dm() {
+    command::acr_dm_Uninit(*this);
 }
-
 
 // --- command.acr_dm_proc..Init
 // Set all fields to initial values.
@@ -468,18 +480,21 @@ inline void command::acr_dm_proc_Init(command::acr_dm_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr_ed::acr_ed() {
+
+// --- command.acr_dm_proc..Ctor
+inline  command::acr_dm_proc::acr_dm_proc() {
+    command::acr_dm_proc_Init(*this);
+}
+
+// --- command.acr_dm_proc..Dtor
+inline  command::acr_dm_proc::~acr_dm_proc() {
+    command::acr_dm_proc_Uninit(*this);
+}
+
+// --- command.acr_ed..Ctor
+inline  command::acr_ed::acr_ed() {
     command::acr_ed_Init(*this);
 }
-
-inline command::acr_ed_proc::acr_ed_proc() {
-    command::acr_ed_proc_Init(*this);
-}
-
-inline command::acr_ed_proc::~acr_ed_proc() {
-    command::acr_ed_proc_Uninit(*this);
-}
-
 
 // --- command.acr_ed_proc..Init
 // Set all fields to initial values.
@@ -489,18 +504,21 @@ inline void command::acr_ed_proc_Init(command::acr_ed_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr_in::acr_in() {
+
+// --- command.acr_ed_proc..Ctor
+inline  command::acr_ed_proc::acr_ed_proc() {
+    command::acr_ed_proc_Init(*this);
+}
+
+// --- command.acr_ed_proc..Dtor
+inline  command::acr_ed_proc::~acr_ed_proc() {
+    command::acr_ed_proc_Uninit(*this);
+}
+
+// --- command.acr_in..Ctor
+inline  command::acr_in::acr_in() {
     command::acr_in_Init(*this);
 }
-
-inline command::acr_in_proc::acr_in_proc() {
-    command::acr_in_proc_Init(*this);
-}
-
-inline command::acr_in_proc::~acr_in_proc() {
-    command::acr_in_proc_Uninit(*this);
-}
-
 
 // --- command.acr_in_proc..Init
 // Set all fields to initial values.
@@ -510,18 +528,21 @@ inline void command::acr_in_proc_Init(command::acr_in_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr_my::acr_my() {
+
+// --- command.acr_in_proc..Ctor
+inline  command::acr_in_proc::acr_in_proc() {
+    command::acr_in_proc_Init(*this);
+}
+
+// --- command.acr_in_proc..Dtor
+inline  command::acr_in_proc::~acr_in_proc() {
+    command::acr_in_proc_Uninit(*this);
+}
+
+// --- command.acr_my..Ctor
+inline  command::acr_my::acr_my() {
     command::acr_my_Init(*this);
 }
-
-inline command::acr_my_proc::acr_my_proc() {
-    command::acr_my_proc_Init(*this);
-}
-
-inline command::acr_my_proc::~acr_my_proc() {
-    command::acr_my_proc_Uninit(*this);
-}
-
 
 // --- command.acr_my_proc..Init
 // Set all fields to initial values.
@@ -531,14 +552,16 @@ inline void command::acr_my_proc_Init(command::acr_my_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::acr_proc::acr_proc() {
-    command::acr_proc_Init(*this);
+
+// --- command.acr_my_proc..Ctor
+inline  command::acr_my_proc::acr_my_proc() {
+    command::acr_my_proc_Init(*this);
 }
 
-inline command::acr_proc::~acr_proc() {
-    command::acr_proc_Uninit(*this);
+// --- command.acr_my_proc..Dtor
+inline  command::acr_my_proc::~acr_my_proc() {
+    command::acr_my_proc_Uninit(*this);
 }
-
 
 // --- command.acr_proc..Init
 // Set all fields to initial values.
@@ -548,22 +571,26 @@ inline void command::acr_proc_Init(command::acr_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::amc::amc() {
+
+// --- command.acr_proc..Ctor
+inline  command::acr_proc::acr_proc() {
+    command::acr_proc_Init(*this);
+}
+
+// --- command.acr_proc..Dtor
+inline  command::acr_proc::~acr_proc() {
+    command::acr_proc_Uninit(*this);
+}
+
+// --- command.amc..Ctor
+inline  command::amc::amc() {
     command::amc_Init(*this);
 }
 
-inline command::amc_gc::amc_gc() {
+// --- command.amc_gc..Ctor
+inline  command::amc_gc::amc_gc() {
     command::amc_gc_Init(*this);
 }
-
-inline command::amc_gc_proc::amc_gc_proc() {
-    command::amc_gc_proc_Init(*this);
-}
-
-inline command::amc_gc_proc::~amc_gc_proc() {
-    command::amc_gc_proc_Uninit(*this);
-}
-
 
 // --- command.amc_gc_proc..Init
 // Set all fields to initial values.
@@ -573,14 +600,16 @@ inline void command::amc_gc_proc_Init(command::amc_gc_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::amc_proc::amc_proc() {
-    command::amc_proc_Init(*this);
+
+// --- command.amc_gc_proc..Ctor
+inline  command::amc_gc_proc::amc_gc_proc() {
+    command::amc_gc_proc_Init(*this);
 }
 
-inline command::amc_proc::~amc_proc() {
-    command::amc_proc_Uninit(*this);
+// --- command.amc_gc_proc..Dtor
+inline  command::amc_gc_proc::~amc_gc_proc() {
+    command::amc_gc_proc_Uninit(*this);
 }
-
 
 // --- command.amc_proc..Init
 // Set all fields to initial values.
@@ -590,18 +619,21 @@ inline void command::amc_proc_Init(command::amc_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::amc_vis::amc_vis() {
+
+// --- command.amc_proc..Ctor
+inline  command::amc_proc::amc_proc() {
+    command::amc_proc_Init(*this);
+}
+
+// --- command.amc_proc..Dtor
+inline  command::amc_proc::~amc_proc() {
+    command::amc_proc_Uninit(*this);
+}
+
+// --- command.amc_vis..Ctor
+inline  command::amc_vis::amc_vis() {
     command::amc_vis_Init(*this);
 }
-
-inline command::amc_vis_proc::amc_vis_proc() {
-    command::amc_vis_proc_Init(*this);
-}
-
-inline command::amc_vis_proc::~amc_vis_proc() {
-    command::amc_vis_proc_Uninit(*this);
-}
-
 
 // --- command.amc_vis_proc..Init
 // Set all fields to initial values.
@@ -611,24 +643,27 @@ inline void command::amc_vis_proc_Init(command::amc_vis_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ams_cat::ams_cat() {
-    command::ams_cat_Init(*this);
+
+// --- command.amc_vis_proc..Ctor
+inline  command::amc_vis_proc::amc_vis_proc() {
+    command::amc_vis_proc_Init(*this);
 }
 
+// --- command.amc_vis_proc..Dtor
+inline  command::amc_vis_proc::~amc_vis_proc() {
+    command::amc_vis_proc_Uninit(*this);
+}
 
 // --- command.ams_cat..Init
 // Set all fields to initial values.
 inline void command::ams_cat_Init(command::ams_cat& parent) {
     parent.in = algo::strptr("data");
 }
-inline command::ams_cat_proc::ams_cat_proc() {
-    command::ams_cat_proc_Init(*this);
-}
 
-inline command::ams_cat_proc::~ams_cat_proc() {
-    command::ams_cat_proc_Uninit(*this);
+// --- command.ams_cat..Ctor
+inline  command::ams_cat::ams_cat() {
+    command::ams_cat_Init(*this);
 }
-
 
 // --- command.ams_cat_proc..Init
 // Set all fields to initial values.
@@ -638,18 +673,21 @@ inline void command::ams_cat_proc_Init(command::ams_cat_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ams_sendtest::ams_sendtest() {
+
+// --- command.ams_cat_proc..Ctor
+inline  command::ams_cat_proc::ams_cat_proc() {
+    command::ams_cat_proc_Init(*this);
+}
+
+// --- command.ams_cat_proc..Dtor
+inline  command::ams_cat_proc::~ams_cat_proc() {
+    command::ams_cat_proc_Uninit(*this);
+}
+
+// --- command.ams_sendtest..Ctor
+inline  command::ams_sendtest::ams_sendtest() {
     command::ams_sendtest_Init(*this);
 }
-
-inline command::ams_sendtest_proc::ams_sendtest_proc() {
-    command::ams_sendtest_proc_Init(*this);
-}
-
-inline command::ams_sendtest_proc::~ams_sendtest_proc() {
-    command::ams_sendtest_proc_Uninit(*this);
-}
-
 
 // --- command.ams_sendtest_proc..Init
 // Set all fields to initial values.
@@ -659,18 +697,21 @@ inline void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) 
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::apm::apm() {
+
+// --- command.ams_sendtest_proc..Ctor
+inline  command::ams_sendtest_proc::ams_sendtest_proc() {
+    command::ams_sendtest_proc_Init(*this);
+}
+
+// --- command.ams_sendtest_proc..Dtor
+inline  command::ams_sendtest_proc::~ams_sendtest_proc() {
+    command::ams_sendtest_proc_Uninit(*this);
+}
+
+// --- command.apm..Ctor
+inline  command::apm::apm() {
     command::apm_Init(*this);
 }
-
-inline command::apm_proc::apm_proc() {
-    command::apm_proc_Init(*this);
-}
-
-inline command::apm_proc::~apm_proc() {
-    command::apm_proc_Uninit(*this);
-}
-
 
 // --- command.apm_proc..Init
 // Set all fields to initial values.
@@ -680,10 +721,16 @@ inline void command::apm_proc_Init(command::apm_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::aqlite::aqlite() {
-    command::aqlite_Init(*this);
+
+// --- command.apm_proc..Ctor
+inline  command::apm_proc::apm_proc() {
+    command::apm_proc_Init(*this);
 }
 
+// --- command.apm_proc..Dtor
+inline  command::apm_proc::~apm_proc() {
+    command::apm_proc_Uninit(*this);
+}
 
 // --- command.aqlite..Init
 // Set all fields to initial values.
@@ -691,14 +738,11 @@ inline void command::aqlite_Init(command::aqlite& parent) {
     parent.in = algo::strptr("data");
     parent.data = algo::strptr("data");
 }
-inline command::aqlite_proc::aqlite_proc() {
-    command::aqlite_proc_Init(*this);
-}
 
-inline command::aqlite_proc::~aqlite_proc() {
-    command::aqlite_proc_Uninit(*this);
+// --- command.aqlite..Ctor
+inline  command::aqlite::aqlite() {
+    command::aqlite_Init(*this);
 }
-
 
 // --- command.aqlite_proc..Init
 // Set all fields to initial values.
@@ -708,18 +752,21 @@ inline void command::aqlite_proc_Init(command::aqlite_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_amc::atf_amc() {
+
+// --- command.aqlite_proc..Ctor
+inline  command::aqlite_proc::aqlite_proc() {
+    command::aqlite_proc_Init(*this);
+}
+
+// --- command.aqlite_proc..Dtor
+inline  command::aqlite_proc::~aqlite_proc() {
+    command::aqlite_proc_Uninit(*this);
+}
+
+// --- command.atf_amc..Ctor
+inline  command::atf_amc::atf_amc() {
     command::atf_amc_Init(*this);
 }
-
-inline command::atf_amc_proc::atf_amc_proc() {
-    command::atf_amc_proc_Init(*this);
-}
-
-inline command::atf_amc_proc::~atf_amc_proc() {
-    command::atf_amc_proc_Uninit(*this);
-}
-
 
 // --- command.atf_amc_proc..Init
 // Set all fields to initial values.
@@ -729,18 +776,21 @@ inline void command::atf_amc_proc_Init(command::atf_amc_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_ci::atf_ci() {
+
+// --- command.atf_amc_proc..Ctor
+inline  command::atf_amc_proc::atf_amc_proc() {
+    command::atf_amc_proc_Init(*this);
+}
+
+// --- command.atf_amc_proc..Dtor
+inline  command::atf_amc_proc::~atf_amc_proc() {
+    command::atf_amc_proc_Uninit(*this);
+}
+
+// --- command.atf_ci..Ctor
+inline  command::atf_ci::atf_ci() {
     command::atf_ci_Init(*this);
 }
-
-inline command::atf_ci_proc::atf_ci_proc() {
-    command::atf_ci_proc_Init(*this);
-}
-
-inline command::atf_ci_proc::~atf_ci_proc() {
-    command::atf_ci_proc_Uninit(*this);
-}
-
 
 // --- command.atf_ci_proc..Init
 // Set all fields to initial values.
@@ -750,14 +800,16 @@ inline void command::atf_ci_proc_Init(command::atf_ci_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_cmdline::atf_cmdline() {
-    command::atf_cmdline_Init(*this);
+
+// --- command.atf_ci_proc..Ctor
+inline  command::atf_ci_proc::atf_ci_proc() {
+    command::atf_ci_proc_Init(*this);
 }
 
-inline command::atf_cmdline::~atf_cmdline() {
-    command::atf_cmdline_Uninit(*this);
+// --- command.atf_ci_proc..Dtor
+inline  command::atf_ci_proc::~atf_ci_proc() {
+    command::atf_ci_proc_Uninit(*this);
 }
-
 
 // --- command.atf_cmdline.mstr.EmptyQ
 // Return true if index is empty
@@ -1157,14 +1209,16 @@ inline bool command::atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs)
 inline i32& command::atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::atf_cmdline_proc::atf_cmdline_proc() {
-    command::atf_cmdline_proc_Init(*this);
+
+// --- command.atf_cmdline..Ctor
+inline  command::atf_cmdline::atf_cmdline() {
+    command::atf_cmdline_Init(*this);
 }
 
-inline command::atf_cmdline_proc::~atf_cmdline_proc() {
-    command::atf_cmdline_proc_Uninit(*this);
+// --- command.atf_cmdline..Dtor
+inline  command::atf_cmdline::~atf_cmdline() {
+    command::atf_cmdline_Uninit(*this);
 }
-
 
 // --- command.atf_cmdline_proc..Init
 // Set all fields to initial values.
@@ -1174,18 +1228,21 @@ inline void command::atf_cmdline_proc_Init(command::atf_cmdline_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_comp::atf_comp() {
+
+// --- command.atf_cmdline_proc..Ctor
+inline  command::atf_cmdline_proc::atf_cmdline_proc() {
+    command::atf_cmdline_proc_Init(*this);
+}
+
+// --- command.atf_cmdline_proc..Dtor
+inline  command::atf_cmdline_proc::~atf_cmdline_proc() {
+    command::atf_cmdline_proc_Uninit(*this);
+}
+
+// --- command.atf_comp..Ctor
+inline  command::atf_comp::atf_comp() {
     command::atf_comp_Init(*this);
 }
-
-inline command::atf_comp_proc::atf_comp_proc() {
-    command::atf_comp_proc_Init(*this);
-}
-
-inline command::atf_comp_proc::~atf_comp_proc() {
-    command::atf_comp_proc_Uninit(*this);
-}
-
 
 // --- command.atf_comp_proc..Init
 // Set all fields to initial values.
@@ -1195,18 +1252,21 @@ inline void command::atf_comp_proc_Init(command::atf_comp_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_cov::atf_cov() {
+
+// --- command.atf_comp_proc..Ctor
+inline  command::atf_comp_proc::atf_comp_proc() {
+    command::atf_comp_proc_Init(*this);
+}
+
+// --- command.atf_comp_proc..Dtor
+inline  command::atf_comp_proc::~atf_comp_proc() {
+    command::atf_comp_proc_Uninit(*this);
+}
+
+// --- command.atf_cov..Ctor
+inline  command::atf_cov::atf_cov() {
     command::atf_cov_Init(*this);
 }
-
-inline command::atf_cov_proc::atf_cov_proc() {
-    command::atf_cov_proc_Init(*this);
-}
-
-inline command::atf_cov_proc::~atf_cov_proc() {
-    command::atf_cov_proc_Uninit(*this);
-}
-
 
 // --- command.atf_cov_proc..Init
 // Set all fields to initial values.
@@ -1216,18 +1276,21 @@ inline void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_fuzz::atf_fuzz() {
+
+// --- command.atf_cov_proc..Ctor
+inline  command::atf_cov_proc::atf_cov_proc() {
+    command::atf_cov_proc_Init(*this);
+}
+
+// --- command.atf_cov_proc..Dtor
+inline  command::atf_cov_proc::~atf_cov_proc() {
+    command::atf_cov_proc_Uninit(*this);
+}
+
+// --- command.atf_fuzz..Ctor
+inline  command::atf_fuzz::atf_fuzz() {
     command::atf_fuzz_Init(*this);
 }
-
-inline command::atf_fuzz_proc::atf_fuzz_proc() {
-    command::atf_fuzz_proc_Init(*this);
-}
-
-inline command::atf_fuzz_proc::~atf_fuzz_proc() {
-    command::atf_fuzz_proc_Uninit(*this);
-}
-
 
 // --- command.atf_fuzz_proc..Init
 // Set all fields to initial values.
@@ -1237,18 +1300,21 @@ inline void command::atf_fuzz_proc_Init(command::atf_fuzz_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_gcli::atf_gcli() {
+
+// --- command.atf_fuzz_proc..Ctor
+inline  command::atf_fuzz_proc::atf_fuzz_proc() {
+    command::atf_fuzz_proc_Init(*this);
+}
+
+// --- command.atf_fuzz_proc..Dtor
+inline  command::atf_fuzz_proc::~atf_fuzz_proc() {
+    command::atf_fuzz_proc_Uninit(*this);
+}
+
+// --- command.atf_gcli..Ctor
+inline  command::atf_gcli::atf_gcli() {
     command::atf_gcli_Init(*this);
 }
-
-inline command::atf_gcli_proc::atf_gcli_proc() {
-    command::atf_gcli_proc_Init(*this);
-}
-
-inline command::atf_gcli_proc::~atf_gcli_proc() {
-    command::atf_gcli_proc_Uninit(*this);
-}
-
 
 // --- command.atf_gcli_proc..Init
 // Set all fields to initial values.
@@ -1258,10 +1324,16 @@ inline void command::atf_gcli_proc_Init(command::atf_gcli_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_nrun::atf_nrun() {
-    command::atf_nrun_Init(*this);
+
+// --- command.atf_gcli_proc..Ctor
+inline  command::atf_gcli_proc::atf_gcli_proc() {
+    command::atf_gcli_proc_Init(*this);
 }
 
+// --- command.atf_gcli_proc..Dtor
+inline  command::atf_gcli_proc::~atf_gcli_proc() {
+    command::atf_gcli_proc_Uninit(*this);
+}
 
 // --- command.atf_nrun..Init
 // Set all fields to initial values.
@@ -1270,14 +1342,11 @@ inline void command::atf_nrun_Init(command::atf_nrun& parent) {
     parent.maxjobs = i32(2);
     parent.ncmd = i32(6);
 }
-inline command::atf_nrun_proc::atf_nrun_proc() {
-    command::atf_nrun_proc_Init(*this);
-}
 
-inline command::atf_nrun_proc::~atf_nrun_proc() {
-    command::atf_nrun_proc_Uninit(*this);
+// --- command.atf_nrun..Ctor
+inline  command::atf_nrun::atf_nrun() {
+    command::atf_nrun_Init(*this);
 }
-
 
 // --- command.atf_nrun_proc..Init
 // Set all fields to initial values.
@@ -1287,18 +1356,21 @@ inline void command::atf_nrun_proc_Init(command::atf_nrun_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::atf_unit::atf_unit() {
+
+// --- command.atf_nrun_proc..Ctor
+inline  command::atf_nrun_proc::atf_nrun_proc() {
+    command::atf_nrun_proc_Init(*this);
+}
+
+// --- command.atf_nrun_proc..Dtor
+inline  command::atf_nrun_proc::~atf_nrun_proc() {
+    command::atf_nrun_proc_Uninit(*this);
+}
+
+// --- command.atf_unit..Ctor
+inline  command::atf_unit::atf_unit() {
     command::atf_unit_Init(*this);
 }
-
-inline command::atf_unit_proc::atf_unit_proc() {
-    command::atf_unit_proc_Init(*this);
-}
-
-inline command::atf_unit_proc::~atf_unit_proc() {
-    command::atf_unit_proc_Uninit(*this);
-}
-
 
 // --- command.atf_unit_proc..Init
 // Set all fields to initial values.
@@ -1308,20 +1380,27 @@ inline void command::atf_unit_proc_Init(command::atf_unit_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::bash::bash() {
-    command::bash_Init(*this);
+
+// --- command.atf_unit_proc..Ctor
+inline  command::atf_unit_proc::atf_unit_proc() {
+    command::atf_unit_proc_Init(*this);
 }
 
+// --- command.atf_unit_proc..Dtor
+inline  command::atf_unit_proc::~atf_unit_proc() {
+    command::atf_unit_proc_Uninit(*this);
+}
 
 // --- command.bash..Init
 // Set all fields to initial values.
 inline void command::bash_Init(command::bash& parent) {
     parent.c = algo::strptr("");
 }
-inline command::bash2html::bash2html() {
-    command::bash2html_Init(*this);
-}
 
+// --- command.bash..Ctor
+inline  command::bash::bash() {
+    command::bash_Init(*this);
+}
 
 // --- command.bash2html..Init
 // Set all fields to initial values.
@@ -1329,14 +1408,11 @@ inline void command::bash2html_Init(command::bash2html& parent) {
     parent.in = algo::strptr("data");
     parent.test = bool(false);
 }
-inline command::bash2html_proc::bash2html_proc() {
-    command::bash2html_proc_Init(*this);
-}
 
-inline command::bash2html_proc::~bash2html_proc() {
-    command::bash2html_proc_Uninit(*this);
+// --- command.bash2html..Ctor
+inline  command::bash2html::bash2html() {
+    command::bash2html_Init(*this);
 }
-
 
 // --- command.bash2html_proc..Init
 // Set all fields to initial values.
@@ -1346,14 +1422,16 @@ inline void command::bash2html_proc_Init(command::bash2html_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::bash_proc::bash_proc() {
-    command::bash_proc_Init(*this);
+
+// --- command.bash2html_proc..Ctor
+inline  command::bash2html_proc::bash2html_proc() {
+    command::bash2html_proc_Init(*this);
 }
 
-inline command::bash_proc::~bash_proc() {
-    command::bash_proc_Uninit(*this);
+// --- command.bash2html_proc..Dtor
+inline  command::bash2html_proc::~bash2html_proc() {
+    command::bash2html_proc_Uninit(*this);
 }
-
 
 // --- command.bash_proc..Init
 // Set all fields to initial values.
@@ -1363,14 +1441,16 @@ inline void command::bash_proc_Init(command::bash_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::gcache::gcache() {
-    command::gcache_Init(*this);
+
+// --- command.bash_proc..Ctor
+inline  command::bash_proc::bash_proc() {
+    command::bash_proc_Init(*this);
 }
 
-inline command::gcache::~gcache() {
-    command::gcache_Uninit(*this);
+// --- command.bash_proc..Dtor
+inline  command::bash_proc::~bash_proc() {
+    command::bash_proc_Uninit(*this);
 }
-
 
 // --- command.gcache.cmd.EmptyQ
 // Return true if index is empty
@@ -1464,14 +1544,16 @@ inline bool command::gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) {
 inline algo::cstring& command::gcache_cmd_curs_Access(gcache_cmd_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::gcache_proc::gcache_proc() {
-    command::gcache_proc_Init(*this);
+
+// --- command.gcache..Ctor
+inline  command::gcache::gcache() {
+    command::gcache_Init(*this);
 }
 
-inline command::gcache_proc::~gcache_proc() {
-    command::gcache_proc_Uninit(*this);
+// --- command.gcache..Dtor
+inline  command::gcache::~gcache() {
+    command::gcache_Uninit(*this);
 }
-
 
 // --- command.gcache_proc..Init
 // Set all fields to initial values.
@@ -1481,14 +1563,16 @@ inline void command::gcache_proc_Init(command::gcache_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::gcli::gcli() {
-    command::gcli_Init(*this);
+
+// --- command.gcache_proc..Ctor
+inline  command::gcache_proc::gcache_proc() {
+    command::gcache_proc_Init(*this);
 }
 
-inline command::gcli::~gcli() {
-    command::gcli_Uninit(*this);
+// --- command.gcache_proc..Dtor
+inline  command::gcache_proc::~gcache_proc() {
+    command::gcache_proc_Uninit(*this);
 }
-
 
 // --- command.gcli.fields.EmptyQ
 // Return true if index is empty
@@ -1582,14 +1666,16 @@ inline bool command::gcli_fields_curs_ValidQ(gcli_fields_curs &curs) {
 inline algo::cstring& command::gcli_fields_curs_Access(gcli_fields_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::gcli_proc::gcli_proc() {
-    command::gcli_proc_Init(*this);
+
+// --- command.gcli..Ctor
+inline  command::gcli::gcli() {
+    command::gcli_Init(*this);
 }
 
-inline command::gcli_proc::~gcli_proc() {
-    command::gcli_proc_Uninit(*this);
+// --- command.gcli..Dtor
+inline  command::gcli::~gcli() {
+    command::gcli_Uninit(*this);
 }
-
 
 // --- command.gcli_proc..Init
 // Set all fields to initial values.
@@ -1599,14 +1685,16 @@ inline void command::gcli_proc_Init(command::gcli_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::mdbg::mdbg() {
-    command::mdbg_Init(*this);
+
+// --- command.gcli_proc..Ctor
+inline  command::gcli_proc::gcli_proc() {
+    command::gcli_proc_Init(*this);
 }
 
-inline command::mdbg::~mdbg() {
-    command::mdbg_Uninit(*this);
+// --- command.gcli_proc..Dtor
+inline  command::gcli_proc::~gcli_proc() {
+    command::gcli_proc_Uninit(*this);
 }
-
 
 // --- command.mdbg.args.EmptyQ
 // Return true if index is empty
@@ -1793,14 +1881,16 @@ inline bool command::mdbg_b_curs_ValidQ(mdbg_b_curs &curs) {
 inline algo::cstring& command::mdbg_b_curs_Access(mdbg_b_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::mdbg_proc::mdbg_proc() {
-    command::mdbg_proc_Init(*this);
+
+// --- command.mdbg..Ctor
+inline  command::mdbg::mdbg() {
+    command::mdbg_Init(*this);
 }
 
-inline command::mdbg_proc::~mdbg_proc() {
-    command::mdbg_proc_Uninit(*this);
+// --- command.mdbg..Dtor
+inline  command::mdbg::~mdbg() {
+    command::mdbg_Uninit(*this);
 }
-
 
 // --- command.mdbg_proc..Init
 // Set all fields to initial values.
@@ -1810,10 +1900,16 @@ inline void command::mdbg_proc_Init(command::mdbg_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::mysql2ssim::mysql2ssim() {
-    command::mysql2ssim_Init(*this);
+
+// --- command.mdbg_proc..Ctor
+inline  command::mdbg_proc::mdbg_proc() {
+    command::mdbg_proc_Init(*this);
 }
 
+// --- command.mdbg_proc..Dtor
+inline  command::mdbg_proc::~mdbg_proc() {
+    command::mdbg_proc_Uninit(*this);
+}
 
 // --- command.mysql2ssim..Init
 // Set all fields to initial values.
@@ -1826,14 +1922,11 @@ inline void command::mysql2ssim_Init(command::mysql2ssim& parent) {
     parent.nologo = bool(false);
     parent.baddbok = bool(false);
 }
-inline command::mysql2ssim_proc::mysql2ssim_proc() {
-    command::mysql2ssim_proc_Init(*this);
-}
 
-inline command::mysql2ssim_proc::~mysql2ssim_proc() {
-    command::mysql2ssim_proc_Uninit(*this);
+// --- command.mysql2ssim..Ctor
+inline  command::mysql2ssim::mysql2ssim() {
+    command::mysql2ssim_Init(*this);
 }
-
 
 // --- command.mysql2ssim_proc..Init
 // Set all fields to initial values.
@@ -1843,18 +1936,21 @@ inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::orgfile::orgfile() {
+
+// --- command.mysql2ssim_proc..Ctor
+inline  command::mysql2ssim_proc::mysql2ssim_proc() {
+    command::mysql2ssim_proc_Init(*this);
+}
+
+// --- command.mysql2ssim_proc..Dtor
+inline  command::mysql2ssim_proc::~mysql2ssim_proc() {
+    command::mysql2ssim_proc_Uninit(*this);
+}
+
+// --- command.orgfile..Ctor
+inline  command::orgfile::orgfile() {
     command::orgfile_Init(*this);
 }
-
-inline command::orgfile_proc::orgfile_proc() {
-    command::orgfile_proc_Init(*this);
-}
-
-inline command::orgfile_proc::~orgfile_proc() {
-    command::orgfile_proc_Uninit(*this);
-}
-
 
 // --- command.orgfile_proc..Init
 // Set all fields to initial values.
@@ -1864,10 +1960,16 @@ inline void command::orgfile_proc_Init(command::orgfile_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::samp_regx::samp_regx() {
-    command::samp_regx_Init(*this);
+
+// --- command.orgfile_proc..Ctor
+inline  command::orgfile_proc::orgfile_proc() {
+    command::orgfile_proc_Init(*this);
 }
 
+// --- command.orgfile_proc..Dtor
+inline  command::orgfile_proc::~orgfile_proc() {
+    command::orgfile_proc_Uninit(*this);
+}
 
 // --- command.samp_regx.style.GetEnum
 // Get value of field as enum type
@@ -1890,14 +1992,11 @@ inline void command::samp_regx_Init(command::samp_regx& parent) {
     parent.string = algo::strptr("");
     parent.show = bool(false);
 }
-inline command::samp_regx_proc::samp_regx_proc() {
-    command::samp_regx_proc_Init(*this);
-}
 
-inline command::samp_regx_proc::~samp_regx_proc() {
-    command::samp_regx_proc_Uninit(*this);
+// --- command.samp_regx..Ctor
+inline  command::samp_regx::samp_regx() {
+    command::samp_regx_Init(*this);
 }
-
 
 // --- command.samp_regx_proc..Init
 // Set all fields to initial values.
@@ -1907,14 +2006,16 @@ inline void command::samp_regx_proc_Init(command::samp_regx_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::sandbox::sandbox() {
-    command::sandbox_Init(*this);
+
+// --- command.samp_regx_proc..Ctor
+inline  command::samp_regx_proc::samp_regx_proc() {
+    command::samp_regx_proc_Init(*this);
 }
 
-inline command::sandbox::~sandbox() {
-    command::sandbox_Uninit(*this);
+// --- command.samp_regx_proc..Dtor
+inline  command::samp_regx_proc::~samp_regx_proc() {
+    command::samp_regx_proc_Uninit(*this);
 }
-
 
 // --- command.sandbox.cmd.EmptyQ
 // Return true if index is empty
@@ -2101,14 +2202,16 @@ inline bool command::sandbox_files_curs_ValidQ(sandbox_files_curs &curs) {
 inline algo::cstring& command::sandbox_files_curs_Access(sandbox_files_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::sandbox_proc::sandbox_proc() {
-    command::sandbox_proc_Init(*this);
+
+// --- command.sandbox..Ctor
+inline  command::sandbox::sandbox() {
+    command::sandbox_Init(*this);
 }
 
-inline command::sandbox_proc::~sandbox_proc() {
-    command::sandbox_proc_Uninit(*this);
+// --- command.sandbox..Dtor
+inline  command::sandbox::~sandbox() {
+    command::sandbox_Uninit(*this);
 }
-
 
 // --- command.sandbox_proc..Init
 // Set all fields to initial values.
@@ -2118,18 +2221,21 @@ inline void command::sandbox_proc_Init(command::sandbox_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::src_func::src_func() {
+
+// --- command.sandbox_proc..Ctor
+inline  command::sandbox_proc::sandbox_proc() {
+    command::sandbox_proc_Init(*this);
+}
+
+// --- command.sandbox_proc..Dtor
+inline  command::sandbox_proc::~sandbox_proc() {
+    command::sandbox_proc_Uninit(*this);
+}
+
+// --- command.src_func..Ctor
+inline  command::src_func::src_func() {
     command::src_func_Init(*this);
 }
-
-inline command::src_func_proc::src_func_proc() {
-    command::src_func_proc_Init(*this);
-}
-
-inline command::src_func_proc::~src_func_proc() {
-    command::src_func_proc_Uninit(*this);
-}
-
 
 // --- command.src_func_proc..Init
 // Set all fields to initial values.
@@ -2139,18 +2245,21 @@ inline void command::src_func_proc_Init(command::src_func_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::src_hdr::src_hdr() {
+
+// --- command.src_func_proc..Ctor
+inline  command::src_func_proc::src_func_proc() {
+    command::src_func_proc_Init(*this);
+}
+
+// --- command.src_func_proc..Dtor
+inline  command::src_func_proc::~src_func_proc() {
+    command::src_func_proc_Uninit(*this);
+}
+
+// --- command.src_hdr..Ctor
+inline  command::src_hdr::src_hdr() {
     command::src_hdr_Init(*this);
 }
-
-inline command::src_hdr_proc::src_hdr_proc() {
-    command::src_hdr_proc_Init(*this);
-}
-
-inline command::src_hdr_proc::~src_hdr_proc() {
-    command::src_hdr_proc_Uninit(*this);
-}
-
 
 // --- command.src_hdr_proc..Init
 // Set all fields to initial values.
@@ -2160,18 +2269,21 @@ inline void command::src_hdr_proc_Init(command::src_hdr_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::src_lim::src_lim() {
+
+// --- command.src_hdr_proc..Ctor
+inline  command::src_hdr_proc::src_hdr_proc() {
+    command::src_hdr_proc_Init(*this);
+}
+
+// --- command.src_hdr_proc..Dtor
+inline  command::src_hdr_proc::~src_hdr_proc() {
+    command::src_hdr_proc_Uninit(*this);
+}
+
+// --- command.src_lim..Ctor
+inline  command::src_lim::src_lim() {
     command::src_lim_Init(*this);
 }
-
-inline command::src_lim_proc::src_lim_proc() {
-    command::src_lim_proc_Init(*this);
-}
-
-inline command::src_lim_proc::~src_lim_proc() {
-    command::src_lim_proc_Uninit(*this);
-}
-
 
 // --- command.src_lim_proc..Init
 // Set all fields to initial values.
@@ -2181,10 +2293,16 @@ inline void command::src_lim_proc_Init(command::src_lim_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ssim2csv::ssim2csv() {
-    command::ssim2csv_Init(*this);
+
+// --- command.src_lim_proc..Ctor
+inline  command::src_lim_proc::src_lim_proc() {
+    command::src_lim_proc_Init(*this);
 }
 
+// --- command.src_lim_proc..Dtor
+inline  command::src_lim_proc::~src_lim_proc() {
+    command::src_lim_proc_Uninit(*this);
+}
 
 // --- command.ssim2csv..Init
 // Set all fields to initial values.
@@ -2192,14 +2310,11 @@ inline void command::ssim2csv_Init(command::ssim2csv& parent) {
     parent.expand = algo::strptr("");
     parent.ignoreQuote = bool(false);
 }
-inline command::ssim2csv_proc::ssim2csv_proc() {
-    command::ssim2csv_proc_Init(*this);
-}
 
-inline command::ssim2csv_proc::~ssim2csv_proc() {
-    command::ssim2csv_proc_Uninit(*this);
+// --- command.ssim2csv..Ctor
+inline  command::ssim2csv::ssim2csv() {
+    command::ssim2csv_Init(*this);
 }
-
 
 // --- command.ssim2csv_proc..Init
 // Set all fields to initial values.
@@ -2209,18 +2324,21 @@ inline void command::ssim2csv_proc_Init(command::ssim2csv_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ssim2mysql::ssim2mysql() {
+
+// --- command.ssim2csv_proc..Ctor
+inline  command::ssim2csv_proc::ssim2csv_proc() {
+    command::ssim2csv_proc_Init(*this);
+}
+
+// --- command.ssim2csv_proc..Dtor
+inline  command::ssim2csv_proc::~ssim2csv_proc() {
+    command::ssim2csv_proc_Uninit(*this);
+}
+
+// --- command.ssim2mysql..Ctor
+inline  command::ssim2mysql::ssim2mysql() {
     command::ssim2mysql_Init(*this);
 }
-
-inline command::ssim2mysql_proc::ssim2mysql_proc() {
-    command::ssim2mysql_proc_Init(*this);
-}
-
-inline command::ssim2mysql_proc::~ssim2mysql_proc() {
-    command::ssim2mysql_proc_Uninit(*this);
-}
-
 
 // --- command.ssim2mysql_proc..Init
 // Set all fields to initial values.
@@ -2230,14 +2348,16 @@ inline void command::ssim2mysql_proc_Init(command::ssim2mysql_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::ssimfilt::ssimfilt() {
-    command::ssimfilt_Init(*this);
+
+// --- command.ssim2mysql_proc..Ctor
+inline  command::ssim2mysql_proc::ssim2mysql_proc() {
+    command::ssim2mysql_proc_Init(*this);
 }
 
-inline command::ssimfilt::~ssimfilt() {
-    command::ssimfilt_Uninit(*this);
+// --- command.ssim2mysql_proc..Dtor
+inline  command::ssim2mysql_proc::~ssim2mysql_proc() {
+    command::ssim2mysql_proc_Uninit(*this);
 }
-
 
 // --- command.ssimfilt.match.EmptyQ
 // Return true if index is empty
@@ -2436,14 +2556,16 @@ inline bool command::ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) {
 inline algo::cstring& command::ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) {
     return curs.elems[curs.index];
 }
-inline command::ssimfilt_proc::ssimfilt_proc() {
-    command::ssimfilt_proc_Init(*this);
+
+// --- command.ssimfilt..Ctor
+inline  command::ssimfilt::ssimfilt() {
+    command::ssimfilt_Init(*this);
 }
 
-inline command::ssimfilt_proc::~ssimfilt_proc() {
-    command::ssimfilt_proc_Uninit(*this);
+// --- command.ssimfilt..Dtor
+inline  command::ssimfilt::~ssimfilt() {
+    command::ssimfilt_Uninit(*this);
 }
-
 
 // --- command.ssimfilt_proc..Init
 // Set all fields to initial values.
@@ -2453,10 +2575,16 @@ inline void command::ssimfilt_proc_Init(command::ssimfilt_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::strconv::strconv() {
-    command::strconv_Init(*this);
+
+// --- command.ssimfilt_proc..Ctor
+inline  command::ssimfilt_proc::ssimfilt_proc() {
+    command::ssimfilt_proc_Init(*this);
 }
 
+// --- command.ssimfilt_proc..Dtor
+inline  command::ssimfilt_proc::~ssimfilt_proc() {
+    command::ssimfilt_proc_Uninit(*this);
+}
 
 // --- command.strconv..Init
 // Set all fields to initial values.
@@ -2466,14 +2594,11 @@ inline void command::strconv_Init(command::strconv& parent) {
     parent.in = algo::strptr("data");
     parent.pathcomp = algo::strptr("");
 }
-inline command::strconv_proc::strconv_proc() {
-    command::strconv_proc_Init(*this);
-}
 
-inline command::strconv_proc::~strconv_proc() {
-    command::strconv_proc_Uninit(*this);
+// --- command.strconv..Ctor
+inline  command::strconv::strconv() {
+    command::strconv_Init(*this);
 }
-
 
 // --- command.strconv_proc..Init
 // Set all fields to initial values.
@@ -2483,18 +2608,21 @@ inline void command::strconv_proc_Init(command::strconv_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
-inline command::sv2ssim::sv2ssim() {
+
+// --- command.strconv_proc..Ctor
+inline  command::strconv_proc::strconv_proc() {
+    command::strconv_proc_Init(*this);
+}
+
+// --- command.strconv_proc..Dtor
+inline  command::strconv_proc::~strconv_proc() {
+    command::strconv_proc_Uninit(*this);
+}
+
+// --- command.sv2ssim..Ctor
+inline  command::sv2ssim::sv2ssim() {
     command::sv2ssim_Init(*this);
 }
-
-inline command::sv2ssim_proc::sv2ssim_proc() {
-    command::sv2ssim_proc_Init(*this);
-}
-
-inline command::sv2ssim_proc::~sv2ssim_proc() {
-    command::sv2ssim_proc_Uninit(*this);
-}
-
 
 // --- command.sv2ssim_proc..Init
 // Set all fields to initial values.
@@ -2503,6 +2631,16 @@ inline void command::sv2ssim_proc_Init(command::sv2ssim_proc& parent) {
     parent.pid = pid_t(0);
     parent.timeout = i32(0);
     parent.status = i32(0);
+}
+
+// --- command.sv2ssim_proc..Ctor
+inline  command::sv2ssim_proc::sv2ssim_proc() {
+    command::sv2ssim_proc_Init(*this);
+}
+
+// --- command.sv2ssim_proc..Dtor
+inline  command::sv2ssim_proc::~sv2ssim_proc() {
+    command::sv2ssim_proc_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const command::FieldId &row) {// cfmt:command.FieldId.String

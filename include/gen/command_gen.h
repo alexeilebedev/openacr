@@ -494,19 +494,23 @@ namespace command { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // command.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator command_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(command_FieldIdEnum arg);
-    FieldId();
+    // func:command.FieldId.value.Cast
+    inline               operator command_FieldIdEnum() const __attribute__((nothrow));
+    // func:command.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:command.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:command.FieldId..EnumCtor
+    inline               FieldId(command_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:command.FieldId.value.GetEnum
-command_FieldIdEnum  value_GetEnum(const command::FieldId& parent) __attribute__((nothrow));
+inline command_FieldIdEnum value_GetEnum(const command::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:command.FieldId.value.SetEnum
-void                 value_SetEnum(command::FieldId& parent, command_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(command::FieldId& parent, command_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:command.FieldId.value.ToCstr
@@ -534,7 +538,7 @@ bool                 value_ReadStrptrMaybe(command::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.FieldId..Init
-void                 FieldId_Init(command::FieldId& parent);
+inline void          FieldId_Init(command::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:command.FieldId.String  printfmt:Raw
 // func:command.FieldId..Print
@@ -568,12 +572,8 @@ struct abt { // command.abt
     bool               report;     //   true  Print final report
     algo::cstring      jcdb;       //   ""  Create JSON compilation database in specified file
     u8                 cache;      //   0  Cache mode
-    abt();
-private:
-    // reftype Regx of command.abt.target prohibits copy
-    // reftype Regx of command.abt.disas prohibits copy
-    abt(const abt&){ /*disallow copy constructor */}
-    void operator =(const abt&){ /*disallow direct assignment */}
+    // func:command.abt..Ctor
+    inline               abt() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -594,10 +594,10 @@ bool                 disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in
 
 // Get value of field as enum type
 // func:command.abt.cache.GetEnum
-command_abt_cache_Enum cache_GetEnum(const command::abt& parent) __attribute__((nothrow));
+inline command_abt_cache_Enum cache_GetEnum(const command::abt& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:command.abt.cache.SetEnum
-void                 cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) __attribute__((nothrow));
+inline void          cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:command.abt.cache.ToCstr
@@ -656,14 +656,8 @@ struct abt_md { // command.abt_md
     bool             anchor;    //   false  (with -print) Print anchors
     bool             print;     //   false  (action) Query mode: Print .md section without evaluating
     bool             dry_run;   //   false  Do not write changes to disk
-    abt_md();
-private:
-    // reftype Regx of command.abt_md.readme prohibits copy
-    // reftype Regx of command.abt_md.ns prohibits copy
-    // reftype Regx of command.abt_md.section prohibits copy
-    // ... and several other reasons
-    abt_md(const abt_md&){ /*disallow copy constructor */}
-    void operator =(const abt_md&){ /*disallow direct assignment */}
+    // func:command.abt_md..Ctor
+    inline               abt_md() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -724,13 +718,10 @@ struct abt_md_proc { // command.abt_md_proc: Subprocess: Tool to generate markdo
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    abt_md_proc();
-    ~abt_md_proc();
-private:
-    // reftype Exec of command.abt_md_proc.abt_md prohibits copy
-    // value field command.abt_md_proc.cmd is not copiable
-    abt_md_proc(const abt_md_proc&){ /*disallow copy constructor */}
-    void operator =(const abt_md_proc&){ /*disallow direct assignment */}
+    // func:command.abt_md_proc..Ctor
+    inline               abt_md_proc() __attribute__((nothrow));
+    // func:command.abt_md_proc..Dtor
+    inline               ~abt_md_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -766,7 +757,7 @@ void                 abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.abt_md_proc..Init
-void                 abt_md_proc_Init(command::abt_md_proc& parent);
+inline void          abt_md_proc_Init(command::abt_md_proc& parent);
 // func:command.abt_md_proc..Uninit
 void                 abt_md_proc_Uninit(command::abt_md_proc& parent) __attribute__((nothrow));
 
@@ -780,13 +771,10 @@ struct abt_proc { // command.abt_proc: Subprocess: Algo Build Tool - build & lin
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    abt_proc();
-    ~abt_proc();
-private:
-    // reftype Exec of command.abt_proc.abt prohibits copy
-    // value field command.abt_proc.cmd is not copiable
-    abt_proc(const abt_proc&){ /*disallow copy constructor */}
-    void operator =(const abt_proc&){ /*disallow direct assignment */}
+    // func:command.abt_proc..Ctor
+    inline               abt_proc() __attribute__((nothrow));
+    // func:command.abt_proc..Dtor
+    inline               ~abt_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -822,7 +810,7 @@ void                 abt_ToArgv(command::abt_proc& parent, algo::StringAry& args
 
 // Set all fields to initial values.
 // func:command.abt_proc..Init
-void                 abt_proc_Init(command::abt_proc& parent);
+inline void          abt_proc_Init(command::abt_proc& parent);
 // func:command.abt_proc..Uninit
 void                 abt_proc_Uninit(command::abt_proc& parent) __attribute__((nothrow));
 
@@ -872,13 +860,14 @@ struct acr { // command.acr
     u32              field_max;     // max. capacity of array before realloc
     algo::cstring    regxof;        //   ""  Single field: output regx of matching field values
     bool             meta;          //   false  Select meta-data for selected records
-    acr();
-    ~acr();
-private:
-    // reftype Tary of command.acr.where prohibits copy
-    // reftype Tary of command.acr.field prohibits copy
-    acr(const acr&){ /*disallow copy constructor */}
-    void operator =(const acr&){ /*disallow direct assignment */}
+    // func:command.acr..AssignOp
+    command::acr&        operator =(const command::acr &rhs) __attribute__((nothrow));
+    // func:command.acr..Ctor
+    inline               acr() __attribute__((nothrow));
+    // func:command.acr..Dtor
+    inline               ~acr() __attribute__((nothrow));
+    // func:command.acr..CopyCtor
+    acr(const command::acr &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -899,22 +888,22 @@ algo::cstring&       where_AllocAt(command::acr& parent, int at) __attribute__((
 algo::aryptr<algo::cstring> where_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr.where.EmptyQ
-bool                 where_EmptyQ(command::acr& parent) __attribute__((nothrow));
+inline bool          where_EmptyQ(command::acr& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.acr.where.Find
-algo::cstring*       where_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* where_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr.where.Getary
-algo::aryptr<algo::cstring> where_Getary(const command::acr& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> where_Getary(const command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr.where.Last
-algo::cstring*       where_Last(command::acr& parent) __attribute__((nothrow, pure));
+inline algo::cstring* where_Last(command::acr& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.acr.where.Max
-i32                  where_Max(command::acr& parent) __attribute__((nothrow));
+inline i32           where_Max(command::acr& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.acr.where.N
-i32                  where_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           where_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.acr.where.Remove
 void                 where_Remove(command::acr& parent, u32 i) __attribute__((nothrow));
@@ -925,7 +914,7 @@ void                 where_RemoveAll(command::acr& parent) __attribute__((nothro
 void                 where_RemoveLast(command::acr& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.acr.where.Reserve
-void                 where_Reserve(command::acr& parent, int n) __attribute__((nothrow));
+inline void          where_Reserve(command::acr& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.acr.where.AbsReserve
 void                 where_AbsReserve(command::acr& parent, int n) __attribute__((nothrow));
@@ -938,13 +927,13 @@ void                 where_Setary(command::acr& parent, command::acr &rhs) __att
 void                 where_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr.where.qFind
-algo::cstring&       where_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& where_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.acr.where.qLast
-algo::cstring&       where_qLast(command::acr& parent) __attribute__((nothrow));
+inline algo::cstring& where_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.acr.where.rowid_Get
-u64                  where_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           where_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.where.AllocNVal
 algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -972,22 +961,22 @@ algo::cstring&       field_AllocAt(command::acr& parent, int at) __attribute__((
 algo::aryptr<algo::cstring> field_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr.field.EmptyQ
-bool                 field_EmptyQ(command::acr& parent) __attribute__((nothrow));
+inline bool          field_EmptyQ(command::acr& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.acr.field.Find
-algo::cstring*       field_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* field_Find(command::acr& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr.field.Getary
-algo::aryptr<algo::cstring> field_Getary(const command::acr& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> field_Getary(const command::acr& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr.field.Last
-algo::cstring*       field_Last(command::acr& parent) __attribute__((nothrow, pure));
+inline algo::cstring* field_Last(command::acr& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.acr.field.Max
-i32                  field_Max(command::acr& parent) __attribute__((nothrow));
+inline i32           field_Max(command::acr& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.acr.field.N
-i32                  field_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           field_N(const command::acr& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.acr.field.Remove
 void                 field_Remove(command::acr& parent, u32 i) __attribute__((nothrow));
@@ -998,7 +987,7 @@ void                 field_RemoveAll(command::acr& parent) __attribute__((nothro
 void                 field_RemoveLast(command::acr& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.acr.field.Reserve
-void                 field_Reserve(command::acr& parent, int n) __attribute__((nothrow));
+inline void          field_Reserve(command::acr& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.acr.field.AbsReserve
 void                 field_AbsReserve(command::acr& parent, int n) __attribute__((nothrow));
@@ -1011,13 +1000,13 @@ void                 field_Setary(command::acr& parent, command::acr &rhs) __att
 void                 field_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr.field.qFind
-algo::cstring&       field_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& field_qFind(command::acr& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.acr.field.qLast
-algo::cstring&       field_qLast(command::acr& parent) __attribute__((nothrow));
+inline algo::cstring& field_qLast(command::acr& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.acr.field.rowid_Get
-u64                  field_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           field_rowid_Get(command::acr& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -1029,26 +1018,26 @@ bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in
 
 // proceed to next item
 // func:command.acr.where_curs.Next
-void                 acr_where_curs_Next(acr_where_curs &curs) __attribute__((nothrow));
+inline void          acr_where_curs_Next(acr_where_curs &curs) __attribute__((nothrow));
 // func:command.acr.where_curs.Reset
-void                 acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent) __attribute__((nothrow));
+inline void          acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr.where_curs.ValidQ
-bool                 acr_where_curs_ValidQ(acr_where_curs &curs) __attribute__((nothrow));
+inline bool          acr_where_curs_ValidQ(acr_where_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr.where_curs.Access
-algo::cstring&       acr_where_curs_Access(acr_where_curs &curs) __attribute__((nothrow));
+inline algo::cstring& acr_where_curs_Access(acr_where_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.acr.field_curs.Next
-void                 acr_field_curs_Next(acr_field_curs &curs) __attribute__((nothrow));
+inline void          acr_field_curs_Next(acr_field_curs &curs) __attribute__((nothrow));
 // func:command.acr.field_curs.Reset
-void                 acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent) __attribute__((nothrow));
+inline void          acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr.field_curs.ValidQ
-bool                 acr_field_curs_ValidQ(acr_field_curs &curs) __attribute__((nothrow));
+inline bool          acr_field_curs_ValidQ(acr_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr.field_curs.Access
-algo::cstring&       acr_field_curs_Access(acr_field_curs &curs) __attribute__((nothrow));
+inline algo::cstring& acr_field_curs_Access(acr_field_curs &curs) __attribute__((nothrow));
 // func:command.acr..ReadFieldMaybe
 bool                 acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr from attributes of ascii tuple TUPLE
@@ -1085,7 +1074,8 @@ struct acr_compl { // command.acr_compl
     algo::cstring   type;        //   "9"  Simulates COMP_TYPE (debug)
     bool            install;     //   false  Produce bash commands to install the handler
     algo::cstring   debug_log;   //   ""  Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
-    acr_compl();
+    // func:command.acr_compl..Ctor
+    inline               acr_compl() __attribute__((nothrow));
 };
 
 // func:command.acr_compl..ReadFieldMaybe
@@ -1099,7 +1089,7 @@ bool                 acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo:
 bool                 acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.acr_compl..Init
-void                 acr_compl_Init(command::acr_compl& parent);
+inline void          acr_compl_Init(command::acr_compl& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.acr_compl..ToCmdline
@@ -1128,12 +1118,10 @@ struct acr_compl_proc { // command.acr_compl_proc: Subprocess: ACR shell auto-co
     pid_t                pid;       //   0  pid of running child process
     i32                  timeout;   //   0  optional timeout for child process
     i32                  status;    //   0  last exit status of child process
-    acr_compl_proc();
-    ~acr_compl_proc();
-private:
-    // reftype Exec of command.acr_compl_proc.acr_compl prohibits copy
-    acr_compl_proc(const acr_compl_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_compl_proc&){ /*disallow direct assignment */}
+    // func:command.acr_compl_proc..Ctor
+    inline               acr_compl_proc() __attribute__((nothrow));
+    // func:command.acr_compl_proc..Dtor
+    inline               ~acr_compl_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1169,7 +1157,7 @@ void                 acr_compl_ToArgv(command::acr_compl_proc& parent, algo::Str
 
 // Set all fields to initial values.
 // func:command.acr_compl_proc..Init
-void                 acr_compl_proc_Init(command::acr_compl_proc& parent);
+inline void          acr_compl_proc_Init(command::acr_compl_proc& parent);
 // func:command.acr_compl_proc..Uninit
 void                 acr_compl_proc_Uninit(command::acr_compl_proc& parent) __attribute__((nothrow));
 
@@ -1183,12 +1171,14 @@ struct acr_dm { // command.acr_dm
     bool             write_ours;   //   false  Write result to ours file
     u8               msize;        //   7  Conflict marker size
     bool             rowid;        //   false  Output 'ours' rowid for merging into original ssimfiles
-    acr_dm();
-    ~acr_dm();
-private:
-    // reftype Tary of command.acr_dm.arg prohibits copy
-    acr_dm(const acr_dm&){ /*disallow copy constructor */}
-    void operator =(const acr_dm&){ /*disallow direct assignment */}
+    // func:command.acr_dm..AssignOp
+    command::acr_dm&     operator =(const command::acr_dm &rhs) __attribute__((nothrow));
+    // func:command.acr_dm..Ctor
+    inline               acr_dm() __attribute__((nothrow));
+    // func:command.acr_dm..Dtor
+    inline               ~acr_dm() __attribute__((nothrow));
+    // func:command.acr_dm..CopyCtor
+    acr_dm(const command::acr_dm &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -1209,22 +1199,22 @@ algo::cstring&       arg_AllocAt(command::acr_dm& parent, int at) __attribute__(
 algo::aryptr<algo::cstring> arg_AllocN(command::acr_dm& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr_dm.arg.EmptyQ
-bool                 arg_EmptyQ(command::acr_dm& parent) __attribute__((nothrow));
+inline bool          arg_EmptyQ(command::acr_dm& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.acr_dm.arg.Find
-algo::cstring*       arg_Find(command::acr_dm& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* arg_Find(command::acr_dm& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.acr_dm.arg.Getary
-algo::aryptr<algo::cstring> arg_Getary(const command::acr_dm& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> arg_Getary(const command::acr_dm& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.acr_dm.arg.Last
-algo::cstring*       arg_Last(command::acr_dm& parent) __attribute__((nothrow, pure));
+inline algo::cstring* arg_Last(command::acr_dm& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.acr_dm.arg.Max
-i32                  arg_Max(command::acr_dm& parent) __attribute__((nothrow));
+inline i32           arg_Max(command::acr_dm& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.acr_dm.arg.N
-i32                  arg_N(const command::acr_dm& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           arg_N(const command::acr_dm& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.acr_dm.arg.Remove
 void                 arg_Remove(command::acr_dm& parent, u32 i) __attribute__((nothrow));
@@ -1235,7 +1225,7 @@ void                 arg_RemoveAll(command::acr_dm& parent) __attribute__((nothr
 void                 arg_RemoveLast(command::acr_dm& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.acr_dm.arg.Reserve
-void                 arg_Reserve(command::acr_dm& parent, int n) __attribute__((nothrow));
+inline void          arg_Reserve(command::acr_dm& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.acr_dm.arg.AbsReserve
 void                 arg_AbsReserve(command::acr_dm& parent, int n) __attribute__((nothrow));
@@ -1248,13 +1238,13 @@ void                 arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) _
 void                 arg_Setary(command::acr_dm& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.acr_dm.arg.qFind
-algo::cstring&       arg_qFind(command::acr_dm& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& arg_qFind(command::acr_dm& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.acr_dm.arg.qLast
-algo::cstring&       arg_qLast(command::acr_dm& parent) __attribute__((nothrow));
+inline algo::cstring& arg_qLast(command::acr_dm& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.acr_dm.arg.rowid_Get
-u64                  arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr_dm.arg.AllocNVal
 algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -1266,15 +1256,15 @@ bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr i
 
 // proceed to next item
 // func:command.acr_dm.arg_curs.Next
-void                 acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) __attribute__((nothrow));
+inline void          acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // func:command.acr_dm.arg_curs.Reset
-void                 acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) __attribute__((nothrow));
+inline void          acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.acr_dm.arg_curs.ValidQ
-bool                 acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) __attribute__((nothrow));
+inline bool          acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.acr_dm.arg_curs.Access
-algo::cstring&       acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) __attribute__((nothrow));
+inline algo::cstring& acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) __attribute__((nothrow));
 // func:command.acr_dm..ReadFieldMaybe
 bool                 acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::acr_dm from attributes of ascii tuple TUPLE
@@ -1282,7 +1272,7 @@ bool                 acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr
 bool                 acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.acr_dm..Init
-void                 acr_dm_Init(command::acr_dm& parent);
+inline void          acr_dm_Init(command::acr_dm& parent);
 // func:command.acr_dm..Uninit
 void                 acr_dm_Uninit(command::acr_dm& parent) __attribute__((nothrow));
 // Convenience function that returns a full command line
@@ -1311,13 +1301,10 @@ struct acr_dm_proc { // command.acr_dm_proc: Subprocess: ACR Diff/Merge
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    acr_dm_proc();
-    ~acr_dm_proc();
-private:
-    // reftype Exec of command.acr_dm_proc.acr_dm prohibits copy
-    // value field command.acr_dm_proc.cmd is not copiable
-    acr_dm_proc(const acr_dm_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_dm_proc&){ /*disallow direct assignment */}
+    // func:command.acr_dm_proc..Ctor
+    inline               acr_dm_proc() __attribute__((nothrow));
+    // func:command.acr_dm_proc..Dtor
+    inline               ~acr_dm_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1353,7 +1340,7 @@ void                 acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.acr_dm_proc..Init
-void                 acr_dm_proc_Init(command::acr_dm_proc& parent);
+inline void          acr_dm_proc_Init(command::acr_dm_proc& parent);
 // func:command.acr_dm_proc..Uninit
 void                 acr_dm_proc_Uninit(command::acr_dm_proc& parent) __attribute__((nothrow));
 
@@ -1405,7 +1392,8 @@ struct acr_ed { // command.acr_ed
     bool                showcpp;     //   false  (With -sandbox), show resulting diff
     algo::cstring       msgtype;     //   ""  (with -ctype) use this msgtype as type
     bool                anonfld;     //   false  Create anonfld
-    acr_ed();
+    // func:command.acr_ed..Ctor
+    inline               acr_ed() __attribute__((nothrow));
 };
 
 // func:command.acr_ed..ReadFieldMaybe
@@ -1440,12 +1428,10 @@ struct acr_ed_proc { // command.acr_ed_proc: Subprocess: Script generator for co
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    acr_ed_proc();
-    ~acr_ed_proc();
-private:
-    // reftype Exec of command.acr_ed_proc.acr_ed prohibits copy
-    acr_ed_proc(const acr_ed_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_ed_proc&){ /*disallow direct assignment */}
+    // func:command.acr_ed_proc..Ctor
+    inline               acr_ed_proc() __attribute__((nothrow));
+    // func:command.acr_ed_proc..Dtor
+    inline               ~acr_ed_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1481,7 +1467,7 @@ void                 acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.acr_ed_proc..Init
-void                 acr_ed_proc_Init(command::acr_ed_proc& parent);
+inline void          acr_ed_proc_Init(command::acr_ed_proc& parent);
 // func:command.acr_ed_proc..Uninit
 void                 acr_ed_proc_Uninit(command::acr_ed_proc& parent) __attribute__((nothrow));
 
@@ -1499,14 +1485,8 @@ struct acr_in { // command.acr_in
     algo_lib::Regx   notssimfile;   //   ""  Sql Regx of dmmeta::Ssimfile
     bool             checkable;     //   false  Ensure output passes acr -check
     algo_lib::Regx   r;             //   ""  Sql Regx of dmmeta::Ssimfile
-    acr_in();
-private:
-    // reftype Regx of command.acr_in.ns prohibits copy
-    // reftype Regx of command.acr_in.notssimfile prohibits copy
-    // reftype Regx of command.acr_in.r prohibits copy
-    // ... and several other reasons
-    acr_in(const acr_in&){ /*disallow copy constructor */}
-    void operator =(const acr_in&){ /*disallow direct assignment */}
+    // func:command.acr_in..Ctor
+    inline               acr_in() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -1567,13 +1547,10 @@ struct acr_in_proc { // command.acr_in_proc: Subprocess: ACR Input - compute set
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    acr_in_proc();
-    ~acr_in_proc();
-private:
-    // reftype Exec of command.acr_in_proc.acr_in prohibits copy
-    // value field command.acr_in_proc.cmd is not copiable
-    acr_in_proc(const acr_in_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_in_proc&){ /*disallow direct assignment */}
+    // func:command.acr_in_proc..Ctor
+    inline               acr_in_proc() __attribute__((nothrow));
+    // func:command.acr_in_proc..Dtor
+    inline               ~acr_in_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1609,7 +1586,7 @@ void                 acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.acr_in_proc..Init
-void                 acr_in_proc_Init(command::acr_in_proc& parent);
+inline void          acr_in_proc_Init(command::acr_in_proc& parent);
 // func:command.acr_in_proc..Uninit
 void                 acr_in_proc_Uninit(command::acr_in_proc& parent) __attribute__((nothrow));
 
@@ -1627,11 +1604,8 @@ struct acr_my { // command.acr_my
     bool             abort;     //   false  Abort local mysql server, losing data
     bool             shell;     //   false  Connect to local mysql server
     bool             serv;      //   false  Start mysql with TCP/IP service enabled
-    acr_my();
-private:
-    // reftype Regx of command.acr_my.nsdb prohibits copy
-    acr_my(const acr_my&){ /*disallow copy constructor */}
-    void operator =(const acr_my&){ /*disallow direct assignment */}
+    // func:command.acr_my..Ctor
+    inline               acr_my() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -1676,13 +1650,10 @@ struct acr_my_proc { // command.acr_my_proc: Subprocess: ACR <-> MariaDB adaptor
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    acr_my_proc();
-    ~acr_my_proc();
-private:
-    // reftype Exec of command.acr_my_proc.acr_my prohibits copy
-    // value field command.acr_my_proc.cmd is not copiable
-    acr_my_proc(const acr_my_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_my_proc&){ /*disallow direct assignment */}
+    // func:command.acr_my_proc..Ctor
+    inline               acr_my_proc() __attribute__((nothrow));
+    // func:command.acr_my_proc..Dtor
+    inline               ~acr_my_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1718,7 +1689,7 @@ void                 acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.acr_my_proc..Init
-void                 acr_my_proc_Init(command::acr_my_proc& parent);
+inline void          acr_my_proc_Init(command::acr_my_proc& parent);
 // func:command.acr_my_proc..Uninit
 void                 acr_my_proc_Uninit(command::acr_my_proc& parent) __attribute__((nothrow));
 
@@ -1732,13 +1703,10 @@ struct acr_proc { // command.acr_proc: Subprocess: Algo Cross-Reference - ssimfi
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    acr_proc();
-    ~acr_proc();
-private:
-    // reftype Exec of command.acr_proc.acr prohibits copy
-    // value field command.acr_proc.cmd is not copiable
-    acr_proc(const acr_proc&){ /*disallow copy constructor */}
-    void operator =(const acr_proc&){ /*disallow direct assignment */}
+    // func:command.acr_proc..Ctor
+    inline               acr_proc() __attribute__((nothrow));
+    // func:command.acr_proc..Dtor
+    inline               ~acr_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1774,7 +1742,7 @@ void                 acr_ToArgv(command::acr_proc& parent, algo::StringAry& args
 
 // Set all fields to initial values.
 // func:command.acr_proc..Init
-void                 acr_proc_Init(command::acr_proc& parent);
+inline void          acr_proc_Init(command::acr_proc& parent);
 // func:command.acr_proc..Uninit
 void                 acr_proc_Uninit(command::acr_proc& parent) __attribute__((nothrow));
 
@@ -1788,11 +1756,8 @@ struct amc { // command.amc
     bool             report;    //   true  Final report
     bool             e;         //   false  Open matching records in editor
     algo_lib::Regx   trace;     //   ""  Sql Regx
-    amc();
-private:
-    // reftype Regx of command.amc.trace prohibits copy
-    amc(const amc&){ /*disallow copy constructor */}
-    void operator =(const amc&){ /*disallow direct assignment */}
+    // func:command.amc..Ctor
+    inline               amc() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -1834,12 +1799,8 @@ struct amc_gc { // command.amc_gc
     algo_lib::Regx   key;       //   ""  Sql Regx
     bool             include;   //   false  Garbage collect includes for specified target
     algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
-    amc_gc();
-private:
-    // reftype Regx of command.amc_gc.target prohibits copy
-    // reftype Regx of command.amc_gc.key prohibits copy
-    amc_gc(const amc_gc&){ /*disallow copy constructor */}
-    void operator =(const amc_gc&){ /*disallow direct assignment */}
+    // func:command.amc_gc..Ctor
+    inline               amc_gc() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -1890,13 +1851,10 @@ struct amc_gc_proc { // command.amc_gc_proc: Subprocess: Garbage collector for i
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    amc_gc_proc();
-    ~amc_gc_proc();
-private:
-    // reftype Exec of command.amc_gc_proc.amc_gc prohibits copy
-    // value field command.amc_gc_proc.cmd is not copiable
-    amc_gc_proc(const amc_gc_proc&){ /*disallow copy constructor */}
-    void operator =(const amc_gc_proc&){ /*disallow direct assignment */}
+    // func:command.amc_gc_proc..Ctor
+    inline               amc_gc_proc() __attribute__((nothrow));
+    // func:command.amc_gc_proc..Dtor
+    inline               ~amc_gc_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1932,7 +1890,7 @@ void                 amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.amc_gc_proc..Init
-void                 amc_gc_proc_Init(command::amc_gc_proc& parent);
+inline void          amc_gc_proc_Init(command::amc_gc_proc& parent);
 // func:command.amc_gc_proc..Uninit
 void                 amc_gc_proc_Uninit(command::amc_gc_proc& parent) __attribute__((nothrow));
 
@@ -1946,13 +1904,10 @@ struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    amc_proc();
-    ~amc_proc();
-private:
-    // reftype Exec of command.amc_proc.amc prohibits copy
-    // value field command.amc_proc.cmd is not copiable
-    amc_proc(const amc_proc&){ /*disallow copy constructor */}
-    void operator =(const amc_proc&){ /*disallow direct assignment */}
+    // func:command.amc_proc..Ctor
+    inline               amc_proc() __attribute__((nothrow));
+    // func:command.amc_proc..Dtor
+    inline               ~amc_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -1988,7 +1943,7 @@ void                 amc_ToArgv(command::amc_proc& parent, algo::StringAry& args
 
 // Set all fields to initial values.
 // func:command.amc_proc..Init
-void                 amc_proc_Init(command::amc_proc& parent);
+inline void          amc_proc_Init(command::amc_proc& parent);
 // func:command.amc_proc..Uninit
 void                 amc_proc_Uninit(command::amc_proc& parent) __attribute__((nothrow));
 
@@ -2003,11 +1958,8 @@ struct amc_vis { // command.amc_vis
     bool             noinput;   //   false  Deselect module inputs
     bool             check;     //   false  Check model for dependency problems
     bool             render;    //   true  Produce an ascii drawing
-    amc_vis();
-private:
-    // reftype Regx of command.amc_vis.ctype prohibits copy
-    amc_vis(const amc_vis&){ /*disallow copy constructor */}
-    void operator =(const amc_vis&){ /*disallow direct assignment */}
+    // func:command.amc_vis..Ctor
+    inline               amc_vis() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -2052,13 +2004,10 @@ struct amc_vis_proc { // command.amc_vis_proc: Subprocess: Draw access path diag
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    amc_vis_proc();
-    ~amc_vis_proc();
-private:
-    // reftype Exec of command.amc_vis_proc.amc_vis prohibits copy
-    // value field command.amc_vis_proc.cmd is not copiable
-    amc_vis_proc(const amc_vis_proc&){ /*disallow copy constructor */}
-    void operator =(const amc_vis_proc&){ /*disallow direct assignment */}
+    // func:command.amc_vis_proc..Ctor
+    inline               amc_vis_proc() __attribute__((nothrow));
+    // func:command.amc_vis_proc..Dtor
+    inline               ~amc_vis_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2094,7 +2043,7 @@ void                 amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.amc_vis_proc..Init
-void                 amc_vis_proc_Init(command::amc_vis_proc& parent);
+inline void          amc_vis_proc_Init(command::amc_vis_proc& parent);
 // func:command.amc_vis_proc..Uninit
 void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attribute__((nothrow));
 
@@ -2102,7 +2051,8 @@ void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attrib
 // access: command.ams_cat_proc.ams_cat (Exec)
 struct ams_cat { // command.ams_cat
     algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
-    ams_cat();
+    // func:command.ams_cat..Ctor
+    inline               ams_cat() __attribute__((nothrow));
 };
 
 // func:command.ams_cat..ReadFieldMaybe
@@ -2112,7 +2062,7 @@ bool                 ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strp
 bool                 ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.ams_cat..Init
-void                 ams_cat_Init(command::ams_cat& parent);
+inline void          ams_cat_Init(command::ams_cat& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ams_cat..ToCmdline
@@ -2137,12 +2087,10 @@ struct ams_cat_proc { // command.ams_cat_proc: Subprocess: Algo Messaging System
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    ams_cat_proc();
-    ~ams_cat_proc();
-private:
-    // reftype Exec of command.ams_cat_proc.ams_cat prohibits copy
-    ams_cat_proc(const ams_cat_proc&){ /*disallow copy constructor */}
-    void operator =(const ams_cat_proc&){ /*disallow direct assignment */}
+    // func:command.ams_cat_proc..Ctor
+    inline               ams_cat_proc() __attribute__((nothrow));
+    // func:command.ams_cat_proc..Dtor
+    inline               ~ams_cat_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2178,7 +2126,7 @@ void                 ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.ams_cat_proc..Init
-void                 ams_cat_proc_Init(command::ams_cat_proc& parent);
+inline void          ams_cat_proc_Init(command::ams_cat_proc& parent);
 // func:command.ams_cat_proc..Uninit
 void                 ams_cat_proc_Uninit(command::ams_cat_proc& parent) __attribute__((nothrow));
 
@@ -2199,11 +2147,8 @@ struct ams_sendtest { // command.ams_sendtest
     i32              msgsize_max;    //   1024  Maximum message length
     i32              bufsize;        //   32768  Shared memory buffer size
     i64              recvdelay;      //   0  Pause nanoseconds between messages
-    ams_sendtest();
-private:
-    // reftype Regx of command.ams_sendtest.trace prohibits copy
-    ams_sendtest(const ams_sendtest&){ /*disallow copy constructor */}
-    void operator =(const ams_sendtest&){ /*disallow direct assignment */}
+    // func:command.ams_sendtest..Ctor
+    inline               ams_sendtest() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -2246,13 +2191,10 @@ struct ams_sendtest_proc { // command.ams_sendtest_proc: Subprocess: Algo Messag
     pid_t                   pid;       //   0  pid of running child process
     i32                     timeout;   //   0  optional timeout for child process
     i32                     status;    //   0  last exit status of child process
-    ams_sendtest_proc();
-    ~ams_sendtest_proc();
-private:
-    // reftype Exec of command.ams_sendtest_proc.ams_sendtest prohibits copy
-    // value field command.ams_sendtest_proc.cmd is not copiable
-    ams_sendtest_proc(const ams_sendtest_proc&){ /*disallow copy constructor */}
-    void operator =(const ams_sendtest_proc&){ /*disallow direct assignment */}
+    // func:command.ams_sendtest_proc..Ctor
+    inline               ams_sendtest_proc() __attribute__((nothrow));
+    // func:command.ams_sendtest_proc..Dtor
+    inline               ~ams_sendtest_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2288,7 +2230,7 @@ void                 ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, alg
 
 // Set all fields to initial values.
 // func:command.ams_sendtest_proc..Init
-void                 ams_sendtest_proc_Init(command::ams_sendtest_proc& parent);
+inline void          ams_sendtest_proc_Init(command::ams_sendtest_proc& parent);
 // func:command.ams_sendtest_proc..Uninit
 void                 ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) __attribute__((nothrow));
 
@@ -2321,12 +2263,8 @@ struct apm { // command.apm
     algo::cstring       data_in;      //   "data"  Dataset from which package records are loaded
     bool                e;            //   false  Open selected records in editor
     algo::cstring       binpath;      //   "bin"  (internal use)
-    apm();
-private:
-    // reftype Regx of command.apm.package prohibits copy
-    // reftype Regx of command.apm.ns prohibits copy
-    apm(const apm&){ /*disallow copy constructor */}
-    void operator =(const apm&){ /*disallow direct assignment */}
+    // func:command.apm..Ctor
+    inline               apm() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -2379,13 +2317,10 @@ struct apm_proc { // command.apm_proc: Subprocess: Algo Package Manager
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    apm_proc();
-    ~apm_proc();
-private:
-    // reftype Exec of command.apm_proc.apm prohibits copy
-    // value field command.apm_proc.cmd is not copiable
-    apm_proc(const apm_proc&){ /*disallow copy constructor */}
-    void operator =(const apm_proc&){ /*disallow direct assignment */}
+    // func:command.apm_proc..Ctor
+    inline               apm_proc() __attribute__((nothrow));
+    // func:command.apm_proc..Dtor
+    inline               ~apm_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2421,7 +2356,7 @@ void                 apm_ToArgv(command::apm_proc& parent, algo::StringAry& args
 
 // Set all fields to initial values.
 // func:command.apm_proc..Init
-void                 apm_proc_Init(command::apm_proc& parent);
+inline void          apm_proc_Init(command::apm_proc& parent);
 // func:command.apm_proc..Uninit
 void                 apm_proc_Uninit(command::apm_proc& parent) __attribute__((nothrow));
 
@@ -2431,7 +2366,8 @@ struct aqlite { // command.aqlite
     algo::cstring   in;     //   "data"  Input directory or filename, - for stdin for schema
     algo::cstring   data;   //   "data"  Input directory for data
     algo::cstring   cmd;    // Sql Query to run
-    aqlite();
+    // func:command.aqlite..Ctor
+    inline               aqlite() __attribute__((nothrow));
 };
 
 // func:command.aqlite..ReadFieldMaybe
@@ -2441,7 +2377,7 @@ bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr
 bool                 aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.aqlite..Init
-void                 aqlite_Init(command::aqlite& parent);
+inline void          aqlite_Init(command::aqlite& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.aqlite..ToCmdline
@@ -2468,12 +2404,10 @@ struct aqlite_proc { // command.aqlite_proc: Subprocess: Runs sqlite queries aga
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    aqlite_proc();
-    ~aqlite_proc();
-private:
-    // reftype Exec of command.aqlite_proc.aqlite prohibits copy
-    aqlite_proc(const aqlite_proc&){ /*disallow copy constructor */}
-    void operator =(const aqlite_proc&){ /*disallow direct assignment */}
+    // func:command.aqlite_proc..Ctor
+    inline               aqlite_proc() __attribute__((nothrow));
+    // func:command.aqlite_proc..Dtor
+    inline               ~aqlite_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2509,7 +2443,7 @@ void                 aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.aqlite_proc..Init
-void                 aqlite_proc_Init(command::aqlite_proc& parent);
+inline void          aqlite_proc_Init(command::aqlite_proc& parent);
 // func:command.aqlite_proc..Uninit
 void                 aqlite_proc_Uninit(command::aqlite_proc& parent) __attribute__((nothrow));
 
@@ -2520,11 +2454,8 @@ struct atf_amc { // command.atf_amc
     algo_lib::Regx   amctest;   //   "%"  Sql Regx of atfdb::Amctest
     bool             dofork;    //   true  Use fork
     bool             q;         //   false  Quiet mode
-    atf_amc();
-private:
-    // reftype Regx of command.atf_amc.amctest prohibits copy
-    atf_amc(const atf_amc&){ /*disallow copy constructor */}
-    void operator =(const atf_amc&){ /*disallow direct assignment */}
+    // func:command.atf_amc..Ctor
+    inline               atf_amc() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -2569,13 +2500,10 @@ struct atf_amc_proc { // command.atf_amc_proc: Subprocess: Unit tests for amc (s
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    atf_amc_proc();
-    ~atf_amc_proc();
-private:
-    // reftype Exec of command.atf_amc_proc.atf_amc prohibits copy
-    // value field command.atf_amc_proc.cmd is not copiable
-    atf_amc_proc(const atf_amc_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_amc_proc&){ /*disallow direct assignment */}
+    // func:command.atf_amc_proc..Ctor
+    inline               atf_amc_proc() __attribute__((nothrow));
+    // func:command.atf_amc_proc..Dtor
+    inline               ~atf_amc_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2611,7 +2539,7 @@ void                 atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.atf_amc_proc..Init
-void                 atf_amc_proc_Init(command::atf_amc_proc& parent);
+inline void          atf_amc_proc_Init(command::atf_amc_proc& parent);
 // func:command.atf_amc_proc..Uninit
 void                 atf_amc_proc_Uninit(command::atf_amc_proc& parent) __attribute__((nothrow));
 
@@ -2623,12 +2551,8 @@ struct atf_ci { // command.atf_ci
     i32              maxerr;    //   0  Exit after this many errors
     algo_lib::Regx   cijob;     //   "%"  Sql Regx of atfdb::Cijob
     bool             capture;   //   false  Capture the output of the test
-    atf_ci();
-private:
-    // reftype Regx of command.atf_ci.citest prohibits copy
-    // reftype Regx of command.atf_ci.cijob prohibits copy
-    atf_ci(const atf_ci&){ /*disallow copy constructor */}
-    void operator =(const atf_ci&){ /*disallow direct assignment */}
+    // func:command.atf_ci..Ctor
+    inline               atf_ci() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -2681,13 +2605,10 @@ struct atf_ci_proc { // command.atf_ci_proc: Subprocess: Normalization tests (se
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    atf_ci_proc();
-    ~atf_ci_proc();
-private:
-    // reftype Exec of command.atf_ci_proc.atf_ci prohibits copy
-    // value field command.atf_ci_proc.cmd is not copiable
-    atf_ci_proc(const atf_ci_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_ci_proc&){ /*disallow direct assignment */}
+    // func:command.atf_ci_proc..Ctor
+    inline               atf_ci_proc() __attribute__((nothrow));
+    // func:command.atf_ci_proc..Dtor
+    inline               ~atf_ci_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -2723,7 +2644,7 @@ void                 atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.atf_ci_proc..Init
-void                 atf_ci_proc_Init(command::atf_ci_proc& parent);
+inline void          atf_ci_proc_Init(command::atf_ci_proc& parent);
 // func:command.atf_ci_proc..Uninit
 void                 atf_ci_proc_Uninit(command::atf_ci_proc& parent) __attribute__((nothrow));
 
@@ -2760,15 +2681,14 @@ struct atf_cmdline { // command.atf_cmdline
     algo::Month         cconst;        // Fconst for arg ctype
     algo_lib::Regx      dregx;         //   "%"  Sql Regx of dmmeta::Ctype
     algo::Smallstr100   dpkey;         //   ""  Predefined pkey
-    atf_cmdline();
-    ~atf_cmdline();
-private:
-    // reftype Tary of command.atf_cmdline.mstr prohibits copy
-    // reftype Tary of command.atf_cmdline.mnum prohibits copy
-    // reftype Tary of command.atf_cmdline.mdbl prohibits copy
-    // ... and several other reasons
-    atf_cmdline(const atf_cmdline&){ /*disallow copy constructor */}
-    void operator =(const atf_cmdline&){ /*disallow direct assignment */}
+    // func:command.atf_cmdline..AssignOp
+    command::atf_cmdline& operator =(const command::atf_cmdline &rhs) __attribute__((nothrow));
+    // func:command.atf_cmdline..Ctor
+    inline               atf_cmdline() __attribute__((nothrow));
+    // func:command.atf_cmdline..Dtor
+    inline               ~atf_cmdline() __attribute__((nothrow));
+    // func:command.atf_cmdline..CopyCtor
+    atf_cmdline(const command::atf_cmdline &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -2789,22 +2709,22 @@ algo::cstring&       mstr_AllocAt(command::atf_cmdline& parent, int at) __attrib
 algo::aryptr<algo::cstring> mstr_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mstr.EmptyQ
-bool                 mstr_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
+inline bool          mstr_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.atf_cmdline.mstr.Find
-algo::cstring*       mstr_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* mstr_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mstr.Getary
-algo::aryptr<algo::cstring> mstr_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> mstr_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mstr.Last
-algo::cstring*       mstr_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
+inline algo::cstring* mstr_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.atf_cmdline.mstr.Max
-i32                  mstr_Max(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32           mstr_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.atf_cmdline.mstr.N
-i32                  mstr_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mstr_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.atf_cmdline.mstr.Remove
 void                 mstr_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
@@ -2815,7 +2735,7 @@ void                 mstr_RemoveAll(command::atf_cmdline& parent) __attribute__(
 void                 mstr_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mstr.Reserve
-void                 mstr_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
+inline void          mstr_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mstr.AbsReserve
 void                 mstr_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
@@ -2828,13 +2748,13 @@ void                 mstr_Setary(command::atf_cmdline& parent, command::atf_cmdl
 void                 mstr_Setary(command::atf_cmdline& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mstr.qFind
-algo::cstring&       mstr_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& mstr_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.atf_cmdline.mstr.qLast
-algo::cstring&       mstr_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
+inline algo::cstring& mstr_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.atf_cmdline.mstr.rowid_Get
-u64                  mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mstr.AllocNVal
 algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -2862,33 +2782,33 @@ i32&                 mnum_AllocAt(command::atf_cmdline& parent, int at) __attrib
 algo::aryptr<i32>    mnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mnum.EmptyQ
-bool                 mnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
+inline bool          mnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.atf_cmdline.mnum.Find
-i32*                 mnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline i32*          mnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mnum.Getary
-algo::aryptr<i32>    mnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
+inline algo::aryptr<i32> mnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mnum.Last
-i32*                 mnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
+inline i32*          mnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.atf_cmdline.mnum.Max
-i32                  mnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32           mnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.atf_cmdline.mnum.N
-i32                  mnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.atf_cmdline.mnum.Remove
 void                 mnum_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
 // func:command.atf_cmdline.mnum.RemoveAll
-void                 mnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
+inline void          mnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:command.atf_cmdline.mnum.RemoveLast
 void                 mnum_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mnum.Reserve
-void                 mnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
+inline void          mnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mnum.AbsReserve
 void                 mnum_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
@@ -2901,13 +2821,13 @@ void                 mnum_Setary(command::atf_cmdline& parent, command::atf_cmdl
 void                 mnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mnum.qFind
-i32&                 mnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
+inline i32&          mnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.atf_cmdline.mnum.qLast
-i32&                 mnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32&          mnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.atf_cmdline.mnum.rowid_Get
-u64                  mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
+inline u64           mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mnum.AllocNVal
 algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
@@ -2935,33 +2855,33 @@ double&              mdbl_AllocAt(command::atf_cmdline& parent, int at) __attrib
 algo::aryptr<double> mdbl_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mdbl.EmptyQ
-bool                 mdbl_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
+inline bool          mdbl_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.atf_cmdline.mdbl.Find
-double*              mdbl_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline double*       mdbl_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.mdbl.Getary
-algo::aryptr<double> mdbl_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
+inline algo::aryptr<double> mdbl_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.mdbl.Last
-double*              mdbl_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
+inline double*       mdbl_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.atf_cmdline.mdbl.Max
-i32                  mdbl_Max(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32           mdbl_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.atf_cmdline.mdbl.N
-i32                  mdbl_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mdbl_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.atf_cmdline.mdbl.Remove
 void                 mdbl_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
 // func:command.atf_cmdline.mdbl.RemoveAll
-void                 mdbl_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
+inline void          mdbl_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:command.atf_cmdline.mdbl.RemoveLast
 void                 mdbl_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mdbl.Reserve
-void                 mdbl_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
+inline void          mdbl_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.atf_cmdline.mdbl.AbsReserve
 void                 mdbl_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
@@ -2974,13 +2894,13 @@ void                 mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdl
 void                 mdbl_Setary(command::atf_cmdline& parent, const algo::aryptr<double> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.mdbl.qFind
-double&              mdbl_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
+inline double&       mdbl_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.atf_cmdline.mdbl.qLast
-double&              mdbl_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
+inline double&       mdbl_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.atf_cmdline.mdbl.rowid_Get
-u64                  mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) __attribute__((nothrow));
+inline u64           mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mdbl.AllocNVal
 algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) __attribute__((nothrow));
@@ -3008,33 +2928,33 @@ i32&                 amnum_AllocAt(command::atf_cmdline& parent, int at) __attri
 algo::aryptr<i32>    amnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.amnum.EmptyQ
-bool                 amnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
+inline bool          amnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.atf_cmdline.amnum.Find
-i32*                 amnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline i32*          amnum_Find(command::atf_cmdline& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.atf_cmdline.amnum.Getary
-algo::aryptr<i32>    amnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
+inline algo::aryptr<i32> amnum_Getary(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.atf_cmdline.amnum.Last
-i32*                 amnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
+inline i32*          amnum_Last(command::atf_cmdline& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.atf_cmdline.amnum.Max
-i32                  amnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32           amnum_Max(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.atf_cmdline.amnum.N
-i32                  amnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           amnum_N(const command::atf_cmdline& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.atf_cmdline.amnum.Remove
 void                 amnum_Remove(command::atf_cmdline& parent, u32 i) __attribute__((nothrow));
 // func:command.atf_cmdline.amnum.RemoveAll
-void                 amnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
+inline void          amnum_RemoveAll(command::atf_cmdline& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:command.atf_cmdline.amnum.RemoveLast
 void                 amnum_RemoveLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.atf_cmdline.amnum.Reserve
-void                 amnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
+inline void          amnum_Reserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.atf_cmdline.amnum.AbsReserve
 void                 amnum_AbsReserve(command::atf_cmdline& parent, int n) __attribute__((nothrow));
@@ -3047,13 +2967,13 @@ void                 amnum_Setary(command::atf_cmdline& parent, command::atf_cmd
 void                 amnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.atf_cmdline.amnum.qFind
-i32&                 amnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
+inline i32&          amnum_qFind(command::atf_cmdline& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.atf_cmdline.amnum.qLast
-i32&                 amnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
+inline i32&          amnum_qLast(command::atf_cmdline& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.atf_cmdline.amnum.rowid_Get
-u64                  amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
+inline u64           amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.amnum.AllocNVal
 algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) __attribute__((nothrow));
@@ -3065,10 +2985,10 @@ bool                 amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::s
 
 // Get value of field as enum type
 // func:command.atf_cmdline.fconst.GetEnum
-command_atf_cmdline_fconst_Enum fconst_GetEnum(const command::atf_cmdline& parent) __attribute__((nothrow));
+inline command_atf_cmdline_fconst_Enum fconst_GetEnum(const command::atf_cmdline& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:command.atf_cmdline.fconst.SetEnum
-void                 fconst_SetEnum(command::atf_cmdline& parent, command_atf_cmdline_fconst_Enum rhs) __attribute__((nothrow));
+inline void          fconst_SetEnum(command::atf_cmdline& parent, command_atf_cmdline_fconst_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:command.atf_cmdline.fconst.ToCstr
@@ -3100,48 +3020,48 @@ bool                 dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::s
 
 // proceed to next item
 // func:command.atf_cmdline.mstr_curs.Next
-void                 atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
+inline void          atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mstr_curs.Reset
-void                 atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
+inline void          atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mstr_curs.ValidQ
-bool                 atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
+inline bool          atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mstr_curs.Access
-algo::cstring&       atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
+inline algo::cstring& atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.mnum_curs.Next
-void                 atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
+inline void          atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mnum_curs.Reset
-void                 atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
+inline void          atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mnum_curs.ValidQ
-bool                 atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
+inline bool          atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mnum_curs.Access
-i32&                 atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
+inline i32&          atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.mdbl_curs.Next
-void                 atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
+inline void          atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.mdbl_curs.Reset
-void                 atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
+inline void          atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.mdbl_curs.ValidQ
-bool                 atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
+inline bool          atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.mdbl_curs.Access
-double&              atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
+inline double&       atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.atf_cmdline.amnum_curs.Next
-void                 atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
+inline void          atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline.amnum_curs.Reset
-void                 atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
+inline void          atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.atf_cmdline.amnum_curs.ValidQ
-bool                 atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
+inline bool          atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.atf_cmdline.amnum_curs.Access
-i32&                 atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
+inline i32&          atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) __attribute__((nothrow));
 // func:command.atf_cmdline..ReadFieldMaybe
 bool                 atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::atf_cmdline from attributes of ascii tuple TUPLE
@@ -3178,13 +3098,10 @@ struct atf_cmdline_proc { // command.atf_cmdline_proc: Subprocess: Test tool for
     pid_t                  pid;       //   0  pid of running child process
     i32                    timeout;   //   0  optional timeout for child process
     i32                    status;    //   0  last exit status of child process
-    atf_cmdline_proc();
-    ~atf_cmdline_proc();
-private:
-    // reftype Exec of command.atf_cmdline_proc.atf_cmdline prohibits copy
-    // value field command.atf_cmdline_proc.cmd is not copiable
-    atf_cmdline_proc(const atf_cmdline_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_cmdline_proc&){ /*disallow direct assignment */}
+    // func:command.atf_cmdline_proc..Ctor
+    inline               atf_cmdline_proc() __attribute__((nothrow));
+    // func:command.atf_cmdline_proc..Dtor
+    inline               ~atf_cmdline_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3220,7 +3137,7 @@ void                 atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo:
 
 // Set all fields to initial values.
 // func:command.atf_cmdline_proc..Init
-void                 atf_cmdline_proc_Init(command::atf_cmdline_proc& parent);
+inline void          atf_cmdline_proc_Init(command::atf_cmdline_proc& parent);
 // func:command.atf_cmdline_proc..Uninit
 void                 atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) __attribute__((nothrow));
 
@@ -3253,11 +3170,8 @@ struct atf_comp { // command.atf_comp
     bool               write;             //   true  (implied with -e) Write any changes back to ssim tables
     bool               report;            //   false  Print final report
     algo::cstring      b;                 //   ""  Breakpoint passed to mdbg as-is
-    atf_comp();
-private:
-    // reftype Regx of command.atf_comp.comptest prohibits copy
-    atf_comp(const atf_comp&){ /*disallow copy constructor */}
-    void operator =(const atf_comp&){ /*disallow direct assignment */}
+    // func:command.atf_comp..Ctor
+    inline               atf_comp() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -3302,13 +3216,10 @@ struct atf_comp_proc { // command.atf_comp_proc: Subprocess: Algo Test Framework
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_comp_proc();
-    ~atf_comp_proc();
-private:
-    // reftype Exec of command.atf_comp_proc.atf_comp prohibits copy
-    // value field command.atf_comp_proc.cmd is not copiable
-    atf_comp_proc(const atf_comp_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_comp_proc&){ /*disallow direct assignment */}
+    // func:command.atf_comp_proc..Ctor
+    inline               atf_comp_proc() __attribute__((nothrow));
+    // func:command.atf_comp_proc..Dtor
+    inline               ~atf_comp_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3344,7 +3255,7 @@ void                 atf_comp_ToArgv(command::atf_comp_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.atf_comp_proc..Init
-void                 atf_comp_proc_Init(command::atf_comp_proc& parent);
+inline void          atf_comp_proc_Init(command::atf_comp_proc& parent);
 // func:command.atf_comp_proc..Uninit
 void                 atf_comp_proc_Uninit(command::atf_comp_proc& parent) __attribute__((nothrow));
 
@@ -3364,11 +3275,8 @@ struct atf_cov { // command.atf_cov
     bool             xmlpretty;   //   false  Generate pretty-formatted XML
     bool             summary;     //   true  Show summary figures
     bool             check;       //   false  Check coverage information against tgtcov table
-    atf_cov();
-private:
-    // reftype Regx of command.atf_cov.exclude prohibits copy
-    atf_cov(const atf_cov&){ /*disallow copy constructor */}
-    void operator =(const atf_cov&){ /*disallow direct assignment */}
+    // func:command.atf_cov..Ctor
+    inline               atf_cov() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -3411,13 +3319,10 @@ struct atf_cov_proc { // command.atf_cov_proc: Subprocess: Line coverage
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    atf_cov_proc();
-    ~atf_cov_proc();
-private:
-    // reftype Exec of command.atf_cov_proc.atf_cov prohibits copy
-    // value field command.atf_cov_proc.cmd is not copiable
-    atf_cov_proc(const atf_cov_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_cov_proc&){ /*disallow direct assignment */}
+    // func:command.atf_cov_proc..Ctor
+    inline               atf_cov_proc() __attribute__((nothrow));
+    // func:command.atf_cov_proc..Dtor
+    inline               ~atf_cov_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3453,7 +3358,7 @@ void                 atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.atf_cov_proc..Init
-void                 atf_cov_proc_Init(command::atf_cov_proc& parent);
+inline void          atf_cov_proc_Init(command::atf_cov_proc& parent);
 // func:command.atf_cov_proc..Uninit
 void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
 
@@ -3468,11 +3373,8 @@ struct atf_fuzz { // command.atf_fuzz
     algo::cstring      in;          //   "data"  Input directory or filename, - for stdin
     i32                seed;        //   0  Random seed
     double             testprob;    //   1  Run each case with this probability
-    atf_fuzz();
-private:
-    // reftype Regx of command.atf_fuzz.fuzzstrat prohibits copy
-    atf_fuzz(const atf_fuzz&){ /*disallow copy constructor */}
-    void operator =(const atf_fuzz&){ /*disallow direct assignment */}
+    // func:command.atf_fuzz..Ctor
+    inline               atf_fuzz() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -3517,13 +3419,10 @@ struct atf_fuzz_proc { // command.atf_fuzz_proc: Subprocess: Generator of bad in
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_fuzz_proc();
-    ~atf_fuzz_proc();
-private:
-    // reftype Exec of command.atf_fuzz_proc.atf_fuzz prohibits copy
-    // value field command.atf_fuzz_proc.cmd is not copiable
-    atf_fuzz_proc(const atf_fuzz_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_fuzz_proc&){ /*disallow direct assignment */}
+    // func:command.atf_fuzz_proc..Ctor
+    inline               atf_fuzz_proc() __attribute__((nothrow));
+    // func:command.atf_fuzz_proc..Dtor
+    inline               ~atf_fuzz_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3559,7 +3458,7 @@ void                 atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.atf_fuzz_proc..Init
-void                 atf_fuzz_proc_Init(command::atf_fuzz_proc& parent);
+inline void          atf_fuzz_proc_Init(command::atf_fuzz_proc& parent);
 // func:command.atf_fuzz_proc..Uninit
 void                 atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) __attribute__((nothrow));
 
@@ -3575,11 +3474,8 @@ struct atf_gcli { // command.atf_gcli
     bool             skip_init;       //   false  Skip setting local files - already set
     bool             skip_git_init;   //   false  Skip setting local files - already set
     bool             dry_run;         //   false  Print actions, do not perform
-    atf_gcli();
-private:
-    // reftype Regx of command.atf_gcli.gtblacttst prohibits copy
-    atf_gcli(const atf_gcli&){ /*disallow copy constructor */}
-    void operator =(const atf_gcli&){ /*disallow direct assignment */}
+    // func:command.atf_gcli..Ctor
+    inline               atf_gcli() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -3622,13 +3518,10 @@ struct atf_gcli_proc { // command.atf_gcli_proc: Subprocess: test harness for gc
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_gcli_proc();
-    ~atf_gcli_proc();
-private:
-    // reftype Exec of command.atf_gcli_proc.atf_gcli prohibits copy
-    // value field command.atf_gcli_proc.cmd is not copiable
-    atf_gcli_proc(const atf_gcli_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_gcli_proc&){ /*disallow direct assignment */}
+    // func:command.atf_gcli_proc..Ctor
+    inline               atf_gcli_proc() __attribute__((nothrow));
+    // func:command.atf_gcli_proc..Dtor
+    inline               ~atf_gcli_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3664,7 +3557,7 @@ void                 atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.atf_gcli_proc..Init
-void                 atf_gcli_proc_Init(command::atf_gcli_proc& parent);
+inline void          atf_gcli_proc_Init(command::atf_gcli_proc& parent);
 // func:command.atf_gcli_proc..Uninit
 void                 atf_gcli_proc_Uninit(command::atf_gcli_proc& parent) __attribute__((nothrow));
 
@@ -3674,7 +3567,8 @@ struct atf_nrun { // command.atf_nrun
     algo::cstring   in;        //   "data"  Input directory or filename, - for stdin
     i32             maxjobs;   //   2  Number of simultaneous jobs
     i32             ncmd;      //   6
-    atf_nrun();
+    // func:command.atf_nrun..Ctor
+    inline               atf_nrun() __attribute__((nothrow));
 };
 
 // func:command.atf_nrun..ReadFieldMaybe
@@ -3684,7 +3578,7 @@ bool                 atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::st
 bool                 atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.atf_nrun..Init
-void                 atf_nrun_Init(command::atf_nrun& parent);
+inline void          atf_nrun_Init(command::atf_nrun& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.atf_nrun..ToCmdline
@@ -3711,12 +3605,10 @@ struct atf_nrun_proc { // command.atf_nrun_proc: Subprocess: Run N subprocesses 
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_nrun_proc();
-    ~atf_nrun_proc();
-private:
-    // reftype Exec of command.atf_nrun_proc.atf_nrun prohibits copy
-    atf_nrun_proc(const atf_nrun_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_nrun_proc&){ /*disallow direct assignment */}
+    // func:command.atf_nrun_proc..Ctor
+    inline               atf_nrun_proc() __attribute__((nothrow));
+    // func:command.atf_nrun_proc..Dtor
+    inline               ~atf_nrun_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3752,7 +3644,7 @@ void                 atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.atf_nrun_proc..Init
-void                 atf_nrun_proc_Init(command::atf_nrun_proc& parent);
+inline void          atf_nrun_proc_Init(command::atf_nrun_proc& parent);
 // func:command.atf_nrun_proc..Uninit
 void                 atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) __attribute__((nothrow));
 
@@ -3769,11 +3661,8 @@ struct atf_unit { // command.atf_unit
     bool             report;            //   true  Print final report
     bool             capture;           //   false  Re-capture test results
     bool             check_untracked;   //   true  Check for untracked file before allowing test to run
-    atf_unit();
-private:
-    // reftype Regx of command.atf_unit.unittest prohibits copy
-    atf_unit(const atf_unit&){ /*disallow copy constructor */}
-    void operator =(const atf_unit&){ /*disallow direct assignment */}
+    // func:command.atf_unit..Ctor
+    inline               atf_unit() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -3818,13 +3707,10 @@ struct atf_unit_proc { // command.atf_unit_proc: Subprocess: Unit tests (see uni
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    atf_unit_proc();
-    ~atf_unit_proc();
-private:
-    // reftype Exec of command.atf_unit_proc.atf_unit prohibits copy
-    // value field command.atf_unit_proc.cmd is not copiable
-    atf_unit_proc(const atf_unit_proc&){ /*disallow copy constructor */}
-    void operator =(const atf_unit_proc&){ /*disallow direct assignment */}
+    // func:command.atf_unit_proc..Ctor
+    inline               atf_unit_proc() __attribute__((nothrow));
+    // func:command.atf_unit_proc..Dtor
+    inline               ~atf_unit_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3860,7 +3746,7 @@ void                 atf_unit_ToArgv(command::atf_unit_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.atf_unit_proc..Init
-void                 atf_unit_proc_Init(command::atf_unit_proc& parent);
+inline void          atf_unit_proc_Init(command::atf_unit_proc& parent);
 // func:command.atf_unit_proc..Uninit
 void                 atf_unit_proc_Uninit(command::atf_unit_proc& parent) __attribute__((nothrow));
 
@@ -3868,12 +3754,13 @@ void                 atf_unit_proc_Uninit(command::atf_unit_proc& parent) __attr
 // access: command.bash_proc.bash (Exec)
 struct bash { // command.bash
     algo::cstring   c;   //   ""  Shell command to execute
-    bash();
+    // func:command.bash..Ctor
+    inline               bash() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:command.bash..Init
-void                 bash_Init(command::bash& parent);
+inline void          bash_Init(command::bash& parent);
 // print string representation of ROW to string STR
 // cfmt:command.bash.ArgvGnu  printfmt:Auto
 // func:command.bash..PrintArgv
@@ -3884,7 +3771,8 @@ void                 bash_PrintArgv(command::bash& row, algo::cstring& str) __at
 struct bash2html { // command.bash2html
     algo::cstring   in;     //   "data"  Input directory or filename, - for stdin
     bool            test;   //   false  Produce Test Output
-    bash2html();
+    // func:command.bash2html..Ctor
+    inline               bash2html() __attribute__((nothrow));
 };
 
 // func:command.bash2html..ReadFieldMaybe
@@ -3894,7 +3782,7 @@ bool                 bash2html_ReadFieldMaybe(command::bash2html& parent, algo::
 bool                 bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.bash2html..Init
-void                 bash2html_Init(command::bash2html& parent);
+inline void          bash2html_Init(command::bash2html& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.bash2html..ToCmdline
@@ -3919,12 +3807,10 @@ struct bash2html_proc { // command.bash2html_proc: Subprocess: Convert bash outp
     pid_t                pid;       //   0  pid of running child process
     i32                  timeout;   //   0  optional timeout for child process
     i32                  status;    //   0  last exit status of child process
-    bash2html_proc();
-    ~bash2html_proc();
-private:
-    // reftype Exec of command.bash2html_proc.bash2html prohibits copy
-    bash2html_proc(const bash2html_proc&){ /*disallow copy constructor */}
-    void operator =(const bash2html_proc&){ /*disallow direct assignment */}
+    // func:command.bash2html_proc..Ctor
+    inline               bash2html_proc() __attribute__((nothrow));
+    // func:command.bash2html_proc..Dtor
+    inline               ~bash2html_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -3960,7 +3846,7 @@ void                 bash2html_ToArgv(command::bash2html_proc& parent, algo::Str
 
 // Set all fields to initial values.
 // func:command.bash2html_proc..Init
-void                 bash2html_proc_Init(command::bash2html_proc& parent);
+inline void          bash2html_proc_Init(command::bash2html_proc& parent);
 // func:command.bash2html_proc..Uninit
 void                 bash2html_proc_Uninit(command::bash2html_proc& parent) __attribute__((nothrow));
 
@@ -3974,12 +3860,10 @@ struct bash_proc { // command.bash_proc
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    bash_proc();
-    ~bash_proc();
-private:
-    // reftype Exec of command.bash_proc.bash prohibits copy
-    bash_proc(const bash_proc&){ /*disallow copy constructor */}
-    void operator =(const bash_proc&){ /*disallow direct assignment */}
+    // func:command.bash_proc..Ctor
+    inline               bash_proc() __attribute__((nothrow));
+    // func:command.bash_proc..Dtor
+    inline               ~bash_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4015,7 +3899,7 @@ void                 bash_ToArgv(command::bash_proc& parent, algo::StringAry& ar
 
 // Set all fields to initial values.
 // func:command.bash_proc..Init
-void                 bash_proc_Init(command::bash_proc& parent);
+inline void          bash_proc_Init(command::bash_proc& parent);
 // func:command.bash_proc..Uninit
 void                 bash_proc_Uninit(command::bash_proc& parent) __attribute__((nothrow));
 
@@ -4037,12 +3921,14 @@ struct gcache { // command.gcache
     algo::UnTime     after;       // Start time for reporting
     bool             report;      //   false  Show end-of-run report
     bool             force;       //   false  Force recompile and update cache
-    gcache();
-    ~gcache();
-private:
-    // reftype Tary of command.gcache.cmd prohibits copy
-    gcache(const gcache&){ /*disallow copy constructor */}
-    void operator =(const gcache&){ /*disallow direct assignment */}
+    // func:command.gcache..AssignOp
+    command::gcache&     operator =(const command::gcache &rhs) __attribute__((nothrow));
+    // func:command.gcache..Ctor
+    inline               gcache() __attribute__((nothrow));
+    // func:command.gcache..Dtor
+    inline               ~gcache() __attribute__((nothrow));
+    // func:command.gcache..CopyCtor
+    gcache(const command::gcache &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -4063,22 +3949,22 @@ algo::cstring&       cmd_AllocAt(command::gcache& parent, int at) __attribute__(
 algo::aryptr<algo::cstring> cmd_AllocN(command::gcache& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.gcache.cmd.EmptyQ
-bool                 cmd_EmptyQ(command::gcache& parent) __attribute__((nothrow));
+inline bool          cmd_EmptyQ(command::gcache& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.gcache.cmd.Find
-algo::cstring*       cmd_Find(command::gcache& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* cmd_Find(command::gcache& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.gcache.cmd.Getary
-algo::aryptr<algo::cstring> cmd_Getary(const command::gcache& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> cmd_Getary(const command::gcache& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.gcache.cmd.Last
-algo::cstring*       cmd_Last(command::gcache& parent) __attribute__((nothrow, pure));
+inline algo::cstring* cmd_Last(command::gcache& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.gcache.cmd.Max
-i32                  cmd_Max(command::gcache& parent) __attribute__((nothrow));
+inline i32           cmd_Max(command::gcache& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.gcache.cmd.N
-i32                  cmd_N(const command::gcache& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cmd_N(const command::gcache& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.gcache.cmd.Remove
 void                 cmd_Remove(command::gcache& parent, u32 i) __attribute__((nothrow));
@@ -4089,7 +3975,7 @@ void                 cmd_RemoveAll(command::gcache& parent) __attribute__((nothr
 void                 cmd_RemoveLast(command::gcache& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.gcache.cmd.Reserve
-void                 cmd_Reserve(command::gcache& parent, int n) __attribute__((nothrow));
+inline void          cmd_Reserve(command::gcache& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.gcache.cmd.AbsReserve
 void                 cmd_AbsReserve(command::gcache& parent, int n) __attribute__((nothrow));
@@ -4102,13 +3988,13 @@ void                 cmd_Setary(command::gcache& parent, command::gcache &rhs) _
 void                 cmd_Setary(command::gcache& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.gcache.cmd.qFind
-algo::cstring&       cmd_qFind(command::gcache& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& cmd_qFind(command::gcache& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.gcache.cmd.qLast
-algo::cstring&       cmd_qLast(command::gcache& parent) __attribute__((nothrow));
+inline algo::cstring& cmd_qLast(command::gcache& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.gcache.cmd.rowid_Get
-u64                  cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcache.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -4120,15 +4006,15 @@ bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr i
 
 // proceed to next item
 // func:command.gcache.cmd_curs.Next
-void                 gcache_cmd_curs_Next(gcache_cmd_curs &curs) __attribute__((nothrow));
+inline void          gcache_cmd_curs_Next(gcache_cmd_curs &curs) __attribute__((nothrow));
 // func:command.gcache.cmd_curs.Reset
-void                 gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) __attribute__((nothrow));
+inline void          gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.gcache.cmd_curs.ValidQ
-bool                 gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) __attribute__((nothrow));
+inline bool          gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.gcache.cmd_curs.Access
-algo::cstring&       gcache_cmd_curs_Access(gcache_cmd_curs &curs) __attribute__((nothrow));
+inline algo::cstring& gcache_cmd_curs_Access(gcache_cmd_curs &curs) __attribute__((nothrow));
 // func:command.gcache..ReadFieldMaybe
 bool                 gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcache from attributes of ascii tuple TUPLE
@@ -4169,13 +4055,10 @@ struct gcache_proc { // command.gcache_proc: Subprocess: Compiler cache
     pid_t             pid;       //   0  pid of running child process
     i32               timeout;   //   0  optional timeout for child process
     i32               status;    //   0  last exit status of child process
-    gcache_proc();
-    ~gcache_proc();
-private:
-    // reftype Exec of command.gcache_proc.gcache prohibits copy
-    // value field command.gcache_proc.cmd is not copiable
-    gcache_proc(const gcache_proc&){ /*disallow copy constructor */}
-    void operator =(const gcache_proc&){ /*disallow direct assignment */}
+    // func:command.gcache_proc..Ctor
+    inline               gcache_proc() __attribute__((nothrow));
+    // func:command.gcache_proc..Dtor
+    inline               ~gcache_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4211,7 +4094,7 @@ void                 gcache_ToArgv(command::gcache_proc& parent, algo::StringAry
 
 // Set all fields to initial values.
 // func:command.gcache_proc..Init
-void                 gcache_proc_Init(command::gcache_proc& parent);
+inline void          gcache_proc_Init(command::gcache_proc& parent);
 // func:command.gcache_proc..Uninit
 void                 gcache_proc_Uninit(command::gcache_proc& parent) __attribute__((nothrow));
 
@@ -4237,12 +4120,14 @@ struct gcli { // command.gcli
     bool                dry_run;                    //   false  Print actions, do not perform
     algo::cstring       gitdir;                     //   ""  (setup) Change directory of git repository
     bool                show_gitlab_system_notes;   //   false  (misc) Show issue and mr notes created by gitlab
-    gcli();
-    ~gcli();
-private:
-    // reftype Tary of command.gcli.fields prohibits copy
-    gcli(const gcli&){ /*disallow copy constructor */}
-    void operator =(const gcli&){ /*disallow direct assignment */}
+    // func:command.gcli..AssignOp
+    command::gcli&       operator =(const command::gcli &rhs) __attribute__((nothrow));
+    // func:command.gcli..Ctor
+    inline               gcli() __attribute__((nothrow));
+    // func:command.gcli..Dtor
+    inline               ~gcli() __attribute__((nothrow));
+    // func:command.gcli..CopyCtor
+    gcli(const command::gcli &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -4263,22 +4148,22 @@ algo::cstring&       fields_AllocAt(command::gcli& parent, int at) __attribute__
 algo::aryptr<algo::cstring> fields_AllocN(command::gcli& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.gcli.fields.EmptyQ
-bool                 fields_EmptyQ(command::gcli& parent) __attribute__((nothrow));
+inline bool          fields_EmptyQ(command::gcli& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.gcli.fields.Find
-algo::cstring*       fields_Find(command::gcli& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* fields_Find(command::gcli& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.gcli.fields.Getary
-algo::aryptr<algo::cstring> fields_Getary(const command::gcli& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> fields_Getary(const command::gcli& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.gcli.fields.Last
-algo::cstring*       fields_Last(command::gcli& parent) __attribute__((nothrow, pure));
+inline algo::cstring* fields_Last(command::gcli& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.gcli.fields.Max
-i32                  fields_Max(command::gcli& parent) __attribute__((nothrow));
+inline i32           fields_Max(command::gcli& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.gcli.fields.N
-i32                  fields_N(const command::gcli& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           fields_N(const command::gcli& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.gcli.fields.Remove
 void                 fields_Remove(command::gcli& parent, u32 i) __attribute__((nothrow));
@@ -4289,7 +4174,7 @@ void                 fields_RemoveAll(command::gcli& parent) __attribute__((noth
 void                 fields_RemoveLast(command::gcli& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.gcli.fields.Reserve
-void                 fields_Reserve(command::gcli& parent, int n) __attribute__((nothrow));
+inline void          fields_Reserve(command::gcli& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.gcli.fields.AbsReserve
 void                 fields_AbsReserve(command::gcli& parent, int n) __attribute__((nothrow));
@@ -4302,13 +4187,13 @@ void                 fields_Setary(command::gcli& parent, command::gcli &rhs) __
 void                 fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.gcli.fields.qFind
-algo::cstring&       fields_qFind(command::gcli& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& fields_qFind(command::gcli& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.gcli.fields.qLast
-algo::cstring&       fields_qLast(command::gcli& parent) __attribute__((nothrow));
+inline algo::cstring& fields_qLast(command::gcli& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.gcli.fields.rowid_Get
-u64                  fields_rowid_Get(command::gcli& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           fields_rowid_Get(command::gcli& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcli.fields.AllocNVal
 algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -4320,15 +4205,15 @@ bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr 
 
 // proceed to next item
 // func:command.gcli.fields_curs.Next
-void                 gcli_fields_curs_Next(gcli_fields_curs &curs) __attribute__((nothrow));
+inline void          gcli_fields_curs_Next(gcli_fields_curs &curs) __attribute__((nothrow));
 // func:command.gcli.fields_curs.Reset
-void                 gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) __attribute__((nothrow));
+inline void          gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.gcli.fields_curs.ValidQ
-bool                 gcli_fields_curs_ValidQ(gcli_fields_curs &curs) __attribute__((nothrow));
+inline bool          gcli_fields_curs_ValidQ(gcli_fields_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.gcli.fields_curs.Access
-algo::cstring&       gcli_fields_curs_Access(gcli_fields_curs &curs) __attribute__((nothrow));
+inline algo::cstring& gcli_fields_curs_Access(gcli_fields_curs &curs) __attribute__((nothrow));
 // func:command.gcli..ReadFieldMaybe
 bool                 gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::gcli from attributes of ascii tuple TUPLE
@@ -4365,13 +4250,10 @@ struct gcli_proc { // command.gcli_proc: Subprocess: Gcli - gitlab/github comman
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    gcli_proc();
-    ~gcli_proc();
-private:
-    // reftype Exec of command.gcli_proc.gcli prohibits copy
-    // value field command.gcli_proc.cmd is not copiable
-    gcli_proc(const gcli_proc&){ /*disallow copy constructor */}
-    void operator =(const gcli_proc&){ /*disallow direct assignment */}
+    // func:command.gcli_proc..Ctor
+    inline               gcli_proc() __attribute__((nothrow));
+    // func:command.gcli_proc..Dtor
+    inline               ~gcli_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4407,7 +4289,7 @@ void                 gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& ar
 
 // Set all fields to initial values.
 // func:command.gcli_proc..Init
-void                 gcli_proc_Init(command::gcli_proc& parent);
+inline void          gcli_proc_Init(command::gcli_proc& parent);
 // func:command.gcli_proc..Uninit
 void                 gcli_proc_Uninit(command::gcli_proc& parent) __attribute__((nothrow));
 
@@ -4433,13 +4315,14 @@ struct mdbg { // command.mdbg
     bool               follow_child;   //   false
     bool               py;             //   false  Enable python scripting
     bool               dry_run;        //   false  Print commands but don't execute
-    mdbg();
-    ~mdbg();
-private:
-    // reftype Tary of command.mdbg.args prohibits copy
-    // reftype Tary of command.mdbg.b prohibits copy
-    mdbg(const mdbg&){ /*disallow copy constructor */}
-    void operator =(const mdbg&){ /*disallow direct assignment */}
+    // func:command.mdbg..AssignOp
+    command::mdbg&       operator =(const command::mdbg &rhs) __attribute__((nothrow));
+    // func:command.mdbg..Ctor
+    inline               mdbg() __attribute__((nothrow));
+    // func:command.mdbg..Dtor
+    inline               ~mdbg() __attribute__((nothrow));
+    // func:command.mdbg..CopyCtor
+    mdbg(const command::mdbg &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -4460,22 +4343,22 @@ algo::cstring&       args_AllocAt(command::mdbg& parent, int at) __attribute__((
 algo::aryptr<algo::cstring> args_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.mdbg.args.EmptyQ
-bool                 args_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
+inline bool          args_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.mdbg.args.Find
-algo::cstring*       args_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* args_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.mdbg.args.Getary
-algo::aryptr<algo::cstring> args_Getary(const command::mdbg& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> args_Getary(const command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.mdbg.args.Last
-algo::cstring*       args_Last(command::mdbg& parent) __attribute__((nothrow, pure));
+inline algo::cstring* args_Last(command::mdbg& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.mdbg.args.Max
-i32                  args_Max(command::mdbg& parent) __attribute__((nothrow));
+inline i32           args_Max(command::mdbg& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.mdbg.args.N
-i32                  args_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           args_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.mdbg.args.Remove
 void                 args_Remove(command::mdbg& parent, u32 i) __attribute__((nothrow));
@@ -4486,7 +4369,7 @@ void                 args_RemoveAll(command::mdbg& parent) __attribute__((nothro
 void                 args_RemoveLast(command::mdbg& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.mdbg.args.Reserve
-void                 args_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
+inline void          args_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.mdbg.args.AbsReserve
 void                 args_AbsReserve(command::mdbg& parent, int n) __attribute__((nothrow));
@@ -4499,13 +4382,13 @@ void                 args_Setary(command::mdbg& parent, command::mdbg &rhs) __at
 void                 args_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.mdbg.args.qFind
-algo::cstring&       args_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& args_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.mdbg.args.qLast
-algo::cstring&       args_qLast(command::mdbg& parent) __attribute__((nothrow));
+inline algo::cstring& args_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.mdbg.args.rowid_Get
-u64                  args_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           args_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.args.AllocNVal
 algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -4533,22 +4416,22 @@ algo::cstring&       b_AllocAt(command::mdbg& parent, int at) __attribute__((__w
 algo::aryptr<algo::cstring> b_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.mdbg.b.EmptyQ
-bool                 b_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
+inline bool          b_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.mdbg.b.Find
-algo::cstring*       b_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* b_Find(command::mdbg& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.mdbg.b.Getary
-algo::aryptr<algo::cstring> b_Getary(const command::mdbg& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> b_Getary(const command::mdbg& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.mdbg.b.Last
-algo::cstring*       b_Last(command::mdbg& parent) __attribute__((nothrow, pure));
+inline algo::cstring* b_Last(command::mdbg& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.mdbg.b.Max
-i32                  b_Max(command::mdbg& parent) __attribute__((nothrow));
+inline i32           b_Max(command::mdbg& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.mdbg.b.N
-i32                  b_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           b_N(const command::mdbg& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.mdbg.b.Remove
 void                 b_Remove(command::mdbg& parent, u32 i) __attribute__((nothrow));
@@ -4559,7 +4442,7 @@ void                 b_RemoveAll(command::mdbg& parent) __attribute__((nothrow))
 void                 b_RemoveLast(command::mdbg& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.mdbg.b.Reserve
-void                 b_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
+inline void          b_Reserve(command::mdbg& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.mdbg.b.AbsReserve
 void                 b_AbsReserve(command::mdbg& parent, int n) __attribute__((nothrow));
@@ -4572,13 +4455,13 @@ void                 b_Setary(command::mdbg& parent, command::mdbg &rhs) __attri
 void                 b_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.mdbg.b.qFind
-algo::cstring&       b_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& b_qFind(command::mdbg& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.mdbg.b.qLast
-algo::cstring&       b_qLast(command::mdbg& parent) __attribute__((nothrow));
+inline algo::cstring& b_qLast(command::mdbg& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.mdbg.b.rowid_Get
-u64                  b_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           b_rowid_Get(command::mdbg& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.b.AllocNVal
 algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -4590,26 +4473,26 @@ bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_st
 
 // proceed to next item
 // func:command.mdbg.args_curs.Next
-void                 mdbg_args_curs_Next(mdbg_args_curs &curs) __attribute__((nothrow));
+inline void          mdbg_args_curs_Next(mdbg_args_curs &curs) __attribute__((nothrow));
 // func:command.mdbg.args_curs.Reset
-void                 mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent) __attribute__((nothrow));
+inline void          mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.mdbg.args_curs.ValidQ
-bool                 mdbg_args_curs_ValidQ(mdbg_args_curs &curs) __attribute__((nothrow));
+inline bool          mdbg_args_curs_ValidQ(mdbg_args_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.mdbg.args_curs.Access
-algo::cstring&       mdbg_args_curs_Access(mdbg_args_curs &curs) __attribute__((nothrow));
+inline algo::cstring& mdbg_args_curs_Access(mdbg_args_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.mdbg.b_curs.Next
-void                 mdbg_b_curs_Next(mdbg_b_curs &curs) __attribute__((nothrow));
+inline void          mdbg_b_curs_Next(mdbg_b_curs &curs) __attribute__((nothrow));
 // func:command.mdbg.b_curs.Reset
-void                 mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent) __attribute__((nothrow));
+inline void          mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.mdbg.b_curs.ValidQ
-bool                 mdbg_b_curs_ValidQ(mdbg_b_curs &curs) __attribute__((nothrow));
+inline bool          mdbg_b_curs_ValidQ(mdbg_b_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.mdbg.b_curs.Access
-algo::cstring&       mdbg_b_curs_Access(mdbg_b_curs &curs) __attribute__((nothrow));
+inline algo::cstring& mdbg_b_curs_Access(mdbg_b_curs &curs) __attribute__((nothrow));
 // func:command.mdbg..ReadFieldMaybe
 bool                 mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::mdbg from attributes of ascii tuple TUPLE
@@ -4646,13 +4529,10 @@ struct mdbg_proc { // command.mdbg_proc: Subprocess: Gdb front-end
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    mdbg_proc();
-    ~mdbg_proc();
-private:
-    // reftype Exec of command.mdbg_proc.mdbg prohibits copy
-    // value field command.mdbg_proc.cmd is not copiable
-    mdbg_proc(const mdbg_proc&){ /*disallow copy constructor */}
-    void operator =(const mdbg_proc&){ /*disallow direct assignment */}
+    // func:command.mdbg_proc..Ctor
+    inline               mdbg_proc() __attribute__((nothrow));
+    // func:command.mdbg_proc..Dtor
+    inline               ~mdbg_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4688,7 +4568,7 @@ void                 mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& ar
 
 // Set all fields to initial values.
 // func:command.mdbg_proc..Init
-void                 mdbg_proc_Init(command::mdbg_proc& parent);
+inline void          mdbg_proc_Init(command::mdbg_proc& parent);
 // func:command.mdbg_proc..Uninit
 void                 mdbg_proc_Uninit(command::mdbg_proc& parent) __attribute__((nothrow));
 
@@ -4703,7 +4583,8 @@ struct mysql2ssim { // command.mysql2ssim
     bool            pretty;          //   false  Format output for the screen
     bool            nologo;          //   false  Don't show copyright notice
     bool            baddbok;         //   false  Don't claim if bad database
-    mysql2ssim();
+    // func:command.mysql2ssim..Ctor
+    inline               mysql2ssim() __attribute__((nothrow));
 };
 
 // func:command.mysql2ssim..ReadFieldMaybe
@@ -4713,7 +4594,7 @@ bool                 mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo
 bool                 mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.mysql2ssim..Init
-void                 mysql2ssim_Init(command::mysql2ssim& parent);
+inline void          mysql2ssim_Init(command::mysql2ssim& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.mysql2ssim..ToCmdline
@@ -4740,12 +4621,10 @@ struct mysql2ssim_proc { // command.mysql2ssim_proc: Subprocess: mysql -> ssim c
     pid_t                 pid;       //   0  pid of running child process
     i32                   timeout;   //   0  optional timeout for child process
     i32                   status;    //   0  last exit status of child process
-    mysql2ssim_proc();
-    ~mysql2ssim_proc();
-private:
-    // reftype Exec of command.mysql2ssim_proc.mysql2ssim prohibits copy
-    mysql2ssim_proc(const mysql2ssim_proc&){ /*disallow copy constructor */}
-    void operator =(const mysql2ssim_proc&){ /*disallow direct assignment */}
+    // func:command.mysql2ssim_proc..Ctor
+    inline               mysql2ssim_proc() __attribute__((nothrow));
+    // func:command.mysql2ssim_proc..Dtor
+    inline               ~mysql2ssim_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4781,7 +4660,7 @@ void                 mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::S
 
 // Set all fields to initial values.
 // func:command.mysql2ssim_proc..Init
-void                 mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
+inline void          mysql2ssim_proc_Init(command::mysql2ssim_proc& parent);
 // func:command.mysql2ssim_proc..Uninit
 void                 mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) __attribute__((nothrow));
 
@@ -4794,11 +4673,8 @@ struct orgfile { // command.orgfile
     bool             commit;   //   false  Apply changes
     bool             undo;     //   false  Read previous orgfile output, undoing movement
     algo::cstring    hash;     //   "sha1"  Hash command to use for deduplication
-    orgfile();
-private:
-    // reftype Regx of command.orgfile.dedup prohibits copy
-    orgfile(const orgfile&){ /*disallow copy constructor */}
-    void operator =(const orgfile&){ /*disallow direct assignment */}
+    // func:command.orgfile..Ctor
+    inline               orgfile() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -4841,13 +4717,10 @@ struct orgfile_proc { // command.orgfile_proc: Subprocess: Organize and deduplic
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    orgfile_proc();
-    ~orgfile_proc();
-private:
-    // reftype Exec of command.orgfile_proc.orgfile prohibits copy
-    // value field command.orgfile_proc.cmd is not copiable
-    orgfile_proc(const orgfile_proc&){ /*disallow copy constructor */}
-    void operator =(const orgfile_proc&){ /*disallow direct assignment */}
+    // func:command.orgfile_proc..Ctor
+    inline               orgfile_proc() __attribute__((nothrow));
+    // func:command.orgfile_proc..Dtor
+    inline               ~orgfile_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -4883,7 +4756,7 @@ void                 orgfile_ToArgv(command::orgfile_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.orgfile_proc..Init
-void                 orgfile_proc_Init(command::orgfile_proc& parent);
+inline void          orgfile_proc_Init(command::orgfile_proc& parent);
 // func:command.orgfile_proc..Uninit
 void                 orgfile_proc_Uninit(command::orgfile_proc& parent) __attribute__((nothrow));
 
@@ -4896,15 +4769,16 @@ struct samp_regx { // command.samp_regx
     bool            match;    //   false  Match a string
     algo::cstring   string;   //   ""  String to match
     bool            show;     //   false  Show regx innards
-    samp_regx();
+    // func:command.samp_regx..Ctor
+    inline               samp_regx() __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:command.samp_regx.style.GetEnum
-command_samp_regx_style_Enum style_GetEnum(const command::samp_regx& parent) __attribute__((nothrow));
+inline command_samp_regx_style_Enum style_GetEnum(const command::samp_regx& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:command.samp_regx.style.SetEnum
-void                 style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) __attribute__((nothrow));
+inline void          style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:command.samp_regx.style.ToCstr
@@ -4933,7 +4807,7 @@ bool                 samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::
 bool                 samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.samp_regx..Init
-void                 samp_regx_Init(command::samp_regx& parent);
+inline void          samp_regx_Init(command::samp_regx& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.samp_regx..ToCmdline
@@ -4960,12 +4834,10 @@ struct samp_regx_proc { // command.samp_regx_proc: Subprocess: Test tool for reg
     pid_t                pid;       //   0  pid of running child process
     i32                  timeout;   //   0  optional timeout for child process
     i32                  status;    //   0  last exit status of child process
-    samp_regx_proc();
-    ~samp_regx_proc();
-private:
-    // reftype Exec of command.samp_regx_proc.samp_regx prohibits copy
-    samp_regx_proc(const samp_regx_proc&){ /*disallow copy constructor */}
-    void operator =(const samp_regx_proc&){ /*disallow direct assignment */}
+    // func:command.samp_regx_proc..Ctor
+    inline               samp_regx_proc() __attribute__((nothrow));
+    // func:command.samp_regx_proc..Dtor
+    inline               ~samp_regx_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5001,7 +4873,7 @@ void                 samp_regx_ToArgv(command::samp_regx_proc& parent, algo::Str
 
 // Set all fields to initial values.
 // func:command.samp_regx_proc..Init
-void                 samp_regx_proc_Init(command::samp_regx_proc& parent);
+inline void          samp_regx_proc_Init(command::samp_regx_proc& parent);
 // func:command.samp_regx_proc..Uninit
 void                 samp_regx_proc_Uninit(command::samp_regx_proc& parent) __attribute__((nothrow));
 
@@ -5026,15 +4898,14 @@ struct sandbox { // command.sandbox
     u32              files_max;     // max. capacity of array before realloc
     algo::cstring    refs;          //   "HEAD"  Refs to fetch into sandbox
     bool             q;             //   false  Quiet mode
-    sandbox();
-    ~sandbox();
-private:
-    // reftype Regx of command.sandbox.name prohibits copy
-    // reftype Tary of command.sandbox.cmd prohibits copy
-    // reftype Tary of command.sandbox.files prohibits copy
-    // ... and several other reasons
-    sandbox(const sandbox&){ /*disallow copy constructor */}
-    void operator =(const sandbox&){ /*disallow direct assignment */}
+    // func:command.sandbox..AssignOp
+    command::sandbox&    operator =(const command::sandbox &rhs) __attribute__((nothrow));
+    // func:command.sandbox..Ctor
+    inline               sandbox() __attribute__((nothrow));
+    // func:command.sandbox..Dtor
+    inline               ~sandbox() __attribute__((nothrow));
+    // func:command.sandbox..CopyCtor
+    sandbox(const command::sandbox &rhs) __attribute__((nothrow));
 };
 
 // Print back to string
@@ -5063,22 +4934,22 @@ algo::cstring&       cmd_AllocAt(command::sandbox& parent, int at) __attribute__
 algo::aryptr<algo::cstring> cmd_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.sandbox.cmd.EmptyQ
-bool                 cmd_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
+inline bool          cmd_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.sandbox.cmd.Find
-algo::cstring*       cmd_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* cmd_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.sandbox.cmd.Getary
-algo::aryptr<algo::cstring> cmd_Getary(const command::sandbox& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> cmd_Getary(const command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.sandbox.cmd.Last
-algo::cstring*       cmd_Last(command::sandbox& parent) __attribute__((nothrow, pure));
+inline algo::cstring* cmd_Last(command::sandbox& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.sandbox.cmd.Max
-i32                  cmd_Max(command::sandbox& parent) __attribute__((nothrow));
+inline i32           cmd_Max(command::sandbox& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.sandbox.cmd.N
-i32                  cmd_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cmd_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.sandbox.cmd.Remove
 void                 cmd_Remove(command::sandbox& parent, u32 i) __attribute__((nothrow));
@@ -5089,7 +4960,7 @@ void                 cmd_RemoveAll(command::sandbox& parent) __attribute__((noth
 void                 cmd_RemoveLast(command::sandbox& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.sandbox.cmd.Reserve
-void                 cmd_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
+inline void          cmd_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.sandbox.cmd.AbsReserve
 void                 cmd_AbsReserve(command::sandbox& parent, int n) __attribute__((nothrow));
@@ -5102,13 +4973,13 @@ void                 cmd_Setary(command::sandbox& parent, command::sandbox &rhs)
 void                 cmd_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.sandbox.cmd.qFind
-algo::cstring&       cmd_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& cmd_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.sandbox.cmd.qLast
-algo::cstring&       cmd_qLast(command::sandbox& parent) __attribute__((nothrow));
+inline algo::cstring& cmd_qLast(command::sandbox& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.sandbox.cmd.rowid_Get
-u64                  cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.cmd.AllocNVal
 algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -5136,22 +5007,22 @@ algo::cstring&       files_AllocAt(command::sandbox& parent, int at) __attribute
 algo::aryptr<algo::cstring> files_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.sandbox.files.EmptyQ
-bool                 files_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
+inline bool          files_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.sandbox.files.Find
-algo::cstring*       files_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* files_Find(command::sandbox& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.sandbox.files.Getary
-algo::aryptr<algo::cstring> files_Getary(const command::sandbox& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> files_Getary(const command::sandbox& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.sandbox.files.Last
-algo::cstring*       files_Last(command::sandbox& parent) __attribute__((nothrow, pure));
+inline algo::cstring* files_Last(command::sandbox& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.sandbox.files.Max
-i32                  files_Max(command::sandbox& parent) __attribute__((nothrow));
+inline i32           files_Max(command::sandbox& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.sandbox.files.N
-i32                  files_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           files_N(const command::sandbox& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.sandbox.files.Remove
 void                 files_Remove(command::sandbox& parent, u32 i) __attribute__((nothrow));
@@ -5162,7 +5033,7 @@ void                 files_RemoveAll(command::sandbox& parent) __attribute__((no
 void                 files_RemoveLast(command::sandbox& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.sandbox.files.Reserve
-void                 files_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
+inline void          files_Reserve(command::sandbox& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.sandbox.files.AbsReserve
 void                 files_AbsReserve(command::sandbox& parent, int n) __attribute__((nothrow));
@@ -5175,13 +5046,13 @@ void                 files_Setary(command::sandbox& parent, command::sandbox &rh
 void                 files_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.sandbox.files.qFind
-algo::cstring&       files_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& files_qFind(command::sandbox& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.sandbox.files.qLast
-algo::cstring&       files_qLast(command::sandbox& parent) __attribute__((nothrow));
+inline algo::cstring& files_qLast(command::sandbox& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.sandbox.files.rowid_Get
-u64                  files_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           files_rowid_Get(command::sandbox& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.files.AllocNVal
 algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -5193,26 +5064,26 @@ bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strpt
 
 // proceed to next item
 // func:command.sandbox.cmd_curs.Next
-void                 sandbox_cmd_curs_Next(sandbox_cmd_curs &curs) __attribute__((nothrow));
+inline void          sandbox_cmd_curs_Next(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // func:command.sandbox.cmd_curs.Reset
-void                 sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent) __attribute__((nothrow));
+inline void          sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.sandbox.cmd_curs.ValidQ
-bool                 sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs) __attribute__((nothrow));
+inline bool          sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.sandbox.cmd_curs.Access
-algo::cstring&       sandbox_cmd_curs_Access(sandbox_cmd_curs &curs) __attribute__((nothrow));
+inline algo::cstring& sandbox_cmd_curs_Access(sandbox_cmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.sandbox.files_curs.Next
-void                 sandbox_files_curs_Next(sandbox_files_curs &curs) __attribute__((nothrow));
+inline void          sandbox_files_curs_Next(sandbox_files_curs &curs) __attribute__((nothrow));
 // func:command.sandbox.files_curs.Reset
-void                 sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent) __attribute__((nothrow));
+inline void          sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.sandbox.files_curs.ValidQ
-bool                 sandbox_files_curs_ValidQ(sandbox_files_curs &curs) __attribute__((nothrow));
+inline bool          sandbox_files_curs_ValidQ(sandbox_files_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.sandbox.files_curs.Access
-algo::cstring&       sandbox_files_curs_Access(sandbox_files_curs &curs) __attribute__((nothrow));
+inline algo::cstring& sandbox_files_curs_Access(sandbox_files_curs &curs) __attribute__((nothrow));
 // func:command.sandbox..ReadFieldMaybe
 bool                 sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::sandbox from attributes of ascii tuple TUPLE
@@ -5249,13 +5120,10 @@ struct sandbox_proc { // command.sandbox_proc: Subprocess: Sandbox - sandbox man
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    sandbox_proc();
-    ~sandbox_proc();
-private:
-    // reftype Exec of command.sandbox_proc.sandbox prohibits copy
-    // value field command.sandbox_proc.cmd is not copiable
-    sandbox_proc(const sandbox_proc&){ /*disallow copy constructor */}
-    void operator =(const sandbox_proc&){ /*disallow direct assignment */}
+    // func:command.sandbox_proc..Ctor
+    inline               sandbox_proc() __attribute__((nothrow));
+    // func:command.sandbox_proc..Dtor
+    inline               ~sandbox_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5291,7 +5159,7 @@ void                 sandbox_ToArgv(command::sandbox_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.sandbox_proc..Init
-void                 sandbox_proc_Init(command::sandbox_proc& parent);
+inline void          sandbox_proc_Init(command::sandbox_proc& parent);
 // func:command.sandbox_proc..Uninit
 void                 sandbox_proc_Uninit(command::sandbox_proc& parent) __attribute__((nothrow));
 
@@ -5319,14 +5187,8 @@ struct src_func { // command.src_func
     bool                e;             //   false  (with -listfunc) Edit found functions
     bool                baddecl;       //   false  Report and fail on bad declarations
     bool                report;        //   false
-    src_func();
-private:
-    // reftype Regx of command.src_func.target prohibits copy
-    // reftype Regx of command.src_func.name prohibits copy
-    // reftype Regx of command.src_func.body prohibits copy
-    // ... and several other reasons
-    src_func(const src_func&){ /*disallow copy constructor */}
-    void operator =(const src_func&){ /*disallow direct assignment */}
+    // func:command.src_func..Ctor
+    inline               src_func() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -5411,13 +5273,10 @@ struct src_func_proc { // command.src_func_proc: Subprocess: Access / edit funct
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    src_func_proc();
-    ~src_func_proc();
-private:
-    // reftype Exec of command.src_func_proc.src_func prohibits copy
-    // value field command.src_func_proc.cmd is not copiable
-    src_func_proc(const src_func_proc&){ /*disallow copy constructor */}
-    void operator =(const src_func_proc&){ /*disallow direct assignment */}
+    // func:command.src_func_proc..Ctor
+    inline               src_func_proc() __attribute__((nothrow));
+    // func:command.src_func_proc..Dtor
+    inline               ~src_func_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5453,7 +5312,7 @@ void                 src_func_ToArgv(command::src_func_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.src_func_proc..Init
-void                 src_func_proc_Init(command::src_func_proc& parent);
+inline void          src_func_proc_Init(command::src_func_proc& parent);
 // func:command.src_func_proc..Uninit
 void                 src_func_proc_Uninit(command::src_func_proc& parent) __attribute__((nothrow));
 
@@ -5466,12 +5325,8 @@ struct src_hdr { // command.src_hdr
     bool             indent;             //   false  Indent source files
     bool             update_copyright;   //   false  Update copyright year for current company
     algo_lib::Regx   scriptfile;         //   ""  Sql Regx of dev::Scriptfile
-    src_hdr();
-private:
-    // reftype Regx of command.src_hdr.targsrc prohibits copy
-    // reftype Regx of command.src_hdr.scriptfile prohibits copy
-    src_hdr(const src_hdr&){ /*disallow copy constructor */}
-    void operator =(const src_hdr&){ /*disallow direct assignment */}
+    // func:command.src_hdr..Ctor
+    inline               src_hdr() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -5522,13 +5377,10 @@ struct src_hdr_proc { // command.src_hdr_proc: Subprocess: Manage source copyrig
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    src_hdr_proc();
-    ~src_hdr_proc();
-private:
-    // reftype Exec of command.src_hdr_proc.src_hdr prohibits copy
-    // value field command.src_hdr_proc.cmd is not copiable
-    src_hdr_proc(const src_hdr_proc&){ /*disallow copy constructor */}
-    void operator =(const src_hdr_proc&){ /*disallow direct assignment */}
+    // func:command.src_hdr_proc..Ctor
+    inline               src_hdr_proc() __attribute__((nothrow));
+    // func:command.src_hdr_proc..Dtor
+    inline               ~src_hdr_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5564,7 +5416,7 @@ void                 src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.src_hdr_proc..Init
-void                 src_hdr_proc_Init(command::src_hdr_proc& parent);
+inline void          src_hdr_proc_Init(command::src_hdr_proc& parent);
 // func:command.src_hdr_proc..Uninit
 void                 src_hdr_proc_Uninit(command::src_hdr_proc& parent) __attribute__((nothrow));
 
@@ -5579,12 +5431,8 @@ struct src_lim { // command.src_lim
     bool             write;       //   false  Update ssim database (with -capture)
     bool             badchar;     //   false  Check for bad chars in source files
     algo_lib::Regx   badline;     //   ""  Sql Regx of dev::Badline
-    src_lim();
-private:
-    // reftype Regx of command.src_lim.srcfile prohibits copy
-    // reftype Regx of command.src_lim.badline prohibits copy
-    src_lim(const src_lim&){ /*disallow copy constructor */}
-    void operator =(const src_lim&){ /*disallow direct assignment */}
+    // func:command.src_lim..Ctor
+    inline               src_lim() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -5635,13 +5483,10 @@ struct src_lim_proc { // command.src_lim_proc: Subprocess: Enforce line length, 
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    src_lim_proc();
-    ~src_lim_proc();
-private:
-    // reftype Exec of command.src_lim_proc.src_lim prohibits copy
-    // value field command.src_lim_proc.cmd is not copiable
-    src_lim_proc(const src_lim_proc&){ /*disallow copy constructor */}
-    void operator =(const src_lim_proc&){ /*disallow direct assignment */}
+    // func:command.src_lim_proc..Ctor
+    inline               src_lim_proc() __attribute__((nothrow));
+    // func:command.src_lim_proc..Dtor
+    inline               ~src_lim_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5677,7 +5522,7 @@ void                 src_lim_ToArgv(command::src_lim_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.src_lim_proc..Init
-void                 src_lim_proc_Init(command::src_lim_proc& parent);
+inline void          src_lim_proc_Init(command::src_lim_proc& parent);
 // func:command.src_lim_proc..Uninit
 void                 src_lim_proc_Uninit(command::src_lim_proc& parent) __attribute__((nothrow));
 
@@ -5686,7 +5531,8 @@ void                 src_lim_proc_Uninit(command::src_lim_proc& parent) __attrib
 struct ssim2csv { // command.ssim2csv
     algo::cstring   expand;        //   ""
     bool            ignoreQuote;   //   false
-    ssim2csv();
+    // func:command.ssim2csv..Ctor
+    inline               ssim2csv() __attribute__((nothrow));
 };
 
 // func:command.ssim2csv..ReadFieldMaybe
@@ -5696,7 +5542,7 @@ bool                 ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::st
 bool                 ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.ssim2csv..Init
-void                 ssim2csv_Init(command::ssim2csv& parent);
+inline void          ssim2csv_Init(command::ssim2csv& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.ssim2csv..ToCmdline
@@ -5721,12 +5567,10 @@ struct ssim2csv_proc { // command.ssim2csv_proc: Subprocess: Ssim -> csv convers
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    ssim2csv_proc();
-    ~ssim2csv_proc();
-private:
-    // reftype Exec of command.ssim2csv_proc.ssim2csv prohibits copy
-    ssim2csv_proc(const ssim2csv_proc&){ /*disallow copy constructor */}
-    void operator =(const ssim2csv_proc&){ /*disallow direct assignment */}
+    // func:command.ssim2csv_proc..Ctor
+    inline               ssim2csv_proc() __attribute__((nothrow));
+    // func:command.ssim2csv_proc..Dtor
+    inline               ~ssim2csv_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5762,7 +5606,7 @@ void                 ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.ssim2csv_proc..Init
-void                 ssim2csv_proc_Init(command::ssim2csv_proc& parent);
+inline void          ssim2csv_proc_Init(command::ssim2csv_proc& parent);
 // func:command.ssim2csv_proc..Uninit
 void                 ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) __attribute__((nothrow));
 
@@ -5780,7 +5624,8 @@ struct ssim2mysql { // command.ssim2mysql
     algo::cstring   db;          //   ""  Optional database name
     bool            createdb;    //   false  Emit CREATE DATABASE code for namespace specified with <db>
     bool            fkey;        //   false  Enable foreign key constraints (uses InnoDB storage engine)
-    ssim2mysql();
+    // func:command.ssim2mysql..Ctor
+    inline               ssim2mysql() __attribute__((nothrow));
 };
 
 // func:command.ssim2mysql..ReadFieldMaybe
@@ -5815,12 +5660,10 @@ struct ssim2mysql_proc { // command.ssim2mysql_proc: Subprocess: Ssim -> mysql
     pid_t                 pid;       //   0  pid of running child process
     i32                   timeout;   //   0  optional timeout for child process
     i32                   status;    //   0  last exit status of child process
-    ssim2mysql_proc();
-    ~ssim2mysql_proc();
-private:
-    // reftype Exec of command.ssim2mysql_proc.ssim2mysql prohibits copy
-    ssim2mysql_proc(const ssim2mysql_proc&){ /*disallow copy constructor */}
-    void operator =(const ssim2mysql_proc&){ /*disallow direct assignment */}
+    // func:command.ssim2mysql_proc..Ctor
+    inline               ssim2mysql_proc() __attribute__((nothrow));
+    // func:command.ssim2mysql_proc..Dtor
+    inline               ~ssim2mysql_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -5856,7 +5699,7 @@ void                 ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::S
 
 // Set all fields to initial values.
 // func:command.ssim2mysql_proc..Init
-void                 ssim2mysql_proc_Init(command::ssim2mysql_proc& parent);
+inline void          ssim2mysql_proc_Init(command::ssim2mysql_proc& parent);
 // func:command.ssim2mysql_proc..Uninit
 void                 ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) __attribute__((nothrow));
 
@@ -5874,15 +5717,14 @@ struct ssimfilt { // command.ssimfilt
     u8               format;        //   0  Output format for selected tuples
     bool             t;             //   false  Alias for -format:table
     algo::cstring    cmd;           //   ""  Command to output
-    ssimfilt();
-    ~ssimfilt();
-private:
-    // reftype Regx of command.ssimfilt.typetag prohibits copy
-    // reftype Tary of command.ssimfilt.match prohibits copy
-    // reftype Tary of command.ssimfilt.field prohibits copy
-    // ... and several other reasons
-    ssimfilt(const ssimfilt&){ /*disallow copy constructor */}
-    void operator =(const ssimfilt&){ /*disallow direct assignment */}
+    // func:command.ssimfilt..AssignOp
+    command::ssimfilt&   operator =(const command::ssimfilt &rhs) __attribute__((nothrow));
+    // func:command.ssimfilt..Ctor
+    inline               ssimfilt() __attribute__((nothrow));
+    // func:command.ssimfilt..Dtor
+    inline               ~ssimfilt() __attribute__((nothrow));
+    // func:command.ssimfilt..CopyCtor
+    ssimfilt(const command::ssimfilt &rhs) __attribute__((nothrow));
 };
 
 // Print back to string
@@ -5911,22 +5753,22 @@ algo::cstring&       match_AllocAt(command::ssimfilt& parent, int at) __attribut
 algo::aryptr<algo::cstring> match_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.ssimfilt.match.EmptyQ
-bool                 match_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
+inline bool          match_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.ssimfilt.match.Find
-algo::cstring*       match_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* match_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.ssimfilt.match.Getary
-algo::aryptr<algo::cstring> match_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> match_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.ssimfilt.match.Last
-algo::cstring*       match_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
+inline algo::cstring* match_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.ssimfilt.match.Max
-i32                  match_Max(command::ssimfilt& parent) __attribute__((nothrow));
+inline i32           match_Max(command::ssimfilt& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.ssimfilt.match.N
-i32                  match_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           match_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.ssimfilt.match.Remove
 void                 match_Remove(command::ssimfilt& parent, u32 i) __attribute__((nothrow));
@@ -5937,7 +5779,7 @@ void                 match_RemoveAll(command::ssimfilt& parent) __attribute__((n
 void                 match_RemoveLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.ssimfilt.match.Reserve
-void                 match_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
+inline void          match_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.ssimfilt.match.AbsReserve
 void                 match_AbsReserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
@@ -5950,13 +5792,13 @@ void                 match_Setary(command::ssimfilt& parent, command::ssimfilt &
 void                 match_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.ssimfilt.match.qFind
-algo::cstring&       match_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& match_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.ssimfilt.match.qLast
-algo::cstring&       match_qLast(command::ssimfilt& parent) __attribute__((nothrow));
+inline algo::cstring& match_qLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.ssimfilt.match.rowid_Get
-u64                  match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.match.AllocNVal
 algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -5984,22 +5826,22 @@ algo::cstring&       field_AllocAt(command::ssimfilt& parent, int at) __attribut
 algo::aryptr<algo::cstring> field_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.ssimfilt.field.EmptyQ
-bool                 field_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
+inline bool          field_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:command.ssimfilt.field.Find
-algo::cstring*       field_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* field_Find(command::ssimfilt& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:command.ssimfilt.field.Getary
-algo::aryptr<algo::cstring> field_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> field_Getary(const command::ssimfilt& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:command.ssimfilt.field.Last
-algo::cstring*       field_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
+inline algo::cstring* field_Last(command::ssimfilt& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:command.ssimfilt.field.Max
-i32                  field_Max(command::ssimfilt& parent) __attribute__((nothrow));
+inline i32           field_Max(command::ssimfilt& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:command.ssimfilt.field.N
-i32                  field_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           field_N(const command::ssimfilt& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:command.ssimfilt.field.Remove
 void                 field_Remove(command::ssimfilt& parent, u32 i) __attribute__((nothrow));
@@ -6010,7 +5852,7 @@ void                 field_RemoveAll(command::ssimfilt& parent) __attribute__((n
 void                 field_RemoveLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:command.ssimfilt.field.Reserve
-void                 field_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
+inline void          field_Reserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:command.ssimfilt.field.AbsReserve
 void                 field_AbsReserve(command::ssimfilt& parent, int n) __attribute__((nothrow));
@@ -6023,13 +5865,13 @@ void                 field_Setary(command::ssimfilt& parent, command::ssimfilt &
 void                 field_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:command.ssimfilt.field.qFind
-algo::cstring&       field_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& field_qFind(command::ssimfilt& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:command.ssimfilt.field.qLast
-algo::cstring&       field_qLast(command::ssimfilt& parent) __attribute__((nothrow));
+inline algo::cstring& field_qLast(command::ssimfilt& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:command.ssimfilt.field.rowid_Get
-u64                  field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.field.AllocNVal
 algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -6041,10 +5883,10 @@ bool                 field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strp
 
 // Get value of field as enum type
 // func:command.ssimfilt.format.GetEnum
-command_ssimfilt_format_Enum format_GetEnum(const command::ssimfilt& parent) __attribute__((nothrow));
+inline command_ssimfilt_format_Enum format_GetEnum(const command::ssimfilt& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:command.ssimfilt.format.SetEnum
-void                 format_SetEnum(command::ssimfilt& parent, command_ssimfilt_format_Enum rhs) __attribute__((nothrow));
+inline void          format_SetEnum(command::ssimfilt& parent, command_ssimfilt_format_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:command.ssimfilt.format.ToCstr
@@ -6068,26 +5910,26 @@ bool                 format_ReadStrptrMaybe(command::ssimfilt& parent, algo::str
 
 // proceed to next item
 // func:command.ssimfilt.match_curs.Next
-void                 ssimfilt_match_curs_Next(ssimfilt_match_curs &curs) __attribute__((nothrow));
+inline void          ssimfilt_match_curs_Next(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt.match_curs.Reset
-void                 ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
+inline void          ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.ssimfilt.match_curs.ValidQ
-bool                 ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs) __attribute__((nothrow));
+inline bool          ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.ssimfilt.match_curs.Access
-algo::cstring&       ssimfilt_match_curs_Access(ssimfilt_match_curs &curs) __attribute__((nothrow));
+inline algo::cstring& ssimfilt_match_curs_Access(ssimfilt_match_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:command.ssimfilt.field_curs.Next
-void                 ssimfilt_field_curs_Next(ssimfilt_field_curs &curs) __attribute__((nothrow));
+inline void          ssimfilt_field_curs_Next(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt.field_curs.Reset
-void                 ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
+inline void          ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:command.ssimfilt.field_curs.ValidQ
-bool                 ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) __attribute__((nothrow));
+inline bool          ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:command.ssimfilt.field_curs.Access
-algo::cstring&       ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) __attribute__((nothrow));
+inline algo::cstring& ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) __attribute__((nothrow));
 // func:command.ssimfilt..ReadFieldMaybe
 bool                 ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of command::ssimfilt from attributes of ascii tuple TUPLE
@@ -6124,13 +5966,10 @@ struct ssimfilt_proc { // command.ssimfilt_proc: Subprocess: Tuple utility
     pid_t               pid;       //   0  pid of running child process
     i32                 timeout;   //   0  optional timeout for child process
     i32                 status;    //   0  last exit status of child process
-    ssimfilt_proc();
-    ~ssimfilt_proc();
-private:
-    // reftype Exec of command.ssimfilt_proc.ssimfilt prohibits copy
-    // value field command.ssimfilt_proc.cmd is not copiable
-    ssimfilt_proc(const ssimfilt_proc&){ /*disallow copy constructor */}
-    void operator =(const ssimfilt_proc&){ /*disallow direct assignment */}
+    // func:command.ssimfilt_proc..Ctor
+    inline               ssimfilt_proc() __attribute__((nothrow));
+    // func:command.ssimfilt_proc..Dtor
+    inline               ~ssimfilt_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -6166,7 +6005,7 @@ void                 ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::Strin
 
 // Set all fields to initial values.
 // func:command.ssimfilt_proc..Init
-void                 ssimfilt_proc_Init(command::ssimfilt_proc& parent);
+inline void          ssimfilt_proc_Init(command::ssimfilt_proc& parent);
 // func:command.ssimfilt_proc..Uninit
 void                 ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) __attribute__((nothrow));
 
@@ -6178,7 +6017,8 @@ struct strconv { // command.strconv
     bool                tolowerunder;   //   false  Convert string to lower-under
     algo::cstring       in;             //   "data"  Input directory or filename, - for stdin
     algo::Smallstr100   pathcomp;       //   ""  Extract path component from string
-    strconv();
+    // func:command.strconv..Ctor
+    inline               strconv() __attribute__((nothrow));
 };
 
 // func:command.strconv..ReadFieldMaybe
@@ -6188,7 +6028,7 @@ bool                 strconv_ReadFieldMaybe(command::strconv& parent, algo::strp
 bool                 strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.strconv..Init
-void                 strconv_Init(command::strconv& parent);
+inline void          strconv_Init(command::strconv& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.strconv..ToCmdline
@@ -6215,12 +6055,10 @@ struct strconv_proc { // command.strconv_proc: Subprocess: A simple string utili
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    strconv_proc();
-    ~strconv_proc();
-private:
-    // reftype Exec of command.strconv_proc.strconv prohibits copy
-    strconv_proc(const strconv_proc&){ /*disallow copy constructor */}
-    void operator =(const strconv_proc&){ /*disallow direct assignment */}
+    // func:command.strconv_proc..Ctor
+    inline               strconv_proc() __attribute__((nothrow));
+    // func:command.strconv_proc..Dtor
+    inline               ~strconv_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -6256,7 +6094,7 @@ void                 strconv_ToArgv(command::strconv_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.strconv_proc..Init
-void                 strconv_proc_Init(command::strconv_proc& parent);
+inline void          strconv_proc_Init(command::strconv_proc& parent);
 // func:command.strconv_proc..Uninit
 void                 strconv_proc_Uninit(command::strconv_proc& parent) __attribute__((nothrow));
 
@@ -6275,11 +6113,8 @@ struct sv2ssim { // command.sv2ssim
     bool             data;            //   false  (output) Convert input file to ssim tuples
     bool             report;          //   true  Print final report
     bool             prefer_signed;   //   false  Prefer signed types when given a choice
-    sv2ssim();
-private:
-    // reftype Regx of command.sv2ssim.field prohibits copy
-    sv2ssim(const sv2ssim&){ /*disallow copy constructor */}
-    void operator =(const sv2ssim&){ /*disallow direct assignment */}
+    // func:command.sv2ssim..Ctor
+    inline               sv2ssim() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -6324,13 +6159,10 @@ struct sv2ssim_proc { // command.sv2ssim_proc: Subprocess: sv2ssim - Separated V
     pid_t              pid;       //   0  pid of running child process
     i32                timeout;   //   0  optional timeout for child process
     i32                status;    //   0  last exit status of child process
-    sv2ssim_proc();
-    ~sv2ssim_proc();
-private:
-    // reftype Exec of command.sv2ssim_proc.sv2ssim prohibits copy
-    // value field command.sv2ssim_proc.cmd is not copiable
-    sv2ssim_proc(const sv2ssim_proc&){ /*disallow copy constructor */}
-    void operator =(const sv2ssim_proc&){ /*disallow direct assignment */}
+    // func:command.sv2ssim_proc..Ctor
+    inline               sv2ssim_proc() __attribute__((nothrow));
+    // func:command.sv2ssim_proc..Dtor
+    inline               ~sv2ssim_proc() __attribute__((nothrow));
 };
 
 // Start subprocess
@@ -6366,7 +6198,7 @@ void                 sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringA
 
 // Set all fields to initial values.
 // func:command.sv2ssim_proc..Init
-void                 sv2ssim_proc_Init(command::sv2ssim_proc& parent);
+inline void          sv2ssim_proc_Init(command::sv2ssim_proc& parent);
 // func:command.sv2ssim_proc..Uninit
 void                 sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) __attribute__((nothrow));
 } // gen:ns_print_struct

@@ -477,7 +477,7 @@ const char *dmmeta_Strtype_strtype_leftpad    = "leftpad";
 
 namespace dmmeta { // gen:ns_print_proto
     // func:dmmeta...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- dmmeta.Anonfld..ReadFieldMaybe

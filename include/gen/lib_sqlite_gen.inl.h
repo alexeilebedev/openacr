@@ -28,14 +28,6 @@
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline lib_sqlite::FConn::FConn() {
-    lib_sqlite::FConn_Init(*this);
-}
-
-inline lib_sqlite::FConn::~FConn() {
-    lib_sqlite::FConn_Uninit(*this);
-}
-
 
 // --- lib_sqlite.FConn..Init
 // Set all fields to initial values.
@@ -44,9 +36,20 @@ inline void lib_sqlite::FConn_Init(lib_sqlite::FConn& conn) {
     conn.conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.conn) not-in-tpool's freelist
     conn.ind_conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.ind_conn) not-in-hash
 }
-inline lib_sqlite::trace::trace() {
+
+// --- lib_sqlite.FConn..Ctor
+inline  lib_sqlite::FConn::FConn() {
+    lib_sqlite::FConn_Init(*this);
 }
 
+// --- lib_sqlite.FConn..Dtor
+inline  lib_sqlite::FConn::~FConn() {
+    lib_sqlite::FConn_Uninit(*this);
+}
+
+// --- lib_sqlite.trace..Ctor
+inline  lib_sqlite::trace::trace() {
+}
 
 // --- lib_sqlite.FDb.ind_conn.EmptyQ
 // Return true if hash is empty
@@ -126,18 +129,10 @@ inline void lib_sqlite::_db_substr_curs_Next(_db_substr_curs &curs) {
 inline lib_sqlite::FSubstr& lib_sqlite::_db_substr_curs_Access(_db_substr_curs &curs) {
     return substr_qFind(u64(curs.index));
 }
-inline lib_sqlite::FSubstr::FSubstr() {
-}
 
-inline lib_sqlite::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- lib_sqlite.FSubstr..Ctor
+inline  lib_sqlite::FSubstr::FSubstr() {
 }
-inline lib_sqlite::FieldId::FieldId(lib_sqlite_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_sqlite::FieldId::FieldId() {
-    lib_sqlite::FieldId_Init(*this);
-}
-
 
 // --- lib_sqlite.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -152,7 +147,7 @@ inline void lib_sqlite::value_SetEnum(lib_sqlite::FieldId& parent, lib_sqlite_Fi
 }
 
 // --- lib_sqlite.FieldId.value.Cast
-inline lib_sqlite::FieldId::operator lib_sqlite_FieldIdEnum () const {
+inline  lib_sqlite::FieldId::operator lib_sqlite_FieldIdEnum() const {
     return lib_sqlite_FieldIdEnum((*this).value);
 }
 
@@ -161,15 +156,22 @@ inline lib_sqlite::FieldId::operator lib_sqlite_FieldIdEnum () const {
 inline void lib_sqlite::FieldId_Init(lib_sqlite::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline lib_sqlite::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_sqlite::TableId::TableId(lib_sqlite_TableIdEnum arg) { this->value = i32(arg); }
-inline lib_sqlite::TableId::TableId() {
-    lib_sqlite::TableId_Init(*this);
+
+// --- lib_sqlite.FieldId..Ctor
+inline  lib_sqlite::FieldId::FieldId() {
+    lib_sqlite::FieldId_Init(*this);
 }
 
+// --- lib_sqlite.FieldId..FieldwiseCtor
+inline  lib_sqlite::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_sqlite.FieldId..EnumCtor
+inline  lib_sqlite::FieldId::FieldId(lib_sqlite_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_sqlite.TableId.value.GetEnum
 // Get value of field as enum type
@@ -184,7 +186,7 @@ inline void lib_sqlite::value_SetEnum(lib_sqlite::TableId& parent, lib_sqlite_Ta
 }
 
 // --- lib_sqlite.TableId.value.Cast
-inline lib_sqlite::TableId::operator lib_sqlite_TableIdEnum () const {
+inline  lib_sqlite::TableId::operator lib_sqlite_TableIdEnum() const {
     return lib_sqlite_TableIdEnum((*this).value);
 }
 
@@ -193,10 +195,22 @@ inline lib_sqlite::TableId::operator lib_sqlite_TableIdEnum () const {
 inline void lib_sqlite::TableId_Init(lib_sqlite::TableId& parent) {
     parent.value = i32(-1);
 }
-inline lib_sqlite::Vtab::Vtab() {
-    lib_sqlite::Vtab_Init(*this);
+
+// --- lib_sqlite.TableId..Ctor
+inline  lib_sqlite::TableId::TableId() {
+    lib_sqlite::TableId_Init(*this);
 }
 
+// --- lib_sqlite.TableId..FieldwiseCtor
+inline  lib_sqlite::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_sqlite.TableId..EnumCtor
+inline  lib_sqlite::TableId::TableId(lib_sqlite_TableIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_sqlite.Vtab..Init
 // Set all fields to initial values.
@@ -204,16 +218,22 @@ inline void lib_sqlite::Vtab_Init(lib_sqlite::Vtab& parent) {
     parent.c_ssimfile = NULL;
     parent.p_ctype = NULL;
 }
-inline lib_sqlite::VtabCurs::VtabCurs() {
-    lib_sqlite::VtabCurs_Init(*this);
-}
 
+// --- lib_sqlite.Vtab..Ctor
+inline  lib_sqlite::Vtab::Vtab() {
+    lib_sqlite::Vtab_Init(*this);
+}
 
 // --- lib_sqlite.VtabCurs..Init
 // Set all fields to initial values.
 inline void lib_sqlite::VtabCurs_Init(lib_sqlite::VtabCurs& parent) {
     parent.i = i32(0);
     parent.eof = bool(false);
+}
+
+// --- lib_sqlite.VtabCurs..Ctor
+inline  lib_sqlite::VtabCurs::VtabCurs() {
+    lib_sqlite::VtabCurs_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_sqlite::trace &row) {// cfmt:lib_sqlite.trace.String

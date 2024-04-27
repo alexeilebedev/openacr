@@ -95,7 +95,7 @@ const char *amcdb_Tclass_tclass_ZSListMT   = "ZSListMT";
 
 namespace amcdb { // gen:ns_print_proto
     // func:amcdb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- amcdb.Bltin..ReadFieldMaybe

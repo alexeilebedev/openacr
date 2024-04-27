@@ -50,7 +50,8 @@ namespace strconv { // gen:ns_print_struct
 // --- strconv.trace
 #pragma pack(push,1)
 struct trace { // strconv.trace
-    trace();
+    // func:strconv.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -115,25 +116,29 @@ bool                 _db_XrefMaybe();
 // func:strconv.FDb..Init
 void                 FDb_Init();
 // func:strconv.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- strconv.FieldId
 #pragma pack(push,1)
 struct FieldId { // strconv.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator strconv_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(strconv_FieldIdEnum arg);
-    FieldId();
+    // func:strconv.FieldId.value.Cast
+    inline               operator strconv_FieldIdEnum() const __attribute__((nothrow));
+    // func:strconv.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:strconv.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:strconv.FieldId..EnumCtor
+    inline               FieldId(strconv_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:strconv.FieldId.value.GetEnum
-strconv_FieldIdEnum  value_GetEnum(const strconv::FieldId& parent) __attribute__((nothrow));
+inline strconv_FieldIdEnum value_GetEnum(const strconv::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:strconv.FieldId.value.SetEnum
-void                 value_SetEnum(strconv::FieldId& parent, strconv_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(strconv::FieldId& parent, strconv_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:strconv.FieldId.value.ToCstr
@@ -161,7 +166,7 @@ bool                 value_ReadStrptrMaybe(strconv::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:strconv.FieldId..Init
-void                 FieldId_Init(strconv::FieldId& parent);
+inline void          FieldId_Init(strconv::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:strconv.FieldId.String  printfmt:Raw
 // func:strconv.FieldId..Print

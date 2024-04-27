@@ -90,7 +90,7 @@ namespace acr_compl { // gen:ns_print_proto
     // func:acr_compl.FDb.bh_completion.Upheap
     static int           bh_completion_Upheap(acr_compl::FCompletion& row, int idx) __attribute__((nothrow));
     // func:acr_compl.FDb.bh_completion.ElemLt
-    static bool          bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
+    inline static bool   bh_completion_ElemLt(acr_compl::FCompletion &a, acr_compl::FCompletion &b) __attribute__((nothrow));
     // func:acr_compl.FDb.bh_completion_curs.Add
     static void          _db_bh_completion_curs_Add(_db_bh_completion_curs &curs, acr_compl::FCompletion& row);
     // func:acr_compl.FDb.ns.InputMaybe
@@ -110,9 +110,9 @@ namespace acr_compl { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:acr_compl.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:acr_compl...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- acr_compl.Badness.badness.ToCstr

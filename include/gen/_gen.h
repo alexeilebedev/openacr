@@ -30,14 +30,16 @@ namespace lib_json { struct FNode; }
 #pragma pack(push,1)
 struct pad_byte { // pad_byte
     u8   value;   //   0
-    explicit pad_byte(u8                             in_value);
-    pad_byte();
+    // func:pad_byte..Ctor
+    inline               pad_byte() __attribute__((nothrow));
+    // func:pad_byte..FieldwiseCtor
+    explicit inline               pad_byte(u8 in_value) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Set all fields to initial values.
 // func:pad_byte..Init
-void                 pad_byte_Init(pad_byte& parent);
+inline void          pad_byte_Init(pad_byte& parent);
 // Attempt to parse i8 from str
 // Leading whitespace is silently skipped
 // Return success value; If false, RESULT is unchanged
@@ -146,7 +148,7 @@ i32                  bool_Cmp(bool lhs, bool rhs) __attribute__((nothrow));
 bool                 bool_Eq(bool lhs, bool rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:bool..Update
-bool                 bool_Update(bool &lhs, bool rhs) __attribute__((nothrow));
+inline bool          bool_Update(bool &lhs, bool rhs) __attribute__((nothrow));
 // Create JSON representation of bool under PARENT node
 // cfmt:bool.Json  printfmt:Extern
 // func:bool..FmtJson
@@ -175,7 +177,7 @@ i32                  char_Cmp(char lhs, char rhs) __attribute__((nothrow));
 bool                 char_Eq(char lhs, char rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:char..Update
-bool                 char_Update(char &lhs, char rhs) __attribute__((nothrow));
+inline bool          char_Update(char &lhs, char rhs) __attribute__((nothrow));
 // Create JSON representation of char under PARENT node
 // cfmt:char.Json  printfmt:Extern
 // func:char..FmtJson
@@ -201,22 +203,22 @@ bool                 double_Lt(double lhs, double rhs) __attribute__((nothrow));
 i32                  double_Cmp(double lhs, double rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:double..UpdateMax
-bool                 double_UpdateMax(double &lhs, double rhs) __attribute__((nothrow));
+inline bool          double_UpdateMax(double &lhs, double rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:double..Min
-double               double_Min(double lhs, double rhs) __attribute__((nothrow));
+inline double        double_Min(double lhs, double rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:double..UpdateMin
-bool                 double_UpdateMin(double &lhs, double rhs) __attribute__((nothrow));
+inline bool          double_UpdateMin(double &lhs, double rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:double..Max
-double               double_Max(double lhs, double rhs) __attribute__((nothrow));
+inline double        double_Max(double lhs, double rhs) __attribute__((nothrow));
 // func:double..Eq
 // this function is 'extrn' and implemented by user
 bool                 double_Eq(double lhs, double rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:double..Update
-bool                 double_Update(double &lhs, double rhs) __attribute__((nothrow));
+inline bool          double_Update(double &lhs, double rhs) __attribute__((nothrow));
 // Create JSON representation of double under PARENT node
 // cfmt:double.Json  printfmt:Extern
 // func:double..FmtJson
@@ -242,22 +244,22 @@ bool                 float_Lt(float lhs, float rhs) __attribute__((nothrow));
 i32                  float_Cmp(float lhs, float rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:float..UpdateMax
-bool                 float_UpdateMax(float &lhs, float rhs) __attribute__((nothrow));
+inline bool          float_UpdateMax(float &lhs, float rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:float..Min
-float                float_Min(float lhs, float rhs) __attribute__((nothrow));
+inline float         float_Min(float lhs, float rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:float..UpdateMin
-bool                 float_UpdateMin(float &lhs, float rhs) __attribute__((nothrow));
+inline bool          float_UpdateMin(float &lhs, float rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:float..Max
-float                float_Max(float lhs, float rhs) __attribute__((nothrow));
+inline float         float_Max(float lhs, float rhs) __attribute__((nothrow));
 // func:float..Eq
 // this function is 'extrn' and implemented by user
 bool                 float_Eq(float lhs, float rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:float..Update
-bool                 float_Update(float &lhs, float rhs) __attribute__((nothrow));
+inline bool          float_Update(float &lhs, float rhs) __attribute__((nothrow));
 // Create JSON representation of float under PARENT node
 // cfmt:float.Json  printfmt:Extern
 // func:float..FmtJson
@@ -283,22 +285,22 @@ bool                 i16_Lt(i16 lhs, i16 rhs) __attribute__((nothrow));
 i32                  i16_Cmp(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:i16..UpdateMax
-bool                 i16_UpdateMax(i16 &lhs, i16 rhs) __attribute__((nothrow));
+inline bool          i16_UpdateMax(i16 &lhs, i16 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:i16..Min
-i16                  i16_Min(i16 lhs, i16 rhs) __attribute__((nothrow));
+inline i16           i16_Min(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:i16..UpdateMin
-bool                 i16_UpdateMin(i16 &lhs, i16 rhs) __attribute__((nothrow));
+inline bool          i16_UpdateMin(i16 &lhs, i16 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:i16..Max
-i16                  i16_Max(i16 lhs, i16 rhs) __attribute__((nothrow));
+inline i16           i16_Max(i16 lhs, i16 rhs) __attribute__((nothrow));
 // func:i16..Eq
 // this function is 'extrn' and implemented by user
 bool                 i16_Eq(i16 lhs, i16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i16..Update
-bool                 i16_Update(i16 &lhs, i16 rhs) __attribute__((nothrow));
+inline bool          i16_Update(i16 &lhs, i16 rhs) __attribute__((nothrow));
 // Create JSON representation of i16 under PARENT node
 // cfmt:i16.Json  printfmt:Extern
 // func:i16..FmtJson
@@ -324,22 +326,22 @@ bool                 i32_Lt(i32 lhs, i32 rhs) __attribute__((nothrow));
 i32                  i32_Cmp(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:i32..UpdateMax
-bool                 i32_UpdateMax(i32 &lhs, i32 rhs) __attribute__((nothrow));
+inline bool          i32_UpdateMax(i32 &lhs, i32 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:i32..Min
-i32                  i32_Min(i32 lhs, i32 rhs) __attribute__((nothrow));
+inline i32           i32_Min(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:i32..UpdateMin
-bool                 i32_UpdateMin(i32 &lhs, i32 rhs) __attribute__((nothrow));
+inline bool          i32_UpdateMin(i32 &lhs, i32 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:i32..Max
-i32                  i32_Max(i32 lhs, i32 rhs) __attribute__((nothrow));
+inline i32           i32_Max(i32 lhs, i32 rhs) __attribute__((nothrow));
 // func:i32..Eq
 // this function is 'extrn' and implemented by user
 bool                 i32_Eq(i32 lhs, i32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i32..Update
-bool                 i32_Update(i32 &lhs, i32 rhs) __attribute__((nothrow));
+inline bool          i32_Update(i32 &lhs, i32 rhs) __attribute__((nothrow));
 // Create JSON representation of i32 under PARENT node
 // cfmt:i32.Json  printfmt:Extern
 // func:i32..FmtJson
@@ -365,22 +367,22 @@ bool                 i64_Lt(i64 lhs, i64 rhs) __attribute__((nothrow));
 i32                  i64_Cmp(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:i64..UpdateMax
-bool                 i64_UpdateMax(i64 &lhs, i64 rhs) __attribute__((nothrow));
+inline bool          i64_UpdateMax(i64 &lhs, i64 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:i64..Min
-i64                  i64_Min(i64 lhs, i64 rhs) __attribute__((nothrow));
+inline i64           i64_Min(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:i64..UpdateMin
-bool                 i64_UpdateMin(i64 &lhs, i64 rhs) __attribute__((nothrow));
+inline bool          i64_UpdateMin(i64 &lhs, i64 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:i64..Max
-i64                  i64_Max(i64 lhs, i64 rhs) __attribute__((nothrow));
+inline i64           i64_Max(i64 lhs, i64 rhs) __attribute__((nothrow));
 // func:i64..Eq
 // this function is 'extrn' and implemented by user
 bool                 i64_Eq(i64 lhs, i64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i64..Update
-bool                 i64_Update(i64 &lhs, i64 rhs) __attribute__((nothrow));
+inline bool          i64_Update(i64 &lhs, i64 rhs) __attribute__((nothrow));
 // Create JSON representation of i64 under PARENT node
 // cfmt:i64.Json  printfmt:Extern
 // func:i64..FmtJson
@@ -406,22 +408,22 @@ bool                 i8_Lt(i8 lhs, i8 rhs) __attribute__((nothrow));
 i32                  i8_Cmp(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:i8..UpdateMax
-bool                 i8_UpdateMax(i8 &lhs, i8 rhs) __attribute__((nothrow));
+inline bool          i8_UpdateMax(i8 &lhs, i8 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:i8..Min
-i8                   i8_Min(i8 lhs, i8 rhs) __attribute__((nothrow));
+inline i8            i8_Min(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:i8..UpdateMin
-bool                 i8_UpdateMin(i8 &lhs, i8 rhs) __attribute__((nothrow));
+inline bool          i8_UpdateMin(i8 &lhs, i8 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:i8..Max
-i8                   i8_Max(i8 lhs, i8 rhs) __attribute__((nothrow));
+inline i8            i8_Max(i8 lhs, i8 rhs) __attribute__((nothrow));
 // func:i8..Eq
 // this function is 'extrn' and implemented by user
 bool                 i8_Eq(i8 lhs, i8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:i8..Update
-bool                 i8_Update(i8 &lhs, i8 rhs) __attribute__((nothrow));
+inline bool          i8_Update(i8 &lhs, i8 rhs) __attribute__((nothrow));
 // Create JSON representation of i8 under PARENT node
 // cfmt:i8.Json  printfmt:Extern
 // func:i8..FmtJson
@@ -447,22 +449,22 @@ bool                 u8_Lt(u8 lhs, u8 rhs) __attribute__((nothrow));
 i32                  u8_Cmp(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:u8..UpdateMax
-bool                 u8_UpdateMax(u8 &lhs, u8 rhs) __attribute__((nothrow));
+inline bool          u8_UpdateMax(u8 &lhs, u8 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:u8..Min
-u8                   u8_Min(u8 lhs, u8 rhs) __attribute__((nothrow));
+inline u8            u8_Min(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:u8..UpdateMin
-bool                 u8_UpdateMin(u8 &lhs, u8 rhs) __attribute__((nothrow));
+inline bool          u8_UpdateMin(u8 &lhs, u8 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:u8..Max
-u8                   u8_Max(u8 lhs, u8 rhs) __attribute__((nothrow));
+inline u8            u8_Max(u8 lhs, u8 rhs) __attribute__((nothrow));
 // func:u8..Eq
 // this function is 'extrn' and implemented by user
 bool                 u8_Eq(u8 lhs, u8 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u8..Update
-bool                 u8_Update(u8 &lhs, u8 rhs) __attribute__((nothrow));
+inline bool          u8_Update(u8 &lhs, u8 rhs) __attribute__((nothrow));
 // Create JSON representation of u8 under PARENT node
 // cfmt:u8.Json  printfmt:Extern
 // func:u8..FmtJson
@@ -488,22 +490,22 @@ bool                 u128_Lt(u128 lhs, u128 rhs) __attribute__((nothrow));
 i32                  u128_Cmp(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:u128..UpdateMax
-bool                 u128_UpdateMax(u128 &lhs, u128 rhs) __attribute__((nothrow));
+inline bool          u128_UpdateMax(u128 &lhs, u128 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:u128..Min
-u128                 u128_Min(u128 lhs, u128 rhs) __attribute__((nothrow));
+inline u128          u128_Min(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:u128..UpdateMin
-bool                 u128_UpdateMin(u128 &lhs, u128 rhs) __attribute__((nothrow));
+inline bool          u128_UpdateMin(u128 &lhs, u128 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:u128..Max
-u128                 u128_Max(u128 lhs, u128 rhs) __attribute__((nothrow));
+inline u128          u128_Max(u128 lhs, u128 rhs) __attribute__((nothrow));
 // func:u128..Eq
 // this function is 'extrn' and implemented by user
 bool                 u128_Eq(u128 lhs, u128 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u128..Update
-bool                 u128_Update(u128 &lhs, u128 rhs) __attribute__((nothrow));
+inline bool          u128_Update(u128 &lhs, u128 rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:u128.String  printfmt:Extern
 // func:u128..Print
@@ -524,22 +526,22 @@ bool                 u16_Lt(u16 lhs, u16 rhs) __attribute__((nothrow));
 i32                  u16_Cmp(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:u16..UpdateMax
-bool                 u16_UpdateMax(u16 &lhs, u16 rhs) __attribute__((nothrow));
+inline bool          u16_UpdateMax(u16 &lhs, u16 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:u16..Min
-u16                  u16_Min(u16 lhs, u16 rhs) __attribute__((nothrow));
+inline u16           u16_Min(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:u16..UpdateMin
-bool                 u16_UpdateMin(u16 &lhs, u16 rhs) __attribute__((nothrow));
+inline bool          u16_UpdateMin(u16 &lhs, u16 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:u16..Max
-u16                  u16_Max(u16 lhs, u16 rhs) __attribute__((nothrow));
+inline u16           u16_Max(u16 lhs, u16 rhs) __attribute__((nothrow));
 // func:u16..Eq
 // this function is 'extrn' and implemented by user
 bool                 u16_Eq(u16 lhs, u16 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u16..Update
-bool                 u16_Update(u16 &lhs, u16 rhs) __attribute__((nothrow));
+inline bool          u16_Update(u16 &lhs, u16 rhs) __attribute__((nothrow));
 // Create JSON representation of u16 under PARENT node
 // cfmt:u16.Json  printfmt:Extern
 // func:u16..FmtJson
@@ -565,22 +567,22 @@ bool                 u32_Lt(u32 lhs, u32 rhs) __attribute__((nothrow));
 i32                  u32_Cmp(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:u32..UpdateMax
-bool                 u32_UpdateMax(u32 &lhs, u32 rhs) __attribute__((nothrow));
+inline bool          u32_UpdateMax(u32 &lhs, u32 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:u32..Min
-u32                  u32_Min(u32 lhs, u32 rhs) __attribute__((nothrow));
+inline u32           u32_Min(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:u32..UpdateMin
-bool                 u32_UpdateMin(u32 &lhs, u32 rhs) __attribute__((nothrow));
+inline bool          u32_UpdateMin(u32 &lhs, u32 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:u32..Max
-u32                  u32_Max(u32 lhs, u32 rhs) __attribute__((nothrow));
+inline u32           u32_Max(u32 lhs, u32 rhs) __attribute__((nothrow));
 // func:u32..Eq
 // this function is 'extrn' and implemented by user
 bool                 u32_Eq(u32 lhs, u32 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u32..Update
-bool                 u32_Update(u32 &lhs, u32 rhs) __attribute__((nothrow));
+inline bool          u32_Update(u32 &lhs, u32 rhs) __attribute__((nothrow));
 // Create JSON representation of u32 under PARENT node
 // cfmt:u32.Json  printfmt:Extern
 // func:u32..FmtJson
@@ -606,22 +608,22 @@ bool                 u64_Lt(u64 lhs, u64 rhs) __attribute__((nothrow));
 i32                  u64_Cmp(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Attempt to make LHS bigger. Return true if it was changed
 // func:u64..UpdateMax
-bool                 u64_UpdateMax(u64 &lhs, u64 rhs) __attribute__((nothrow));
+inline bool          u64_UpdateMax(u64 &lhs, u64 rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:u64..Min
-u64                  u64_Min(u64 lhs, u64 rhs) __attribute__((nothrow));
+inline u64           u64_Min(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:u64..UpdateMin
-bool                 u64_UpdateMin(u64 &lhs, u64 rhs) __attribute__((nothrow));
+inline bool          u64_UpdateMin(u64 &lhs, u64 rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:u64..Max
-u64                  u64_Max(u64 lhs, u64 rhs) __attribute__((nothrow));
+inline u64           u64_Max(u64 lhs, u64 rhs) __attribute__((nothrow));
 // func:u64..Eq
 // this function is 'extrn' and implemented by user
 bool                 u64_Eq(u64 lhs, u64 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:u64..Update
-bool                 u64_Update(u64 &lhs, u64 rhs) __attribute__((nothrow));
+inline bool          u64_Update(u64 &lhs, u64 rhs) __attribute__((nothrow));
 // Create JSON representation of u64 under PARENT node
 // cfmt:u64.Json  printfmt:Extern
 // func:u64..FmtJson

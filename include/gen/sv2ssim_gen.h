@@ -87,7 +87,8 @@ namespace sv2ssim { // gen:ns_print_struct
 
 // --- sv2ssim.FBltin
 // create: sv2ssim.FDb.bltin (Lary)
-// global access: ind_bltin (Thash)
+// global access: bltin (Lary, by rowid)
+// global access: ind_bltin (Thash, hash field ctype)
 struct FBltin { // sv2ssim.FBltin
     algo::Smallstr100   ctype;            //
     bool                likeu64;          //   false
@@ -95,15 +96,19 @@ struct FBltin { // sv2ssim.FBltin
     bool                issigned;         //   false
     algo::Comment       comment;          //
     sv2ssim::FBltin*    ind_bltin_next;   // hash next
+    // func:sv2ssim.FBltin..AssignOp
+    inline sv2ssim::FBltin& operator =(const sv2ssim::FBltin &rhs) = delete;
+    // func:sv2ssim.FBltin..CopyCtor
+    inline               FBltin(const sv2ssim::FBltin &rhs) = delete;
 private:
+    // func:sv2ssim.FBltin..Ctor
+    inline               FBltin() __attribute__((nothrow));
+    // func:sv2ssim.FBltin..Dtor
+    inline               ~FBltin() __attribute__((nothrow));
     friend sv2ssim::FBltin&     bltin_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend sv2ssim::FBltin*     bltin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 bltin_RemoveAll() __attribute__((nothrow));
     friend void                 bltin_RemoveLast() __attribute__((nothrow));
-    FBltin();
-    ~FBltin();
-    FBltin(const FBltin&){ /*disallow copy constructor */}
-    void operator =(const FBltin&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -115,14 +120,15 @@ void                 bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) __attr
 
 // Set all fields to initial values.
 // func:sv2ssim.FBltin..Init
-void                 FBltin_Init(sv2ssim::FBltin& bltin);
+inline void          FBltin_Init(sv2ssim::FBltin& bltin);
 // func:sv2ssim.FBltin..Uninit
 void                 FBltin_Uninit(sv2ssim::FBltin& bltin) __attribute__((nothrow));
 
 // --- sv2ssim.trace
 #pragma pack(push,1)
 struct trace { // sv2ssim.trace
-    trace();
+    // func:sv2ssim.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -214,16 +220,16 @@ sv2ssim::FField*     field_AllocMaybe() __attribute__((__warn_unused_result__, n
 void*                field_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sv2ssim.FDb.field.EmptyQ
-bool                 field_EmptyQ() __attribute__((nothrow, pure));
+inline bool          field_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:sv2ssim.FDb.field.Find
-sv2ssim::FField*     field_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline sv2ssim::FField* field_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sv2ssim.FDb.field.Last
-sv2ssim::FField*     field_Last() __attribute__((nothrow, pure));
+inline sv2ssim::FField* field_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:sv2ssim.FDb.field.N
-i32                  field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:sv2ssim.FDb.field.RemoveAll
 void                 field_RemoveAll() __attribute__((nothrow));
@@ -232,7 +238,7 @@ void                 field_RemoveAll() __attribute__((nothrow));
 void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sv2ssim.FDb.field.qFind
-sv2ssim::FField&     field_qFind(i32 t) __attribute__((nothrow, pure));
+inline sv2ssim::FField& field_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:sv2ssim.FDb.field.XrefMaybe
@@ -256,22 +262,22 @@ algo::cstring&       linetok_AllocAt(int at) __attribute__((__warn_unused_result
 algo::aryptr<algo::cstring> linetok_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sv2ssim.FDb.linetok.EmptyQ
-bool                 linetok_EmptyQ() __attribute__((nothrow));
+inline bool          linetok_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:sv2ssim.FDb.linetok.Find
-algo::cstring*       linetok_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* linetok_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:sv2ssim.FDb.linetok.Getary
-algo::aryptr<algo::cstring> linetok_Getary() __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> linetok_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sv2ssim.FDb.linetok.Last
-algo::cstring*       linetok_Last() __attribute__((nothrow, pure));
+inline algo::cstring* linetok_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:sv2ssim.FDb.linetok.Max
-i32                  linetok_Max() __attribute__((nothrow));
+inline i32           linetok_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:sv2ssim.FDb.linetok.N
-i32                  linetok_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           linetok_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:sv2ssim.FDb.linetok.Remove
 void                 linetok_Remove(u32 i) __attribute__((nothrow));
@@ -282,19 +288,19 @@ void                 linetok_RemoveAll() __attribute__((nothrow));
 void                 linetok_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:sv2ssim.FDb.linetok.Reserve
-void                 linetok_Reserve(int n) __attribute__((nothrow));
+inline void          linetok_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:sv2ssim.FDb.linetok.AbsReserve
 void                 linetok_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sv2ssim.FDb.linetok.qFind
-algo::cstring&       linetok_qFind(u64 t) __attribute__((nothrow));
+inline algo::cstring& linetok_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:sv2ssim.FDb.linetok.qLast
-algo::cstring&       linetok_qLast() __attribute__((nothrow));
+inline algo::cstring& linetok_qLast() __attribute__((nothrow));
 // Return row id of specified element
 // func:sv2ssim.FDb.linetok.rowid_Get
-u64                  linetok_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+inline u64           linetok_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:sv2ssim.FDb.linetok.AllocNVal
 algo::aryptr<algo::cstring> linetok_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -320,16 +326,16 @@ sv2ssim::FSvtype*    svtype_InsertMaybe(const dmmeta::Svtype &value) __attribute
 void*                svtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sv2ssim.FDb.svtype.EmptyQ
-bool                 svtype_EmptyQ() __attribute__((nothrow, pure));
+inline bool          svtype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:sv2ssim.FDb.svtype.Find
-sv2ssim::FSvtype*    svtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline sv2ssim::FSvtype* svtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sv2ssim.FDb.svtype.Last
-sv2ssim::FSvtype*    svtype_Last() __attribute__((nothrow, pure));
+inline sv2ssim::FSvtype* svtype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:sv2ssim.FDb.svtype.N
-i32                  svtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           svtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:sv2ssim.FDb.svtype.RemoveAll
 void                 svtype_RemoveAll() __attribute__((nothrow));
@@ -338,7 +344,7 @@ void                 svtype_RemoveAll() __attribute__((nothrow));
 void                 svtype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sv2ssim.FDb.svtype.qFind
-sv2ssim::FSvtype&    svtype_qFind(u64 t) __attribute__((nothrow, pure));
+inline sv2ssim::FSvtype& svtype_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:sv2ssim.FDb.svtype.XrefMaybe
@@ -346,7 +352,7 @@ bool                 svtype_XrefMaybe(sv2ssim::FSvtype &row);
 
 // Return true if hash is empty
 // func:sv2ssim.FDb.ind_field.EmptyQ
-bool                 ind_field_EmptyQ() __attribute__((nothrow));
+inline bool          ind_field_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:sv2ssim.FDb.ind_field.Find
 sv2ssim::FField*     ind_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -358,7 +364,7 @@ sv2ssim::FField&     ind_field_FindX(const algo::strptr& key);
 sv2ssim::FField&     ind_field_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:sv2ssim.FDb.ind_field.N
-i32                  ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:sv2ssim.FDb.ind_field.InsertMaybe
 bool                 ind_field_InsertMaybe(sv2ssim::FField& row) __attribute__((nothrow));
@@ -371,28 +377,28 @@ void                 ind_field_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:sv2ssim.FDb.zd_selfield.EmptyQ
-bool                 zd_selfield_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_selfield_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:sv2ssim.FDb.zd_selfield.First
-sv2ssim::FField*     zd_selfield_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline sv2ssim::FField* zd_selfield_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:sv2ssim.FDb.zd_selfield.InLlistQ
-bool                 zd_selfield_InLlistQ(sv2ssim::FField& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_selfield_InLlistQ(sv2ssim::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:sv2ssim.FDb.zd_selfield.Insert
 void                 zd_selfield_Insert(sv2ssim::FField& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:sv2ssim.FDb.zd_selfield.Last
-sv2ssim::FField*     zd_selfield_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline sv2ssim::FField* zd_selfield_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:sv2ssim.FDb.zd_selfield.N
-i32                  zd_selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:sv2ssim.FDb.zd_selfield.Next
-sv2ssim::FField*     zd_selfield_Next(sv2ssim::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline sv2ssim::FField* zd_selfield_Next(sv2ssim::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:sv2ssim.FDb.zd_selfield.Prev
-sv2ssim::FField*     zd_selfield_Prev(sv2ssim::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline sv2ssim::FField* zd_selfield_Prev(sv2ssim::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:sv2ssim.FDb.zd_selfield.Remove
 void                 zd_selfield_Remove(sv2ssim::FField& row) __attribute__((nothrow));
@@ -404,7 +410,7 @@ void                 zd_selfield_RemoveAll() __attribute__((nothrow));
 sv2ssim::FField*     zd_selfield_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:sv2ssim.FDb.zd_selfield.qLast
-sv2ssim::FField&     zd_selfield_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline sv2ssim::FField& zd_selfield_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -422,16 +428,16 @@ sv2ssim::FBltin*     bltin_InsertMaybe(const amcdb::Bltin &value) __attribute__(
 void*                bltin_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sv2ssim.FDb.bltin.EmptyQ
-bool                 bltin_EmptyQ() __attribute__((nothrow, pure));
+inline bool          bltin_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:sv2ssim.FDb.bltin.Find
-sv2ssim::FBltin*     bltin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline sv2ssim::FBltin* bltin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sv2ssim.FDb.bltin.Last
-sv2ssim::FBltin*     bltin_Last() __attribute__((nothrow, pure));
+inline sv2ssim::FBltin* bltin_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:sv2ssim.FDb.bltin.N
-i32                  bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:sv2ssim.FDb.bltin.RemoveAll
 void                 bltin_RemoveAll() __attribute__((nothrow));
@@ -440,7 +446,7 @@ void                 bltin_RemoveAll() __attribute__((nothrow));
 void                 bltin_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sv2ssim.FDb.bltin.qFind
-sv2ssim::FBltin&     bltin_qFind(u64 t) __attribute__((nothrow, pure));
+inline sv2ssim::FBltin& bltin_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:sv2ssim.FDb.bltin.XrefMaybe
@@ -448,7 +454,7 @@ bool                 bltin_XrefMaybe(sv2ssim::FBltin &row);
 
 // Return true if hash is empty
 // func:sv2ssim.FDb.ind_bltin.EmptyQ
-bool                 ind_bltin_EmptyQ() __attribute__((nothrow));
+inline bool          ind_bltin_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:sv2ssim.FDb.ind_bltin.Find
 sv2ssim::FBltin*     ind_bltin_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -460,7 +466,7 @@ sv2ssim::FBltin&     ind_bltin_FindX(const algo::strptr& key);
 sv2ssim::FBltin&     ind_bltin_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:sv2ssim.FDb.ind_bltin.N
-i32                  ind_bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:sv2ssim.FDb.ind_bltin.InsertMaybe
 bool                 ind_bltin_InsertMaybe(sv2ssim::FBltin& row) __attribute__((nothrow));
@@ -473,63 +479,63 @@ void                 ind_bltin_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:sv2ssim.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
+inline bool          _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
+inline void          _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.field_curs.Access
-sv2ssim::FField&     _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
+inline sv2ssim::FField& _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.linetok_curs.Next
-void                 _db_linetok_curs_Next(_db_linetok_curs &curs) __attribute__((nothrow));
+inline void          _db_linetok_curs_Next(_db_linetok_curs &curs) __attribute__((nothrow));
 // func:sv2ssim.FDb.linetok_curs.Reset
-void                 _db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.linetok_curs.ValidQ
-bool                 _db_linetok_curs_ValidQ(_db_linetok_curs &curs) __attribute__((nothrow));
+inline bool          _db_linetok_curs_ValidQ(_db_linetok_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.linetok_curs.Access
-algo::cstring&       _db_linetok_curs_Access(_db_linetok_curs &curs) __attribute__((nothrow));
+inline algo::cstring& _db_linetok_curs_Access(_db_linetok_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.svtype_curs.Reset
-void                 _db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.svtype_curs.ValidQ
-bool                 _db_svtype_curs_ValidQ(_db_svtype_curs &curs) __attribute__((nothrow));
+inline bool          _db_svtype_curs_ValidQ(_db_svtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.svtype_curs.Next
-void                 _db_svtype_curs_Next(_db_svtype_curs &curs) __attribute__((nothrow));
+inline void          _db_svtype_curs_Next(_db_svtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.svtype_curs.Access
-sv2ssim::FSvtype&    _db_svtype_curs_Access(_db_svtype_curs &curs) __attribute__((nothrow));
+inline sv2ssim::FSvtype& _db_svtype_curs_Access(_db_svtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.zd_selfield_curs.Reset
-void                 _db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.zd_selfield_curs.ValidQ
-bool                 _db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.zd_selfield_curs.Next
-void                 _db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.zd_selfield_curs.Access
-sv2ssim::FField&     _db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs) __attribute__((nothrow));
+inline sv2ssim::FField& _db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.bltin_curs.Reset
-void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sv2ssim.FDb.bltin_curs.ValidQ
-bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
+inline bool          _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sv2ssim.FDb.bltin_curs.Next
-void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
+inline void          _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
 // item access
 // func:sv2ssim.FDb.bltin_curs.Access
-sv2ssim::FBltin&     _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
+inline sv2ssim::FBltin& _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.FDb..Init
 void                 FDb_Init();
@@ -538,7 +544,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- sv2ssim.FField
 // create: sv2ssim.FDb.field (Lary)
-// global access: ind_field (Thash)
+// global access: field (Lary, by rowid)
+// global access: ind_field (Thash, hash field name)
 // global access: zd_selfield (Llist)
 struct FField { // sv2ssim.FField
     sv2ssim::FField*    ind_field_next;     // hash next
@@ -558,15 +565,19 @@ struct FField { // sv2ssim.FField
     bool                couldbe_fixwid;     //   true  Fixed width char
     bool                couldbe_double;     //   true
     i32                 rowid;              //   0
+    // func:sv2ssim.FField..AssignOp
+    sv2ssim::FField&     operator =(const sv2ssim::FField &rhs) = delete;
+    // func:sv2ssim.FField..CopyCtor
+    FField(const sv2ssim::FField &rhs) = delete;
 private:
+    // func:sv2ssim.FField..Ctor
+    inline               FField() __attribute__((nothrow));
+    // func:sv2ssim.FField..Dtor
+    inline               ~FField() __attribute__((nothrow));
     friend sv2ssim::FField&     field_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend sv2ssim::FField*     field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 field_RemoveAll() __attribute__((nothrow));
     friend void                 field_RemoveLast() __attribute__((nothrow));
-    FField();
-    ~FField();
-    FField(const FField&){ /*disallow copy constructor */}
-    void operator =(const FField&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
@@ -587,6 +598,7 @@ void                 FField_Print(sv2ssim::FField& row, algo::cstring& str) __at
 
 // --- sv2ssim.FSvtype
 // create: sv2ssim.FDb.svtype (Lary)
+// global access: svtype (Lary, by rowid)
 struct FSvtype { // sv2ssim.FSvtype
     algo::Smallstr100   ctype;       // Type to choose
     i32                 maxwid;      //   0  Maximum width in chars of input field
@@ -594,11 +606,12 @@ struct FSvtype { // sv2ssim.FSvtype
     i32                 fixedwid2;   //   0  Max chars after decimal point
     algo::Comment       comment;     //
 private:
+    // func:sv2ssim.FSvtype..Ctor
+    inline               FSvtype() __attribute__((nothrow));
     friend sv2ssim::FSvtype&    svtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend sv2ssim::FSvtype*    svtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 svtype_RemoveAll() __attribute__((nothrow));
     friend void                 svtype_RemoveLast() __attribute__((nothrow));
-    FSvtype();
 };
 
 // Copy fields out of row
@@ -610,25 +623,29 @@ void                 svtype_CopyIn(sv2ssim::FSvtype &row, dmmeta::Svtype &in) __
 
 // Set all fields to initial values.
 // func:sv2ssim.FSvtype..Init
-void                 FSvtype_Init(sv2ssim::FSvtype& svtype);
+inline void          FSvtype_Init(sv2ssim::FSvtype& svtype);
 
 // --- sv2ssim.FieldId
 #pragma pack(push,1)
 struct FieldId { // sv2ssim.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator sv2ssim_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(sv2ssim_FieldIdEnum arg);
-    FieldId();
+    // func:sv2ssim.FieldId.value.Cast
+    inline               operator sv2ssim_FieldIdEnum() const __attribute__((nothrow));
+    // func:sv2ssim.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:sv2ssim.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:sv2ssim.FieldId..EnumCtor
+    inline               FieldId(sv2ssim_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:sv2ssim.FieldId.value.GetEnum
-sv2ssim_FieldIdEnum  value_GetEnum(const sv2ssim::FieldId& parent) __attribute__((nothrow));
+inline sv2ssim_FieldIdEnum value_GetEnum(const sv2ssim::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:sv2ssim.FieldId.value.SetEnum
-void                 value_SetEnum(sv2ssim::FieldId& parent, sv2ssim_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(sv2ssim::FieldId& parent, sv2ssim_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:sv2ssim.FieldId.value.ToCstr
@@ -656,7 +673,7 @@ bool                 value_ReadStrptrMaybe(sv2ssim::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.FieldId..Init
-void                 FieldId_Init(sv2ssim::FieldId& parent);
+inline void          FieldId_Init(sv2ssim::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.FieldId.String  printfmt:Raw
 // func:sv2ssim.FieldId..Print
@@ -665,18 +682,22 @@ void                 FieldId_Print(sv2ssim::FieldId& row, algo::cstring& str) __
 // --- sv2ssim.TableId
 struct TableId { // sv2ssim.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator sv2ssim_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(sv2ssim_TableIdEnum arg);
-    TableId();
+    // func:sv2ssim.TableId.value.Cast
+    inline               operator sv2ssim_TableIdEnum() const __attribute__((nothrow));
+    // func:sv2ssim.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:sv2ssim.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:sv2ssim.TableId..EnumCtor
+    inline               TableId(sv2ssim_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:sv2ssim.TableId.value.GetEnum
-sv2ssim_TableIdEnum  value_GetEnum(const sv2ssim::TableId& parent) __attribute__((nothrow));
+inline sv2ssim_TableIdEnum value_GetEnum(const sv2ssim::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:sv2ssim.TableId.value.SetEnum
-void                 value_SetEnum(sv2ssim::TableId& parent, sv2ssim_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(sv2ssim::TableId& parent, sv2ssim_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:sv2ssim.TableId.value.ToCstr
@@ -704,7 +725,7 @@ bool                 value_ReadStrptrMaybe(sv2ssim::TableId& parent, algo::strpt
 bool                 TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sv2ssim.TableId..Init
-void                 TableId_Init(sv2ssim::TableId& parent);
+inline void          TableId_Init(sv2ssim::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.TableId.String  printfmt:Raw
 // func:sv2ssim.TableId..Print

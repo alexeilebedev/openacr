@@ -50,7 +50,8 @@ namespace lib_mysql { // gen:ns_print_struct
 // --- lib_mysql.trace
 #pragma pack(push,1)
 struct trace { // lib_mysql.trace
-    trace();
+    // func:lib_mysql.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -110,25 +111,29 @@ void                 mysql_Cleanup() __attribute__((nothrow));
 // func:lib_mysql.FDb..Init
 void                 FDb_Init();
 // func:lib_mysql.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_mysql.FieldId
 #pragma pack(push,1)
 struct FieldId { // lib_mysql.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_mysql_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_mysql_FieldIdEnum arg);
-    FieldId();
+    // func:lib_mysql.FieldId.value.Cast
+    inline               operator lib_mysql_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_mysql.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_mysql.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_mysql.FieldId..EnumCtor
+    inline               FieldId(lib_mysql_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_mysql.FieldId.value.GetEnum
-lib_mysql_FieldIdEnum value_GetEnum(const lib_mysql::FieldId& parent) __attribute__((nothrow));
+inline lib_mysql_FieldIdEnum value_GetEnum(const lib_mysql::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_mysql.FieldId.value.SetEnum
-void                 value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_mysql.FieldId.value.ToCstr
@@ -156,7 +161,7 @@ bool                 value_ReadStrptrMaybe(lib_mysql::FieldId& parent, algo::str
 bool                 FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_mysql.FieldId..Init
-void                 FieldId_Init(lib_mysql::FieldId& parent);
+inline void          FieldId_Init(lib_mysql::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.FieldId.String  printfmt:Raw
 // func:lib_mysql.FieldId..Print
@@ -166,12 +171,10 @@ void                 FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) 
 // create: lib_mysql.FDb.res (Cppstack)
 struct Res { // lib_mysql.Res
     MYSQL_RES*   res;   // optional pointer
-    Res();
-    ~Res();
-private:
-    // user-defined fcleanup on lib_mysql.Res.res prevents copy
-    Res(const Res&){ /*disallow copy constructor */}
-    void operator =(const Res&){ /*disallow direct assignment */}
+    // func:lib_mysql.Res..Ctor
+    inline               Res() __attribute__((nothrow));
+    // func:lib_mysql.Res..Dtor
+    inline               ~Res() __attribute__((nothrow));
 };
 
 // Declaration for user-defined cleanup function
@@ -182,9 +185,9 @@ void                 res_Cleanup(lib_mysql::Res& res) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_mysql.Res..Init
-void                 Res_Init(lib_mysql::Res& res);
+inline void          Res_Init(lib_mysql::Res& res);
 // func:lib_mysql.Res..Uninit
-void                 Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
+inline void          Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_mysql { // gen:ns_func
 // func:lib_mysql...StaticCheck

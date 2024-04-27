@@ -29,10 +29,6 @@
 #include "include/gen/ams_gen.inl.h"
 #include "include/gen/lib_ams_gen.inl.h"
 //#pragma endinclude
-inline ams_sendtest::AmsSendTest::AmsSendTest() {
-    ams_sendtest::AmsSendTest_Init(*this);
-}
-
 
 // --- ams_sendtest.AmsSendTest..Init
 // Set all fields to initial values.
@@ -43,17 +39,25 @@ inline void ams_sendtest::AmsSendTest_Init(ams_sendtest::AmsSendTest& parent) {
     parent.n_msg_limit = u64(1000000);
     parent.sum_recv_latency = u64(0);
 }
-inline ams_sendtest::FChild::FChild() {
+
+// --- ams_sendtest.AmsSendTest..Ctor
+inline  ams_sendtest::AmsSendTest::AmsSendTest() {
+    ams_sendtest::AmsSendTest_Init(*this);
+}
+
+// --- ams_sendtest.FChild..Ctor
+inline  ams_sendtest::FChild::FChild() {
     ams_sendtest::FChild_Init(*this);
 }
 
-inline ams_sendtest::FChild::~FChild() {
+// --- ams_sendtest.FChild..Dtor
+inline  ams_sendtest::FChild::~FChild() {
     ams_sendtest::FChild_Uninit(*this);
 }
 
-inline ams_sendtest::trace::trace() {
+// --- ams_sendtest.trace..Ctor
+inline  ams_sendtest::trace::trace() {
 }
-
 
 // --- ams_sendtest.FDb.child.EmptyQ
 // Return true if index is empty
@@ -121,15 +125,6 @@ inline void ams_sendtest::_db_child_curs_Next(_db_child_curs &curs) {
 inline ams_sendtest::FChild& ams_sendtest::_db_child_curs_Access(_db_child_curs &curs) {
     return child_qFind(u64(curs.index));
 }
-inline ams_sendtest::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ams_sendtest::FieldId::FieldId(ams_sendtest_FieldIdEnum arg) { this->value = i32(arg); }
-inline ams_sendtest::FieldId::FieldId() {
-    ams_sendtest::FieldId_Init(*this);
-}
-
 
 // --- ams_sendtest.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -144,7 +139,7 @@ inline void ams_sendtest::value_SetEnum(ams_sendtest::FieldId& parent, ams_sendt
 }
 
 // --- ams_sendtest.FieldId.value.Cast
-inline ams_sendtest::FieldId::operator ams_sendtest_FieldIdEnum () const {
+inline  ams_sendtest::FieldId::operator ams_sendtest_FieldIdEnum() const {
     return ams_sendtest_FieldIdEnum((*this).value);
 }
 
@@ -152,6 +147,22 @@ inline ams_sendtest::FieldId::operator ams_sendtest_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void ams_sendtest::FieldId_Init(ams_sendtest::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- ams_sendtest.FieldId..Ctor
+inline  ams_sendtest::FieldId::FieldId() {
+    ams_sendtest::FieldId_Init(*this);
+}
+
+// --- ams_sendtest.FieldId..FieldwiseCtor
+inline  ams_sendtest::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams_sendtest.FieldId..EnumCtor
+inline  ams_sendtest::FieldId::FieldId(ams_sendtest_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ams_sendtest::AmsSendTest &row) {// cfmt:ams_sendtest.AmsSendTest.String

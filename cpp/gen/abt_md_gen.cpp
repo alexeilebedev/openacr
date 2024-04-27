@@ -104,7 +104,7 @@ namespace abt_md { // gen:ns_print_proto
     // func:abt_md.FDb.bh_file_section.Upheap
     static int           bh_file_section_Upheap(abt_md::FFileSection& row, int idx) __attribute__((nothrow));
     // func:abt_md.FDb.bh_file_section.ElemLt
-    static bool          bh_file_section_ElemLt(abt_md::FFileSection &a, abt_md::FFileSection &b) __attribute__((nothrow));
+    inline static bool   bh_file_section_ElemLt(abt_md::FFileSection &a, abt_md::FFileSection &b) __attribute__((nothrow));
     // func:abt_md.FDb.bh_file_section_curs.Add
     static void          _db_bh_file_section_curs_Add(_db_bh_file_section_curs &curs, abt_md::FFileSection& row);
     // func:abt_md.FDb.ns.InputMaybe
@@ -132,7 +132,7 @@ namespace abt_md { // gen:ns_print_proto
     // func:abt_md.FDb.bh_dirent.Upheap
     static int           bh_dirent_Upheap(abt_md::FDirent& row, int idx) __attribute__((nothrow));
     // func:abt_md.FDb.bh_dirent.ElemLt
-    static bool          bh_dirent_ElemLt(abt_md::FDirent &a, abt_md::FDirent &b) __attribute__((nothrow));
+    inline static bool   bh_dirent_ElemLt(abt_md::FDirent &a, abt_md::FDirent &b) __attribute__((nothrow));
     // func:abt_md.FDb.bh_dirent_curs.Add
     static void          _db_bh_dirent_curs_Add(_db_bh_dirent_curs &curs, abt_md::FDirent& row);
     // func:abt_md.FDb.comptest.InputMaybe
@@ -152,12 +152,12 @@ namespace abt_md { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:abt_md.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
     // func:abt_md.FDirent.filename.Nextchar
-    static int           filename_Nextchar(const abt_md::FDirent& dirent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static int    filename_Nextchar(const abt_md::FDirent& dirent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:abt_md...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- abt_md.FAnchor..Uninit

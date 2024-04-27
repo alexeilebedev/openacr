@@ -104,19 +104,23 @@ namespace report { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // report.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator report_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(report_FieldIdEnum arg);
-    FieldId();
+    // func:report.FieldId.value.Cast
+    inline               operator report_FieldIdEnum() const __attribute__((nothrow));
+    // func:report.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:report.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:report.FieldId..EnumCtor
+    inline               FieldId(report_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:report.FieldId.value.GetEnum
-report_FieldIdEnum   value_GetEnum(const report::FieldId& parent) __attribute__((nothrow));
+inline report_FieldIdEnum value_GetEnum(const report::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:report.FieldId.value.SetEnum
-void                 value_SetEnum(report::FieldId& parent, report_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(report::FieldId& parent, report_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:report.FieldId.value.ToCstr
@@ -144,7 +148,7 @@ bool                 value_ReadStrptrMaybe(report::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.FieldId..Init
-void                 FieldId_Init(report::FieldId& parent);
+inline void          FieldId_Init(report::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:report.FieldId.String  printfmt:Raw
 // func:report.FieldId..Print
@@ -159,14 +163,10 @@ struct abt { // report.abt
     u32                n_warn;        //   0  Number of compiler warnings
     u32                n_err;         //   0  Number of compiler errors
     u16                n_install;     //   0  Number of executabes linked to bin/
-    explicit abt(u16                            in_n_target
-        ,algo::UnDiff                   in_time
-        ,const algo::strptr&            in_hitrate
-        ,const algo::strptr&            in_pch_hitrate
-        ,u32                            in_n_warn
-        ,u32                            in_n_err
-        ,u16                            in_n_install);
-    abt();
+    // func:report.abt..Ctor
+    inline               abt() __attribute__((nothrow));
+    // func:report.abt..FieldwiseCtor
+    explicit inline               abt(u16 in_n_target, algo::UnDiff in_time, const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate, u32 in_n_warn, u32 in_n_err, u16 in_n_install) __attribute__((nothrow));
 };
 
 // func:report.abt..ReadFieldMaybe
@@ -177,7 +177,7 @@ bool                 abt_ReadFieldMaybe(report::abt& parent, algo::strptr field,
 bool                 abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.abt..Init
-void                 abt_Init(report::abt& parent);
+inline void          abt_Init(report::abt& parent);
 // print string representation of ROW to string STR
 // cfmt:report.abt.String  printfmt:Tuple
 // func:report.abt..Print
@@ -191,7 +191,8 @@ struct acr { // report.acr
     u32   n_ignore;     //   0  Number of input records ignored
     u32   n_update;     //   0  Number of records updated
     u32   n_file_mod;   //   0  Number of files modified
-    acr();
+    // func:report.acr..Ctor
+    inline               acr() __attribute__((nothrow));
 };
 
 // func:report.acr..ReadFieldMaybe
@@ -202,7 +203,7 @@ bool                 acr_ReadFieldMaybe(report::acr& parent, algo::strptr field,
 bool                 acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.acr..Init
-void                 acr_Init(report::acr& parent);
+inline void          acr_Init(report::acr& parent);
 // print string representation of ROW to string STR
 // cfmt:report.acr.String  printfmt:Tuple
 // func:report.acr..Print
@@ -212,9 +213,10 @@ void                 acr_Print(report::acr& row, algo::cstring& str) __attribute
 struct acr_check { // report.acr_check
     u32   records;   //   0  Number of records checked
     u32   errors;    //   0  Number of errors reported
-    explicit acr_check(u32                            in_records
-        ,u32                            in_errors);
-    acr_check();
+    // func:report.acr_check..Ctor
+    inline               acr_check() __attribute__((nothrow));
+    // func:report.acr_check..FieldwiseCtor
+    explicit inline               acr_check(u32 in_records, u32 in_errors) __attribute__((nothrow));
 };
 
 // func:report.acr_check..ReadFieldMaybe
@@ -225,7 +227,7 @@ bool                 acr_check_ReadFieldMaybe(report::acr_check& parent, algo::s
 bool                 acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.acr_check..Init
-void                 acr_check_Init(report::acr_check& parent);
+inline void          acr_check_Init(report::acr_check& parent);
 // print string representation of ROW to string STR
 // cfmt:report.acr_check.String  printfmt:Tuple
 // func:report.acr_check..Print
@@ -239,7 +241,8 @@ struct amc { // report.amc
     u32   n_func;      //   0  Total number of functions
     u32   n_xref;      //   0  Number of x-references built
     u32   n_filemod;   //   0  Number of files written
-    amc();
+    // func:report.amc..Ctor
+    inline               amc() __attribute__((nothrow));
 };
 
 // func:report.amc..ReadFieldMaybe
@@ -250,7 +253,7 @@ bool                 amc_ReadFieldMaybe(report::amc& parent, algo::strptr field,
 bool                 amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.amc..Init
-void                 amc_Init(report::amc& parent);
+inline void          amc_Init(report::amc& parent);
 // print string representation of ROW to string STR
 // cfmt:report.amc.String  printfmt:Tuple
 // func:report.amc..Print
@@ -267,7 +270,8 @@ struct atf_comp { // report.atf_comp
     i32    nerr;      //   0  Number of errors
     i32    ninsert;   //   0  Number of tests inserted
     bool   success;   //   false  Success flag
-    atf_comp();
+    // func:report.atf_comp..Ctor
+    inline               atf_comp() __attribute__((nothrow));
 };
 
 // func:report.atf_comp..ReadFieldMaybe
@@ -278,7 +282,7 @@ bool                 atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::str
 bool                 atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.atf_comp..Init
-void                 atf_comp_Init(report::atf_comp& parent);
+inline void          atf_comp_Init(report::atf_comp& parent);
 // print string representation of ROW to string STR
 // cfmt:report.atf_comp.String  printfmt:Tuple
 // func:report.atf_comp..Print
@@ -290,7 +294,8 @@ struct atf_unit { // report.atf_unit
     bool   success;        //   false  Success flag
     u64    n_test_run;     //   0  Number of tests invoked
     u64    n_err;          //   0  Number of errors
-    atf_unit();
+    // func:report.atf_unit..Ctor
+    inline               atf_unit() __attribute__((nothrow));
 };
 
 // func:report.atf_unit..ReadFieldMaybe
@@ -301,7 +306,7 @@ bool                 atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::str
 bool                 atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.atf_unit..Init
-void                 atf_unit_Init(report::atf_unit& parent);
+inline void          atf_unit_Init(report::atf_unit& parent);
 // print string representation of ROW to string STR
 // cfmt:report.atf_unit.String  printfmt:Tuple
 // func:report.atf_unit..Print
@@ -319,17 +324,10 @@ struct gcache { // report.gcache
     algo::cstring   pch_file;          // location of PCH file
     algo::cstring   source;            // Source file
     algo::cstring   pch_source;        // PCH source file
-    explicit gcache(algo::UnTime                   in_starttime
-        ,double                         in_elapsed_sec
-        ,i32                            in_preproc_size
-        ,bool                           in_hit
-        ,const algo::strptr&            in_cached_file
-        ,bool                           in_copy_file_range
-        ,bool                           in_pch_hit
-        ,const algo::strptr&            in_pch_file
-        ,const algo::strptr&            in_source
-        ,const algo::strptr&            in_pch_source);
-    gcache();
+    // func:report.gcache..Ctor
+    inline               gcache() __attribute__((nothrow));
+    // func:report.gcache..FieldwiseCtor
+    explicit inline               gcache(algo::UnTime in_starttime, double in_elapsed_sec, i32 in_preproc_size, bool in_hit, const algo::strptr& in_cached_file, bool in_copy_file_range, bool in_pch_hit, const algo::strptr& in_pch_file, const algo::strptr& in_source, const algo::strptr& in_pch_source) __attribute__((nothrow));
 };
 
 // func:report.gcache..ReadFieldMaybe
@@ -350,9 +348,10 @@ void                 gcache_Print(report::gcache& row, algo::cstring& str) __att
 struct gcache_hitrate { // report.gcache_hitrate
     algo::Smallstr20   hitrate;       // Compiler hit rate
     algo::Smallstr20   pch_hitrate;   // Precompiled header hit rate
-    explicit gcache_hitrate(const algo::strptr&            in_hitrate
-        ,const algo::strptr&            in_pch_hitrate);
-    gcache_hitrate();
+    // func:report.gcache_hitrate..Ctor
+    inline               gcache_hitrate() __attribute__((nothrow));
+    // func:report.gcache_hitrate..FieldwiseCtor
+    explicit inline               gcache_hitrate(const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate) __attribute__((nothrow));
 };
 
 // func:report.gcache_hitrate..ReadFieldMaybe
@@ -376,7 +375,8 @@ struct src_func { // report.src_func
     u32             n_filemod;       //   0  Number of files written
     u32             n_baddecl;       //   0  Number of unparseable (by src_func) declarations
     algo::Comment   comment;         //
-    src_func();
+    // func:report.src_func..Ctor
+    inline               src_func() __attribute__((nothrow));
 };
 
 // func:report.src_func..ReadFieldMaybe
@@ -387,7 +387,7 @@ bool                 src_func_ReadFieldMaybe(report::src_func& parent, algo::str
 bool                 src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:report.src_func..Init
-void                 src_func_Init(report::src_func& parent);
+inline void          src_func_Init(report::src_func& parent);
 // print string representation of ROW to string STR
 // cfmt:report.src_func.String  printfmt:Tuple
 // func:report.src_func..Print

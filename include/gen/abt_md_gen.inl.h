@@ -54,28 +54,22 @@ static abt_md::FMdsection &abt_md_mdsection_Inputs        = ((abt_md::FMdsection
 static abt_md::FMdsection &abt_md_mdsection_ImdbUses      = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[20];
 static abt_md::FMdsection &abt_md_mdsection_Tests         = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[21];
 static abt_md::FMdsection &abt_md_mdsection_Copyright     = ((abt_md::FMdsection*)abt_md::_db.mdsection_data)[22];
-inline abt_md::FAnchor::FAnchor() {
-    abt_md::FAnchor_Init(*this);
-}
-
-inline abt_md::FAnchor::~FAnchor() {
-    abt_md::FAnchor_Uninit(*this);
-}
-
 
 // --- abt_md.FAnchor..Init
 // Set all fields to initial values.
 inline void abt_md::FAnchor_Init(abt_md::FAnchor& anchor) {
     anchor.ind_anchor_next = (abt_md::FAnchor*)-1; // (abt_md.FDb.ind_anchor) not-in-hash
 }
-inline abt_md::FComptest::FComptest() {
-    abt_md::FComptest_Init(*this);
+
+// --- abt_md.FAnchor..Ctor
+inline  abt_md::FAnchor::FAnchor() {
+    abt_md::FAnchor_Init(*this);
 }
 
-inline abt_md::FComptest::~FComptest() {
-    abt_md::FComptest_Uninit(*this);
+// --- abt_md.FAnchor..Dtor
+inline  abt_md::FAnchor::~FAnchor() {
+    abt_md::FAnchor_Uninit(*this);
 }
-
 
 // --- abt_md.FComptest..Init
 // Set all fields to initial values.
@@ -85,14 +79,16 @@ inline void abt_md::FComptest_Init(abt_md::FComptest& comptest) {
     comptest.exit_code = u8(0);
     comptest.ns_c_comptest_in_ary = bool(false);
 }
-inline abt_md::FCtype::FCtype() {
-    abt_md::FCtype_Init(*this);
+
+// --- abt_md.FComptest..Ctor
+inline  abt_md::FComptest::FComptest() {
+    abt_md::FComptest_Init(*this);
 }
 
-inline abt_md::FCtype::~FCtype() {
-    abt_md::FCtype_Uninit(*this);
+// --- abt_md.FComptest..Dtor
+inline  abt_md::FComptest::~FComptest() {
+    abt_md::FComptest_Uninit(*this);
 }
-
 
 // --- abt_md.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -294,10 +290,16 @@ inline void abt_md::FCtype_Init(abt_md::FCtype& ctype) {
     ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ind_ctype_next = (abt_md::FCtype*)-1; // (abt_md.FDb.ind_ctype) not-in-hash
 }
-inline abt_md::FMdsection::FMdsection() {
-    abt_md::FMdsection_Init(*this);
+
+// --- abt_md.FCtype..Ctor
+inline  abt_md::FCtype::FCtype() {
+    abt_md::FCtype_Init(*this);
 }
 
+// --- abt_md.FCtype..Dtor
+inline  abt_md::FCtype::~FCtype() {
+    abt_md::FCtype_Uninit(*this);
+}
 
 // --- abt_md.FMdsection.step.Call
 // Invoke function by pointer
@@ -385,9 +387,15 @@ inline void abt_md::mdsection_zd_file_section_curs_Next(mdsection_zd_file_sectio
 inline abt_md::FFileSection& abt_md::mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs) {
     return *curs.row;
 }
-inline abt_md::trace::trace() {
+
+// --- abt_md.FMdsection..Ctor
+inline  abt_md::FMdsection::FMdsection() {
+    abt_md::FMdsection_Init(*this);
 }
 
+// --- abt_md.trace..Ctor
+inline  abt_md::trace::trace() {
+}
 
 // --- abt_md.FDb.readme.EmptyQ
 // Return true if index is empty
@@ -1980,14 +1988,6 @@ inline void abt_md::_db_readmecat_curs_Next(_db_readmecat_curs &curs) {
 inline abt_md::FReadmecat& abt_md::_db_readmecat_curs_Access(_db_readmecat_curs &curs) {
     return readmecat_qFind(u64(curs.index));
 }
-inline abt_md::FDirent::FDirent() {
-    abt_md::FDirent_Init(*this);
-}
-
-inline abt_md::FDirent::~FDirent() {
-    abt_md::FDirent_Uninit(*this);
-}
-
 
 // --- abt_md.FDirent.filename.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -2009,28 +2009,32 @@ inline void abt_md::FDirent_Init(abt_md::FDirent& dirent) {
     dirent.is_dir = bool(false);
     dirent.bh_dirent_idx = -1; // (abt_md.FDb.bh_dirent) not-in-heap
 }
-inline abt_md::FFconst::FFconst() {
-    abt_md::FFconst_Init(*this);
+
+// --- abt_md.FDirent..Ctor
+inline  abt_md::FDirent::FDirent() {
+    abt_md::FDirent_Init(*this);
 }
 
-inline abt_md::FFconst::~FFconst() {
-    abt_md::FFconst_Uninit(*this);
+// --- abt_md.FDirent..Dtor
+inline  abt_md::FDirent::~FDirent() {
+    abt_md::FDirent_Uninit(*this);
 }
-
 
 // --- abt_md.FFconst..Init
 // Set all fields to initial values.
 inline void abt_md::FFconst_Init(abt_md::FFconst& fconst) {
     fconst.field_c_fconst_in_ary = bool(false);
 }
-inline abt_md::FField::FField() {
-    abt_md::FField_Init(*this);
+
+// --- abt_md.FFconst..Ctor
+inline  abt_md::FFconst::FFconst() {
+    abt_md::FFconst_Init(*this);
 }
 
-inline abt_md::FField::~FField() {
-    abt_md::FField_Uninit(*this);
+// --- abt_md.FFconst..Dtor
+inline  abt_md::FFconst::~FFconst() {
+    abt_md::FFconst_Uninit(*this);
 }
-
 
 // --- abt_md.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -2154,14 +2158,16 @@ inline void abt_md::field_c_fconst_curs_Next(field_c_fconst_curs &curs) {
 inline abt_md::FFconst& abt_md::field_c_fconst_curs_Access(field_c_fconst_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline abt_md::FFileSection::FFileSection() {
-    abt_md::FFileSection_Init(*this);
+
+// --- abt_md.FField..Ctor
+inline  abt_md::FField::FField() {
+    abt_md::FField_Init(*this);
 }
 
-inline abt_md::FFileSection::~FFileSection() {
-    abt_md::FFileSection_Uninit(*this);
+// --- abt_md.FField..Dtor
+inline  abt_md::FField::~FField() {
+    abt_md::FField_Uninit(*this);
 }
-
 
 // --- abt_md.FFileSection..Init
 // Set all fields to initial values.
@@ -2174,28 +2180,32 @@ inline void abt_md::FFileSection_Init(abt_md::FFileSection& file_section) {
     file_section.zd_file_section_prev = NULL; // (abt_md.FMdsection.zd_file_section)
     file_section.bh_file_section_idx = -1; // (abt_md.FDb.bh_file_section) not-in-heap
 }
-inline abt_md::FGconst::FGconst() {
-    abt_md::FGconst_Init(*this);
+
+// --- abt_md.FFileSection..Ctor
+inline  abt_md::FFileSection::FFileSection() {
+    abt_md::FFileSection_Init(*this);
 }
 
-inline abt_md::FGconst::~FGconst() {
-    abt_md::FGconst_Uninit(*this);
+// --- abt_md.FFileSection..Dtor
+inline  abt_md::FFileSection::~FFileSection() {
+    abt_md::FFileSection_Uninit(*this);
 }
-
 
 // --- abt_md.FGconst..Init
 // Set all fields to initial values.
 inline void abt_md::FGconst_Init(abt_md::FGconst& gconst) {
     gconst.wantenum = bool(true);
 }
-inline abt_md::FHumanText::FHumanText() {
-    abt_md::FHumanText_Init(*this);
+
+// --- abt_md.FGconst..Ctor
+inline  abt_md::FGconst::FGconst() {
+    abt_md::FGconst_Init(*this);
 }
 
-inline abt_md::FHumanText::~FHumanText() {
-    abt_md::FHumanText_Uninit(*this);
+// --- abt_md.FGconst..Dtor
+inline  abt_md::FGconst::~FGconst() {
+    abt_md::FGconst_Uninit(*this);
 }
-
 
 // --- abt_md.FHumanText..Init
 // Set all fields to initial values.
@@ -2204,17 +2214,20 @@ inline void abt_md::FHumanText_Init(abt_md::FHumanText& human_text) {
     human_text.human_text_next = (abt_md::FHumanText*)-1; // (abt_md.FDb.human_text) not-in-tpool's freelist
     human_text.ind_human_text_next = (abt_md::FHumanText*)-1; // (abt_md.FDb.ind_human_text) not-in-hash
 }
-inline abt_md::FLink::FLink() {
+
+// --- abt_md.FHumanText..Ctor
+inline  abt_md::FHumanText::FHumanText() {
+    abt_md::FHumanText_Init(*this);
 }
 
-inline abt_md::FNs::FNs() {
-    abt_md::FNs_Init(*this);
+// --- abt_md.FHumanText..Dtor
+inline  abt_md::FHumanText::~FHumanText() {
+    abt_md::FHumanText_Uninit(*this);
 }
 
-inline abt_md::FNs::~FNs() {
-    abt_md::FNs_Uninit(*this);
+// --- abt_md.FLink..Ctor
+inline  abt_md::FLink::FLink() {
 }
-
 
 // --- abt_md.FNs.c_targsrc.EmptyQ
 // Return true if index is empty
@@ -2480,68 +2493,79 @@ inline void abt_md::ns_c_comptest_curs_Next(ns_c_comptest_curs &curs) {
 inline abt_md::FComptest& abt_md::ns_c_comptest_curs_Access(ns_c_comptest_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline abt_md::FNstype::FNstype() {
-    abt_md::FNstype_Init(*this);
+
+// --- abt_md.FNs..Ctor
+inline  abt_md::FNs::FNs() {
+    abt_md::FNs_Init(*this);
 }
 
-inline abt_md::FNstype::~FNstype() {
-    abt_md::FNstype_Uninit(*this);
+// --- abt_md.FNs..Dtor
+inline  abt_md::FNs::~FNs() {
+    abt_md::FNs_Uninit(*this);
 }
-
 
 // --- abt_md.FNstype..Init
 // Set all fields to initial values.
 inline void abt_md::FNstype_Init(abt_md::FNstype& nstype) {
     nstype.ind_nstype_next = (abt_md::FNstype*)-1; // (abt_md.FDb.ind_nstype) not-in-hash
 }
-inline abt_md::FReadme::FReadme() {
+
+// --- abt_md.FNstype..Ctor
+inline  abt_md::FNstype::FNstype() {
+    abt_md::FNstype_Init(*this);
+}
+
+// --- abt_md.FNstype..Dtor
+inline  abt_md::FNstype::~FNstype() {
+    abt_md::FNstype_Uninit(*this);
+}
+
+// --- abt_md.FReadme..Ctor
+inline  abt_md::FReadme::FReadme() {
     abt_md::FReadme_Init(*this);
 }
 
-inline abt_md::FReadme::~FReadme() {
+// --- abt_md.FReadme..Dtor
+inline  abt_md::FReadme::~FReadme() {
     abt_md::FReadme_Uninit(*this);
 }
-
-inline abt_md::FReadmecat::FReadmecat() {
-    abt_md::FReadmecat_Init(*this);
-}
-
-inline abt_md::FReadmecat::~FReadmecat() {
-    abt_md::FReadmecat_Uninit(*this);
-}
-
 
 // --- abt_md.FReadmecat..Init
 // Set all fields to initial values.
 inline void abt_md::FReadmecat_Init(abt_md::FReadmecat& readmecat) {
     readmecat.ind_readmecat_next = (abt_md::FReadmecat*)-1; // (abt_md.FDb.ind_readmecat) not-in-hash
 }
-inline abt_md::FReftype::FReftype() {
+
+// --- abt_md.FReadmecat..Ctor
+inline  abt_md::FReadmecat::FReadmecat() {
+    abt_md::FReadmecat_Init(*this);
+}
+
+// --- abt_md.FReadmecat..Dtor
+inline  abt_md::FReadmecat::~FReadmecat() {
+    abt_md::FReadmecat_Uninit(*this);
+}
+
+// --- abt_md.FReftype..Ctor
+inline  abt_md::FReftype::FReftype() {
     abt_md::FReftype_Init(*this);
 }
-
-inline abt_md::FScriptfile::FScriptfile() {
-    abt_md::FScriptfile_Init(*this);
-}
-
-inline abt_md::FScriptfile::~FScriptfile() {
-    abt_md::FScriptfile_Uninit(*this);
-}
-
 
 // --- abt_md.FScriptfile..Init
 // Set all fields to initial values.
 inline void abt_md::FScriptfile_Init(abt_md::FScriptfile& scriptfile) {
     scriptfile.ind_scriptfile_next = (abt_md::FScriptfile*)-1; // (abt_md.FDb.ind_scriptfile) not-in-hash
 }
-inline abt_md::FSsimfile::FSsimfile() {
-    abt_md::FSsimfile_Init(*this);
+
+// --- abt_md.FScriptfile..Ctor
+inline  abt_md::FScriptfile::FScriptfile() {
+    abt_md::FScriptfile_Init(*this);
 }
 
-inline abt_md::FSsimfile::~FSsimfile() {
-    abt_md::FSsimfile_Uninit(*this);
+// --- abt_md.FScriptfile..Dtor
+inline  abt_md::FScriptfile::~FScriptfile() {
+    abt_md::FScriptfile_Uninit(*this);
 }
-
 
 // --- abt_md.FSsimfile..Init
 // Set all fields to initial values.
@@ -2549,57 +2573,64 @@ inline void abt_md::FSsimfile_Init(abt_md::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.ind_ssimfile_next = (abt_md::FSsimfile*)-1; // (abt_md.FDb.ind_ssimfile) not-in-hash
 }
-inline abt_md::FSubstr::FSubstr() {
-    abt_md::FSubstr_Init(*this);
+
+// --- abt_md.FSsimfile..Ctor
+inline  abt_md::FSsimfile::FSsimfile() {
+    abt_md::FSsimfile_Init(*this);
 }
 
-inline abt_md::FSubstr::~FSubstr() {
-    abt_md::FSubstr_Uninit(*this);
+// --- abt_md.FSsimfile..Dtor
+inline  abt_md::FSsimfile::~FSsimfile() {
+    abt_md::FSsimfile_Uninit(*this);
 }
-
 
 // --- abt_md.FSubstr..Init
 // Set all fields to initial values.
 inline void abt_md::FSubstr_Init(abt_md::FSubstr& substr) {
     substr.p_srcfield = NULL;
 }
-inline abt_md::FTargsrc::FTargsrc() {
-    abt_md::FTargsrc_Init(*this);
+
+// --- abt_md.FSubstr..Ctor
+inline  abt_md::FSubstr::FSubstr() {
+    abt_md::FSubstr_Init(*this);
 }
 
-inline abt_md::FTargsrc::~FTargsrc() {
-    abt_md::FTargsrc_Uninit(*this);
+// --- abt_md.FSubstr..Dtor
+inline  abt_md::FSubstr::~FSubstr() {
+    abt_md::FSubstr_Uninit(*this);
 }
-
 
 // --- abt_md.FTargsrc..Init
 // Set all fields to initial values.
 inline void abt_md::FTargsrc_Init(abt_md::FTargsrc& targsrc) {
     targsrc.ns_c_targsrc_in_ary = bool(false);
 }
-inline abt_md::FTclass::FTclass() {
-    abt_md::FTclass_Init(*this);
+
+// --- abt_md.FTargsrc..Ctor
+inline  abt_md::FTargsrc::FTargsrc() {
+    abt_md::FTargsrc_Init(*this);
 }
 
-inline abt_md::FTclass::~FTclass() {
-    abt_md::FTclass_Uninit(*this);
+// --- abt_md.FTargsrc..Dtor
+inline  abt_md::FTargsrc::~FTargsrc() {
+    abt_md::FTargsrc_Uninit(*this);
 }
-
 
 // --- abt_md.FTclass..Init
 // Set all fields to initial values.
 inline void abt_md::FTclass_Init(abt_md::FTclass& tclass) {
     tclass.ind_tclass_next = (abt_md::FTclass*)-1; // (abt_md.FDb.ind_tclass) not-in-hash
 }
-inline abt_md::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline abt_md::FieldId::FieldId(abt_md_FieldIdEnum arg) { this->value = i32(arg); }
-inline abt_md::FieldId::FieldId() {
-    abt_md::FieldId_Init(*this);
+
+// --- abt_md.FTclass..Ctor
+inline  abt_md::FTclass::FTclass() {
+    abt_md::FTclass_Init(*this);
 }
 
+// --- abt_md.FTclass..Dtor
+inline  abt_md::FTclass::~FTclass() {
+    abt_md::FTclass_Uninit(*this);
+}
 
 // --- abt_md.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -2614,7 +2645,7 @@ inline void abt_md::value_SetEnum(abt_md::FieldId& parent, abt_md_FieldIdEnum rh
 }
 
 // --- abt_md.FieldId.value.Cast
-inline abt_md::FieldId::operator abt_md_FieldIdEnum () const {
+inline  abt_md::FieldId::operator abt_md_FieldIdEnum() const {
     return abt_md_FieldIdEnum((*this).value);
 }
 
@@ -2623,15 +2654,22 @@ inline abt_md::FieldId::operator abt_md_FieldIdEnum () const {
 inline void abt_md::FieldId_Init(abt_md::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline abt_md::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline abt_md::TableId::TableId(abt_md_TableIdEnum arg) { this->value = i32(arg); }
-inline abt_md::TableId::TableId() {
-    abt_md::TableId_Init(*this);
+
+// --- abt_md.FieldId..Ctor
+inline  abt_md::FieldId::FieldId() {
+    abt_md::FieldId_Init(*this);
 }
 
+// --- abt_md.FieldId..FieldwiseCtor
+inline  abt_md::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- abt_md.FieldId..EnumCtor
+inline  abt_md::FieldId::FieldId(abt_md_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- abt_md.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2646,7 +2684,7 @@ inline void abt_md::value_SetEnum(abt_md::TableId& parent, abt_md_TableIdEnum rh
 }
 
 // --- abt_md.TableId.value.Cast
-inline abt_md::TableId::operator abt_md_TableIdEnum () const {
+inline  abt_md::TableId::operator abt_md_TableIdEnum() const {
     return abt_md_TableIdEnum((*this).value);
 }
 
@@ -2654,6 +2692,22 @@ inline abt_md::TableId::operator abt_md_TableIdEnum () const {
 // Set all fields to initial values.
 inline void abt_md::TableId_Init(abt_md::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- abt_md.TableId..Ctor
+inline  abt_md::TableId::TableId() {
+    abt_md::TableId_Init(*this);
+}
+
+// --- abt_md.TableId..FieldwiseCtor
+inline  abt_md::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- abt_md.TableId..EnumCtor
+inline  abt_md::TableId::TableId(abt_md_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const abt_md::trace &row) {// cfmt:abt_md.trace.String

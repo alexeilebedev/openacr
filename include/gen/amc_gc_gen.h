@@ -51,7 +51,8 @@ namespace amc_gc { // gen:ns_print_struct
 // --- amc_gc.trace
 #pragma pack(push,1)
 struct trace { // amc_gc.trace
-    trace();
+    // func:amc_gc.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -122,25 +123,29 @@ bool                 _db_XrefMaybe();
 // func:amc_gc.FDb..Init
 void                 FDb_Init();
 // func:amc_gc.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- amc_gc.FieldId
 #pragma pack(push,1)
 struct FieldId { // amc_gc.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator amc_gc_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(amc_gc_FieldIdEnum arg);
-    FieldId();
+    // func:amc_gc.FieldId.value.Cast
+    inline               operator amc_gc_FieldIdEnum() const __attribute__((nothrow));
+    // func:amc_gc.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:amc_gc.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:amc_gc.FieldId..EnumCtor
+    inline               FieldId(amc_gc_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:amc_gc.FieldId.value.GetEnum
-amc_gc_FieldIdEnum   value_GetEnum(const amc_gc::FieldId& parent) __attribute__((nothrow));
+inline amc_gc_FieldIdEnum value_GetEnum(const amc_gc::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:amc_gc.FieldId.value.SetEnum
-void                 value_SetEnum(amc_gc::FieldId& parent, amc_gc_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(amc_gc::FieldId& parent, amc_gc_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:amc_gc.FieldId.value.ToCstr
@@ -168,7 +173,7 @@ bool                 value_ReadStrptrMaybe(amc_gc::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(amc_gc::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc_gc.FieldId..Init
-void                 FieldId_Init(amc_gc::FieldId& parent);
+inline void          FieldId_Init(amc_gc::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:amc_gc.FieldId.String  printfmt:Raw
 // func:amc_gc.FieldId..Print

@@ -26,9 +26,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline mysql2ssim::trace::trace() {
-}
 
+// --- mysql2ssim.trace..Ctor
+inline  mysql2ssim::trace::trace() {
+}
 
 // --- mysql2ssim.FDb.table_names.EmptyQ
 // Return true if index is empty
@@ -213,14 +214,6 @@ inline bool mysql2ssim::_db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) {
 inline algo::cstring& mysql2ssim::_db_in_tables_curs_Access(_db_in_tables_curs &curs) {
     return curs.elems[curs.index];
 }
-inline mysql2ssim::FTobltin::FTobltin() {
-    mysql2ssim::FTobltin_Init(*this);
-}
-
-inline mysql2ssim::FTobltin::~FTobltin() {
-    mysql2ssim::FTobltin_Uninit(*this);
-}
-
 
 // --- mysql2ssim.FTobltin.vals.EmptyQ
 // Return true if index is empty
@@ -324,15 +317,16 @@ inline void mysql2ssim::FTobltin_Init(mysql2ssim::FTobltin& parent) {
     parent.vals_n     	= 0; // (mysql2ssim.FTobltin.vals)
     parent.vals_max   	= 0; // (mysql2ssim.FTobltin.vals)
 }
-inline mysql2ssim::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline mysql2ssim::FieldId::FieldId(mysql2ssim_FieldIdEnum arg) { this->value = i32(arg); }
-inline mysql2ssim::FieldId::FieldId() {
-    mysql2ssim::FieldId_Init(*this);
+
+// --- mysql2ssim.FTobltin..Ctor
+inline  mysql2ssim::FTobltin::FTobltin() {
+    mysql2ssim::FTobltin_Init(*this);
 }
 
+// --- mysql2ssim.FTobltin..Dtor
+inline  mysql2ssim::FTobltin::~FTobltin() {
+    mysql2ssim::FTobltin_Uninit(*this);
+}
 
 // --- mysql2ssim.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -347,7 +341,7 @@ inline void mysql2ssim::value_SetEnum(mysql2ssim::FieldId& parent, mysql2ssim_Fi
 }
 
 // --- mysql2ssim.FieldId.value.Cast
-inline mysql2ssim::FieldId::operator mysql2ssim_FieldIdEnum () const {
+inline  mysql2ssim::FieldId::operator mysql2ssim_FieldIdEnum() const {
     return mysql2ssim_FieldIdEnum((*this).value);
 }
 
@@ -355,6 +349,22 @@ inline mysql2ssim::FieldId::operator mysql2ssim_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void mysql2ssim::FieldId_Init(mysql2ssim::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- mysql2ssim.FieldId..Ctor
+inline  mysql2ssim::FieldId::FieldId() {
+    mysql2ssim::FieldId_Init(*this);
+}
+
+// --- mysql2ssim.FieldId..FieldwiseCtor
+inline  mysql2ssim::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- mysql2ssim.FieldId..EnumCtor
+inline  mysql2ssim::FieldId::FieldId(mysql2ssim_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const mysql2ssim::trace &row) {// cfmt:mysql2ssim.trace.String

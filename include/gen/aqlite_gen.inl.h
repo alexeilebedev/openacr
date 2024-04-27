@@ -27,9 +27,10 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline aqlite::trace::trace() {
-}
 
+// --- aqlite.trace..Ctor
+inline  aqlite::trace::trace() {
+}
 
 // --- aqlite.FDb.ns.EmptyQ
 // Return true if index is empty
@@ -97,18 +98,10 @@ inline void aqlite::_db_ns_curs_Next(_db_ns_curs &curs) {
 inline aqlite::FNs& aqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
     return ns_qFind(u64(curs.index));
 }
-inline aqlite::FNs::FNs() {
-}
 
-inline aqlite::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- aqlite.FNs..Ctor
+inline  aqlite::FNs::FNs() {
 }
-inline aqlite::FieldId::FieldId(aqlite_FieldIdEnum arg) { this->value = i32(arg); }
-inline aqlite::FieldId::FieldId() {
-    aqlite::FieldId_Init(*this);
-}
-
 
 // --- aqlite.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -123,7 +116,7 @@ inline void aqlite::value_SetEnum(aqlite::FieldId& parent, aqlite_FieldIdEnum rh
 }
 
 // --- aqlite.FieldId.value.Cast
-inline aqlite::FieldId::operator aqlite_FieldIdEnum () const {
+inline  aqlite::FieldId::operator aqlite_FieldIdEnum() const {
     return aqlite_FieldIdEnum((*this).value);
 }
 
@@ -132,15 +125,22 @@ inline aqlite::FieldId::operator aqlite_FieldIdEnum () const {
 inline void aqlite::FieldId_Init(aqlite::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline aqlite::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline aqlite::TableId::TableId(aqlite_TableIdEnum arg) { this->value = i32(arg); }
-inline aqlite::TableId::TableId() {
-    aqlite::TableId_Init(*this);
+
+// --- aqlite.FieldId..Ctor
+inline  aqlite::FieldId::FieldId() {
+    aqlite::FieldId_Init(*this);
 }
 
+// --- aqlite.FieldId..FieldwiseCtor
+inline  aqlite::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- aqlite.FieldId..EnumCtor
+inline  aqlite::FieldId::FieldId(aqlite_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- aqlite.TableId.value.GetEnum
 // Get value of field as enum type
@@ -155,7 +155,7 @@ inline void aqlite::value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rh
 }
 
 // --- aqlite.TableId.value.Cast
-inline aqlite::TableId::operator aqlite_TableIdEnum () const {
+inline  aqlite::TableId::operator aqlite_TableIdEnum() const {
     return aqlite_TableIdEnum((*this).value);
 }
 
@@ -163,6 +163,22 @@ inline aqlite::TableId::operator aqlite_TableIdEnum () const {
 // Set all fields to initial values.
 inline void aqlite::TableId_Init(aqlite::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- aqlite.TableId..Ctor
+inline  aqlite::TableId::TableId() {
+    aqlite::TableId_Init(*this);
+}
+
+// --- aqlite.TableId..FieldwiseCtor
+inline  aqlite::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- aqlite.TableId..EnumCtor
+inline  aqlite::TableId::TableId(aqlite_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const aqlite::trace &row) {// cfmt:aqlite.trace.String

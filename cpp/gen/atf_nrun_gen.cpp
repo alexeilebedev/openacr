@@ -64,22 +64,22 @@ namespace atf_nrun { // gen:ns_print_proto
     static void          InitReflection();
     // Update cycles count from previous clock capture
     // func:atf_nrun.FDb.ind_running.UpdateCycles
-    static void          ind_running_UpdateCycles() __attribute__((nothrow));
+    inline static void   ind_running_UpdateCycles() __attribute__((nothrow));
     // func:atf_nrun.FDb.ind_running.Call
-    static void          ind_running_Call() __attribute__((nothrow));
+    inline static void   ind_running_Call() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:atf_nrun.FDb.zd_todo.UpdateCycles
-    static void          zd_todo_UpdateCycles() __attribute__((nothrow));
+    inline static void   zd_todo_UpdateCycles() __attribute__((nothrow));
     // func:atf_nrun.FDb.zd_todo.Call
-    static void          zd_todo_Call() __attribute__((nothrow));
+    inline static void   zd_todo_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_nrun.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_nrun.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:atf_nrun...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_nrun.trace..Print

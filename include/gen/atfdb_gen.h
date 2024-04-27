@@ -102,7 +102,8 @@ namespace atfdb { // gen:ns_print_struct
 struct Amctest { // atfdb.Amctest
     algo::Smallstr50   amctest;   //
     algo::Comment      comment;   //
-    Amctest();
+    // func:atfdb.Amctest..Ctor
+    inline               Amctest() __attribute__((nothrow));
 };
 
 // func:atfdb.Amctest..ReadFieldMaybe
@@ -120,7 +121,8 @@ void                 Amctest_Print(atfdb::Amctest& row, algo::cstring& str) __at
 struct Cijob { // atfdb.Cijob
     algo::Smallstr50   cijob;     //
     algo::Comment      comment;   //
-    Cijob();
+    // func:atfdb.Cijob..Ctor
+    inline               Cijob() __attribute__((nothrow));
 };
 
 // func:atfdb.Cijob..ReadFieldMaybe
@@ -141,7 +143,8 @@ struct Cipackage { // atfdb.Cipackage
     bool                build;       //   false
     algo::Smallstr100   reinstall;   //
     algo::Comment       comment;     //
-    Cipackage();
+    // func:atfdb.Cipackage..Ctor
+    inline               Cipackage() __attribute__((nothrow));
 };
 
 // func:atfdb.Cipackage..ReadFieldMaybe
@@ -152,7 +155,7 @@ bool                 Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::st
 bool                 Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Cipackage..Init
-void                 Cipackage_Init(atfdb::Cipackage& parent);
+inline void          Cipackage_Init(atfdb::Cipackage& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.Cipackage.String  printfmt:Tuple
 // func:atfdb.Cipackage..Print
@@ -164,7 +167,8 @@ struct Citest { // atfdb.Citest
     algo::Smallstr50   cijob;     //   "test"  CI job in which this test runs
     bool               sandbox;   //   false  Run test in sandbox
     algo::Comment      comment;   //
-    Citest();
+    // func:atfdb.Citest..Ctor
+    inline               Citest() __attribute__((nothrow));
 };
 
 // func:atfdb.Citest..ReadFieldMaybe
@@ -175,7 +179,7 @@ bool                 Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr f
 bool                 Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Citest..Init
-void                 Citest_Init(atfdb::Citest& parent);
+inline void          Citest_Init(atfdb::Citest& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.Citest.String  printfmt:Tuple
 // func:atfdb.Citest..Print
@@ -188,7 +192,8 @@ struct Comptest { // atfdb.Comptest
     bool               memcheck;    //   true
     u8                 exit_code;   //   0  Exit code to check
     algo::Comment      comment;     //
-    Comptest();
+    // func:atfdb.Comptest..Ctor
+    inline               Comptest() __attribute__((nothrow));
 };
 
 // func:atfdb.Comptest.target.Get
@@ -211,7 +216,7 @@ bool                 Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strp
 bool                 Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Comptest..Init
-void                 Comptest_Init(atfdb::Comptest& parent);
+inline void          Comptest_Init(atfdb::Comptest& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.Comptest.String  printfmt:Tuple
 // func:atfdb.Comptest..Print
@@ -221,19 +226,23 @@ void                 Comptest_Print(atfdb::Comptest& row, algo::cstring& str) __
 #pragma pack(push,1)
 struct FieldId { // atfdb.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atfdb_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atfdb_FieldIdEnum arg);
-    FieldId();
+    // func:atfdb.FieldId.value.Cast
+    inline               operator atfdb_FieldIdEnum() const __attribute__((nothrow));
+    // func:atfdb.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atfdb.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atfdb.FieldId..EnumCtor
+    inline               FieldId(atfdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atfdb.FieldId.value.GetEnum
-atfdb_FieldIdEnum    value_GetEnum(const atfdb::FieldId& parent) __attribute__((nothrow));
+inline atfdb_FieldIdEnum value_GetEnum(const atfdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atfdb.FieldId.value.SetEnum
-void                 value_SetEnum(atfdb::FieldId& parent, atfdb_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atfdb::FieldId& parent, atfdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atfdb.FieldId.value.ToCstr
@@ -261,7 +270,7 @@ bool                 value_ReadStrptrMaybe(atfdb::FieldId& parent, algo::strptr 
 bool                 FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.FieldId..Init
-void                 FieldId_Init(atfdb::FieldId& parent);
+inline void          FieldId_Init(atfdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.FieldId.String  printfmt:Raw
 // func:atfdb.FieldId..Print
@@ -271,7 +280,8 @@ void                 FieldId_Print(atfdb::FieldId& row, algo::cstring& str) __at
 struct Fuzzstrat { // atfdb.Fuzzstrat
     algo::Smallstr50   fuzzstrat;   //
     algo::Comment      comment;     //
-    Fuzzstrat();
+    // func:atfdb.Fuzzstrat..Ctor
+    inline               Fuzzstrat() __attribute__((nothrow));
 };
 
 // func:atfdb.Fuzzstrat..ReadFieldMaybe
@@ -289,7 +299,8 @@ void                 Fuzzstrat_Print(atfdb::Fuzzstrat& row, algo::cstring& str) 
 struct Msgdir { // atfdb.Msgdir
     algo::Smallstr50   msgdir;    //
     algo::Comment      comment;   //
-    Msgdir();
+    // func:atfdb.Msgdir..Ctor
+    inline               Msgdir() __attribute__((nothrow));
 };
 
 // func:atfdb.Msgdir..ReadFieldMaybe
@@ -307,7 +318,8 @@ void                 Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) __attr
 struct Targs { // atfdb.Targs
     algo::Smallstr50   comptest;   //
     algo::cstring      args;       //
-    Targs();
+    // func:atfdb.Targs..Ctor
+    inline               Targs() __attribute__((nothrow));
 };
 
 // func:atfdb.Targs..ReadFieldMaybe
@@ -325,7 +337,8 @@ void                 Targs_Print(atfdb::Targs& row, algo::cstring& str) __attrib
 struct TestGsymbolChar { // atfdb.TestGsymbolChar
     algo::Smallstr50   test_gsymbol_char;   //
     algo::Comment      comment;             //
-    TestGsymbolChar();
+    // func:atfdb.TestGsymbolChar..Ctor
+    inline               TestGsymbolChar() __attribute__((nothrow));
 };
 
 // func:atfdb.TestGsymbolChar..ReadFieldMaybe
@@ -343,7 +356,8 @@ void                 TestGsymbolChar_Print(atfdb::TestGsymbolChar& row, algo::cs
 struct TestGsymbolPkey { // atfdb.TestGsymbolPkey
     algo::Smallstr50   test_gsymbol_pkey;   //
     algo::Comment      comment;             //
-    TestGsymbolPkey();
+    // func:atfdb.TestGsymbolPkey..Ctor
+    inline               TestGsymbolPkey() __attribute__((nothrow));
 };
 
 // func:atfdb.TestGsymbolPkey..ReadFieldMaybe
@@ -361,7 +375,8 @@ void                 TestGsymbolPkey_Print(atfdb::TestGsymbolPkey& row, algo::cs
 struct TestGsymbolStrptr { // atfdb.TestGsymbolStrptr
     algo::Smallstr50   test_gsymbol_strptr;   //
     algo::Comment      comment;               //
-    TestGsymbolStrptr();
+    // func:atfdb.TestGsymbolStrptr..Ctor
+    inline               TestGsymbolStrptr() __attribute__((nothrow));
 };
 
 // func:atfdb.TestGsymbolStrptr..ReadFieldMaybe
@@ -380,7 +395,8 @@ struct Tfilt { // atfdb.Tfilt
     algo::Smallstr50   comptest;   //
     algo::cstring      filter;     //
     algo::Comment      comment;    //
-    Tfilt();
+    // func:atfdb.Tfilt..Ctor
+    inline               Tfilt() __attribute__((nothrow));
 };
 
 // func:atfdb.Tfilt..ReadFieldMaybe
@@ -399,7 +415,8 @@ struct Tmsg { // atfdb.Tmsg
     algo::Smallstr50   tmsg;      //
     bool               istuple;   //   false
     algo::cstring      msg;       //
-    Tmsg();
+    // func:atfdb.Tmsg..Ctor
+    inline               Tmsg() __attribute__((nothrow));
 };
 
 // func:atfdb.Tmsg.comptest.Get
@@ -427,7 +444,7 @@ bool                 Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field
 bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Tmsg..Init
-void                 Tmsg_Init(atfdb::Tmsg& parent);
+inline void          Tmsg_Init(atfdb::Tmsg& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.Tmsg.String  printfmt:Tuple
 // func:atfdb.Tmsg..Print
@@ -437,7 +454,8 @@ void                 Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) __attribut
 struct Unittest { // atfdb.Unittest
     algo::Smallstr50   unittest;   //
     algo::Comment      comment;    //
-    Unittest();
+    // func:atfdb.Unittest..Ctor
+    inline               Unittest() __attribute__((nothrow));
 };
 
 // func:atfdb.Unittest.target.Get

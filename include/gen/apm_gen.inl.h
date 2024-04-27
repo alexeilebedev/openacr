@@ -29,14 +29,6 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline apm::FCtype::FCtype() {
-    apm::FCtype_Init(*this);
-}
-
-inline apm::FCtype::~FCtype() {
-    apm::FCtype_Uninit(*this);
-}
-
 
 // --- apm.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -236,9 +228,20 @@ inline void apm::FCtype_Init(apm::FCtype& ctype) {
     ctype.c_ssimreq_max = 0; // (apm.FCtype.c_ssimreq)
     ctype.ind_ctype_next = (apm::FCtype*)-1; // (apm.FDb.ind_ctype) not-in-hash
 }
-inline apm::trace::trace() {
+
+// --- apm.FCtype..Ctor
+inline  apm::FCtype::FCtype() {
+    apm::FCtype_Init(*this);
 }
 
+// --- apm.FCtype..Dtor
+inline  apm::FCtype::~FCtype() {
+    apm::FCtype_Uninit(*this);
+}
+
+// --- apm.trace..Ctor
+inline  apm::trace::trace() {
+}
 
 // --- apm.FDb.package.EmptyQ
 // Return true if index is empty
@@ -1508,14 +1511,6 @@ inline void apm::_db_ns_curs_Next(_db_ns_curs &curs) {
 inline apm::FNs& apm::_db_ns_curs_Access(_db_ns_curs &curs) {
     return ns_qFind(u64(curs.index));
 }
-inline apm::FField::FField() {
-    apm::FField_Init(*this);
-}
-
-inline apm::FField::~FField() {
-    apm::FField_Uninit(*this);
-}
-
 
 // --- apm.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1536,14 +1531,16 @@ inline void apm::c_substr_Remove(apm::FField& field, apm::FSubstr& row) {
         field.c_substr = NULL;
     }
 }
-inline apm::FMergefile::FMergefile() {
-    apm::FMergefile_Init(*this);
+
+// --- apm.FField..Ctor
+inline  apm::FField::FField() {
+    apm::FField_Init(*this);
 }
 
-inline apm::FMergefile::~FMergefile() {
-    apm::FMergefile_Uninit(*this);
+// --- apm.FField..Dtor
+inline  apm::FField::~FField() {
+    apm::FField_Uninit(*this);
 }
-
 
 // --- apm.FMergefile..Init
 // Set all fields to initial values.
@@ -1553,31 +1550,36 @@ inline void apm::FMergefile_Init(apm::FMergefile& mergefile) {
     mergefile.theirs_mode = i32(0);
     mergefile.ind_mergefile_next = (apm::FMergefile*)-1; // (apm.FDb.ind_mergefile) not-in-hash
 }
-inline apm::FMkdir::FMkdir() {
-    apm::FMkdir_Init(*this);
+
+// --- apm.FMergefile..Ctor
+inline  apm::FMergefile::FMergefile() {
+    apm::FMergefile_Init(*this);
 }
 
-inline apm::FMkdir::~FMkdir() {
-    apm::FMkdir_Uninit(*this);
+// --- apm.FMergefile..Dtor
+inline  apm::FMergefile::~FMergefile() {
+    apm::FMergefile_Uninit(*this);
 }
-
 
 // --- apm.FMkdir..Init
 // Set all fields to initial values.
 inline void apm::FMkdir_Init(apm::FMkdir& mkdir) {
     mkdir.ind_mkdir_next = (apm::FMkdir*)-1; // (apm.FDb.ind_mkdir) not-in-hash
 }
-inline apm::FNs::FNs() {
+
+// --- apm.FMkdir..Ctor
+inline  apm::FMkdir::FMkdir() {
+    apm::FMkdir_Init(*this);
 }
 
-inline apm::FPackage::FPackage() {
-    apm::FPackage_Init(*this);
+// --- apm.FMkdir..Dtor
+inline  apm::FMkdir::~FMkdir() {
+    apm::FMkdir_Uninit(*this);
 }
 
-inline apm::FPackage::~FPackage() {
-    apm::FPackage_Uninit(*this);
+// --- apm.FNs..Ctor
+inline  apm::FNs::FNs() {
 }
-
 
 // --- apm.FPackage.zd_pkgkey.EmptyQ
 // Return true if index is empty
@@ -1929,14 +1931,16 @@ inline void apm::package_zd_pkgrec_curs_Next(package_zd_pkgrec_curs &curs) {
 inline apm::FPkgrec& apm::package_zd_pkgrec_curs_Access(package_zd_pkgrec_curs &curs) {
     return *curs.row;
 }
-inline apm::FPkgdep::FPkgdep() {
-    apm::FPkgdep_Init(*this);
+
+// --- apm.FPackage..Ctor
+inline  apm::FPackage::FPackage() {
+    apm::FPackage_Init(*this);
 }
 
-inline apm::FPkgdep::~FPkgdep() {
-    apm::FPkgdep_Uninit(*this);
+// --- apm.FPackage..Dtor
+inline  apm::FPackage::~FPackage() {
+    apm::FPackage_Uninit(*this);
 }
-
 
 // --- apm.FPkgdep..Init
 // Set all fields to initial values.
@@ -1947,14 +1951,16 @@ inline void apm::FPkgdep_Init(apm::FPkgdep& pkgdep) {
     pkgdep.package_c_pkgdep_in_ary = bool(false);
     pkgdep.package_c_pkgdep_parent_in_ary = bool(false);
 }
-inline apm::FPkgkey::FPkgkey() {
-    apm::FPkgkey_Init(*this);
+
+// --- apm.FPkgdep..Ctor
+inline  apm::FPkgdep::FPkgdep() {
+    apm::FPkgdep_Init(*this);
 }
 
-inline apm::FPkgkey::~FPkgkey() {
-    apm::FPkgkey_Uninit(*this);
+// --- apm.FPkgdep..Dtor
+inline  apm::FPkgdep::~FPkgdep() {
+    apm::FPkgdep_Uninit(*this);
 }
-
 
 // --- apm.FPkgkey.c_pkgrec.EmptyQ
 // Return true if index is empty
@@ -2049,14 +2055,16 @@ inline void apm::pkgkey_c_pkgrec_curs_Next(pkgkey_c_pkgrec_curs &curs) {
 inline apm::FPkgrec& apm::pkgkey_c_pkgrec_curs_Access(pkgkey_c_pkgrec_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline apm::FPkgrec::FPkgrec() {
-    apm::FPkgrec_Init(*this);
+
+// --- apm.FPkgkey..Ctor
+inline  apm::FPkgkey::FPkgkey() {
+    apm::FPkgkey_Init(*this);
 }
 
-inline apm::FPkgrec::~FPkgrec() {
-    apm::FPkgrec_Uninit(*this);
+// --- apm.FPkgkey..Dtor
+inline  apm::FPkgkey::~FPkgkey() {
+    apm::FPkgkey_Uninit(*this);
 }
-
 
 // --- apm.FPkgrec..Init
 // Set all fields to initial values.
@@ -2071,14 +2079,16 @@ inline void apm::FPkgrec_Init(apm::FPkgrec& pkgrec) {
     pkgrec.zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FRec.zd_rec_pkgrec) not-in-list
     pkgrec.zd_rec_pkgrec_prev = NULL; // (apm.FRec.zd_rec_pkgrec)
 }
-inline apm::FRec::FRec() {
-    apm::FRec_Init(*this);
+
+// --- apm.FPkgrec..Ctor
+inline  apm::FPkgrec::FPkgrec() {
+    apm::FPkgrec_Init(*this);
 }
 
-inline apm::FRec::~FRec() {
-    apm::FRec_Uninit(*this);
+// --- apm.FPkgrec..Dtor
+inline  apm::FPkgrec::~FPkgrec() {
+    apm::FPkgrec_Uninit(*this);
 }
-
 
 // --- apm.FRec.c_child.EmptyQ
 // Return true if index is empty
@@ -2256,14 +2266,16 @@ inline void apm::rec_zd_rec_pkgrec_curs_Next(rec_zd_rec_pkgrec_curs &curs) {
 inline apm::FPkgrec& apm::rec_zd_rec_pkgrec_curs_Access(rec_zd_rec_pkgrec_curs &curs) {
     return *curs.row;
 }
-inline apm::FSsimfile::FSsimfile() {
-    apm::FSsimfile_Init(*this);
+
+// --- apm.FRec..Ctor
+inline  apm::FRec::FRec() {
+    apm::FRec_Init(*this);
 }
 
-inline apm::FSsimfile::~FSsimfile() {
-    apm::FSsimfile_Uninit(*this);
+// --- apm.FRec..Dtor
+inline  apm::FRec::~FRec() {
+    apm::FRec_Uninit(*this);
 }
-
 
 // --- apm.FSsimfile.zd_ssimfile_rec.EmptyQ
 // Return true if index is empty
@@ -2355,37 +2367,42 @@ inline void apm::ssimfile_zd_ssimfile_rec_curs_Next(ssimfile_zd_ssimfile_rec_cur
 inline apm::FRec& apm::ssimfile_zd_ssimfile_rec_curs_Access(ssimfile_zd_ssimfile_rec_curs &curs) {
     return *curs.row;
 }
-inline apm::FSsimreq::FSsimreq() {
+
+// --- apm.FSsimfile..Ctor
+inline  apm::FSsimfile::FSsimfile() {
+    apm::FSsimfile_Init(*this);
+}
+
+// --- apm.FSsimfile..Dtor
+inline  apm::FSsimfile::~FSsimfile() {
+    apm::FSsimfile_Uninit(*this);
+}
+
+// --- apm.FSsimreq..Ctor
+inline  apm::FSsimreq::FSsimreq() {
     apm::FSsimreq_Init(*this);
 }
 
-inline apm::FSsimreq::~FSsimreq() {
+// --- apm.FSsimreq..Dtor
+inline  apm::FSsimreq::~FSsimreq() {
     apm::FSsimreq_Uninit(*this);
 }
-
-inline apm::FSubstr::FSubstr() {
-    apm::FSubstr_Init(*this);
-}
-
-inline apm::FSubstr::~FSubstr() {
-    apm::FSubstr_Uninit(*this);
-}
-
 
 // --- apm.FSubstr..Init
 // Set all fields to initial values.
 inline void apm::FSubstr_Init(apm::FSubstr& substr) {
     substr.p_srcfield = NULL;
 }
-inline apm::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline apm::FieldId::FieldId(apm_FieldIdEnum arg) { this->value = i32(arg); }
-inline apm::FieldId::FieldId() {
-    apm::FieldId_Init(*this);
+
+// --- apm.FSubstr..Ctor
+inline  apm::FSubstr::FSubstr() {
+    apm::FSubstr_Init(*this);
 }
 
+// --- apm.FSubstr..Dtor
+inline  apm::FSubstr::~FSubstr() {
+    apm::FSubstr_Uninit(*this);
+}
 
 // --- apm.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -2400,7 +2417,7 @@ inline void apm::value_SetEnum(apm::FieldId& parent, apm_FieldIdEnum rhs) {
 }
 
 // --- apm.FieldId.value.Cast
-inline apm::FieldId::operator apm_FieldIdEnum () const {
+inline  apm::FieldId::operator apm_FieldIdEnum() const {
     return apm_FieldIdEnum((*this).value);
 }
 
@@ -2409,15 +2426,22 @@ inline apm::FieldId::operator apm_FieldIdEnum () const {
 inline void apm::FieldId_Init(apm::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline apm::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline apm::TableId::TableId(apm_TableIdEnum arg) { this->value = i32(arg); }
-inline apm::TableId::TableId() {
-    apm::TableId_Init(*this);
+
+// --- apm.FieldId..Ctor
+inline  apm::FieldId::FieldId() {
+    apm::FieldId_Init(*this);
 }
 
+// --- apm.FieldId..FieldwiseCtor
+inline  apm::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- apm.FieldId..EnumCtor
+inline  apm::FieldId::FieldId(apm_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- apm.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2432,7 +2456,7 @@ inline void apm::value_SetEnum(apm::TableId& parent, apm_TableIdEnum rhs) {
 }
 
 // --- apm.TableId.value.Cast
-inline apm::TableId::operator apm_TableIdEnum () const {
+inline  apm::TableId::operator apm_TableIdEnum() const {
     return apm_TableIdEnum((*this).value);
 }
 
@@ -2440,6 +2464,22 @@ inline apm::TableId::operator apm_TableIdEnum () const {
 // Set all fields to initial values.
 inline void apm::TableId_Init(apm::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- apm.TableId..Ctor
+inline  apm::TableId::TableId() {
+    apm::TableId_Init(*this);
+}
+
+// --- apm.TableId..FieldwiseCtor
+inline  apm::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- apm.TableId..EnumCtor
+inline  apm::TableId::TableId(apm_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const apm::trace &row) {// cfmt:apm.trace.String

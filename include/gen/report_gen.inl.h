@@ -25,15 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline report::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline report::FieldId::FieldId(report_FieldIdEnum arg) { this->value = i32(arg); }
-inline report::FieldId::FieldId() {
-    report::FieldId_Init(*this);
-}
-
 
 // --- report.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -48,7 +39,7 @@ inline void report::value_SetEnum(report::FieldId& parent, report_FieldIdEnum rh
 }
 
 // --- report.FieldId.value.Cast
-inline report::FieldId::operator report_FieldIdEnum () const {
+inline  report::FieldId::operator report_FieldIdEnum() const {
     return report_FieldIdEnum((*this).value);
 }
 
@@ -57,26 +48,22 @@ inline report::FieldId::operator report_FieldIdEnum () const {
 inline void report::FieldId_Init(report::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline report::abt::abt(u16                            in_n_target
-        ,algo::UnDiff                   in_time
-        ,const algo::strptr&            in_hitrate
-        ,const algo::strptr&            in_pch_hitrate
-        ,u32                            in_n_warn
-        ,u32                            in_n_err
-        ,u16                            in_n_install)
-    : n_target(in_n_target)
-    , time(in_time)
-    , hitrate(in_hitrate)
-    , pch_hitrate(in_pch_hitrate)
-    , n_warn(in_n_warn)
-    , n_err(in_n_err)
-    , n_install(in_n_install)
-{
-}
-inline report::abt::abt() {
-    report::abt_Init(*this);
+
+// --- report.FieldId..Ctor
+inline  report::FieldId::FieldId() {
+    report::FieldId_Init(*this);
 }
 
+// --- report.FieldId..FieldwiseCtor
+inline  report::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- report.FieldId..EnumCtor
+inline  report::FieldId::FieldId(report_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- report.abt..Init
 // Set all fields to initial values.
@@ -86,10 +73,23 @@ inline void report::abt_Init(report::abt& parent) {
     parent.n_err = u32(0);
     parent.n_install = u16(0);
 }
-inline report::acr::acr() {
-    report::acr_Init(*this);
+
+// --- report.abt..Ctor
+inline  report::abt::abt() {
+    report::abt_Init(*this);
 }
 
+// --- report.abt..FieldwiseCtor
+inline  report::abt::abt(u16 in_n_target, algo::UnDiff in_time, const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate, u32 in_n_warn, u32 in_n_err, u16 in_n_install)
+    : n_target(in_n_target)
+    , time(in_time)
+    , hitrate(in_hitrate)
+    , pch_hitrate(in_pch_hitrate)
+    , n_warn(in_n_warn)
+    , n_err(in_n_err)
+    , n_install(in_n_install)
+ {
+}
 
 // --- report.acr..Init
 // Set all fields to initial values.
@@ -101,16 +101,11 @@ inline void report::acr_Init(report::acr& parent) {
     parent.n_update = u32(0);
     parent.n_file_mod = u32(0);
 }
-inline report::acr_check::acr_check(u32                            in_records
-        ,u32                            in_errors)
-    : records(in_records)
-    , errors(in_errors)
-{
-}
-inline report::acr_check::acr_check() {
-    report::acr_check_Init(*this);
-}
 
+// --- report.acr..Ctor
+inline  report::acr::acr() {
+    report::acr_Init(*this);
+}
 
 // --- report.acr_check..Init
 // Set all fields to initial values.
@@ -118,10 +113,18 @@ inline void report::acr_check_Init(report::acr_check& parent) {
     parent.records = u32(0);
     parent.errors = u32(0);
 }
-inline report::amc::amc() {
-    report::amc_Init(*this);
+
+// --- report.acr_check..Ctor
+inline  report::acr_check::acr_check() {
+    report::acr_check_Init(*this);
 }
 
+// --- report.acr_check..FieldwiseCtor
+inline  report::acr_check::acr_check(u32 in_records, u32 in_errors)
+    : records(in_records)
+    , errors(in_errors)
+ {
+}
 
 // --- report.amc..Init
 // Set all fields to initial values.
@@ -133,10 +136,11 @@ inline void report::amc_Init(report::amc& parent) {
     parent.n_xref = u32(0);
     parent.n_filemod = u32(0);
 }
-inline report::atf_comp::atf_comp() {
-    report::atf_comp_Init(*this);
-}
 
+// --- report.amc..Ctor
+inline  report::amc::amc() {
+    report::amc_Init(*this);
+}
 
 // --- report.atf_comp..Init
 // Set all fields to initial values.
@@ -151,10 +155,11 @@ inline void report::atf_comp_Init(report::atf_comp& parent) {
     parent.ninsert = i32(0);
     parent.success = bool(false);
 }
-inline report::atf_unit::atf_unit() {
-    report::atf_unit_Init(*this);
-}
 
+// --- report.atf_comp..Ctor
+inline  report::atf_comp::atf_comp() {
+    report::atf_comp_Init(*this);
+}
 
 // --- report.atf_unit..Init
 // Set all fields to initial values.
@@ -164,16 +169,19 @@ inline void report::atf_unit_Init(report::atf_unit& parent) {
     parent.n_test_run = u64(0);
     parent.n_err = u64(0);
 }
-inline report::gcache::gcache(algo::UnTime                   in_starttime
-        ,double                         in_elapsed_sec
-        ,i32                            in_preproc_size
-        ,bool                           in_hit
-        ,const algo::strptr&            in_cached_file
-        ,bool                           in_copy_file_range
-        ,bool                           in_pch_hit
-        ,const algo::strptr&            in_pch_file
-        ,const algo::strptr&            in_source
-        ,const algo::strptr&            in_pch_source)
+
+// --- report.atf_unit..Ctor
+inline  report::atf_unit::atf_unit() {
+    report::atf_unit_Init(*this);
+}
+
+// --- report.gcache..Ctor
+inline  report::gcache::gcache() {
+    report::gcache_Init(*this);
+}
+
+// --- report.gcache..FieldwiseCtor
+inline  report::gcache::gcache(algo::UnTime in_starttime, double in_elapsed_sec, i32 in_preproc_size, bool in_hit, const algo::strptr& in_cached_file, bool in_copy_file_range, bool in_pch_hit, const algo::strptr& in_pch_file, const algo::strptr& in_source, const algo::strptr& in_pch_source)
     : starttime(in_starttime)
     , elapsed_sec(in_elapsed_sec)
     , preproc_size(in_preproc_size)
@@ -184,25 +192,19 @@ inline report::gcache::gcache(algo::UnTime                   in_starttime
     , pch_file(in_pch_file)
     , source(in_source)
     , pch_source(in_pch_source)
-{
-}
-inline report::gcache::gcache() {
-    report::gcache_Init(*this);
+ {
 }
 
-inline report::gcache_hitrate::gcache_hitrate(const algo::strptr&            in_hitrate
-        ,const algo::strptr&            in_pch_hitrate)
+// --- report.gcache_hitrate..Ctor
+inline  report::gcache_hitrate::gcache_hitrate() {
+}
+
+// --- report.gcache_hitrate..FieldwiseCtor
+inline  report::gcache_hitrate::gcache_hitrate(const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate)
     : hitrate(in_hitrate)
     , pch_hitrate(in_pch_hitrate)
-{
+ {
 }
-inline report::gcache_hitrate::gcache_hitrate() {
-}
-
-inline report::src_func::src_func() {
-    report::src_func_Init(*this);
-}
-
 
 // --- report.src_func..Init
 // Set all fields to initial values.
@@ -214,6 +216,11 @@ inline void report::src_func_Init(report::src_func& parent) {
     parent.n_mysteryfunc = u32(0);
     parent.n_filemod = u32(0);
     parent.n_baddecl = u32(0);
+}
+
+// --- report.src_func..Ctor
+inline  report::src_func::src_func() {
+    report::src_func_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::FieldId &row) {// cfmt:report.FieldId.String
