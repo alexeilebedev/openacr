@@ -597,6 +597,7 @@ bool apm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimreq"),recursive);
+        retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);

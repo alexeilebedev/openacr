@@ -66,6 +66,8 @@ namespace lib_ctype { // gen:ns_print_proto
     static bool          unstablefld_InputMaybe(dev::Unstablefld &elem) __attribute__((nothrow));
     // func:lib_ctype.FDb.bltin.InputMaybe
     static bool          bltin_InputMaybe(amcdb::Bltin &elem) __attribute__((nothrow));
+    // func:lib_ctype.FDb.sqltype.InputMaybe
+    static bool          sqltype_InputMaybe(dmmeta::Sqltype &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:lib_ctype.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -483,6 +485,21 @@ void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) {
         ctype.c_cfmt_elems = (lib_ctype::FCfmt**)new_mem;
         ctype.c_cfmt_max = new_max;
     }
+}
+
+// --- lib_ctype.FCtype..Init
+// Set all fields to initial values.
+void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
+    ctype.c_field_elems = NULL; // (lib_ctype.FCtype.c_field)
+    ctype.c_field_n = 0; // (lib_ctype.FCtype.c_field)
+    ctype.c_field_max = 0; // (lib_ctype.FCtype.c_field)
+    ctype.c_cdflt = NULL;
+    ctype.c_cfmt_elems = NULL; // (lib_ctype.FCtype.c_cfmt)
+    ctype.c_cfmt_n = 0; // (lib_ctype.FCtype.c_cfmt)
+    ctype.c_cfmt_max = 0; // (lib_ctype.FCtype.c_cfmt)
+    ctype.c_bltin = NULL;
+    ctype.c_sqltype = NULL;
+    ctype.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
 }
 
 // --- lib_ctype.FCtype..Uninit
@@ -1693,7 +1710,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'4a7d003bc87cf109b94b2598d6297eda93c53aa1'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'9f2e90c5e54c166080039493e7b06fd0cc60d63e'");
 }
 
 // --- lib_ctype.FDb._db.StaticCheck
@@ -1775,6 +1792,12 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && bltin_InputMaybe(elem);
             break;
         }
+        case lib_ctype_TableId_dmmeta_Sqltype: { // finput:lib_ctype.FDb.sqltype
+            dmmeta::Sqltype elem;
+            retval = dmmeta::Sqltype_ReadStrptrMaybe(elem, str);
+            retval = retval && sqltype_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -1797,6 +1820,7 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
@@ -2547,6 +2571,118 @@ bool lib_ctype::bltin_XrefMaybe(lib_ctype::FBltin &row) {
     return retval;
 }
 
+// --- lib_ctype.FDb.sqltype.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+lib_ctype::FSqltype& lib_ctype::sqltype_Alloc() {
+    lib_ctype::FSqltype* row = sqltype_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.sqltype  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_ctype.FDb.sqltype.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+lib_ctype::FSqltype* lib_ctype::sqltype_AllocMaybe() {
+    lib_ctype::FSqltype *row = (lib_ctype::FSqltype*)sqltype_AllocMem();
+    if (row) {
+        new (row) lib_ctype::FSqltype; // call constructor
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.sqltype.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+lib_ctype::FSqltype* lib_ctype::sqltype_InsertMaybe(const dmmeta::Sqltype &value) {
+    lib_ctype::FSqltype *row = &sqltype_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    sqltype_CopyIn(*row,const_cast<dmmeta::Sqltype&>(value));
+    bool ok = sqltype_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        sqltype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- lib_ctype.FDb.sqltype.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* lib_ctype::sqltype_AllocMem() {
+    u64 new_nelems     = _db.sqltype_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    lib_ctype::FSqltype*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.sqltype_lary[bsr];
+        if (!lev) {
+            lev=(lib_ctype::FSqltype*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FSqltype) * (u64(1)<<bsr));
+            _db.sqltype_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.sqltype_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- lib_ctype.FDb.sqltype.RemoveAll
+// Remove all elements from Lary
+void lib_ctype::sqltype_RemoveAll() {
+    for (u64 n = _db.sqltype_n; n>0; ) {
+        n--;
+        sqltype_qFind(u64(n)).~FSqltype(); // destroy last element
+        _db.sqltype_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.sqltype.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void lib_ctype::sqltype_RemoveLast() {
+    u64 n = _db.sqltype_n;
+    if (n > 0) {
+        n -= 1;
+        sqltype_qFind(u64(n)).~FSqltype();
+        _db.sqltype_n = i32(n);
+    }
+}
+
+// --- lib_ctype.FDb.sqltype.InputMaybe
+static bool lib_ctype::sqltype_InputMaybe(dmmeta::Sqltype &elem) {
+    bool retval = true;
+    retval = sqltype_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- lib_ctype.FDb.sqltype.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool lib_ctype::sqltype_XrefMaybe(lib_ctype::FSqltype &row) {
+    bool retval = true;
+    (void)row;
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+    if (UNLIKELY(!p_ctype)) {
+        algo_lib::ResetErrtext() << "lib_ctype.bad_xref  index:lib_ctype.FDb.ind_ctype" << Keyval("key", row.ctype);
+        return false;
+    }
+    // insert sqltype into index c_sqltype
+    if (true) { // user-defined insert condition
+        bool success = c_sqltype_InsertMaybe(*p_ctype, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "lib_ctype.duplicate_key  xref:lib_ctype.FCtype.c_sqltype"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
 // --- lib_ctype.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr lib_ctype::trace_RowidFind(int t) {
@@ -2734,6 +2870,17 @@ void lib_ctype::FDb_Init() {
         _db.bltin_lary[i]  = bltin_first;
         bltin_first    += 1ULL<<i;
     }
+    // initialize LAry sqltype (lib_ctype.FDb.sqltype)
+    _db.sqltype_n = 0;
+    memset(_db.sqltype_lary, 0, sizeof(_db.sqltype_lary)); // zero out all level pointers
+    lib_ctype::FSqltype* sqltype_first = (lib_ctype::FSqltype*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FSqltype) * (u64(1)<<4));
+    if (!sqltype_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.sqltype_lary[i]  = sqltype_first;
+        sqltype_first    += 1ULL<<i;
+    }
 
     lib_ctype::InitReflection();
 }
@@ -2741,6 +2888,9 @@ void lib_ctype::FDb_Init() {
 // --- lib_ctype.FDb..Uninit
 void lib_ctype::FDb_Uninit() {
     lib_ctype::FDb &row = _db; (void)row;
+
+    // lib_ctype.FDb.sqltype.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // lib_ctype.FDb.bltin.Uninit (Lary)  //
     // skip destruction in global scope
@@ -3132,6 +3282,31 @@ void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) {
     }
 }
 
+// --- lib_ctype.FSqltype.base.CopyOut
+// Copy fields out of row
+void lib_ctype::sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) {
+    out.ctype = row.ctype;
+    out.expr = row.expr;
+    out.comment = row.comment;
+}
+
+// --- lib_ctype.FSqltype.base.CopyIn
+// Copy fields in to row
+void lib_ctype::sqltype_CopyIn(lib_ctype::FSqltype &row, dmmeta::Sqltype &in) {
+    row.ctype = in.ctype;
+    row.expr = in.expr;
+    row.comment = in.comment;
+}
+
+// --- lib_ctype.FSqltype..Uninit
+void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& sqltype) {
+    lib_ctype::FSqltype &row = sqltype; (void)row;
+    lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
+    if (p_ctype)  {
+        c_sqltype_Remove(*p_ctype, row);// remove sqltype from index c_sqltype
+    }
+}
+
 // --- lib_ctype.FSsimfile.msghdr.CopyOut
 // Copy fields out of row
 void lib_ctype::ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) {
@@ -3321,6 +3496,7 @@ const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) {
         case lib_ctype_TableId_dmmeta_Fconst: ret = "dmmeta.Fconst";  break;
         case lib_ctype_TableId_dmmeta_Field: ret = "dmmeta.Field";  break;
         case lib_ctype_TableId_dmmeta_Ftuple: ret = "dmmeta.Ftuple";  break;
+        case lib_ctype_TableId_dmmeta_Sqltype: ret = "dmmeta.Sqltype";  break;
         case lib_ctype_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
         case lib_ctype_TableId_dmmeta_Substr: ret = "dmmeta.Substr";  break;
         case lib_ctype_TableId_dev_Unstablefld: ret = "dev.Unstablefld";  break;
@@ -3420,8 +3596,16 @@ bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"ppfunc",6)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_Cppfunc); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','m','m','e','t','a','.','S'): {
+                    if (memcmp(rhs.elems+8,"qltype",6)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_Sqltype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','c'): {
                     if (memcmp(rhs.elems+8,"ppfunc",6)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_cppfunc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','s'): {
+                    if (memcmp(rhs.elems+8,"qltype",6)==0) { value_SetEnum(parent,lib_ctype_TableId_dmmeta_sqltype); ret = true; break; }
                     break;
                 }
             }

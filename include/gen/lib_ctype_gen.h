@@ -59,15 +59,17 @@ enum lib_ctype_TableIdEnum {                    // lib_ctype.TableId.value
     ,lib_ctype_TableId_dmmeta_field      = 6    // dmmeta.field -> lib_ctype.FField
     ,lib_ctype_TableId_dmmeta_Ftuple     = 7    // dmmeta.Ftuple -> lib_ctype.FFtuple
     ,lib_ctype_TableId_dmmeta_ftuple     = 7    // dmmeta.ftuple -> lib_ctype.FFtuple
-    ,lib_ctype_TableId_dmmeta_Ssimfile   = 8    // dmmeta.Ssimfile -> lib_ctype.FSsimfile
-    ,lib_ctype_TableId_dmmeta_ssimfile   = 8    // dmmeta.ssimfile -> lib_ctype.FSsimfile
-    ,lib_ctype_TableId_dmmeta_Substr     = 9    // dmmeta.Substr -> lib_ctype.FSubstr
-    ,lib_ctype_TableId_dmmeta_substr     = 9    // dmmeta.substr -> lib_ctype.FSubstr
-    ,lib_ctype_TableId_dev_Unstablefld   = 10   // dev.Unstablefld -> lib_ctype.FUnstablefld
-    ,lib_ctype_TableId_dev_unstablefld   = 10   // dev.unstablefld -> lib_ctype.FUnstablefld
+    ,lib_ctype_TableId_dmmeta_Sqltype    = 8    // dmmeta.Sqltype -> lib_ctype.FSqltype
+    ,lib_ctype_TableId_dmmeta_sqltype    = 8    // dmmeta.sqltype -> lib_ctype.FSqltype
+    ,lib_ctype_TableId_dmmeta_Ssimfile   = 9    // dmmeta.Ssimfile -> lib_ctype.FSsimfile
+    ,lib_ctype_TableId_dmmeta_ssimfile   = 9    // dmmeta.ssimfile -> lib_ctype.FSsimfile
+    ,lib_ctype_TableId_dmmeta_Substr     = 10   // dmmeta.Substr -> lib_ctype.FSubstr
+    ,lib_ctype_TableId_dmmeta_substr     = 10   // dmmeta.substr -> lib_ctype.FSubstr
+    ,lib_ctype_TableId_dev_Unstablefld   = 11   // dev.Unstablefld -> lib_ctype.FUnstablefld
+    ,lib_ctype_TableId_dev_unstablefld   = 11   // dev.unstablefld -> lib_ctype.FUnstablefld
 };
 
-enum { lib_ctype_TableIdEnum_N = 22 };
+enum { lib_ctype_TableIdEnum_N = 24 };
 
 namespace lib_ctype { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -89,6 +91,7 @@ namespace lib_ctype { struct _db_cppfunc_curs; }
 namespace lib_ctype { struct _db_substr_curs; }
 namespace lib_ctype { struct _db_unstablefld_curs; }
 namespace lib_ctype { struct _db_bltin_curs; }
+namespace lib_ctype { struct _db_sqltype_curs; }
 namespace lib_ctype { struct field_zd_fconst_curs; }
 namespace lib_ctype { struct field_c_substr_srcfield_curs; }
 namespace lib_ctype { struct Cmdline; }
@@ -100,6 +103,7 @@ namespace lib_ctype { struct trace; }
 namespace lib_ctype { struct FDb; }
 namespace lib_ctype { struct FFconst; }
 namespace lib_ctype { struct FFtuple; }
+namespace lib_ctype { struct FSqltype; }
 namespace lib_ctype { struct FSsimfile; }
 namespace lib_ctype { struct FSubstr; }
 namespace lib_ctype { struct FUnstablefld; }
@@ -287,18 +291,19 @@ void                 FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) __attribute__
 // access: lib_ctype.FField.p_arg (Upptr)
 // access: lib_ctype.FSsimfile.p_ctype (Upptr)
 struct FCtype { // lib_ctype.FCtype
-    algo::Smallstr100     ctype;            // Identifier. must be ns.typename
-    algo::Comment         comment;          //
-    lib_ctype::FField**   c_field_elems;    // array of pointers
-    u32                   c_field_n;        // array of pointers
-    u32                   c_field_max;      // capacity of allocated array
-    algo::Smallstr50      printfmt;         //
-    lib_ctype::FCdflt*    c_cdflt;          // optional pointer
-    lib_ctype::FCfmt**    c_cfmt_elems;     // array of pointers
-    u32                   c_cfmt_n;         // array of pointers
-    u32                   c_cfmt_max;       // capacity of allocated array
-    lib_ctype::FBltin*    c_bltin;          // optional pointer
-    lib_ctype::FCtype*    ind_ctype_next;   // hash next
+    algo::Smallstr100      ctype;            // Identifier. must be ns.typename
+    algo::Comment          comment;          //
+    lib_ctype::FField**    c_field_elems;    // array of pointers
+    u32                    c_field_n;        // array of pointers
+    u32                    c_field_max;      // capacity of allocated array
+    algo::Smallstr50       printfmt;         //
+    lib_ctype::FCdflt*     c_cdflt;          // optional pointer
+    lib_ctype::FCfmt**     c_cfmt_elems;     // array of pointers
+    u32                    c_cfmt_n;         // array of pointers
+    u32                    c_cfmt_max;       // capacity of allocated array
+    lib_ctype::FBltin*     c_bltin;          // optional pointer
+    lib_ctype::FSqltype*   c_sqltype;        // optional pointer
+    lib_ctype::FCtype*     ind_ctype_next;   // hash next
 private:
     friend lib_ctype::FCtype&   ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_ctype::FCtype*   ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
@@ -416,6 +421,13 @@ bool                 c_bltin_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FB
 // func:lib_ctype.FCtype.c_bltin.Remove
 void                 c_bltin_Remove(lib_ctype::FCtype& ctype, lib_ctype::FBltin& row) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+// func:lib_ctype.FCtype.c_sqltype.InsertMaybe
+bool                 c_sqltype_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FSqltype& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_ctype.FCtype.c_sqltype.Remove
+void                 c_sqltype_Remove(lib_ctype::FCtype& ctype, lib_ctype::FSqltype& row) __attribute__((nothrow));
+
 // func:lib_ctype.FCtype.c_field_curs.Reset
 void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -502,6 +514,8 @@ struct FDb { // lib_ctype.FDb: In-memory database for lib_ctype
     i32                        unstablefld_n;                  // number of elements in array
     lib_ctype::FBltin*         bltin_lary[32];                 // level array
     i32                        bltin_n;                        // number of elements in array
+    lib_ctype::FSqltype*       sqltype_lary[32];               // level array
+    i32                        sqltype_n;                      // number of elements in array
     lib_ctype::trace           trace;                          //
 };
 
@@ -1090,6 +1104,46 @@ lib_ctype::FBltin&   bltin_qFind(u64 t) __attribute__((nothrow, pure));
 // func:lib_ctype.FDb.bltin.XrefMaybe
 bool                 bltin_XrefMaybe(lib_ctype::FBltin &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_ctype.FDb.sqltype.Alloc
+lib_ctype::FSqltype& sqltype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_ctype.FDb.sqltype.AllocMaybe
+lib_ctype::FSqltype* sqltype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_ctype.FDb.sqltype.InsertMaybe
+lib_ctype::FSqltype* sqltype_InsertMaybe(const dmmeta::Sqltype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_ctype.FDb.sqltype.AllocMem
+void*                sqltype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_ctype.FDb.sqltype.EmptyQ
+bool                 sqltype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_ctype.FDb.sqltype.Find
+lib_ctype::FSqltype* sqltype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_ctype.FDb.sqltype.Last
+lib_ctype::FSqltype* sqltype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_ctype.FDb.sqltype.N
+i32                  sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_ctype.FDb.sqltype.RemoveAll
+void                 sqltype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_ctype.FDb.sqltype.RemoveLast
+void                 sqltype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_ctype.FDb.sqltype.qFind
+lib_ctype::FSqltype& sqltype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_ctype.FDb.sqltype.XrefMaybe
+bool                 sqltype_XrefMaybe(lib_ctype::FSqltype &row);
+
 // cursor points to valid item
 // func:lib_ctype.FDb.fconst_curs.Reset
 void                 _db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
@@ -1222,6 +1276,18 @@ void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((no
 // item access
 // func:lib_ctype.FDb.bltin_curs.Access
 lib_ctype::FBltin&   _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_ctype.FDb.sqltype_curs.Reset
+void                 _db_sqltype_curs_Reset(_db_sqltype_curs &curs, lib_ctype::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_ctype.FDb.sqltype_curs.ValidQ
+bool                 _db_sqltype_curs_ValidQ(_db_sqltype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_ctype.FDb.sqltype_curs.Next
+void                 _db_sqltype_curs_Next(_db_sqltype_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_ctype.FDb.sqltype_curs.Access
+lib_ctype::FSqltype& _db_sqltype_curs_Access(_db_sqltype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.FDb..Init
 void                 FDb_Init();
@@ -1492,6 +1558,34 @@ void                 ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) 
 
 // func:lib_ctype.FFtuple..Uninit
 void                 FFtuple_Uninit(lib_ctype::FFtuple& ftuple) __attribute__((nothrow));
+
+// --- lib_ctype.FSqltype
+// create: lib_ctype.FDb.sqltype (Lary)
+// access: lib_ctype.FCtype.c_sqltype (Ptr)
+struct FSqltype { // lib_ctype.FSqltype
+    algo::Smallstr100   ctype;     //
+    algo::Smallstr100   expr;      //
+    algo::Comment       comment;   //
+private:
+    friend lib_ctype::FSqltype& sqltype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ctype::FSqltype* sqltype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 sqltype_RemoveAll() __attribute__((nothrow));
+    friend void                 sqltype_RemoveLast() __attribute__((nothrow));
+    FSqltype();
+    ~FSqltype();
+    FSqltype(const FSqltype&){ /*disallow copy constructor */}
+    void operator =(const FSqltype&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+// func:lib_ctype.FSqltype.base.CopyOut
+void                 sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_ctype.FSqltype.base.CopyIn
+void                 sqltype_CopyIn(lib_ctype::FSqltype &row, dmmeta::Sqltype &in) __attribute__((nothrow));
+
+// func:lib_ctype.FSqltype..Uninit
+void                 FSqltype_Uninit(lib_ctype::FSqltype& sqltype) __attribute__((nothrow));
 
 // --- lib_ctype.FSsimfile
 // create: lib_ctype.FDb.ssimfile (Lary)
@@ -1816,6 +1910,14 @@ struct _db_bltin_curs {// cursor
     lib_ctype::FDb *parent;
     i64 index;
     _db_bltin_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_sqltype_curs {// cursor
+    typedef lib_ctype::FSqltype ChildType;
+    lib_ctype::FDb *parent;
+    i64 index;
+    _db_sqltype_curs(){ parent=NULL; index=0; }
 };
 
 

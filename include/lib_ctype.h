@@ -37,6 +37,10 @@ namespace lib_ctype { // update-hdr
     // cpp/lib/lib_ctype.cpp
     //
 
+    // Find ctype from ctype name
+    // Supports ctype and ssimfile lookups.
+    lib_ctype::FCtype *TagToCtype(strptr name);
+
     // Find ctype from tuple type tag.
     // Supports ctype and ssimfile lookups.
     lib_ctype::FCtype *TagToCtype(algo::Tuple &tuple);

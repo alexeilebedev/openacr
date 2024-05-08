@@ -23,6 +23,7 @@ dev.gitfile  gitfile:bin/amc_vis
 dev.gitfile  gitfile:bin/ams_cat
 dev.gitfile  gitfile:bin/ams_sendtest
 dev.gitfile  gitfile:bin/apm
+dev.gitfile  gitfile:bin/aqlite
 dev.gitfile  gitfile:bin/atf_amc
 dev.gitfile  gitfile:bin/atf_ci
 dev.gitfile  gitfile:bin/atf_cmdline
@@ -250,6 +251,7 @@ dev.gitfile  gitfile:cpp/apm/remove.cpp
 dev.gitfile  gitfile:cpp/apm/reset.cpp
 dev.gitfile  gitfile:cpp/apm/show.cpp
 dev.gitfile  gitfile:cpp/apm/update.cpp
+dev.gitfile  gitfile:cpp/aqlite/aqlite.cpp
 dev.gitfile  gitfile:cpp/atf/atf_cmdline.cpp
 dev.gitfile  gitfile:cpp/atf/atf_cov.cpp
 dev.gitfile  gitfile:cpp/atf/atf_fuzz.cpp
@@ -355,6 +357,7 @@ dev.gitfile  gitfile:cpp/gen/ams_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ams_sendtest_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amsdb_gen.cpp
 dev.gitfile  gitfile:cpp/gen/apm_gen.cpp
+dev.gitfile  gitfile:cpp/gen/aqlite_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_amc_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_ci_gen.cpp
 dev.gitfile  gitfile:cpp/gen/atf_cmdline_gen.cpp
@@ -387,6 +390,7 @@ dev.gitfile  gitfile:cpp/gen/lib_json_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_prot_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_sql_gen.cpp
+dev.gitfile  gitfile:cpp/gen/lib_sqlite_gen.cpp
 dev.gitfile  gitfile:cpp/gen/mdbg_gen.cpp
 dev.gitfile  gitfile:cpp/gen/mysql2ssim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/orgfile_gen.cpp
@@ -436,6 +440,8 @@ dev.gitfile  gitfile:cpp/lib_amcdb/lib_amcdb.cpp
 dev.gitfile  gitfile:cpp/lib_ams/expect.cpp
 dev.gitfile  gitfile:cpp/lib_ams/file.cpp
 dev.gitfile  gitfile:cpp/lib_ams/stream.cpp
+dev.gitfile  gitfile:cpp/lib_sqlite/lib_sqlite.cpp
+dev.gitfile  gitfile:cpp/lib_sqlite/vtab.cpp
 dev.gitfile  gitfile:cpp/mdbg/mdbg.cpp
 dev.gitfile  gitfile:cpp/mysql2ssim.cpp
 dev.gitfile  gitfile:cpp/orgfile.cpp
@@ -696,6 +702,7 @@ dev.gitfile  gitfile:include/amc.h
 dev.gitfile  gitfile:include/ams_cat.h
 dev.gitfile  gitfile:include/ams_sendtest.h
 dev.gitfile  gitfile:include/apm.h
+dev.gitfile  gitfile:include/aqlite.h
 dev.gitfile  gitfile:include/atf_amc.h
 dev.gitfile  gitfile:include/atf_ci.h
 dev.gitfile  gitfile:include/atf_cmdline.h
@@ -749,6 +756,8 @@ dev.gitfile  gitfile:include/gen/amsdb_gen.h
 dev.gitfile  gitfile:include/gen/amsdb_gen.inl.h
 dev.gitfile  gitfile:include/gen/apm_gen.h
 dev.gitfile  gitfile:include/gen/apm_gen.inl.h
+dev.gitfile  gitfile:include/gen/aqlite_gen.h
+dev.gitfile  gitfile:include/gen/aqlite_gen.inl.h
 dev.gitfile  gitfile:include/gen/atf_amc_gen.h
 dev.gitfile  gitfile:include/gen/atf_amc_gen.inl.h
 dev.gitfile  gitfile:include/gen/atf_ci_gen.h
@@ -813,6 +822,8 @@ dev.gitfile  gitfile:include/gen/lib_prot_gen.h
 dev.gitfile  gitfile:include/gen/lib_prot_gen.inl.h
 dev.gitfile  gitfile:include/gen/lib_sql_gen.h
 dev.gitfile  gitfile:include/gen/lib_sql_gen.inl.h
+dev.gitfile  gitfile:include/gen/lib_sqlite_gen.h
+dev.gitfile  gitfile:include/gen/lib_sqlite_gen.inl.h
 dev.gitfile  gitfile:include/gen/mdbg_gen.h
 dev.gitfile  gitfile:include/gen/mdbg_gen.inl.h
 dev.gitfile  gitfile:include/gen/mysql2ssim_gen.h
@@ -852,6 +863,7 @@ dev.gitfile  gitfile:include/lib_json.h
 dev.gitfile  gitfile:include/lib_json.inl.h
 dev.gitfile  gitfile:include/lib_mysql.h
 dev.gitfile  gitfile:include/lib_sql.h
+dev.gitfile  gitfile:include/lib_sqlite.h
 dev.gitfile  gitfile:include/orgfile.h
 dev.gitfile  gitfile:include/samp_regx.h
 dev.gitfile  gitfile:include/sandbox.h
@@ -1040,6 +1052,8 @@ dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
 dev.gitfile  gitfile:test/atf_comp/acr_in.Reverse
 dev.gitfile  gitfile:test/atf_comp/acr_in.Simple
 dev.gitfile  gitfile:test/atf_comp/acr_in.Tree
+dev.gitfile  gitfile:test/atf_comp/aqlite.Number
+dev.gitfile  gitfile:test/atf_comp/aqlite.Smoke
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Bare
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Debug
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Help
@@ -1057,6 +1071,7 @@ dev.gitfile  gitfile:test/atf_comp/mdbg.SmokeBreak2
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.Csv
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.CsvField
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.FirstTag
+dev.gitfile  gitfile:test/atf_comp/ssimfilt.Json
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.JsonRecursive
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.MatchField
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.MatchTag
@@ -1110,6 +1125,7 @@ dev.gitfile  gitfile:txt/exe/amc_vis/README.md
 dev.gitfile  gitfile:txt/exe/ams_cat/README.md
 dev.gitfile  gitfile:txt/exe/ams_sendtest/README.md
 dev.gitfile  gitfile:txt/exe/apm/README.md
+dev.gitfile  gitfile:txt/exe/aqlite/README.md
 dev.gitfile  gitfile:txt/exe/atf_amc/README.md
 dev.gitfile  gitfile:txt/exe/atf_ci/README.md
 dev.gitfile  gitfile:txt/exe/atf_cmdline/README.md
@@ -1148,6 +1164,7 @@ dev.gitfile  gitfile:txt/lib/lib_json/README.md
 dev.gitfile  gitfile:txt/lib/lib_mysql/README.md
 dev.gitfile  gitfile:txt/lib/lib_prot/README.md
 dev.gitfile  gitfile:txt/lib/lib_sql/README.md
+dev.gitfile  gitfile:txt/lib/lib_sqlite/README.md
 dev.gitfile  gitfile:txt/protocol/README.md
 dev.gitfile  gitfile:txt/protocol/algo/Attr.md
 dev.gitfile  gitfile:txt/protocol/algo/Bool.md

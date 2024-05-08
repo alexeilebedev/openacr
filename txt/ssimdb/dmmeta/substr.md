@@ -32,5 +32,6 @@ Substrings are used pervasively by acr to construct structured keys.
 * [amc](/txt/exe/amc/README.md) as amc.FSubstr
 * [apm](/txt/exe/apm/README.md) as apm.FSubstr
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as lib_ctype.FSubstr
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as lib_sqlite.FSubstr
 * [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FSubstr
 

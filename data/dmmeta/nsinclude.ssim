@@ -1,3 +1,5 @@
+dmmeta.nsinclude  nsinclude:aqlite/include/lib_sqlite.h  sys:N  comment:"typedef for HANDLE"
 dmmeta.nsinclude  nsinclude:atf_amc/include/lib_json.h  sys:N  comment:""
 dmmeta.nsinclude  nsinclude:lib_iconv/iconv.h  sys:Y  comment:""
 dmmeta.nsinclude  nsinclude:lib_mysql/mariadb/mysql.h  sys:Y  comment:""
+dmmeta.nsinclude  nsinclude:lib_sqlite/sqlite3.h  sys:Y  comment:""

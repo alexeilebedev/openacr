@@ -1,5 +1,3 @@
-[
-{@type:"atf_amc.TypeTVal", j:33, types:{@type:"atf_amc.TypeS", types:1, comment:"lkjljk"}}
-,{@type:"atf_amc.TypeTVal", j:22, types:{@type:"atf_amc.TypeS", types:2, comment:"eryerty"}}
-,{@type:"atf_amc.TypeTVal", j:11, types:{@type:"atf_amc.TypeS", types:3, comment:"asdf"}}
-]
+{"@type":"atf_amc.TypeTVal","j":33,"types":{"@type":"atf_amc.TypeS","types":1,"comment":"lkjljk"}}
+{"@type":"atf_amc.TypeTVal","j":22,"types":{"@type":"atf_amc.TypeS","types":2,"comment":"eryerty"}}
+{"@type":"atf_amc.TypeTVal","j":11,"types":{"@type":"atf_amc.TypeS","types":3,"comment":"asdf"}}

@@ -17,5 +17,6 @@ This table is used when converting OpenACR schema to MariaDB schema.
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
+* [lib_ctype](/txt/lib/lib_ctype/README.md) as lib_ctype.FSqltype
 * [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FSqltype
 

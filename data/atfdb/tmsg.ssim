@@ -68,6 +68,11 @@ atfdb.tmsg  tmsg:acr_compl.CustomData/100000.in  istuple:N  msg:"gclidb.gclicmdt
 atfdb.tmsg  tmsg:acr_compl.CustomData/100010.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mrsearch.ghp        gmethod:GET     uri:"search/issues?q=is:pr+repo:$KEYID$COND"          comment:github'
 atfdb.tmsg  tmsg:acr_compl.CustomData/100020.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.ghp          gmethod:GET     uri:"repos/$KEYID/milestones?state=open"              comment:github'
 atfdb.tmsg  tmsg:acr_compl.CustomData/100030.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.glpat        gmethod:GET     uri:"api/v4/projects/$KEYID/milestones?active=true"   comment:gitlab'
+atfdb.tmsg  tmsg:aqlite.Smoke/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:i16                  comment:""'
+atfdb.tmsg  tmsg:aqlite.Smoke/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:i32                  comment:""'
+atfdb.tmsg  tmsg:aqlite.Smoke/100020.in  istuple:N  msg:'dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:""  comment:""'
+atfdb.tmsg  tmsg:aqlite.Smoke/100030.in  istuple:N  msg:'dmmeta.field  field:abt.FCfg.msghdr       arg:dev.Cfg         reftype:Base    dflt:""  comment:""'
+atfdb.tmsg  tmsg:aqlite.Smoke/100040.in  istuple:N  msg:'dmmeta.field  field:abt.FCompiler.msghdr  arg:dev.Compiler    reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:ssimfilt.Csv/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
@@ -84,6 +89,7 @@ atfdb.tmsg  tmsg:ssimfilt.CsvField/100050.in  istuple:N  msg:'dmmeta.nstype  nst
 atfdb.tmsg  tmsg:ssimfilt.CsvField/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
 atfdb.tmsg  tmsg:ssimfilt.FirstTag/100000.in  istuple:N  msg:"dmmeta.ns ns:blah"
 atfdb.tmsg  tmsg:ssimfilt.FirstTag/100010.in  istuple:N  msg:"dmmeta.ctype ctype:blah.Y"
+atfdb.tmsg  tmsg:ssimfilt.Json/100000.in  istuple:N  msg:"report.acr  n_select:4741  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0"
 atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100000.in  istuple:N  msg:"atf_amc.TypeTVal j:33 types:'atf_amc.TypeS types:1 comment:\"lkjljk\"'"
 atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100010.in  istuple:N  msg:"atf_amc.TypeTVal j:22 types:'atf_amc.TypeS types:2 comment:\"eryerty\"'"
 atfdb.tmsg  tmsg:ssimfilt.JsonRecursive/100020.in  istuple:N  msg:"atf_amc.TypeTVal j:11 types:'atf_amc.TypeS types:3 comment:\"asdf\"'"

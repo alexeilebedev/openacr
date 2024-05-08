@@ -31,6 +31,9 @@ dmmeta.cextern  ctype:i64  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:i8  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:iconv_t  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:pid_t  initmemset:N  isstruct:N
+dmmeta.cextern  ctype:sqlite3  initmemset:N  isstruct:Y
+dmmeta.cextern  ctype:sqlite3_vtab  initmemset:N  isstruct:Y
+dmmeta.cextern  ctype:sqlite3_vtab_cursor  initmemset:N  isstruct:Y
 dmmeta.cextern  ctype:u128  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:u16  initmemset:N  isstruct:N
 dmmeta.cextern  ctype:u32  initmemset:N  isstruct:N

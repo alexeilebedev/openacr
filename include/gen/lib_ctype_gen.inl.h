@@ -249,6 +249,26 @@ inline void lib_ctype::c_bltin_Remove(lib_ctype::FCtype& ctype, lib_ctype::FBlti
     }
 }
 
+// --- lib_ctype.FCtype.c_sqltype.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_ctype::c_sqltype_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FSqltype& row) {
+    lib_ctype::FSqltype* ptr = ctype.c_sqltype;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_sqltype = &row;
+    }
+    return retval;
+}
+
+// --- lib_ctype.FCtype.c_sqltype.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_ctype::c_sqltype_Remove(lib_ctype::FCtype& ctype, lib_ctype::FSqltype& row) {
+    lib_ctype::FSqltype *ptr = ctype.c_sqltype;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_sqltype = NULL;
+    }
+}
+
 // --- lib_ctype.FCtype.c_field_curs.Reset
 inline void lib_ctype::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_ctype::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -297,20 +317,6 @@ inline void lib_ctype::ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) {
 // item access
 inline lib_ctype::FCfmt& lib_ctype::ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) {
     return *curs.elems[curs.index];
-}
-
-// --- lib_ctype.FCtype..Init
-// Set all fields to initial values.
-inline void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
-    ctype.c_field_elems = NULL; // (lib_ctype.FCtype.c_field)
-    ctype.c_field_n = 0; // (lib_ctype.FCtype.c_field)
-    ctype.c_field_max = 0; // (lib_ctype.FCtype.c_field)
-    ctype.c_cdflt = NULL;
-    ctype.c_cfmt_elems = NULL; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_cfmt_n = 0; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_cfmt_max = 0; // (lib_ctype.FCtype.c_cfmt)
-    ctype.c_bltin = NULL;
-    ctype.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
 }
 inline lib_ctype::trace::trace() {
 }
@@ -850,6 +856,48 @@ inline lib_ctype::FBltin& lib_ctype::bltin_qFind(u64 t) {
     return _db.bltin_lary[bsr][index];
 }
 
+// --- lib_ctype.FDb.sqltype.EmptyQ
+// Return true if index is empty
+inline bool lib_ctype::sqltype_EmptyQ() {
+    return _db.sqltype_n == 0;
+}
+
+// --- lib_ctype.FDb.sqltype.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_ctype::FSqltype* lib_ctype::sqltype_Find(u64 t) {
+    lib_ctype::FSqltype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.sqltype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.sqltype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_ctype.FDb.sqltype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_ctype::FSqltype* lib_ctype::sqltype_Last() {
+    return sqltype_Find(u64(_db.sqltype_n-1));
+}
+
+// --- lib_ctype.FDb.sqltype.N
+// Return number of items in the pool
+inline i32 lib_ctype::sqltype_N() {
+    return _db.sqltype_n;
+}
+
+// --- lib_ctype.FDb.sqltype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_ctype::FSqltype& lib_ctype::sqltype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.sqltype_lary[bsr][index];
+}
+
 // --- lib_ctype.FDb.fconst_curs.Reset
 // cursor points to valid item
 inline void lib_ctype::_db_fconst_curs_Reset(_db_fconst_curs &curs, lib_ctype::FDb &parent) {
@@ -1123,6 +1171,31 @@ inline void lib_ctype::_db_bltin_curs_Next(_db_bltin_curs &curs) {
 // item access
 inline lib_ctype::FBltin& lib_ctype::_db_bltin_curs_Access(_db_bltin_curs &curs) {
     return bltin_qFind(u64(curs.index));
+}
+
+// --- lib_ctype.FDb.sqltype_curs.Reset
+// cursor points to valid item
+inline void lib_ctype::_db_sqltype_curs_Reset(_db_sqltype_curs &curs, lib_ctype::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_ctype.FDb.sqltype_curs.ValidQ
+// cursor points to valid item
+inline bool lib_ctype::_db_sqltype_curs_ValidQ(_db_sqltype_curs &curs) {
+    return curs.index < _db.sqltype_n;
+}
+
+// --- lib_ctype.FDb.sqltype_curs.Next
+// proceed to next item
+inline void lib_ctype::_db_sqltype_curs_Next(_db_sqltype_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_ctype.FDb.sqltype_curs.Access
+// item access
+inline lib_ctype::FSqltype& lib_ctype::_db_sqltype_curs_Access(_db_sqltype_curs &curs) {
+    return sqltype_qFind(u64(curs.index));
 }
 inline lib_ctype::FFconst::FFconst() {
     lib_ctype::FFconst_Init(*this);
@@ -1398,6 +1471,13 @@ inline lib_ctype::FFtuple::FFtuple() {
 
 inline lib_ctype::FFtuple::~FFtuple() {
     lib_ctype::FFtuple_Uninit(*this);
+}
+
+inline lib_ctype::FSqltype::FSqltype() {
+}
+
+inline lib_ctype::FSqltype::~FSqltype() {
+    lib_ctype::FSqltype_Uninit(*this);
 }
 
 inline lib_ctype::FSsimfile::FSsimfile() {

@@ -636,6 +636,7 @@ dmmeta.xref  field:lib_ctype.FField.c_unstablefld  inscond:true  via:lib_ctype.F
 dmmeta.xref  field:lib_ctype.FField.c_substr_srcfield  inscond:true  via:lib_ctype.FDb.ind_field/dmmeta.Substr.srcfield
 dmmeta.xref  field:lib_ctype.FSubstr.p_field  inscond:true  via:lib_ctype.FDb.ind_field/dmmeta.Substr.field
 dmmeta.xref  field:lib_ctype.FCtype.c_bltin  inscond:true  via:lib_ctype.FDb.ind_ctype/amcdb.Bltin.ctype
+dmmeta.xref  field:lib_ctype.FCtype.c_sqltype  inscond:true  via:lib_ctype.FDb.ind_ctype/dmmeta.Sqltype.ctype
 dmmeta.xref  field:lib_exec.FSyscmd.c_prior  inscond:true  via:lib_exec.FDb.syscmd/dev.Syscmddep.child
 dmmeta.xref  field:lib_exec.FSyscmd.c_next  inscond:true  via:lib_exec.FDb.syscmd/dev.Syscmddep.parent
 dmmeta.xref  field:lib_exec.FSyscmddep.p_child  inscond:true  via:lib_exec.FDb.syscmd/dev.Syscmddep.child
@@ -649,6 +650,7 @@ dmmeta.xref  field:lib_fm.FDb.ind_alm_objtype  inscond:true  via:""
 dmmeta.xref  field:lib_json.FDb.ind_objfld  inscond:"(NULL!=fldkey_Get(row).object)"  via:""
 dmmeta.xref  field:lib_json.FNode.c_child  inscond:"row.p_parent != &row"  via:lib_json.FNode.p_parent
 dmmeta.xref  field:lib_sql.FDb.ind_attr  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FDb.ind_conn  inscond:true  via:""
 dmmeta.xref  field:mdbg.FDb.ind_cfg  inscond:true  via:""
 dmmeta.xref  field:mdbg.FCfg.c_builddir  inscond:true  via:mdbg.FDb.ind_cfg/dev.Builddir.cfg
 dmmeta.xref  field:orgfile.FDb.ind_filename  inscond:true  via:""
