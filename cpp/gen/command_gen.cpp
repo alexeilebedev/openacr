@@ -9939,6 +9939,291 @@ void command::apm_proc_Uninit(command::apm_proc& parent) {
     apm_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.aqlite..ReadFieldMaybe
+bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+            break;
+        }
+        case command_FieldId_data: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.data, strval);
+            break;
+        }
+        case command_FieldId_cmd: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.aqlite..ReadTupleMaybe
+// Read fields of command::aqlite from attributes of ascii tuple TUPLE
+bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = aqlite_GetAnon(parent, anon_idx++);
+        }
+        retval = aqlite_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.aqlite..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::aqlite_ToCmdline(command::aqlite& row) {
+    tempstr ret;
+    ret << "bin/aqlite ";
+    aqlite_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.aqlite..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.aqlite.Argv  printfmt:Tuple
+void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.data == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.data, temp);
+        str << " -data:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.cmd, temp);
+    str << " -cmd:";
+    strptr_PrintBash(temp,str);
+}
+
+// --- command.aqlite..GetAnon
+algo::strptr command::aqlite_GetAnon(command::aqlite &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("cmd", 3);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.aqlite..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_data: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_cmd: { // $comment
+            *out_anon = true;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    (void)out_dflt;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- command.aqlite_proc.aqlite.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::aqlite_Start(command::aqlite_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(aqlite_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(aqlite_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= aqlite_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.aqlite_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.aqlite_proc.aqlite.StartRead
+// Start subprocess & Read output
+algo::Fildes command::aqlite_StartRead(command::aqlite_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    aqlite_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.aqlite_proc.aqlite.Kill
+// Kill subprocess and wait
+void command::aqlite_Kill(command::aqlite_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        aqlite_Wait(parent);
+    }
+}
+
+// --- command.aqlite_proc.aqlite.Wait
+// Wait for subprocess to return
+void command::aqlite_Wait(command::aqlite_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.aqlite_proc.aqlite.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::aqlite_Exec(command::aqlite_proc& parent) {
+    aqlite_Start(parent);
+    aqlite_Wait(parent);
+    return parent.status;
+}
+
+// --- command.aqlite_proc.aqlite.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::aqlite_ExecX(command::aqlite_proc& parent) {
+    int rc = aqlite_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",aqlite_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.aqlite_proc.aqlite.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::aqlite_Execv(command::aqlite_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    aqlite_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.aqlite_proc.aqlite.ToCmdline
+algo::tempstr command::aqlite_ToCmdline(command::aqlite_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::aqlite_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.aqlite_proc.aqlite.ToArgv
+// Form array from the command line
+void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.data != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-data:";
+        cstring_Print(parent.cmd.data, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cmd:";
+        cstring_Print(parent.cmd.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.aqlite_proc..Uninit
+void command::aqlite_proc_Uninit(command::aqlite_proc& parent) {
+    command::aqlite_proc &row = parent; (void)row;
+
+    // command.aqlite_proc.aqlite.Uninit (Exec)  //
+    aqlite_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.atf_amc.amctest.Print
 // Print back to string
 void command::amctest_Print(command::atf_amc& parent, algo::cstring &out) {

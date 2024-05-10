@@ -312,6 +312,7 @@ bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.substr"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
+        retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ftuple"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fconst"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
@@ -652,7 +653,6 @@ void ssimfilt::FDb_Init() {
         selfield_first    += 1ULL<<i;
     }
     _db.csv_locked = bool(false);
-    _db.n_json_out = i32(0);
 
     ssimfilt::InitReflection();
 }

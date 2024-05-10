@@ -435,6 +435,8 @@ namespace command { struct ams_sendtest; }
 namespace command { struct ams_sendtest_proc; }
 namespace command { struct apm; }
 namespace command { struct apm_proc; }
+namespace command { struct aqlite; }
+namespace command { struct aqlite_proc; }
 namespace command { struct atf_amc; }
 namespace command { struct atf_amc_proc; }
 namespace command { struct atf_ci; }
@@ -2435,6 +2437,94 @@ void                 apm_ToArgv(command::apm_proc& parent, algo::StringAry& args
 void                 apm_proc_Init(command::apm_proc& parent);
 // func:command.apm_proc..Uninit
 void                 apm_proc_Uninit(command::apm_proc& parent) __attribute__((nothrow));
+
+// --- command.aqlite
+// access: command.aqlite_proc.aqlite (Exec)
+struct aqlite { // command.aqlite
+    algo::cstring   in;     //   "data"  Input directory or filename, - for stdin for schema
+    algo::cstring   data;   //   "data"  Input directory for data
+    algo::cstring   cmd;    // Sql Query to run
+    aqlite();
+};
+
+// func:command.aqlite..ReadFieldMaybe
+bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::aqlite from attributes of ascii tuple TUPLE
+// func:command.aqlite..ReadTupleMaybe
+bool                 aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.aqlite..Init
+void                 aqlite_Init(command::aqlite& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.aqlite..ToCmdline
+tempstr              aqlite_ToCmdline(command::aqlite& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.aqlite.Argv  printfmt:Tuple
+// func:command.aqlite..PrintArgv
+void                 aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) __attribute__((nothrow));
+// func:command.aqlite..GetAnon
+algo::strptr         aqlite_GetAnon(command::aqlite &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.aqlite..NArgs
+i32                  aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.aqlite_proc
+struct aqlite_proc { // command.aqlite_proc: Subprocess: Runs sqlite queries against ssim files
+    algo::cstring     path;      //   "bin/aqlite"  path for executable
+    command::aqlite   cmd;       // command line for child process
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
+    pid_t             pid;       //   0  pid of running child process
+    i32               timeout;   //   0  optional timeout for child process
+    i32               status;    //   0  last exit status of child process
+    aqlite_proc();
+    ~aqlite_proc();
+private:
+    // reftype Exec of command.aqlite_proc.aqlite prohibits copy
+    aqlite_proc(const aqlite_proc&){ /*disallow copy constructor */}
+    void operator =(const aqlite_proc&){ /*disallow direct assignment */}
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.aqlite_proc.aqlite.Start
+int                  aqlite_Start(command::aqlite_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.aqlite_proc.aqlite.StartRead
+algo::Fildes         aqlite_StartRead(command::aqlite_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.aqlite_proc.aqlite.Kill
+void                 aqlite_Kill(command::aqlite_proc& parent);
+// Wait for subprocess to return
+// func:command.aqlite_proc.aqlite.Wait
+void                 aqlite_Wait(command::aqlite_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.aqlite_proc.aqlite.Exec
+int                  aqlite_Exec(command::aqlite_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.aqlite_proc.aqlite.ExecX
+void                 aqlite_ExecX(command::aqlite_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.aqlite_proc.aqlite.Execv
+int                  aqlite_Execv(command::aqlite_proc& parent) __attribute__((nothrow));
+// func:command.aqlite_proc.aqlite.ToCmdline
+algo::tempstr        aqlite_ToCmdline(command::aqlite_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.aqlite_proc.aqlite.ToArgv
+void                 aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.aqlite_proc..Init
+void                 aqlite_proc_Init(command::aqlite_proc& parent);
+// func:command.aqlite_proc..Uninit
+void                 aqlite_proc_Uninit(command::aqlite_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_amc
 // access: command.atf_amc_proc.atf_amc (Exec)

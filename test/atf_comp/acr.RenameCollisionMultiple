@@ -33,6 +33,7 @@ acr.update  dev.targsyslib  targsyslib:Blah/lib_ams.lz4               comment:""
 acr.update  dev.targsyslib  targsyslib:Blah/lib_ams.rt                comment:""
 acr.update  dev.targsyslib  targsyslib:Blah/lib_mysql.mariadb         comment:""
 acr.update  dev.targsyslib  targsyslib:Blah/lib_mysql.mysqlclient     comment:""
+acr.update  dev.targsyslib  targsyslib:Blah/lib_sqlite.sqlite3        comment:""
 acr.delete  dev.targsyslib  targsyslib:FreeBSD/amc.crypto             comment:""
 acr.delete  dev.targsyslib  targsyslib:FreeBSD/gcache.crypto          comment:""
 acr.delete  dev.targsyslib  targsyslib:FreeBSD/gcli.curl              comment:""
@@ -42,4 +43,4 @@ acr.delete  dev.targsyslib  targsyslib:Linux/amc.crypto               comment:""
 acr.delete  dev.targsyslib  targsyslib:Linux/amc.ssl                  comment:""
 acr.delete  dev.targsyslib  targsyslib:Linux/gcache.crypto            comment:""
 acr.delete  dev.targsyslib  targsyslib:Linux/gcli.curl                comment:""
-report.acr  n_select:42  n_insert:0  n_delete:13  n_ignore:0  n_update:42  n_file_mod:0
+report.acr  n_select:43  n_insert:0  n_delete:13  n_ignore:0  n_update:43  n_file_mod:0

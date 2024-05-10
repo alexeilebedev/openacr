@@ -312,6 +312,7 @@ extern const char *  dmmeta_Ns_ns_ams_cat;        // ams_cat         fconst:dmme
 extern const char *  dmmeta_Ns_ns_ams_sendtest;   // ams_sendtest    fconst:dmmeta.Ns.ns/ams_sendtest
 extern const char *  dmmeta_Ns_ns_amsdb;          // amsdb           fconst:dmmeta.Ns.ns/amsdb
 extern const char *  dmmeta_Ns_ns_apm;            // apm             fconst:dmmeta.Ns.ns/apm
+extern const char *  dmmeta_Ns_ns_aqlite;         // aqlite          fconst:dmmeta.Ns.ns/aqlite
 extern const char *  dmmeta_Ns_ns_atf;            // atf             fconst:dmmeta.Ns.ns/atf
 extern const char *  dmmeta_Ns_ns_atf_amc;        // atf_amc         fconst:dmmeta.Ns.ns/atf_amc
 extern const char *  dmmeta_Ns_ns_atf_ci;         // atf_ci          fconst:dmmeta.Ns.ns/atf_ci
@@ -344,6 +345,7 @@ extern const char *  dmmeta_Ns_ns_lib_json;       // lib_json        fconst:dmme
 extern const char *  dmmeta_Ns_ns_lib_mysql;      // lib_mysql       fconst:dmmeta.Ns.ns/lib_mysql
 extern const char *  dmmeta_Ns_ns_lib_prot;       // lib_prot        fconst:dmmeta.Ns.ns/lib_prot
 extern const char *  dmmeta_Ns_ns_lib_sql;        // lib_sql         fconst:dmmeta.Ns.ns/lib_sql
+extern const char *  dmmeta_Ns_ns_lib_sqlite;     // lib_sqlite      fconst:dmmeta.Ns.ns/lib_sqlite
 extern const char *  dmmeta_Ns_ns_mdbg;           // mdbg            fconst:dmmeta.Ns.ns/mdbg
 extern const char *  dmmeta_Ns_ns_mysql2ssim;     // mysql2ssim      fconst:dmmeta.Ns.ns/mysql2ssim
 extern const char *  dmmeta_Ns_ns_orgfile;        // orgfile         fconst:dmmeta.Ns.ns/orgfile

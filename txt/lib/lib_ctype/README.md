@@ -58,6 +58,7 @@ Other ctypes in this namespace which don't have own readme files
 |c_cdflt|lib_ctype.FCdflt|Ptr|
 |c_cfmt|lib_ctype.FCfmt|Ptrary|
 |c_bltin|lib_ctype.FBltin|Ptr|
+|c_sqltype|lib_ctype.FSqltype|Ptr|
 
 #### lib_ctype.FDb - In-memory database for lib_ctype
 <a href="#lib_ctype-fdb"></a>
@@ -85,6 +86,7 @@ Other ctypes in this namespace which don't have own readme files
 |c_bool|lib_ctype.FCtype|Ptr|
 |unstablefld|lib_ctype.FUnstablefld|Lary|
 |bltin|lib_ctype.FBltin|Lary|
+|sqltype|lib_ctype.FSqltype|Lary|
 
 #### lib_ctype.FFconst - 
 <a href="#lib_ctype-ffconst"></a>
@@ -117,6 +119,13 @@ Other ctypes in this namespace which don't have own readme files
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |msghdr|[dmmeta.Ftuple](/txt/ssimdb/dmmeta/ftuple.md)|Base|
+
+#### lib_ctype.FSqltype - 
+<a href="#lib_ctype-fsqltype"></a>
+
+|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|base|[dmmeta.Sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Base|
 
 #### lib_ctype.FSsimfile - 
 <a href="#lib_ctype-fssimfile"></a>
@@ -156,6 +165,12 @@ Other ctypes in this namespace which don't have own readme files
 ### Functions
 <a href="#functions"></a>
 Functions exported from this namespace:
+
+```c++
+// Find ctype from ctype name
+// Supports ctype and ssimfile lookups.
+lib_ctype::FCtype *lib_ctype::TagToCtype(strptr name) 
+```
 
 ```c++
 // Find ctype from tuple type tag.
@@ -277,6 +292,7 @@ The following source files are part of this tool:
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
 |[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
 |[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|

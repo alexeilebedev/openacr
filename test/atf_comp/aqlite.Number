@@ -1,0 +1,1 @@
+field:dev.Syscmd.maxtime  ctype:dev.Syscmd  ns:dev  name:maxtime  arg:i32  reftype:Val  dflt:0  comment:"Optional max running time (used to use SIGALRM)"

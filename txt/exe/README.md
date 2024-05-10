@@ -31,6 +31,8 @@
 
 * [apm - Algo Package Manager](/txt/exe/apm/README.md)
 
+* [aqlite - Runs sqlite queries against ssim files](/txt/exe/aqlite/README.md)
+
 * [atf_amc - Unit tests for amc (see amctest table)](/txt/exe/atf_amc/README.md)
 
 * [atf_ci - Normalization tests (see citest table)](/txt/exe/atf_ci/README.md)

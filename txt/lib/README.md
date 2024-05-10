@@ -27,3 +27,5 @@
 
 * [lib_sql - SQL formatting functions](/txt/lib/lib_sql/README.md)
 
+* [lib_sqlite -](/txt/lib/lib_sqlite/README.md)
+

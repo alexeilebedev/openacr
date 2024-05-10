@@ -14,6 +14,7 @@ dev.target  target:amc_vis
 dev.target  target:ams_cat
 dev.target  target:ams_sendtest
 dev.target  target:apm
+dev.target  target:aqlite
 dev.target  target:atf_amc
 dev.target  target:atf_ci
 dev.target  target:atf_cmdline
@@ -37,6 +38,7 @@ dev.target  target:lib_json
 dev.target  target:lib_mysql
 dev.target  target:lib_prot
 dev.target  target:lib_sql
+dev.target  target:lib_sqlite
 dev.target  target:mdbg
 dev.target  target:mysql2ssim
 dev.target  target:orgfile

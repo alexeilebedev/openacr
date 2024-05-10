@@ -27,12 +27,18 @@
 
 // -----------------------------------------------------------------------------
 
+// Find ctype from ctype name
+// Supports ctype and ssimfile lookups.
+lib_ctype::FCtype *lib_ctype::TagToCtype(strptr name) {
+    lib_ctype::FSsimfile *ssimfile = lib_ctype::ind_ssimfile_Find(name);
+    lib_ctype::FCtype *ctype = ssimfile ? ssimfile->p_ctype : lib_ctype::ind_ctype_Find(name);
+    return ctype;
+}
+
 // Find ctype from tuple type tag.
 // Supports ctype and ssimfile lookups.
 lib_ctype::FCtype *lib_ctype::TagToCtype(algo::Tuple &tuple) {
-    lib_ctype::FSsimfile *ssimfile = lib_ctype::ind_ssimfile_Find(tuple.head.value);
-    lib_ctype::FCtype *ctype = ssimfile ? ssimfile->p_ctype : lib_ctype::ind_ctype_Find(tuple.head.value);
-    return ctype;
+    return lib_ctype::TagToCtype(tuple.head.value);
 }
 
 // -----------------------------------------------------------------------------

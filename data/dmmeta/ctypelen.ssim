@@ -561,6 +561,8 @@ dmmeta.ctypelen  ctype:apm.FRec  len:200  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:apm.FSsimfile  len:200  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:apm.FSsimreq  len:480  alignment:8  padbytes:8
 dmmeta.ctypelen  ctype:apm.FSubstr  len:464  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:aqlite.FDb  len:312  alignment:8  padbytes:3
+dmmeta.ctypelen  ctype:aqlite.FNs  len:274  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:atf.Testresult  len:4  alignment:4  padbytes:0
 dmmeta.ctypelen  ctype:atf.Testrun  len:88  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:atf_amc.AmcCleanup2  len:8  alignment:4  padbytes:0
@@ -727,6 +729,7 @@ dmmeta.ctypelen  ctype:command.amc_vis  len:128  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:command.ams_cat  len:16  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.ams_sendtest  len:192  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:command.apm  len:536  alignment:8  padbytes:9
+dmmeta.ctypelen  ctype:command.aqlite  len:48  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:command.atf_amc  len:112  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:command.atf_ci  len:208  alignment:8  padbytes:11
 dmmeta.ctypelen  ctype:command.atf_cmdline  len:408  alignment:8  padbytes:45
@@ -1014,11 +1017,12 @@ dmmeta.ctypelen  ctype:lib_ctype.FBltin  len:257  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_ctype.FCdflt  len:862  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_ctype.FCfmt  len:344  alignment:8  padbytes:4
 dmmeta.ctypelen  ctype:lib_ctype.FCppfunc  len:356  alignment:1  padbytes:0
-dmmeta.ctypelen  ctype:lib_ctype.FCtype  len:368  alignment:8  padbytes:6
-dmmeta.ctypelen  ctype:lib_ctype.FDb  len:3024  alignment:8  padbytes:43
+dmmeta.ctypelen  ctype:lib_ctype.FCtype  len:376  alignment:8  padbytes:6
+dmmeta.ctypelen  ctype:lib_ctype.FDb  len:3288  alignment:8  padbytes:47
 dmmeta.ctypelen  ctype:lib_ctype.FFconst  len:560  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:lib_ctype.FField  len:768  alignment:8  padbytes:20
 dmmeta.ctypelen  ctype:lib_ctype.FFtuple  len:254  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:lib_ctype.FSqltype  len:356  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:lib_ctype.FSsimfile  len:176  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:lib_ctype.FSubstr  len:472  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_ctype.FUnstablefld  len:254  alignment:1  padbytes:0
@@ -1042,6 +1046,11 @@ dmmeta.ctypelen  ctype:lib_mysql.FDb  len:16  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_mysql.Res  len:8  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:lib_sql.FAttr  len:32  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:lib_sql.FDb  len:288  alignment:8  padbytes:11
+dmmeta.ctypelen  ctype:lib_sqlite.FConn  len:40  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:lib_sqlite.FDb  len:296  alignment:8  padbytes:3
+dmmeta.ctypelen  ctype:lib_sqlite.FSubstr  len:456  alignment:1  padbytes:0
+dmmeta.ctypelen  ctype:lib_sqlite.Vtab  len:56  alignment:8  padbytes:0
+dmmeta.ctypelen  ctype:lib_sqlite.VtabCurs  len:8328  alignment:8  padbytes:3
 dmmeta.ctypelen  ctype:mdbg.FBuilddir  len:205  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:mdbg.FCfg  len:240  alignment:8  padbytes:5
 dmmeta.ctypelen  ctype:mdbg.FDb  len:1032  alignment:8  padbytes:10
@@ -1105,7 +1114,7 @@ dmmeta.ctypelen  ctype:ssim2mysql.FNs  len:304  alignment:8  padbytes:6
 dmmeta.ctypelen  ctype:ssim2mysql.FSqltype  len:356  alignment:1  padbytes:0
 dmmeta.ctypelen  ctype:ssim2mysql.FSsimfile  len:224  alignment:8  padbytes:19
 dmmeta.ctypelen  ctype:ssim2mysql.FSubstr  len:464  alignment:8  padbytes:0
-dmmeta.ctypelen  ctype:ssimfilt.FDb  len:960  alignment:8  padbytes:14
+dmmeta.ctypelen  ctype:ssimfilt.FDb  len:952  alignment:8  padbytes:10
 dmmeta.ctypelen  ctype:ssimfilt.KVRegx  len:176  alignment:8  padbytes:0
 dmmeta.ctypelen  ctype:strconv.FDb  len:152  alignment:8  padbytes:7
 dmmeta.ctypelen  ctype:sv2ssim.FBltin  len:272  alignment:8  padbytes:7

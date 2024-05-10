@@ -125,28 +125,37 @@ bool ssimfilt::MatchInputTuple(algo::Tuple &tuple) {
 // -----------------------------------------------------------------------------
 
 void ssimfilt::PrintJson(algo::Tuple &tuple, cstring &out, bool toplevel) {
-    algo::ListSep ls(", ");
-    if (toplevel && _db.n_json_out++>0) {
-        out<<",";// comma between objects
-    }
+    algo::ListSep ls(",");
     out<<"{"<<ls;
-    out<<"@type:";
+    out<<"\"@type\":";
     lib_ctype::FCtype *ctype = lib_ctype::TagToCtype(tuple);
     lib_json::JsonSerializeString(tuple.head.value,out);
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         if (!toplevel || MatchOutputAttr(attr)) {
             out<<ls;
-            out<<attr.name<<":";
-            bool quoted=true;
-            bool isbool=false;
-            bool istuple=false;
+            lib_json::JsonSerializeString(attr.name,out);
+            out<<":";
+            auto quoted=true;
+            auto isbool=false;
+            auto istuple=false;
             // for unknown schema, print fields using quotes
             if (ctype) {
                 lib_ctype::FField *field = lib_ctype::FindField(*ctype,attr.name);
                 if (field) {
-                    istuple= TupleFieldQ(*field);
-                    quoted = !field->p_arg->c_bltin;
-                    isbool = field->p_arg == lib_ctype::_db.c_bool;
+                    istuple = TupleFieldQ(*field);
+                    // TODO: create a table
+                    quoted = !(field->p_arg->ctype == "double" ||
+                               field->p_arg->ctype == "float" ||
+                               field->p_arg->ctype == "i8" ||
+                               field->p_arg->ctype == "u8" ||
+                               field->p_arg->ctype == "i16" ||
+                               field->p_arg->ctype == "u16" ||
+                               field->p_arg->ctype == "i32" ||
+                               field->p_arg->ctype == "u32" ||
+                               field->p_arg->ctype == "i64" ||
+                               field->p_arg->ctype == "u64" ||
+                               field->p_arg->ctype == "u128");
+                    isbool = field->p_arg->ctype == "bool";
                 }
             }
             if (istuple) {// print recursive json object
@@ -215,8 +224,15 @@ void ssimfilt::PrintCsv(algo::Tuple &tuple) {
 
 void ssimfilt::Table_Save(algo::Tuple &tuple) {
     // flush when input type changes
-    if (tuple_N()>0 && !(tuple_Find(0)->head.value == tuple.head.value)) {
-        Table_Flush();
+    if (tuple_N()>0) {
+        auto& header = tuple_qFind(0);
+        auto flush = header.head.name == ""
+            ? header.head.value != tuple.head.value
+            : header.head.name != tuple.head.name;
+        flush |= attrs_N(tuple) != attrs_N(header);
+        if (flush) {
+            Table_Flush();
+        }
     }
     // save tuple
     algo::Tuple &saved=tuple_Alloc();
@@ -228,27 +244,35 @@ void ssimfilt::Table_Save(algo::Tuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
+static void AddCol(algo_lib::FTxttbl& txttbl, algo::Attr& attr) {
+    if (attr.name != "" && ssimfilt::MatchOutputAttr(attr)) {
+        tempstr name(attr.name);
+        ind_beg(algo::cstring_ch_curs,ch,name) {
+            ch=algo::ToUpper(ch);
+        }ind_end;
+        AddCol(txttbl,name);
+    }
+}
+
+static void AddCell(algo_lib::FTxttbl& txttbl, algo::Attr& attr) {
+    if (attr.name != "" && ssimfilt::MatchOutputAttr(attr)) {
+        AddCell(txttbl)=attr.value;
+    }
+}
+
 void ssimfilt::Table_Flush() {
     algo_lib::FTxttbl txttbl;
     ind_beg(_db_tuple_curs,tuple,_db) {
         if (ind_curs(tuple).index==0) {
+            AddCol(txttbl, tuple.head);
             ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-                if (ssimfilt::MatchOutputAttr(attr)) {
-                    tempstr name(attr.name);
-                    if (_db.cmdline.t) {
-                        ind_beg(algo::cstring_ch_curs,ch,name) {
-                            ch=algo::ToUpper(ch);
-                        }ind_end;
-                    }
-                    AddCol(txttbl,name);
-                }
+                AddCol(txttbl, attr);
             }ind_end;
         }
         AddRow(txttbl);
+        AddCell(txttbl, tuple.head);
         ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-            if (ssimfilt::MatchOutputAttr(attr)) {
-                AddCell(txttbl)=attr.value;
-            }
+            AddCell(txttbl, attr);
         }ind_end;
     }ind_end;
     tempstr out;
@@ -282,12 +306,9 @@ void ssimfilt::Main() {
     if (_db.cmdline.cmd != "") {
         _db.cmdline.format = command_ssimfilt_format_cmd;
     }
-    if (_db.cmdline.format==command_ssimfilt_format_json) {
-        prlog("[");
-    }
     ind_beg(algo::FileLine_curs,line,algo::Fildes(0)) {
         algo::Tuple tuple;
-        if (Tuple_ReadStrptr(tuple,line,false) && attrs_N(tuple)) {
+        if (Tuple_ReadStrptr(tuple,line,false) && (attrs_N(tuple) || tuple.head.value != "")) {
             if (MatchInputTuple(tuple)) {
                 switch(_db.cmdline.format) {
                     break; case command_ssimfilt_format_ssim: PrintSsim(tuple);
@@ -300,9 +321,6 @@ void ssimfilt::Main() {
             }
         }
     }ind_end;
-    if (_db.cmdline.format==command_ssimfilt_format_json) {
-        prlog("]");
-    }
     if (_db.cmdline.format == command_ssimfilt_format_table) {
         Table_Flush();
     }

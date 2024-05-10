@@ -75,7 +75,6 @@ struct FDb { // ssimfilt.FDb: In-memory database for ssimfilt
     ssimfilt::KVRegx*   selfield_lary[32];     // level array
     i32                 selfield_n;            // number of elements in array
     bool                csv_locked;            //   false  CSV header locked
-    i32                 n_json_out;            //   0
     ssimfilt::trace     trace;                 //
 };
 

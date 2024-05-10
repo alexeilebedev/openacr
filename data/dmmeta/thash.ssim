@@ -180,6 +180,7 @@ dmmeta.thash  field:lib_fm.FDb.ind_alm_code  hashfld:fmdb.AlmCode.alm_code  uniq
 dmmeta.thash  field:lib_fm.FDb.ind_alm_objtype  hashfld:fmdb.AlmObjtype.alm_objtype  unique:Y  comment:""
 dmmeta.thash  field:lib_json.FDb.ind_objfld  hashfld:lib_json.FNode.fldkey  unique:Y  comment:""
 dmmeta.thash  field:lib_sql.FDb.ind_attr  hashfld:lib_sql.FAttr.attr  unique:Y  comment:""
+dmmeta.thash  field:lib_sqlite.FDb.ind_conn  hashfld:lib_sqlite.FConn.name  unique:Y  comment:""
 dmmeta.thash  field:mdbg.FDb.ind_cfg  hashfld:dev.Cfg.cfg  unique:Y  comment:""
 dmmeta.thash  field:orgfile.FDb.ind_filehash  hashfld:orgfile.FFilehash.filehash  unique:Y  comment:""
 dmmeta.thash  field:orgfile.FDb.ind_filename  hashfld:orgfile.FFilename.filename  unique:Y  comment:""

@@ -13,6 +13,7 @@ dmmeta.fcmdline  field:amc_vis.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmd
 dmmeta.fcmdline  field:ams_cat.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:ams_sendtest.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:apm.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+dmmeta.fcmdline  field:aqlite.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_amc.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_ci.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_cmdline.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""

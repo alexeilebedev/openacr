@@ -162,6 +162,8 @@ atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.t
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
+atfdb.targs  comptest:aqlite.Number  args:"'select * from field where dflt = 0 and ns = \"dev\"'"
+atfdb.targs  comptest:aqlite.Smoke  args:'-data:- "select rowid,* from ctype; select rowid,* from field"'
 atfdb.targs  comptest:atf_cmdline.Bare  args:""
 atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"
 atfdb.targs  comptest:atf_cmdline.Help  args:-help
@@ -179,6 +181,7 @@ atfdb.targs  comptest:mdbg.SmokeBreak2  args:"-dry_run -tui mdbg mdbg -b a -b b 
 atfdb.targs  comptest:ssimfilt.Csv  args:-format:csv
 atfdb.targs  comptest:ssimfilt.CsvField  args:"-format:csv -field:comment"
 atfdb.targs  comptest:ssimfilt.FirstTag  args:^
+atfdb.targs  comptest:ssimfilt.Json  args:-format:json
 atfdb.targs  comptest:ssimfilt.JsonRecursive  args:"-format json"
 atfdb.targs  comptest:ssimfilt.MatchField  args:"% ns:b%"
 atfdb.targs  comptest:ssimfilt.MatchTag  args:dmmeta.%

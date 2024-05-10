@@ -66,6 +66,7 @@ These ssimfiles reference dmmeta.ns
 * [acr_in](/txt/exe/acr_in/README.md) as acr_in.FNs
 * [amc](/txt/exe/amc/README.md) as amc.FNs
 * [apm](/txt/exe/apm/README.md) as apm.FNs
+* [aqlite](/txt/exe/aqlite/README.md) as aqlite.FNs
 * [atf_ci](/txt/exe/atf_ci/README.md) as atf_ci.FNs
 * [src_hdr](/txt/exe/src_hdr/README.md) as src_hdr.FNs
 * [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FNs

@@ -106,6 +106,7 @@ The following source files are part of this tool:
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
 |[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
 |[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
@@ -123,6 +124,7 @@ These can be executed with `atf_comp <comptest> -v`
 |ssimfilt.Csv||
 |ssimfilt.CsvField|CSV + field selection|
 |ssimfilt.FirstTag|Lock typetag to first input tuple|
+|ssimfilt.Json|Convert test data to json|
 |ssimfilt.JsonRecursive|Print Recursive json object|
 |ssimfilt.MatchField|Select fields by value|
 |ssimfilt.MatchTag|Match typetag|

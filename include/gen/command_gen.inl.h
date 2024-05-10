@@ -683,6 +683,34 @@ inline void command::apm_proc_Init(command::apm_proc& parent) {
     parent.timeout = i32(0);
     parent.status = i32(0);
 }
+inline command::aqlite::aqlite() {
+    command::aqlite_Init(*this);
+}
+
+
+// --- command.aqlite..Init
+// Set all fields to initial values.
+inline void command::aqlite_Init(command::aqlite& parent) {
+    parent.in = algo::strptr("data");
+    parent.data = algo::strptr("data");
+}
+inline command::aqlite_proc::aqlite_proc() {
+    command::aqlite_proc_Init(*this);
+}
+
+inline command::aqlite_proc::~aqlite_proc() {
+    command::aqlite_proc_Uninit(*this);
+}
+
+
+// --- command.aqlite_proc..Init
+// Set all fields to initial values.
+inline void command::aqlite_proc_Init(command::aqlite_proc& parent) {
+    parent.path = algo::strptr("bin/aqlite");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
 inline command::atf_amc::atf_amc() {
     command::atf_amc_Init(*this);
 }

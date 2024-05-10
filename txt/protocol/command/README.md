@@ -309,6 +309,15 @@ Other ctypes in this namespace which don't have own readme files
 |e|bool|Val||Open selected records in editor|
 |binpath|algo.cstring|Val|"bin"|(internal use)|
 
+#### command.aqlite - Command line for [aqlite](/txt/exe/aqlite/README.md)
+<a href="#command-aqlite"></a>
+
+|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|in|algo.cstring|Val|"data"|Input directory or filename, - for stdin for schema|
+|data|algo.cstring|Val|"data"|Input directory for data|
+|cmd|algo.cstring|Val||Sql Query to run|
+
 #### command.atf_amc - Command line for [atf_amc](/txt/exe/atf_amc/README.md)
 <a href="#command-atf_amc"></a>
 
