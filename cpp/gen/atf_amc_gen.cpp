@@ -4839,48 +4839,6 @@ static void atf_amc::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'3b9943558be9b03e79fade60297ec50f1d4702a3'");
 }
 
-// --- atf_amc.FDb._db.StaticCheck
-void atf_amc::StaticCheck() {
-    algo_assert(sizeof(atf_amc::amctest_step_hook) == 8); // csize:atf_amc.amctest_step_hook
-    algo_assert(sizeof(atf_amc::listtype_step_hook) == 8); // csize:atf_amc.listtype_step_hook
-    algo_assert(sizeof(atf_amc::parent_callback_hook) == 8); // csize:atf_amc.parent_callback_hook
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::BitfldType1*)0)->value)*8 >= 15);
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::BitfldType2*)0)->value)*8 >= 2);
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::BitfldU128*)0)->value)*8 >= 128);
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::BitfldU16*)0)->value)*8 >= 12);
-    algo_assert(_offset_of(atf_amc::DispCase, value) + sizeof(((atf_amc::DispCase*)0)->value) == sizeof(atf_amc::DispCase));
-    algo_assert(_offset_of(atf_amc::trace, step_cd_in_msg_cycles) + sizeof(((atf_amc::trace*)0)->step_cd_in_msg_cycles) == sizeof(atf_amc::trace));
-    algo_assert(_offset_of(atf_amc::FieldId, value) + sizeof(((atf_amc::FieldId*)0)->value) == sizeof(atf_amc::FieldId));
-    algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
-    algo_assert(_offset_of(atf_amc::MsgHdrLT_curs, msglen) + sizeof(((atf_amc::MsgHdrLT_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLT_curs));
-    algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
-    algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
-    algo_assert(_offset_of(atf_amc::MsgHeader, length) == 2);
-    algo_assert(_offset_of(atf_amc::MsgHeader_curs, msglen) + sizeof(((atf_amc::MsgHeader_curs*)0)->msglen) == sizeof(atf_amc::MsgHeader_curs));
-    algo_assert(_offset_of(atf_amc::MsgLTA, a) + sizeof(((atf_amc::MsgLTA*)0)->a) == sizeof(atf_amc::MsgLTA));
-    algo_assert(_offset_of(atf_amc::MsgLTB, b) + sizeof(((atf_amc::MsgLTB*)0)->b) == sizeof(atf_amc::MsgLTB));
-    algo_assert(_offset_of(atf_amc::MsgsCase, value) + sizeof(((atf_amc::MsgsCase*)0)->value) == sizeof(atf_amc::MsgsCase));
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::NetBitfld1*)0)->value_be)*8 >= 12);
-    algo_assert(_offset_of(atf_amc::OptAlloc_curs, msglen) + sizeof(((atf_amc::OptAlloc_curs*)0)->msglen) == sizeof(atf_amc::OptAlloc_curs));
-    algo_assert(_offset_of(atf_amc::OptG_curs, msglen) + sizeof(((atf_amc::OptG_curs*)0)->msglen) == sizeof(atf_amc::OptG_curs));
-    algo_assert(_offset_of(atf_amc::OptOptG_curs, msglen) + sizeof(((atf_amc::OptOptG_curs*)0)->msglen) == sizeof(atf_amc::OptOptG_curs));
-    algo_assert(_offset_of(atf_amc::PmaskMultiple, value7) + sizeof(((atf_amc::PmaskMultiple*)0)->value7) == sizeof(atf_amc::PmaskMultiple));
-    algo_assert(_offset_of(atf_amc::PmaskU128, value71) + sizeof(((atf_amc::PmaskU128*)0)->value71) == sizeof(atf_amc::PmaskU128));
-    algo_assert(_offset_of(atf_amc::PmaskU32, value5) + sizeof(((atf_amc::PmaskU32*)0)->value5) == sizeof(atf_amc::PmaskU32));
-    algo_assert(_offset_of(atf_amc::SsimfilesCase, value) + sizeof(((atf_amc::SsimfilesCase*)0)->value) == sizeof(atf_amc::SsimfilesCase));
-    // check that bitfield fits width
-    algo_assert(sizeof(((atf_amc::TypeBE64sf*)0)->value_be)*8 >= 64);
-    algo_assert(_offset_of(atf_amc::VarlenAlloc_curs, msglen) + sizeof(((atf_amc::VarlenAlloc_curs*)0)->msglen) == sizeof(atf_amc::VarlenAlloc_curs));
-    algo_assert(_offset_of(atf_amc::VarlenExtern_curs, msglen) + sizeof(((atf_amc::VarlenExtern_curs*)0)->msglen) == sizeof(atf_amc::VarlenExtern_curs));
-    algo_assert(_offset_of(atf_amc::VarlenH_curs, msglen) + sizeof(((atf_amc::VarlenH_curs*)0)->msglen) == sizeof(atf_amc::VarlenH_curs));
-    algo_assert(_offset_of(atf_amc::VarlenK_curs, msglen) + sizeof(((atf_amc::VarlenK_curs*)0)->msglen) == sizeof(atf_amc::VarlenK_curs));
-}
-
 // --- atf_amc.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -16497,6 +16455,48 @@ void atf_amc::ForAllStrings(void (*fcn)(algo::StringDesc&) ) {
 
 // --- atf_amc...SizeCheck
 inline static void atf_amc::SizeCheck() {
+}
+
+// --- atf_amc...StaticCheck
+void atf_amc::StaticCheck() {
+    algo_assert(sizeof(atf_amc::amctest_step_hook) == 8); // csize:atf_amc.amctest_step_hook
+    algo_assert(sizeof(atf_amc::listtype_step_hook) == 8); // csize:atf_amc.listtype_step_hook
+    algo_assert(sizeof(atf_amc::parent_callback_hook) == 8); // csize:atf_amc.parent_callback_hook
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::BitfldType1*)0)->value)*8 >= 15);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::BitfldType2*)0)->value)*8 >= 2);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::BitfldU128*)0)->value)*8 >= 128);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::BitfldU16*)0)->value)*8 >= 12);
+    algo_assert(_offset_of(atf_amc::DispCase, value) + sizeof(((atf_amc::DispCase*)0)->value) == sizeof(atf_amc::DispCase));
+    algo_assert(_offset_of(atf_amc::trace, step_cd_in_msg_cycles) + sizeof(((atf_amc::trace*)0)->step_cd_in_msg_cycles) == sizeof(atf_amc::trace));
+    algo_assert(_offset_of(atf_amc::FieldId, value) + sizeof(((atf_amc::FieldId*)0)->value) == sizeof(atf_amc::FieldId));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
+    algo_assert(_offset_of(atf_amc::MsgHdrLT_curs, msglen) + sizeof(((atf_amc::MsgHdrLT_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLT_curs));
+    algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
+    algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
+    algo_assert(_offset_of(atf_amc::MsgHeader, length) == 2);
+    algo_assert(_offset_of(atf_amc::MsgHeader_curs, msglen) + sizeof(((atf_amc::MsgHeader_curs*)0)->msglen) == sizeof(atf_amc::MsgHeader_curs));
+    algo_assert(_offset_of(atf_amc::MsgLTA, a) + sizeof(((atf_amc::MsgLTA*)0)->a) == sizeof(atf_amc::MsgLTA));
+    algo_assert(_offset_of(atf_amc::MsgLTB, b) + sizeof(((atf_amc::MsgLTB*)0)->b) == sizeof(atf_amc::MsgLTB));
+    algo_assert(_offset_of(atf_amc::MsgsCase, value) + sizeof(((atf_amc::MsgsCase*)0)->value) == sizeof(atf_amc::MsgsCase));
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::NetBitfld1*)0)->value_be)*8 >= 12);
+    algo_assert(_offset_of(atf_amc::OptAlloc_curs, msglen) + sizeof(((atf_amc::OptAlloc_curs*)0)->msglen) == sizeof(atf_amc::OptAlloc_curs));
+    algo_assert(_offset_of(atf_amc::OptG_curs, msglen) + sizeof(((atf_amc::OptG_curs*)0)->msglen) == sizeof(atf_amc::OptG_curs));
+    algo_assert(_offset_of(atf_amc::OptOptG_curs, msglen) + sizeof(((atf_amc::OptOptG_curs*)0)->msglen) == sizeof(atf_amc::OptOptG_curs));
+    algo_assert(_offset_of(atf_amc::PmaskMultiple, value7) + sizeof(((atf_amc::PmaskMultiple*)0)->value7) == sizeof(atf_amc::PmaskMultiple));
+    algo_assert(_offset_of(atf_amc::PmaskU128, value71) + sizeof(((atf_amc::PmaskU128*)0)->value71) == sizeof(atf_amc::PmaskU128));
+    algo_assert(_offset_of(atf_amc::PmaskU32, value5) + sizeof(((atf_amc::PmaskU32*)0)->value5) == sizeof(atf_amc::PmaskU32));
+    algo_assert(_offset_of(atf_amc::SsimfilesCase, value) + sizeof(((atf_amc::SsimfilesCase*)0)->value) == sizeof(atf_amc::SsimfilesCase));
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::TypeBE64sf*)0)->value_be)*8 >= 64);
+    algo_assert(_offset_of(atf_amc::VarlenAlloc_curs, msglen) + sizeof(((atf_amc::VarlenAlloc_curs*)0)->msglen) == sizeof(atf_amc::VarlenAlloc_curs));
+    algo_assert(_offset_of(atf_amc::VarlenExtern_curs, msglen) + sizeof(((atf_amc::VarlenExtern_curs*)0)->msglen) == sizeof(atf_amc::VarlenExtern_curs));
+    algo_assert(_offset_of(atf_amc::VarlenH_curs, msglen) + sizeof(((atf_amc::VarlenH_curs*)0)->msglen) == sizeof(atf_amc::VarlenH_curs));
+    algo_assert(_offset_of(atf_amc::VarlenK_curs, msglen) + sizeof(((atf_amc::VarlenK_curs*)0)->msglen) == sizeof(atf_amc::VarlenK_curs));
 }
 
 // --- atf_amc.MsgHdrLTMsgs..Print

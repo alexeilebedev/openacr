@@ -68,11 +68,6 @@ static void lib_iconv::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_iconv.FDb._db.StaticCheck
-void lib_iconv::StaticCheck() {
-    algo_assert(_offset_of(lib_iconv::FieldId, value) + sizeof(((lib_iconv::FieldId*)0)->value) == sizeof(lib_iconv::FieldId));
-}
-
 // --- lib_iconv.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -283,4 +278,9 @@ void lib_iconv::Icd_Print(lib_iconv::Icd& row, algo::cstring& str) {
 
 // --- lib_iconv...SizeCheck
 inline static void lib_iconv::SizeCheck() {
+}
+
+// --- lib_iconv...StaticCheck
+void lib_iconv::StaticCheck() {
+    algo_assert(_offset_of(lib_iconv::FieldId, value) + sizeof(((lib_iconv::FieldId*)0)->value) == sizeof(lib_iconv::FieldId));
 }

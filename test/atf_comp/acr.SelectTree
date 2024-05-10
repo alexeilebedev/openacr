@@ -8,7 +8,7 @@ dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
       dmmeta.field  field:command.acr.schema  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Directory for initializing acr meta-data"
         dmmeta.floadtuples  field:command.acr.schema  comment:""
 
-      dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21
+      dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21  plaindata:N
 
 dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:""  comment:"command line"
   dmmeta.fcmdline  field:acr.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""

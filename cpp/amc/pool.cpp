@@ -43,8 +43,8 @@ static bool NeedAllocExtraQ(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Pool() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
 
     amc::FCtype& fldtype = *field.p_arg;
     if (fldtype.c_varlenfld) {
@@ -102,8 +102,8 @@ static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Pool_AllocMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
@@ -122,8 +122,8 @@ void amc::tfunc_Pool_AllocMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Pool_Alloc() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
@@ -150,8 +150,8 @@ void amc::tfunc_Pool_Alloc() {
 // -- pointer to extra (varlen portion) memory to tack onto the record,
 // and number of bytes
 void amc::tfunc_Pool_AllocExtraMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (NeedAllocExtraQ(field)) {
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddProtoArg(func, "void *", "extra");
@@ -165,8 +165,8 @@ void amc::tfunc_Pool_AllocExtraMaybe() {
 
 // Like AllocExtraMaybe, but die on out-of-memory
 void amc::tfunc_Pool_AllocExtra() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (NeedAllocExtraQ(field)) {
         vrfy_(field.p_reftype->varlen);// sanity
         amc::FFunc& func = amc::CreateCurFunc(true);
@@ -185,8 +185,8 @@ void amc::tfunc_Pool_AllocExtra() {
 
 // VarlenMaybe -- array of fixed-size structs tacked onto the end of a struct
 void amc::tfunc_Pool_AllocVarlenMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype& fldtype = *field.p_arg;
     if (fldtype.c_varlenfld) {
         amc::FFunc& func = amc::CreateCurFunc();
@@ -203,8 +203,8 @@ void amc::tfunc_Pool_AllocVarlenMaybe() {
 
 // Like VarlenMaybe, but die on out-of-memory
 void amc::tfunc_Pool_AllocVarlen() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype& fldtype = *field.p_arg;
     if (fldtype.c_varlenfld) {
         amc::FFunc& func = amc::CreateCurFunc();
@@ -218,8 +218,8 @@ void amc::tfunc_Pool_AllocVarlen() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Pool_InsertMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;// pool
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;// pool
     bool can_copy = CanCopyQ(*field.p_arg);// target type
     if (can_copy) {
         Set(R, "$Basetype", GetBaseType(*field.p_arg,NULL)->cpp_type);
@@ -274,8 +274,8 @@ amc::FField *amc::FindFieldByName(amc::FCtype &ctype, algo::strptr name) {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Pool_UpdateMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &pool = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &pool = *amc::_db.genctx.p_field;
     amc::FCtype &ctype = *pool.p_arg;
     bool can_copy = CanCopyQ(*pool.p_arg);
 
@@ -364,8 +364,8 @@ static tempstr TotlenExpr(algo_lib::Replscope &R, amc::FCtype *ctype, strptr nam
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Pool_Delete() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.p_reftype->del) {
         amc::FFunc& fdel = amc::CreateCurFunc(true);
         AddRetval(fdel,"void","","");

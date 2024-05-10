@@ -901,9 +901,6 @@ inline fm::FieldId::operator fm_FieldIdEnum () const {
 inline void fm::FieldId_Init(fm::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline fm::Protocol::Protocol() {
-}
-
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const fm::Flag &row) {// cfmt:fm.Flag.String
     fm::Flag_Print(const_cast<fm::Flag&>(row), str);

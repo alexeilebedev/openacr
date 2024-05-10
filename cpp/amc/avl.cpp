@@ -27,8 +27,8 @@
 
 //Initialize the structs etc.
 void amc::tclass_Atree(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     vrfy(field.c_sortfld, "amc.avl: sortfield must must be specified through sortfld table");
     amc::FField &sortfld   = *field.c_sortfld->p_sortfld;
 
@@ -59,8 +59,8 @@ void amc::tclass_Atree(){
 
 //Predicate function, can take parent as argument in the case of complicated comparisons.
 void amc::tfunc_Atree_ElemLt(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
 
     amc::FFunc& lt = amc::CreateCurFunc();
@@ -83,7 +83,7 @@ void amc::tfunc_Atree_ElemLt(){
 
 
 static void GenIter(strptr name, bool next){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, tempstr()<<"$name_"<<name<<"($Cpptype& node)", false);
@@ -115,7 +115,7 @@ void amc::tfunc_Atree_Next(){
 
 //Initialize Root and Number of elements
 void amc::tfunc_Atree_Init(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.body, "$Root = NULL; // ($field)");
     Ins(&R, func.body, "$NElem = 0;");
@@ -124,7 +124,7 @@ void amc::tfunc_Atree_Init(){
 
 //Returns true if the element is in tree.
 void amc::tfunc_Atree_InTreeQ(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "bool", false);
     Ins(&R, func.proto, "$name_InTreeQ($Cpptype& row)", false);
@@ -135,7 +135,7 @@ void amc::tfunc_Atree_InTreeQ(){
 //Returns true if the tree is empty.
 //Plant a tree if empty!
 void amc::tfunc_Atree_EmptyQ(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.proto, "$name_EmptyQ($Parent)", false);
     Ins(&R, func.ret  , "bool", false);
@@ -146,7 +146,7 @@ void amc::tfunc_Atree_EmptyQ(){
 
 //Given an element finds the smallest element in the subtree.
 void amc::tfunc_Atree_FirstImpl(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_FirstImpl($Cpptype* root)" , false);
@@ -158,7 +158,7 @@ void amc::tfunc_Atree_FirstImpl(){
 
 //Given an element finds the largest element in the subtree.
 void amc::tfunc_Atree_LastImpl(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_LastImpl($Cpptype* root)" , false);
@@ -171,7 +171,7 @@ void amc::tfunc_Atree_LastImpl(){
 
 //Returns the smallest element
 void amc::tfunc_Atree_First(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_First($Parent)" , false);
@@ -181,7 +181,7 @@ void amc::tfunc_Atree_First(){
 
 //Returns the largest element.
 void amc::tfunc_Atree_Last(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_Last($Parent)" , false);
@@ -191,7 +191,7 @@ void amc::tfunc_Atree_Last(){
 
 //Finds the child that violates the balance. Left child if no disbalance.
 void amc::tfunc_Atree_TallerChild(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = true;
     func.priv = true;
@@ -202,7 +202,7 @@ void amc::tfunc_Atree_TallerChild(){
 
 //Disconnect the node from its parent.
 void amc::tfunc_Atree_Disconnect(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     func.priv = true;
@@ -219,7 +219,7 @@ void amc::tfunc_Atree_Disconnect(){
 //Rotates the tree from the direction from->to
 //Assumption is that from is the child of to.
 void amc::tfunc_Atree_Turn(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     func.priv = true;
@@ -241,7 +241,7 @@ void amc::tfunc_Atree_Turn(){
 //4. Turn child onto node.
 //5. Make sure to NOT turn the grandchild into child if child is balanced(Many hours of debugging).
 void amc::tfunc_Atree_Rebalance(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_Rebalance($Cpptype& node)", false);
@@ -263,7 +263,7 @@ void amc::tfunc_Atree_Rebalance(){
 
 
 void amc::tfunc_Atree_UpdateDepth(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     func.priv = true;
@@ -278,7 +278,7 @@ void amc::tfunc_Atree_UpdateDepth(){
 //If a node needs rebalancing we rebalance and go up
 //Notice that after rebalance a node can go deeper down the tree.
 void amc::tfunc_Atree_Propagate(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.proto, "$name_Propagate($Cpptype& pnode)", false);
@@ -298,7 +298,7 @@ void amc::tfunc_Atree_Propagate(){
 //the element in the appropriate leaf.
 //Note that balance might be broken after this operation.
 void amc::tfunc_Atree_InsertImpl(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret,   "void", false);
@@ -319,7 +319,7 @@ void amc::tfunc_Atree_InsertImpl(){
 //2. Rebalance if necessary.
 //3. Assign new root.
 void amc::tfunc_Atree_Insert(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.proto,"$name_Insert($Parent, $Cpptype& row)", false);
     Ins(&R, func.ret,  "void", false);
@@ -332,7 +332,7 @@ void amc::tfunc_Atree_Insert(){
 
 //Leftbalance - Rightbalance
 void amc::tfunc_Atree_Balance(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret  , "i32", false);
@@ -346,8 +346,8 @@ void amc::tfunc_Atree_Balance(){
 //A recursive function to delete elements.
 //if del flag is set it also destroys the elements.
 void amc::tfunc_Atree_RemoveAllImpl(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField& field = *_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField& field = *_db.genctx.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
     Ins(&R, func.proto, "$name_RemoveAllImpl($Parent, $Cpptype* root, bool del)", false);
@@ -366,8 +366,8 @@ void amc::tfunc_Atree_RemoveAllImpl(){
 }
 
 void amc::tfunc_Atree_Cascdel(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (field.c_cascdel){
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.body , "$name_RemoveAllImpl($pararg, $Root, true);");
@@ -378,7 +378,7 @@ void amc::tfunc_Atree_Cascdel(){
 
 //Remove all elements without deleting them.
 void amc::tfunc_Atree_RemoveAll(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = true;
     Ins(&R, func.ret  , "void", false);
@@ -391,7 +391,7 @@ void amc::tfunc_Atree_RemoveAll(){
 
 //Remove the first element. Rebalance. Update root.
 void amc::tfunc_Atree_RemoveFirst(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
     Ins(&R, func.proto, "$name_RemoveFirst($Parent)", false);
@@ -402,7 +402,7 @@ void amc::tfunc_Atree_RemoveFirst(){
 
 //Reinsert an element
 void amc::tfunc_Atree_Reinsert(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.ret  , "void", false);
     Ins(&R, func.proto, "$name_Reinsert($Parent, $Cpptype& node)", false);
@@ -412,7 +412,7 @@ void amc::tfunc_Atree_Reinsert(){
 
 //Connect 2 elements (either can be NULL).
 void amc::tfunc_Atree_Connect(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = true;
     func.priv = true;
@@ -431,7 +431,7 @@ void amc::tfunc_Atree_Connect(){
 //4. Remove the element.
 //5. Propagate up from the next's parent.
 void amc::tfunc_Atree_Remove(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& func = amc::CreateCurFunc();
     func.inl = false;
     Ins(&R, func.ret  , "void", false);
@@ -468,8 +468,8 @@ void amc::tfunc_Atree_Remove(){
 
 //generate [.,.) range functions.
 static void GenFind(strptr name, bool greater){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField   &sortfld   = *field.c_sortfld->p_sortfld;
     amc::FFunc& func = amc::CreateCurFunc();
     Set(R, "$aval"     , FieldvalExpr(field.p_arg, sortfld, "(*result)"));
@@ -510,8 +510,8 @@ void amc::tfunc_Atree_LastLt(){
 //Generate cursor related funcs and struct.
 //Pretty straightforward since Next is done without extra state.
 void amc::tfunc_Atree_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField& field = *_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField& field = *_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
     Ins(&R, ns.curstext    , "");
     Ins(&R, ns.curstext    , "struct $Parname_$name_curs {// cursor");

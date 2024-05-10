@@ -291,11 +291,6 @@ static void aqlite::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'aqlite.Input'  signature:'72fb8587bf449500ae86e40501458dc78734e248'");
 }
 
-// --- aqlite.FDb._db.StaticCheck
-void aqlite::StaticCheck() {
-    algo_assert(_offset_of(aqlite::FieldId, value) + sizeof(((aqlite::FieldId*)0)->value) == sizeof(aqlite::FieldId));
-}
-
 // --- aqlite.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -727,6 +722,11 @@ void aqlite::TableId_Print(aqlite::TableId& row, algo::cstring& str) {
 
 // --- aqlite...SizeCheck
 inline static void aqlite::SizeCheck() {
+}
+
+// --- aqlite...StaticCheck
+void aqlite::StaticCheck() {
+    algo_assert(_offset_of(aqlite::FieldId, value) + sizeof(((aqlite::FieldId*)0)->value) == sizeof(aqlite::FieldId));
 }
 
 // --- aqlite...main

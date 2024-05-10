@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [gclidb.gact - Action that may be performed on a table](/txt/ssimdb/gclidb/gact.md)
 
 * [gclidb.gatv -](/txt/ssimdb/gclidb/gatv.md)
@@ -71,6 +72,8 @@
 * [gclidb.project - Gitlab project mr](/txt/ssimdb/gclidb/project.md)
 
 * [gclidb.user -](/txt/ssimdb/gclidb/user.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

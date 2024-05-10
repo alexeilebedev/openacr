@@ -34,8 +34,8 @@ static bool TrivialCmpQ(amc::FField &field) {
 
 // Field comparison functions
 void amc::tclass_Cmp() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     Set(R,"$Chtype",TrivialCmpQ(field) ? "int" : "u64");
     if (field.p_arg->c_cstr && field.arg != "char") {// string comparison for target type
         vrfy(field.reftype==dmmeta_Reftype_reftype_Val, "fcmp implies Val");
@@ -46,8 +46,8 @@ void amc::tclass_Cmp() {
 
 // Next char function for version sort
 void amc::tfunc_Cmp_Nextchar() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
     if (field.p_arg->c_cstr && !fcmp.extrn) {
         amc::FFunc& nextch = amc::CreateCurFunc();
@@ -88,8 +88,8 @@ void amc::tfunc_Cmp_Nextchar() {
 
 // Comparison function for field
 void amc::tfunc_Cmp_Cmp() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
     amc::FFunc& cmp = amc::CreateCurFunc();
 
@@ -140,8 +140,8 @@ void amc::tfunc_Cmp_Cmp() {
 
 // Lt function for field
 void amc::tfunc_Cmp_Lt() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFcmp          &fcmp       = *field.c_fcmp;
     amc::FFunc& lt = amc::CreateCurFunc();
 

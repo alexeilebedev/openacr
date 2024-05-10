@@ -1536,12 +1536,6 @@ static void atf_unit::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- atf_unit.FDb._db.StaticCheck
-void atf_unit::StaticCheck() {
-    algo_assert(sizeof(atf_unit::unittest_step_hook) == 8); // csize:atf_unit.unittest_step_hook
-    algo_assert(_offset_of(atf_unit::FieldId, value) + sizeof(((atf_unit::FieldId*)0)->value) == sizeof(atf_unit::FieldId));
-}
-
 // --- atf_unit.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -2921,6 +2915,12 @@ void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
 
 // --- atf_unit...SizeCheck
 inline static void atf_unit::SizeCheck() {
+}
+
+// --- atf_unit...StaticCheck
+void atf_unit::StaticCheck() {
+    algo_assert(sizeof(atf_unit::unittest_step_hook) == 8); // csize:atf_unit.unittest_step_hook
+    algo_assert(_offset_of(atf_unit::FieldId, value) + sizeof(((atf_unit::FieldId*)0)->value) == sizeof(atf_unit::FieldId));
 }
 
 // --- atf_unit...main

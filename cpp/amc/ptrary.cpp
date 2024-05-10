@@ -25,14 +25,14 @@
 #include "include/amc.h"
 
 void amc::tclass_Ptrary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     Set(R, "$Rowid", "u32");
 
-    InsVar(R, field.p_ctype     , "$Cpptype**", "$name_elems", "", "array of pointers");
-    InsVar(R, field.p_ctype     , "u32", "$name_n", "", "array of pointers");
-    InsVar(R, field.p_ctype     , "u32", "$name_max", "", "capacity of allocated array");
+    InsVar(R, field.p_ctype, "$Cpptype**", "$name_elems", "", "array of pointers");
+    InsVar(R, field.p_ctype, "u32", "$name_n", "", "array of pointers");
+    InsVar(R, field.p_ctype, "u32", "$name_max", "", "capacity of allocated array");
 
     amc::FPtrary &ptrary = *field.c_ptrary;
     if (ptrary.p_field->c_cascdel && !ptrary.unique) {
@@ -43,19 +43,19 @@ void amc::tclass_Ptrary() {
 }
 
 void amc::tfunc_Ptrary_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
     if (field.c_cascdel) {
         amc::FFunc& cascdel = amc::CreateCurFunc();
-        Ins(&R, cascdel.body    , "// Clear $name_n so that calls to $field.Remove do not have to scan");
-        Ins(&R, cascdel.body    , "// the array for pointers or shift anything.");
-        Ins(&R, cascdel.body    , "// This is somewhat of a hack.");
-        Ins(&R, cascdel.body    , "i32 n = $parname.$name_n;");
-        Ins(&R, cascdel.body    , "$parname.$name_n = 0;");
-        Ins(&R, cascdel.body    , "for (i32 i = n - 1; i >= 0; i--) {");
-        Ins(&R, cascdel.body    , "    $Cpptype &row = *$parname.$name_elems[i];");
+        Ins(&R, cascdel.body, "// Clear $name_n so that calls to $field.Remove do not have to scan");
+        Ins(&R, cascdel.body, "// the array for pointers or shift anything.");
+        Ins(&R, cascdel.body, "// This is somewhat of a hack.");
+        Ins(&R, cascdel.body, "i32 n = $parname.$name_n;");
+        Ins(&R, cascdel.body, "$parname.$name_n = 0;");
+        Ins(&R, cascdel.body, "for (i32 i = n - 1; i >= 0; i--) {");
+        Ins(&R, cascdel.body, "    $Cpptype &row = *$parname.$name_elems[i];");
         if (ptrary.unique) {
             Ins(&R, cascdel.body, "    row.$parname_$name_in_ary = false;");
         }
@@ -65,7 +65,7 @@ void amc::tfunc_Ptrary_Cascdel() {
 }
 
 void amc::tfunc_Ptrary_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.ret  , "bool", false);
@@ -74,7 +74,7 @@ void amc::tfunc_Ptrary_EmptyQ() {
 }
 
 void amc::tfunc_Ptrary_Find() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& find = amc::CreateCurFunc();
     find.inl = true;
     Ins(&R, find.ret  , "$Cpptype*", false);
@@ -89,8 +89,8 @@ void amc::tfunc_Ptrary_Find() {
 }
 
 void amc::tfunc_Ptrary_InAryQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField& field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField& field = *amc::_db.genctx.p_field;
     amc::FPtrary& ptrary = *field.c_ptrary;
     if (ptrary.unique) {
         amc::FFunc& inary = amc::CreateCurFunc();
@@ -105,7 +105,7 @@ void amc::tfunc_Ptrary_InAryQ() {
 }
 
 void amc::tfunc_Ptrary_qFind() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& find = amc::CreateCurFunc();
     find.inl = true;
     Ins(&R, find.ret  , "$Cpptype&", false);
@@ -114,7 +114,7 @@ void amc::tfunc_Ptrary_qFind() {
 }
 
 void amc::tfunc_Ptrary_qLast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& find = amc::CreateCurFunc();
     find.inl = true;
     Ins(&R, find.ret  , "$Cpptype&", false);
@@ -123,7 +123,7 @@ void amc::tfunc_Ptrary_qLast() {
 }
 
 void amc::tfunc_Ptrary_Getary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& getary = amc::CreateCurFunc();
     Ins(&R, getary.ret  , "algo::aryptr<$Cpptype*>", false);
@@ -132,7 +132,7 @@ void amc::tfunc_Ptrary_Getary() {
 }
 
 void amc::tfunc_Ptrary_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = true;
@@ -142,8 +142,8 @@ void amc::tfunc_Ptrary_Init() {
 }
 
 void amc::tfunc_Ptrary_Insert() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
     tempstr text;
@@ -176,8 +176,8 @@ void amc::tfunc_Ptrary_Insert() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ptrary_InsertMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
     if (ptrary.unique) {
         amc::FFunc& insmaybe = amc::CreateCurFunc();
@@ -195,8 +195,8 @@ void amc::tfunc_Ptrary_InsertMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ptrary_ScanInsertMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
     if (!ptrary.unique) {
         amc::FFunc& insmaybe = amc::CreateCurFunc(true);
@@ -226,7 +226,7 @@ void amc::tfunc_Ptrary_ScanInsertMaybe() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ptrary_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "i32", false);
@@ -237,8 +237,8 @@ void amc::tfunc_Ptrary_N() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ptrary_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
     tempstr text;
@@ -270,8 +270,8 @@ void amc::tfunc_Ptrary_Remove() {
 }
 
 void amc::tfunc_Ptrary_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
     amc::FFunc& removeall = amc::CreateCurFunc();
@@ -288,7 +288,7 @@ void amc::tfunc_Ptrary_RemoveAll() {
 }
 
 void amc::tfunc_Ptrary_Reserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.ret  , "void", false);
@@ -308,16 +308,16 @@ void amc::tfunc_Ptrary_Reserve() {
 }
 
 void amc::tfunc_Ptrary_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& uninit = amc::CreateCurFunc();
     Ins(&R, uninit.body, "$basepool_FreeMem($parname.$name_elems, sizeof($Cpptype*)*$parname.$name_max); // ($field)");
 }
 
 void amc::Ptrary_curs(bool once) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
     Ins(&R, ns.curstext, "");

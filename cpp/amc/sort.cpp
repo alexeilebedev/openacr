@@ -28,8 +28,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Sort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     amc::FCtype         &tgttype    = *fsort.p_field->p_arg;
     bool                 is_value   = (fsort.p_sortfld->reftype == dmmeta_Reftype_reftype_Val);
@@ -61,8 +61,8 @@ void amc::tclass_Sort() {
 }
 
 void amc::tfunc_Sort_Swap() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     bool                 is_ptr     = (field.reftype == dmmeta_Reftype_reftype_Ptrary);
     bool                 cheap_copy = amc::CheapCopyQ(field);
     // Swap
@@ -86,8 +86,8 @@ void amc::tfunc_Sort_Swap() {
 }
 
 void amc::tfunc_Sort_Rotleft() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     bool                 is_ptr     = (field.reftype == dmmeta_Reftype_reftype_Ptrary);
     bool                 cheap_copy = amc::CheapCopyQ(field);
     // Rotleft
@@ -112,8 +112,8 @@ void amc::tfunc_Sort_Rotleft() {
 }
 
 void amc::tfunc_Sort_Lt() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort         &fsort      = *field.c_fsort;
     amc::FField         &sortfld    = *fsort.p_sortfld;
     amc::FCtype         &tgttype    = *fsort.p_field->p_arg;
@@ -145,7 +145,7 @@ void amc::tfunc_Sort_Lt() {
 }
 
 void amc::tfunc_Sort_SortedQ() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
     // SortedQ
     amc::FFunc& sortedq = amc::CreateCurFunc();
     Ins(&R, sortedq.comment, "Verify whether array is sorted");
@@ -162,8 +162,8 @@ void amc::tfunc_Sort_SortedQ() {
 }
 
 void amc::tfunc_Sort_IntInsertionSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 is_ptr     = (field.reftype == dmmeta_Reftype_reftype_Ptrary);
     bool                 cheap_copy = amc::CheapCopyQ(field);
@@ -208,8 +208,8 @@ void amc::tfunc_Sort_IntInsertionSort() {
 }
 
 void amc::tfunc_Sort_IntHeapSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 need_quick = (fsort.sorttype == dmmeta_Sorttype_sorttype_QuickSort);
     bool                 need_heap  = (fsort.sorttype == dmmeta_Sorttype_sorttype_HeapSort) || need_quick;
@@ -254,8 +254,8 @@ void amc::tfunc_Sort_IntHeapSort() {
 }
 
 void amc::tfunc_Sort_IntQuickSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 is_ptr     = (field.reftype == dmmeta_Reftype_reftype_Ptrary);
     bool                 cheap_copy = amc::CheapCopyQ(field);
@@ -319,8 +319,8 @@ void amc::tfunc_Sort_IntQuickSort() {
 }
 
 void amc::tfunc_Sort_InsertionSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 need_quick = (fsort.sorttype == dmmeta_Sorttype_sorttype_QuickSort);
     bool                 need_ins   = (fsort.sorttype == dmmeta_Sorttype_sorttype_InsertionSort) || need_quick;
@@ -337,8 +337,8 @@ void amc::tfunc_Sort_InsertionSort() {
 }
 
 void amc::tfunc_Sort_HeapSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 need_quick = (fsort.sorttype == dmmeta_Sorttype_sorttype_QuickSort);
     bool                 need_heap  = (fsort.sorttype == dmmeta_Sorttype_sorttype_HeapSort) || need_quick;
@@ -355,8 +355,8 @@ void amc::tfunc_Sort_HeapSort() {
 }
 
 void amc::tfunc_Sort_QuickSort() {
-    algo_lib::Replscope &R          = amc::_db.genfield.R;
-    amc::FField         &field      = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FFsort          &fsort       = *field.c_fsort;
     bool                 need_quick = (fsort.sorttype == dmmeta_Sorttype_sorttype_QuickSort);
     // Quick Sort

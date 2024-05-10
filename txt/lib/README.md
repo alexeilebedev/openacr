@@ -3,6 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
+<!-- TOC_BEG AUTO -->
 * [algo_lib - Support library for all executables](/txt/lib/algo_lib/README.md)
 
 * [lib_amcdb - Library used by amc](/txt/lib/lib_amcdb/README.md)
@@ -28,4 +29,6 @@
 * [lib_sql - SQL formatting functions](/txt/lib/lib_sql/README.md)
 
 * [lib_sqlite -](/txt/lib/lib_sqlite/README.md)
+
+<!-- TOC_END AUTO -->
 

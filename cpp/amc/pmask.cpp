@@ -91,8 +91,8 @@ void amc::tclass_Pmask() {
 
 // Create multiple functions, one for each pmask of which this field is a member
 void amc::tfunc_Pmask_PresentQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
         Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
@@ -117,8 +117,8 @@ tempstr amc::SetPresentExpr(amc::FField &field, strptr parent) {
 
 // Create multiple functions, one for each pmask of which this field is a member
 void amc::tfunc_Pmask_SetPresent() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
         Set(R,"$pmask",name_Get(*pmaskfld_member.p_pmaskfld->p_field));
@@ -132,8 +132,8 @@ void amc::tfunc_Pmask_SetPresent() {
 
 // Create multiple functions, one for each pmask of which this field is a member
 void amc::tfunc_Pmask_GetBit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
         Set(R,"$Present",pmaskfld_member.p_pmaskfld->funcname);

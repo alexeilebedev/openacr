@@ -10,6 +10,7 @@
 |Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gitfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|Pkey|
+|readmecat|[dev.Readmecat](/txt/ssimdb/dev/readmecat.md)|Pkey||<br>/LR/LL of gitfile|
 |inl|bool|Val|
 |sandbox|bool|Val|
 |filter|algo.Smallstr100|Val|

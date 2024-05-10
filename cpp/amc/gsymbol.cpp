@@ -42,7 +42,7 @@ static tempstr ResolveGsymboltype(amc::FGsymbol &gsymbol) {
 // Generate regular c++ symbols from tables
 void amc::gen_ns_gsymbol() {
     amc::FNs &ns =*amc::_db.c_ns;
-    amc::_db.genfield.p_field = NULL;
+    amc::_db.genctx.p_field = NULL;
     ind_beg(amc::ns_c_gsymbol_curs, gsymbol,ns) {
         algo_lib::Regx regx;
         (void)Regx_ReadSql(regx, tempstr() <<"%("<<gsymbol.inc<<")%", true);

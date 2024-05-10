@@ -78,12 +78,12 @@ enum { abt_TableIdEnum_N = 28 };
 
 namespace abt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace abt { // gen:ns_field
+namespace abt { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
 extern const char *abt_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Arch; }
 namespace dev { struct Cfg; }
@@ -729,8 +729,6 @@ void                 Step();
 // func:abt.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:abt.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:abt.FDb._db.InsertStrptrMaybe
@@ -3233,6 +3231,8 @@ struct target_c_alllib_curs {// fcurs:abt.FTarget.c_alllib/curs
 
 } // gen:ns_curstext
 namespace abt { // gen:ns_func
+// func:abt...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:abt...main
 int                  main(int argc, char **argv);

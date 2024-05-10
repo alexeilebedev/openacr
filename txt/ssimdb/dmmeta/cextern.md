@@ -12,6 +12,7 @@
 |ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||Ctype in question|
 |initmemset|bool|Val||Initialize using memset? (set this to Y for all C structs)|
 |isstruct|bool|Val|
+|plaindata|bool|Val|
 
 ### Used In Executables
 <a href="#used-in-executables"></a>

@@ -37,8 +37,8 @@ enum { lib_mysql_FieldIdEnum_N = 1 };
 
 namespace lib_mysql { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_mysql { // gen:ns_field
-} // gen:ns_field
+namespace lib_mysql { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_mysql { struct trace; }
 namespace lib_mysql { struct FDb; }
@@ -71,8 +71,6 @@ struct FDb { // lib_mysql.FDb: In-memory database for lib_mysql
 // func:lib_mysql.FDb.res.XrefMaybe
 bool                 res_XrefMaybe(lib_mysql::Res &row);
 
-// func:lib_mysql.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_mysql.FDb._db.InsertStrptrMaybe
@@ -189,6 +187,8 @@ void                 Res_Init(lib_mysql::Res& res);
 void                 Res_Uninit(lib_mysql::Res& res) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_mysql { // gen:ns_func
+// func:lib_mysql...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

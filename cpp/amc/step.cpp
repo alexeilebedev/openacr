@@ -28,8 +28,8 @@ void amc::tclass_Step() {
 }
 
 void amc::tfunc_Step_UpdateCycles() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     amc::FFunc& func = amc::CreateCurFunc();
     func.priv        = !amc::ExternStepQ(fstep);
@@ -49,7 +49,7 @@ void amc::tfunc_Step_UpdateCycles() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Step_Step() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& step = amc::CreateCurFunc();
     Ins(&R, step.proto  , "$name_Step()",false);
     Ins(&R, step.ret  , "void",false);
@@ -59,9 +59,9 @@ void amc::tfunc_Step_Step() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Step_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& init = amc::CreateCurFunc();
-    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     init.inl = false;
 
@@ -136,8 +136,8 @@ static tempstr GetStepCond(amc::FField &field, amc::FFstep &fstep) {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Step_Call() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
 
     amc::FFunc& call = amc::CreateCurFunc();
@@ -190,8 +190,8 @@ void amc::tfunc_Step_Call() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Step_FirstChanged() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     if (field.need_firstchanged) {
         amc::FFunc& chg = amc::CreateCurFunc();
@@ -227,8 +227,8 @@ void amc::tfunc_Step_FirstChanged() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Step_SetDelay() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
         amc::FFunc& func = amc::CreateCurFunc();

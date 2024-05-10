@@ -322,11 +322,6 @@ static void sv2ssim::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'sv2ssim.Input'  signature:'af79eaf9b4ed5338f63e526d8cc7f32e470fe2ad'");
 }
 
-// --- sv2ssim.FDb._db.StaticCheck
-void sv2ssim::StaticCheck() {
-    algo_assert(_offset_of(sv2ssim::FieldId, value) + sizeof(((sv2ssim::FieldId*)0)->value) == sizeof(sv2ssim::FieldId));
-}
-
 // --- sv2ssim.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1717,6 +1712,11 @@ void sv2ssim::TableId_Print(sv2ssim::TableId& row, algo::cstring& str) {
 
 // --- sv2ssim...SizeCheck
 inline static void sv2ssim::SizeCheck() {
+}
+
+// --- sv2ssim...StaticCheck
+void sv2ssim::StaticCheck() {
+    algo_assert(_offset_of(sv2ssim::FieldId, value) + sizeof(((sv2ssim::FieldId*)0)->value) == sizeof(sv2ssim::FieldId));
 }
 
 // --- sv2ssim...main

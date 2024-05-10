@@ -72,11 +72,6 @@ static void lib_git::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_git.FDb._db.StaticCheck
-void lib_git::StaticCheck() {
-    algo_assert(_offset_of(lib_git::FieldId, value) + sizeof(((lib_git::FieldId*)0)->value) == sizeof(lib_git::FieldId));
-}
-
 // --- lib_git.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -267,4 +262,9 @@ void lib_git::FieldId_Print(lib_git::FieldId& row, algo::cstring& str) {
 
 // --- lib_git...SizeCheck
 inline static void lib_git::SizeCheck() {
+}
+
+// --- lib_git...StaticCheck
+void lib_git::StaticCheck() {
+    algo_assert(_offset_of(lib_git::FieldId, value) + sizeof(((lib_git::FieldId*)0)->value) == sizeof(lib_git::FieldId));
 }

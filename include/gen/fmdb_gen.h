@@ -63,8 +63,8 @@ namespace fmdb { // gen:ns_pkeytypedef
     typedef fm::Objtype AlmObjtypePkey;
     typedef fm::Source AlmSourcePkey;
 } // gen:ns_pkeytypedef
-namespace fmdb { // gen:ns_field
-} // gen:ns_field
+namespace fmdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace fmdb { struct Alarm; }
 namespace fmdb { struct AlmCode; }

@@ -56,12 +56,12 @@ enum { amc_vis_TableIdEnum_N = 8 };
 namespace amc_vis { // gen:ns_pkeytypedef
     typedef i32 OutrowPkey;
 } // gen:ns_pkeytypedef
-namespace amc_vis { // gen:ns_field
+namespace amc_vis { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
 extern const char *amc_vis_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace amc_vis { struct FCtype; }
@@ -392,8 +392,6 @@ void                 Step();
 // func:amc_vis.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:amc_vis.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:amc_vis.FDb._db.InsertStrptrMaybe
@@ -2212,6 +2210,8 @@ struct outrow_text_curs {// cursor
 
 } // gen:ns_curstext
 namespace amc_vis { // gen:ns_func
+// func:amc_vis...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:amc_vis...main
 int                  main(int argc, char **argv);

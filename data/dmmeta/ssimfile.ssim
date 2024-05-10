@@ -47,6 +47,7 @@ dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
+dmmeta.ssimfile  ssimfile:dev.readmecat  ctype:dev.Readmecat
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile

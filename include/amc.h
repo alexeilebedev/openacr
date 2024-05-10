@@ -624,7 +624,7 @@ namespace amc { // update-hdr
     amc::Funcarg* AddTypearg(amc::FFunc &func, strptr type);
     void SetPresent(amc::FFunc &func, strptr ref, amc::FField &field);
 
-    // Create function for current field (amc::_db.genfield.p_field) & tfunc (amc::_db.genfield.p_tfunc)
+    // Create function for current field (amc::_db.genctx.p_field) & tfunc (amc::_db.genctx.p_tfunc)
     // The function name is constructed from the field name and the tfunc name, e.g. "field_FuncName"
     // unless an explicit function name is passed through argument FUNCNAME.
     //
@@ -719,6 +719,13 @@ namespace amc { // update-hdr
     // void gen_xref_parent();
     // void gen_datafld();
     // void gen_ctype_toposort();
+    void PlaindataVisit(amc::FCtype &ctype);
+
+    // recursively determine for each type whether it's "plaindata".
+    // set ctype.plaindata flag.
+    // plaindata structs can be copied with memcpy.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_plaindata();
     tempstr Argtype(amc::FField &field);
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_prep_ctype();
@@ -755,7 +762,6 @@ namespace amc { // update-hdr
     // void gen_ns_check_path();
     // void gen_ns_pkeytypedef();
     // void gen_ns_enums();
-    // void gen_ns_field();
     // void gen_ns_include();
     // void gen_ns_funcindex();
 
@@ -797,7 +803,6 @@ namespace amc { // update-hdr
     // void tfunc_Global_Steps();
     // void tfunc_Global_Step();
     // void tfunc_Global_Main();
-    // void tfunc_Global_StaticCheck();
 
     // Return TRUE if FIELD (in command line context) requires no argument
     // This is true for bool fields or fields with "emptyval" provided
@@ -1388,9 +1393,8 @@ namespace amc { // update-hdr
     // cpp/amc/protocol.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void tclass_Protocol();
-    // void tfunc_Protocol_StaticCheck();
-    // void gen_prep_proto();
+    // void tclass_Ns();
+    // void tfunc_Ns_StaticCheck();
 
     // -------------------------------------------------------------------
     // cpp/amc/ptr.cpp
@@ -1495,6 +1499,7 @@ namespace amc { // update-hdr
     // Recursively compute sizes of all ctypes,
     // and generate per-namespace SizeCheck function,
     // asserting that amc-computed sizes are the same as gcc-computed sizes.
+    // The sizes are computed by scanning the actual generated struct for each ctype.
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_compute_size();
 
@@ -1655,10 +1660,10 @@ namespace amc { // update-hdr
     //
 
     // Call tclass, tfunc, and cursor generators for this template
-    // Context is provided via _db.genfield:
-    // - genfield.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
-    // - genfield.p_ctype   --- current ctype, never NULL
-    // - genfield.p_tfunc   --- pointer to tfunc, never NULL
+    // Context is provided via _db.genctx:
+    // - genctx.p_field   --- field pointer (NULL for tclass, cursor, and Ctype, set for individual fields)
+    // - genctx.p_ctype   --- current ctype, never NULL
+    // - genctx.p_tfunc   --- pointer to tfunc, never NULL
     // First, the tclass function is called
     // Then, for each tfunc, its function is called
     // The tfunc may be a cursor generator (as indicated by tcurs table)
@@ -1676,13 +1681,14 @@ namespace amc { // update-hdr
     // Each field triggers zero or more tclass generators
     // (template class, no relation to C++ notion of template or class)
     // based on its type and associated records, and each tclass generates zero or more tfuncs
-    void GenTclass_Fields(amc::FCtype &ctype);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gen_ns_tclass_field();
 
     // Call tfunc generators without field context (Ctype generators)
     // This must be called after field-specific generators, since by this time
     // ctype sizes have been computed.
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void gen_ns_ctype();
+    // void gen_ns_tclass_ctype();
+    // void gen_ns_tclass_ns();
 
     // -------------------------------------------------------------------
     // cpp/amc/thash.cpp -- Hash tables

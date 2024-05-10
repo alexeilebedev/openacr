@@ -36,8 +36,8 @@ enum { lib_amcdb_FieldIdEnum_N = 1 };
 
 namespace lib_amcdb { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_amcdb { // gen:ns_field
-} // gen:ns_field
+namespace lib_amcdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_amcdb { struct FieldId; }
 namespace lib_amcdb { // gen:ns_print_struct

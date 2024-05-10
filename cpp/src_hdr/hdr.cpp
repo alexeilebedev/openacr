@@ -179,10 +179,10 @@ static void UpdateCopyrightYear(algo::cstring &years, int year) {
 // Copyright (C) 2021-2013 Company Name
 static void ParseCopyright(algo::strptr text, algo::strptr &years, algo::strptr &company) {
     if (text != "" && algo_lib::DigitCharQ(text.elems[0])) {
-        years=Trimmed(Pathcomp(text, " LL"));
+        years=Pathcomp(text, " LL");
         company=Trimmed(Pathcomp(text, " LR"));
     } else {
-        years=Trimmed(Pathcomp(text, " RR"));
+        years=Pathcomp(text, " RR");
         company=Trimmed(Pathcomp(text, " RL"));
     }
 }

@@ -79,8 +79,8 @@ static void Thash_Check(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Thash() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FThash &thash = *field.c_thash;
     amc::FField        *hashfld   = thash.p_hashfld;
 
@@ -104,7 +104,7 @@ void amc::tclass_Thash() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_Find() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& find = amc::CreateCurFunc();
     Ins(&R, find.ret  , "$Cpptype*", false);
@@ -124,7 +124,7 @@ void amc::tfunc_Thash_Find() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_FindX() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& findx = amc::CreateCurFunc();
     Ins(&R, findx.ret  , "$Cpptype&", false);
@@ -137,7 +137,7 @@ void amc::tfunc_Thash_FindX() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_Reserve() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.ret  , "void", false);
@@ -226,8 +226,8 @@ static bool CanGetOrCreateQ(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_GetOrCreate() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField *inst = FirstInst(*field.p_arg);
     amc::FThash &thash = *field.c_thash;
     // this function must always succeed!
@@ -270,7 +270,7 @@ void amc::tfunc_Thash_GetOrCreate() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
     Ins(&R, nitems.ret  , "i32", false);
@@ -279,7 +279,7 @@ void amc::tfunc_Thash_N() {
 }
 
 void amc::tfunc_Thash_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.ret  , "bool", false);
@@ -288,8 +288,8 @@ void amc::tfunc_Thash_EmptyQ() {
 }
 
 void amc::tfunc_Thash_InsertMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FThash &thash = *field.c_thash;
 
     amc::FFunc& ins = amc::CreateCurFunc();
@@ -324,8 +324,8 @@ void amc::tfunc_Thash_InsertMaybe() {
 }
 
 void amc::tfunc_Thash_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.c_cascdel) {
         amc::FFunc& cascdel = amc::CreateCurFunc();// already exists!
@@ -343,7 +343,7 @@ void amc::tfunc_Thash_Cascdel() {
 }
 
 void amc::tfunc_Thash_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& rem = amc::CreateCurFunc();
     Ins(&R, rem.ret  , "void", false);
@@ -364,8 +364,8 @@ void amc::tfunc_Thash_Remove() {
 }
 
 void amc::tfunc_Thash_FindRemove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.c_findrem) {
         amc::FFunc& findrem = amc::CreateCurFunc();
@@ -390,7 +390,7 @@ void amc::tfunc_Thash_FindRemove() {
 }
 
 void amc::tfunc_Thash_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
@@ -406,8 +406,8 @@ void amc::tfunc_Thash_Init() {
 }
 
 void amc::tfunc_Thash_Uninit() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     amc::FFunc& uninit = amc::CreateCurFunc();
     if (GlobalQ(*field.p_ctype)) {
@@ -420,8 +420,8 @@ void amc::tfunc_Thash_Uninit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Thash_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     Set(R, "$curspararg", ch_N(Subst(R,"$pararg")) ? "*curs.$parname" : "");
 
     Ins(&R, ns.curstext    , "");

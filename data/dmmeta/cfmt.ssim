@@ -448,6 +448,7 @@ dmmeta.cfmt  cfmt:dev.Package.String  printfmt:Tuple  read:Y  print:Y  sep:""  g
 dmmeta.cfmt  cfmt:dev.Pkgdep.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Pkgkey.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Readme.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:dev.Readmecat.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Sandbox.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Sbpath.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:dev.Scriptfile.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

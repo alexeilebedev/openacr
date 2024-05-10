@@ -215,6 +215,7 @@ static int ComputeCtypeSize(amc::FCtype *ctype) {
 // Recursively compute sizes of all ctypes,
 // and generate per-namespace SizeCheck function,
 // asserting that amc-computed sizes are the same as gcc-computed sizes.
+// The sizes are computed by scanning the actual generated struct for each ctype.
 void amc::gen_compute_size() {
     amc::_db.c_u64 = amc::ind_ctype_Find("u64");
     ind_beg(amc::_db_csize_curs,csize,amc::_db) {
@@ -241,6 +242,7 @@ void amc::gen_compute_size() {
                     ctypelen.len = ctype.totsize_byte;
                     ctypelen.alignment = ctype.alignment;
                     ctypelen.padbytes = ctype.n_padbytes;
+                    ctypelen.plaindata = ctype.plaindata;// save this, useful
                     amc::ctypelen_InsertMaybe(ctypelen);// create it
                     if (ctype.p_ns->c_nsx && ctype.p_ns->c_nsx->pack) {
                         check->body << ctype.sizecheck;

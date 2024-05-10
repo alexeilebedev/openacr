@@ -2,4 +2,4 @@ dev.package  package:amc  baseref:HEAD  origin:../openacr  comment:"Algo model c
 dev.package  package:ams  baseref:HEAD  origin:.  comment:"Algo Messaging System middleware"
 dev.package  package:apm  baseref:HEAD  origin:../openacr  comment:"Algo Package Manager"
 dev.package  package:gcli  baseref:HEAD  origin:.  comment:"Gcli tool"
-dev.package  package:openacr  baseref:6112ae0c45f9fdb720a87458b1472548d7c901f4  origin:../openacr  comment:"OpenACR distribution (includes other packages)"
+dev.package  package:openacr  baseref:HEAD  origin:../openacr  comment:"OpenACR distribution (includes other packages)"

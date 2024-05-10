@@ -336,6 +336,9 @@ inline void dev::Readme_Init(dev::Readme& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
 }
+inline dev::Readmecat::Readmecat() {
+}
+
 inline dev::Sandbox::Sandbox() {
 }
 
@@ -567,6 +570,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgkey &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
     dev::Readme_Print(const_cast<dev::Readme&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmecat &row) {// cfmt:dev.Readmecat.String
+    dev::Readmecat_Print(const_cast<dev::Readmecat&>(row), str);
     return str;
 }
 

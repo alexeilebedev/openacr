@@ -735,11 +735,6 @@ static void acr_compl::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_compl.Input'  signature:'af49159b85d99a9b207d2eacdc5453c1f73d8e4b'");
 }
 
-// --- acr_compl.FDb._db.StaticCheck
-void acr_compl::StaticCheck() {
-    algo_assert(_offset_of(acr_compl::FieldId, value) + sizeof(((acr_compl::FieldId*)0)->value) == sizeof(acr_compl::FieldId));
-}
-
 // --- acr_compl.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -4316,6 +4311,11 @@ void acr_compl::TableId_Print(acr_compl::TableId& row, algo::cstring& str) {
 
 // --- acr_compl...SizeCheck
 inline static void acr_compl::SizeCheck() {
+}
+
+// --- acr_compl...StaticCheck
+void acr_compl::StaticCheck() {
+    algo_assert(_offset_of(acr_compl::FieldId, value) + sizeof(((acr_compl::FieldId*)0)->value) == sizeof(acr_compl::FieldId));
 }
 
 // --- acr_compl...main

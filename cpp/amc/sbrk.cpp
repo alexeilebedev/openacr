@@ -26,15 +26,15 @@
 #include "include/amc.h"
 
 void amc::tclass_Sbrk() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     InsVar(R, field.p_ctype, "u64", "$name_huge_limit", "", "Huge page limit in bytes -- set to 0 with fork!");
     InsVar(R, field.p_ctype, "u64", "$name_huge_alloc", "", "Huge page bytes allocated");
     InsVar(R, field.p_ctype, "bool", "$name_zeromem", "", "Zero allocated memory");
 }
 
 void amc::tfunc_Sbrk_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& allocmem = amc::CreateCurFunc();
     Ins(&R, allocmem.ret     , "void*", false);
@@ -91,7 +91,7 @@ void amc::tfunc_Sbrk_AllocMem() {
 }
 
 void amc::tfunc_Sbrk_FreeMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& freemem = amc::CreateCurFunc();
     Ins(&R, freemem.ret  , "void", false);
@@ -108,7 +108,7 @@ void amc::tfunc_Sbrk_FreeMem() {
 }
 
 void amc::tfunc_Sbrk_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;

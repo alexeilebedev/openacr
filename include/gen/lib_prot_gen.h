@@ -36,8 +36,8 @@ enum { lib_prot_FieldIdEnum_N = 1 };
 
 namespace lib_prot { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_prot { // gen:ns_field
-} // gen:ns_field
+namespace lib_prot { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_prot { struct FieldId; }
 namespace lib_prot { // gen:ns_print_struct

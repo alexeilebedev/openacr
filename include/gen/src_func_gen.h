@@ -62,9 +62,9 @@ enum { src_func_TableIdEnum_N = 12 };
 
 namespace src_func { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace src_func { // gen:ns_field
+namespace src_func { // gen:ns_tclass_field
 extern const char *src_func_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace src_func { struct FTargsrc; }
 namespace src_func { struct FTarget; }
@@ -97,9 +97,10 @@ namespace src_func { // gen:ns_print_struct
 // global access: ind_ctypelen (Thash)
 struct FCtypelen { // src_func.FCtypelen
     algo::Smallstr100      ctype;               // Identifies the Ctype
-    u32                    len;                 //   0
-    i32                    alignment;           //   0
-    i32                    padbytes;            //   0
+    u32                    len;                 //   0  (calculated) length of the C++ struct in bytes
+    i32                    alignment;           //   0  (calculated) alignment for the struct
+    i32                    padbytes;            //   0  (calculated) total # of pad bytes
+    bool                   plaindata;           //   false  (calculated) this struct can me safely memcpy'ed
     src_func::FCtypelen*   ind_ctypelen_next;   // hash next
 private:
     friend src_func::FCtypelen& ctypelen_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -232,8 +233,6 @@ void                 Step();
 // func:src_func.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:src_func.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:src_func.FDb._db.InsertStrptrMaybe
@@ -1332,6 +1331,8 @@ struct targsrc_zd_func_curs {// fcurs:src_func.FTargsrc.zd_func/curs
 
 } // gen:ns_curstext
 namespace src_func { // gen:ns_func
+// func:src_func...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:src_func...main
 int                  main(int argc, char **argv);

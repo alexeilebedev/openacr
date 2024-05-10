@@ -26,8 +26,8 @@
 
 
 void amc::tclass_Blkpool() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *field.p_ctype->p_ns;
 
     Ins(&R, *ns.hdr, "struct $name_Bpbuf {");
@@ -50,7 +50,7 @@ void amc::tclass_Blkpool() {
 }
 
 void amc::tfunc_Blkpool_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& allocmem = amc::CreateCurFunc();
     Ins(&R, allocmem.comment, "Allocate n bytes. If no memory available, return NULL.");
     Ins(&R, allocmem.comment, "If requested block size exceeds Blkpool buffer size, or out-of-memory, return NULL");
@@ -92,7 +92,7 @@ void amc::tfunc_Blkpool_AllocMem() {
 }
 
 void amc::tfunc_Blkpool_SetBufferSize() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& setbufsize = amc::CreateCurFunc();
     Ins(&R, setbufsize.ret  , "void", false);
     Ins(&R, setbufsize.comment, "Set size of all future buffers to NBYTES each.");
@@ -101,7 +101,7 @@ void amc::tfunc_Blkpool_SetBufferSize() {
 }
 
 void amc::tfunc_Blkpool_ReserveBuffers() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.ret  , "bool", false);
     Ins(&R, reserve.proto, "$name_ReserveBuffers($Parent, u32 nbuf, u32 size)", false);
@@ -122,7 +122,7 @@ void amc::tfunc_Blkpool_ReserveBuffers() {
 }
 
 void amc::tfunc_Blkpool_FreeMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& freemem = amc::CreateCurFunc();
     Ins(&R, freemem.ret  , "void", false);
     Ins(&R, freemem.proto, "$name_FreeMem($Parent, $Cpptype *row, size_t size)", false);
@@ -146,7 +146,7 @@ void amc::tfunc_Blkpool_FreeMem() {
 }
 
 void amc::tfunc_Blkpool_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
     Ins(&R, init.body, "$parname.$name_buf_dflt_size   = 4096;");

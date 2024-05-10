@@ -377,11 +377,6 @@ static void acr_dm::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- acr_dm.FDb._db.StaticCheck
-void acr_dm::StaticCheck() {
-    algo_assert(_offset_of(acr_dm::FieldId, value) + sizeof(((acr_dm::FieldId*)0)->value) == sizeof(acr_dm::FieldId));
-}
-
 // --- acr_dm.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1457,6 +1452,11 @@ void acr_dm::FieldId_Print(acr_dm::FieldId& row, algo::cstring& str) {
 
 // --- acr_dm...SizeCheck
 inline static void acr_dm::SizeCheck() {
+}
+
+// --- acr_dm...StaticCheck
+void acr_dm::StaticCheck() {
+    algo_assert(_offset_of(acr_dm::FieldId, value) + sizeof(((acr_dm::FieldId*)0)->value) == sizeof(acr_dm::FieldId));
 }
 
 // --- acr_dm...main

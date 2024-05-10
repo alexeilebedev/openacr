@@ -245,11 +245,6 @@ static void ssim2csv::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- ssim2csv.FDb._db.StaticCheck
-void ssim2csv::StaticCheck() {
-    algo_assert(_offset_of(ssim2csv::FieldId, value) + sizeof(((ssim2csv::FieldId*)0)->value) == sizeof(ssim2csv::FieldId));
-}
-
 // --- ssim2csv.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1383,6 +1378,11 @@ void ssim2csv::FieldId_Print(ssim2csv::FieldId& row, algo::cstring& str) {
 
 // --- ssim2csv...SizeCheck
 inline static void ssim2csv::SizeCheck() {
+}
+
+// --- ssim2csv...StaticCheck
+void ssim2csv::StaticCheck() {
+    algo_assert(_offset_of(ssim2csv::FieldId, value) + sizeof(((ssim2csv::FieldId*)0)->value) == sizeof(ssim2csv::FieldId));
 }
 
 // --- ssim2csv...main

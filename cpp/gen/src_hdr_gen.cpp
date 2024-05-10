@@ -325,11 +325,6 @@ static void src_hdr::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_hdr.Input'  signature:'eedf70958929d3625b0910fd6de7b646dce50d54'");
 }
 
-// --- src_hdr.FDb._db.StaticCheck
-void src_hdr::StaticCheck() {
-    algo_assert(_offset_of(src_hdr::FieldId, value) + sizeof(((src_hdr::FieldId*)0)->value) == sizeof(src_hdr::FieldId));
-}
-
 // --- src_hdr.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -2814,6 +2809,11 @@ void src_hdr::TableId_Print(src_hdr::TableId& row, algo::cstring& str) {
 
 // --- src_hdr...SizeCheck
 inline static void src_hdr::SizeCheck() {
+}
+
+// --- src_hdr...StaticCheck
+void src_hdr::StaticCheck() {
+    algo_assert(_offset_of(src_hdr::FieldId, value) + sizeof(((src_hdr::FieldId*)0)->value) == sizeof(src_hdr::FieldId));
 }
 
 // --- src_hdr...main

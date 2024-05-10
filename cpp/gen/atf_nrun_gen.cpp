@@ -282,11 +282,6 @@ static void atf_nrun::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- atf_nrun.FDb._db.StaticCheck
-void atf_nrun::StaticCheck() {
-    algo_assert(_offset_of(atf_nrun::FieldId, value) + sizeof(((atf_nrun::FieldId*)0)->value) == sizeof(atf_nrun::FieldId));
-}
-
 // --- atf_nrun.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1026,6 +1021,11 @@ void atf_nrun::FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) {
 
 // --- atf_nrun...SizeCheck
 inline static void atf_nrun::SizeCheck() {
+}
+
+// --- atf_nrun...StaticCheck
+void atf_nrun::StaticCheck() {
+    algo_assert(_offset_of(atf_nrun::FieldId, value) + sizeof(((atf_nrun::FieldId*)0)->value) == sizeof(atf_nrun::FieldId));
 }
 
 // --- atf_nrun...main

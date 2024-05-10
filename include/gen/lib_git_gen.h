@@ -36,8 +36,8 @@ enum { lib_git_FieldIdEnum_N = 1 };
 
 namespace lib_git { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_git { // gen:ns_field
-} // gen:ns_field
+namespace lib_git { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_git { struct trace; }
 namespace lib_git { struct FDb; }
@@ -63,8 +63,6 @@ struct FDb { // lib_git.FDb: In-memory database for lib_git
     lib_git::trace   trace;   //
 };
 
-// func:lib_git.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_git.FDb._db.InsertStrptrMaybe
@@ -151,6 +149,8 @@ void                 FieldId_Init(lib_git::FieldId& parent);
 void                 FieldId_Print(lib_git::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_git { // gen:ns_func
+// func:lib_git...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

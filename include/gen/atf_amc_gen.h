@@ -294,7 +294,7 @@ namespace atf_amc { // gen:ns_pkeytypedef
     typedef i32 TypeAPkey;
     typedef i32 TypeSPkey;
 } // gen:ns_pkeytypedef
-namespace atf_amc { // gen:ns_field
+namespace atf_amc { // gen:ns_tclass_field
 extern const char *atf_amc_help;
 struct varlen_extern_Lpblock {
     varlen_extern_Lpblock* next;
@@ -308,7 +308,7 @@ struct varlenalloc_Lpblock {
 struct optg_Lpblock {
     optg_Lpblock* next;
 };
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Amctest; }
 namespace atf_amc { struct FCascdel; }
@@ -2978,8 +2978,6 @@ void                 Step();
 // func:atf_amc.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:atf_amc.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:atf_amc.FDb._db.InsertStrptrMaybe
@@ -11388,6 +11386,8 @@ void                 listtype_zs(atf_amc::FListtype&);
 // func:atf_amc...listtype_zsl
 // this function is 'extrn' and implemented by user
 void                 listtype_zsl(atf_amc::FListtype&);
+// func:atf_amc...StaticCheck
+void                 StaticCheck();
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len

@@ -1,16 +1,17 @@
 ## amc - Algo Model Compiler: generate code under include/gen and cpp/gen
 <a href="#amc"></a>
 For the philosophy behind the generative approach, and an explanation
-of concepts, see [Introduction To AMC](/txt/exe/amc/intro.md)
+of concepts, see [Introduction To AMC](/txt/fun/cpp/intro.md)
 
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [AMC Enumerated Types](/txt/exe/amc/enum.md)
 
 * [AMC Subprocess Invocation](/txt/exe/amc/exec.md)
 
-* [AMC Intro](/txt/exe/amc/intro.md)
+* [AMC Presence Masks](/txt/exe/amc/pmask.md)
 
 * [AMC Memory Pools](/txt/exe/amc/pools.md)
 
@@ -27,6 +28,8 @@ of concepts, see [Introduction To AMC](/txt/exe/amc/intro.md)
 * [AMC Strings](/txt/exe/amc/strings.md)
 
 * [AMC Cross-References (xrefs)](/txt/exe/amc/xref.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

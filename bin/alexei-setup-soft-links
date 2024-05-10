@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (C) 2023 AlgoRND
+# Copyright (C) 2023-2024 AlgoRND
 #
 # License: GPL
 # This program is free software: you can redistribute it and/or modify
@@ -18,4 +18,5 @@
 
 set -x
 ln -sf $PWD/conf/emacs.el $HOME/.emacs
+ln -sf $PWD/conf/elisp $HOME/elisp
 ln -sf $PWD/conf/alexei/bash_profile $HOME/.bash_profile

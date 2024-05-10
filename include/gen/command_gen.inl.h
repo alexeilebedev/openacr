@@ -57,9 +57,6 @@ inline command::FieldId::operator command_FieldIdEnum () const {
 inline void command::FieldId_Init(command::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline command::Protocol::Protocol() {
-}
-
 inline command::abt::abt() {
     command::abt_Init(*this);
 }

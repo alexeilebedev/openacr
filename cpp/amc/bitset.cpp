@@ -26,8 +26,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Bitset() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     amc::FFbitset &fbitset = *field.c_fbitset;
     amc::FCtype &elemtype = *field.p_arg;
 
@@ -47,8 +47,8 @@ void amc::tclass_Bitset() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_N() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     bool singleval = !field.c_inlary && !field.c_tary;
     // support single-element bitset
     if (singleval) {
@@ -64,8 +64,8 @@ void amc::tfunc_Bitset_N() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qFind() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     bool singleval = !field.c_inlary && !field.c_tary;
     if (singleval) {
         // qfind -- always return value itself
@@ -80,7 +80,7 @@ void amc::tfunc_Bitset_qFind() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_NBits() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &nbits = amc::CreateCurFunc();
     Ins(&R, nbits.comment, "Return max. number of bits supported by array");
     Ins(&R, nbits.ret  , "int",false);
@@ -91,7 +91,7 @@ void amc::tfunc_Bitset_NBits() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qGetBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qgetbit = amc::CreateCurFunc();
     Ins(&R, qgetbit.comment, "Retrieve value of bit #BIT_IDX in bit set. No bounds checking");
     Ins(&R, qgetbit.ret  , "bool",false);
@@ -105,7 +105,7 @@ void amc::tfunc_Bitset_qGetBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_GetBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &getbit = amc::CreateCurFunc();
     Ins(&R, getbit.comment, "Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.");
     Ins(&R, getbit.ret  , "bool",false);
@@ -124,9 +124,9 @@ void amc::tfunc_Bitset_GetBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_Sum1s() {
-    algo_lib::Replscope &R       = amc::_db.genfield.R;
+    algo_lib::Replscope &R       = amc::_db.genctx.R;
     amc::FFunc          &sumones = amc::CreateCurFunc();
-    amc::FField         &field   = *amc::_db.genfield.p_field;
+    amc::FField         &field   = *amc::_db.genctx.p_field;
 
     Set(R, "$Fldtype", field.p_arg->cpp_type);
     Ins(&R, sumones.ret  , "u64",false);
@@ -142,9 +142,9 @@ void amc::tfunc_Bitset_Sum1s() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_BitsEmptyQ() {
-    algo_lib::Replscope &R       = amc::_db.genfield.R;
+    algo_lib::Replscope &R       = amc::_db.genctx.R;
     amc::FFunc          &emptyq = amc::CreateCurFunc();
-    amc::FField         &field   = *amc::_db.genfield.p_field;
+    amc::FField         &field   = *amc::_db.genctx.p_field;
 
     Set(R, "$Fldtype", field.p_arg->cpp_type);
     Ins(&R, emptyq.ret  , "bool",false);
@@ -163,7 +163,7 @@ void amc::tfunc_Bitset_BitsEmptyQ() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qClearBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qclearbit = amc::CreateCurFunc();
     Ins(&R, qclearbit.comment, "Clear bit # BIT_IDX in bit set. No bounds checking");
     Ins(&R, qclearbit.ret  , "void",false);
@@ -177,7 +177,7 @@ void amc::tfunc_Bitset_qClearBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_ClearBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &clearbit = amc::CreateCurFunc();
     Ins(&R, clearbit.comment, "Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing");
     Ins(&R, clearbit.ret  , "void",false);
@@ -194,7 +194,7 @@ void amc::tfunc_Bitset_ClearBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qSetBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qsetbit = amc::CreateCurFunc();
     Ins(&R, qsetbit.ret  , "void",false);
     Ins(&R, qsetbit.proto, "$name_qSetBit($Parent, u32 bit_idx)",false);
@@ -207,7 +207,7 @@ void amc::tfunc_Bitset_qSetBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_SetBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &setbit = amc::CreateCurFunc();
     Ins(&R, setbit.ret  , "void",false);
     Ins(&R, setbit.proto, "$name_SetBit($Parent, u32 bit_idx)",false);
@@ -223,7 +223,7 @@ void amc::tfunc_Bitset_SetBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qSetBitVal() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &setbitval = amc::CreateCurFunc();
     Ins(&R, setbitval.ret  , "void",false);
     Ins(&R, setbitval.proto, "$name_qSetBitVal($Parent, u32 bit_idx, bool val)",false);
@@ -236,7 +236,7 @@ void amc::tfunc_Bitset_qSetBitVal() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_qOrBitVal() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &orbitval = amc::CreateCurFunc();
     Ins(&R, orbitval.ret  , "void",false);
     Ins(&R, orbitval.proto, "$name_qOrBitVal($Parent, u32 bit_idx, bool val)",false);
@@ -249,7 +249,7 @@ void amc::tfunc_Bitset_qOrBitVal() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_ClearBitsAll() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &clearall = amc::CreateCurFunc();
     Ins(&R, clearall.comment, "Set all bits of array to zero.");
     Ins(&R, clearall.comment, "Note: this does not change what NBits will return.");
@@ -264,7 +264,7 @@ void amc::tfunc_Bitset_ClearBitsAll() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_ClearBits() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qclearbits = amc::CreateCurFunc();
     Ins(&R, qclearbits.ret  , "void",false);
     Ins(&R, qclearbits.proto, "$name_ClearBits($Parent, $Partype &rhs)",false);
@@ -277,7 +277,7 @@ void amc::tfunc_Bitset_ClearBits() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_OrBits() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qsetbits = amc::CreateCurFunc();
     Ins(&R, qsetbits.comment, "Set PARENT to union of two bitsets.");
     Ins(&R, qsetbits.comment, "(This function is not named Set.. to avoid triple entendre).");
@@ -292,8 +292,8 @@ void amc::tfunc_Bitset_OrBits() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_ExpandBits() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     bool singleval = !field.c_inlary && !field.c_tary;
     bool expandable = (!field.c_inlary || !FixaryQ(field)) && !singleval;
     // todo: support varlen and other array types
@@ -315,8 +315,8 @@ void amc::tfunc_Bitset_ExpandBits() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_AllocBit() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     bool singleval = !field.c_inlary && !field.c_tary;
     bool expandable = (!field.c_inlary || !FixaryQ(field)) && !singleval;
     if (expandable) {
@@ -332,8 +332,8 @@ void amc::tfunc_Bitset_AllocBit() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_Sup() {
-    algo_lib::Replscope &R        = amc::_db.genfield.R;
-    amc::FField         &field    = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R        = amc::_db.genctx.R;
+    amc::FField         &field    = *amc::_db.genctx.p_field;
     amc::FCtype &elemtype = *field.p_arg;
     u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
     // sup function
@@ -358,9 +358,9 @@ void amc::tfunc_Bitset_Sup() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_bitcurs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    amc::FCtype &elemtype = *amc::_db.genfield.p_field->p_arg;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
+    amc::FCtype &elemtype = *amc::_db.genctx.p_field->p_arg;
     u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
     if (elem_bits <= 64) {
         amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Next"));

@@ -45,6 +45,7 @@ inline void src_func::FCtypelen_Init(src_func::FCtypelen& ctypelen) {
     ctypelen.len = u32(0);
     ctypelen.alignment = i32(0);
     ctypelen.padbytes = i32(0);
+    ctypelen.plaindata = bool(false);
     ctypelen.ind_ctypelen_next = (src_func::FCtypelen*)-1; // (src_func.FDb.ind_ctypelen) not-in-hash
 }
 inline src_func::trace::trace() {

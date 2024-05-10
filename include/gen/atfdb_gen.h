@@ -78,8 +78,8 @@ namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TmsgPkey;
     typedef algo::Smallstr50 UnittestPkey;
 } // gen:ns_pkeytypedef
-namespace atfdb { // gen:ns_field
-} // gen:ns_field
+namespace atfdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Amctest; }
 namespace atfdb { struct Cijob; }

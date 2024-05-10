@@ -64,7 +64,10 @@ void abt_md::CheckSection(abt_md::FFileSection &file_section) {
         algo_lib::_db.exit_code=1;
     }
 }
-
+// -----------------------------------------------------------------------------
+static bool MarktocQ(strptr line){
+    return StartsWithQ(line,"<!-- TOC_");
+}
 // -----------------------------------------------------------------------------
 
 // Scan section and save human-entered text into hash ind_human_text
@@ -75,12 +78,13 @@ void abt_md::SaveHumanText(abt_md::FFileSection &file_section) {
     abt_md::FMdsection &mdsection = *file_section.p_mdsection;
     ind_human_text_Cascdel();
     if (mdsection.genlist != "") {
-        abt_md::FHumanText *cur_human_text=&abt_md::ind_human_text_GetOrCreate("");// initial tet
-        ind_beg(Line_curs,line,file_section.text) {
+        abt_md::FHumanText *cur_human_text=&abt_md::ind_human_text_GetOrCreate("");// initial text
+        ind_beg(Line_curs,line,file_section.text) if (!MarktocQ(line)){
             if (StartsWithQ(line,mdsection.genlist)) {
                 tempstr name=LineKey(line);
                 abt_md::FHumanText &ht=abt_md::ind_human_text_GetOrCreate(name);
                 cur_human_text=&ht;
+                // don't save abt_md markers, they will be restored
             } else {
                 cur_human_text->text << line << eol;
             }
@@ -192,6 +196,11 @@ void abt_md::ScanLinksAnchors() {
                             link.location << _db.c_readme->gitfile<<":"<<(file_section.firstline + 1 + ind_curs(line).i);
                             link.text=ch_GetRegion(line,bracket_start+1,bracket_end-bracket_start-1);
                             link.target=ch_GetRegion(line,paren_start+1,paren_end-paren_start-1);
+                            // link is taken, clear brackets
+                            bracket_start=-1;
+                            bracket_end=-1;
+                            paren_start=-1;
+                            paren_end=-1;
                         }
                     }
                 }

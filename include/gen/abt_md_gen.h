@@ -61,27 +61,29 @@ enum abt_md_TableIdEnum {                    // abt_md.TableId.value
     ,abt_md_TableId_dmmeta_nstype     = 6    // dmmeta.nstype -> abt_md.FNstype
     ,abt_md_TableId_dev_Readme        = 7    // dev.Readme -> abt_md.FReadme
     ,abt_md_TableId_dev_readme        = 7    // dev.readme -> abt_md.FReadme
-    ,abt_md_TableId_dmmeta_Reftype    = 8    // dmmeta.Reftype -> abt_md.FReftype
-    ,abt_md_TableId_dmmeta_reftype    = 8    // dmmeta.reftype -> abt_md.FReftype
-    ,abt_md_TableId_dev_Scriptfile    = 9    // dev.Scriptfile -> abt_md.FScriptfile
-    ,abt_md_TableId_dev_scriptfile    = 9    // dev.scriptfile -> abt_md.FScriptfile
-    ,abt_md_TableId_dmmeta_Ssimfile   = 10   // dmmeta.Ssimfile -> abt_md.FSsimfile
-    ,abt_md_TableId_dmmeta_ssimfile   = 10   // dmmeta.ssimfile -> abt_md.FSsimfile
-    ,abt_md_TableId_dmmeta_Substr     = 11   // dmmeta.Substr -> abt_md.FSubstr
-    ,abt_md_TableId_dmmeta_substr     = 11   // dmmeta.substr -> abt_md.FSubstr
-    ,abt_md_TableId_dev_Targsrc       = 12   // dev.Targsrc -> abt_md.FTargsrc
-    ,abt_md_TableId_dev_targsrc       = 12   // dev.targsrc -> abt_md.FTargsrc
-    ,abt_md_TableId_amcdb_Tclass      = 13   // amcdb.Tclass -> abt_md.FTclass
-    ,abt_md_TableId_amcdb_tclass      = 13   // amcdb.tclass -> abt_md.FTclass
+    ,abt_md_TableId_dev_Readmecat     = 8    // dev.Readmecat -> abt_md.FReadmecat
+    ,abt_md_TableId_dev_readmecat     = 8    // dev.readmecat -> abt_md.FReadmecat
+    ,abt_md_TableId_dmmeta_Reftype    = 9    // dmmeta.Reftype -> abt_md.FReftype
+    ,abt_md_TableId_dmmeta_reftype    = 9    // dmmeta.reftype -> abt_md.FReftype
+    ,abt_md_TableId_dev_Scriptfile    = 10   // dev.Scriptfile -> abt_md.FScriptfile
+    ,abt_md_TableId_dev_scriptfile    = 10   // dev.scriptfile -> abt_md.FScriptfile
+    ,abt_md_TableId_dmmeta_Ssimfile   = 11   // dmmeta.Ssimfile -> abt_md.FSsimfile
+    ,abt_md_TableId_dmmeta_ssimfile   = 11   // dmmeta.ssimfile -> abt_md.FSsimfile
+    ,abt_md_TableId_dmmeta_Substr     = 12   // dmmeta.Substr -> abt_md.FSubstr
+    ,abt_md_TableId_dmmeta_substr     = 12   // dmmeta.substr -> abt_md.FSubstr
+    ,abt_md_TableId_dev_Targsrc       = 13   // dev.Targsrc -> abt_md.FTargsrc
+    ,abt_md_TableId_dev_targsrc       = 13   // dev.targsrc -> abt_md.FTargsrc
+    ,abt_md_TableId_amcdb_Tclass      = 14   // amcdb.Tclass -> abt_md.FTclass
+    ,abt_md_TableId_amcdb_tclass      = 14   // amcdb.tclass -> abt_md.FTclass
 };
 
-enum { abt_md_TableIdEnum_N = 28 };
+enum { abt_md_TableIdEnum_N = 30 };
 
 namespace abt_md { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace abt_md { // gen:ns_field
+namespace abt_md { // gen:ns_tclass_field
 extern const char *abt_md_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Comptest; }
 namespace dmmeta { struct Ctype; }
@@ -97,6 +99,7 @@ namespace dmmeta { struct Nstype; }
 namespace dev { struct Readme; }
 namespace abt_md { struct FSsimfile; }
 namespace abt_md { struct FScriptfile; }
+namespace dev { struct Readmecat; }
 namespace dmmeta { struct Reftype; }
 namespace abt_md { struct FTclass; }
 namespace dev { struct Scriptfile; }
@@ -130,6 +133,7 @@ namespace abt_md { struct _db_reftype_curs; }
 namespace abt_md { struct _db_tclass_curs; }
 namespace abt_md { struct _db_fconst_curs; }
 namespace abt_md { struct _db_gconst_curs; }
+namespace abt_md { struct _db_readmecat_curs; }
 namespace abt_md { struct field_c_fconst_curs; }
 namespace abt_md { struct ns_c_targsrc_curs; }
 namespace abt_md { struct ns_c_ctype_curs; }
@@ -146,6 +150,7 @@ namespace abt_md { struct FHumanText; }
 namespace abt_md { struct FLink; }
 namespace abt_md { struct FNstype; }
 namespace abt_md { struct FReadme; }
+namespace abt_md { struct FReadmecat; }
 namespace abt_md { struct FReftype; }
 namespace abt_md { struct FSubstr; }
 namespace abt_md { struct FTargsrc; }
@@ -573,6 +578,11 @@ struct FDb { // abt_md.FDb: In-memory database for abt_md
     i32                      fconst_n;                                          // number of elements in array
     abt_md::FGconst*         gconst_lary[32];                                   // level array
     i32                      gconst_n;                                          // number of elements in array
+    abt_md::FReadmecat*      readmecat_lary[32];                                // level array
+    i32                      readmecat_n;                                       // number of elements in array
+    abt_md::FReadmecat**     ind_readmecat_buckets_elems;                       // pointer to bucket array
+    i32                      ind_readmecat_buckets_n;                           // number of elements in bucket array
+    i32                      ind_readmecat_n;                                   // number of elements in the hash table
     abt_md::trace            trace;                                             //
 };
 
@@ -592,8 +602,6 @@ void                 Step();
 // func:abt_md.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:abt_md.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:abt_md.FDb._db.InsertStrptrMaybe
@@ -1731,6 +1739,71 @@ abt_md::FGconst&     gconst_qFind(u64 t) __attribute__((nothrow, pure));
 // func:abt_md.FDb.gconst.XrefMaybe
 bool                 gconst_XrefMaybe(abt_md::FGconst &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:abt_md.FDb.readmecat.Alloc
+abt_md::FReadmecat&  readmecat_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:abt_md.FDb.readmecat.AllocMaybe
+abt_md::FReadmecat*  readmecat_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt_md.FDb.readmecat.InsertMaybe
+abt_md::FReadmecat*  readmecat_InsertMaybe(const dev::Readmecat &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:abt_md.FDb.readmecat.AllocMem
+void*                readmecat_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:abt_md.FDb.readmecat.EmptyQ
+bool                 readmecat_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:abt_md.FDb.readmecat.Find
+abt_md::FReadmecat*  readmecat_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:abt_md.FDb.readmecat.Last
+abt_md::FReadmecat*  readmecat_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:abt_md.FDb.readmecat.N
+i32                  readmecat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:abt_md.FDb.readmecat.RemoveAll
+void                 readmecat_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:abt_md.FDb.readmecat.RemoveLast
+void                 readmecat_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:abt_md.FDb.readmecat.qFind
+abt_md::FReadmecat&  readmecat_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt_md.FDb.readmecat.XrefMaybe
+bool                 readmecat_XrefMaybe(abt_md::FReadmecat &row);
+
+// Return true if hash is empty
+// func:abt_md.FDb.ind_readmecat.EmptyQ
+bool                 ind_readmecat_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:abt_md.FDb.ind_readmecat.Find
+abt_md::FReadmecat*  ind_readmecat_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:abt_md.FDb.ind_readmecat.FindX
+abt_md::FReadmecat&  ind_readmecat_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt_md.FDb.ind_readmecat.GetOrCreate
+abt_md::FReadmecat&  ind_readmecat_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:abt_md.FDb.ind_readmecat.N
+i32                  ind_readmecat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt_md.FDb.ind_readmecat.InsertMaybe
+bool                 ind_readmecat_InsertMaybe(abt_md::FReadmecat& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt_md.FDb.ind_readmecat.Remove
+void                 ind_readmecat_Remove(abt_md::FReadmecat& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:abt_md.FDb.ind_readmecat.Reserve
+void                 ind_readmecat_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:abt_md.FDb.readme_curs.Reset
 void                 _db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
@@ -1998,6 +2071,18 @@ void                 _db_gconst_curs_Next(_db_gconst_curs &curs) __attribute__((
 // item access
 // func:abt_md.FDb.gconst_curs.Access
 abt_md::FGconst&     _db_gconst_curs_Access(_db_gconst_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:abt_md.FDb.readmecat_curs.Reset
+void                 _db_readmecat_curs_Reset(_db_readmecat_curs &curs, abt_md::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:abt_md.FDb.readmecat_curs.ValidQ
+bool                 _db_readmecat_curs_ValidQ(_db_readmecat_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:abt_md.FDb.readmecat_curs.Next
+void                 _db_readmecat_curs_Next(_db_readmecat_curs &curs) __attribute__((nothrow));
+// item access
+// func:abt_md.FDb.readmecat_curs.Access
+abt_md::FReadmecat&  _db_readmecat_curs_Access(_db_readmecat_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:abt_md.FDb..Init
 void                 FDb_Init();
@@ -2011,6 +2096,7 @@ struct FDirent { // abt_md.FDirent
     i32             bh_dirent_idx;   // index in heap; -1 means not-in-heap
     bool            is_dir;          //   false
     algo::cstring   filename;        //
+    algo::cstring   sortfld;         //
     algo::cstring   pathname;        //
 private:
     friend abt_md::FDirent&     dirent_Alloc() __attribute__((__warn_unused_result__, nothrow));
@@ -2567,11 +2653,46 @@ void                 readme_CopyOut(abt_md::FReadme &row, dev::Readme &out) __at
 // func:abt_md.FReadme.base.CopyIn
 void                 readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
+// func:abt_md.FReadme.readmecat.Get
+algo::Smallstr50     readmecat_Get(abt_md::FReadme& readme) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:abt_md.FReadme..Init
 void                 FReadme_Init(abt_md::FReadme& readme);
 // func:abt_md.FReadme..Uninit
 void                 FReadme_Uninit(abt_md::FReadme& readme) __attribute__((nothrow));
+
+// --- abt_md.FReadmecat
+// create: abt_md.FDb.readmecat (Lary)
+// global access: ind_readmecat (Thash)
+struct FReadmecat { // abt_md.FReadmecat
+    abt_md::FReadmecat*   ind_readmecat_next;   // hash next
+    algo::Smallstr50      readmecat;            //
+    algo::Comment         comment;              //
+    algo::cstring         sortfld;              //
+private:
+    friend abt_md::FReadmecat&  readmecat_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt_md::FReadmecat*  readmecat_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 readmecat_RemoveAll() __attribute__((nothrow));
+    friend void                 readmecat_RemoveLast() __attribute__((nothrow));
+    FReadmecat();
+    ~FReadmecat();
+    FReadmecat(const FReadmecat&){ /*disallow copy constructor */}
+    void operator =(const FReadmecat&){ /*disallow direct assignment */}
+};
+
+// Copy fields out of row
+// func:abt_md.FReadmecat.base.CopyOut
+void                 readmecat_CopyOut(abt_md::FReadmecat &row, dev::Readmecat &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:abt_md.FReadmecat.base.CopyIn
+void                 readmecat_CopyIn(abt_md::FReadmecat &row, dev::Readmecat &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:abt_md.FReadmecat..Init
+void                 FReadmecat_Init(abt_md::FReadmecat& readmecat);
+// func:abt_md.FReadmecat..Uninit
+void                 FReadmecat_Uninit(abt_md::FReadmecat& readmecat) __attribute__((nothrow));
 
 // --- abt_md.FReftype
 // create: abt_md.FDb.reftype (Lary)
@@ -3106,6 +3227,14 @@ struct _db_gconst_curs {// cursor
 };
 
 
+struct _db_readmecat_curs {// cursor
+    typedef abt_md::FReadmecat ChildType;
+    abt_md::FDb *parent;
+    i64 index;
+    _db_readmecat_curs(){ parent=NULL; index=0; }
+};
+
+
 struct field_c_fconst_curs {// fcurs:abt_md.FField.c_fconst/curs
     typedef abt_md::FFconst ChildType;
     abt_md::FFconst** elems;
@@ -3235,6 +3364,8 @@ void                 mdsection_Tests(abt_md::FFileSection&);
 // func:abt_md...mdsection_Copyright
 // this function is 'extrn' and implemented by user
 void                 mdsection_Copyright(abt_md::FFileSection&);
+// func:abt_md...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:abt_md...main
 int                  main(int argc, char **argv);

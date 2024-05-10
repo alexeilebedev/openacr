@@ -190,7 +190,6 @@ const char *dmmeta_Reftype_reftype_Lpool      = "Lpool";
 const char *dmmeta_Reftype_reftype_Malloc     = "Malloc";
 const char *dmmeta_Reftype_reftype_Opt        = "Opt";
 const char *dmmeta_Reftype_reftype_Pkey       = "Pkey";
-const char *dmmeta_Reftype_reftype_Protocol   = "Protocol";
 const char *dmmeta_Reftype_reftype_Ptr        = "Ptr";
 const char *dmmeta_Reftype_reftype_Ptrary     = "Ptrary";
 
@@ -265,7 +264,9 @@ const char *dmmeta_Ssimfile_ssimfile_dev_package                 = "dev.package"
 const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep                  = "dev.pkgdep";
 const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey                  = "dev.pkgkey";
 const char *dmmeta_Ssimfile_ssimfile_dev_readme                  = "dev.readme";
-const char *dmmeta_Ssimfile_ssimfile_dev_sandbox                 = "dev.sandbox";
+const char *dmmeta_Ssimfile_ssimfile_dev_readmecat               = "dev.readmecat";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_sandbox   = "dev.sandbox";
 
 const char *dmmeta_Ssimfile_ssimfile_dev_sbpath            = "dev.sbpath";
 const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile        = "dev.scriptfile";
@@ -1066,6 +1067,10 @@ bool dmmeta::Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strptr field,
             retval = bool_ReadStrptrMaybe(parent.isstruct, strval);
             break;
         }
+        case dmmeta_FieldId_plaindata: {
+            retval = bool_ReadStrptrMaybe(parent.plaindata, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1101,6 +1106,9 @@ void dmmeta::Cextern_Print(dmmeta::Cextern& row, algo::cstring& str) {
 
     bool_Print(row.isstruct, temp);
     PrintAttrSpaceReset(str,"isstruct", temp);
+
+    bool_Print(row.plaindata, temp);
+    PrintAttrSpaceReset(str,"plaindata", temp);
 }
 
 // --- dmmeta.Cfast..ReadFieldMaybe
@@ -1853,6 +1861,10 @@ bool dmmeta::Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::strptr fiel
             retval = i32_ReadStrptrMaybe(parent.padbytes, strval);
             break;
         }
+        case dmmeta_FieldId_plaindata: {
+            retval = bool_ReadStrptrMaybe(parent.plaindata, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1891,6 +1903,9 @@ void dmmeta::Ctypelen_Print(dmmeta::Ctypelen& row, algo::cstring& str) {
 
     i32_Print(row.padbytes, temp);
     PrintAttrSpaceReset(str,"padbytes", temp);
+
+    bool_Print(row.plaindata, temp);
+    PrintAttrSpaceReset(str,"plaindata", temp);
 }
 
 // --- dmmeta.Dispatch.ns.Get
@@ -4352,6 +4367,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_jsdflt         : ret = "jsdflt";  break;
         case dmmeta_FieldId_initmemset     : ret = "initmemset";  break;
         case dmmeta_FieldId_isstruct       : ret = "isstruct";  break;
+        case dmmeta_FieldId_plaindata      : ret = "plaindata";  break;
         case dmmeta_FieldId_id             : ret = "id";  break;
         case dmmeta_FieldId_encoding       : ret = "encoding";  break;
         case dmmeta_FieldId_reset          : ret = "reset";  break;
@@ -5068,6 +5084,10 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','s','i','n','c','l','u','d'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dmmeta_FieldId_nsinclude); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','l','a','i','n','d','a','t'): {
+                    if (memcmp(rhs.elems+8,"a",1)==0) { value_SetEnum(parent,dmmeta_FieldId_plaindata); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','i','g','n','a','t','u','r'): {
@@ -8402,7 +8422,6 @@ const char* dmmeta::reftype_ToCstr(const dmmeta::ReftypeCase& parent) {
         case dmmeta_ReftypeCase_Malloc     : ret = "Malloc";  break;
         case dmmeta_ReftypeCase_Opt        : ret = "Opt";  break;
         case dmmeta_ReftypeCase_Pkey       : ret = "Pkey";  break;
-        case dmmeta_ReftypeCase_Protocol   : ret = "Protocol";  break;
         case dmmeta_ReftypeCase_Ptr        : ret = "Ptr";  break;
         case dmmeta_ReftypeCase_Ptrary     : ret = "Ptrary";  break;
         case dmmeta_ReftypeCase_Regx       : ret = "Regx";  break;
@@ -8561,9 +8580,6 @@ bool dmmeta::reftype_SetStrptrMaybe(dmmeta::ReftypeCase& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('C','p','p','s','t','a','c','k'): {
                     reftype_SetEnum(parent,dmmeta_ReftypeCase_Cppstack); ret = true; break;
-                }
-                case LE_STR8('P','r','o','t','o','c','o','l'): {
-                    reftype_SetEnum(parent,dmmeta_ReftypeCase_Protocol); ret = true; break;
                 }
                 case LE_STR8('S','m','a','l','l','s','t','r'): {
                     reftype_SetEnum(parent,dmmeta_ReftypeCase_Smallstr); ret = true; break;

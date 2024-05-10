@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Varlen() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     InsStruct(R, field.p_ctype, "// var-length field $field starts here. access it with $name_Addr");
     Set(R, "$lenexpr", LengthExpr(*field.p_ctype, Subst(R,"$parname")));
     Set(R, "$curslenexpr", LengthExpr(*field.p_ctype, Subst(R,"parent")));
@@ -58,7 +58,7 @@ void amc::tclass_Varlen() {
 }
 
 void amc::tfunc_Varlen_Addr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& addr = amc::CreateCurFunc();
     Ins(&R, addr.ret  , "$rettype*", false);
     Ins(&R, addr.proto, "$name_Addr($Parent)", false);
@@ -66,15 +66,15 @@ void amc::tfunc_Varlen_Addr() {
 }
 
 void amc::tfunc_Varlen_Getary() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& get = amc::CreateCurFunc(true);
     AddRetval(get, Subst(R,"algo::aryptr<$rettype>"), "", "");
     Ins(&R, get.body, "return algo::aryptr<$rettype>($name_Addr($pararg), $name_N($pararg));");
 }
 
 void amc::tfunc_Varlen_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // N: number of elements in varlen portion
     amc::FFunc& get_n = amc::CreateCurFunc();
@@ -91,8 +91,8 @@ void amc::tfunc_Varlen_N() {
 }
 
 void amc::tfunc_Varlen_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (HasReadQ(*field.p_ctype)) {
         amc::FFunc& rd = amc::CreateCurFunc();
         Ins(&R, rd.comment, "Convert string to field. Return success value");
@@ -121,9 +121,9 @@ void amc::tfunc_Varlen_ReadStrptrMaybe() {
 }
 
 void amc::tfunc_Varlen_curs() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     if (field.p_ctype->c_lenfld) {
 
         Ins(&R, ns.curstext, "");

@@ -40,7 +40,7 @@ void amc::tfunc_Ctype_Uninit() {
     // - user-specified cleanup in reverse order
     // - un-init fields in reverse order
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     tempstr uninit_text;
     tempstr unref_text;
@@ -320,7 +320,7 @@ static void Ctype_Unref(amc::FCtype &ctype) {
 
 void amc::tfunc_Ctype_XrefMaybe() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
     if (FirstInst(ctype) && ns.c_globfld) {
@@ -332,7 +332,7 @@ void amc::tfunc_Ctype_XrefMaybe() {
 
 void amc::tfunc_Ctype_Unref() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
     if (FirstInst(ctype) && ns.c_globfld) {
@@ -344,7 +344,7 @@ void amc::tfunc_Ctype_Unref() {
 
 void amc::tfunc_Ctype_Hash() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
     if (ctype.c_chash) {
@@ -395,7 +395,7 @@ void amc::tfunc_Ctype_Hash() {
 // That's why the Cmp function for ctype does not call out fo
 void amc::tfunc_Ctype_Cmp() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp) {
         vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
@@ -487,7 +487,7 @@ static void Ctype_Lt_SingleField(algo_lib::Replscope &R, amc::FCtype &ctype, amc
 // Less-than function for ctype
 void amc::tfunc_Ctype_Lt() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     if (ctype.c_ccmp && ctype.c_ccmp->order) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
@@ -513,7 +513,7 @@ void amc::tfunc_Ctype_Lt() {
 
 void amc::tfunc_Ctype_Init() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     Set(R, "$ns", ns_Get(ctype));
 
     tempstr text;
@@ -558,7 +558,7 @@ void amc::tfunc_Ctype_Init() {
 
 void amc::tfunc_Ctype_Update() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->order) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -576,7 +576,7 @@ void amc::tfunc_Ctype_Update() {
 
 void amc::tfunc_Ctype_Min() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -590,7 +590,7 @@ void amc::tfunc_Ctype_Min() {
 
 void amc::tfunc_Ctype_Max() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -604,7 +604,7 @@ void amc::tfunc_Ctype_Max() {
 
 void amc::tfunc_Ctype_UpdateMin() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -622,7 +622,7 @@ void amc::tfunc_Ctype_UpdateMin() {
 
 void amc::tfunc_Ctype_UpdateMax() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
@@ -696,7 +696,7 @@ static bool GenSmallstrEq(algo_lib::Replscope &R, amc::FField &field, cstring &o
 // - for all other fields, c++ operator "==" is used. it better be defined
 void amc::tfunc_Ctype_Eq() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     if (ctype.c_ccmp) {
         vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
@@ -754,7 +754,7 @@ void amc::tfunc_Ctype_Eq() {
 
 void amc::tfunc_Ctype_EqStrptr() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     bool single_smallstr = c_datafld_N(ctype)==1 && c_datafld_Find(ctype,0)->reftype==dmmeta_Reftype_reftype_Smallstr;
 
@@ -776,7 +776,7 @@ void amc::tfunc_Ctype_EqStrptr() {
 
 void amc::tfunc_Ctype_ToCmdline() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     bool has_print = false;
     ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) if (cfmt.print && strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Argv) {
@@ -807,7 +807,7 @@ void amc::tfunc_Ctype_ToCmdline() {
 // Used with command lines
 void amc::tfunc_Ctype_NArgs() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     bool has_read = false;
     ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
@@ -865,7 +865,7 @@ void amc::tfunc_Ctype_NArgs() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_Print() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {
         if (cfmt.print) {
             GenPrint(ctype,cfmt);
@@ -876,7 +876,7 @@ void amc::tfunc_Ctype_Print() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_Read() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) {
         if (cfmt.read) {
             GenRead(ctype,cfmt);
@@ -887,7 +887,7 @@ void amc::tfunc_Ctype_Read() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_EqEnum() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FField *field = c_datafld_N(ctype) == 1 ? c_datafld_Find(ctype,0) : NULL;
     // always generate EqEnum function if field has fconsts.
     // TODO: generate EqEnum for field, then promote to a ctype-wide EqEnum
@@ -921,7 +921,7 @@ void amc::tfunc_Ctype_EqEnum() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_GetAnon() {
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     bool need_anon = false;
     ind_beg(amc::ctype_zs_cfmt_curs,cfmt,ctype) if (cfmt.read
                                                     && !(cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw
@@ -962,8 +962,8 @@ void amc::tfunc_Ctype_GetAnon() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_GetMsgLength() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_lenfld) {
         amc::FFunc& func = amc::CreateCurFunc(true, "GetMsgLength");
         AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "parent");
@@ -978,8 +978,8 @@ void amc::tfunc_Ctype_GetMsgLength() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_GetMsgMemptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_lenfld) {
         amc::FFunc& func = amc::CreateCurFunc(true, "GetMsgMemptr"); {
             AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "row");

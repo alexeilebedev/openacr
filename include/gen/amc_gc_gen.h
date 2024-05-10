@@ -38,9 +38,9 @@ enum { amc_gc_FieldIdEnum_N = 1 };
 
 namespace amc_gc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace amc_gc { // gen:ns_field
+namespace amc_gc { // gen:ns_tclass_field
 extern const char *amc_gc_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amc_gc { struct trace; }
 namespace amc_gc { struct FDb; }
@@ -89,8 +89,6 @@ void                 Step();
 // func:amc_gc.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:amc_gc.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:amc_gc.FDb._db.InsertStrptrMaybe
@@ -177,6 +175,8 @@ void                 FieldId_Init(amc_gc::FieldId& parent);
 void                 FieldId_Print(amc_gc::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amc_gc { // gen:ns_func
+// func:amc_gc...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:amc_gc...main
 int                  main(int argc, char **argv);

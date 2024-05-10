@@ -232,11 +232,6 @@ static void lib_exec::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_exec.FDb._db.StaticCheck
-void lib_exec::StaticCheck() {
-    algo_assert(_offset_of(lib_exec::FieldId, value) + sizeof(((lib_exec::FieldId*)0)->value) == sizeof(lib_exec::FieldId));
-}
-
 // --- lib_exec.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1481,4 +1476,9 @@ void lib_exec::FieldId_Print(lib_exec::FieldId& row, algo::cstring& str) {
 
 // --- lib_exec...SizeCheck
 inline static void lib_exec::SizeCheck() {
+}
+
+// --- lib_exec...StaticCheck
+void lib_exec::StaticCheck() {
+    algo_assert(_offset_of(lib_exec::FieldId, value) + sizeof(((lib_exec::FieldId*)0)->value) == sizeof(lib_exec::FieldId));
 }

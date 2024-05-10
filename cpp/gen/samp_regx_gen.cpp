@@ -281,11 +281,6 @@ static void samp_regx::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- samp_regx.FDb._db.StaticCheck
-void samp_regx::StaticCheck() {
-    algo_assert(_offset_of(samp_regx::FieldId, value) + sizeof(((samp_regx::FieldId*)0)->value) == sizeof(samp_regx::FieldId));
-}
-
 // --- samp_regx.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -476,6 +471,11 @@ void samp_regx::FieldId_Print(samp_regx::FieldId& row, algo::cstring& str) {
 
 // --- samp_regx...SizeCheck
 inline static void samp_regx::SizeCheck() {
+}
+
+// --- samp_regx...StaticCheck
+void samp_regx::StaticCheck() {
+    algo_assert(_offset_of(samp_regx::FieldId, value) + sizeof(((samp_regx::FieldId*)0)->value) == sizeof(samp_regx::FieldId));
 }
 
 // --- samp_regx...main

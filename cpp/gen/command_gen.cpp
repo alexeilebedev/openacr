@@ -1427,11 +1427,6 @@ void command::FieldId_Print(command::FieldId& row, algo::cstring& str) {
     command::value_Print(row, str);
 }
 
-// --- command.Protocol.proto.StaticCheck
-void command::StaticCheck() {
-    algo_assert(_offset_of(command::FieldId, value) + sizeof(((command::FieldId*)0)->value) == sizeof(command::FieldId));
-}
-
 // --- command.abt.target.Print
 // Print back to string
 void command::target_Print(command::abt& parent, algo::cstring &out) {
@@ -23963,4 +23958,9 @@ void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
 
 // --- command...SizeCheck
 inline static void command::SizeCheck() {
+}
+
+// --- command...StaticCheck
+void command::StaticCheck() {
+    algo_assert(_offset_of(command::FieldId, value) + sizeof(((command::FieldId*)0)->value) == sizeof(command::FieldId));
 }

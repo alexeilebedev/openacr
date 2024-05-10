@@ -85,11 +85,11 @@ enum { algo_lib_TableIdEnum_N = 2 };
 
 namespace algo_lib { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace algo_lib { // gen:ns_field
+namespace algo_lib { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
 };
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Dispsigcheck; }
 namespace dmmeta { struct Logcat; }
@@ -912,8 +912,6 @@ bool                 SsimQuotesafeQ(u32 ch) __attribute__((nothrow));
 // Main step
 // func:algo_lib.FDb._db.Step
 void                 Step();
-// func:algo_lib.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:algo_lib.FDb._db.InsertStrptrMaybe
@@ -3108,6 +3106,8 @@ struct tabulate_width_curs {// cursor
 
 } // gen:ns_curstext
 namespace algo_lib { // gen:ns_func
+// func:algo_lib...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

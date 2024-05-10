@@ -321,13 +321,6 @@ static void gcli::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gcli.Input'  signature:'11a9aa9a5e538f546927ef1802bd464c4e5842b9'");
 }
 
-// --- gcli.FDb._db.StaticCheck
-void gcli::StaticCheck() {
-    algo_assert(sizeof(gcli::gclicmd_step_hook) == 8); // csize:gcli.gclicmd_step_hook
-    algo_assert(sizeof(gcli::gtblact_step_hook) == 8); // csize:gcli.gtblact_step_hook
-    algo_assert(_offset_of(gcli::FieldId, value) + sizeof(((gcli::FieldId*)0)->value) == sizeof(gcli::FieldId));
-}
-
 // --- gcli.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -10173,6 +10166,13 @@ void gcli::TableId_Print(gcli::TableId& row, algo::cstring& str) {
 
 // --- gcli...SizeCheck
 inline static void gcli::SizeCheck() {
+}
+
+// --- gcli...StaticCheck
+void gcli::StaticCheck() {
+    algo_assert(sizeof(gcli::gclicmd_step_hook) == 8); // csize:gcli.gclicmd_step_hook
+    algo_assert(sizeof(gcli::gtblact_step_hook) == 8); // csize:gcli.gtblact_step_hook
+    algo_assert(_offset_of(gcli::FieldId, value) + sizeof(((gcli::FieldId*)0)->value) == sizeof(gcli::FieldId));
 }
 
 // --- gcli...main

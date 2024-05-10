@@ -6,7 +6,7 @@ and writing code as data. OpenACR is published at [https://github.com/alexeilebe
 
 It is the result of over 15 years of development and
 production use. The tools were initially written with the goal of formalizing
-construction of large mission criticial programs,
+construction of large mission critical programs,
 but they ended up being suitable for all sorts of other things, and the code generation
 part took on a life of its own, eventually generating most of its own source code.
 
@@ -14,4 +14,6 @@ OpenACR was co-developed in connection with a large, mission critical software p
 OpenACR was first published in 2019, and is being actively maintained.
 The ideal use case is realized when it is taken as a kernel, and an ecosystem of commands and corresponding
 configuration data files are grown in-place around it. Thus, it is meant to be used as a core of a project.
+
+There are two key concepts in Openacr generative approach framework: [Sssimfiles for Information Management](/txt/fun/ssim/fun_05.md) and [C++ integration via A(lgo)M(odel)C(ompiler) amc](/txt/fun/cpp/intro.md).
 

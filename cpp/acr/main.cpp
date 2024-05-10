@@ -63,6 +63,7 @@ static void Main_RewriteOpts() {
     }
     if (acr::_db.cmdline.meta) {
         acr::_db.cmdline.tree = true;
+        acr::_db.cmdline.l = true;// left closure
     }
     if (field_N(acr::_db.cmdline) > 0) {
         acr::_db.cmdline.print = false;

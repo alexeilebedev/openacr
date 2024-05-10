@@ -19,7 +19,6 @@ atfdb.comptest  comptest:acr.Meta3  timeout:10  memcheck:Y  exit_code:0  comment
 atfdb.comptest  comptest:acr.NullTrunc  timeout:10  memcheck:Y  exit_code:0  comment:"Trunc with reinsertion has no effect"
 atfdb.comptest  comptest:acr.QueryCtype  timeout:10  memcheck:Y  exit_code:0  comment:"Select one record"
 atfdb.comptest  comptest:acr.RenameCollision  timeout:10  memcheck:Y  exit_code:0  comment:"Rename with collision"
-atfdb.comptest  comptest:acr.RenameCollisionMultiple  timeout:10  memcheck:Y  exit_code:0  comment:"Rename multiple records with collision"
 atfdb.comptest  comptest:acr.RenameField  timeout:10  memcheck:Y  exit_code:0  comment:"-rename -field renames affected attributes in dataset"
 atfdb.comptest  comptest:acr.RenameRecord  timeout:10  memcheck:Y  exit_code:0  comment:"Rename field and propagate recursively through structured keys"
 atfdb.comptest  comptest:acr.Replace  timeout:10  memcheck:Y  exit_code:0  comment:"A record is replaced"

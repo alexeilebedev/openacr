@@ -767,11 +767,6 @@ static void amc_vis::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'533c01b711e8b6ff9e6268d40b3b5c11331f68b5'");
 }
 
-// --- amc_vis.FDb._db.StaticCheck
-void amc_vis::StaticCheck() {
-    algo_assert(_offset_of(amc_vis::FieldId, value) + sizeof(((amc_vis::FieldId*)0)->value) == sizeof(amc_vis::FieldId));
-}
-
 // --- amc_vis.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -4166,6 +4161,11 @@ void amc_vis::TableId_Print(amc_vis::TableId& row, algo::cstring& str) {
 
 // --- amc_vis...SizeCheck
 inline static void amc_vis::SizeCheck() {
+}
+
+// --- amc_vis...StaticCheck
+void amc_vis::StaticCheck() {
+    algo_assert(_offset_of(amc_vis::FieldId, value) + sizeof(((amc_vis::FieldId*)0)->value) == sizeof(amc_vis::FieldId));
 }
 
 // --- amc_vis...main

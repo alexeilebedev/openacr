@@ -58,7 +58,7 @@ static char FindSepOnRight(amc::FSubstr& substr){
 }
 
 static void GenerateForCurrentCoverage(){
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField* sourceField = amc::zd_substr_params_First()->p_srcfield;
     Set(R, "$NS"    , ns_Get(*sourceField));
     Set(R, "$Type"  , name_Get(*sourceField->p_ctype));

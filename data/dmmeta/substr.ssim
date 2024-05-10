@@ -28,6 +28,7 @@ dmmeta.substr  field:dev.Pkgdep.package  expr:.RL  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgdep.parent  expr:.RR  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgkey.key  expr:/LR  srcfield:dev.Pkgkey.pkgkey
 dmmeta.substr  field:dev.Pkgkey.package  expr:/LL  srcfield:dev.Pkgkey.pkgkey
+dmmeta.substr  field:dev.Readme.readmecat  expr:/LR/LL  srcfield:dev.Readme.gitfile
 dmmeta.substr  field:dev.Scriptfile.name  expr:/RR  srcfield:dev.Scriptfile.gitfile
 dmmeta.substr  field:dev.Srcfile.ext  expr:.RR  srcfield:dev.Srcfile.srcfile
 dmmeta.substr  field:dev.Targdep.parent  expr:.RR  srcfield:dev.Targdep.targdep

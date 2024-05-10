@@ -3,6 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
+<!-- TOC_BEG AUTO -->
 * [abt - Algo Build Tool - build & link C++ targets](/txt/exe/abt/README.md)
 
 * [abt_md - Tool to generate markdown documentation](/txt/exe/abt_md/README.md)
@@ -82,4 +83,6 @@
 * [strconv - A simple string utility](/txt/exe/strconv/README.md)
 
 * [sv2ssim - sv2ssim - Separated Value file processor](/txt/exe/sv2ssim/README.md)
+
+<!-- TOC_END AUTO -->
 

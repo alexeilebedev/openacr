@@ -275,11 +275,6 @@ static void mysql2ssim::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- mysql2ssim.FDb._db.StaticCheck
-void mysql2ssim::StaticCheck() {
-    algo_assert(_offset_of(mysql2ssim::FieldId, value) + sizeof(((mysql2ssim::FieldId*)0)->value) == sizeof(mysql2ssim::FieldId));
-}
-
 // --- mysql2ssim.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -933,6 +928,11 @@ void mysql2ssim::FieldId_Print(mysql2ssim::FieldId& row, algo::cstring& str) {
 
 // --- mysql2ssim...SizeCheck
 inline static void mysql2ssim::SizeCheck() {
+}
+
+// --- mysql2ssim...StaticCheck
+void mysql2ssim::StaticCheck() {
+    algo_assert(_offset_of(mysql2ssim::FieldId, value) + sizeof(((mysql2ssim::FieldId*)0)->value) == sizeof(mysql2ssim::FieldId));
 }
 
 // --- mysql2ssim...main

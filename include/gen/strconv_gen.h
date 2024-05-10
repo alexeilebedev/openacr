@@ -37,9 +37,9 @@ enum { strconv_FieldIdEnum_N = 1 };
 
 namespace strconv { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace strconv { // gen:ns_field
+namespace strconv { // gen:ns_tclass_field
 extern const char *strconv_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace strconv { struct trace; }
 namespace strconv { struct FDb; }
@@ -82,8 +82,6 @@ void                 Step();
 // func:strconv.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:strconv.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:strconv.FDb._db.InsertStrptrMaybe
@@ -170,6 +168,8 @@ void                 FieldId_Init(strconv::FieldId& parent);
 void                 FieldId_Print(strconv::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace strconv { // gen:ns_func
+// func:strconv...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:strconv...main
 int                  main(int argc, char **argv);

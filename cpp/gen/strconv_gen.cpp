@@ -276,11 +276,6 @@ static void strconv::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- strconv.FDb._db.StaticCheck
-void strconv::StaticCheck() {
-    algo_assert(_offset_of(strconv::FieldId, value) + sizeof(((strconv::FieldId*)0)->value) == sizeof(strconv::FieldId));
-}
-
 // --- strconv.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -471,6 +466,11 @@ void strconv::FieldId_Print(strconv::FieldId& row, algo::cstring& str) {
 
 // --- strconv...SizeCheck
 inline static void strconv::SizeCheck() {
+}
+
+// --- strconv...StaticCheck
+void strconv::StaticCheck() {
+    algo_assert(_offset_of(strconv::FieldId, value) + sizeof(((strconv::FieldId*)0)->value) == sizeof(strconv::FieldId));
 }
 
 // --- strconv...main

@@ -28,7 +28,7 @@ void amc::tclass_Count() {
 }
 
 void amc::tfunc_Count_Insert() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& insert = amc::CreateCurFunc();
     Ins(&R, insert.comment, "Count row. If row is already counted, do nothing");
     Ins(&R, insert.ret  , "void", false);
@@ -38,7 +38,7 @@ void amc::tfunc_Count_Insert() {
 }
 
 void amc::tfunc_Count_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& remove = amc::CreateCurFunc();
     Ins(&R, remove.comment, "Uncount row");
     Ins(&R, remove.ret  , "void", false);
@@ -50,7 +50,7 @@ void amc::tfunc_Count_Remove() {
 }
 
 void amc::tfunc_Count_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& n = amc::CreateCurFunc();
     Ins(&R, n.comment, "Count # of elements in the set");
     Ins(&R, n.ret  , "u32", false);

@@ -25,7 +25,7 @@
 
 // -----------------------------------------------------------------------------
 
-void amc::tclass_Protocol() {
+void amc::tclass_Ns() {
 }
 
 // -----------------------------------------------------------------------------
@@ -79,46 +79,32 @@ static void OffsetCheck(algo_lib::Replscope &R, amc::FField &field, int field_id
 
 // -----------------------------------------------------------------------------
 
-void amc::tfunc_Protocol_StaticCheck() {
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
-    algo_lib::Replscope R;
-    Set(R, "$ns", ns.ns);
-    amc::FFunc& chk = amc::CreateCurFunc();
-    Ins(&R, chk.ret, "void",false);
-    Ins(&R, chk.proto, "StaticCheck()",false);
-    SizeCheck(R,ns,chk);
-    ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
-        int field_idx = 0;
-        ind_beg(amc::ctype_c_field_curs, field,ctype) if (!FldfuncQ(field)) {
-            OffsetCheck(R,field,field_idx,chk.body);
-            if (!field.c_bitfld) {
-                field_idx++;
-            }
+void amc::tfunc_Ns_StaticCheck() {
+    amc::FNs &ns = *amc::_db.genctx.p_ns;
+    if (ns.nstype == dmmeta_Nstype_nstype_protocol || ns.c_globfld) {
+        algo_lib::Replscope R;
+        Set(R, "$ns", ns.ns);
+        amc::FFunc& chk = amc::CreateCurFunc();
+        Ins(&R, chk.ret, "void",false);
+        Ins(&R, chk.proto, "StaticCheck()",false);
+        SizeCheck(R,ns,chk);
+        ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
+            int field_idx = 0;
+            ind_beg(amc::ctype_c_field_curs, field,ctype) if (!FldfuncQ(field)) {
+                OffsetCheck(R,field,field_idx,chk.body);
+                if (!field.c_bitfld) {
+                    field_idx++;
+                }
+            }ind_end;
+            ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_fldoffset) {
+                if (name_Get(field).n_ch > 0 && !FixaryQ(field) && &field != field.p_ctype->c_varlenfld) {
+                    Set(R, "$Type", amc::NsToCpp(ctype_Get(field)));
+                    Set(R, "$offset", tempstr() << field.c_fldoffset->offset);
+                    Set(R, "$fld", name_Get(field));
+                    Set(R, "$suffix",field.c_fbigend?"_be":"");
+                    Ins(&R, chk.body, "algo_assert(_offset_of($Type, $fld$suffix) == $offset);");
+                }
+            }ind_end;
         }ind_end;
-        ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_fldoffset) {
-            if (name_Get(field).n_ch > 0 && !FixaryQ(field) && &field != field.p_ctype->c_varlenfld) {
-                Set(R, "$Type", amc::NsToCpp(ctype_Get(field)));
-                Set(R, "$offset", tempstr() << field.c_fldoffset->offset);
-                Set(R, "$fld", name_Get(field));
-                Set(R, "$suffix",field.c_fbigend?"_be":"");
-                Ins(&R, chk.body, "algo_assert(_offset_of($Type, $fld$suffix) == $offset);");
-            }
-        }ind_end;
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-void amc::gen_prep_proto() {
-    ind_beg(amc::_db_ns_curs,ns,amc::_db) {
-        if (ns.nstype == dmmeta_Nstype_nstype_protocol && ns.ns != "") {
-            if (!ns.c_globfld) {
-                tempstr db=tempstr() << ns.ns << ".Protocol";
-                amc::ctype_InsertMaybe(dmmeta::Ctype(db,algo::Comment("amc-generated struct for internal purposes")));
-                amc::pack_InsertMaybe(dmmeta::Pack(db,algo::Comment()));
-                amc::field_InsertMaybe(dmmeta::Field(tempstr()<<db<<".proto", db, dmmeta_Reftype_reftype_Protocol
-                                                     , algo::CppExpr(), algo::Comment("")));
-            }
-        }
-    }ind_end;
+    }
 }

@@ -89,12 +89,12 @@ extern const char *  amcdb_Tclass_tclass_Lary;       // Lary        fconst:amcdb
 extern const char *  amcdb_Tclass_tclass_Llist;      // Llist       fconst:amcdb.Tclass.tclass/Llist
 extern const char *  amcdb_Tclass_tclass_Lpool;      // Lpool       fconst:amcdb.Tclass.tclass/Lpool
 extern const char *  amcdb_Tclass_tclass_Malloc;     // Malloc      fconst:amcdb.Tclass.tclass/Malloc
+extern const char *  amcdb_Tclass_tclass_Ns;         // Ns          fconst:amcdb.Tclass.tclass/Ns
 extern const char *  amcdb_Tclass_tclass_Numstr;     // Numstr      fconst:amcdb.Tclass.tclass/Numstr
 extern const char *  amcdb_Tclass_tclass_Opt;        // Opt         fconst:amcdb.Tclass.tclass/Opt
 extern const char *  amcdb_Tclass_tclass_Pkey;       // Pkey        fconst:amcdb.Tclass.tclass/Pkey
 extern const char *  amcdb_Tclass_tclass_Pmask;      // Pmask       fconst:amcdb.Tclass.tclass/Pmask
 extern const char *  amcdb_Tclass_tclass_Pool;       // Pool        fconst:amcdb.Tclass.tclass/Pool
-extern const char *  amcdb_Tclass_tclass_Protocol;   // Protocol    fconst:amcdb.Tclass.tclass/Protocol
 extern const char *  amcdb_Tclass_tclass_Ptr;        // Ptr         fconst:amcdb.Tclass.tclass/Ptr
 extern const char *  amcdb_Tclass_tclass_Ptrary;     // Ptrary      fconst:amcdb.Tclass.tclass/Ptrary
 extern const char *  amcdb_Tclass_tclass_Regx;       // Regx        fconst:amcdb.Tclass.tclass/Regx
@@ -118,8 +118,8 @@ namespace amcdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TclassPkey;
     typedef algo::Smallstr50 TfuncPkey;
 } // gen:ns_pkeytypedef
-namespace amcdb { // gen:ns_field
-} // gen:ns_field
+namespace amcdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amcdb { struct Bltin; }
 namespace amcdb { struct Curstype; }

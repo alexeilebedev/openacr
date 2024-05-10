@@ -63,8 +63,8 @@ enum { lib_ams_FieldIdEnum_N = 1 };
 
 namespace lib_ams { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_ams { // gen:ns_field
-} // gen:ns_field
+namespace lib_ams { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_ams { struct FStream; }
 namespace lib_ams { struct FProc; }
@@ -424,8 +424,6 @@ void                 cd_fdin_read_Step() __attribute__((nothrow));
 // Main step
 // func:lib_ams.FDb._db.Step
 void                 Step();
-// func:lib_ams.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_ams.FDb._db.InsertStrptrMaybe
@@ -2150,6 +2148,8 @@ struct writefile_cbuf_curs {// cursor
 
 } // gen:ns_curstext
 namespace lib_ams { // gen:ns_func
+// func:lib_ams...StaticCheck
+void                 StaticCheck();
 // User-implemented callback function for dispatch CtlMsg
 // func:lib_ams.CtlMsg.ams.DumpStreamTableMsg
 // this function is 'extrn' and implemented by user

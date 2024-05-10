@@ -37,9 +37,9 @@ enum { bash2html_FieldIdEnum_N = 1 };
 
 namespace bash2html { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace bash2html { // gen:ns_field
+namespace bash2html { // gen:ns_tclass_field
 extern const char *bash2html_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace bash2html { struct trace; }
 namespace bash2html { struct FDb; }
@@ -82,8 +82,6 @@ void                 Step();
 // func:bash2html.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:bash2html.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:bash2html.FDb._db.InsertStrptrMaybe
@@ -170,6 +168,8 @@ void                 FieldId_Init(bash2html::FieldId& parent);
 void                 FieldId_Print(bash2html::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace bash2html { // gen:ns_func
+// func:bash2html...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:bash2html...main
 int                  main(int argc, char **argv);

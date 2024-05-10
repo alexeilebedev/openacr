@@ -28,8 +28,8 @@ void amc::tclass_Fcast() {
 }
 
 void amc::tfunc_Fcast_Cast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype &valtype = *field.p_arg;
     amc::FFcast &fcast = *field.c_fcast;
 

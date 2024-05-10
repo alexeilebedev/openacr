@@ -197,12 +197,6 @@ static void lib_json::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_json.FDb._db.StaticCheck
-void lib_json::StaticCheck() {
-    algo_assert(_offset_of(lib_json::trace, del__db_node) + sizeof(((lib_json::trace*)0)->del__db_node) == sizeof(lib_json::trace));
-    algo_assert(_offset_of(lib_json::FieldId, value) + sizeof(((lib_json::FieldId*)0)->value) == sizeof(lib_json::FieldId));
-}
-
 // --- lib_json.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1018,4 +1012,10 @@ void lib_json::FieldId_Print(lib_json::FieldId& row, algo::cstring& str) {
 
 // --- lib_json...SizeCheck
 inline static void lib_json::SizeCheck() {
+}
+
+// --- lib_json...StaticCheck
+void lib_json::StaticCheck() {
+    algo_assert(_offset_of(lib_json::trace, del__db_node) + sizeof(((lib_json::trace*)0)->del__db_node) == sizeof(lib_json::trace));
+    algo_assert(_offset_of(lib_json::FieldId, value) + sizeof(((lib_json::FieldId*)0)->value) == sizeof(lib_json::FieldId));
 }

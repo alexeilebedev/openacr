@@ -37,9 +37,9 @@ enum { samp_regx_FieldIdEnum_N = 1 };
 
 namespace samp_regx { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace samp_regx { // gen:ns_field
+namespace samp_regx { // gen:ns_tclass_field
 extern const char *samp_regx_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace samp_regx { struct trace; }
 namespace samp_regx { struct FDb; }
@@ -82,8 +82,6 @@ void                 Step();
 // func:samp_regx.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:samp_regx.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:samp_regx.FDb._db.InsertStrptrMaybe
@@ -170,6 +168,8 @@ void                 FieldId_Init(samp_regx::FieldId& parent);
 void                 FieldId_Print(samp_regx::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace samp_regx { // gen:ns_func
+// func:samp_regx...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:samp_regx...main
 int                  main(int argc, char **argv);

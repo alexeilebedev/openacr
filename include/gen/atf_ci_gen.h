@@ -71,9 +71,9 @@ enum { atf_ci_TableIdEnum_N = 22 };
 
 namespace atf_ci { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace atf_ci { // gen:ns_field
+namespace atf_ci { // gen:ns_tclass_field
 extern const char *atf_ci_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Builddir; }
 namespace dev { struct Cfg; }
@@ -359,8 +359,6 @@ void                 Step();
 // func:atf_ci.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:atf_ci.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:atf_ci.FDb._db.InsertStrptrMaybe
@@ -1408,6 +1406,9 @@ void                 readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) __at
 // func:atf_ci.FReadme.base.CopyIn
 void                 readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) __attribute__((nothrow));
 
+// func:atf_ci.FReadme.readmecat.Get
+algo::Smallstr50     readmecat_Get(atf_ci::FReadme& readme) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:atf_ci.FReadme..Init
 void                 FReadme_Init(atf_ci::FReadme& readme);
@@ -1858,6 +1859,10 @@ void                 citest_atf_comp();
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_cov();
 // User-implemented function from gstatic:atf_ci.FDb.citest
+// func:atf_ci...citest_apm_check
+// this function is 'extrn' and implemented by user
+void                 citest_apm_check();
+// User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_atf_comp_mem
 // this function is 'extrn' and implemented by user
 void                 citest_atf_comp_mem();
@@ -1866,17 +1871,13 @@ void                 citest_atf_comp_mem();
 // this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimfile();
 // User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_apm_check
+// func:atf_ci...citest_apm
 // this function is 'extrn' and implemented by user
-void                 citest_apm_check();
+void                 citest_apm();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_acr_ed_ssimdb
 // this function is 'extrn' and implemented by user
 void                 citest_acr_ed_ssimdb();
-// User-implemented function from gstatic:atf_ci.FDb.citest
-// func:atf_ci...citest_apm
-// this function is 'extrn' and implemented by user
-void                 citest_apm();
 // User-implemented function from gstatic:atf_ci.FDb.citest
 // func:atf_ci...citest_acr_ed_target
 // this function is 'extrn' and implemented by user
@@ -1889,6 +1890,8 @@ void                 citest_apm_reinstall();
 // func:atf_ci...citest_ssimfile
 // this function is 'extrn' and implemented by user
 void                 citest_ssimfile();
+// func:atf_ci...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:atf_ci...main
 int                  main(int argc, char **argv);

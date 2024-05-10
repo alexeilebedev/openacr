@@ -28,8 +28,8 @@ void amc::tclass_Cppfunc() {
 }
 
 void amc::tfunc_Cppfunc_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& get = amc::CreateCurFunc();
     Set(R, "$Fldtype", field.cpp_type);
     Ins(&R, get.ret  , "$Fldtype", false);
@@ -56,8 +56,8 @@ void amc::tfunc_Cppfunc_Init() {
 }
 
 void amc::tfunc_Cppfunc_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (field.c_cppfunc && field.c_cppfunc->set) {
         Set(R, "$Fldargtype", Argtype(field));

@@ -44,8 +44,8 @@ enum { lib_exec_FieldIdEnum_N = 6 };
 
 namespace lib_exec { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace lib_exec { // gen:ns_field
-} // gen:ns_field
+namespace lib_exec { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace lib_exec { struct FSyscmd; }
 namespace lib_exec { struct _db_syscmddep_curs; }
@@ -127,8 +127,6 @@ struct FDb { // lib_exec.FDb
     lib_exec::trace         trace;                       //
 };
 
-// func:lib_exec.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_exec.FDb._db.InsertStrptrMaybe
@@ -714,6 +712,8 @@ struct syscmd_c_next_curs {// fcurs:lib_exec.FSyscmd.c_next/curs
 
 } // gen:ns_curstext
 namespace lib_exec { // gen:ns_func
+// func:lib_exec...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

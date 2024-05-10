@@ -682,6 +682,61 @@ void amc::gen_ctype_toposort() {
     }ind_end;
 }
 
+void amc::PlaindataVisit(amc::FCtype &ctype) {
+    // todo: rename this to zs_ctype_visit
+    if(!zs_sig_visit_InLlistQ(ctype)) {
+        zs_sig_visit_Insert(ctype);
+        // assume the best initially...
+        bool plaindata= ctype.c_cextern ? ctype.c_cextern->plaindata
+            : true;
+        // check fields -- any complex fields mean the type is not plaindata
+        // inline strings, arrays, pointers, values, are OK
+        // any user-defined functions attached to field disqualify the ctype.
+        if (plaindata) {
+            ind_beg(ctype_c_field_curs,field,ctype) {
+                if (!(field.reftype == dmmeta_Reftype_reftype_Smallstr
+                      || field.reftype == dmmeta_Reftype_reftype_Val
+                      || field.reftype == dmmeta_Reftype_reftype_Inlary
+                      || field.reftype == dmmeta_Reftype_reftype_Cppstack
+                      || field.reftype == dmmeta_Reftype_reftype_Ptr
+                      || field.reftype == dmmeta_Reftype_reftype_Base
+                      || field.reftype == dmmeta_Reftype_reftype_Bitfld)
+                    || field.c_fcleanup
+                    || field.c_fuserinit) {
+                    plaindata=false;
+                } else {
+                    // recursive step
+                    PlaindataVisit(*field.p_arg);
+                    if (!field.p_arg->plaindata) {
+                        plaindata=false;
+                    }
+                }
+            }ind_end;
+        }
+        // check access paths -- any xrefs means the type is not plaindata
+        ind_beg(ctype_zd_access_curs,inst,ctype) {
+            if (inst.p_reftype->isxref) {
+                plaindata=false;
+                break;
+            }
+        }ind_end;
+        // save the computed value
+        ctype.plaindata=plaindata;
+    }
+}
+
+// recursively determine for each type whether it's "plaindata".
+// set ctype.plaindata flag.
+// plaindata structs can be copied with memcpy.
+void amc::gen_plaindata() {
+    zs_sig_visit_RemoveAll();
+    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
+        PlaindataVisit(ctype);
+        // #AL# it would be interesting to assert to that all ctypes in a given namespace
+        // must be 'plaindata' but we have too many violations (algo, command, even atf)
+    }ind_end;
+}
+
 tempstr amc::Argtype(amc::FField &field) {
     tempstr retval;
     // determine arg type
@@ -1143,16 +1198,6 @@ void amc::gen_ns_enums() {
         ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
             amc::Main_GenEnum(ns, ctype); // experimental
         }ind_end;
-    }ind_end;
-}
-
-void amc::gen_ns_field() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
-        amc::BeginNsBlock(*ns.hdr, ns, "");
-        ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
-            GenTclass_Fields(ctype);
-        }ind_end;
-        amc::EndNsBlock(*ns.hdr, ns, "");
     }ind_end;
 }
 

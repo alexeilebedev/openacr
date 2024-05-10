@@ -147,38 +147,39 @@ enum dev_FieldIdEnum {                 // dev.FieldId.value
     ,dev_FieldId_soft           = 71
     ,dev_FieldId_pkgkey         = 72
     ,dev_FieldId_key            = 73
-    ,dev_FieldId_inl            = 74
-    ,dev_FieldId_sandbox        = 75
-    ,dev_FieldId_filter         = 76
-    ,dev_FieldId_sbpath         = 77
-    ,dev_FieldId_syscmd         = 78
-    ,dev_FieldId_execkey        = 79
-    ,dev_FieldId_command        = 80
-    ,dev_FieldId_pid            = 81
-    ,dev_FieldId_status         = 82
-    ,dev_FieldId_nprereq        = 83
-    ,dev_FieldId_fail_prereq    = 84
-    ,dev_FieldId_completed      = 85
-    ,dev_FieldId_maxtime        = 86
-    ,dev_FieldId_syscmddep      = 87
-    ,dev_FieldId_child          = 88
-    ,dev_FieldId_syslib         = 89
-    ,dev_FieldId_targdep        = 90
-    ,dev_FieldId_target         = 91
-    ,dev_FieldId_targsrc        = 92
-    ,dev_FieldId_targsyslib     = 93
-    ,dev_FieldId_cov_min        = 94
-    ,dev_FieldId_maxerr         = 95
-    ,dev_FieldId_timefmt        = 96
-    ,dev_FieldId_dirname        = 97
-    ,dev_FieldId_tool_opt       = 98
-    ,dev_FieldId_opt            = 99
-    ,dev_FieldId_sortfld        = 100
-    ,dev_FieldId_field          = 101
-    ,dev_FieldId_value          = 102
+    ,dev_FieldId_readmecat      = 74
+    ,dev_FieldId_inl            = 75
+    ,dev_FieldId_sandbox        = 76
+    ,dev_FieldId_filter         = 77
+    ,dev_FieldId_sbpath         = 78
+    ,dev_FieldId_syscmd         = 79
+    ,dev_FieldId_execkey        = 80
+    ,dev_FieldId_command        = 81
+    ,dev_FieldId_pid            = 82
+    ,dev_FieldId_status         = 83
+    ,dev_FieldId_nprereq        = 84
+    ,dev_FieldId_fail_prereq    = 85
+    ,dev_FieldId_completed      = 86
+    ,dev_FieldId_maxtime        = 87
+    ,dev_FieldId_syscmddep      = 88
+    ,dev_FieldId_child          = 89
+    ,dev_FieldId_syslib         = 90
+    ,dev_FieldId_targdep        = 91
+    ,dev_FieldId_target         = 92
+    ,dev_FieldId_targsrc        = 93
+    ,dev_FieldId_targsyslib     = 94
+    ,dev_FieldId_cov_min        = 95
+    ,dev_FieldId_maxerr         = 96
+    ,dev_FieldId_timefmt        = 97
+    ,dev_FieldId_dirname        = 98
+    ,dev_FieldId_tool_opt       = 99
+    ,dev_FieldId_opt            = 100
+    ,dev_FieldId_sortfld        = 101
+    ,dev_FieldId_field          = 102
+    ,dev_FieldId_value          = 103
 };
 
-enum { dev_FieldIdEnum_N = 103 };
+enum { dev_FieldIdEnum_N = 104 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
@@ -212,6 +213,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
     typedef algo::Smallstr150 PkgkeyPkey;
+    typedef algo::Smallstr50 ReadmecatPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
     typedef algo::Smallstr200 SrcfilePkey;
@@ -226,8 +228,8 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr100 ToolOptPkey;
     typedef algo::Smallstr50 UnamePkey;
 } // gen:ns_pkeytypedef
-namespace dev { // gen:ns_field
-} // gen:ns_field
+namespace dev { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Arch; }
 namespace dev { struct Badline; }
@@ -256,6 +258,7 @@ namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Readme; }
+namespace dev { struct Readmecat; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
 namespace dev { struct Scriptfile; }
@@ -1013,6 +1016,11 @@ struct Readme { // dev.Readme: File containing documentation
     Readme();
 };
 
+// func:dev.Readme.readmecat.Get
+algo::Smallstr50     readmecat_Get(dev::Readme& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Readme.readmecat.Get2
+algo::Smallstr50     Readme_readmecat_Get(algo::strptr arg) __attribute__((nothrow));
+
 // func:dev.Readme..ReadFieldMaybe
 bool                 Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Readme from an ascii string.
@@ -1026,6 +1034,24 @@ void                 Readme_Init(dev::Readme& parent);
 // cfmt:dev.Readme.String  printfmt:Tuple
 // func:dev.Readme..Print
 void                 Readme_Print(dev::Readme& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Readmecat
+struct Readmecat { // dev.Readmecat: sorted categories of txt/ *.md files presented in dev.readme
+    algo::Smallstr50   readmecat;   //
+    algo::Comment      comment;     //
+    Readmecat();
+};
+
+// func:dev.Readmecat..ReadFieldMaybe
+bool                 Readmecat_ReadFieldMaybe(dev::Readmecat& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Readmecat from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Readmecat..ReadStrptrMaybe
+bool                 Readmecat_ReadStrptrMaybe(dev::Readmecat &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Readmecat.String  printfmt:Tuple
+// func:dev.Readmecat..Print
+void                 Readmecat_Print(dev::Readmecat& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sandbox
 struct Sandbox { // dev.Sandbox: Registered sandbox
@@ -1482,6 +1508,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmecat &row);// cfmt:dev.Readmecat.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Scriptfile &row);// cfmt:dev.Scriptfile.String

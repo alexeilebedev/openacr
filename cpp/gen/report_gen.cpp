@@ -372,11 +372,6 @@ void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
     report::value_Print(row, str);
 }
 
-// --- report.Protocol.proto.StaticCheck
-void report::StaticCheck() {
-    algo_assert(_offset_of(report::FieldId, value) + sizeof(((report::FieldId*)0)->value) == sizeof(report::FieldId));
-}
-
 // --- report.abt..ReadFieldMaybe
 bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1073,4 +1068,9 @@ void report::src_func_Print(report::src_func& row, algo::cstring& str) {
 
 // --- report...SizeCheck
 inline static void report::SizeCheck() {
+}
+
+// --- report...StaticCheck
+void report::StaticCheck() {
+    algo_assert(_offset_of(report::FieldId, value) + sizeof(((report::FieldId*)0)->value) == sizeof(report::FieldId));
 }

@@ -66,9 +66,9 @@ enum { sv2ssim_TableIdEnum_N = 4 };
 
 namespace sv2ssim { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace sv2ssim { // gen:ns_field
+namespace sv2ssim { // gen:ns_tclass_field
 extern const char *sv2ssim_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace sv2ssim { struct _db_field_curs; }
 namespace sv2ssim { struct _db_linetok_curs; }
@@ -173,8 +173,6 @@ void                 Step();
 // func:sv2ssim.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:sv2ssim.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:sv2ssim.FDb._db.InsertStrptrMaybe
@@ -757,6 +755,8 @@ struct _db_bltin_curs {// cursor
 
 } // gen:ns_curstext
 namespace sv2ssim { // gen:ns_func
+// func:sv2ssim...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:sv2ssim...main
 int                  main(int argc, char **argv);

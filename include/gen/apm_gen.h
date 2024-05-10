@@ -67,9 +67,9 @@ enum { apm_TableIdEnum_N = 18 };
 
 namespace apm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace apm { // gen:ns_field
+namespace apm { // gen:ns_tclass_field
 extern const char *apm_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace dmmeta { struct Field; }
@@ -398,8 +398,6 @@ void                 Step();
 // func:apm.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:apm.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:apm.FDb._db.InsertStrptrMaybe
@@ -2727,6 +2725,8 @@ struct ssimfile_zd_ssimfile_rec_curs {// fcurs:apm.FSsimfile.zd_ssimfile_rec/cur
 
 } // gen:ns_curstext
 namespace apm { // gen:ns_func
+// func:apm...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:apm...main
 int                  main(int argc, char **argv);

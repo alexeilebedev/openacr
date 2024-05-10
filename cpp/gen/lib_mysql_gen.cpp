@@ -77,11 +77,6 @@ static void lib_mysql::InitReflection() {
     // -- load signatures of existing dispatches --
 }
 
-// --- lib_mysql.FDb._db.StaticCheck
-void lib_mysql::StaticCheck() {
-    algo_assert(_offset_of(lib_mysql::FieldId, value) + sizeof(((lib_mysql::FieldId*)0)->value) == sizeof(lib_mysql::FieldId));
-}
-
 // --- lib_mysql.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -277,4 +272,9 @@ void lib_mysql::Res_Uninit(lib_mysql::Res& res) {
 
 // --- lib_mysql...SizeCheck
 inline static void lib_mysql::SizeCheck() {
+}
+
+// --- lib_mysql...StaticCheck
+void lib_mysql::StaticCheck() {
+    algo_assert(_offset_of(lib_mysql::FieldId, value) + sizeof(((lib_mysql::FieldId*)0)->value) == sizeof(lib_mysql::FieldId));
 }

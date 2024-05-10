@@ -479,11 +479,6 @@ static void src_lim::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'00ee14baa7bb10e798a9968848e5501b1eba3043'");
 }
 
-// --- src_lim.FDb._db.StaticCheck
-void src_lim::StaticCheck() {
-    algo_assert(_offset_of(src_lim::FieldId, value) + sizeof(((src_lim::FieldId*)0)->value) == sizeof(src_lim::FieldId));
-}
-
 // --- src_lim.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1554,6 +1549,11 @@ void src_lim::TableId_Print(src_lim::TableId& row, algo::cstring& str) {
 
 // --- src_lim...SizeCheck
 inline static void src_lim::SizeCheck() {
+}
+
+// --- src_lim...StaticCheck
+void src_lim::StaticCheck() {
+    algo_assert(_offset_of(src_lim::FieldId, value) + sizeof(((src_lim::FieldId*)0)->value) == sizeof(src_lim::FieldId));
 }
 
 // --- src_lim...main

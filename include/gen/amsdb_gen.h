@@ -44,8 +44,8 @@ namespace amsdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ProcTypePkey;
     typedef algo::Smallstr50 StreamTypePkey;
 } // gen:ns_pkeytypedef
-namespace amsdb { // gen:ns_field
-} // gen:ns_field
+namespace amsdb { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amsdb { struct FieldId; }
 namespace amsdb { struct ProcType; }

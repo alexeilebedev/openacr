@@ -296,9 +296,6 @@ inline bool ietf::Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) {
     }
     return ret;
 }
-inline ietf::Protocol::Protocol() {
-}
-
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ietf::FieldId &row) {// cfmt:ietf.FieldId.String
     ietf::FieldId_Print(const_cast<ietf::FieldId&>(row), str);

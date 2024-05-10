@@ -40,14 +40,13 @@ enum { ietf_FieldIdEnum_N = 5 };
 
 namespace ietf { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace ietf { // gen:ns_field
-} // gen:ns_field
+namespace ietf { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ietf { struct FieldId; }
 namespace ietf { struct Ipv4; }
 namespace ietf { struct Ipport; }
 namespace ietf { struct Ipv4Addr; }
-namespace ietf { struct Protocol; }
 namespace ietf { // gen:ns_print_struct
 
 // --- ietf.FieldId
@@ -223,20 +222,10 @@ bool                 Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) __
 // func:ietf.Ipv4Addr..Print
 // this function is 'extrn' and implemented by user
 void                 Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring& str) __attribute__((nothrow));
-
-// --- ietf.Protocol
-// access: ietf.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // ietf.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:ietf.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 } // gen:ns_print_struct
 namespace ietf { // gen:ns_func
+// func:ietf...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Llist() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
     amc::FListtype &listtype = *llist->p_listtype;
 
@@ -75,8 +75,8 @@ void amc::tclass_Llist() {
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Llist_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     // cascading delete
     if (field.c_cascdel) {
@@ -91,7 +91,7 @@ void amc::tfunc_Llist_DestructiveFirst() {
 }
 
 void amc::tfunc_Llist_EmptyQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& emptyq = amc::CreateCurFunc();
     Ins(&R, emptyq.ret  , "bool", false);
@@ -100,7 +100,7 @@ void amc::tfunc_Llist_EmptyQ() {
 }
 
 void amc::tfunc_Llist_First() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& first = amc::CreateCurFunc();
     Ins(&R, first.ret  , "$Cpptype*", false);
@@ -111,7 +111,7 @@ void amc::tfunc_Llist_First() {
 }
 
 void amc::tfunc_Llist_InLlistQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& inlist = amc::CreateCurFunc();
     Ins(&R, inlist.ret  , "bool", false);
@@ -122,8 +122,8 @@ void amc::tfunc_Llist_InLlistQ() {
 }
 
 void amc::tfunc_Llist_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     amc::FFunc& init = amc::CreateCurFunc();
@@ -137,8 +137,8 @@ void amc::tfunc_Llist_Init() {
 }
 
 void amc::tfunc_Llist_Last() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     if (llist->havetail) {
@@ -160,8 +160,8 @@ void amc::tfunc_Llist_Last() {
 }
 
 void amc::tfunc_Llist_N() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     if (llist->havecount) {
@@ -173,7 +173,7 @@ void amc::tfunc_Llist_N() {
 }
 
 void amc::tfunc_Llist_Next() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& next = amc::CreateCurFunc();
     Ins(&R, next.ret  , "$Cpptype*", false);
@@ -182,8 +182,8 @@ void amc::tfunc_Llist_Next() {
 }
 
 void amc::tfunc_Llist_Prev() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     if (llist->p_listtype->haveprev) {
@@ -195,8 +195,8 @@ void amc::tfunc_Llist_Prev() {
 }
 
 void amc::tfunc_Llist_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     amc::FFunc& remove = amc::CreateCurFunc();
@@ -303,8 +303,8 @@ void amc::tfunc_Llist_Remove() {
 }
 
 void amc::tfunc_Llist_RemoveAll() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     amc::FFunc& flush = amc::CreateCurFunc();
@@ -344,8 +344,8 @@ void amc::tfunc_Llist_RemoveAll() {
 }
 
 void amc::tfunc_Llist_RemoveFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     amc::FFunc& remfirst = amc::CreateCurFunc();
@@ -401,8 +401,8 @@ void amc::tfunc_Llist_RemoveFirst() {
 }
 
 void amc::tfunc_Llist_RotateFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
 
     if (llist->p_listtype->circular) {
@@ -422,8 +422,8 @@ void amc::tfunc_Llist_RotateFirst() {
 }
 
 void amc::tfunc_Llist_Insert() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
     amc::FListtype &listtype = *llist->p_listtype;
 
@@ -523,8 +523,8 @@ void amc::tfunc_Llist_Insert() {
 }
 
 void amc::tfunc_Llist_qLast() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FLlist *llist = field.c_llist;
     amc::FListtype &listtype = *llist->p_listtype;
 
@@ -552,8 +552,8 @@ void amc::tfunc_Llist_qLast() {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_ZSListMT() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc *child_init = amc::init_GetOrCreate(*field.p_arg);
 
     // helper fields
@@ -568,7 +568,7 @@ void amc::tclass_ZSListMT() {
 }
 
 void amc::tfunc_ZSListMT_DestructiveFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& first = amc::CreateCurFunc();
     Ins(&R,     first.comment, "If index is empty, return NULL");
@@ -599,7 +599,7 @@ void amc::tfunc_ZSListMT_DestructiveFirst() {
 }
 
 void amc::tfunc_ZSListMT_RemoveFirst() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& remfirst = amc::CreateCurFunc();
     Ins(&R,     remfirst.ret  , "$Cpptype*", false);
@@ -614,7 +614,7 @@ void amc::tfunc_ZSListMT_RemoveFirst() {
 }
 
 void amc::tfunc_ZSListMT_InLlistQ() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& inlist = amc::CreateCurFunc();
     inlist.inl=true;
@@ -626,7 +626,7 @@ void amc::tfunc_ZSListMT_InLlistQ() {
 }
 
 void amc::tfunc_ZSListMT_Insert() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& insert = amc::CreateCurFunc();
     Ins(&R,     insert.ret  , "void", false);
@@ -644,7 +644,7 @@ void amc::tfunc_ZSListMT_Insert() {
 }
 
 void amc::tfunc_ZSListMT_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& remove = amc::CreateCurFunc();
     Ins(&R,     remove.comment, "If element is not in index, do nothing.");
     Ins(&R,     remove.comment, "Otherwise, throw exception: ZSListMT elements cannot");
@@ -658,7 +658,7 @@ void amc::tfunc_ZSListMT_Remove() {
 }
 
 void amc::tfunc_ZSListMT_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = true;
     Ins(&R, init.body     , "$parname.$name_head = NULL; // ($field)");
@@ -667,9 +667,9 @@ void amc::tfunc_ZSListMT_Init() {
 
 // Generate cursor for llist
 void amc::Llist_curs(bool needdel) {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
-    amc::FNs &ns = *amc::_db.genfield.p_field->p_ctype->p_ns;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
     amc::FLlist *llist = field.c_llist;
     amc::FListtype &listtype = *llist->p_listtype;
     bool circular  = listtype.circular;

@@ -80,9 +80,9 @@ enum { acr_ed_TableIdEnum_N = 32 };
 
 namespace acr_ed { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace acr_ed { // gen:ns_field
+namespace acr_ed { // gen:ns_tclass_field
 extern const char *acr_ed_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Cfmt; }
 namespace dmmeta { struct Cpptype; }
@@ -665,8 +665,6 @@ void                 Step();
 // func:acr_ed.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:acr_ed.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:acr_ed.FDb._db.InsertStrptrMaybe
@@ -2619,6 +2617,8 @@ void                 edaction_Rename_Ssimfile();
 // func:acr_ed...edaction_Rename_Target
 // this function is 'extrn' and implemented by user
 void                 edaction_Rename_Target();
+// func:acr_ed...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:acr_ed...main
 int                  main(int argc, char **argv);

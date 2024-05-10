@@ -77,8 +77,8 @@ enum { fm_FieldIdEnum_N = 19 };
 
 namespace fm { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace fm { // gen:ns_field
-} // gen:ns_field
+namespace fm { // gen:ns_tclass_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace fm { struct Code; }
 namespace fm { struct Objtype; }
@@ -89,7 +89,6 @@ namespace fm { struct Summary; }
 namespace fm { struct Description; }
 namespace fm { struct Source; }
 namespace fm { struct FieldId; }
-namespace fm { struct Protocol; }
 namespace fm { // gen:ns_print_struct
 
 // --- fm.Code
@@ -723,20 +722,10 @@ void                 FieldId_Init(fm::FieldId& parent);
 // cfmt:fm.FieldId.String  printfmt:Raw
 // func:fm.FieldId..Print
 void                 FieldId_Print(fm::FieldId& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- fm.Protocol
-// access: fm.Protocol.proto (Protocol)
-#pragma pack(push,1)
-struct Protocol { // fm.Protocol: amc-generated struct for internal purposes
-    Protocol();
-};
-#pragma pack(pop)
-
-// func:fm.Protocol.proto.StaticCheck
-void                 StaticCheck();
-
 } // gen:ns_print_struct
 namespace fm { // gen:ns_func
+// func:fm...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {

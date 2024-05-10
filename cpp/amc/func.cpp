@@ -173,7 +173,7 @@ void amc::SetPresent(amc::FFunc &func, strptr ref, amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
-// Create function for current field (amc::_db.genfield.p_field) & tfunc (amc::_db.genfield.p_tfunc)
+// Create function for current field (amc::_db.genctx.p_field) & tfunc (amc::_db.genctx.p_tfunc)
 // The function name is constructed from the field name and the tfunc name, e.g. "field_FuncName"
 // unless an explicit function name is passed through argument FUNCNAME.
 //
@@ -185,22 +185,25 @@ void amc::SetPresent(amc::FFunc &func, strptr ref, amc::FField &field) {
 // If PROTO flag is set, function prototype (FUNC.PROTO) string is initialized to the function name,
 // and a default first argument is added unless the function is on a global field.
 amc::FFunc &amc::CreateCurFunc(bool proto DFLTVAL(false), algo::strptr funcname DFLTVAL("")) {
-    amc::FTfunc &tfunc = *amc::_db.genfield.p_tfunc;
-    amc::FField *field=amc::_db.genfield.p_field;
-    amc::FCtype *ctype=amc::_db.genfield.p_ctype;
+    amc::FTfunc &tfunc = *amc::_db.genctx.p_tfunc;
+    amc::FField *field=amc::_db.genctx.p_field;
+    amc::FCtype *ctype=amc::_db.genctx.p_ctype;
+    amc::FNs *ns=amc::_db.genctx.p_ns;
     algo::Smallstr50 name = funcname == "" ? strptr(name_Get(tfunc)) : funcname;
     tempstr key;
     if (field) {
         key << field->field << ".";
-    } else {
+    } else if (ctype) {
         key << ctype->ctype << "..";
+    } else {
+        key << ns->ns << "...";
     }
     key << name;
     amc::FFunc  &func = amc::ind_func_GetOrCreate(key);
     func.glob         = !field;
     func.wur          = tfunc.wur;     // copy warn-unused-result flag
     func.inl          = tfunc.inl;     // default
-    func.globns       = !field && ns_Get(*ctype)=="";
+    func.globns       = !field && ns->ns=="";
     func.isalloc      = tfunc.poolfunc;
     func.nothrow      = !tfunc.hasthrow && tfunc.leaf;
     func.ismacro      = tfunc.ismacro;
@@ -215,18 +218,20 @@ amc::FFunc &amc::CreateCurFunc(bool proto DFLTVAL(false), algo::strptr funcname 
                 // function name based on field
                 func.proto << name_Get(*field);
             }
-        } else {
+        } else if (ctype) {
             if (!GlobalQ(*ctype) && funcname == "") {
                 // function name based on ctype
                 func.proto << name_Get(*ctype);
             }
+        } else {
+            func.proto << ns->ns;
         }
         if (func.proto != "") {
             func.proto<<"_";
         }
         func.proto<<name<<"()";
         // add first argument
-        if (field && !GlobalQ(*ctype)) {
+        if (field && ctype && !GlobalQ(*ctype)) {
             AddProtoArg(func, Refto(ctype->cpp_type), Refname(*ctype));
         }
     }

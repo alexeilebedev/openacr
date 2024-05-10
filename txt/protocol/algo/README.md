@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [txt/protocol/algo/Attr.md](/txt/protocol/algo/Attr.md)
 
 * [txt/protocol/algo/Bool.md](/txt/protocol/algo/Bool.md)
@@ -77,6 +78,8 @@
 * [txt/protocol/algo/memptr.md](/txt/protocol/algo/memptr.md)
 
 * [txt/protocol/algo/strptr.md](/txt/protocol/algo/strptr.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>

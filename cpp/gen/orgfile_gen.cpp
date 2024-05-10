@@ -261,11 +261,6 @@ static void orgfile::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'orgfile.Input'  signature:'dadfcf8accbcc44f5e5443f439ac4024afc89edf'");
 }
 
-// --- orgfile.FDb._db.StaticCheck
-void orgfile::StaticCheck() {
-    algo_assert(_offset_of(orgfile::FieldId, value) + sizeof(((orgfile::FieldId*)0)->value) == sizeof(orgfile::FieldId));
-}
-
 // --- orgfile.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -1379,6 +1374,11 @@ void orgfile::move_Print(orgfile::move& row, algo::cstring& str) {
 
 // --- orgfile...SizeCheck
 inline static void orgfile::SizeCheck() {
+}
+
+// --- orgfile...StaticCheck
+void orgfile::StaticCheck() {
+    algo_assert(_offset_of(orgfile::FieldId, value) + sizeof(((orgfile::FieldId*)0)->value) == sizeof(orgfile::FieldId));
 }
 
 // --- orgfile...main

@@ -1148,15 +1148,6 @@ static void algo_lib::InitReflection() {
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'algo_lib.Input'  signature:'ddc07e859e7056e1a824df1ad0e6d08e12e89849'");
 }
 
-// --- algo_lib.FDb._db.StaticCheck
-void algo_lib::StaticCheck() {
-    algo_assert(sizeof(algo_lib::_db_h_fatalerror_hook) == 8); // csize:algo_lib._db_h_fatalerror_hook
-    algo_assert(sizeof(algo_lib::iohook_callback_hook) == 8); // csize:algo_lib.iohook_callback_hook
-    algo_assert(sizeof(algo_lib::timehook_hook_hook) == 8); // csize:algo_lib.timehook_hook_hook
-    algo_assert(_offset_of(algo_lib::trace, del__db_malloc) + sizeof(((algo_lib::trace*)0)->del__db_malloc) == sizeof(algo_lib::trace));
-    algo_assert(_offset_of(algo_lib::FieldId, value) + sizeof(((algo_lib::FieldId*)0)->value) == sizeof(algo_lib::FieldId));
-}
-
 // --- algo_lib.FDb._db.InsertStrptrMaybe
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
@@ -5284,4 +5275,13 @@ void algo_lib::Tabulate_Print(algo_lib::Tabulate& row, algo::cstring& str) {
 
 // --- algo_lib...SizeCheck
 inline static void algo_lib::SizeCheck() {
+}
+
+// --- algo_lib...StaticCheck
+void algo_lib::StaticCheck() {
+    algo_assert(sizeof(algo_lib::_db_h_fatalerror_hook) == 8); // csize:algo_lib._db_h_fatalerror_hook
+    algo_assert(sizeof(algo_lib::iohook_callback_hook) == 8); // csize:algo_lib.iohook_callback_hook
+    algo_assert(sizeof(algo_lib::timehook_hook_hook) == 8); // csize:algo_lib.timehook_hook_hook
+    algo_assert(_offset_of(algo_lib::trace, del__db_malloc) + sizeof(((algo_lib::trace*)0)->del__db_malloc) == sizeof(algo_lib::trace));
+    algo_assert(_offset_of(algo_lib::FieldId, value) + sizeof(((algo_lib::FieldId*)0)->value) == sizeof(algo_lib::FieldId));
 }

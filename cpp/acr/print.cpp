@@ -140,7 +140,7 @@ static void PrintFieldComments(acr::FPrint &print) {
     ind_beg(acr::_db_zd_all_selrec_curs, rec,acr::_db) {
         acr::FCtype &ctype=*rec.p_ctype;
         if (bool_Update(ctype.cmt_printed,true)) {
-            ind_beg(acr::ctype_c_field_curs, field, ctype) if (ch_N(field.comment.value) > 0) {
+            ind_beg(acr::ctype_c_field_curs, field, ctype) if (!field.c_substr) {
                 AddRow(txttbl);
                 AddCell(txttbl) << field.field;
                 AddCell(txttbl) << field.arg;

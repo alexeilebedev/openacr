@@ -328,7 +328,7 @@ static void FastEncodePrimitiveType(algo_lib::Replscope &R, amc::FFunc &func, bo
 // Type FAST encode
 void amc::tfunc_Ctype_FastEncode() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type) {
         dmmeta::FastencCase ctype_encoding;
         dmmeta::fastenc_SetStrptrMaybe(ctype_encoding,ctype.c_cfast->encoding);
@@ -656,7 +656,7 @@ static void FastDecodePrimitiveType(algo_lib::Replscope &R, amc::FFunc &func, bo
 // Type FAST decode
 void amc::tfunc_Ctype_FastDecode() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type) {
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddRetval(func, "bool", "ok", "true");
@@ -843,7 +843,7 @@ static void DecodeMsgs() {
 
 void amc::tfunc_Ctype_FixEncode() {
     algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genfield.p_ctype;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_cfast && ctype.c_cfast->encoding != dmmeta_Fastenc_fastenc_type) {
         Set(R, "$Cpptype", ctype.cpp_type);
         Set(R, "$Name", name_Get(ctype));

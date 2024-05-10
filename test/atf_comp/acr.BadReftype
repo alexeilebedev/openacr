@@ -2,7 +2,7 @@ stdin:1: Invalid value reftype:
 dmmeta.field  field:command.acr_ed.blah  arg:bool
 
 Type               dmmeta.Reftype
-Valid values       Alias, Atree, Base, Bheap, Bitfld, Blkpool, Charset, Count, Cppstack, Delptr, Exec, Fbuf, Global, Hook, Inlary, Lary, Llist, Lpool, Malloc, Opt, Pkey, Protocol, Ptr, Ptrary, Regx, RegxSql, Sbrk, Smallstr, Tary, Thash, Tpool, Upptr, Val, Varlen, ZSListMT
+Valid values       Alias, Atree, Base, Bheap, Bitfld, Blkpool, Charset, Count, Cppstack, Delptr, Exec, Fbuf, Global, Hook, Inlary, Lary, Llist, Lpool, Malloc, Opt, Pkey, Ptr, Ptrary, Regx, RegxSql, Sbrk, Smallstr, Tary, Thash, Tpool, Upptr, Val, Varlen, ZSListMT
 
 acr.badrefs  ctype:dmmeta.Field  nbad:1
 

@@ -57,9 +57,6 @@ inline atf::FieldId::operator atf_FieldIdEnum () const {
 inline void atf::FieldId_Init(atf::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf::Protocol::Protocol() {
-}
-
 inline atf::Testresult::Testresult(u32                            in_value)
     : value(in_value)
 {

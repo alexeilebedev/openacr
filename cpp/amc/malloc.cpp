@@ -29,7 +29,7 @@ void amc::tclass_Malloc() {
 }
 
 void amc::tfunc_Malloc_AllocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& allocmem = amc::CreateCurFunc();
     Ins(&R, allocmem.comment, "Allocate n bytes. If no memory available, return NULL.");
@@ -41,7 +41,7 @@ void amc::tfunc_Malloc_AllocMem() {
 }
 
 void amc::tfunc_Malloc_ReallocMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& reallocmem = amc::CreateCurFunc();
     Ins(&R, reallocmem.comment, "Reallocate n bytes. If the call fails, return value is NULL.");
@@ -56,7 +56,7 @@ void amc::tfunc_Malloc_ReallocMem() {
 }
 
 void amc::tfunc_Malloc_FreeMem() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& free = amc::CreateCurFunc();
     free.inl = false;

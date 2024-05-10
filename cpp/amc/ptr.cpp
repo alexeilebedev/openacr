@@ -25,8 +25,8 @@
 #include "include/amc.h"
 
 void amc::tclass_Ptr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     Set(R, "$dflt"   , field.dflt.value);
     Set(R, "$Fldtype", field.cpp_type);
@@ -47,8 +47,8 @@ void amc::tclass_Ptr() {
 }
 
 void amc::tfunc_Ptr_Init() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FldfuncQ(field)) {
         amc::FFunc& init = amc::CreateCurFunc();
         init.inl = true;
@@ -57,8 +57,8 @@ void amc::tfunc_Ptr_Init() {
 }
 
 void amc::tfunc_Ptr_InsertMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     if (!FldfuncQ(field) && field.c_xref) {// xref functions -- the pointer acts like an index.
         amc::FFunc& ins = amc::CreateCurFunc();
         ins.inl = true;
@@ -75,8 +75,8 @@ void amc::tfunc_Ptr_InsertMaybe() {
 }
 
 void amc::tfunc_Ptr_Remove() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (!FldfuncQ(field) && field.c_xref) {
         amc::FFunc& remove = amc::CreateCurFunc();
@@ -91,8 +91,8 @@ void amc::tfunc_Ptr_Remove() {
 }
 
 void amc::tfunc_Ptr_Cascdel() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
 
     if (!FldfuncQ(field) && field.c_cascdel) {
         amc::FFunc& cascdel = amc::CreateCurFunc();

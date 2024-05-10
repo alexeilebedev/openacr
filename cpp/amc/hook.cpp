@@ -75,9 +75,9 @@ void amc::gen_newfield_hook() {
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Hook() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
 
-    amc::FField &field = *amc::_db.genfield.p_field;
+    amc::FField &field = *amc::_db.genctx.p_field;
     vrfy(field.c_hook, "hook record required");
     amc::FHook &hook = *field.c_hook;
 
@@ -133,20 +133,20 @@ static void _tfunc_Hook_Set(algo_lib::Replscope &R, amc::FField &field, int n) {
 }
 
 void amc::tfunc_Hook_Set0() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     _tfunc_Hook_Set(R,field,0);
 }
 
 void amc::tfunc_Hook_Set1() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     _tfunc_Hook_Set(R,field,1);
 }
 
 void amc::tfunc_Hook_Set2() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     _tfunc_Hook_Set(R,field,2);
 }
 
@@ -154,8 +154,8 @@ void amc::tfunc_Hook_Set2() {
 
 // Implement _Call function for the hook
 void amc::tfunc_Hook_Call() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FHook &hook = *field.c_hook;
 
     amc::FFunc& func = amc::CreateCurFunc(true);

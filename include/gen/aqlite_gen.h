@@ -50,9 +50,9 @@ enum { aqlite_TableIdEnum_N = 2 };
 
 namespace aqlite { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
-namespace aqlite { // gen:ns_field
+namespace aqlite { // gen:ns_tclass_field
 extern const char *aqlite_help;
-} // gen:ns_field
+} // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dmmeta { struct Ns; }
 namespace aqlite { struct _db_ns_curs; }
@@ -101,8 +101,6 @@ void                 Step();
 // func:aqlite.FDb._db.Main
 // this function is 'extrn' and implemented by user
 void                 Main();
-// func:aqlite.FDb._db.StaticCheck
-void                 StaticCheck();
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:aqlite.FDb._db.InsertStrptrMaybe
@@ -322,6 +320,8 @@ struct _db_ns_curs {// cursor
 
 } // gen:ns_curstext
 namespace aqlite { // gen:ns_func
+// func:aqlite...StaticCheck
+void                 StaticCheck();
 } // gen:ns_func
 // func:aqlite...main
 int                  main(int argc, char **argv);

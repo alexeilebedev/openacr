@@ -1404,6 +1404,7 @@ void amc::cextern_CopyOut(amc::FCextern &row, dmmeta::Cextern &out) {
     out.ctype = row.ctype;
     out.initmemset = row.initmemset;
     out.isstruct = row.isstruct;
+    out.plaindata = row.plaindata;
 }
 
 // --- amc.FCextern.msghdr.CopyIn
@@ -1412,6 +1413,7 @@ void amc::cextern_CopyIn(amc::FCextern &row, dmmeta::Cextern &in) {
     row.ctype = in.ctype;
     row.initmemset = in.initmemset;
     row.isstruct = in.isstruct;
+    row.plaindata = in.plaindata;
 }
 
 // --- amc.FCextern..Uninit
@@ -3008,6 +3010,7 @@ void amc::FCtype_Init(amc::FCtype& ctype) {
     ctype.copy_priv = bool(false);
     ctype.fields_cloned = bool(false);
     ctype.original = bool(false);
+    ctype.plaindata = bool(false);
     ctype.alignment = u32(1);
     ctype.n_padbytes = i32(0);
     ctype.totsize_byte = u32(0);
@@ -3068,6 +3071,7 @@ void amc::ctypelen_CopyOut(amc::FCtypelen &row, dmmeta::Ctypelen &out) {
     out.len = row.len;
     out.alignment = row.alignment;
     out.padbytes = row.padbytes;
+    out.plaindata = row.plaindata;
 }
 
 // --- amc.FCtypelen.base.CopyIn
@@ -3077,6 +3081,7 @@ void amc::ctypelen_CopyIn(amc::FCtypelen &row, dmmeta::Ctypelen &in) {
     row.len = in.len;
     row.alignment = in.alignment;
     row.padbytes = in.padbytes;
+    row.plaindata = in.plaindata;
 }
 
 // --- amc.FCtypelen..Uninit
@@ -6644,7 +6649,6 @@ static void amc::reftype_LoadStatic() {
         ,{ "dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y" }
         ,{ "dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y" }
         ,{ "dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Protocol  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
         ,{ "dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
@@ -6876,15 +6880,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'469bbf0164731ea4924cd90c0b01213147e7f147'");
-}
-
-// --- amc.FDb._db.StaticCheck
-void amc::StaticCheck() {
-    algo_assert(sizeof(amc::gen_step_hook) == 8); // csize:amc.gen_step_hook
-    algo_assert(sizeof(amc::tclass_step_hook) == 8); // csize:amc.tclass_step_hook
-    algo_assert(sizeof(amc::tfunc_step_hook) == 8); // csize:amc.tfunc_step_hook
-    algo_assert(_offset_of(amc::FieldId, value) + sizeof(((amc::FieldId*)0)->value) == sizeof(amc::FieldId));
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'254e1b54471c471b688a9d593176b6f7f1fe3a8e'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -16057,7 +16053,6 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Global.Step  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main step\"", amc::tfunc_Global_Step }
         ,{ "amcdb.tfunc  tfunc:Global.Main  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Main function\"", amc::tfunc_Global_Main }
         ,{ "amcdb.tfunc  tfunc:Global.InitReflection  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load statically available data into tables, register tables and database.\"", amc::tfunc_Global_InitReflection }
-        ,{ "amcdb.tfunc  tfunc:Global.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_StaticCheck }
         ,{ "amcdb.tfunc  tfunc:Global.InsertStrptrMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Global_InsertStrptrMaybe }
         ,{ "amcdb.tfunc  tfunc:Global.LoadTuplesMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load all finputs from given directory.\"", amc::tfunc_Global_LoadTuplesMaybe }
         ,{ "amcdb.tfunc  tfunc:Global.LoadTuplesFile  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Load all finputs from given file.\"", amc::tfunc_Global_LoadTuplesFile }
@@ -16134,6 +16129,7 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Malloc.AllocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:Y  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_AllocMem }
         ,{ "amcdb.tfunc  tfunc:Malloc.FreeMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_FreeMem }
         ,{ "amcdb.tfunc  tfunc:Malloc.ReallocMem  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Malloc_ReallocMem }
+        ,{ "amcdb.tfunc  tfunc:Ns.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ns_StaticCheck }
         ,{ "amcdb.tfunc  tfunc:Numstr.Getnum  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_Getnum }
         ,{ "amcdb.tfunc  tfunc:Numstr.GetnumDflt  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_GetnumDflt }
         ,{ "amcdb.tfunc  tfunc:Numstr.Geti64  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Numstr_Geti64 }
@@ -16155,7 +16151,6 @@ static void amc::tfunc_LoadStatic() {
         ,{ "amcdb.tfunc  tfunc:Pool.InsertMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pool_InsertMaybe }
         ,{ "amcdb.tfunc  tfunc:Pool.UpdateMaybe  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"Insert new value or update existing value\"", amc::tfunc_Pool_UpdateMaybe }
         ,{ "amcdb.tfunc  tfunc:Pool.Delete  hasthrow:N  leaf:Y  poolfunc:Y  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Pool_Delete }
-        ,{ "amcdb.tfunc  tfunc:Protocol.StaticCheck  hasthrow:N  leaf:N  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Protocol_StaticCheck }
         ,{ "amcdb.tfunc  tfunc:Ptr.Cascdel  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptr_Cascdel }
         ,{ "amcdb.tfunc  tfunc:Ptr.InsertMaybe  hasthrow:N  leaf:Y  poolfunc:N  inl:N  wur:N  pure:N  ismacro:N  comment:\"\"", amc::tfunc_Ptr_InsertMaybe }
         ,{ "amcdb.tfunc  tfunc:Ptr.Remove  hasthrow:N  leaf:Y  poolfunc:N  inl:Y  wur:N  pure:N  ismacro:N  comment:\"Remove element from index. If element is not in index, do nothing.\"", amc::tfunc_Ptr_Remove }
@@ -16546,7 +16541,6 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:check_ssimsort  perns:N  comment:\"Check Ssimsort table\"", amc::gen_check_ssimsort }
         ,{ "amcdb.gen  gen:clonefconst  perns:N  comment:\"Generate numeric fconsts for all string-based fconsts (creates new ctype)\"", amc::gen_clonefconst }
         ,{ "amcdb.gen  gen:parsenum  perns:N  comment:\"Generate functions to parse {i,u}{32,64,128}\"", amc::gen_parsenum }
-        ,{ "amcdb.gen  gen:prep_proto  perns:N  comment:\"Detect protocol namespaces\"", amc::gen_prep_proto }
         ,{ "amcdb.gen  gen:newfield_charset  perns:N  comment:\"Generate code for charsets -- earlyish\"", amc::gen_newfield_charset }
         ,{ "amcdb.gen  gen:newfield_count  perns:N  comment:\"Create new fields for Count\"", amc::gen_newfield_count }
         ,{ "amcdb.gen  gen:newfield_hook  perns:N  comment:\"Create new fields for Hook\"", amc::gen_newfield_hook }
@@ -16573,6 +16567,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:xref_parent  perns:N  comment:\"Create p_parent links for xrefs\"", amc::gen_xref_parent }
         ,{ "amcdb.gen  gen:datafld  perns:N  comment:\"Create ctype.c_datafld\"", amc::gen_datafld }
         ,{ "amcdb.gen  gen:ctype_toposort  perns:N  comment:\"Determine ctype graph\"", amc::gen_ctype_toposort }
+        ,{ "amcdb.gen  gen:plaindata  perns:N  comment:\"Recursively determine if a ctype is plain data\"", amc::gen_plaindata }
         ,{ "amcdb.gen  gen:prep_ctype  perns:N  comment:\"cpp_type,arg_type,enum_type, varname\"", amc::gen_prep_ctype }
         ,{ "amcdb.gen  gen:prep_fconst  perns:N  comment:\"\"", amc::gen_prep_fconst }
         ,{ "amcdb.gen  gen:usedns  perns:N  comment:\"Namespace dependencies\"", amc::gen_usedns }
@@ -16584,7 +16579,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:check_xref  perns:N  comment:\"Validate xrefs\"", amc::gen_check_xref }
         ,{ "amcdb.gen  gen:ns_enums  perns:N  comment:\"Output enums\"", amc::gen_ns_enums }
         ,{ "amcdb.gen  gen:ns_pkeytypedef  perns:N  comment:\"Pkey typedefs\"", amc::gen_ns_pkeytypedef }
-        ,{ "amcdb.gen  gen:ns_field  perns:N  comment:\"Recursively visit all fields and generate code for them\"", amc::gen_ns_field }
+        ,{ "amcdb.gen  gen:ns_tclass_field  perns:N  comment:\"Generate field-level tfuncs\"", amc::gen_ns_tclass_field }
         ,{ "amcdb.gen  gen:ns_fwddecl  perns:N  comment:\"Forward-declaration of steps\"", amc::gen_ns_fwddecl }
         ,{ "amcdb.gen  gen:ns_fwddecl2  perns:N  comment:\"Output forward declarations of structs\"", amc::gen_ns_fwddecl2 }
         ,{ "amcdb.gen  gen:ns_gstatic  perns:N  comment:\"Generate step function pointers for gstatic tables\"", amc::gen_ns_gstatic }
@@ -16594,7 +16589,8 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:ns_include  perns:Y  comment:\"Generate includes\"", amc::gen_ns_include }
         ,{ "amcdb.gen  gen:ns_gsymbol  perns:Y  comment:\"Generate strings from tables\"", amc::gen_ns_gsymbol }
         ,{ "amcdb.gen  gen:ns_size_enums  perns:Y  comment:\"Enums for sizes of certain types (avoids circular dependency of includes)\"", amc::gen_ns_size_enums }
-        ,{ "amcdb.gen  gen:ns_ctype  perns:Y  comment:\"Generate ctype functions\"", amc::gen_ns_ctype }
+        ,{ "amcdb.gen  gen:ns_tclass_ns  perns:Y  comment:\"Generate namespace-level tfuncs\"", amc::gen_ns_tclass_ns }
+        ,{ "amcdb.gen  gen:ns_tclass_ctype  perns:Y  comment:\"Generate ctype-level tfuncs\"", amc::gen_ns_tclass_ctype }
         ,{ "amcdb.gen  gen:ns_check_path  perns:Y  comment:\"Check x-ref paths for consistency\"", amc::gen_ns_check_path }
         ,{ "amcdb.gen  gen:ns_check_pack  perns:Y  comment:\"Recursively check packing\"", amc::gen_ns_check_pack }
         ,{ "amcdb.gen  gen:ns_check_nstype  perns:Y  comment:\"Check namespace annotations\"", amc::gen_ns_check_nstype }
@@ -16830,12 +16826,12 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Llist  comment:\"X-reference: any of 32 possible types of linked list\"", amc::tclass_Llist }
         ,{ "amcdb.tclass  tclass:Lpool  comment:\"Varlen pool, implemented as array of 32 Tpools\"", amc::tclass_Lpool }
         ,{ "amcdb.tclass  tclass:Malloc  comment:\"Pass-through for malloc / free\"", amc::tclass_Malloc }
+        ,{ "amcdb.tclass  tclass:Ns  comment:\"\"", amc::tclass_Ns }
         ,{ "amcdb.tclass  tclass:Numstr  comment:\"\"", amc::tclass_Numstr }
         ,{ "amcdb.tclass  tclass:Opt  comment:\"Optional trailing struct field occupying rest of space\"", amc::tclass_Opt }
         ,{ "amcdb.tclass  tclass:Pkey  comment:\"Primary key reference\"", amc::tclass_Pkey }
         ,{ "amcdb.tclass  tclass:Pmask  comment:\"\"", amc::tclass_Pmask }
         ,{ "amcdb.tclass  tclass:Pool  comment:\"Base for all pools\"", amc::tclass_Pool }
-        ,{ "amcdb.tclass  tclass:Protocol  comment:\"\"", amc::tclass_Protocol }
         ,{ "amcdb.tclass  tclass:Ptr  comment:\"Cross-reference pointer to a future record\"", amc::tclass_Ptr }
         ,{ "amcdb.tclass  tclass:Ptrary  comment:\"Array of pointers\"", amc::tclass_Ptrary }
         ,{ "amcdb.tclass  tclass:Regx  comment:\"Pkey regx reference (on relational types), Regx when using in-memory DB\"", amc::tclass_Regx }
@@ -30102,7 +30098,6 @@ void amc::FNs_Init(amc::FNs& ns) {
     ns.include_elems 	= 0; // (amc.FNs.include)
     ns.include_n     	= 0; // (amc.FNs.include)
     ns.include_max   	= 0; // (amc.FNs.include)
-    ns.topo_visited = bool(false);
     ns.c_dispsig_elems = NULL; // (amc.FNs.c_dispsig)
     ns.c_dispsig_n = 0; // (amc.FNs.c_dispsig)
     ns.c_dispsig_max = 0; // (amc.FNs.c_dispsig)
@@ -32391,6 +32386,14 @@ void amc::TableId_Print(amc::TableId& row, algo::cstring& str) {
 
 // --- amc...SizeCheck
 inline static void amc::SizeCheck() {
+}
+
+// --- amc...StaticCheck
+void amc::StaticCheck() {
+    algo_assert(sizeof(amc::gen_step_hook) == 8); // csize:amc.gen_step_hook
+    algo_assert(sizeof(amc::tclass_step_hook) == 8); // csize:amc.tclass_step_hook
+    algo_assert(sizeof(amc::tfunc_step_hook) == 8); // csize:amc.tfunc_step_hook
+    algo_assert(_offset_of(amc::FieldId, value) + sizeof(((amc::FieldId*)0)->value) == sizeof(amc::FieldId));
 }
 
 // --- amc...main

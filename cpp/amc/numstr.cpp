@@ -28,8 +28,8 @@
 // -----------------------------------------------------------------------------
 
 void amc::tclass_Numstr() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
     GetMinMax(*numstr.p_numtype, numstr.nummin, numstr.nummax, numstr.issigned);
@@ -61,8 +61,8 @@ void amc::tclass_Numstr() {
 }
 
 void amc::tfunc_Numstr_Getnum() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
     double str_max  = pow(numstr.base, smallstr.length)-1;
@@ -146,8 +146,8 @@ void amc::tfunc_Numstr_Getnum() {
 
 
 void amc::tfunc_Numstr_GetnumDflt() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
 
@@ -166,8 +166,8 @@ void amc::tfunc_Numstr_GetnumDflt() {
 
 
 void amc::tfunc_Numstr_Geti64() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
 
@@ -184,8 +184,8 @@ void amc::tfunc_Numstr_Geti64() {
 }
 
 void amc::tfunc_Numstr_SetnumMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
 
@@ -260,8 +260,8 @@ void amc::tfunc_Numstr_SetnumMaybe() {
 
 
 void amc::tfunc_Numstr_ForAllStrings() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
     Set(R, "$min_length", tempstr() << numstr.min_len);

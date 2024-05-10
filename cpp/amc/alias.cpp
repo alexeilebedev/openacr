@@ -25,8 +25,8 @@ void amc::tclass_Alias() {
 }
 
 void amc::tfunc_Alias_Get() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& func = amc::CreateCurFunc();
     Set(R, "$basename", name_Get(*field.c_falias->p_srcfield));
     Ins(&R, func.comment, "Alias: value is retrieved from $basename");
@@ -38,8 +38,8 @@ void amc::tfunc_Alias_Get() {
 }
 
 void amc::tfunc_Alias_Set() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField &srcfield = *field.c_falias->p_srcfield;
     amc::FFunc& func = amc::CreateCurFunc();
 
@@ -52,8 +52,8 @@ void amc::tfunc_Alias_Set() {
 }
 
 void amc::tfunc_Alias_ReadStrptrMaybe() {
-    algo_lib::Replscope &R = amc::_db.genfield.R;
-    amc::FField &field = *amc::_db.genfield.p_field;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FField &srcfield = *field.c_falias->p_srcfield;
     amc::FFunc& func = amc::CreateCurFunc();
     Ins(&R, func.comment, "Alias: value is read into $basename");

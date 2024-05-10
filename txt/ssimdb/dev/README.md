@@ -4,6 +4,7 @@
 ### Chapters
 <a href="#chapters"></a>
 
+<!-- TOC_BEG AUTO -->
 * [dev.arch - System architecture](/txt/ssimdb/dev/arch.md)
 
 * [dev.badline - Regex of a dubious source code line](/txt/ssimdb/dev/badline.md)
@@ -56,6 +57,8 @@
 
 * [dev.readme - File containing documentation](/txt/ssimdb/dev/readme.md)
 
+* [dev.readmecat - sorted categories of txt/ *.md files presented in dev.readme](/txt/ssimdb/dev/readmecat.md)
+
 * [dev.sandbox - Registered sandbox](/txt/ssimdb/dev/sandbox.md)
 
 * [dev.sbpath - Extra files to copy into the sandbox](/txt/ssimdb/dev/sbpath.md)
@@ -87,6 +90,8 @@
 * [dev.uname - List of known unames](/txt/ssimdb/dev/uname.md)
 
 * [dev.unstablefld - Fields that should be stripped from component test output because they contain timestamps etc.](/txt/ssimdb/dev/unstablefld.md)
+
+<!-- TOC_END AUTO -->
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
