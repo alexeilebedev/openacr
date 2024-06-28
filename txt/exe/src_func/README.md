@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Examples](#examples)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [src_func - Internals](/txt/exe/src_func/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 src_func: Access / edit functions
 Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
@@ -44,9 +48,63 @@ Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
+### Examples
+<a href="#examples"></a>
+* Re-scan source files for function prototypes
+
+    src_func -updateproto
+
+* List functions in target:
+
+    src_func amc
+
+* List function prototypes in target:
+
+    src_func amc -proto
+
+* Edit functions in target matching regex:
+
+    src_func amc %X% -e
+    <use F4, shift-F4 to visit locations>
+
+* Show functions that are not documented:
+
+    src_func amc -listiffy
+
+* Edit all functions in program:
+
+     src_func amc -e
+
+* Search all hand-written source for pattern:
+
+     src_func % % "%pattern%"
+
+* Search all generated source for pattern:
+
+     src_func % % "%pattern%" -gen
+
+* Search hand-written source for pattern:
+
+     src_func amc % "%pattern%"
+
+* Search source of specific target for pattern and open in editor:
+
+     src_func amc % "%pattern%" -e
+
+* Search function arguments (i.e. first line, including return type and arguments):
+
+     src_func % % -func:%amc::FCtype%
+
+* Show target functions, sort by name:
+
+     src_func amc -sortname
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -110,87 +168,21 @@ Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
 #### -report -- 
 <a href="#-report"></a>
 
-### Examples
-<a href="#examples"></a>
-* Re-scan source files for function prototypes
-
-    src_func -updateproto
-
-* List functions in target:
-
-    src_func amc
-
-* List function prototypes in target:
-
-    src_func amc -proto
-
-* Edit functions in target matching regex:
-
-    src_func amc %X% -e
-    <use F4, shift-F4 to visit locations>
-
-* Show functions that are not documented:
-
-    src_func amc -listiffy
-
-* Edit all functions in program:
-
-     src_func amc -e
-
-* Search all hand-written source for pattern:
-
-     src_func % % "%pattern%"
-
-* Search all generated source for pattern:
-
-     src_func % % "%pattern%" -gen
-
-* Search hand-written source for pattern:
-
-     src_func amc % "%pattern%"
-
-* Search source of specific target for pattern and open in editor:
-
-     src_func amc % "%pattern%" -e
-
-* Search function arguments (i.e. first line, including return type and arguments):
-
-     src_func % % -func:%amc::FCtype%
-
-* Show target functions, sort by name:
-
-     src_func amc -sortname
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/src_func_gen.cpp](/cpp/gen/src_func_gen.cpp)||
-|[cpp/src_func/edit.cpp](/cpp/src_func/edit.cpp)|Implementation of -e|
-|[cpp/src_func/fileloc.cpp](/cpp/src_func/fileloc.cpp)|Location in file, for each function|
-|[cpp/src_func/header.cpp](/cpp/src_func/header.cpp)|Generate prototypes in header|
-|[cpp/src_func/iffy.cpp](/cpp/src_func/iffy.cpp)|Check iffy function prototypes|
-|[cpp/src_func/list.cpp](/cpp/src_func/list.cpp)|Print list of functions|
-|[cpp/src_func/main.cpp](/cpp/src_func/main.cpp)|Main file|
-|[cpp/src_func/nextfile.cpp](/cpp/src_func/nextfile.cpp)|Find next file in target|
-|[cpp/src_func/scan.cpp](/cpp/src_func/scan.cpp)|Scan sources to collect functions|
-|[include/gen/src_func_gen.h](/include/gen/src_func_gen.h)||
-|[include/gen/src_func_gen.inl.h](/include/gen/src_func_gen.inl.h)||
-|[include/src_func.h](/include/src_func.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `src_func` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
 |[dmmeta.fstep](/txt/ssimdb/dmmeta/fstep.md)|Generate a main loop step to be executed whenever a field is non-empty|
 |[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
-|[dmmeta.ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)|Size of Ctype|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dmmeta.ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)|Size of Ctype|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

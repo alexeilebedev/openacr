@@ -1530,64 +1530,6 @@ bool algo_lib::replscope_XrefMaybe(algo_lib::Replscope &row) {
     return retval;
 }
 
-// --- algo_lib.FDb.error.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-algo_lib::ErrorX& algo_lib::error_Alloc() {
-    algo_lib::ErrorX* row = error_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("algo_lib.out_of_mem  field:algo_lib.FDb.error  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- algo_lib.FDb.error.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-algo_lib::ErrorX* algo_lib::error_AllocMaybe() {
-    algo_lib::ErrorX *row = (algo_lib::ErrorX*)error_AllocMem(sizeof(algo_lib::ErrorX));
-    if (row) {
-        new (row) algo_lib::ErrorX; // call constructor
-    }
-    return row;
-}
-
-// --- algo_lib.FDb.error.Delete
-// Remove row from all global and cross indices, then deallocate row
-void algo_lib::error_Delete(algo_lib::ErrorX &row) {
-    int length = sizeof(algo_lib::ErrorX);
-    row.~ErrorX();
-    error_FreeMem(&row, length);
-}
-
-// --- algo_lib.FDb.error.AllocMem
-// Allocate n bytes. If no memory available, return NULL.
-void* algo_lib::error_AllocMem(size_t n) {
-    void* mem = malloc(n);
-    ++algo_lib::_db.trace.alloc__db_malloc; // update global malloc counter
-    return mem;
-}
-
-// --- algo_lib.FDb.error.FreeMem
-// Remove mem from all global and cross indices, then deallocate mem
-void algo_lib::error_FreeMem(void *mem, size_t n) {
-    (void)n;
-    if (mem) {
-        ++algo_lib::_db.trace.del__db_malloc; // update global malloc counter
-        free(mem);
-    }
-}
-
-// --- algo_lib.FDb.error.ReallocMem
-// Reallocate n bytes. If the call fails, return value is NULL.
-// In this case, original MEM pointer is untouched.
-void* algo_lib::error_ReallocMem(void *mem, size_t old_size, size_t new_size) {
-    (void)old_size;
-    algo_lib::_db.trace.alloc__db_malloc += old_size == 0; // update global malloc counter
-    algo_lib::_db.trace.del__db_malloc += new_size == 0; // update global malloc counter
-    void* new_mem = realloc(mem, new_size);
-    return new_mem;
-}
-
 // --- algo_lib.FDb.error.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.

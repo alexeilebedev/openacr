@@ -323,12 +323,16 @@ namespace atf_amc { // gen:ns_print_proto
     static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
-    // func:atf_amc.Msgbuf.in.ScanMsg
-    static void          in_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.Msgbuf.in_buf.ScanMsg
+    static void          in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
-    // func:atf_amc.Msgbuf.in.Shift
-    static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.Msgbuf.in_buf.Shift
+    static void          in_buf_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Msgbuf.in_custom.Shift
+    static void          in_custom_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.out_extra.Shift
@@ -6134,6 +6138,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:linebuf_test3  comment:\"write a line in two phases, no message in between\"", atf_amc::amctest_linebuf_test3 }
         ,{ "atfdb.amctest  amctest:linebuf_test4  comment:\"Write an empty line, read line back\"", atf_amc::amctest_linebuf_test4 }
         ,{ "atfdb.amctest  amctest:linebuf_test5  comment:\"Line too large -- will never fit. Set EOF\"", atf_amc::amctest_linebuf_test5 }
+        ,{ "atfdb.amctest  amctest:msgbuf_custom  comment:\"Custom framer\"", atf_amc::amctest_msgbuf_custom }
         ,{ "atfdb.amctest  amctest:msgbuf_extra_test  comment:\"Write messages with extra len to temp buffer and read them\"", atf_amc::amctest_msgbuf_extra_test }
         ,{ "atfdb.amctest  amctest:msgbuf_test0  comment:\"initial state - no message\"", atf_amc::amctest_msgbuf_test0 }
         ,{ "atfdb.amctest  amctest:msgbuf_test1  comment:\"write message, read message back\"", atf_amc::amctest_msgbuf_test1 }
@@ -11667,101 +11672,101 @@ void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
     }ind_end;
 }
 
-// --- atf_amc.Msgbuf.in.BeginRead
+// --- atf_amc.Msgbuf.in_buf.BeginRead
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
-    callback_Set1(msgbuf.in_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
-    msgbuf.in_iohook.fildes = fd;
+void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+    callback_Set1(msgbuf.in_buf_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+    msgbuf.in_buf_iohook.fildes = fd;
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (msgbuf.in_epoll_enable) {
-        algo_lib::IohookAdd(msgbuf.in_iohook, flags);
+    if (msgbuf.in_buf_epoll_enable) {
+        algo_lib::IohookAdd(msgbuf.in_buf_iohook, flags);
     } else {
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
 }
 
-// --- atf_amc.Msgbuf.in.EndRead
+// --- atf_amc.Msgbuf.in_buf.EndRead
 // Set EOF flag
-void atf_amc::in_EndRead(atf_amc::Msgbuf& msgbuf) {
-    if (ValidQ(msgbuf.in_iohook.fildes)) {
-        msgbuf.in_eof = true;
+void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
+    if (ValidQ(msgbuf.in_buf_iohook.fildes)) {
+        msgbuf.in_buf_eof = true;
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
 }
 
-// --- atf_amc.Msgbuf.in.GetMsg
+// --- atf_amc.Msgbuf.in_buf.GetMsg
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
     atf_amc::MsgHeader* ret;
-    if (!msgbuf.in_msgvalid) {
-        in_ScanMsg(msgbuf);
-        if (!msgbuf.in_msgvalid) {
-            bool readable = in_Refill(msgbuf);
+    if (!msgbuf.in_buf_msgvalid) {
+        in_buf_ScanMsg(msgbuf);
+        if (!msgbuf.in_buf_msgvalid) {
+            bool readable = in_buf_Refill(msgbuf);
             if (readable) {
-                in_ScanMsg(msgbuf);
+                in_buf_ScanMsg(msgbuf);
             }
         }
     }
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_elems + msgbuf.in_start);
-    ret = msgbuf.in_msgvalid ? hdr : NULL;
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
+    ret = msgbuf.in_buf_msgvalid ? hdr : NULL;
     return ret;
 }
 
-// --- atf_amc.Msgbuf.in.Refill
+// --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_Refill(atf_amc::Msgbuf& msgbuf) {
-    bool readable = ValidQ(msgbuf.in_iohook.fildes);
+bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
+    bool readable = ValidQ(msgbuf.in_buf_iohook.fildes);
     if (readable) {
-        int fd     = msgbuf.in_iohook.fildes.value;
-        i32 max    = in_Max(msgbuf);
-        i32 end    = msgbuf.in_end;
-        i32 nbytes = end - msgbuf.in_start; // # bytes currently in buffer
+        int fd     = msgbuf.in_buf_iohook.fildes.value;
+        i32 max    = in_buf_Max(msgbuf);
+        i32 end    = msgbuf.in_buf_end;
+        i32 nbytes = end - msgbuf.in_buf_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(msgbuf);
-            end = msgbuf.in_end;
+            in_buf_Shift(msgbuf);
+            end = msgbuf.in_buf_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, msgbuf.in_elems + end, nfree);
+        ssize_t ret         = read(fd, msgbuf.in_buf_elems + end, nfree);
         readable            = !(ret < 0 && errno == EAGAIN);
         bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
         bool eof            = error || (ret == 0 && nfree > 0);
-        msgbuf.in_end += i32_Max(ret,0); // new end of bytes
+        msgbuf.in_buf_end += i32_Max(ret,0); // new end of bytes
         if (error) {
-            msgbuf.in_err = algo::FromErrno(errno); // fetch errno
+            msgbuf.in_buf_err = algo::FromErrno(errno); // fetch errno
         }
-        msgbuf.in_eof |= eof;
+        msgbuf.in_buf_eof |= eof;
     }
-    if (!readable && msgbuf.in_epoll_enable) {
+    if (!readable && msgbuf.in_buf_epoll_enable) {
         atf_amc::cd_in_msg_Remove(msgbuf);
     }
     return readable;
 }
 
-// --- atf_amc.Msgbuf.in.RemoveAll
+// --- atf_amc.Msgbuf.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_start    = 0;
-    msgbuf.in_end      = 0;
-    msgbuf.in_msgvalid = false;
+void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.in_buf_start    = 0;
+    msgbuf.in_buf_end      = 0;
+    msgbuf.in_buf_msgvalid = false;
 }
 
-// --- atf_amc.Msgbuf.in.ScanMsg
+// --- atf_amc.Msgbuf.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Msgbuf& msgbuf) {
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_elems + msgbuf.in_start);
-    i32 avail = in_N(msgbuf);
+static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
+    i32 avail = in_buf_N(msgbuf);
     i32 msglen;
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHeader);
@@ -11769,70 +11774,222 @@ static void atf_amc::in_ScanMsg(atf_amc::Msgbuf& msgbuf) {
         msglen = i32((*hdr).length); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
-    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(msgbuf)) {
-        msgbuf.in_eof = true; // cause user to detect eof
-        msgbuf.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_buf_Max(msgbuf)) {
+        msgbuf.in_buf_eof = true; // cause user to detect eof
+        msgbuf.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    msgbuf.in_msglen = msglen;
-    msgbuf.in_msgvalid = found;
+    msgbuf.in_buf_msglen = msglen;
+    msgbuf.in_buf_msgvalid = found;
 }
 
-// --- atf_amc.Msgbuf.in.Shift
+// --- atf_amc.Msgbuf.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.in_start;
-    i32 bytes_n = msgbuf.in_end - start;
+static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.in_buf_start;
+    i32 bytes_n = msgbuf.in_buf_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.in_elems, msgbuf.in_elems + start, bytes_n);
+        memmove(msgbuf.in_buf_elems, msgbuf.in_buf_elems + start, bytes_n);
     }
-    msgbuf.in_end = bytes_n;
-    msgbuf.in_start = 0;
+    msgbuf.in_buf_end = bytes_n;
+    msgbuf.in_buf_start = 0;
 }
 
-// --- atf_amc.Msgbuf.in.SkipMsg
+// --- atf_amc.Msgbuf.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.in_msgvalid) {
-        int skip = msgbuf.in_msglen;
-        i32 start = msgbuf.in_start;
+void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.in_buf_msgvalid) {
+        int skip = msgbuf.in_buf_msglen;
+        i32 start = msgbuf.in_buf_start;
         start += skip;
-        msgbuf.in_start = start;
-        msgbuf.in_msgvalid = false;
-        msgbuf.in_msglen   = 0; // reset message length -- important for delimited streams
+        msgbuf.in_buf_start = start;
+        msgbuf.in_buf_msgvalid = false;
+        msgbuf.in_buf_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
-// --- atf_amc.Msgbuf.in.WriteAll
+// --- atf_amc.Msgbuf.in_buf.WriteAll
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = in_Max(msgbuf);
+bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = in_buf_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.in_end + in_n > max) {
-        in_Shift(msgbuf);
+    if (msgbuf.in_buf_end + in_n > max) {
+        in_buf_Shift(msgbuf);
     }
     // now try to write the message.
-    i32 end = msgbuf.in_end;
+    i32 end = msgbuf.in_buf_end;
     bool fits = end + in_n <= max;
     if (fits && in_n > 0) {
-        memcpy(msgbuf.in_elems + end, in, in_n);
-        msgbuf.in_end = end + in_n;
+        memcpy(msgbuf.in_buf_elems + end, in, in_n);
+        msgbuf.in_buf_end = end + in_n;
     }
     return fits;
 }
 
-// --- atf_amc.Msgbuf.in.XrefMaybe
+// --- atf_amc.Msgbuf.in_buf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
+bool atf_amc::in_buf_XrefMaybe(atf_amc::MsgHeader &row) {
     bool retval = true;
     (void)row;
     return retval;
+}
+
+// --- atf_amc.Msgbuf.in_custom.BeginRead
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_custom via FIohook field.
+// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
+void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+    callback_Set1(msgbuf.in_custom_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+    msgbuf.in_custom_iohook.fildes = fd;
+    IOEvtFlags flags;
+    read_Set(flags, true);
+    if (msgbuf.in_custom_epoll_enable) {
+        algo_lib::IohookAdd(msgbuf.in_custom_iohook, flags);
+    } else {
+        atf_amc::cd_in_msg_Insert(msgbuf);
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.EndRead
+// Set EOF flag
+void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
+    if (ValidQ(msgbuf.in_custom_iohook.fildes)) {
+        msgbuf.in_custom_eof = true;
+        atf_amc::cd_in_msg_Insert(msgbuf);
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message boundary is determined by a custom ScanMsg function implemented by user
+// 
+algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
+    algo::aryptr<char> ret;
+    if (!msgbuf.in_custom_msgvalid) {
+        in_custom_ScanMsg(msgbuf);
+        if (!msgbuf.in_custom_msgvalid) {
+            bool readable = in_custom_Refill(msgbuf);
+            if (readable) {
+                in_custom_ScanMsg(msgbuf);
+            }
+        }
+    }
+    char *hdr = (char*)(msgbuf.in_custom_elems + msgbuf.in_custom_start);
+    if (msgbuf.in_custom_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = msgbuf.in_custom_msglen;
+    }
+    return ret;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Refill
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
+    bool readable = ValidQ(msgbuf.in_custom_iohook.fildes);
+    if (readable) {
+        int fd     = msgbuf.in_custom_iohook.fildes.value;
+        i32 max    = in_custom_Max(msgbuf);
+        i32 end    = msgbuf.in_custom_end;
+        i32 nbytes = end - msgbuf.in_custom_start; // # bytes currently in buffer
+        i32 nfree  = max - end; // bytes available at the end of buffer
+        if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
+            in_custom_Shift(msgbuf);
+            end = msgbuf.in_custom_end;
+            nfree = max - end;
+        }
+        ssize_t ret         = read(fd, msgbuf.in_custom_elems + end, nfree);
+        readable            = !(ret < 0 && errno == EAGAIN);
+        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+        bool eof            = error || (ret == 0 && nfree > 0);
+        msgbuf.in_custom_end += i32_Max(ret,0); // new end of bytes
+        if (error) {
+            msgbuf.in_custom_err = algo::FromErrno(errno); // fetch errno
+        }
+        msgbuf.in_custom_eof |= eof;
+    }
+    if (!readable && msgbuf.in_custom_epoll_enable) {
+        atf_amc::cd_in_msg_Remove(msgbuf);
+    }
+    return readable;
+}
+
+// --- atf_amc.Msgbuf.in_custom.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.in_custom_start    = 0;
+    msgbuf.in_custom_end      = 0;
+    msgbuf.in_custom_msgvalid = false;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.in_custom_start;
+    i32 bytes_n = msgbuf.in_custom_end - start;
+    if (bytes_n > 0) {
+        memmove(msgbuf.in_custom_elems, msgbuf.in_custom_elems + start, bytes_n);
+    }
+    msgbuf.in_custom_end = bytes_n;
+    msgbuf.in_custom_start = 0;
+}
+
+// --- atf_amc.Msgbuf.in_custom.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
+    int avail = msgbuf.in_custom_end - msgbuf.in_custom_start;
+    n = i32_Min(n,avail);
+    msgbuf.in_custom_start += n;
+    msgbuf.in_custom_msgvalid = false;
+}
+
+// --- atf_amc.Msgbuf.in_custom.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.in_custom_msgvalid) {
+        int skip = msgbuf.in_custom_msglen;
+        i32 start = msgbuf.in_custom_start;
+        start += skip;
+        msgbuf.in_custom_start = start;
+        msgbuf.in_custom_msgvalid = false;
+        msgbuf.in_custom_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.WriteAll
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = in_custom_Max(msgbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (msgbuf.in_custom_end + in_n > max) {
+        in_custom_Shift(msgbuf);
+    }
+    // now try to write the message.
+    i32 end = msgbuf.in_custom_end;
+    bool fits = end + in_n <= max;
+    if (fits && in_n > 0) {
+        memcpy(msgbuf.in_custom_elems + end, in, in_n);
+        msgbuf.in_custom_end = end + in_n;
+    }
+    return fits;
 }
 
 // --- atf_amc.Msgbuf.out_extra.RemoveAll
@@ -12009,12 +12166,18 @@ bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf..Init
 // Set all fields to initial values.
 void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_end = 0; // in: initialize
-    msgbuf.in_start = 0; // in: initialize
-    msgbuf.in_eof = false; // in: initialize
-    msgbuf.in_msgvalid = false; // in: initialize
-    msgbuf.in_msglen = 0; // in: initialize
-    msgbuf.in_epoll_enable = true; // in: initialize
+    msgbuf.in_buf_end = 0; // in_buf: initialize
+    msgbuf.in_buf_start = 0; // in_buf: initialize
+    msgbuf.in_buf_eof = false; // in_buf: initialize
+    msgbuf.in_buf_msgvalid = false; // in_buf: initialize
+    msgbuf.in_buf_msglen = 0; // in_buf: initialize
+    msgbuf.in_buf_epoll_enable = true; // in_buf: initialize
+    msgbuf.in_custom_end = 0; // in_custom: initialize
+    msgbuf.in_custom_start = 0; // in_custom: initialize
+    msgbuf.in_custom_eof = false; // in_custom: initialize
+    msgbuf.in_custom_msgvalid = false; // in_custom: initialize
+    msgbuf.in_custom_msglen = 0; // in_custom: initialize
+    msgbuf.in_custom_epoll_enable = true; // in_custom: initialize
     msgbuf.out_extra_end = 0; // out_extra: initialize
     msgbuf.out_extra_start = 0; // out_extra: initialize
     msgbuf.out_extra_eof = false; // out_extra: initialize

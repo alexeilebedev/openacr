@@ -40,10 +40,6 @@ extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // 
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
-extern const char *  dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64;      // Linux-g++-9.coverage-x86_64       fconst:dev.Builddir.builddir/Linux-g++-9.coverage-x86_64
-extern const char *  dev_Builddir_builddir_Linux_gPP_9_debug_x86_64;         // Linux-g++-9.debug-x86_64          fconst:dev.Builddir.builddir/Linux-g++-9.debug-x86_64
-extern const char *  dev_Builddir_builddir_Linux_gPP_9_profile_x86_64;       // Linux-g++-9.profile-x86_64        fconst:dev.Builddir.builddir/Linux-g++-9.profile-x86_64
-extern const char *  dev_Builddir_builddir_Linux_gPP_9_release_x86_64;       // Linux-g++-9.release-x86_64        fconst:dev.Builddir.builddir/Linux-g++-9.release-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
@@ -133,56 +129,77 @@ enum dev_FieldIdEnum {                 // dev.FieldId.value
     ,dev_FieldId_longestfunc    = 57
     ,dev_FieldId_nmysteryfunc   = 58
     ,dev_FieldId_badness        = 59
-    ,dev_FieldId_mdsection      = 60
-    ,dev_FieldId_match          = 61
-    ,dev_FieldId_path           = 62
-    ,dev_FieldId_genlist        = 63
-    ,dev_FieldId_strict         = 64
-    ,dev_FieldId_opt_type       = 65
-    ,dev_FieldId_sep            = 66
-    ,dev_FieldId_baseref        = 67
-    ,dev_FieldId_origin         = 68
-    ,dev_FieldId_pkgdep         = 69
-    ,dev_FieldId_parent         = 70
-    ,dev_FieldId_soft           = 71
-    ,dev_FieldId_pkgkey         = 72
-    ,dev_FieldId_key            = 73
-    ,dev_FieldId_readmecat      = 74
-    ,dev_FieldId_inl            = 75
-    ,dev_FieldId_sandbox        = 76
-    ,dev_FieldId_filter         = 77
-    ,dev_FieldId_sbpath         = 78
-    ,dev_FieldId_syscmd         = 79
-    ,dev_FieldId_execkey        = 80
-    ,dev_FieldId_command        = 81
-    ,dev_FieldId_pid            = 82
-    ,dev_FieldId_status         = 83
-    ,dev_FieldId_nprereq        = 84
-    ,dev_FieldId_fail_prereq    = 85
-    ,dev_FieldId_completed      = 86
-    ,dev_FieldId_maxtime        = 87
-    ,dev_FieldId_syscmddep      = 88
-    ,dev_FieldId_child          = 89
-    ,dev_FieldId_syslib         = 90
-    ,dev_FieldId_targdep        = 91
-    ,dev_FieldId_target         = 92
-    ,dev_FieldId_targsrc        = 93
-    ,dev_FieldId_targsyslib     = 94
-    ,dev_FieldId_cov_min        = 95
-    ,dev_FieldId_maxerr         = 96
-    ,dev_FieldId_timefmt        = 97
-    ,dev_FieldId_dirname        = 98
-    ,dev_FieldId_tool_opt       = 99
-    ,dev_FieldId_opt            = 100
-    ,dev_FieldId_sortfld        = 101
-    ,dev_FieldId_field          = 102
-    ,dev_FieldId_value          = 103
+    ,dev_FieldId_mdmark         = 60
+    ,dev_FieldId_state          = 61
+    ,dev_FieldId_param          = 62
+    ,dev_FieldId_mdsection      = 63
+    ,dev_FieldId_match          = 64
+    ,dev_FieldId_path           = 65
+    ,dev_FieldId_genlist        = 66
+    ,dev_FieldId_strict         = 67
+    ,dev_FieldId_opt_type       = 68
+    ,dev_FieldId_sep            = 69
+    ,dev_FieldId_baseref        = 70
+    ,dev_FieldId_origin         = 71
+    ,dev_FieldId_pkgdep         = 72
+    ,dev_FieldId_parent         = 73
+    ,dev_FieldId_soft           = 74
+    ,dev_FieldId_pkgkey         = 75
+    ,dev_FieldId_key            = 76
+    ,dev_FieldId_inl            = 77
+    ,dev_FieldId_sandbox        = 78
+    ,dev_FieldId_filter         = 79
+    ,dev_FieldId_readmesort     = 80
+    ,dev_FieldId_sbpath         = 81
+    ,dev_FieldId_syscmd         = 82
+    ,dev_FieldId_execkey        = 83
+    ,dev_FieldId_command        = 84
+    ,dev_FieldId_pid            = 85
+    ,dev_FieldId_status         = 86
+    ,dev_FieldId_nprereq        = 87
+    ,dev_FieldId_fail_prereq    = 88
+    ,dev_FieldId_completed      = 89
+    ,dev_FieldId_maxtime        = 90
+    ,dev_FieldId_syscmddep      = 91
+    ,dev_FieldId_child          = 92
+    ,dev_FieldId_syslib         = 93
+    ,dev_FieldId_targdep        = 94
+    ,dev_FieldId_target         = 95
+    ,dev_FieldId_targsrc        = 96
+    ,dev_FieldId_targsyslib     = 97
+    ,dev_FieldId_cov_min        = 98
+    ,dev_FieldId_maxerr         = 99
+    ,dev_FieldId_timefmt        = 100
+    ,dev_FieldId_dirname        = 101
+    ,dev_FieldId_tool_opt       = 102
+    ,dev_FieldId_opt            = 103
+    ,dev_FieldId_sortfld        = 104
+    ,dev_FieldId_field          = 105
+    ,dev_FieldId_value          = 106
 };
 
-enum { dev_FieldIdEnum_N = 104 };
+enum { dev_FieldIdEnum_N = 107 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
+extern const char *  dev_Mdmark_mdmark_MDSECTION;   // MDSECTION    fconst:dev.Mdmark.mdmark/MDSECTION
+extern const char *  dev_Mdmark_mdmark_CMD;         // CMD          fconst:dev.Mdmark.mdmark/CMD
+extern const char *  dev_Mdmark_mdmark_TOC;         // TOC          fconst:dev.Mdmark.mdmark/TOC
+extern const char *  dev_Mdmark_state_BEG;          // BEG          fconst:dev.Mdmark.state/BEG
+extern const char *  dev_Mdmark_state_END;          // END          fconst:dev.Mdmark.state/END
+extern const char *  dev_Mdmark_state_BEG_AUTO;     // BEG_AUTO     fconst:dev.Mdmark.state/BEG_AUTO
+extern const char *  dev_Mdmark_state_END_AUTO;     // END_AUTO     fconst:dev.Mdmark.state/END_AUTO
+
+// --- dev_MdmarkCaseEnum
+
+enum dev_MdmarkCaseEnum {             // dev.MdmarkCase.mdmark
+     dev_MdmarkCase_MDSECTION   = 1   // mdsection marker
+    ,dev_MdmarkCase_CMD         = 2   // hidden inline-command marker
+    ,dev_MdmarkCase_TOC         = 3   // MYst Table of Contents directive
+};
+
+enum { dev_MdmarkCaseEnum_N = 3 };
+
 extern const char *  dev_Sandbox_sandbox_abt_md;       // abt_md        fconst:dev.Sandbox.sandbox/abt_md
 extern const char *  dev_Sandbox_sandbox_acr_ed;       // acr_ed        fconst:dev.Sandbox.sandbox/acr_ed
 extern const char *  dev_Sandbox_sandbox_amc;          // amc           fconst:dev.Sandbox.sandbox/amc
@@ -192,6 +209,7 @@ extern const char *  dev_Sandbox_sandbox_apm_theirs;   // apm-theirs    fconst:d
 extern const char *  dev_Sandbox_sandbox_atf_ci;       // atf_ci        fconst:dev.Sandbox.sandbox/atf_ci
 extern const char *  dev_Sandbox_sandbox_atf_ci_apm;   // atf_ci-apm    fconst:dev.Sandbox.sandbox/atf_ci-apm
 extern const char *  dev_Sandbox_sandbox_atf_fuzz;     // atf_fuzz      fconst:dev.Sandbox.sandbox/atf_fuzz
+extern const char *  dev_Sandbox_sandbox_tut_make;     // tut_make      fconst:dev.Sandbox.sandbox/tut_make
 namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ArchPkey;
     typedef algo::Smallstr50 BadlinePkey;
@@ -208,12 +226,13 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 HtmlentityPkey;
     typedef algo::Smallstr200 IncludePkey;
     typedef algo::Smallstr50 LicensePkey;
+    typedef algo::Smallstr50 MdmarkPkey;
     typedef algo::Smallstr50 MdsectionPkey;
     typedef algo::Smallstr50 OptTypePkey;
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
     typedef algo::Smallstr150 PkgkeyPkey;
-    typedef algo::Smallstr50 ReadmecatPkey;
+    typedef algo::Smallstr250 ReadmesortPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
     typedef algo::Smallstr200 SrcfilePkey;
@@ -250,6 +269,8 @@ namespace dev { struct Htmlentity; }
 namespace dev { struct Include; }
 namespace dev { struct License; }
 namespace dev { struct Linelim; }
+namespace dev { struct Mdmark; }
+namespace dev { struct MdmarkCase; }
 namespace dev { struct Mdsection; }
 namespace dev { struct Msgfile; }
 namespace dev { struct Noindent; }
@@ -258,7 +279,7 @@ namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace dev { struct Pkgkey; }
 namespace dev { struct Readme; }
-namespace dev { struct Readmecat; }
+namespace dev { struct Readmesort; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
 namespace dev { struct Scriptfile; }
@@ -835,6 +856,69 @@ inline void          Linelim_Init(dev::Linelim& parent);
 // func:dev.Linelim..Print
 void                 Linelim_Print(dev::Linelim& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Mdmark
+struct Mdmark { // dev.Mdmark: invisible markers for markdown files
+    algo::Smallstr50   mdmark;   //
+    algo::Smallstr50   state;    //
+    algo::cstring      param;    // parameter of mdmark - command or mdsection etc...
+    // func:dev.Mdmark..Ctor
+    inline               Mdmark() __attribute__((nothrow));
+};
+
+// func:dev.Mdmark..ReadFieldMaybe
+bool                 Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Mdmark from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Mdmark..ReadStrptrMaybe
+bool                 Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Mdmark.String  printfmt:Tuple
+// func:dev.Mdmark..Print
+void                 Mdmark_Print(dev::Mdmark& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.MdmarkCase
+#pragma pack(push,1)
+struct MdmarkCase { // dev.MdmarkCase: enum helper invisible markers for markdown files
+    u8   mdmark;   //   0
+    // func:dev.MdmarkCase.mdmark.Cast
+    inline               operator dev_MdmarkCaseEnum() const __attribute__((nothrow));
+    // func:dev.MdmarkCase..Ctor
+    inline               MdmarkCase() __attribute__((nothrow));
+    // func:dev.MdmarkCase..FieldwiseCtor
+    explicit inline               MdmarkCase(u8 in_mdmark) __attribute__((nothrow));
+    // func:dev.MdmarkCase..EnumCtor
+    inline               MdmarkCase(dev_MdmarkCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:dev.MdmarkCase.mdmark.GetEnum
+inline dev_MdmarkCaseEnum mdmark_GetEnum(const dev::MdmarkCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:dev.MdmarkCase.mdmark.SetEnum
+inline void          mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:dev.MdmarkCase.mdmark.ToCstr
+const char*          mdmark_ToCstr(const dev::MdmarkCase& parent) __attribute__((nothrow));
+// Convert mdmark to a string. First, attempt conversion to a known string.
+// If no string matches, print mdmark as a numeric value.
+// func:dev.MdmarkCase.mdmark.Print
+void                 mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:dev.MdmarkCase.mdmark.SetStrptrMaybe
+bool                 mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:dev.MdmarkCase.mdmark.SetStrptr
+void                 mdmark_SetStrptr(dev::MdmarkCase& parent, algo::strptr rhs, dev_MdmarkCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:dev.MdmarkCase..Init
+inline void          MdmarkCase_Init(dev::MdmarkCase& parent);
+
 // --- dev.Mdsection
 struct Mdsection { // dev.Mdsection: Template for updating a markdown file
     algo::Smallstr50    mdsection;   //
@@ -1027,11 +1111,6 @@ struct Readme { // dev.Readme: File containing documentation
     explicit inline               Readme(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
-// func:dev.Readme.readmecat.Get
-algo::Smallstr50     readmecat_Get(dev::Readme& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:dev.Readme.readmecat.Get2
-algo::Smallstr50     Readme_readmecat_Get(algo::strptr arg) __attribute__((nothrow));
-
 // func:dev.Readme..ReadFieldMaybe
 bool                 Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of dev::Readme from an ascii string.
@@ -1046,24 +1125,24 @@ inline void          Readme_Init(dev::Readme& parent);
 // func:dev.Readme..Print
 void                 Readme_Print(dev::Readme& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- dev.Readmecat
-struct Readmecat { // dev.Readmecat: sorted categories of txt/ *.md files presented in dev.readme
-    algo::Smallstr50   readmecat;   //
-    algo::Comment      comment;     //
-    // func:dev.Readmecat..Ctor
-    inline               Readmecat() __attribute__((nothrow));
+// --- dev.Readmesort
+struct Readmesort { // dev.Readmesort: sorted categories of txt/ *.md files presented in dev.readme
+    algo::Smallstr250   readmesort;   //
+    algo::Comment       comment;      //
+    // func:dev.Readmesort..Ctor
+    inline               Readmesort() __attribute__((nothrow));
 };
 
-// func:dev.Readmecat..ReadFieldMaybe
-bool                 Readmecat_ReadFieldMaybe(dev::Readmecat& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Readmecat from an ascii string.
+// func:dev.Readmesort..ReadFieldMaybe
+bool                 Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Readmesort from an ascii string.
 // The format of the string is an ssim Tuple
-// func:dev.Readmecat..ReadStrptrMaybe
-bool                 Readmecat_ReadStrptrMaybe(dev::Readmecat &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:dev.Readmesort..ReadStrptrMaybe
+bool                 Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) __attribute__((nothrow));
 // print string representation of ROW to string STR
-// cfmt:dev.Readmecat.String  printfmt:Tuple
-// func:dev.Readmecat..Print
-void                 Readmecat_Print(dev::Readmecat& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:dev.Readmesort.String  printfmt:Tuple
+// func:dev.Readmesort..Print
+void                 Readmesort_Print(dev::Readmesort& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sandbox
 struct Sandbox { // dev.Sandbox: Registered sandbox
@@ -1524,6 +1603,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Htmlentity &row
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Include &row);// cfmt:dev.Include.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::License &row);// cfmt:dev.License.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);// cfmt:dev.Linelim.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdmark &row);// cfmt:dev.Mdmark.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdsection &row);// cfmt:dev.Mdsection.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
@@ -1531,7 +1611,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmecat &row);// cfmt:dev.Readmecat.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmesort &row);// cfmt:dev.Readmesort.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Scriptfile &row);// cfmt:dev.Scriptfile.String

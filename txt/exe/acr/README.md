@@ -4,29 +4,24 @@
 Acr is a query and editing tool for ssim (super-simple) datasets.
 An acr dataset can be a directory, file or stdin.
 
-### Chapters
-<a href="#chapters"></a>
-
-<!-- TOC_BEG AUTO -->
-* [ACR release notes](/txt/exe/acr/relnotes.md)
-
-<!-- TOC_END AUTO -->
-
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Chapters](#chapters)
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Reading Stdin](#reading-stdin)
-* [Sorting & RowIDs](#sorting---rowids)
-* [See Also](#see-also)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Reading Stdin](#reading-stdin)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sorting & RowIDs](#sorting---rowids)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [See Also](#see-also)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [acr - Internals](/txt/exe/acr/internals.md)<br/>
+&#128196; [ACR release notes](/txt/exe/acr/relnotes.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr: Algo Cross-Reference - ssimfile database & update tool
 Usage: acr [[-query:]<string>] [options]
@@ -78,8 +73,11 @@ Usage: acr [[-query:]<string>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Acr performs a fixed number of operations in a fixed order. All of the operations can be enabled/controlled with
 command-line flags.
@@ -102,9 +100,53 @@ The -print option is modified by `-tree`, `-loose`, `-maxgroup`, `-rowid`, `-fld
 * Writing to dataset or back to file (-write). Option -e implies -write. 
 * Printing final report summarizing the number of updates and modified files (-report).
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
+### Reading Stdin
+<a href="#reading-stdin"></a>
+
+The options `-insert`, `-replace`, `-merge`, '-sel' all enable reading of stdin
+for a list of tuples. The lines in the input stream can override the setting on the command line.
+The following table shows the possible prefixes:
+
+```
+inline-command: acr fconst:acr.ReadMode.read_mode/% -field name,comment
+acr.insert	Insert new record only
+acr.replace	Replace record with input
+acr.update	Merge existing attributes only
+acr.merge	Create new record & merge attributes
+acr.delete	Delete record
+acr.select	Select found record
+```
+
+To illustrate, invoking `acr -insert` and then providing the lines
+```
+acr.delete <tuple>
+acr.merge <tuple>
+```
+
+Performs the corresponding actions.
+
+### Sorting & RowIDs
+<a href="#sorting---rowids"></a>
+
+Acr always saves files in sorted order. Sorting is controlled by the `ssimsort`
+table, which is a subset of `ssimfile`. Sorting is optional. If `ssimsort` is missing
+or doesn't specify the primary key of the table, the set is *order-dependent*.
+When sorting is enabled, it can be done on any fields, including a fldfunc.
+
+### See Also
+<a href="#see-also"></a>
+
+* [acr_my](/txt/exe/acr_my/README.md)
+* [acr_ed](/txt/exe/acr_ed/README.md)
+* [mysql2ssim](/txt/exe/mysql2ssim/README.md)
+* [ssim2mysql](/txt/exe/ssim2mysql/README.md)
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -query -- Regx to match record
 <a href="#-query"></a>
 
@@ -370,77 +412,14 @@ in the selected set.
 Deselect any selected records and selects their meta-data instead.
 `-meta` implies `-t`.
 
-### Reading Stdin
-<a href="#reading-stdin"></a>
-
-The options `-insert`, `-replace`, `-merge`, '-sel' all enable reading of stdin
-for a list of tuples. The lines in the input stream can override the setting on the command line.
-The following table shows the possible prefixes:
-
-```
-inline-command: acr fconst:acr.ReadMode.read_mode/% -field name,comment
-acr.insert	Insert new record only
-acr.replace	Replace record with input
-acr.update	Merge existing attributes only
-acr.merge	Create new record & merge attributes
-acr.delete	Delete record
-acr.select	Select found record
-```
-
-To illustrate, invoking `acr -insert` and then providing the lines
-```
-acr.delete <tuple>
-acr.merge <tuple>
-```
-
-Performs the corresponding actions.
-
-### Sorting & RowIDs
-<a href="#sorting---rowids"></a>
-
-Acr always saves files in sorted order. Sorting is controlled by the `ssimsort`
-table, which is a subset of `ssimfile`. Sorting is optional. If `ssimsort` is missing
-or doesn't specify the primary key of the table, the set is *order-dependent*.
-When sorting is enabled, it can be done on any fields, including a fldfunc.
-
-### See Also
-<a href="#see-also"></a>
-
-* [acr_my](/txt/exe/acr_my/README.md)
-* [acr_ed](/txt/exe/acr_ed/README.md)
-* [mysql2ssim](/txt/exe/mysql2ssim/README.md)
-* [ssim2mysql](/txt/exe/ssim2mysql/README.md)
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/acr/check.cpp](/cpp/acr/check.cpp)|Check constraints & referential integrity|
-|[cpp/acr/createrec.cpp](/cpp/acr/createrec.cpp)|Create record|
-|[cpp/acr/err.cpp](/cpp/acr/err.cpp)|Show errors / suggestions|
-|[cpp/acr/eval.cpp](/cpp/acr/eval.cpp)|Evaluate attributes|
-|[cpp/acr/git.cpp](/cpp/acr/git.cpp)|Git triggers|
-|[cpp/acr/load.cpp](/cpp/acr/load.cpp)|Load files|
-|[cpp/acr/main.cpp](/cpp/acr/main.cpp)|Main file|
-|[cpp/acr/print.cpp](/cpp/acr/print.cpp)|Code for output|
-|[cpp/acr/query.cpp](/cpp/acr/query.cpp)|Run query|
-|[cpp/acr/select.cpp](/cpp/acr/select.cpp)|Selection of records|
-|[cpp/acr/verb.cpp](/cpp/acr/verb.cpp)|Command-line verbs|
-|[cpp/acr/write.cpp](/cpp/acr/write.cpp)|Write files|
-|[cpp/gen/acr_gen.cpp](/cpp/gen/acr_gen.cpp)||
-|[include/acr.h](/include/acr.h)|Header file|
-|[include/gen/acr_gen.h](/include/gen/acr_gen.h)||
-|[include/gen/acr_gen.inl.h](/include/gen/acr_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
@@ -449,47 +428,11 @@ The following source files are part of this tool:
 |[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
 |[dmmeta.smallstr](/txt/ssimdb/dmmeta/smallstr.md)|Generated fixed-length padded or length-delimited string field|
 |[dmmeta.funique](/txt/ssimdb/dmmeta/funique.md)|This field must be unique in the table. Not needed for primary key|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
 |[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.anonfld](/txt/ssimdb/dmmeta/anonfld.md)|Omit field name where possible (command line, enums, constants)|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `acr`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|acr.BadInsert|Duplicate insert is ignored|
-|acr.BadNs|Insert a bad record and check that it's detected|
-|acr.BadPkey|Warning about missing pkey - not error|
-|acr.BadReftype|Invalid reftype detected|
-|acr.CascDel|-del recursively deletes dependent records|
-|acr.CascDel2|Insert records & cascade delete them -- no change|
-|acr.DelField|A field is deleted|
-|acr.DelRecord|A record is deleted|
-|acr.DeleteReinsert|A record is deleted and re-inserted|
-|acr.Fields|Select fields|
-|acr.FieldsComma|Select fields with comma separator|
-|acr.GitTrigger1|Test -g option|
-|acr.Insert|Insert a few records|
-|acr.InsertDelete|Insert & delete record, nothing happens|
-|acr.Merge|Merging|
-|acr.Meta1|Select meta-information|
-|acr.Meta2|Select meta-information|
-|acr.Meta3|Select meta-information|
-|acr.NullTrunc|Trunc with reinsertion has no effect|
-|acr.QueryCtype|Select one record|
-|acr.RenameCollision|Rename with collision|
-|acr.RenameField|-rename -field renames affected attributes in dataset|
-|acr.RenameRecord|Rename field and propagate recursively through structured keys|
-|acr.Replace|A record is replaced|
-|acr.Select|A record is selected|
-|acr.SelectStdin|A record is selected by reading stdin|
-|acr.SelectTree|Tree selection|
-|acr.TooManyArgs|Acr command line input error|
-|acr.Trunc|Truncate table|
-|acr.UpdateBad|Update fails|
-|acr.UpdateGood|Update succeeds|
-|acr.Where|Test -where option|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

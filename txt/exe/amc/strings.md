@@ -1,4 +1,4 @@
-## AMC Strings
+## amc Strings
 
 
 ### String types and how to use them
@@ -74,16 +74,16 @@ The following functions are generated:
 inline-command: amc algo.LspaceStr5.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5.ch.Getary
-algo::aryptr<char>   ch_Getary(const algo::LspaceStr5& parent) __attribute__((nothrow));
+inline algo::aryptr<char> ch_Getary(const algo::LspaceStr5& parent) __attribute__((nothrow));
 // func:algo.LspaceStr5.ch.HashStrptr
-u32                  LspaceStr5_Hash(u32 prev, const algo::strptr &str);
+inline u32           LspaceStr5_Hash(u32 prev, const algo::strptr &str);
 // func:algo.LspaceStr5.ch.Init
-void                 ch_Init(algo::LspaceStr5 &parent) __attribute__((nothrow));
+inline void          ch_Init(algo::LspaceStr5 &parent) __attribute__((nothrow));
 // always return constant 5
 // func:algo.LspaceStr5.ch.Max
-int                  ch_Max(algo::LspaceStr5& parent) __attribute__((nothrow));
+inline int           ch_Max(algo::LspaceStr5& parent) __attribute__((nothrow));
 // func:algo.LspaceStr5.ch.N
-int                  ch_N(const algo::LspaceStr5& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline int           ch_N(const algo::LspaceStr5& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // func:algo.LspaceStr5.ch.Print
 void                 ch_Print(algo::LspaceStr5& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
@@ -96,17 +96,11 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr r
 void                 ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr& rhs) __attribute__((nothrow));
 // Copy from strptr (operator=)
 // func:algo.LspaceStr5.ch.AssignStrptr
-void                 algo::LspaceStr5::operator =(const algo::strptr &str) __attribute__((nothrow));
-// Copy from same type
-// Copy value from RHS.
-// func:algo.LspaceStr5.ch.Set
-void                 algo::LspaceStr5::operator =(const algo::LspaceStr5& parent) __attribute__((nothrow));
-// func:algo.LspaceStr5.ch.Ctor
-algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) __attribute__((nothrow));
+inline void          algo::LspaceStr5::operator =(const algo::strptr &str) __attribute__((nothrow));
 // func:algo.LspaceStr5.ch.CtorStrptr
-algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) __attribute__((nothrow));
+inline               algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) __attribute__((nothrow));
 // func:algo.LspaceStr5.ch.Cast
-operator algo::strptr () const __attribute__((nothrow));
+inline               algo::LspaceStr5::operator algo::strptr() const __attribute__((nothrow));
 
 ```
 
@@ -128,16 +122,16 @@ The following functions are generated for the example above:
 inline-command: amc algo.LspaceStr5_I16.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5_I16.ch.Getary
-algo::aryptr<char>   ch_Getary(const algo::LspaceStr5_I16& parent) __attribute__((nothrow));
+inline algo::aryptr<char> ch_Getary(const algo::LspaceStr5_I16& parent) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16.ch.HashStrptr
-u32                  LspaceStr5_I16_Hash(u32 prev, const algo::strptr &str);
+inline u32           LspaceStr5_I16_Hash(u32 prev, const algo::strptr &str);
 // func:algo.LspaceStr5_I16.ch.Init
-void                 ch_Init(algo::LspaceStr5_I16 &parent) __attribute__((nothrow));
+inline void          ch_Init(algo::LspaceStr5_I16 &parent) __attribute__((nothrow));
 // always return constant 5
 // func:algo.LspaceStr5_I16.ch.Max
-int                  ch_Max(algo::LspaceStr5_I16& parent) __attribute__((nothrow));
+inline int           ch_Max(algo::LspaceStr5_I16& parent) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16.ch.N
-int                  ch_N(const algo::LspaceStr5_I16& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline int           ch_N(const algo::LspaceStr5_I16& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // func:algo.LspaceStr5_I16.ch.Print
 void                 ch_Print(algo::LspaceStr5_I16& parent, algo::cstring &out) __attribute__((nothrow));
 // Convert string to field. Return success value
@@ -150,15 +144,9 @@ bool                 ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strp
 void                 ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr& rhs) __attribute__((nothrow));
 // Copy from strptr (operator=)
 // func:algo.LspaceStr5_I16.ch.AssignStrptr
-void                 algo::LspaceStr5_I16::operator =(const algo::strptr &str) __attribute__((nothrow));
-// Copy from same type
-// Copy value from RHS.
-// func:algo.LspaceStr5_I16.ch.Set
-void                 algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16& parent) __attribute__((nothrow));
-// func:algo.LspaceStr5_I16.ch.Ctor
-algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) __attribute__((nothrow));
+inline void          algo::LspaceStr5_I16::operator =(const algo::strptr &str) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16.ch.CtorStrptr
-algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) __attribute__((nothrow));
+inline               algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) __attribute__((nothrow));
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
@@ -180,7 +168,7 @@ i64                  ch_Geti64(algo::LspaceStr5_I16& parent, bool &out_ok) __att
 // func:algo.LspaceStr5_I16.ch.SetnumMaybe
 bool                 ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) __attribute__((nothrow));
 // func:algo.LspaceStr5_I16.ch.Cast
-operator algo::strptr () const __attribute__((nothrow));
+inline               algo::LspaceStr5_I16::operator algo::strptr() const __attribute__((nothrow));
 
 ```
 

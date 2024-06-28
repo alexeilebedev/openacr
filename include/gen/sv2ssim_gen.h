@@ -160,6 +160,7 @@ struct FDb { // sv2ssim.FDb: In-memory database for sv2ssim
     sv2ssim::FBltin**   ind_bltin_buckets_elems;   // pointer to bucket array
     i32                 ind_bltin_buckets_n;       // number of elements in bucket array
     i32                 ind_bltin_n;               // number of elements in the hash table
+    bool                cmt2fld_ok;                //   false
     sv2ssim::trace      trace;                     //
 };
 

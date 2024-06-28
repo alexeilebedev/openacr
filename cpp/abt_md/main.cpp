@@ -26,7 +26,7 @@
 
 // Return true if readme file README needs section MDSECTION
 bool abt_md::NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadme &readme) {
-    return Regx_Match(mdsection.regx_path,readme.gitfile);
+    return Regx_Match(mdsection.regx_path,readme.gitfile) && mdsection.path!="";
 }
 
 // Extract words from line up until first dash
@@ -43,11 +43,14 @@ tempstr abt_md::LineKey(algo::strptr line) {
         str=ch_FirstN(str,i);
     }
     str=Trimmed(str);
-    return MdEscape(str);
+    return MdAnchor(str);
 }
 
 // Translate characters to create a markdown link
-tempstr abt_md::MdEscape(algo::strptr str) {
+// : is skipped
+// non-identifier characters are replaced with -
+// All characters are lowercased
+tempstr abt_md::MdAnchor(algo::strptr str) {
     tempstr ret;
     for (int i=0; i < str.n_elems; i++) {
         char c = algo::ToLower(str.elems[i]);
@@ -61,6 +64,13 @@ tempstr abt_md::MdEscape(algo::strptr str) {
         }
     }
     return ret;
+}
+
+algo::strptr abt_md::FileIcon() {
+    return "&#128196; ";
+}
+algo::strptr abt_md::FolderIcon() {
+    return "&#128193; ";
 }
 
 // Print anchor to OUT and add it to a global table
@@ -94,29 +104,6 @@ tempstr abt_md::CodeBlock(algo::strptr text) {
 
 // -----------------------------------------------------------------------------
 
-static tempstr NewlineToBr(strptr s) {
-    tempstr ret(s);
-    Replace(ret,"\n","<br>");
-    return ret;
-}
-
-void abt_md::AddRow(cstring &out, strptr text1, strptr text2, strptr text3 DFLTVAL(""), strptr text4 DFLTVAL(""), strptr text5 DFLTVAL("")) {
-    out <<"|"<<NewlineToBr(text1);
-    out<<"|"<<NewlineToBr(text2);
-    if (text5!="" || text4!="" || text3!="") {
-        out<<"|"<<NewlineToBr(text3);
-    }
-    if (text5!= "" || text4!="") {
-        out<<"|"<<NewlineToBr(text4);
-    }
-    if (text5!="") {
-        out<<"|"<<NewlineToBr(text5);
-    }
-    out<<"|"<<eol;
-}
-
-// -----------------------------------------------------------------------------
-
 // Return markdown link pointing to page URL and optional anchor ANCHOR
 // The displayed string is NAME
 tempstr abt_md::Link(algo::strptr name, algo::strptr url, algo::strptr anchor DFLTVAL("")) {
@@ -137,7 +124,7 @@ tempstr abt_md::LinkToMd(strptr fname) {
     tempstr ret;
     ind_beg(algo::FileLine_curs,line,fname) {// take first line
         strptr rest=Pathcomp(line," LR");// usually rest of the line
-        ret << "["<<rest<<"](/"<<fname<<")"<<eol;
+        ret << "["<<rest<<"](/"<<fname<<")";
         break;
     }ind_end;
     return ret;
@@ -155,8 +142,73 @@ tempstr abt_md::LinkToSsimfile(algo::strptr name, algo::strptr ssimfile, algo::s
 }
 
 // Link to documentation for given namespace (could be lib,protocol,exe,ssimdb)
-tempstr abt_md::LinkToNs(strptr ns, strptr nstype, algo::strptr anchor DFLTVAL("")) {
-    return LinkToFileAbs(ns, tempstr()<<"txt/"<<nstype<<"/"<<ns<<"/README.md", anchor);
+tempstr abt_md::LinkToNs(strptr ns, algo::strptr anchor DFLTVAL("")) {
+    abt_md::FNs &fns = ind_ns_FindX(ns);
+    return LinkToFileAbs(ns, tempstr()<<"txt/"<<fns.nstype<<"/"<<ns<<"/README.md", anchor);
+}
+
+// Link to internals documentation for given namespace (could be lib,protocol,exe,ssimdb)
+// The link text is NAME
+// the namespace is NS
+// Optional anchor is ANCHOR
+// For executables, a separate 'internals' file is used
+tempstr abt_md::LinkToInternals(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor DFLTVAL("")) {
+    return LinkToFileAbs(name, tempstr()<<"txt/"<<ns.nstype<<"/"<<ns.ns<<"/"
+                         <<(ns.nstype == dmmeta_Nstype_nstype_exe ? "internals.md" : "README.md"), anchor);
+}
+
+tempstr abt_md::LinkToReftype(algo::strptr reftype) {
+    return LinkToFileAbs(reftype, "txt/exe/amc/reftypes.md", MdAnchor(reftype));
+}
+
+tempstr abt_md::LinkToCtype(abt_md::FCtype &ctype) {
+    abt_md::FNs &ns=*ctype.p_ns;
+    tempstr ret(ctype.ctype); // default - plain text
+    // global namespace doesn't have a readme yet
+    if (ctype.c_ssimfile) {
+        ret = LinkToSsimfile(ctype.ctype, ctype.c_ssimfile->ssimfile);
+    } else if (ns.ns != "") {
+        // some types may be documented as separate files
+        // if they're not, they will be documented inside the main README file
+        tempstr fname = tempstr()<<"txt/"<<ns.nstype<<"/"<<ns.ns<<"/"<<name_Get(ctype)<<".md";
+        if (FileQ(fname)) {
+            ret = LinkToFileAbs(ctype.ctype, fname);
+        } else {
+            ret = LinkToInternals(ctype.ctype, ns, MdAnchor(ctype.ctype));
+        }
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+tempstr abt_md::TypeComment(abt_md::FCtype &ctype) {
+    tempstr ret(ctype.comment);
+    if (ret =="") {
+        ret = GetBaseType(ctype)->comment;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Compute base type, or return CTYPE if none
+abt_md::FCtype *abt_md::GetBaseType(abt_md::FCtype &ctype) {
+    abt_md::FCtype *ret=&ctype;
+    ind_beg(abt_md::ctype_c_field_curs,field,ctype){
+        if (field.reftype == dmmeta_Reftype_reftype_Base) {
+            ret=field.p_arg;
+            break;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Create an HTML comment
+tempstr abt_md::MdComment(algo::strptr str){
+    return tempstr()<<"<!-- "<<str<<" -->";
 }
 
 // --------------------------------------------------------------------------------
@@ -166,21 +218,7 @@ tempstr abt_md::LinkToNs(strptr ns, strptr nstype, algo::strptr anchor DFLTVAL("
 // We just repeat its algorithm and generate a link to that target
 tempstr abt_md::LinkToSection(strptr str) {
     str = Trimmed(str);
-    tempstr ret;
-    ret << "[" << str << "](#";
-    for (int i=0; i < str.n_elems; i++) {
-        char c = algo::ToLower(str.elems[i]);
-        if (c == ':') {
-            // skip
-        } else {
-            if (!algo_lib::IdentCharQ(c)) {
-                c = '-';
-            }
-            ret << c;
-        }
-    }
-    ret << ")";
-    return ret;
+    return tempstr() << "[" << str << "](#" << MdAnchor(str) << ")";
 }
 
 // -----------------------------------------------------------------------------
@@ -188,21 +226,41 @@ tempstr abt_md::LinkToSection(strptr str) {
 // Populate global table DIRENT with a directory listing
 // matching PATTERN, that can be read in sorted order
 // (Dir_curs does not provide sorted order)
-void abt_md::PopulateDirent(strptr pattern) {
-    dirent_RemoveAll();
-    ind_beg(algo::Dir_curs,ent,pattern) {
-        abt_md::FDirent &dirent=dirent_Alloc();
+void abt_md::PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern) {
+    dirent_RemoveAll(dirscan);
+    bool sorted_level(false);
+    bool unsorted_level(false);
+    ind_beg(algo::Dir_curs,ent,pattern) if (!EndsWithQ(ent.filename,"~")) {
+        abt_md::FDirent &dirent=dirent_Alloc(dirscan);
+        dirent.p_dirscan=&dirscan;
         dirent.filename=ent.filename;
         // support sorting by readmecat
-        if (FReadmecat *readmecat=ind_readmecat_Find(ent.filename)){
-            dirent.sortfld=readmecat->sortfld;
+        if (FReadmesort *readmesort=ind_readmesort_Find(ent.pathname)){
+            dirent.sortfld=readmesort->sortfld;
+            sorted_level=true;
         }else{
             dirent.sortfld=ent.filename;
+            if (ent.filename!="README.md"){
+                unsorted_level=true;
+            }
         }
         dirent.pathname=ent.pathname;
         dirent.is_dir=ent.is_dir;
         vrfy_(dirent_XrefMaybe(dirent));
     }ind_end;
+    if (sorted_level && unsorted_level){
+        ind_beg(abt_md::FDirscan_dirent_curs,dirent,dirscan) if (dirent.sortfld!="README.md"){
+            u32 num;
+            prlog(Keyval("dir",dirent.pathname)
+                  <<Keyval("dir",dirent.pathname)
+                  <<Keyval("sort",dirent.sortfld)
+                  <<Keyval("comment",u32_ReadStrptrMaybe(num,dirent.sortfld) ? "present" : "missing")
+                  );
+        }ind_end;
+        vrfy(0,tempstr()
+             <<Keyval("comment","readmesort table is missing entries for the level")
+             );
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -248,7 +306,7 @@ void abt_md::UpdateReadme() {
         }
     }ind_end;
 
-    if (readme.sandbox) {
+    if (readme.sandbox && _db.cmdline.evalcmd) {
         command::sandbox_proc sandbox;
         sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
         sandbox.cmd.reset = true;
@@ -295,46 +353,59 @@ void abt_md::UpdateReadme() {
 // canot handle exceptions like README.md
 void abt_md::Main_XrefNs() {
     ind_beg(_db_readme_curs,readme,_db) {
-        // PATHNAME                    DIR1     DIR2     FILENAME
-        // txt/exe/acr/main.md         exe      ""       main
-        // txt/script/abc.md           script   script   abc
-        // txt/ssimdb/ns/name.md       ssimdb   ssimdb   name
-        algo::strptr dir1=Pathcomp(readme.gitfile, "/LR/LL");
-        algo::strptr dir2=Pathcomp(readme.gitfile, "/LR/LR/LL");
-        algo::strptr filename = Pathcomp(readme.gitfile, "/RR.RL");
+        // PATHNAME                              DIR1     DIR2     FILENAME
+        // txt/exe/acr/main.md                   exe      ""       main
+        // txt/script/abc.md                     script   script   abc
+        // txt/ssimdb/ns/name.md                 ssimdb   ssimdb   name
+        tempstr gitfile(readme.gitfile);
+        algo::strptr dir1=Pathcomp(gitfile, "/LR/LL");
+        algo::strptr dir2=Pathcomp(gitfile, "/LR/LR/LL");
+        algo::strptr filename = Pathcomp(gitfile, "/RR.RL");
         tempstr stray_error;
         if (dir1 == "script" && filename != "README") {// manually check script existence
-            if (abt_md::FScriptfile *scriptfile=ind_scriptfile_Find(DirFileJoin("bin",filename))) {
+            tempstr scriptfile_key(DirFileJoin("bin",filename));
+            if (abt_md::FScriptfile *scriptfile=ind_scriptfile_Find(scriptfile_key)) {
                 readme.p_scriptfile=scriptfile;
             } else {
-                stray_error="no such script";
+                stray_error<<Keyval("no such script",scriptfile_key);
             }
         } else if (abt_md::FNs *ns=ind_ns_Find(dir2)) {
-            if (filename == "README") {
+            if (dir1 == dmmeta_Nstype_nstype_exe) {
                 if (ns->ns != "") {
                     readme.p_ns=ns;
                     ns->c_readme=&readme;
                 }
             } else if (dir1==dmmeta_Nstype_nstype_ssimdb) {
-                if (abt_md::FSsimfile *ssimfile =ind_ssimfile_Find(tempstr()<<dir2<<"."<<filename)) {
+                tempstr ssimfile_key(tempstr()<<dir2<<"."<<filename);
+                if (filename == "README") {
+                    readme.p_ns = ns;
+                    ns->c_readme=&readme;
+                } else if (abt_md::FSsimfile *ssimfile =ind_ssimfile_Find(ssimfile_key)) {
                     readme.p_ssimfile=ssimfile;
                     readme.p_ctype=ssimfile->p_ctype;
                 } else {
-                    stray_error="no such ssimfile";
+                    stray_error<<Keyval("no such ssimfile",ssimfile_key);
                 }
             } else if (dir1==dmmeta_Nstype_nstype_lib || dir1==dmmeta_Nstype_nstype_protocol) {
-                if (abt_md::FCtype *ctype =ind_ctype_Find(tempstr()<<dir2<<"."<<filename)) {
+                tempstr ctype_key(tempstr()<<dir2<<"."<<filename);
+                if (filename == "README") {
+                    readme.p_ns = ns;
+                    ns->c_readme=&readme;
+                } else if (abt_md::FCtype *ctype =ind_ctype_Find(ctype_key)) {
                     readme.p_ctype=ctype;
                 } else {
-                    stray_error="no such ctype";
+                    stray_error<<Keyval("no such ctype",ctype_key);
                 }
             } else {
                 // other file such as txt/exe/amc/xyz.md
             }
         }
+
         if (stray_error!="") {
             prerr("abt_md.unrecognized_readme"
                   <<Keyval("readme",readme.gitfile)
+                  <<Keyval("dir1",dir1)
+                  <<Keyval("dir2",dir2)
                   <<Keyval("comment",stray_error));
             algo_lib::_db.exit_code=1;
         }
@@ -369,7 +440,11 @@ void abt_md::CheckLinks() {
         // in the third case, the path is interpreted relative to the repo root
         tempstr path;
         if (StartsWithQ(link.target,"https://") || StartsWithQ(link.target,"http://")) {
-            good=true;// don't check URLs
+            if (_db.cmdline.external) {
+                verblog("checking "<<link.target);
+                tempstr cmd = tempstr() << "curl --output /dev/null --silent --head --fail " << strptr_ToBash(link.target);
+                good=SysCmd(cmd) == 0;
+            }
         } else if (StartsWithQ(link.target,"/")) {
             // /txt/file.md#abcd -> txt/file.md
             path=Pathcomp(link.target,"/LR#LL");
@@ -393,10 +468,12 @@ void abt_md::CheckLinks() {
             tempstr anchor(Pathcomp(link.target,"#LR"));
             tempstr fullanchor = tempstr() << path << "#"<<anchor;
             if (good && anchor!="" && !ind_anchor_Find(fullanchor)) {
+                //            if (good && anchor!="" && !fanchor) {
                 good=false;
                 prlog(link.location<<": "
                       <<Keyval("target",link.target)
                       <<Keyval("anchor",anchor)
+                      <<Keyval("fullanchor",fullanchor)
                       <<Keyval("comment","link path is OK, but the anchor doesn't exist"));
             }
         }
@@ -414,8 +491,8 @@ void abt_md::Main() {
     }
     // initialize reademecat for sorting
     u32 sort_n=0;
-    ind_beg(_db_readmecat_curs,readmecat,_db){
-        i64_PrintPadLeft(sort_n++,readmecat.sortfld,3);
+    ind_beg(_db_readmesort_curs,readmesort,_db){
+        i64_PrintPadLeft(sort_n++,readmesort.sortfld,3);
     }ind_end;
 
     // initialize regx for mdsection
@@ -424,19 +501,19 @@ void abt_md::Main() {
         Regx_ReadSql(mdsection.regx_path,mdsection.path,true);
     }ind_end;
 
+    // x-reference readme and ns
+    Main_XrefNs();
+
     // select md files by regex or by namespace
     ind_beg(_db_readme_curs,readme,_db) {
         readme.select = _db.cmdline.ns.expr != ""
-            ? Regx_Match(_db.cmdline.ns,Pathcomp(readme.gitfile,"/LR/LR/LL"))
+            ? (readme.p_ns && Regx_Match(_db.cmdline.ns,readme.p_ns->ns))
             : Regx_Match(_db.cmdline.readme,readme.gitfile);
 
         if (readme.select) {
             verblog("abt_md: select "<<readme.gitfile);
         }
     }ind_end;
-
-    // x-reference readme and ns
-    Main_XrefNs();
 
     ind_beg(_db_ctype_curs,ctype,_db) {
         if (abt_md::FField *field=c_field_Find(ctype,0)) {

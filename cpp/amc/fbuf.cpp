@@ -27,6 +27,9 @@
 static bool ReadQ(amc::FFbuf &fbuf) {
     return fbufdir_Get(fbuf) == dmmeta_Fbufdir_fbufdir_in;
 }
+static bool HasFdQ(amc::FFbuf &fbuf) {
+    return fbuf.insready != "" && fbuf.insready != fbuf.field;
+}
 
 //
 // see tex/amc/amc_fbuf.tex for documentation
@@ -63,14 +66,12 @@ void amc::tclass_Fbuf() {
     InsVar(R, field.p_ctype    , "i32", "$name_end", "", "end of valid bytes (in bytes)");
     InsVar(R, field.p_ctype    , "bool", "$name_eof", "", "no more data will be written to buffer");
     InsVar(R, field.p_ctype    , "algo::Errcode", "$name_err", "", "system error code");
-    if (linebuf || inmsgbuf) {
-        InsVar(R, field.p_ctype, "bool", "$name_msgvalid", "", "current message is valid");
-        InsVar(R, field.p_ctype, "i32", "$name_msglen", "", "current message length");
-    }
-    if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
+    InsVar(R, field.p_ctype    , "bool", "$name_msgvalid", "", "current message is valid");
+    InsVar(R, field.p_ctype    , "i32", "$name_msglen", "", "current message length");
+    if (ReadQ(fbuf) && HasFdQ(fbuf)) {
         InsVar(R, field.p_ctype, "algo_lib::FIohook", "$name_iohook", "", "edge-triggered hook for refilling buffer");
     }
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         InsVar(R, field.p_ctype, "algo_lib::FIohook", "$name_iohook", "", "edge-triggered hook for emptying buffer");
         InsVar(R, field.p_ctype, "bool", "$name_zerocopy", "", "support zero-copy optimization");
         InsVar(R, field.p_ctype, "u64", "$name_n_eagain", "", "eagain counter");
@@ -97,7 +98,7 @@ void amc::tfunc_Fbuf_BeginRead() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
-    if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Attach file descriptor and begin reading using edge-triggered epoll.");
         Ins(&R, func.comment, "File descriptor becomes owned by $Partype.$name via FIohook field.");
@@ -120,12 +121,12 @@ void amc::tfunc_Fbuf_GetMsg() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
+    bool msgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf;
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
     bool bytebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Bytebuf;
+    bool bytebuf_extern = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_BytebufExtern;
 
-    if (inmsgbuf || linebuf || bytebuf) {
-
+    if (ReadQ(fbuf)) {
         amc::FFunc& getmsg = amc::CreateCurFunc();
         Ins(&R, getmsg.comment, "Look for valid message at current position in the buffer.");
         Ins(&R, getmsg.comment, "If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).");
@@ -139,57 +140,41 @@ void amc::tfunc_Fbuf_GetMsg() {
             Ins(&R, getmsg.comment, "A partial line at the end of input is NOT returned (TODO?)");
         } else if (bytebuf) {
             Ins(&R, getmsg.comment, "The message is any number of bytes > 0");
-        } else if (inmsgbuf) {
+        } else if (bytebuf_extern) {
+            Ins(&R, getmsg.comment, "The message boundary is determined by a custom ScanMsg function implemented by user");
+        } else if (msgbuf) {
             Ins(&R, getmsg.comment, "The message is length-delimited based on field $lenfld field");
         }
         Ins(&R, getmsg.comment, "");
         Ins(&R, getmsg.ret  , "$Rettype",false);
         Ins(&R, getmsg.proto, "$name_GetMsg($Parent)",false);
-        Ins(&R, getmsg.body        , "$Rettype ret;");
-
-        if (linebuf || inmsgbuf) {
-            Ins(&R, getmsg.body        , "if (!$parname.$name_msgvalid) {");
-            Ins(&R, getmsg.body        , "    $name_Scanmsg($pararg);");
-            if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
-                Ins(&R, getmsg.body    , "    if (!$parname.$name_msgvalid) {");
-                Ins(&R, getmsg.body    , "        bool readable = $name_Refill($pararg);");
-                Ins(&R, getmsg.body    , "        if (readable) {");
-                Ins(&R, getmsg.body    , "            $name_Scanmsg($pararg);");
-                Ins(&R, getmsg.body    , "        }");
-                Ins(&R, getmsg.body    , "    }");
-            }
-            Ins(&R, getmsg.body        , "}");
-            Ins(&R, getmsg.body        , "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
-            if (linebuf) {
-                Ins(&R, getmsg.body    , "if ($parname.$name_msgvalid) {");
-                Ins(&R, getmsg.body    , "    ret.elems = hdr;");
-                Ins(&R, getmsg.body    , "    ret.n_elems = $parname.$name_msglen;");
-                Ins(&R, getmsg.body    , "}");
-            } else {
-                Ins(&R, getmsg.body    , "ret = $parname.$name_msgvalid ? hdr : NULL;");
-            }
-        } else { // bytebuf
-            Ins(&R, getmsg.body        , "if ($name_N($pararg) == 0) {");
-            if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
-                Ins(&R, getmsg.body    , "    $name_Refill($pararg); // refill from fd");
-            }
-            Ins(&R, getmsg.body        , "}");
-            Ins(&R, getmsg.body        , "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
-            Ins(&R, getmsg.body        , "if ($name_N($pararg)) {");
-            Ins(&R, getmsg.body        , "    ret.elems = hdr; // if no elements, return value is NULL");
-            Ins(&R, getmsg.body        , "    ret.n_elems = $name_N($pararg);");
-            Ins(&R, getmsg.body        , "}");
+        Ins(&R, getmsg.body,    "$Rettype ret;");
+        Ins(&R, getmsg.body,    "if (!$parname.$name_msgvalid) {");
+        Ins(&R, getmsg.body,    "    $name_ScanMsg($pararg);");
+        if (HasFdQ(fbuf)) {
+            Ins(&R, getmsg.body, "    if (!$parname.$name_msgvalid) {");
+            Ins(&R, getmsg.body, "        bool readable = $name_Refill($pararg);");
+            Ins(&R, getmsg.body, "        if (readable) {");
+            Ins(&R, getmsg.body, "            $name_ScanMsg($pararg);");
+            Ins(&R, getmsg.body, "        }");
+            Ins(&R, getmsg.body, "    }");
+        }
+        Ins(&R, getmsg.body,     "}");
+        Ins(&R, getmsg.body,     "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
+        if (linebuf || bytebuf || bytebuf_extern) {
+            Ins(&R, getmsg.body, "if ($parname.$name_msgvalid) {");
+            Ins(&R, getmsg.body, "    ret.elems = hdr;");
+            Ins(&R, getmsg.body, "    ret.n_elems = $parname.$name_msglen;");
+            Ins(&R, getmsg.body, "}");
+        } else if (msgbuf) {
+            Ins(&R, getmsg.body, "ret = $parname.$name_msgvalid ? hdr : NULL;");
         }
         if (fbuf.inseof != fbuf.field) {
-            if (bytebuf) {
-                Ins(&R, getmsg.body    , "if (!ret.n_elems && $parname.$name_eof) { // all bytes processed");
-            } else {
-                Ins(&R, getmsg.body    , "if (!$parname.$name_msgvalid && $parname.$name_eof) { // all messages processed");
-            }
-            Ins(&R, getmsg.body        , "    $ns::$eof_Insert($pararg);");
-            Ins(&R, getmsg.body        , "}");
+            Ins(&R, getmsg.body, "if (!$parname.$name_msgvalid && $parname.$name_eof) { // all messages processed");
+            Ins(&R, getmsg.body, "    $ns::$eof_Insert($pararg);");
+            Ins(&R, getmsg.body, "}");
         }
-        Ins(&R, getmsg.body            , "return ret;");
+        Ins(&R, getmsg.body, "return ret;");
     }
 }
 
@@ -197,8 +182,6 @@ void amc::tfunc_Fbuf_Init() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
-    bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
@@ -209,15 +192,13 @@ void amc::tfunc_Fbuf_Init() {
     Ins(&R, init.body    , "$parname.$name_end = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_start = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_eof = false; // $name: initialize");
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         Ins(&R, init.body, "$parname.$name_zerocopy = false; // $name: initialize");
         Ins(&R, init.body, "$parname.$name_n_eagain = 0; // $name: initialize");
     }
-    if (linebuf || inmsgbuf) {
-        Ins(&R, init.body, "$parname.$name_msgvalid = false; // $name: initialize");
-        Ins(&R, init.body, "$parname.$name_msglen = 0; // $name: initialize");
-    }
-    Ins(&R, init.body    , "$parname.$name_epoll_enable = true; // $name: initialize");
+    Ins(&R, init.body, "$parname.$name_msgvalid = false; // $name: initialize");
+    Ins(&R, init.body, "$parname.$name_msglen = 0; // $name: initialize");
+    Ins(&R, init.body, "$parname.$name_epoll_enable = true; // $name: initialize");
 }
 
 void amc::tfunc_Fbuf_Max() {
@@ -249,7 +230,7 @@ void amc::tfunc_Fbuf_Refill() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
-    if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& refill = amc::CreateCurFunc();
         Ins(&R, refill.ret  , "bool",false);
         Ins(&R, refill.proto, "$name_Refill($Parent)",false);
@@ -284,70 +265,73 @@ void amc::tfunc_Fbuf_Refill() {
 
 void amc::tfunc_Fbuf_RemoveAll() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFbuf &fbuf = *field.c_fbuf;
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
-    bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
-
     amc::FFunc& removeall = amc::CreateCurFunc();
     Ins(&R, removeall.comment, "Discard contents of the buffer.");
     Ins(&R, removeall.ret      , "void",false);
     Ins(&R, removeall.proto    , "$name_RemoveAll($Parent)",false);
     Ins(&R, removeall.body     , "$parname.$name_start    = 0;");
     Ins(&R, removeall.body     , "$parname.$name_end      = 0;");
-    if (linebuf || inmsgbuf) {
-        Ins(&R, removeall.body , "$parname.$name_msgvalid = false;");
-        Ins(&R, removeall.body , "$parname.$name_msglen   = 0; // reset message length -- important for delimited streams");
-    }
+    Ins(&R, removeall.body     , "$parname.$name_msgvalid = false;");
 }
 
-void amc::tfunc_Fbuf_Scanmsg() {
+void amc::tfunc_Fbuf_ScanMsg() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
+    bool msgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf;
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
+    bool bytebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Bytebuf;
+    bool bytebuf_extern = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_BytebufExtern;
 
-    if (linebuf || inmsgbuf) {
+    if (ReadQ(fbuf)) {
         amc::FFunc& scanmsg = amc::CreateCurFunc();
-        scanmsg.priv = true;
         Ins(&R, scanmsg.comment, "");
         Ins(&R, scanmsg.ret  , "void",false);
-        Ins(&R, scanmsg.proto, "$name_Scanmsg($Parent)",false);
-        if (linebuf || inmsgbuf) {
-            Ins(&R, scanmsg.body, "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
+        Ins(&R, scanmsg.proto, "$name_ScanMsg($Parent)",false);
+        if (bytebuf_extern) {
+            scanmsg.extrn=true;
         }
-        Ins(&R, scanmsg.body    , "i32 avail = $name_N($pararg);");
-        Ins(&R, scanmsg.body    , "i32 msglen;");
-        Ins(&R, scanmsg.body    , "bool found = false;");
-        if (linebuf) {
-            Ins(&R, scanmsg.body, "// scan for delimiter starting from the previous place where we left off.");
-            Ins(&R, scanmsg.body, "// at the end, save offset back to $parname so we don't have to re-scan.");
-            Ins(&R, scanmsg.body, "// returned message length **does not include delimiter**.");
-            Ins(&R, scanmsg.body, "// a line that exceeds buffer length is not returned.");
-            Ins(&R, scanmsg.body, "for (msglen = $parname.$name_msglen; msglen < avail; msglen += sizeof($Cpptype)) {");
-            Ins(&R, scanmsg.body, "    if (hdr[msglen] == $dflt) { // delimiter?");
-            Ins(&R, scanmsg.body, "        found = true;");
-            Ins(&R, scanmsg.body, "        break;");
-            Ins(&R, scanmsg.body, "    }");
-            Ins(&R, scanmsg.body, "}");
-            Ins(&R, scanmsg.body, "if (!found && msglen >= $name_Max($pararg)) {");
-            Ins(&R, scanmsg.body, "    $parname.$name_eof = true; // cause user to detect eof");
-            Ins(&R, scanmsg.body, "    $parname.$name_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code");
-            Ins(&R, scanmsg.body, "}");
-        } else {
-            Ins(&R, scanmsg.body, "msglen = ssizeof($Cpptype);");// this is the minimum readable message
-            Ins(&R, scanmsg.body, "if (avail >= msglen) {");
-            Ins(&R, scanmsg.body, "    msglen = $lenval; // check rest of the message");
-            Ins(&R, scanmsg.body, "}");
-            Ins(&R, scanmsg.body, "found = msglen >= ssizeof($Cpptype) && avail >= msglen;");
-            Ins(&R, scanmsg.body, "if (msglen < ssizeof($Cpptype) || msglen > $name_Max($pararg)) {");
-            Ins(&R, scanmsg.body, "    $parname.$name_eof = true; // cause user to detect eof");
-            Ins(&R, scanmsg.body, "    $parname.$name_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code");
-            Ins(&R, scanmsg.body, "}");
+        if (!scanmsg.extrn) {
+            scanmsg.priv = true;
+            if (linebuf || msgbuf) {
+                Ins(&R, scanmsg.body, "$Cpptype *hdr = ($Cpptype*)($parname.$name_elems + $parname.$name_start);");
+            }
+            Ins(&R, scanmsg.body    , "i32 avail = $name_N($pararg);");
+            Ins(&R, scanmsg.body    , "i32 msglen;");
+            Ins(&R, scanmsg.body    , "bool found = false;");
+            if (linebuf) {
+                Ins(&R, scanmsg.body, "// scan for delimiter starting from the previous place where we left off.");
+                Ins(&R, scanmsg.body, "// at the end, save offset back to $parname so we don't have to re-scan.");
+                Ins(&R, scanmsg.body, "// returned message length **does not include delimiter**.");
+                Ins(&R, scanmsg.body, "// a line that exceeds buffer length is not returned.");
+                Ins(&R, scanmsg.body, "for (msglen = $parname.$name_msglen; msglen < avail; msglen += sizeof($Cpptype)) {");
+                Ins(&R, scanmsg.body, "    if (hdr[msglen] == $dflt) { // delimiter?");
+                Ins(&R, scanmsg.body, "        found = true;");
+                Ins(&R, scanmsg.body, "        break;");
+                Ins(&R, scanmsg.body, "    }");
+                Ins(&R, scanmsg.body, "}");
+                Ins(&R, scanmsg.body, "if (!found && msglen >= $name_Max($pararg)) {");
+                Ins(&R, scanmsg.body, "    $parname.$name_eof = true; // cause user to detect eof");
+                Ins(&R, scanmsg.body, "    $parname.$name_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code");
+                Ins(&R, scanmsg.body, "}");
+            } else if (bytebuf || bytebuf_extern) {
+                Ins(&R, scanmsg.body, "found = avail>0;");// all remaining bytes
+                Ins(&R, scanmsg.body, "msglen = avail;");
+            } else if (msgbuf) {// msgbuf
+                Ins(&R, scanmsg.body, "msglen = ssizeof($Cpptype);");// this is the minimum readable message
+                Ins(&R, scanmsg.body, "if (avail >= msglen) {");
+                Ins(&R, scanmsg.body, "    msglen = $lenval; // check rest of the message");
+                Ins(&R, scanmsg.body, "}");
+                Ins(&R, scanmsg.body, "found = msglen >= ssizeof($Cpptype) && avail >= msglen;");
+                Ins(&R, scanmsg.body, "if (msglen < ssizeof($Cpptype) || msglen > $name_Max($pararg)) {");
+                Ins(&R, scanmsg.body, "    $parname.$name_eof = true; // cause user to detect eof");
+                Ins(&R, scanmsg.body, "    $parname.$name_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code");
+                Ins(&R, scanmsg.body, "}");
+            }
+            Ins(&R, scanmsg.body    , "$parname.$name_msglen = msglen;");
+            Ins(&R, scanmsg.body    , "$parname.$name_msgvalid = found;");
+            MaybeUnused(scanmsg, Subst(R,"$parname"));
         }
-        Ins(&R, scanmsg.body    , "$parname.$name_msglen = msglen;");
-        Ins(&R, scanmsg.body    , "$parname.$name_msgvalid = found;");
     }
 }
 
@@ -373,11 +357,7 @@ void amc::tfunc_Fbuf_SkipBytes() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool outmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && !ReadQ(fbuf);
-    bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
-    bool bytebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Bytebuf;
-
-    if (outmsgbuf || bytebuf || linebuf) {
+    if (!ReadQ(fbuf) || fbuf.p_fbuftype->skipbytes) {
         amc::FFunc& skipbytes = amc::CreateCurFunc();
         Ins(&R, skipbytes.comment, "Mark some buffer contents as read.");
         Ins(&R, skipbytes.comment, "");
@@ -386,6 +366,7 @@ void amc::tfunc_Fbuf_SkipBytes() {
         Ins(&R, skipbytes.body     , "int avail = $parname.$name_end - $parname.$name_start;");
         Ins(&R, skipbytes.body     , "n = i32_Min(n,avail);");
         Ins(&R, skipbytes.body     , "$parname.$name_start += n;");
+        Ins(&R, skipbytes.body     , "$parname.$name_msgvalid = false;");
     }
 }
 
@@ -393,28 +374,24 @@ void amc::tfunc_Fbuf_SkipMsg() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-    bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
 
-    if (linebuf || inmsgbuf) {
-        amc::FFunc& skipmsg = amc::CreateCurFunc();
-        skipmsg.inl = false;
-        Ins(&R, skipmsg.comment, "Skip current message, if any.");
-        //Ins(&R, skipmsg.comment, "");
-        Ins(&R, skipmsg.ret  , "void",false);
-        Ins(&R, skipmsg.proto, "$name_SkipMsg($Parent)",false);
-        Ins(&R, skipmsg.body    , "if ($parname.$name_msgvalid) {");
-        Ins(&R, skipmsg.body    , "    int skip = $parname.$name_msglen;");
-        if (linebuf) {
-            Ins(&R, skipmsg.body, "    skip += ssizeof($Cpptype); // delimiter");
-        }
-        Ins(&R, skipmsg.body    , "    i32 start = $parname.$name_start;");
-        Ins(&R, skipmsg.body    , "    start += skip;");
-        Ins(&R, skipmsg.body    , "    $parname.$name_start = start;");
-        Ins(&R, skipmsg.body    , "    $parname.$name_msgvalid = false;");
-        Ins(&R, skipmsg.body    , "    $parname.$name_msglen   = 0; // reset message length -- important for delimited streams");
-        Ins(&R, skipmsg.body    , "}");
+    amc::FFunc& skipmsg = amc::CreateCurFunc();
+    skipmsg.inl = false;
+    Ins(&R, skipmsg.comment, "Skip current message, if any.");
+    Ins(&R, skipmsg.ret  , "void",false);
+    Ins(&R, skipmsg.proto, "$name_SkipMsg($Parent)",false);
+    Ins(&R, skipmsg.body    , "if ($parname.$name_msgvalid) {");
+    Ins(&R, skipmsg.body    , "    int skip = $parname.$name_msglen;");
+    if (linebuf) {
+        Ins(&R, skipmsg.body, "    skip += ssizeof($Cpptype); // delimiter");
     }
+    Ins(&R, skipmsg.body    , "    i32 start = $parname.$name_start;");
+    Ins(&R, skipmsg.body    , "    start += skip;");
+    Ins(&R, skipmsg.body    , "    $parname.$name_start = start;");
+    Ins(&R, skipmsg.body    , "    $parname.$name_msgvalid = false;");
+    Ins(&R, skipmsg.body    , "    $parname.$name_msglen   = 0; // reset message length -- important for delimited streams");
+    Ins(&R, skipmsg.body    , "}");
 }
 
 void amc::tfunc_Fbuf_WriteAll() {
@@ -438,7 +415,7 @@ void amc::tfunc_Fbuf_WriteAll() {
     Ins(&R, writeall.body    , "// now try to write the message.");
     Ins(&R, writeall.body    , "i32 end = $parname.$name_end;");
     Ins(&R, writeall.body    , "bool fits = end + in_n <= max;");
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         Ins(&R, writeall.body, "if ($parname.$name_zerocopy && fits && out_N($pararg)==0) {// in kernel bypass situations this is faster");
         Ins(&R, writeall.body, "    int rc = write($pararg.out_iohook.fildes.value, in, in_n);");
         Ins(&R, writeall.body, "    if (rc >= 0) {");
@@ -450,7 +427,7 @@ void amc::tfunc_Fbuf_WriteAll() {
     Ins(&R, writeall.body    , "if (fits && in_n > 0) {");
     Ins(&R, writeall.body    , "    memcpy($parname.$name_elems + end, in, in_n);");
     Ins(&R, writeall.body    , "    $parname.$name_end = end + in_n;");
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         Ins(&R, writeall.body, "    $ready_Insert($pararg); // schedule outflow");
     }
     Ins(&R, writeall.body    , "}");
@@ -485,7 +462,7 @@ void amc::tfunc_Fbuf_BeginWrite() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.");
         Ins(&R, func.comment, "Whenever buffer is non-empty and fd is writable, insert $parname into $ready.");
@@ -512,7 +489,7 @@ void amc::tfunc_Fbuf_Outflow() {
     amc::FFbuf &fbuf       = *field.c_fbuf;
     Set(R,"$partrace", Refname(*field.p_ctype));
 
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (!ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Once all bytes are written or when fd buffer is full, buffer is automatically removed from $ready list.");
         Ins(&R, func.comment, "Edge-triggered epoll will re-insert $name into $ready.");
@@ -553,7 +530,7 @@ void amc::tfunc_Fbuf_EndRead() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
-    if (ReadQ(fbuf) && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.proto, "$name_EndRead($Parent)",false);
         Ins(&R, func.ret  , "void",false);
@@ -569,7 +546,7 @@ void amc::tfunc_Fbuf_EndWrite() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
 
-    if (ReadQ(fbuf) == false && fbuf.insready != fbuf.field) {
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.proto, "$name_EndWrite($Parent)",false);
         Ins(&R, func.ret  , "void",false);

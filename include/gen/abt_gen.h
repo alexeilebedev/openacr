@@ -25,10 +25,10 @@
 #pragma once
 #include "include/gen/dev_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/dmmeta_gen.h"
-#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -46,35 +46,37 @@ enum { abt_FieldIdEnum_N = 1 };
 enum abt_TableIdEnum {                   // abt.TableId.value
      abt_TableId_dev_Arch         = 0    // dev.Arch -> abt.FArch
     ,abt_TableId_dev_arch         = 0    // dev.arch -> abt.FArch
-    ,abt_TableId_dev_Cfg          = 1    // dev.Cfg -> abt.FCfg
-    ,abt_TableId_dev_cfg          = 1    // dev.cfg -> abt.FCfg
-    ,abt_TableId_dev_Compiler     = 2    // dev.Compiler -> abt.FCompiler
-    ,abt_TableId_dev_compiler     = 2    // dev.compiler -> abt.FCompiler
-    ,abt_TableId_dev_Include      = 3    // dev.Include -> abt.FInclude
-    ,abt_TableId_dev_include      = 3    // dev.include -> abt.FInclude
-    ,abt_TableId_dmmeta_Ns        = 4    // dmmeta.Ns -> abt.FNs
-    ,abt_TableId_dmmeta_ns        = 4    // dmmeta.ns -> abt.FNs
-    ,abt_TableId_dev_Syscmd       = 5    // dev.Syscmd -> abt.FSyscmd
-    ,abt_TableId_dev_syscmd       = 5    // dev.syscmd -> abt.FSyscmd
-    ,abt_TableId_dev_Syscmddep    = 6    // dev.Syscmddep -> abt.FSyscmddep
-    ,abt_TableId_dev_syscmddep    = 6    // dev.syscmddep -> abt.FSyscmddep
-    ,abt_TableId_dev_Syslib       = 7    // dev.Syslib -> abt.FSyslib
-    ,abt_TableId_dev_syslib       = 7    // dev.syslib -> abt.FSyslib
-    ,abt_TableId_dev_Targdep      = 8    // dev.Targdep -> abt.FTargdep
-    ,abt_TableId_dev_targdep      = 8    // dev.targdep -> abt.FTargdep
-    ,abt_TableId_dev_Target       = 9    // dev.Target -> abt.FTarget
-    ,abt_TableId_dev_target       = 9    // dev.target -> abt.FTarget
-    ,abt_TableId_dev_Targsrc      = 10   // dev.Targsrc -> abt.FTargsrc
-    ,abt_TableId_dev_targsrc      = 10   // dev.targsrc -> abt.FTargsrc
-    ,abt_TableId_dev_Targsyslib   = 11   // dev.Targsyslib -> abt.FTargsyslib
-    ,abt_TableId_dev_targsyslib   = 11   // dev.targsyslib -> abt.FTargsyslib
-    ,abt_TableId_dev_ToolOpt      = 12   // dev.ToolOpt -> abt.FToolOpt
-    ,abt_TableId_dev_tool_opt     = 12   // dev.tool_opt -> abt.FToolOpt
-    ,abt_TableId_dev_Uname        = 13   // dev.Uname -> abt.FUname
-    ,abt_TableId_dev_uname        = 13   // dev.uname -> abt.FUname
+    ,abt_TableId_dev_Builddir     = 1    // dev.Builddir -> abt.FBuilddir
+    ,abt_TableId_dev_builddir     = 1    // dev.builddir -> abt.FBuilddir
+    ,abt_TableId_dev_Cfg          = 2    // dev.Cfg -> abt.FCfg
+    ,abt_TableId_dev_cfg          = 2    // dev.cfg -> abt.FCfg
+    ,abt_TableId_dev_Compiler     = 3    // dev.Compiler -> abt.FCompiler
+    ,abt_TableId_dev_compiler     = 3    // dev.compiler -> abt.FCompiler
+    ,abt_TableId_dev_Include      = 4    // dev.Include -> abt.FInclude
+    ,abt_TableId_dev_include      = 4    // dev.include -> abt.FInclude
+    ,abt_TableId_dmmeta_Ns        = 5    // dmmeta.Ns -> abt.FNs
+    ,abt_TableId_dmmeta_ns        = 5    // dmmeta.ns -> abt.FNs
+    ,abt_TableId_dev_Syscmd       = 6    // dev.Syscmd -> abt.FSyscmd
+    ,abt_TableId_dev_syscmd       = 6    // dev.syscmd -> abt.FSyscmd
+    ,abt_TableId_dev_Syscmddep    = 7    // dev.Syscmddep -> abt.FSyscmddep
+    ,abt_TableId_dev_syscmddep    = 7    // dev.syscmddep -> abt.FSyscmddep
+    ,abt_TableId_dev_Syslib       = 8    // dev.Syslib -> abt.FSyslib
+    ,abt_TableId_dev_syslib       = 8    // dev.syslib -> abt.FSyslib
+    ,abt_TableId_dev_Targdep      = 9    // dev.Targdep -> abt.FTargdep
+    ,abt_TableId_dev_targdep      = 9    // dev.targdep -> abt.FTargdep
+    ,abt_TableId_dev_Target       = 10   // dev.Target -> abt.FTarget
+    ,abt_TableId_dev_target       = 10   // dev.target -> abt.FTarget
+    ,abt_TableId_dev_Targsrc      = 11   // dev.Targsrc -> abt.FTargsrc
+    ,abt_TableId_dev_targsrc      = 11   // dev.targsrc -> abt.FTargsrc
+    ,abt_TableId_dev_Targsyslib   = 12   // dev.Targsyslib -> abt.FTargsyslib
+    ,abt_TableId_dev_targsyslib   = 12   // dev.targsyslib -> abt.FTargsyslib
+    ,abt_TableId_dev_ToolOpt      = 13   // dev.ToolOpt -> abt.FToolOpt
+    ,abt_TableId_dev_tool_opt     = 13   // dev.tool_opt -> abt.FToolOpt
+    ,abt_TableId_dev_Uname        = 14   // dev.Uname -> abt.FUname
+    ,abt_TableId_dev_uname        = 14   // dev.uname -> abt.FUname
 };
 
-enum { abt_TableIdEnum_N = 28 };
+enum { abt_TableIdEnum_N = 30 };
 
 namespace abt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -86,6 +88,8 @@ extern const char *abt_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace dev { struct Arch; }
+namespace dev { struct Builddir; }
+namespace abt { struct FCompiler; }
 namespace dev { struct Cfg; }
 namespace dev { struct Compiler; }
 namespace dev { struct Include; }
@@ -126,6 +130,7 @@ namespace abt { struct _db_sysincl_curs; }
 namespace abt { struct _db_zs_origsel_target_curs; }
 namespace abt { struct _db_ns_curs; }
 namespace abt { struct _db_filestat_curs; }
+namespace abt { struct _db_builddir_curs; }
 namespace abt { struct _db_zd_inclstack_curs; }
 namespace abt { struct srcfile_zd_include_curs; }
 namespace abt { struct syscmd_c_prior_curs; }
@@ -135,10 +140,9 @@ namespace abt { struct target_c_srcfile_curs; }
 namespace abt { struct target_c_targdep_curs; }
 namespace abt { struct target_c_targsyslib_curs; }
 namespace abt { struct target_c_alldep_curs; }
-namespace abt { struct target_c_alllib_curs; }
 namespace abt { struct FArch; }
+namespace abt { struct FBuilddir; }
 namespace abt { struct FCfg; }
-namespace abt { struct FCompiler; }
 namespace abt { struct trace; }
 namespace abt { struct FDb; }
 namespace abt { struct FFilestat; }
@@ -151,6 +155,7 @@ namespace abt { struct FToolOpt; }
 namespace abt { struct FUname; }
 namespace abt { struct FieldId; }
 namespace abt { struct TableId; }
+namespace abt { struct config; }
 namespace abt { extern struct abt::FDb _db; }
 namespace abt { // gen:ns_gsymbol
     extern const char* dev_opt_type_AR; // "AR"
@@ -168,7 +173,7 @@ namespace abt { // gen:ns_print_struct
 // create: abt.FDb.arch (Lary)
 // global access: arch (Lary, by rowid)
 // global access: ind_arch (Thash, hash field arch)
-struct FArch { // abt.FArch
+struct FArch { // abt.FArch: Machine architecture
     algo::Smallstr50   arch;            //
     algo::Comment      comment;         //
     abt::FArch*        ind_arch_next;   // hash next
@@ -199,11 +204,69 @@ inline void          FArch_Init(abt::FArch& arch);
 // func:abt.FArch..Uninit
 void                 FArch_Uninit(abt::FArch& arch) __attribute__((nothrow));
 
+// --- abt.FBuilddir
+// create: abt.FDb.builddir (Lary)
+// global access: builddir (Lary, by rowid)
+// global access: ind_builddir (Thash, hash field builddir)
+// global access: c_builddir (Ptr)
+struct FBuilddir { // abt.FBuilddir
+    algo::Smallstr50      builddir;            // Primary key - uname.compiler.cfg-arch
+    algo::Comment         comment;             //
+    bool                  select;              //   false
+    algo::cstring         path;                // Path for this builddir
+    algo_lib::FLockfile   lockfile;            //
+    algo_lib::Replscope   R;                   //
+    abt::FCompiler*       p_compiler;          // reference to parent row
+    abt::FBuilddir*       ind_builddir_next;   // hash next
+    // value field abt.FBuilddir.R is not copiable
+    // x-reference on abt.FBuilddir.p_compiler prevents copy
+    // func:abt.FBuilddir..AssignOp
+    abt::FBuilddir&      operator =(const abt::FBuilddir &rhs) = delete;
+    // value field abt.FBuilddir.R is not copiable
+    // x-reference on abt.FBuilddir.p_compiler prevents copy
+    // func:abt.FBuilddir..CopyCtor
+    FBuilddir(const abt::FBuilddir &rhs) = delete;
+private:
+    // func:abt.FBuilddir..Ctor
+    inline               FBuilddir() __attribute__((nothrow));
+    // func:abt.FBuilddir..Dtor
+    inline               ~FBuilddir() __attribute__((nothrow));
+    friend abt::FBuilddir&      builddir_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend abt::FBuilddir*      builddir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 builddir_RemoveAll() __attribute__((nothrow));
+    friend void                 builddir_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:abt.FBuilddir.base.CopyOut
+void                 builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:abt.FBuilddir.base.CopyIn
+void                 builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) __attribute__((nothrow));
+
+// func:abt.FBuilddir.uname.Get
+algo::Smallstr50     uname_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FBuilddir.compiler.Get
+algo::Smallstr50     compiler_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FBuilddir.cfg.Get
+algo::Smallstr50     cfg_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+// func:abt.FBuilddir.arch.Get
+algo::Smallstr50     arch_Get(abt::FBuilddir& builddir) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:abt.FBuilddir..Init
+void                 FBuilddir_Init(abt::FBuilddir& builddir);
+// func:abt.FBuilddir..Uninit
+void                 FBuilddir_Uninit(abt::FBuilddir& builddir) __attribute__((nothrow));
+
 // --- abt.FCfg
 // create: abt.FDb.cfg (Lary)
 // global access: cfg (Lary, by rowid)
 // global access: ind_cfg (Thash, hash field cfg)
-struct FCfg { // abt.FCfg
+struct FCfg { // abt.FCfg: Build configuration
     algo::Smallstr50   cfg;            //
     algo::Smallstr5    suffix;         //
     algo::Comment      comment;        //
@@ -237,10 +300,10 @@ void                 FCfg_Uninit(abt::FCfg& cfg) __attribute__((nothrow));
 
 // --- abt.FCompiler
 // create: abt.FDb.compiler (Lary)
-// global access: c_compiler (Ptr)
 // global access: compiler (Lary, by rowid)
 // global access: ind_compiler (Thash, hash field compiler)
-struct FCompiler { // abt.FCompiler
+// access: abt.FBuilddir.p_compiler (Upptr)
+struct FCompiler { // abt.FCompiler: Compiler
     algo::Smallstr50   compiler;            //
     algo::Smallstr50   ranlib;              //
     algo::Smallstr50   ar;                  //
@@ -308,7 +371,6 @@ struct FDb { // abt.FDb: In-memory database for abt
     i32                 ind_target_n;                 // number of elements in the hash table
     abt::FTarget*       target_lary[32];              // level array
     i32                 target_n;                     // number of elements in array
-    abt::FCompiler*     c_compiler;                   // optional pointer
     abt::FTargsrc**     ind_targsrc_buckets_elems;    // pointer to bucket array
     i32                 ind_targsrc_buckets_n;        // number of elements in bucket array
     i32                 ind_targsrc_n;                // number of elements in the hash table
@@ -385,7 +447,12 @@ struct FDb { // abt.FDb: In-memory database for abt
     abt::FFilestat**    ind_filestat_buckets_elems;   // pointer to bucket array
     i32                 ind_filestat_buckets_n;       // number of elements in bucket array
     i32                 ind_filestat_n;               // number of elements in the hash table
-    algo::Smallstr50    builddir;                     // uname-compiler.cfg-arch
+    abt::FBuilddir*     builddir_lary[32];            // level array
+    i32                 builddir_n;                   // number of elements in array
+    abt::FBuilddir**    ind_builddir_buckets_elems;   // pointer to bucket array
+    i32                 ind_builddir_buckets_n;       // number of elements in bucket array
+    i32                 ind_builddir_n;               // number of elements in the hash table
+    abt::FBuilddir*     c_builddir;                   // optional pointer
     abt::FSrcfile*      zd_inclstack_head;            // zero-terminated doubly linked list
     i32                 zd_inclstack_n;               // zero-terminated doubly linked list
     abt::FSrcfile*      zd_inclstack_tail;            // pointer to last element
@@ -1555,6 +1622,68 @@ void                 ind_filestat_Remove(abt::FFilestat& row) __attribute__((not
 // func:abt.FDb.ind_filestat.Reserve
 void                 ind_filestat_Reserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:abt.FDb.builddir.Alloc
+abt::FBuilddir&      builddir_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:abt.FDb.builddir.AllocMaybe
+abt::FBuilddir*      builddir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:abt.FDb.builddir.InsertMaybe
+abt::FBuilddir*      builddir_InsertMaybe(const dev::Builddir &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:abt.FDb.builddir.AllocMem
+void*                builddir_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:abt.FDb.builddir.EmptyQ
+inline bool          builddir_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:abt.FDb.builddir.Find
+inline abt::FBuilddir* builddir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:abt.FDb.builddir.Last
+inline abt::FBuilddir* builddir_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:abt.FDb.builddir.N
+inline i32           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:abt.FDb.builddir.RemoveAll
+void                 builddir_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:abt.FDb.builddir.RemoveLast
+void                 builddir_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:abt.FDb.builddir.qFind
+inline abt::FBuilddir& builddir_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:abt.FDb.builddir.XrefMaybe
+bool                 builddir_XrefMaybe(abt::FBuilddir &row);
+
+// Return true if hash is empty
+// func:abt.FDb.ind_builddir.EmptyQ
+inline bool          ind_builddir_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:abt.FDb.ind_builddir.Find
+abt::FBuilddir*      ind_builddir_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:abt.FDb.ind_builddir.GetOrCreate
+abt::FBuilddir&      ind_builddir_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:abt.FDb.ind_builddir.N
+inline i32           ind_builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:abt.FDb.ind_builddir.InsertMaybe
+bool                 ind_builddir_InsertMaybe(abt::FBuilddir& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:abt.FDb.ind_builddir.Remove
+void                 ind_builddir_Remove(abt::FBuilddir& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:abt.FDb.ind_builddir.Reserve
+void                 ind_builddir_Reserve(int n) __attribute__((nothrow));
+
 // Return true if index is empty
 // func:abt.FDb.zd_inclstack.EmptyQ
 inline bool          zd_inclstack_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1846,6 +1975,18 @@ inline void          _db_filestat_curs_Next(_db_filestat_curs &curs) __attribute
 // func:abt.FDb.filestat_curs.Access
 inline abt::FFilestat& _db_filestat_curs_Access(_db_filestat_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
+// func:abt.FDb.builddir_curs.Reset
+inline void          _db_builddir_curs_Reset(_db_builddir_curs &curs, abt::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:abt.FDb.builddir_curs.ValidQ
+inline bool          _db_builddir_curs_ValidQ(_db_builddir_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:abt.FDb.builddir_curs.Next
+inline void          _db_builddir_curs_Next(_db_builddir_curs &curs) __attribute__((nothrow));
+// item access
+// func:abt.FDb.builddir_curs.Access
+inline abt::FBuilddir& _db_builddir_curs_Access(_db_builddir_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
 // func:abt.FDb.zd_inclstack_curs.Reset
 inline void          _db_zd_inclstack_curs_Reset(_db_zd_inclstack_curs &curs, abt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1999,7 +2140,6 @@ struct FSrcfile { // abt.FSrcfile: Source file or header (key is pathname)
     algo::UnTime        mod_time;               // File's modification time
     abt::FTarget*       p_target;               // reference to parent row
     algo::cstring       objkey;                 // Path to file, / replaced with .
-    algo::cstring       objpath;                // Path to output file
     algo::UnTime        cum_modtime;            // Cumulative modtime of src and all headers
     bool                ood;                    //   false  Out-of-date flag
     bool                cum_mod_visited;        //   false  Lockout for topo sort
@@ -2099,11 +2239,11 @@ void                 FSrcfile_Uninit(abt::FSrcfile& srcfile) __attribute__((noth
 // global access: bh_syscmd (Bheap, sort field execkey)
 // access: abt.FSyscmddep.p_child (Upptr)
 // access: abt.FSyscmddep.p_parent (Upptr)
-// access: abt.FTarget.targ_start (Ptr)
-// access: abt.FTarget.targ_compile (Ptr)
-// access: abt.FTarget.targ_link (Ptr)
-// access: abt.FTarget.targ_end (Ptr)
-struct FSyscmd { // abt.FSyscmd
+// access: abt.FTarget.syscmd_start (Ptr)
+// access: abt.FTarget.syscmd_compile (Ptr)
+// access: abt.FTarget.syscmd_link (Ptr)
+// access: abt.FTarget.syscmd_end (Ptr)
+struct FSyscmd { // abt.FSyscmd: A build command
     abt::FSyscmd*       ind_syscmd_next;    // hash next
     abt::FSyscmd*       ind_running_next;   // hash next
     i32                 bh_syscmd_idx;      // index in heap; -1 means not-in-heap
@@ -2271,7 +2411,7 @@ void                 FSyscmd_Uninit(abt::FSyscmd& syscmd) __attribute__((nothrow
 // global access: syscmddep (Lary, by rowid)
 // access: abt.FSyscmd.c_prior (Ptrary)
 // access: abt.FSyscmd.c_next (Ptrary)
-struct FSyscmddep { // abt.FSyscmddep
+struct FSyscmddep { // abt.FSyscmddep: Dependency between commands
     i64             child;                   //   0
     i64             parent;                  //   0
     abt::FSyscmd*   p_child;                 // reference to parent row
@@ -2317,9 +2457,8 @@ void                 FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) __attribute__
 // create: abt.FDb.syslib (Lary)
 // global access: syslib (Lary, by rowid)
 // global access: ind_syslib (Thash, hash field syslib)
-// access: abt.FTarget.c_alllib (Ptrary)
 // access: abt.FTargsyslib.p_syslib (Upptr)
-struct FSyslib { // abt.FSyslib
+struct FSyslib { // abt.FSyslib: System library
     abt::FSyslib*      ind_syslib_next;   // hash next
     algo::Smallstr50   syslib;            //
     algo::Comment      comment;           //
@@ -2354,7 +2493,7 @@ void                 FSyslib_Uninit(abt::FSyslib& syslib) __attribute__((nothrow
 // create: abt.FDb.targdep (Lary)
 // global access: targdep (Lary, by rowid)
 // access: abt.FTarget.c_targdep (Ptrary)
-struct FTargdep { // abt.FTargdep
+struct FTargdep { // abt.FTargdep: Dependency between targets
     algo::Smallstr50   targdep;                   // Primary key - target.parent
     algo::Comment      comment;                   //
     abt::FTarget*      p_parent;                  // reference to parent row
@@ -2404,18 +2543,17 @@ void                 FTargdep_Uninit(abt::FTargdep& targdep) __attribute__((noth
 // access: abt.FTargdep.p_parent (Upptr)
 // access: abt.FTarget.c_alldep (Ptrary)
 // access: abt.FTargsrc.p_target (Upptr)
-struct FTarget { // abt.FTarget
+struct FTarget { // abt.FTarget: Build target
     abt::FTarget*        ind_target_next;          // hash next
     abt::FTarget*        zs_sel_target_next;       // zslist link; -1 means not-in-list
     abt::FTarget*        zs_origsel_target_next;   // zslist link; -1 means not-in-list
     algo::Smallstr16     target;                   // Primary key - name of target
     algo::UnTime         cum_modtime;              // Cumulative modtime of all source files in this target
-    algo::cstring        outfile;                  //
-    bool                 ood;                      //   false
-    abt::FSyscmd*        targ_start;               // optional pointer
-    abt::FSyscmd*        targ_compile;             // optional pointer
-    abt::FSyscmd*        targ_link;                // optional pointer
-    abt::FSyscmd*        targ_end;                 // optional pointer
+    bool                 ood;                      //   false  File is out of date
+    abt::FSyscmd*        syscmd_start;             // optional pointer
+    abt::FSyscmd*        syscmd_compile;           // optional pointer
+    abt::FSyscmd*        syscmd_link;              // optional pointer
+    abt::FSyscmd*        syscmd_end;               // optional pointer
     abt::FTargsrc**      c_targsrc_elems;          // array of pointers
     u32                  c_targsrc_n;              // array of pointers
     u32                  c_targsrc_max;            // capacity of allocated array
@@ -2432,18 +2570,15 @@ struct FTarget { // abt.FTarget
     abt::FTarget**       c_alldep_elems;           // array of pointers
     u32                  c_alldep_n;               // array of pointers
     u32                  c_alldep_max;             // capacity of allocated array
-    abt::FSyslib**       c_alllib_elems;           // array of pointers
-    u32                  c_alllib_n;               // array of pointers
-    u32                  c_alllib_max;             // capacity of allocated array
     abt::FNs*            p_ns;                     // reference to parent row
     bool                 libdep_visited;           //   false
     algo::UnTime         out_modtime;              //
+    bool                 origsel;                  //   false
     // reftype Ptrary of abt.FTarget.c_targsrc prohibits copy
     // reftype Ptrary of abt.FTarget.c_srcfile prohibits copy
     // reftype Ptrary of abt.FTarget.c_targdep prohibits copy
     // reftype Ptrary of abt.FTarget.c_targsyslib prohibits copy
     // reftype Ptrary of abt.FTarget.c_alldep prohibits copy
-    // reftype Ptrary of abt.FTarget.c_alllib prohibits copy
     // x-reference on abt.FTarget.p_ns prevents copy
     // func:abt.FTarget..AssignOp
     abt::FTarget&        operator =(const abt::FTarget &rhs) = delete;
@@ -2452,7 +2587,6 @@ struct FTarget { // abt.FTarget
     // reftype Ptrary of abt.FTarget.c_targdep prohibits copy
     // reftype Ptrary of abt.FTarget.c_targsyslib prohibits copy
     // reftype Ptrary of abt.FTarget.c_alldep prohibits copy
-    // reftype Ptrary of abt.FTarget.c_alllib prohibits copy
     // x-reference on abt.FTarget.p_ns prevents copy
     // func:abt.FTarget..CopyCtor
     FTarget(const abt::FTarget &rhs) = delete;
@@ -2669,44 +2803,6 @@ inline abt::FTarget& c_alldep_qFind(abt::FTarget& target, u32 idx) __attribute__
 // func:abt.FTarget.c_alldep.qLast
 inline abt::FTarget& c_alldep_qLast(abt::FTarget& target) __attribute__((nothrow));
 
-// Return true if index is empty
-// func:abt.FTarget.c_alllib.EmptyQ
-inline bool          c_alllib_EmptyQ(abt::FTarget& target) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:abt.FTarget.c_alllib.Find
-inline abt::FSyslib* c_alllib_Find(abt::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-// func:abt.FTarget.c_alllib.Getary
-inline algo::aryptr<abt::FSyslib*> c_alllib_Getary(abt::FTarget& target) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-// func:abt.FTarget.c_alllib.Insert
-void                 c_alllib_Insert(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Linear search is used to locate the element.
-// Return value: whether element was inserted into array.
-// func:abt.FTarget.c_alllib.ScanInsertMaybe
-bool                 c_alllib_ScanInsertMaybe(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-// func:abt.FTarget.c_alllib.N
-inline i32           c_alllib_N(const abt::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-// func:abt.FTarget.c_alllib.Remove
-void                 c_alllib_Remove(abt::FTarget& target, abt::FSyslib& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:abt.FTarget.c_alllib.RemoveAll
-inline void          c_alllib_RemoveAll(abt::FTarget& target) __attribute__((nothrow));
-// Reserve space in index for N more elements;
-// func:abt.FTarget.c_alllib.Reserve
-void                 c_alllib_Reserve(abt::FTarget& target, u32 n) __attribute__((nothrow));
-// Return reference without bounds checking
-// func:abt.FTarget.c_alllib.qFind
-inline abt::FSyslib& c_alllib_qFind(abt::FTarget& target, u32 idx) __attribute__((nothrow));
-// Reference to last element without bounds checking
-// func:abt.FTarget.c_alllib.qLast
-inline abt::FSyslib& c_alllib_qLast(abt::FTarget& target) __attribute__((nothrow));
-
 // Set all fields to initial values.
 // func:abt.FTarget..Init
 void                 FTarget_Init(abt::FTarget& target);
@@ -2765,17 +2861,6 @@ inline void          target_c_alldep_curs_Next(target_c_alldep_curs &curs) __att
 // item access
 // func:abt.FTarget.c_alldep_curs.Access
 inline abt::FTarget& target_c_alldep_curs_Access(target_c_alldep_curs &curs) __attribute__((nothrow));
-// func:abt.FTarget.c_alllib_curs.Reset
-inline void          target_c_alllib_curs_Reset(target_c_alllib_curs &curs, abt::FTarget &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:abt.FTarget.c_alllib_curs.ValidQ
-inline bool          target_c_alllib_curs_ValidQ(target_c_alllib_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:abt.FTarget.c_alllib_curs.Next
-inline void          target_c_alllib_curs_Next(target_c_alllib_curs &curs) __attribute__((nothrow));
-// item access
-// func:abt.FTarget.c_alllib_curs.Access
-inline abt::FSyslib& target_c_alllib_curs_Access(target_c_alllib_curs &curs) __attribute__((nothrow));
 // func:abt.FTarget..Uninit
 void                 FTarget_Uninit(abt::FTarget& target) __attribute__((nothrow));
 
@@ -2832,7 +2917,7 @@ void                 FTargsrc_Uninit(abt::FTargsrc& targsrc) __attribute__((noth
 // create: abt.FDb.targsyslib (Lary)
 // global access: targsyslib (Lary, by rowid)
 // access: abt.FTarget.c_targsyslib (Ptrary)
-struct FTargsyslib { // abt.FTargsyslib
+struct FTargsyslib { // abt.FTargsyslib: Target -> system library dependency
     algo::Smallstr50   targsyslib;                   //
     algo::Comment      comment;                      //
     abt::FSyslib*      p_syslib;                     // reference to parent row
@@ -2878,12 +2963,11 @@ void                 FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) __attribut
 // --- abt.FToolOpt
 // create: abt.FDb.tool_opt (Lary)
 // global access: tool_opt (Lary, by rowid)
-struct FToolOpt { // abt.FToolOpt
+struct FToolOpt { // abt.FToolOpt: Single tool option
     algo::Smallstr100   tool_opt;      // Primary key - uname.compiler-cfg.arch/target-opt_type:opt
     algo::Comment       comment;       //
     algo_lib::Regx      regx_opt;      // Sql Regx
     algo_lib::Regx      regx_target;   // Sql Regx
-    bool                select;        //   false
 private:
     // func:abt.FToolOpt..Ctor
     inline               FToolOpt() __attribute__((nothrow));
@@ -2931,15 +3015,12 @@ void                 regx_opt_Print(abt::FToolOpt& tool_opt, algo::cstring &out)
 // func:abt.FToolOpt.regx_target.Print
 void                 regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) __attribute__((nothrow));
 
-// Set all fields to initial values.
-// func:abt.FToolOpt..Init
-void                 FToolOpt_Init(abt::FToolOpt& tool_opt);
 
 // --- abt.FUname
 // create: abt.FDb.uname (Lary)
 // global access: uname (Lary, by rowid)
 // global access: ind_uname (Thash, hash field uname)
-struct FUname { // abt.FUname
+struct FUname { // abt.FUname: Unix name
     abt::FUname*       ind_uname_next;   // hash next
     algo::Smallstr50   uname;            //
     algo::Comment      comment;          //
@@ -3075,6 +3156,26 @@ inline void          TableId_Init(abt::TableId& parent);
 // cfmt:abt.TableId.String  printfmt:Raw
 // func:abt.TableId..Print
 void                 TableId_Print(abt::TableId& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- abt.config
+struct config { // abt.config: Breadcrumbs printed by abt when executing
+    algo::Smallstr50   builddir;     //
+    i32                ood_src;      //   0
+    i32                ood_target;   //   0
+    algo::Smallstr20   cache;        //
+    // func:abt.config..Ctor
+    inline               config() __attribute__((nothrow));
+    // func:abt.config..FieldwiseCtor
+    explicit inline               config(const algo::strptr& in_builddir, i32 in_ood_src, i32 in_ood_target, const algo::strptr& in_cache) __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:abt.config..Init
+inline void          config_Init(abt::config& parent);
+// print string representation of ROW to string STR
+// cfmt:abt.config.String  printfmt:Tuple
+// func:abt.config..Print
+void                 config_Print(abt::config& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace abt { // gen:ns_curstext
 
@@ -3254,6 +3355,14 @@ struct _db_filestat_curs {// cursor
 };
 
 
+struct _db_builddir_curs {// cursor
+    typedef abt::FBuilddir ChildType;
+    abt::FDb *parent;
+    i64 index;
+    _db_builddir_curs(){ parent=NULL; index=0; }
+};
+
+
 struct _db_zd_inclstack_curs {// fcurs:abt.FDb.zd_inclstack/curs
     typedef abt::FSrcfile ChildType;
     abt::FSrcfile* row;
@@ -3334,15 +3443,6 @@ struct target_c_alldep_curs {// fcurs:abt.FTarget.c_alldep/curs
     target_c_alldep_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
-
-struct target_c_alllib_curs {// fcurs:abt.FTarget.c_alllib/curs
-    typedef abt::FSyslib ChildType;
-    abt::FSyslib** elems;
-    u32 n_elems;
-    u32 index;
-    target_c_alllib_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
 } // gen:ns_curstext
 namespace abt { // gen:ns_func
 // func:abt...StaticCheck
@@ -3359,4 +3459,5 @@ namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const abt::trace &row);// cfmt:abt.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const abt::FieldId &row);// cfmt:abt.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const abt::TableId &row);// cfmt:abt.TableId.String
+inline algo::cstring &operator <<(algo::cstring &str, const abt::config &row);// cfmt:abt.config.String
 }

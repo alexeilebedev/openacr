@@ -6505,17 +6505,30 @@ inline  atf_amc::MsgLTV::MsgLTV() {
     atf_amc::MsgLTV_Init(*this);
 }
 
-// --- atf_amc.Msgbuf.in.Max
+// --- atf_amc.Msgbuf.in_buf.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
-// --- atf_amc.Msgbuf.in.N
+// --- atf_amc.Msgbuf.in_buf.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_N(atf_amc::Msgbuf& msgbuf) {
-    return msgbuf.in_end - msgbuf.in_start;
+inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.in_buf_end - msgbuf.in_buf_start;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_amc::in_custom_Max(atf_amc::Msgbuf& msgbuf) {
+    return 64;
+    (void)msgbuf;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Msgbuf.in_custom.N
+// Return number of bytes in the buffer.
+inline i32 atf_amc::in_custom_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.in_custom_end - msgbuf.in_custom_start;
 }
 
 // --- atf_amc.Msgbuf.out_extra.Max
@@ -6547,7 +6560,7 @@ inline i32 atf_amc::in_extra_N(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf..Ctor
 inline  atf_amc::Msgbuf::Msgbuf() {
     atf_amc::Msgbuf_Init(*this);
-    // added because atf_amc.Msgbuf.in (Fbuf) does not need initialization
+    // added because atf_amc.Msgbuf.in_buf (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
 

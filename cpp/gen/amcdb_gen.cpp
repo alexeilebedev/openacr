@@ -50,7 +50,9 @@ const char *amcdb_Tclass_tclass_Count      = "Count";
 const char *amcdb_Tclass_tclass_Cppfunc    = "Cppfunc";
 const char *amcdb_Tclass_tclass_Cppstack   = "Cppstack";
 const char *amcdb_Tclass_tclass_Ctype      = "Ctype";
-const char *amcdb_Tclass_tclass_Dec        = "Dec";
+const char *amcdb_Tclass_tclass_Ctype2     = "Ctype2";
+
+const char *amcdb_Tclass_tclass_Dec   = "Dec";
 
 const char *amcdb_Tclass_tclass_Delptr   = "Delptr";
 const char *amcdb_Tclass_tclass_Exec     = "Exec";

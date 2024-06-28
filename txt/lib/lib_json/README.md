@@ -3,67 +3,16 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_json.FDb - In-memory database for lib_json
-<a href="#lib_json-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|lpool|u8|Lpool||private memory pool|
-|_db|lib_json.FDb|Global|
-|node|lib_json.FNode|Tpool|
-|ind_objfld|lib_json.FNode|Thash|
-|JsonNumChar|algo.Charset|Charset|
-|JsonFirstNumChar|algo.Charset|Charset|
-
-#### lib_json.FNode - 
-<a href="#lib_json-fnode"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|p_parent|lib_json.FNode|Upptr||Parent node, may be NULL|
-|c_child|lib_json.FNode|Ptrary||Child node(s)|
-|type|u32|Val|
-|value|algo.cstring|Val|
-|fldkey|lib_json.FldKey|Val|
-
-#### lib_json.FParser - 
-<a href="#lib_json-fparser"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|buf|algo.strptr|Val|
-|ind|i32|Val|
-|node|lib_json.FNode|Ptr|
-|root_node|lib_json.FNode|Ptr|
-|state|u32|Val|
-|need_comma|bool|Val|
-|have_comma|bool|Val|
-|need_colon|bool|Val|
-|err_info|algo.cstring|Val|
-|err_offset|i32|Val|
-|offset|i32|Val|
-|uesc_value|u32|Val|
-|uesc_need|u8|Val|
-|value|algo.cstring|Val|
-
-#### lib_json.FldKey - 
-<a href="#lib_json-fldkey"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|object|lib_json.FNode|Ptr|
-|field|algo.strptr|Val|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
@@ -187,12 +136,13 @@ lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path)
 ```
 
 ```c++
-// Get node value as u32, EXCEPTION on any error
+// Get node value as u32
+// If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
 // 
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
-u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path) 
+u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0) 
 ```
 
 ```c++
@@ -266,8 +216,11 @@ lib_json::FldKey lib_json::fldkey_Get(lib_json::FNode &node)
 inline bool lib_json::JsonParseOkQ(lib_json::FParser &parser) 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -279,4 +232,182 @@ The following source files are part of this tool:
 |[include/gen/lib_json_gen.inl.h](/include/gen/lib_json_gen.inl.h)||
 |[include/lib_json.h](/include/lib_json.h)||
 |[include/lib_json.inl.h](/include/lib_json.inl.h)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_json` generated code creates the tables below.
+All allocations are done through global `lib_json::_db` [lib_json.FDb](#lib_json-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_json.FDb](#lib_json-fdb)||FDb._db (Global)|
+|[lib_json.FldKey](#lib_json-fldkey)||
+|[lib_json.FNode](#lib_json-fnode)||FDb.node (Tpool)|ind_objfld (Thash, hash field fldkey)|
+||||FNode.p_parent (Upptr)|
+||||FNode.c_child (Ptrary)|
+||||FParser.node (Ptr)|
+||||FParser.root_node (Ptr)|
+||||FldKey.object (Ptr)|
+|[lib_json.FParser](#lib_json-fparser)||
+
+#### lib_json.FDb - In-memory database for lib_json
+<a href="#lib_json-fdb"></a>
+
+#### lib_json.FDb Fields
+<a href="#lib_json-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_json.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftypes.md#lpool)||private memory pool|
+|lib_json.FDb._db|[lib_json.FDb](/txt/lib/lib_json/README.md#lib_json-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_json.FDb.node|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|lib_json.FDb.ind_objfld|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_json.FDb.JsonNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|lib_json.FDb.JsonFirstNumChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/include/gen/lib_json_gen.h)
+```
+struct FDb { // lib_json.FDb: In-memory database for lib_json
+    lpool_Lpblock*      lpool_free[36];             // Lpool levels
+    u64                 node_blocksize;             // # bytes per block
+    lib_json::FNode*    node_free;                  //
+    lib_json::FNode**   ind_objfld_buckets_elems;   // pointer to bucket array
+    i32                 ind_objfld_buckets_n;       // number of elements in bucket array
+    i32                 ind_objfld_n;               // number of elements in the hash table
+    lib_json::trace     trace;                      //
+};
+```
+
+#### lib_json.FldKey - 
+<a href="#lib_json-fldkey"></a>
+
+#### lib_json.FldKey Fields
+<a href="#lib_json-fldkey-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_json.FldKey.object|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|lib_json.FldKey.field|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FldKey
+<a href="#struct-fldkey"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/include/gen/lib_json_gen.h)
+```
+struct FldKey { // lib_json.FldKey
+    lib_json::FNode*   object;   // optional pointer
+    algo::strptr       field;    //
+    // func:lib_json.FldKey..EqOp
+    inline bool          operator ==(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..NeOp
+    inline bool          operator !=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..LtOp
+    inline bool          operator <(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..GtOp
+    inline bool          operator >(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..LeOp
+    inline bool          operator <=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..GeOp
+    inline bool          operator >=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..Ctor
+    inline               FldKey() __attribute__((nothrow));
+    // func:lib_json.FldKey..FieldwiseCtor
+    explicit inline               FldKey(lib_json::FNode* in_object, algo::strptr in_field) __attribute__((nothrow));
+};
+```
+
+#### lib_json.FNode - 
+<a href="#lib_json-fnode"></a>
+
+#### lib_json.FNode Fields
+<a href="#lib_json-fnode-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_json.FNode.p_parent|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftypes.md#upptr)||Parent node, may be NULL|
+|lib_json.FNode.c_child|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)||Child node(s)|
+|lib_json.FNode.type|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FNode.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FNode.fldkey|[lib_json.FldKey](/txt/lib/lib_json/README.md#lib_json-fldkey)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FNode
+<a href="#struct-fnode"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/include/gen/lib_json_gen.h)
+```
+struct FNode { // lib_json.FNode
+    lib_json::FNode*    node_next;             // Pointer to next free element int tpool
+    lib_json::FNode*    ind_objfld_next;       // hash next
+    lib_json::FNode*    p_parent;              // reference to parent row
+    lib_json::FNode**   c_child_elems;         // array of pointers
+    u32                 c_child_n;             // array of pointers
+    u32                 c_child_max;           // capacity of allocated array
+    u32                 type;                  //   0
+    algo::cstring       value;                 //
+    bool                node_c_child_in_ary;   //   false  membership flag
+    // reftype Ptrary of lib_json.FNode.c_child prohibits copy
+    // func:lib_json.FNode..AssignOp
+    inline lib_json::FNode& operator =(const lib_json::FNode &rhs) = delete;
+    // reftype Ptrary of lib_json.FNode.c_child prohibits copy
+    // func:lib_json.FNode..CopyCtor
+    inline               FNode(const lib_json::FNode &rhs) = delete;
+private:
+    // func:lib_json.FNode..Ctor
+    inline               FNode() __attribute__((nothrow));
+    // func:lib_json.FNode..Dtor
+    inline               ~FNode() __attribute__((nothrow));
+    friend lib_json::FNode&     node_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_json::FNode*     node_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 node_Delete(lib_json::FNode &row) __attribute__((nothrow));
+};
+```
+
+#### lib_json.FParser - 
+<a href="#lib_json-fparser"></a>
+
+#### lib_json.FParser Fields
+<a href="#lib_json-fparser-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_json.FParser.buf|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.ind|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.node|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|lib_json.FParser.root_node|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|lib_json.FParser.state|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.need_comma|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.have_comma|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.need_colon|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.err_info|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.err_offset|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.offset|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.uesc_value|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.uesc_need|u8|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_json.FParser.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FParser
+<a href="#struct-fparser"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/include/gen/lib_json_gen.h)
+```
+struct FParser { // lib_json.FParser
+    algo::strptr       buf;          //
+    i32                ind;          //   0
+    lib_json::FNode*   node;         // optional pointer
+    lib_json::FNode*   root_node;    // optional pointer
+    u32                state;        //   0
+    bool               need_comma;   //   false
+    bool               have_comma;   //   false
+    bool               need_colon;   //   false
+    algo::cstring      err_info;     //
+    i32                err_offset;   //   0
+    i32                offset;       //   0
+    u32                uesc_value;   //   0
+    u8                 uesc_need;    //   0
+    algo::cstring      value;        //
+    // func:lib_json.FParser..Ctor
+    inline               FParser() __attribute__((nothrow));
+    // func:lib_json.FParser..Dtor
+    inline               ~FParser() __attribute__((nothrow));
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 

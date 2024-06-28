@@ -40,15 +40,20 @@ enum { ams_ProcTypeEnum_N = 2 };
 
 // --- ams_StreamTypeEnum
 
-enum ams_StreamTypeEnum {         // ams.StreamType.value
-     ams_StreamType_0       = 0   // No stream
-    ,ams_StreamType_ctl     = 1   // AMS control messages
-    ,ams_StreamType_io      = 5   // Messages intended for file output
-    ,ams_StreamType_out     = 2   // Log messages, alarms
-    ,ams_StreamType_trace   = 6   // Trace messages
+enum ams_StreamTypeEnum {          // ams.StreamType.value
+     ams_StreamType_0       = 0    // No stream
+    ,ams_StreamType_ack     = 10   // Commit Ack messages
+    ,ams_StreamType_ctl     = 1    // AMS control messages
+    ,ams_StreamType_fetch   = 11   // Consumer messages
+    ,ams_StreamType_io      = 5    // Messages intended for file output
+    ,ams_StreamType_out     = 2    // Log messages, alarms
+    ,ams_StreamType_prod    = 8    // Producer messages
+    ,ams_StreamType_seq     = 9    // Sequenced messages
+    ,ams_StreamType_sup     = 7    // Supervision messages
+    ,ams_StreamType_trace   = 6    // Trace messages
 };
 
-enum { ams_StreamTypeEnum_N = 5 };
+enum { ams_StreamTypeEnum_N = 10 };
 
 
 // --- ams_FieldIdEnum

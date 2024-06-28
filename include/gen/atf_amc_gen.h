@@ -5865,7 +5865,7 @@ inline bool          MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLengt
 void                 MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgHeader
-// create: atf_amc.Msgbuf.in (Fbuf)
+// create: atf_amc.Msgbuf.in_buf (Fbuf)
 // create: atf_amc.Seqmsg.payload (Opt)
 // access: atf_amc.Seqmsg.msghdr (Base)
 // access: atf_amc.Text.msghdr (Base)
@@ -6162,16 +6162,26 @@ void                 MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) __at
 struct Msgbuf { // atf_amc.Msgbuf
     atf_amc::Msgbuf*    cd_in_msg_next;           // zslist link; -1 means not-in-list
     atf_amc::Msgbuf*    cd_in_msg_prev;           // previous element
-    u8                  in_elems[64];             // pointer to elements of inline array
-    i32                 in_start;                 // beginning of valid bytes (in bytes)
-    i32                 in_end;                   // end of valid bytes (in bytes)
-    bool                in_eof;                   // no more data will be written to buffer
-    algo::Errcode       in_err;                   // system error code
-    bool                in_msgvalid;              // current message is valid
-    i32                 in_msglen;                // current message length
-    algo_lib::FIohook   in_iohook;                // edge-triggered hook for refilling buffer
-    bool                in_epoll_enable;          // use epoll?
-    enum { in_max = 64 };
+    u8                  in_buf_elems[64];         // pointer to elements of inline array
+    i32                 in_buf_start;             // beginning of valid bytes (in bytes)
+    i32                 in_buf_end;               // end of valid bytes (in bytes)
+    bool                in_buf_eof;               // no more data will be written to buffer
+    algo::Errcode       in_buf_err;               // system error code
+    bool                in_buf_msgvalid;          // current message is valid
+    i32                 in_buf_msglen;            // current message length
+    algo_lib::FIohook   in_buf_iohook;            // edge-triggered hook for refilling buffer
+    bool                in_buf_epoll_enable;      // use epoll?
+    enum { in_buf_max = 64 };
+    u8                  in_custom_elems[64];      // pointer to elements of inline array
+    i32                 in_custom_start;          // beginning of valid bytes (in bytes)
+    i32                 in_custom_end;            // end of valid bytes (in bytes)
+    bool                in_custom_eof;            // no more data will be written to buffer
+    algo::Errcode       in_custom_err;            // system error code
+    bool                in_custom_msgvalid;       // current message is valid
+    i32                 in_custom_msglen;         // current message length
+    algo_lib::FIohook   in_custom_iohook;         // edge-triggered hook for refilling buffer
+    bool                in_custom_epoll_enable;   // use epoll?
+    enum { in_custom_max = 64 };
     u8                  out_extra_elems[64];      // pointer to elements of inline array
     i32                 out_extra_start;          // beginning of valid bytes (in bytes)
     i32                 out_extra_end;            // end of valid bytes (in bytes)
@@ -6190,7 +6200,8 @@ struct Msgbuf { // atf_amc.Msgbuf
     i32                 in_extra_msglen;          // current message length
     bool                in_extra_epoll_enable;    // use epoll?
     enum { in_extra_max = 64 };
-    // field atf_amc.Msgbuf.in prevents copy
+    // field atf_amc.Msgbuf.in_buf prevents copy
+    // field atf_amc.Msgbuf.in_custom prevents copy
     // field atf_amc.Msgbuf.out_extra prevents copy
     // field atf_amc.Msgbuf.in_extra prevents copy
     // func:atf_amc.Msgbuf..AssignOp
@@ -6199,7 +6210,8 @@ struct Msgbuf { // atf_amc.Msgbuf
     inline               Msgbuf() __attribute__((nothrow));
     // func:atf_amc.Msgbuf..Dtor
     inline               ~Msgbuf() __attribute__((nothrow));
-    // field atf_amc.Msgbuf.in prevents copy
+    // field atf_amc.Msgbuf.in_buf prevents copy
+    // field atf_amc.Msgbuf.in_custom prevents copy
     // field atf_amc.Msgbuf.out_extra prevents copy
     // field atf_amc.Msgbuf.in_extra prevents copy
     // func:atf_amc.Msgbuf..CopyCtor
@@ -6208,49 +6220,101 @@ struct Msgbuf { // atf_amc.Msgbuf
 
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-// func:atf_amc.Msgbuf.in.BeginRead
-void                 in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.BeginRead
+void                 in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) __attribute__((nothrow));
 // Set EOF flag
-// func:atf_amc.Msgbuf.in.EndRead
-void                 in_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.EndRead
+void                 in_buf_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 //
-// func:atf_amc.Msgbuf.in.GetMsg
-atf_amc::MsgHeader*  in_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.GetMsg
+atf_amc::MsgHeader*  in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
-// func:atf_amc.Msgbuf.in.Max
-inline i32           in_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.Max
+inline i32           in_buf_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Return number of bytes in the buffer.
-// func:atf_amc.Msgbuf.in.N
-inline i32           in_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_amc.Msgbuf.in_buf.N
+inline i32           in_buf_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-// func:atf_amc.Msgbuf.in.Refill
-bool                 in_Refill(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.Refill
+bool                 in_buf_Refill(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Empty bfufer
 // Discard contents of the buffer.
-// func:atf_amc.Msgbuf.in.RemoveAll
-void                 in_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.RemoveAll
+void                 in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Skip current message, if any
 // Skip current message, if any.
-// func:atf_amc.Msgbuf.in.SkipMsg
-void                 in_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.SkipMsg
+void                 in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
-// func:atf_amc.Msgbuf.in.WriteAll
-bool                 in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
+// func:atf_amc.Msgbuf.in_buf.WriteAll
+bool                 in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_amc.Msgbuf.in.XrefMaybe
-bool                 in_XrefMaybe(atf_amc::MsgHeader &row);
+// func:atf_amc.Msgbuf.in_buf.XrefMaybe
+bool                 in_buf_XrefMaybe(atf_amc::MsgHeader &row);
+
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_custom via FIohook field.
+// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
+// func:atf_amc.Msgbuf.in_custom.BeginRead
+void                 in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) __attribute__((nothrow));
+// Set EOF flag
+// func:atf_amc.Msgbuf.in_custom.EndRead
+void                 in_custom_EndRead(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message boundary is determined by a custom ScanMsg function implemented by user
+//
+// func:atf_amc.Msgbuf.in_custom.GetMsg
+algo::aryptr<char>   in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in_custom.Max
+inline i32           in_custom_Max(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_amc.Msgbuf.in_custom.N
+inline i32           in_custom_N(atf_amc::Msgbuf& msgbuf) __attribute__((__warn_unused_result__, nothrow, pure));
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+// func:atf_amc.Msgbuf.in_custom.Refill
+bool                 in_custom_Refill(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_amc.Msgbuf.in_custom.RemoveAll
+void                 in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Internal function to scan for a message
+//
+// func:atf_amc.Msgbuf.in_custom.ScanMsg
+// this function is 'extrn' and implemented by user
+void                 in_custom_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_amc.Msgbuf.in_custom.SkipBytes
+void                 in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_amc.Msgbuf.in_custom.SkipMsg
+void                 in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_amc.Msgbuf.in_custom.WriteAll
+bool                 in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Return max. number of bytes in the buffer.
 // func:atf_amc.Msgbuf.out_extra.Max
@@ -11581,6 +11645,10 @@ void                 amctest_linebuf_test4();
 // func:atf_amc...amctest_linebuf_test5
 // this function is 'extrn' and implemented by user
 void                 amctest_linebuf_test5();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_msgbuf_custom
+// this function is 'extrn' and implemented by user
+void                 amctest_msgbuf_custom();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_msgbuf_extra_test
 // this function is 'extrn' and implemented by user

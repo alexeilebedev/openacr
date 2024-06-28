@@ -74,6 +74,18 @@ inline aqlite::FNs& aqlite::ns_qFind(u64 t) {
     return _db.ns_lary[bsr][index];
 }
 
+// --- aqlite.FDb.ind_ns.EmptyQ
+// Return true if hash is empty
+inline bool aqlite::ind_ns_EmptyQ() {
+    return _db.ind_ns_n == 0;
+}
+
+// --- aqlite.FDb.ind_ns.N
+// Return number of items in the hash
+inline i32 aqlite::ind_ns_N() {
+    return _db.ind_ns_n;
+}
+
 // --- aqlite.FDb.ns_curs.Reset
 // cursor points to valid item
 inline void aqlite::_db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) {
@@ -99,8 +111,21 @@ inline aqlite::FNs& aqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
     return ns_qFind(u64(curs.index));
 }
 
+// --- aqlite.FNs..Init
+// Set all fields to initial values.
+inline void aqlite::FNs_Init(aqlite::FNs& ns) {
+    ns.select = bool(false);
+    ns.ind_ns_next = (aqlite::FNs*)-1; // (aqlite.FDb.ind_ns) not-in-hash
+}
+
 // --- aqlite.FNs..Ctor
 inline  aqlite::FNs::FNs() {
+    aqlite::FNs_Init(*this);
+}
+
+// --- aqlite.FNs..Dtor
+inline  aqlite::FNs::~FNs() {
+    aqlite::FNs_Uninit(*this);
 }
 
 // --- aqlite.FieldId.value.GetEnum

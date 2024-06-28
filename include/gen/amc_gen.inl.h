@@ -44,44 +44,45 @@ static amc::FTclass &amc_tclass_Count      = ((amc::FTclass*)amc::_db.tclass_dat
 static amc::FTclass &amc_tclass_Cppfunc    = ((amc::FTclass*)amc::_db.tclass_data)[10];
 static amc::FTclass &amc_tclass_Cppstack   = ((amc::FTclass*)amc::_db.tclass_data)[11];
 static amc::FTclass &amc_tclass_Ctype      = ((amc::FTclass*)amc::_db.tclass_data)[12];
-static amc::FTclass &amc_tclass_Dec        = ((amc::FTclass*)amc::_db.tclass_data)[13];
-static amc::FTclass &amc_tclass_Delptr     = ((amc::FTclass*)amc::_db.tclass_data)[14];
-static amc::FTclass &amc_tclass_Exec       = ((amc::FTclass*)amc::_db.tclass_data)[15];
-static amc::FTclass &amc_tclass_Fbuf       = ((amc::FTclass*)amc::_db.tclass_data)[16];
-static amc::FTclass &amc_tclass_Fcast      = ((amc::FTclass*)amc::_db.tclass_data)[17];
-static amc::FTclass &amc_tclass_Fconst     = ((amc::FTclass*)amc::_db.tclass_data)[18];
-static amc::FTclass &amc_tclass_Field      = ((amc::FTclass*)amc::_db.tclass_data)[19];
-static amc::FTclass &amc_tclass_Field2     = ((amc::FTclass*)amc::_db.tclass_data)[20];
-static amc::FTclass &amc_tclass_Global     = ((amc::FTclass*)amc::_db.tclass_data)[21];
-static amc::FTclass &amc_tclass_Hook       = ((amc::FTclass*)amc::_db.tclass_data)[22];
-static amc::FTclass &amc_tclass_Inlary     = ((amc::FTclass*)amc::_db.tclass_data)[23];
-static amc::FTclass &amc_tclass_Io         = ((amc::FTclass*)amc::_db.tclass_data)[24];
-static amc::FTclass &amc_tclass_Lary       = ((amc::FTclass*)amc::_db.tclass_data)[25];
-static amc::FTclass &amc_tclass_Llist      = ((amc::FTclass*)amc::_db.tclass_data)[26];
-static amc::FTclass &amc_tclass_Lpool      = ((amc::FTclass*)amc::_db.tclass_data)[27];
-static amc::FTclass &amc_tclass_Malloc     = ((amc::FTclass*)amc::_db.tclass_data)[28];
-static amc::FTclass &amc_tclass_Ns         = ((amc::FTclass*)amc::_db.tclass_data)[29];
-static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[30];
-static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[31];
-static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[32];
-static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[33];
-static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[34];
-static amc::FTclass &amc_tclass_Ptr        = ((amc::FTclass*)amc::_db.tclass_data)[35];
-static amc::FTclass &amc_tclass_Ptrary     = ((amc::FTclass*)amc::_db.tclass_data)[36];
-static amc::FTclass &amc_tclass_Regx       = ((amc::FTclass*)amc::_db.tclass_data)[37];
-static amc::FTclass &amc_tclass_RegxSql    = ((amc::FTclass*)amc::_db.tclass_data)[38];
-static amc::FTclass &amc_tclass_Sbrk       = ((amc::FTclass*)amc::_db.tclass_data)[39];
-static amc::FTclass &amc_tclass_Smallstr   = ((amc::FTclass*)amc::_db.tclass_data)[40];
-static amc::FTclass &amc_tclass_Sort       = ((amc::FTclass*)amc::_db.tclass_data)[41];
-static amc::FTclass &amc_tclass_Step       = ((amc::FTclass*)amc::_db.tclass_data)[42];
-static amc::FTclass &amc_tclass_Substr     = ((amc::FTclass*)amc::_db.tclass_data)[43];
-static amc::FTclass &amc_tclass_Tary       = ((amc::FTclass*)amc::_db.tclass_data)[44];
-static amc::FTclass &amc_tclass_Thash      = ((amc::FTclass*)amc::_db.tclass_data)[45];
-static amc::FTclass &amc_tclass_Tpool      = ((amc::FTclass*)amc::_db.tclass_data)[46];
-static amc::FTclass &amc_tclass_Upptr      = ((amc::FTclass*)amc::_db.tclass_data)[47];
-static amc::FTclass &amc_tclass_Val        = ((amc::FTclass*)amc::_db.tclass_data)[48];
-static amc::FTclass &amc_tclass_Varlen     = ((amc::FTclass*)amc::_db.tclass_data)[49];
-static amc::FTclass &amc_tclass_ZSListMT   = ((amc::FTclass*)amc::_db.tclass_data)[50];
+static amc::FTclass &amc_tclass_Ctype2     = ((amc::FTclass*)amc::_db.tclass_data)[13];
+static amc::FTclass &amc_tclass_Dec        = ((amc::FTclass*)amc::_db.tclass_data)[14];
+static amc::FTclass &amc_tclass_Delptr     = ((amc::FTclass*)amc::_db.tclass_data)[15];
+static amc::FTclass &amc_tclass_Exec       = ((amc::FTclass*)amc::_db.tclass_data)[16];
+static amc::FTclass &amc_tclass_Fbuf       = ((amc::FTclass*)amc::_db.tclass_data)[17];
+static amc::FTclass &amc_tclass_Fcast      = ((amc::FTclass*)amc::_db.tclass_data)[18];
+static amc::FTclass &amc_tclass_Fconst     = ((amc::FTclass*)amc::_db.tclass_data)[19];
+static amc::FTclass &amc_tclass_Field      = ((amc::FTclass*)amc::_db.tclass_data)[20];
+static amc::FTclass &amc_tclass_Field2     = ((amc::FTclass*)amc::_db.tclass_data)[21];
+static amc::FTclass &amc_tclass_Global     = ((amc::FTclass*)amc::_db.tclass_data)[22];
+static amc::FTclass &amc_tclass_Hook       = ((amc::FTclass*)amc::_db.tclass_data)[23];
+static amc::FTclass &amc_tclass_Inlary     = ((amc::FTclass*)amc::_db.tclass_data)[24];
+static amc::FTclass &amc_tclass_Io         = ((amc::FTclass*)amc::_db.tclass_data)[25];
+static amc::FTclass &amc_tclass_Lary       = ((amc::FTclass*)amc::_db.tclass_data)[26];
+static amc::FTclass &amc_tclass_Llist      = ((amc::FTclass*)amc::_db.tclass_data)[27];
+static amc::FTclass &amc_tclass_Lpool      = ((amc::FTclass*)amc::_db.tclass_data)[28];
+static amc::FTclass &amc_tclass_Malloc     = ((amc::FTclass*)amc::_db.tclass_data)[29];
+static amc::FTclass &amc_tclass_Ns         = ((amc::FTclass*)amc::_db.tclass_data)[30];
+static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[31];
+static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[32];
+static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[33];
+static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[34];
+static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[35];
+static amc::FTclass &amc_tclass_Ptr        = ((amc::FTclass*)amc::_db.tclass_data)[36];
+static amc::FTclass &amc_tclass_Ptrary     = ((amc::FTclass*)amc::_db.tclass_data)[37];
+static amc::FTclass &amc_tclass_Regx       = ((amc::FTclass*)amc::_db.tclass_data)[38];
+static amc::FTclass &amc_tclass_RegxSql    = ((amc::FTclass*)amc::_db.tclass_data)[39];
+static amc::FTclass &amc_tclass_Sbrk       = ((amc::FTclass*)amc::_db.tclass_data)[40];
+static amc::FTclass &amc_tclass_Smallstr   = ((amc::FTclass*)amc::_db.tclass_data)[41];
+static amc::FTclass &amc_tclass_Sort       = ((amc::FTclass*)amc::_db.tclass_data)[42];
+static amc::FTclass &amc_tclass_Step       = ((amc::FTclass*)amc::_db.tclass_data)[43];
+static amc::FTclass &amc_tclass_Substr     = ((amc::FTclass*)amc::_db.tclass_data)[44];
+static amc::FTclass &amc_tclass_Tary       = ((amc::FTclass*)amc::_db.tclass_data)[45];
+static amc::FTclass &amc_tclass_Thash      = ((amc::FTclass*)amc::_db.tclass_data)[46];
+static amc::FTclass &amc_tclass_Tpool      = ((amc::FTclass*)amc::_db.tclass_data)[47];
+static amc::FTclass &amc_tclass_Upptr      = ((amc::FTclass*)amc::_db.tclass_data)[48];
+static amc::FTclass &amc_tclass_Val        = ((amc::FTclass*)amc::_db.tclass_data)[49];
+static amc::FTclass &amc_tclass_Varlen     = ((amc::FTclass*)amc::_db.tclass_data)[50];
+static amc::FTclass &amc_tclass_ZSListMT   = ((amc::FTclass*)amc::_db.tclass_data)[51];
 
 // --- amc.BltinId.value.GetEnum
 // Get value of field as enum type
@@ -5623,7 +5624,7 @@ inline amc::FFregx& amc::fregx_qFind(u64 t) {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* amc::tclass_AllocMem() {
     void *row = reinterpret_cast<amc::FTclass*>(_db.tclass_data) + _db.tclass_n;
-    if (_db.tclass_n == 51) row = NULL;
+    if (_db.tclass_n == 52) row = NULL;
     if (row) _db.tclass_n++;
     return row;
 }
@@ -5649,9 +5650,9 @@ inline algo::aryptr<amc::FTclass> amc::tclass_Getary() {
 }
 
 // --- amc.FDb.tclass.Max
-// Return constant 51 -- max. number of items in the pool
+// Return constant 52 -- max. number of items in the pool
 inline i32 amc::tclass_Max() {
-    return 51;
+    return 52;
 }
 
 // --- amc.FDb.tclass.N
@@ -7995,6 +7996,60 @@ inline amc::FSsimsort& amc::ssimsort_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.ssimsort_lary[bsr][index];
+}
+
+// --- amc.FDb.fbuftype.EmptyQ
+// Return true if index is empty
+inline bool amc::fbuftype_EmptyQ() {
+    return _db.fbuftype_n == 0;
+}
+
+// --- amc.FDb.fbuftype.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFbuftype* amc::fbuftype_Find(u64 t) {
+    amc::FFbuftype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.fbuftype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.fbuftype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.fbuftype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FFbuftype* amc::fbuftype_Last() {
+    return fbuftype_Find(u64(_db.fbuftype_n-1));
+}
+
+// --- amc.FDb.fbuftype.N
+// Return number of items in the pool
+inline i32 amc::fbuftype_N() {
+    return _db.fbuftype_n;
+}
+
+// --- amc.FDb.fbuftype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FFbuftype& amc::fbuftype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.fbuftype_lary[bsr][index];
+}
+
+// --- amc.FDb.ind_fbuftype.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_fbuftype_EmptyQ() {
+    return _db.ind_fbuftype_n == 0;
+}
+
+// --- amc.FDb.ind_fbuftype.N
+// Return number of items in the hash
+inline i32 amc::ind_fbuftype_N() {
+    return _db.ind_fbuftype_n;
 }
 
 // --- amc.FDb.fsort_curs.Reset
@@ -11113,6 +11168,31 @@ inline amc::FSsimsort& amc::_db_ssimsort_curs_Access(_db_ssimsort_curs &curs) {
     return ssimsort_qFind(u64(curs.index));
 }
 
+// --- amc.FDb.fbuftype_curs.Reset
+// cursor points to valid item
+inline void amc::_db_fbuftype_curs_Reset(_db_fbuftype_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- amc.FDb.fbuftype_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_fbuftype_curs_ValidQ(_db_fbuftype_curs &curs) {
+    return curs.index < _db.fbuftype_n;
+}
+
+// --- amc.FDb.fbuftype_curs.Next
+// proceed to next item
+inline void amc::_db_fbuftype_curs_Next(_db_fbuftype_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.fbuftype_curs.Access
+// item access
+inline amc::FFbuftype& amc::_db_fbuftype_curs_Access(_db_fbuftype_curs &curs) {
+    return fbuftype_qFind(u64(curs.index));
+}
+
 // --- amc.FDispatch.c_dispfilter.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool amc::c_dispfilter_InsertMaybe(amc::FDispatch& dispatch, amc::FDispfilter& row) {
@@ -11577,6 +11657,7 @@ inline void amc::FFbuf_Init(amc::FFbuf& fbuf) {
     fbuf.max = u32(0);
     fbuf.p_insready = NULL;
     fbuf.p_inseof = NULL;
+    fbuf.p_fbuftype = NULL;
     fbuf.ind_fbuf_next = (amc::FFbuf*)-1; // (amc.FDb.ind_fbuf) not-in-hash
 }
 
@@ -11588,6 +11669,23 @@ inline  amc::FFbuf::FFbuf() {
 // --- amc.FFbuf..Dtor
 inline  amc::FFbuf::~FFbuf() {
     amc::FFbuf_Uninit(*this);
+}
+
+// --- amc.FFbuftype..Init
+// Set all fields to initial values.
+inline void amc::FFbuftype_Init(amc::FFbuftype& fbuftype) {
+    fbuftype.skipbytes = bool(false);
+    fbuftype.ind_fbuftype_next = (amc::FFbuftype*)-1; // (amc.FDb.ind_fbuftype) not-in-hash
+}
+
+// --- amc.FFbuftype..Ctor
+inline  amc::FFbuftype::FFbuftype() {
+    amc::FFbuftype_Init(*this);
+}
+
+// --- amc.FFbuftype..Dtor
+inline  amc::FFbuftype::~FFbuftype() {
+    amc::FFbuftype_Uninit(*this);
 }
 
 // --- amc.FFcast..Ctor

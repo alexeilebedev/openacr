@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [abt_md - Internals](/txt/exe/abt_md/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 abt_md: Tool to generate markdown documentation
 Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]
@@ -25,6 +29,8 @@ Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]
     -anchor                     (with -print) Print anchors
     -print                      (action) Query mode: Print .md section without evaluating
     -dry_run                    Do not write changes to disk
+    -external                   Check external links as well (may fail if no internet connection)
+    -evalcmd            Y       Execute inline-commands
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -33,8 +39,11 @@ Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 abt_md reads and processes files specified in the `dev.readme` table.
 The file sections, marked with "##" or deeper, are loaded, sorted
@@ -54,9 +63,12 @@ The contents of an `md` file can be evaluated inside a sandbox by setting `sandb
 in the `readme` record. Any changes produced by the commands are discarded after the file finishes
 processing.
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -92,41 +104,39 @@ errlist abt_md -check
 #### -dry_run -- Do not write changes to disk
 <a href="#-dry_run"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+#### -external -- Check external links as well (may fail if no internet connection)
+<a href="#-external"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/abt_md/file_section.cpp](/cpp/abt_md/file_section.cpp)||
-|[cpp/abt_md/main.cpp](/cpp/abt_md/main.cpp)||
-|[cpp/abt_md/mdsection.cpp](/cpp/abt_md/mdsection.cpp)||
-|[cpp/abt_md/sources.cpp](/cpp/abt_md/sources.cpp)||
-|[cpp/gen/abt_md_gen.cpp](/cpp/gen/abt_md_gen.cpp)||
-|[include/abt_md.h](/include/abt_md.h)||
-|[include/gen/abt_md_gen.h](/include/gen/abt_md_gen.h)||
-|[include/gen/abt_md_gen.inl.h](/include/gen/abt_md_gen.inl.h)||
+#### -evalcmd -- Execute inline-commands
+<a href="#-evalcmd"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `abt_md` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
+|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|
+|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
 |[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
-|[dev.readmecat](/txt/ssimdb/dev/readmecat.md)|sorted categories of txt/ *.md files presented in dev.readme|
-|[dev.readme](/txt/ssimdb/dev/readme.md)|File containing documentation|
+|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
 |[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
 |[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
+|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
+|[dev.readmesort](/txt/ssimdb/dev/readmesort.md)|sorted categories of txt/ *.md files presented in dev.readme|
+|[dev.readme](/txt/ssimdb/dev/readme.md)|File containing documentation|
 |[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

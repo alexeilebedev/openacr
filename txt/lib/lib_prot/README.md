@@ -1,12 +1,9 @@
 ## lib_prot - Library covering all protocols
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-* [Sources](#sources)
-
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -41,4 +38,6 @@ The following source files are part of this tool:
 |[include/gen/ietf_gen.inl.h](/include/gen/ietf_gen.inl.h)||
 |[include/gen/lib_prot_gen.h](/include/gen/lib_prot_gen.h)||
 |[include/gen/lib_prot_gen.inl.h](/include/gen/lib_prot_gen.inl.h)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
 

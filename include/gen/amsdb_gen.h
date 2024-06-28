@@ -33,12 +33,13 @@
 enum amsdb_FieldIdEnum {             // amsdb.FieldId.value
      amsdb_FieldId_proctype     = 0
     ,amsdb_FieldId_id           = 1
-    ,amsdb_FieldId_comment      = 2
-    ,amsdb_FieldId_streamtype   = 3
-    ,amsdb_FieldId_value        = 4
+    ,amsdb_FieldId_ns           = 2
+    ,amsdb_FieldId_comment      = 3
+    ,amsdb_FieldId_streamtype   = 4
+    ,amsdb_FieldId_value        = 5
 };
 
-enum { amsdb_FieldIdEnum_N = 5 };
+enum { amsdb_FieldIdEnum_N = 6 };
 
 namespace amsdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ProcTypePkey;
@@ -110,6 +111,7 @@ void                 FieldId_Print(amsdb::FieldId& row, algo::cstring& str) __at
 struct ProcType { // amsdb.ProcType
     algo::Smallstr50   proctype;   //
     u32                id;         //   0
+    algo::Smallstr16   ns;         //
     algo::Comment      comment;    //
     // func:amsdb.ProcType..Ctor
     inline               ProcType() __attribute__((nothrow));

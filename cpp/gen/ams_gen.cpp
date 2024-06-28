@@ -251,9 +251,14 @@ const char* ams::value_ToCstr(const ams::StreamType& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_StreamType_0              : ret = "0";  break;
+        case ams_StreamType_ack            : ret = "ack";  break;
         case ams_StreamType_ctl            : ret = "ctl";  break;
+        case ams_StreamType_fetch          : ret = "fetch";  break;
         case ams_StreamType_io             : ret = "io";  break;
         case ams_StreamType_out            : ret = "out";  break;
+        case ams_StreamType_prod           : ret = "prod";  break;
+        case ams_StreamType_seq            : ret = "seq";  break;
+        case ams_StreamType_sup            : ret = "sup";  break;
         case ams_StreamType_trace          : ret = "trace";  break;
     }
     return ret;
@@ -296,17 +301,37 @@ bool ams::value_SetStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','c','k'): {
+                    value_SetEnum(parent,ams_StreamType_ack); ret = true; break;
+                }
                 case LE_STR3('c','t','l'): {
                     value_SetEnum(parent,ams_StreamType_ctl); ret = true; break;
                 }
                 case LE_STR3('o','u','t'): {
                     value_SetEnum(parent,ams_StreamType_out); ret = true; break;
                 }
+                case LE_STR3('s','e','q'): {
+                    value_SetEnum(parent,ams_StreamType_seq); ret = true; break;
+                }
+                case LE_STR3('s','u','p'): {
+                    value_SetEnum(parent,ams_StreamType_sup); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('p','r','o','d'): {
+                    value_SetEnum(parent,ams_StreamType_prod); ret = true; break;
+                }
             }
             break;
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('f','e','t','c','h'): {
+                    value_SetEnum(parent,ams_StreamType_fetch); ret = true; break;
+                }
                 case LE_STR5('t','r','a','c','e'): {
                     value_SetEnum(parent,ams_StreamType_trace); ret = true; break;
                 }

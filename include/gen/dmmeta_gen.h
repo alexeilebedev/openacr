@@ -96,9 +96,10 @@ enum { dmmeta_FastopCaseEnum_N = 7 };
 
 extern const char *  dmmeta_Fbufdir_fbufdir_in;    // in     fconst:dmmeta.Fbufdir.fbufdir/in
 extern const char *  dmmeta_Fbufdir_fbufdir_out;   // out    fconst:dmmeta.Fbufdir.fbufdir/out
-extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;   // Bytebuf    fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;   // Linebuf    fconst:dmmeta.Fbuftype.fbuftype/Linebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;    // Msgbuf     fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;         // Bytebuf          fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_BytebufExtern;   // BytebufExtern    fconst:dmmeta.Fbuftype.fbuftype/BytebufExtern
+extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;         // Linebuf          fconst:dmmeta.Fbuftype.fbuftype/Linebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;          // Msgbuf           fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
 
 // --- dmmeta_FieldIdEnum
 
@@ -169,127 +170,118 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_fbuftype              = 63
     ,dmmeta_FieldId_insready              = 64
     ,dmmeta_FieldId_inseof                = 65
-    ,dmmeta_FieldId_getmsg                = 66
-    ,dmmeta_FieldId_skipbytes             = 67
-    ,dmmeta_FieldId_fcmap                 = 68
-    ,dmmeta_FieldId_leftField             = 69
-    ,dmmeta_FieldId_leftVal               = 70
-    ,dmmeta_FieldId_rightVal              = 71
-    ,dmmeta_FieldId_rightField            = 72
-    ,dmmeta_FieldId_bidir                 = 73
-    ,dmmeta_FieldId_basecmdline           = 74
-    ,dmmeta_FieldId_versionsort           = 75
-    ,dmmeta_FieldId_casesens              = 76
-    ,dmmeta_FieldId_fconst                = 77
-    ,dmmeta_FieldId_value                 = 78
-    ,dmmeta_FieldId_fcurs                 = 79
-    ,dmmeta_FieldId_curstype              = 80
-    ,dmmeta_FieldId_nplace                = 81
-    ,dmmeta_FieldId_fixedfmt              = 82
-    ,dmmeta_FieldId_fstep                 = 83
-    ,dmmeta_FieldId_delay                 = 84
-    ,dmmeta_FieldId_scale                 = 85
-    ,dmmeta_FieldId_ffast                 = 86
-    ,dmmeta_FieldId_pos                   = 87
-    ,dmmeta_FieldId_optional              = 88
-    ,dmmeta_FieldId_op                    = 89
-    ,dmmeta_FieldId_cumulative            = 90
-    ,dmmeta_FieldId_emptyval              = 91
-    ,dmmeta_FieldId_arg                   = 92
-    ,dmmeta_FieldId_reftype               = 93
-    ,dmmeta_FieldId_update                = 94
-    ,dmmeta_FieldId_fprefix               = 95
-    ,dmmeta_FieldId_partial               = 96
-    ,dmmeta_FieldId_regxtype              = 97
-    ,dmmeta_FieldId_sorttype              = 98
-    ,dmmeta_FieldId_sortfld               = 99
-    ,dmmeta_FieldId_steptype              = 100
-    ,dmmeta_FieldId_func                  = 101
-    ,dmmeta_FieldId_inl                   = 102
-    ,dmmeta_FieldId_proto                 = 103
-    ,dmmeta_FieldId_body                  = 104
-    ,dmmeta_FieldId_deprecate             = 105
-    ,dmmeta_FieldId_ismacro               = 106
-    ,dmmeta_FieldId_glob                  = 107
-    ,dmmeta_FieldId_priv                  = 108
-    ,dmmeta_FieldId_ret                   = 109
-    ,dmmeta_FieldId_fwddecl               = 110
-    ,dmmeta_FieldId_namefld               = 111
-    ,dmmeta_FieldId_idfld                 = 112
-    ,dmmeta_FieldId_wantenum              = 113
-    ,dmmeta_FieldId_namefldctyp           = 114
-    ,dmmeta_FieldId_gsymbol               = 115
-    ,dmmeta_FieldId_ssimfile              = 116
-    ,dmmeta_FieldId_inc                   = 117
-    ,dmmeta_FieldId_symboltype            = 118
-    ,dmmeta_FieldId_min                   = 119
-    ,dmmeta_FieldId_extra                 = 120
-    ,dmmeta_FieldId_listtype              = 121
-    ,dmmeta_FieldId_circular              = 122
-    ,dmmeta_FieldId_haveprev              = 123
-    ,dmmeta_FieldId_instail               = 124
-    ,dmmeta_FieldId_havetail              = 125
-    ,dmmeta_FieldId_havecount             = 126
-    ,dmmeta_FieldId_logcat                = 127
-    ,dmmeta_FieldId_enabled               = 128
-    ,dmmeta_FieldId_builtin               = 129
-    ,dmmeta_FieldId_ismodule              = 130
-    ,dmmeta_FieldId_type                  = 131
-    ,dmmeta_FieldId_xref                  = 132
-    ,dmmeta_FieldId_nstype                = 133
-    ,dmmeta_FieldId_license               = 134
-    ,dmmeta_FieldId_nsinclude             = 135
-    ,dmmeta_FieldId_sys                   = 136
-    ,dmmeta_FieldId_version               = 137
-    ,dmmeta_FieldId_genthrow              = 138
-    ,dmmeta_FieldId_correct_getorcreate   = 139
-    ,dmmeta_FieldId_pool                  = 140
-    ,dmmeta_FieldId_sortxref              = 141
-    ,dmmeta_FieldId_pack                  = 142
-    ,dmmeta_FieldId_numtype               = 143
-    ,dmmeta_FieldId_min_len               = 144
-    ,dmmeta_FieldId_filter_print          = 145
-    ,dmmeta_FieldId_pmaskfld_member       = 146
-    ,dmmeta_FieldId_pmaskfld              = 147
-    ,dmmeta_FieldId_pnew                  = 148
-    ,dmmeta_FieldId_buftype               = 149
-    ,dmmeta_FieldId_unique                = 150
-    ,dmmeta_FieldId_isval                 = 151
-    ,dmmeta_FieldId_cascins               = 152
-    ,dmmeta_FieldId_usebasepool           = 153
-    ,dmmeta_FieldId_cancopy               = 154
-    ,dmmeta_FieldId_isxref                = 155
-    ,dmmeta_FieldId_del                   = 156
-    ,dmmeta_FieldId_up                    = 157
-    ,dmmeta_FieldId_isnew                 = 158
-    ,dmmeta_FieldId_hasalloc              = 159
-    ,dmmeta_FieldId_inst                  = 160
-    ,dmmeta_FieldId_varlen                = 161
-    ,dmmeta_FieldId_length                = 162
-    ,dmmeta_FieldId_strtype               = 163
-    ,dmmeta_FieldId_pad                   = 164
-    ,dmmeta_FieldId_ssimns                = 165
-    ,dmmeta_FieldId_ssimreq               = 166
-    ,dmmeta_FieldId_parent                = 167
-    ,dmmeta_FieldId_parent_field          = 168
-    ,dmmeta_FieldId_parent_ctype          = 169
-    ,dmmeta_FieldId_child_ssimfile        = 170
-    ,dmmeta_FieldId_child_key             = 171
-    ,dmmeta_FieldId_reqchild              = 172
-    ,dmmeta_FieldId_maxwid                = 173
-    ,dmmeta_FieldId_fixedwid1             = 174
-    ,dmmeta_FieldId_fixedwid2             = 175
-    ,dmmeta_FieldId_aliased               = 176
-    ,dmmeta_FieldId_hashfld               = 177
-    ,dmmeta_FieldId_tracefld              = 178
-    ,dmmeta_FieldId_tracerec              = 179
-    ,dmmeta_FieldId_inscond               = 180
-    ,dmmeta_FieldId_via                   = 181
-    ,dmmeta_FieldId_viafld                = 182
-    ,dmmeta_FieldId_keyfld                = 183
+    ,dmmeta_FieldId_skipbytes             = 66
+    ,dmmeta_FieldId_fcmap                 = 67
+    ,dmmeta_FieldId_leftField             = 68
+    ,dmmeta_FieldId_leftVal               = 69
+    ,dmmeta_FieldId_rightVal              = 70
+    ,dmmeta_FieldId_rightField            = 71
+    ,dmmeta_FieldId_bidir                 = 72
+    ,dmmeta_FieldId_basecmdline           = 73
+    ,dmmeta_FieldId_versionsort           = 74
+    ,dmmeta_FieldId_casesens              = 75
+    ,dmmeta_FieldId_fconst                = 76
+    ,dmmeta_FieldId_value                 = 77
+    ,dmmeta_FieldId_fcurs                 = 78
+    ,dmmeta_FieldId_curstype              = 79
+    ,dmmeta_FieldId_nplace                = 80
+    ,dmmeta_FieldId_fixedfmt              = 81
+    ,dmmeta_FieldId_fstep                 = 82
+    ,dmmeta_FieldId_delay                 = 83
+    ,dmmeta_FieldId_scale                 = 84
+    ,dmmeta_FieldId_ffast                 = 85
+    ,dmmeta_FieldId_pos                   = 86
+    ,dmmeta_FieldId_optional              = 87
+    ,dmmeta_FieldId_op                    = 88
+    ,dmmeta_FieldId_cumulative            = 89
+    ,dmmeta_FieldId_emptyval              = 90
+    ,dmmeta_FieldId_arg                   = 91
+    ,dmmeta_FieldId_reftype               = 92
+    ,dmmeta_FieldId_update                = 93
+    ,dmmeta_FieldId_fprefix               = 94
+    ,dmmeta_FieldId_partial               = 95
+    ,dmmeta_FieldId_regxtype              = 96
+    ,dmmeta_FieldId_sorttype              = 97
+    ,dmmeta_FieldId_sortfld               = 98
+    ,dmmeta_FieldId_steptype              = 99
+    ,dmmeta_FieldId_func                  = 100
+    ,dmmeta_FieldId_fwddecl               = 101
+    ,dmmeta_FieldId_namefld               = 102
+    ,dmmeta_FieldId_idfld                 = 103
+    ,dmmeta_FieldId_wantenum              = 104
+    ,dmmeta_FieldId_namefldctyp           = 105
+    ,dmmeta_FieldId_gsymbol               = 106
+    ,dmmeta_FieldId_ssimfile              = 107
+    ,dmmeta_FieldId_inc                   = 108
+    ,dmmeta_FieldId_symboltype            = 109
+    ,dmmeta_FieldId_min                   = 110
+    ,dmmeta_FieldId_extra                 = 111
+    ,dmmeta_FieldId_listtype              = 112
+    ,dmmeta_FieldId_circular              = 113
+    ,dmmeta_FieldId_haveprev              = 114
+    ,dmmeta_FieldId_instail               = 115
+    ,dmmeta_FieldId_havetail              = 116
+    ,dmmeta_FieldId_havecount             = 117
+    ,dmmeta_FieldId_logcat                = 118
+    ,dmmeta_FieldId_enabled               = 119
+    ,dmmeta_FieldId_builtin               = 120
+    ,dmmeta_FieldId_ismodule              = 121
+    ,dmmeta_FieldId_type                  = 122
+    ,dmmeta_FieldId_xref                  = 123
+    ,dmmeta_FieldId_nstype                = 124
+    ,dmmeta_FieldId_license               = 125
+    ,dmmeta_FieldId_nsinclude             = 126
+    ,dmmeta_FieldId_sys                   = 127
+    ,dmmeta_FieldId_version               = 128
+    ,dmmeta_FieldId_genthrow              = 129
+    ,dmmeta_FieldId_correct_getorcreate   = 130
+    ,dmmeta_FieldId_pool                  = 131
+    ,dmmeta_FieldId_sortxref              = 132
+    ,dmmeta_FieldId_pack                  = 133
+    ,dmmeta_FieldId_numtype               = 134
+    ,dmmeta_FieldId_min_len               = 135
+    ,dmmeta_FieldId_filter_print          = 136
+    ,dmmeta_FieldId_pmaskfld_member       = 137
+    ,dmmeta_FieldId_pmaskfld              = 138
+    ,dmmeta_FieldId_pnew                  = 139
+    ,dmmeta_FieldId_buftype               = 140
+    ,dmmeta_FieldId_unique                = 141
+    ,dmmeta_FieldId_isval                 = 142
+    ,dmmeta_FieldId_cascins               = 143
+    ,dmmeta_FieldId_usebasepool           = 144
+    ,dmmeta_FieldId_cancopy               = 145
+    ,dmmeta_FieldId_isxref                = 146
+    ,dmmeta_FieldId_del                   = 147
+    ,dmmeta_FieldId_up                    = 148
+    ,dmmeta_FieldId_isnew                 = 149
+    ,dmmeta_FieldId_hasalloc              = 150
+    ,dmmeta_FieldId_inst                  = 151
+    ,dmmeta_FieldId_varlen                = 152
+    ,dmmeta_FieldId_length                = 153
+    ,dmmeta_FieldId_strtype               = 154
+    ,dmmeta_FieldId_pad                   = 155
+    ,dmmeta_FieldId_ssimns                = 156
+    ,dmmeta_FieldId_ssimreq               = 157
+    ,dmmeta_FieldId_parent                = 158
+    ,dmmeta_FieldId_parent_field          = 159
+    ,dmmeta_FieldId_parent_ctype          = 160
+    ,dmmeta_FieldId_child_ssimfile        = 161
+    ,dmmeta_FieldId_child_key             = 162
+    ,dmmeta_FieldId_reqchild              = 163
+    ,dmmeta_FieldId_maxwid                = 164
+    ,dmmeta_FieldId_fixedwid1             = 165
+    ,dmmeta_FieldId_fixedwid2             = 166
+    ,dmmeta_FieldId_aliased               = 167
+    ,dmmeta_FieldId_hashfld               = 168
+    ,dmmeta_FieldId_tracefld              = 169
+    ,dmmeta_FieldId_tracerec              = 170
+    ,dmmeta_FieldId_inscond               = 171
+    ,dmmeta_FieldId_via                   = 172
+    ,dmmeta_FieldId_viafld                = 173
+    ,dmmeta_FieldId_keyfld                = 174
 };
 
-enum { dmmeta_FieldIdEnum_N = 184 };
+enum { dmmeta_FieldIdEnum_N = 175 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -351,6 +343,7 @@ extern const char *  dmmeta_Ns_ns_mdbg;           // mdbg            fconst:dmme
 extern const char *  dmmeta_Ns_ns_mysql2ssim;     // mysql2ssim      fconst:dmmeta.Ns.ns/mysql2ssim
 extern const char *  dmmeta_Ns_ns_orgfile;        // orgfile         fconst:dmmeta.Ns.ns/orgfile
 extern const char *  dmmeta_Ns_ns_report;         // report          fconst:dmmeta.Ns.ns/report
+extern const char *  dmmeta_Ns_ns_samp_meng;      // samp_meng       fconst:dmmeta.Ns.ns/samp_meng
 extern const char *  dmmeta_Ns_ns_samp_regx;      // samp_regx       fconst:dmmeta.Ns.ns/samp_regx
 extern const char *  dmmeta_Ns_ns_sandbox;        // sandbox         fconst:dmmeta.Ns.ns/sandbox
 extern const char *  dmmeta_Ns_ns_src_func;       // src_func        fconst:dmmeta.Ns.ns/src_func
@@ -383,6 +376,7 @@ extern const char *  dmmeta_Reftype_reftype_Blkpool;    // Blkpool     fconst:dm
 extern const char *  dmmeta_Reftype_reftype_Charset;    // Charset     fconst:dmmeta.Reftype.reftype/Charset
 extern const char *  dmmeta_Reftype_reftype_Count;      // Count       fconst:dmmeta.Reftype.reftype/Count
 extern const char *  dmmeta_Reftype_reftype_Cppstack;   // Cppstack    fconst:dmmeta.Reftype.reftype/Cppstack
+extern const char *  dmmeta_Reftype_reftype_Ctype;      // Ctype       fconst:dmmeta.Reftype.reftype/Ctype
 extern const char *  dmmeta_Reftype_reftype_Delptr;     // Delptr      fconst:dmmeta.Reftype.reftype/Delptr
 extern const char *  dmmeta_Reftype_reftype_Exec;       // Exec        fconst:dmmeta.Reftype.reftype/Exec
 extern const char *  dmmeta_Reftype_reftype_Fbuf;       // Fbuf        fconst:dmmeta.Reftype.reftype/Fbuf
@@ -421,34 +415,35 @@ enum dmmeta_ReftypeCaseEnum {            // dmmeta.ReftypeCase.reftype
     ,dmmeta_ReftypeCase_Charset    = 7
     ,dmmeta_ReftypeCase_Count      = 8
     ,dmmeta_ReftypeCase_Cppstack   = 9
-    ,dmmeta_ReftypeCase_Delptr     = 10
-    ,dmmeta_ReftypeCase_Exec       = 11
-    ,dmmeta_ReftypeCase_Fbuf       = 12
-    ,dmmeta_ReftypeCase_Global     = 13
-    ,dmmeta_ReftypeCase_Hook       = 14
-    ,dmmeta_ReftypeCase_Inlary     = 15
-    ,dmmeta_ReftypeCase_Lary       = 16
-    ,dmmeta_ReftypeCase_Llist      = 17
-    ,dmmeta_ReftypeCase_Lpool      = 18
-    ,dmmeta_ReftypeCase_Malloc     = 19
-    ,dmmeta_ReftypeCase_Opt        = 20
-    ,dmmeta_ReftypeCase_Pkey       = 21
-    ,dmmeta_ReftypeCase_Ptr        = 22
-    ,dmmeta_ReftypeCase_Ptrary     = 23
-    ,dmmeta_ReftypeCase_Regx       = 24
-    ,dmmeta_ReftypeCase_RegxSql    = 25
-    ,dmmeta_ReftypeCase_Sbrk       = 26
-    ,dmmeta_ReftypeCase_Smallstr   = 27
-    ,dmmeta_ReftypeCase_Tary       = 28
-    ,dmmeta_ReftypeCase_Thash      = 29
-    ,dmmeta_ReftypeCase_Tpool      = 30
-    ,dmmeta_ReftypeCase_Upptr      = 31
-    ,dmmeta_ReftypeCase_Val        = 32
-    ,dmmeta_ReftypeCase_Varlen     = 33
-    ,dmmeta_ReftypeCase_ZSListMT   = 34
+    ,dmmeta_ReftypeCase_Ctype      = 10
+    ,dmmeta_ReftypeCase_Delptr     = 11
+    ,dmmeta_ReftypeCase_Exec       = 12
+    ,dmmeta_ReftypeCase_Fbuf       = 13
+    ,dmmeta_ReftypeCase_Global     = 14
+    ,dmmeta_ReftypeCase_Hook       = 15
+    ,dmmeta_ReftypeCase_Inlary     = 16
+    ,dmmeta_ReftypeCase_Lary       = 17
+    ,dmmeta_ReftypeCase_Llist      = 18
+    ,dmmeta_ReftypeCase_Lpool      = 19
+    ,dmmeta_ReftypeCase_Malloc     = 20
+    ,dmmeta_ReftypeCase_Opt        = 21
+    ,dmmeta_ReftypeCase_Pkey       = 22
+    ,dmmeta_ReftypeCase_Ptr        = 23
+    ,dmmeta_ReftypeCase_Ptrary     = 24
+    ,dmmeta_ReftypeCase_Regx       = 25
+    ,dmmeta_ReftypeCase_RegxSql    = 26
+    ,dmmeta_ReftypeCase_Sbrk       = 27
+    ,dmmeta_ReftypeCase_Smallstr   = 28
+    ,dmmeta_ReftypeCase_Tary       = 29
+    ,dmmeta_ReftypeCase_Thash      = 30
+    ,dmmeta_ReftypeCase_Tpool      = 31
+    ,dmmeta_ReftypeCase_Upptr      = 32
+    ,dmmeta_ReftypeCase_Val        = 33
+    ,dmmeta_ReftypeCase_Varlen     = 34
+    ,dmmeta_ReftypeCase_ZSListMT   = 35
 };
 
-enum { dmmeta_ReftypeCaseEnum_N = 34 };
+enum { dmmeta_ReftypeCaseEnum_N = 35 };
 
 extern const char *  dmmeta_Sorttype_sorttype_QuickSort;       // QuickSort        fconst:dmmeta.Sorttype.sorttype/QuickSort
 extern const char *  dmmeta_Sorttype_sorttype_InsertionSort;   // InsertionSort    fconst:dmmeta.Sorttype.sorttype/InsertionSort
@@ -494,6 +489,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_htmlentity;              // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_include;                 // dev.include                  fconst:dmmeta.Ssimfile.ssimfile/dev.include
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_license;                 // dev.license                  fconst:dmmeta.Ssimfile.ssimfile/dev.license
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_linelim;                 // dev.linelim                  fconst:dmmeta.Ssimfile.ssimfile/dev.linelim
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_mdmark;                  // dev.mdmark                   fconst:dmmeta.Ssimfile.ssimfile/dev.mdmark
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_mdsection;               // dev.mdsection                fconst:dmmeta.Ssimfile.ssimfile/dev.mdsection
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_msgfile;                 // dev.msgfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.msgfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_noindent;                // dev.noindent                 fconst:dmmeta.Ssimfile.ssimfile/dev.noindent
@@ -502,7 +498,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_package;                 // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdep;                  // dev.pkgdep                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkey;                  // dev.pkgkey                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkey
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_readme;                  // dev.readme                   fconst:dmmeta.Ssimfile.ssimfile/dev.readme
-extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmecat;               // dev.readmecat                fconst:dmmeta.Ssimfile.ssimfile/dev.readmecat
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmesort;              // dev.readmesort               fconst:dmmeta.Ssimfile.ssimfile/dev.readmesort
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sandbox;                 // dev.sandbox                  fconst:dmmeta.Ssimfile.ssimfile/dev.sandbox
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sbpath;                  // dev.sbpath                   fconst:dmmeta.Ssimfile.ssimfile/dev.sbpath
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_scriptfile;              // dev.scriptfile               fconst:dmmeta.Ssimfile.ssimfile/dev.scriptfile
@@ -1945,9 +1941,7 @@ void                 Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) __a
 // --- dmmeta.Fbuftype
 struct Fbuftype { // dmmeta.Fbuftype: Buffer type
     algo::Smallstr50   fbuftype;    //
-    bool               getmsg;      //   false  Has getmsg function?
     bool               skipbytes;   //   false  Has skipbytes function?
-    bool               read;        //   false
     algo::Comment      comment;     //
     // func:dmmeta.Fbuftype..Ctor
     inline               Fbuftype() __attribute__((nothrow));
@@ -2700,17 +2694,9 @@ void                 Ftuple_Print(dmmeta::Ftuple& row, algo::cstring& str) __att
 
 // --- dmmeta.Func
 struct Func { // dmmeta.Func
-    algo::Smallstr100   func;        // Primary key
-    bool                inl;         //   false  Make inline?
-    algo::cstring       proto;       // Prototype
-    algo::cstring       body;        // Body of function
-    bool                deprecate;   //   false  Make deprecated?
-    bool                ismacro;     //   false  Always inline.
-    bool                extrn;       //   false  Implemented externally by user
-    bool                glob;        //   false  Function is not attached to a field (EXPLAIN!!)
-    bool                priv;        //   false  Private to translateion unit (static)
-    algo::cstring       ret;         // Return type (c++ expression)
-    algo::cstring       comment;     // Description
+    algo::Smallstr100   func;      // Primary key
+    bool                extrn;     //   false  Implemented externally by user
+    algo::cstring       comment;   // Description
     // func:dmmeta.Func..Ctor
     inline               Func() __attribute__((nothrow));
 };
@@ -2745,7 +2731,7 @@ bool                 Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr fiel
 bool                 Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Func..Init
-void                 Func_Init(dmmeta::Func& parent);
+inline void          Func_Init(dmmeta::Func& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Func.String  printfmt:Tuple
 // func:dmmeta.Func..Print

@@ -3,19 +3,23 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Reading Output As Input](#reading-output-as-input)
-* [Find files with identical contents (but don't do anything with them)](#find-files-with-identical-contents--but-don-t-do-anything-with-them-)
-* [Same as above but with an additional filter](#same-as-above-but-with-an-additional-filter)
-* [Delete files in secondary backup that already exist in primary backup](#delete-files-in-secondary-backup-that-already-exist-in-primary-backup)
-* [Organize images by year and day](#organize-images-by-year-and-day)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Reading Output As Input](#reading-output-as-input)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Find files with identical contents (but don't do anything with them)](#find-files-with-identical-contents--but-don-t-do-anything-with-them-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Same as above but with an additional filter](#same-as-above-but-with-an-additional-filter)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Delete files in secondary backup that already exist in primary backup](#delete-files-in-secondary-backup-that-already-exist-in-primary-backup)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Organize images by year and day](#organize-images-by-year-and-day)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [orgfile - Internals](/txt/exe/orgfile/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 orgfile: Organize and deduplicate files by timestamp and by contents
 Usage: orgfile [options]
@@ -34,8 +38,11 @@ Usage: orgfile [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Orgfile reads a list of filenames from stdin and performs move and dedup operations with
 incoming files. 
@@ -75,26 +82,7 @@ If `-dedup` is specified, then any incoming file is scanned for its hash.
 Any file whose pathname matches the pattern specified by `-dedup`, and the file is proven to be a duplicate,
 is deleted.
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -move -- Read stdin, rename files based on pattern
-<a href="#-move"></a>
-
-#### -dedup -- Only allow deleting files that match this regx
-<a href="#-dedup"></a>
-
-#### -commit -- Apply changes
-<a href="#-commit"></a>
-
-#### -undo -- Read previous orgfile output, undoing movement
-<a href="#-undo"></a>
-
-#### -hash -- Hash command to use for deduplication
-<a href="#-hash"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Reading Output As Input
 <a href="#reading-output-as-input"></a>
@@ -135,24 +123,38 @@ find backup backup2 -type f | orgfile -dedup:"backup2/%" -commit
 find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 ```
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/gen/orgfile_gen.cpp](/cpp/gen/orgfile_gen.cpp)||
-|[cpp/orgfile.cpp](/cpp/orgfile.cpp)||
-|[include/gen/orgfile_gen.h](/include/gen/orgfile_gen.h)||
-|[include/gen/orgfile_gen.inl.h](/include/gen/orgfile_gen.inl.h)||
-|[include/orgfile.h](/include/orgfile.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -move -- Read stdin, rename files based on pattern
+<a href="#-move"></a>
+
+#### -dedup -- Only allow deleting files that match this regx
+<a href="#-dedup"></a>
+
+#### -commit -- Apply changes
+<a href="#-commit"></a>
+
+#### -undo -- Read previous orgfile output, undoing movement
+<a href="#-undo"></a>
+
+#### -hash -- Hash command to use for deduplication
+<a href="#-hash"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `orgfile` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
-|[dev.timefmt](/txt/ssimdb/dev/timefmt.md)|Time formats supported by orgfile|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.timefmt](/txt/ssimdb/dev/timefmt.md)|Time formats supported by orgfile|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -389,7 +389,7 @@ inline u64 algo::ary_rowid_Get(algo::ByteAry& parent, u8 &elem) {
 }
 
 // --- algo.ByteAry.ary.Cast
-inline  algo::ByteAry::operator algo::memptr() const {
+inline  algo::ByteAry::operator algo::aryptr<u8>() const {
     return ary_Getary(*this);
 }
 
@@ -18886,6 +18886,11 @@ inline u64 algo::ary_rowid_Get(algo::StringAry& parent, algo::cstring &elem) {
     return u64(id);
 }
 
+// --- algo.StringAry.ary.Cast
+inline  algo::StringAry::operator algo::aryptr<algo::cstring>() const {
+    return ary_Getary(*this);
+}
+
 // --- algo.StringAry.ary_curs.Next
 // proceed to next item
 inline void algo::StringAry_ary_curs_Next(StringAry_ary_curs &curs) {
@@ -19105,12 +19110,44 @@ inline algo::Attr& algo::Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) {
     return curs.elems[curs.index];
 }
 
+// --- algo.Tuple..EqOp
+inline bool algo::Tuple::operator ==(const algo::Tuple &rhs) const {
+    return algo::Tuple_Eq(const_cast<algo::Tuple&>(*this),const_cast<algo::Tuple&>(rhs));
+}
+
+// --- algo.Tuple..NeOp
+inline bool algo::Tuple::operator !=(const algo::Tuple &rhs) const {
+    return !algo::Tuple_Eq(const_cast<algo::Tuple&>(*this),const_cast<algo::Tuple&>(rhs));
+}
+
+// --- algo.Tuple..Cmp
+inline i32 algo::Tuple_Cmp(algo::Tuple& lhs, algo::Tuple& rhs) {
+    i32 retval = 0;
+    retval = attrs_Cmp(lhs,rhs);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = algo::Attr_Cmp(lhs.head, rhs.head);
+    return retval;
+}
+
 // --- algo.Tuple..Init
 // Set all fields to initial values.
 inline void algo::Tuple_Init(algo::Tuple& parent) {
     parent.attrs_elems 	= 0; // (algo.Tuple.attrs)
     parent.attrs_n     	= 0; // (algo.Tuple.attrs)
     parent.attrs_max   	= 0; // (algo.Tuple.attrs)
+}
+
+// --- algo.Tuple..Eq
+inline bool algo::Tuple_Eq(algo::Tuple& lhs, algo::Tuple& rhs) {
+    bool retval = true;
+    retval = attrs_Eq(lhs,rhs);
+    if (!retval) {
+        return false;
+    }
+    retval = algo::Attr_Eq(lhs.head, rhs.head);
+    return retval;
 }
 
 // --- algo.Tuple..Ctor
@@ -20483,6 +20520,123 @@ inline  algo::UnixTime::UnixTime(i64 in_value)
  {
 }
 
+// --- algo.Uuid.value.Fill
+// Set all elements of fixed array to value RHS
+inline void algo::value_Fill(algo::Uuid& parent, const u8 &rhs) {
+    for (int i = 0; i < 16; i++) {
+        parent.value_elems[i] = rhs;
+    }
+}
+
+// --- algo.Uuid.value.Find
+// Look up row by row id. Return NULL if out of range
+inline u8* algo::value_Find(algo::Uuid& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = 16;
+    return idx < lim ? parent.value_elems + idx : NULL; // unsigned comparison with limit
+}
+
+// --- algo.Uuid.value.Getary
+// Access fixed array value as aryptr.
+inline algo::aryptr<u8> algo::value_Getary(algo::Uuid& parent) {
+    return algo::aryptr<u8>(parent.value_elems, 16);
+}
+
+// --- algo.Uuid.value.Max
+// Return max number of items in the array
+inline i32 algo::value_Max(algo::Uuid& parent) {
+    (void)parent;
+    return 16;
+}
+
+// --- algo.Uuid.value.N
+// Return number of items in the array
+inline i32 algo::value_N(const algo::Uuid& parent) {
+    (void)parent;//only to avoid -Wunused-parameter
+    return 16;
+}
+
+// --- algo.Uuid.value.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void algo::value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) {
+    int n = i32_Min(16, rhs.n_elems);
+    memcpy(parent.value_elems, rhs.elems, sizeof(u8)*n);
+}
+
+// --- algo.Uuid.value.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline u8& algo::value_qFind(algo::Uuid& parent, u64 t) {
+    return parent.value_elems[u64(t)];
+}
+
+// --- algo.Uuid.value_curs.Reset
+// cursor points to valid item
+inline void algo::Uuid_value_curs_Reset(Uuid_value_curs &curs, algo::Uuid &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- algo.Uuid.value_curs.ValidQ
+// cursor points to valid item
+inline bool algo::Uuid_value_curs_ValidQ(Uuid_value_curs &curs) {
+    return u64(curs.index) < u64(16);
+}
+
+// --- algo.Uuid.value_curs.Next
+// proceed to next item
+inline void algo::Uuid_value_curs_Next(Uuid_value_curs &curs) {
+    curs.index++;
+}
+
+// --- algo.Uuid.value_curs.Access
+// item access
+inline u8& algo::Uuid_value_curs_Access(Uuid_value_curs &curs) {
+    return value_qFind((*curs.parent), u64(curs.index));
+}
+
+// --- algo.Uuid..Hash
+inline u32 algo::Uuid_Hash(u32 prev, const algo::Uuid& rhs) {
+    frep_(i,16) prev = u8_Hash(prev, rhs.value_elems[i]);
+    return prev;
+}
+
+// --- algo.Uuid..EqOp
+inline bool algo::Uuid::operator ==(const algo::Uuid &rhs) const {
+    return algo::Uuid_Eq(const_cast<algo::Uuid&>(*this),const_cast<algo::Uuid&>(rhs));
+}
+
+// --- algo.Uuid..NeOp
+inline bool algo::Uuid::operator !=(const algo::Uuid &rhs) const {
+    return !algo::Uuid_Eq(const_cast<algo::Uuid&>(*this),const_cast<algo::Uuid&>(rhs));
+}
+
+// --- algo.Uuid..Cmp
+inline i32 algo::Uuid_Cmp(algo::Uuid& lhs, algo::Uuid& rhs) {
+    i32 retval = 0;
+    retval = value_Cmp(lhs,rhs);
+    return retval;
+}
+
+// --- algo.Uuid..Init
+// Set all fields to initial values.
+inline void algo::Uuid_Init(algo::Uuid& parent) {
+    for (int i = 0; i < 16; i++) {
+        parent.value_elems[i] = 0;
+    }
+}
+
+// --- algo.Uuid..Eq
+inline bool algo::Uuid_Eq(algo::Uuid& lhs, algo::Uuid& rhs) {
+    bool retval = true;
+    retval = value_Eq(lhs,rhs);
+    return retval;
+}
+
+// --- algo.Uuid..Ctor
+inline  algo::Uuid::Uuid() {
+    algo::Uuid_Init(*this);
+}
+
 // --- algo.WDiff..Hash
 inline u32 algo::WDiff_Hash(u32 prev, algo::WDiff rhs) {
     prev = i64_Hash(prev, rhs.value);
@@ -21106,6 +21260,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::UnixDiff
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::UnixTime &row) {// cfmt:algo.UnixTime.String
     algo::UnixTime_Print(const_cast<algo::UnixTime&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Uuid &row) {// cfmt:algo.Uuid.String
+    algo::Uuid_Print(const_cast<algo::Uuid&>(row), str);
     return str;
 }
 

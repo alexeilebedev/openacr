@@ -732,13 +732,6 @@ inline  command::apm_proc::~apm_proc() {
     command::apm_proc_Uninit(*this);
 }
 
-// --- command.aqlite..Init
-// Set all fields to initial values.
-inline void command::aqlite_Init(command::aqlite& parent) {
-    parent.in = algo::strptr("data");
-    parent.data = algo::strptr("data");
-}
-
 // --- command.aqlite..Ctor
 inline  command::aqlite::aqlite() {
     command::aqlite_Init(*this);
@@ -1969,6 +1962,36 @@ inline  command::orgfile_proc::orgfile_proc() {
 // --- command.orgfile_proc..Dtor
 inline  command::orgfile_proc::~orgfile_proc() {
     command::orgfile_proc_Uninit(*this);
+}
+
+// --- command.samp_meng..Init
+// Set all fields to initial values.
+inline void command::samp_meng_Init(command::samp_meng& parent) {
+    parent.in = algo::strptr("data");
+}
+
+// --- command.samp_meng..Ctor
+inline  command::samp_meng::samp_meng() {
+    command::samp_meng_Init(*this);
+}
+
+// --- command.samp_meng_proc..Init
+// Set all fields to initial values.
+inline void command::samp_meng_proc_Init(command::samp_meng_proc& parent) {
+    parent.path = algo::strptr("bin/samp_meng");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.samp_meng_proc..Ctor
+inline  command::samp_meng_proc::samp_meng_proc() {
+    command::samp_meng_proc_Init(*this);
+}
+
+// --- command.samp_meng_proc..Dtor
+inline  command::samp_meng_proc::~samp_meng_proc() {
+    command::samp_meng_proc_Uninit(*this);
 }
 
 // --- command.samp_regx.style.GetEnum

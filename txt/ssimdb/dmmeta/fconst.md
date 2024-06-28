@@ -27,10 +27,10 @@ The following functions are generated:
 inline-command: amc lib_json.FParser.state.% -proto -report:N
 // Get value of field as enum type
 // func:lib_json.FParser.state.GetEnum
-lib_json_FParser_state_Enum state_GetEnum(const lib_json::FParser& parent) __attribute__((nothrow));
+inline lib_json_FParser_state_Enum state_GetEnum(const lib_json::FParser& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_json.FParser.state.SetEnum
-void                 state_SetEnum(lib_json::FParser& parent, lib_json_FParser_state_Enum rhs) __attribute__((nothrow));
+inline void          state_SetEnum(lib_json::FParser& parent, lib_json_FParser_state_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_json.FParser.state.ToCstr
@@ -53,22 +53,31 @@ void                 state_SetStrptr(lib_json::FParser& parent, algo::strptr rhs
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Fconst
 
 * file:[data/dmmeta/fconst.ssim](/data/dmmeta/fconst.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *field, name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fconst|algo.Smallstr100|Val|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||<br>/LL of fconst|
-|value|algo.CppExpr|Val|
-|name|algo.Smallstr100|Val||<br>/LR of fconst|
-|comment|algo.Comment|Val|
+|fconst|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/LL of fconst*|
+|value|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|*name*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*<br>/LR of fconst*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [abt_md](/txt/exe/abt_md/README.md) as abt_md.FFconst
-* [acr_compl](/txt/exe/acr_compl/README.md) as acr_compl.FFconst
-* [amc](/txt/exe/amc/README.md) as amc.FFconst
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as lib_ctype.FFconst
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FFconst](/txt/exe/abt_md/internals.md#abt_md-ffconst)
+* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FFconst](/txt/exe/acr_compl/internals.md#acr_compl-ffconst)
+* [amc](/txt/exe/amc/internals.md) as [amc.FFconst](/txt/exe/amc/internals.md#amc-ffconst)
+* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FFconst](/txt/lib/lib_ctype/README.md#lib_ctype-ffconst)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

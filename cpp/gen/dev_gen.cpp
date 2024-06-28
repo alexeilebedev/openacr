@@ -45,10 +45,6 @@ const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-cl
 const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_release_amd64    = "FreeBSD-clang++.release-amd64";
-const char *dev_Builddir_builddir_Linux_gPP_9_coverage_x86_64      = "Linux-g++-9.coverage-x86_64";
-const char *dev_Builddir_builddir_Linux_gPP_9_debug_x86_64         = "Linux-g++-9.debug-x86_64";
-const char *dev_Builddir_builddir_Linux_gPP_9_profile_x86_64       = "Linux-g++-9.profile-x86_64";
-const char *dev_Builddir_builddir_Linux_gPP_9_release_x86_64       = "Linux-g++-9.release-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_coverage_x86_64        = "Linux-g++.coverage-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_debug_x86_64           = "Linux-g++.debug-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_profile_x86_64         = "Linux-g++.profile-x86_64";
@@ -74,6 +70,17 @@ const char *dev_Compiler_compiler_gPP_9     = "g++-9";
 const char *dev_License_license_      = "";
 const char *dev_License_license_GPL   = "GPL";
 
+// compile-time string constants for dev.Mdmark.mdmark
+const char *dev_Mdmark_mdmark_MDSECTION   = "MDSECTION";
+const char *dev_Mdmark_mdmark_CMD         = "CMD";
+const char *dev_Mdmark_mdmark_TOC         = "TOC";
+
+// compile-time string constants for dev.Mdmark.state
+const char *dev_Mdmark_state_BEG        = "BEG";
+const char *dev_Mdmark_state_END        = "END";
+const char *dev_Mdmark_state_BEG_AUTO   = "BEG_AUTO";
+const char *dev_Mdmark_state_END_AUTO   = "END_AUTO";
+
 // compile-time string constants for dev.Sandbox.sandbox
 const char *dev_Sandbox_sandbox_abt_md   = "abt_md";
 
@@ -85,6 +92,7 @@ const char *dev_Sandbox_sandbox_apm_theirs   = "apm-theirs";
 const char *dev_Sandbox_sandbox_atf_ci       = "atf_ci";
 const char *dev_Sandbox_sandbox_atf_ci_apm   = "atf_ci-apm";
 const char *dev_Sandbox_sandbox_atf_fuzz     = "atf_fuzz";
+const char *dev_Sandbox_sandbox_tut_make     = "tut_make";
 
 namespace dev { // gen:ns_print_proto
     // func:dev...SizeCheck
@@ -1075,6 +1083,9 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_longestfunc       : ret = "longestfunc";  break;
         case dev_FieldId_nmysteryfunc      : ret = "nmysteryfunc";  break;
         case dev_FieldId_badness           : ret = "badness";  break;
+        case dev_FieldId_mdmark            : ret = "mdmark";  break;
+        case dev_FieldId_state             : ret = "state";  break;
+        case dev_FieldId_param             : ret = "param";  break;
         case dev_FieldId_mdsection         : ret = "mdsection";  break;
         case dev_FieldId_match             : ret = "match";  break;
         case dev_FieldId_path              : ret = "path";  break;
@@ -1089,10 +1100,10 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_soft              : ret = "soft";  break;
         case dev_FieldId_pkgkey            : ret = "pkgkey";  break;
         case dev_FieldId_key               : ret = "key";  break;
-        case dev_FieldId_readmecat         : ret = "readmecat";  break;
         case dev_FieldId_inl               : ret = "inl";  break;
         case dev_FieldId_sandbox           : ret = "sandbox";  break;
         case dev_FieldId_filter            : ret = "filter";  break;
+        case dev_FieldId_readmesort        : ret = "readmesort";  break;
         case dev_FieldId_sbpath            : ret = "sbpath";  break;
         case dev_FieldId_syscmd            : ret = "syscmd";  break;
         case dev_FieldId_execkey           : ret = "execkey";  break;
@@ -1252,6 +1263,12 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('m','a','x','w','s'): {
                     value_SetEnum(parent,dev_FieldId_maxws); ret = true; break;
                 }
+                case LE_STR5('p','a','r','a','m'): {
+                    value_SetEnum(parent,dev_FieldId_param); ret = true; break;
+                }
+                case LE_STR5('s','t','a','t','e'): {
+                    value_SetEnum(parent,dev_FieldId_state); ret = true; break;
+                }
                 case LE_STR5('t','o','t','a','l'): {
                     value_SetEnum(parent,dev_FieldId_total); ret = true; break;
                 }
@@ -1283,6 +1300,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('m','a','x','e','r','r'): {
                     value_SetEnum(parent,dev_FieldId_maxerr); ret = true; break;
+                }
+                case LE_STR6('m','d','m','a','r','k'): {
+                    value_SetEnum(parent,dev_FieldId_mdmark); ret = true; break;
                 }
                 case LE_STR6('n','b','a','d','w','s'): {
                     value_SetEnum(parent,dev_FieldId_nbadws); ret = true; break;
@@ -1471,10 +1491,6 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dev_FieldId_nlongline); ret = true; break; }
                     break;
                 }
-                case LE_STR8('r','e','a','d','m','e','c','a'): {
-                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,dev_FieldId_readmecat); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('s','y','s','c','m','d','d','e'): {
                     if (memcmp(rhs.elems+8,"p",1)==0) { value_SetEnum(parent,dev_FieldId_syscmddep); ret = true; break; }
                     break;
@@ -1486,6 +1502,10 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('h','t','m','l','e','n','t','i'): {
                     if (memcmp(rhs.elems+8,"ty",2)==0) { value_SetEnum(parent,dev_FieldId_htmlentity); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','a','d','m','e','s','o'): {
+                    if (memcmp(rhs.elems+8,"rt",2)==0) { value_SetEnum(parent,dev_FieldId_readmesort); ret = true; break; }
                     break;
                 }
                 case LE_STR8('t','a','r','g','s','y','s','l'): {
@@ -2043,6 +2063,124 @@ void dev::Linelim_Print(dev::Linelim& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"badness", temp);
 }
 
+// --- dev.Mdmark..ReadFieldMaybe
+bool dev::Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_mdmark: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.mdmark, strval);
+            break;
+        }
+        case dev_FieldId_state: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.state, strval);
+            break;
+        }
+        case dev_FieldId_param: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.param, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Mdmark..ReadStrptrMaybe
+// Read fields of dev::Mdmark from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.mdmark") || algo::StripTypeTag(in_str, "dev.Mdmark");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Mdmark_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Mdmark..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Mdmark.String  printfmt:Tuple
+void dev::Mdmark_Print(dev::Mdmark& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.mdmark";
+
+    algo::Smallstr50_Print(row.mdmark, temp);
+    PrintAttrSpaceReset(str,"mdmark", temp);
+
+    algo::Smallstr50_Print(row.state, temp);
+    PrintAttrSpaceReset(str,"state", temp);
+
+    algo::cstring_Print(row.param, temp);
+    PrintAttrSpaceReset(str,"param", temp);
+}
+
+// --- dev.MdmarkCase.mdmark.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* dev::mdmark_ToCstr(const dev::MdmarkCase& parent) {
+    const char *ret = NULL;
+    switch(mdmark_GetEnum(parent)) {
+        case dev_MdmarkCase_MDSECTION      : ret = "MDSECTION";  break;
+        case dev_MdmarkCase_CMD            : ret = "CMD";  break;
+        case dev_MdmarkCase_TOC            : ret = "TOC";  break;
+    }
+    return ret;
+}
+
+// --- dev.MdmarkCase.mdmark.Print
+// Convert mdmark to a string. First, attempt conversion to a known string.
+// If no string matches, print mdmark as a numeric value.
+void dev::mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) {
+    const char *strval = mdmark_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.mdmark;
+    }
+}
+
+// --- dev.MdmarkCase.mdmark.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool dev::mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('C','M','D'): {
+                    mdmark_SetEnum(parent,dev_MdmarkCase_CMD); ret = true; break;
+                }
+                case LE_STR3('T','O','C'): {
+                    mdmark_SetEnum(parent,dev_MdmarkCase_TOC); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('M','D','S','E','C','T','I','O'): {
+                    if (memcmp(rhs.elems+8,"N",1)==0) { mdmark_SetEnum(parent,dev_MdmarkCase_MDSECTION); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- dev.MdmarkCase.mdmark.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void dev::mdmark_SetStrptr(dev::MdmarkCase& parent, algo::strptr rhs, dev_MdmarkCaseEnum dflt) {
+    if (!mdmark_SetStrptrMaybe(parent,rhs)) mdmark_SetEnum(parent,dflt);
+}
+
 // --- dev.Mdsection..ReadFieldMaybe
 bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2509,18 +2647,6 @@ void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- dev.Readme.readmecat.Get
-algo::Smallstr50 dev::readmecat_Get(dev::Readme& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gitfile, "/LR/LL"));
-    return ret;
-}
-
-// --- dev.Readme.readmecat.Get2
-algo::Smallstr50 dev::Readme_readmecat_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR/LL"));
-    return ret;
-}
-
 // --- dev.Readme..ReadFieldMaybe
 bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2529,10 +2655,6 @@ bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
-        case dev_FieldId_readmecat: {
-            retval = false;
             break;
         }
         case dev_FieldId_inl: {
@@ -2594,14 +2716,14 @@ void dev::Readme_Print(dev::Readme& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- dev.Readmecat..ReadFieldMaybe
-bool dev::Readmecat_ReadFieldMaybe(dev::Readmecat& parent, algo::strptr field, algo::strptr strval) {
+// --- dev.Readmesort..ReadFieldMaybe
+bool dev::Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case dev_FieldId_readmecat: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.readmecat, strval);
+        case dev_FieldId_readmesort: {
+            retval = algo::Smallstr250_ReadStrptrMaybe(parent.readmesort, strval);
             break;
         }
         case dev_FieldId_comment: {
@@ -2616,27 +2738,27 @@ bool dev::Readmecat_ReadFieldMaybe(dev::Readmecat& parent, algo::strptr field, a
     return retval;
 }
 
-// --- dev.Readmecat..ReadStrptrMaybe
-// Read fields of dev::Readmecat from an ascii string.
+// --- dev.Readmesort..ReadStrptrMaybe
+// Read fields of dev::Readmesort from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Readmecat_ReadStrptrMaybe(dev::Readmecat &parent, algo::strptr in_str) {
+bool dev::Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dev.readmecat") || algo::StripTypeTag(in_str, "dev.Readmecat");
+    retval = algo::StripTypeTag(in_str, "dev.readmesort") || algo::StripTypeTag(in_str, "dev.Readmesort");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Readmecat_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Readmesort_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- dev.Readmecat..Print
+// --- dev.Readmesort..Print
 // print string representation of ROW to string STR
-// cfmt:dev.Readmecat.String  printfmt:Tuple
-void dev::Readmecat_Print(dev::Readmecat& row, algo::cstring& str) {
+// cfmt:dev.Readmesort.String  printfmt:Tuple
+void dev::Readmesort_Print(dev::Readmesort& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "dev.readmecat";
+    str << "dev.readmesort";
 
-    algo::Smallstr50_Print(row.readmecat, temp);
-    PrintAttrSpaceReset(str,"readmecat", temp);
+    algo::Smallstr250_Print(row.readmesort, temp);
+    PrintAttrSpaceReset(str,"readmesort", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

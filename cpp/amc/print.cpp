@@ -328,6 +328,7 @@ static void GenPrintArgv(algo_lib::Replscope &R, amc::FCtype &parent, amc::FCfmt
 // -----------------------------------------------------------------------------
 
 void amc::GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &, amc::FFunc &fmtjson) {
+    amc::FPmaskfld *filter = GetPrintFilter(ctype);
     if (c_datafld_N(ctype)!=1) { // zero or many -- always return some object even empty, to form valud field on upper object
         Ins(&R, fmtjson.body, "lib_json::FNode *object_node = &lib_json::node_Alloc();");
         Ins(&R, fmtjson.body, "object_node->p_parent = parent?parent:object_node;");
@@ -335,14 +336,21 @@ void amc::GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &,
         Ins(&R, fmtjson.body, "node_XrefMaybe(*object_node);");
         Set(R,"$return_json_node","object_node");
     }
-    ind_beg(amc::ctype_c_field_curs, field,ctype) {
+    ind_beg(amc::ctype_c_field_curs, field,ctype) if (!field.c_pmaskfld) {
+        Set(R, "$name", name_Get(field));
+        int conditional=0;
+        amc::FPmaskfldMember *filter_member = filter ? FindMember(field,filter) : NULL;
+        if (filter_member){ // do not print pmasked field if there is pmask and corresponding bit set
+            Set(R, "$Present", filter_member->p_pmaskfld->funcname);
+            Ins(&R, fmtjson.body,"if ($name_$PresentQ($parname)) {");
+            conditional++;
+        }
         if (field.reftype == dmmeta_Reftype_reftype_Val && !FldfuncQ(field)) {
             amc::FCtype& valtype = *(field).p_arg;
             Set(R, "$Ftype", valtype.cpp_type);
             Set(R, "$fldref", FieldvalExpr(&ctype, field, "const_cast<$Cpptype&>(row)"));
             if (c_datafld_N(ctype)!=1) {
                 Set(R, "$Fldtype", valtype.ctype);
-                Set(R, "$name", name_Get(field));
                 amc::FCfmt *print_json = amc::ind_cfmt_Find(Subst(R, "$Fldtype.Json"));
                 if (print_json) {
                     Ins(&R, fmtjson.body, "");
@@ -364,7 +372,6 @@ void amc::GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &,
             Set(R, "$fldref", FieldvalExpr(&ctype, field, "const_cast<$Cpptype&>(row)"));
             if (c_datafld_N(ctype)!=1) {
                 Set(R, "$Fldtype", valtype.ctype);
-                Set(R, "$name", name_Get(field));
                 if (amc::ind_cfmt_Find(Subst(R, "$Fldtype.Json"))) {
                     Ins(&R, fmtjson.body, "");
                     Ins(&R, fmtjson.body, "algo::aryptr<$Ftype> $name_ary = $name_Getary(row);");
@@ -376,6 +383,10 @@ void amc::GenPrintJson(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FCfmt &,
             } else {
                 Set(R,"$return_json_node", "$Ftype_FmtJson($fldref,parent);");
             }
+        }
+        while (conditional) {
+            Ins(&R, fmtjson.body, "}");
+            conditional--;
         }
     }ind_end;
     Ins(&R, fmtjson.body, "return $return_json_node;");

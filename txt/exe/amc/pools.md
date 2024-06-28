@@ -1,4 +1,4 @@
-## AMC Memory Pools
+## amc Memory Pools
 <a href="#amc-memory-pools"></a>
 
 For each `ctype`, instances of which can be dynamically allocated

@@ -37,7 +37,7 @@ namespace lib_sqlite { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib_sqlite/lib_sqlite.cpp
     //
-    void Open(lib_sqlite::FConn& conn);
+    int Open(lib_sqlite::FConn& conn);
     void db_Cleanup(lib_sqlite::FConn &parent);
     void Init();
 }

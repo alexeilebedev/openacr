@@ -61,6 +61,7 @@ const char *aqlite_help =
 "    -in         string  \"data\"  Input directory or filename, - for stdin for schema\n"
 "    -data       string  \"data\"  Input directory for data\n"
 "    [cmd]       string          Sql Query to run\n"
+"    -ns         regx    \"%\"     Regx of databases to attach\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -288,7 +289,7 @@ static void aqlite::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'aqlite.Input'  signature:'72fb8587bf449500ae86e40501458dc78734e248'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'aqlite.Input'  signature:'e758e9ff054f7b492d364bad9b482d6f396beaa7'");
 }
 
 // --- aqlite.FDb._db.InsertStrptrMaybe
@@ -504,7 +505,138 @@ static bool aqlite::ns_InputMaybe(dmmeta::Ns &elem) {
 bool aqlite::ns_XrefMaybe(aqlite::FNs &row) {
     bool retval = true;
     (void)row;
+    // insert ns into index ind_ns
+    if (true) { // user-defined insert condition
+        bool success = ind_ns_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "aqlite.duplicate_key  xref:aqlite.FDb.ind_ns"; // check for duplicate key
+            return false;
+        }
+    }
     return retval;
+}
+
+// --- aqlite.FDb.ind_ns.Find
+// Find row by key. Return NULL if not found.
+aqlite::FNs* aqlite::ind_ns_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
+    aqlite::FNs* *e = &_db.ind_ns_buckets_elems[index];
+    aqlite::FNs* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).ns == key;
+        if (done) break;
+        e         = &ret->ind_ns_next;
+    } while (true);
+    return ret;
+}
+
+// --- aqlite.FDb.ind_ns.FindX
+// Look up row by key and return reference. Throw exception if not found
+aqlite::FNs& aqlite::ind_ns_FindX(const algo::strptr& key) {
+    aqlite::FNs* ret = ind_ns_Find(key);
+    vrfy(ret, tempstr() << "aqlite.key_error  table:ind_ns  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- aqlite.FDb.ind_ns.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+aqlite::FNs& aqlite::ind_ns_GetOrCreate(const algo::strptr& key) {
+    aqlite::FNs* ret = ind_ns_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ns_Alloc();
+        (*ret).ns = key;
+        bool good = ns_XrefMaybe(*ret);
+        if (!good) {
+            ns_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "aqlite.create_error  table:ind_ns  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- aqlite.FDb.ind_ns.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool aqlite::ind_ns_InsertMaybe(aqlite::FNs& row) {
+    ind_ns_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_ns_next == (aqlite::FNs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        aqlite::FNs* *prev = &_db.ind_ns_buckets_elems[index];
+        do {
+            aqlite::FNs* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).ns == row.ns) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_ns_next;
+        } while (true);
+        if (retval) {
+            row.ind_ns_next = *prev;
+            _db.ind_ns_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- aqlite.FDb.ind_ns.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void aqlite::ind_ns_Remove(aqlite::FNs& row) {
+    if (LIKELY(row.ind_ns_next != (aqlite::FNs*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        aqlite::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
+        while (aqlite::FNs *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_ns_next; // unlink (singly linked list)
+                _db.ind_ns_n--;
+                row.ind_ns_next = (aqlite::FNs*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_ns_next;
+        }
+    }
+}
+
+// --- aqlite.FDb.ind_ns.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void aqlite::ind_ns_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_ns_buckets_n;
+    u32 new_nelems   = _db.ind_ns_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(aqlite::FNs*);
+        u32 new_size = new_nbuckets * sizeof(aqlite::FNs*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        aqlite::FNs* *new_buckets = (aqlite::FNs**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("aqlite.out_of_memory  field:aqlite.FDb.ind_ns");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_ns_buckets_n; i++) {
+            aqlite::FNs* elem = _db.ind_ns_buckets_elems[i];
+            while (elem) {
+                aqlite::FNs &row        = *elem;
+                aqlite::FNs* next       = row.ind_ns_next;
+                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                row.ind_ns_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_ns_buckets_elems, old_size);
+        _db.ind_ns_buckets_elems = new_buckets;
+        _db.ind_ns_buckets_n = new_nbuckets;
+    }
 }
 
 // --- aqlite.FDb.trace.RowidFind
@@ -533,6 +665,14 @@ void aqlite::FDb_Init() {
         _db.ns_lary[i]  = ns_first;
         ns_first    += 1ULL<<i;
     }
+    // initialize hash table for aqlite::FNs;
+    _db.ind_ns_n             	= 0; // (aqlite.FDb.ind_ns)
+    _db.ind_ns_buckets_n     	= 4; // (aqlite.FDb.ind_ns)
+    _db.ind_ns_buckets_elems 	= (aqlite::FNs**)algo_lib::malloc_AllocMem(sizeof(aqlite::FNs*)*_db.ind_ns_buckets_n); // initial buckets (aqlite.FDb.ind_ns)
+    if (!_db.ind_ns_buckets_elems) {
+        FatalErrorExit("out of memory"); // (aqlite.FDb.ind_ns)
+    }
+    memset(_db.ind_ns_buckets_elems, 0, sizeof(aqlite::FNs*)*_db.ind_ns_buckets_n); // (aqlite.FDb.ind_ns)
 
     aqlite::InitReflection();
 }
@@ -540,6 +680,9 @@ void aqlite::FDb_Init() {
 // --- aqlite.FDb..Uninit
 void aqlite::FDb_Uninit() {
     aqlite::FDb &row = _db; (void)row;
+
+    // aqlite.FDb.ind_ns.Uninit (Thash)  //
+    // skip destruction of ind_ns in global scope
 
     // aqlite.FDb.ns.Uninit (Lary)  //
     // skip destruction in global scope
@@ -561,6 +704,12 @@ void aqlite::ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) {
     row.nstype = in.nstype;
     row.license = in.license;
     row.comment = in.comment;
+}
+
+// --- aqlite.FNs..Uninit
+void aqlite::FNs_Uninit(aqlite::FNs& ns) {
+    aqlite::FNs &row = ns; (void)row;
+    ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
 // --- aqlite.FieldId.value.ToCstr

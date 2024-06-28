@@ -29,14 +29,14 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
@@ -54,8 +54,7 @@ const char *abt_help =
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    [target]    regx    \"\"      Regx of target name\n"
 "    -in         string  \"data\"  Root of input ssim dir\n"
-"    -out_dir    string  \"\"      Output directory\n"
-"    -cfg        string  \"\"      Set config\n"
+"    -cfg        regx    \"\"      Set config\n"
 "    -compiler   string  \"\"      Set compiler.\n"
 "    -uname      string  \"\"      Set uname (default: guess)\n"
 "    -arch       string  \"\"      Set architecture (default: guess)\n"
@@ -64,6 +63,7 @@ const char *abt_help =
 "    -listincl                   List includes\n"
 "    -build                      If set, build specified target (all necessary steps)\n"
 "    -preproc                    Preprocess file, produce .i file\n"
+"    -srcfile    regx    \"%\"     Build/disassemble/preprocess specific file\n"
 "    -clean                      Delete all output files\n"
 "    -dry_run                    Print actions, do not perform\n"
 "    -maxjobs    int     0       Maximum number of child build processes. 0=pick good default\n"
@@ -82,6 +82,7 @@ const char *abt_help =
 "                                    gcache  Select gcache if enabled (no cache if disabled)\n"
 "                                    gcache-force  Pass --force to gcache (no cache if disabled)\n"
 "                                    ccache  Select ccache if enabled (no cache if disabled)\n"
+"    -shortlink                  Try to shorten sort link if possible\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      int             Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -150,6 +151,8 @@ namespace abt { // gen:ns_print_proto
     static bool          include_InputMaybe(dev::Include &elem) __attribute__((nothrow));
     // func:abt.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
+    // func:abt.FDb.builddir.InputMaybe
+    static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:abt.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -178,6 +181,58 @@ void abt::arch_CopyIn(abt::FArch &row, dev::Arch &in) {
 void abt::FArch_Uninit(abt::FArch& arch) {
     abt::FArch &row = arch; (void)row;
     ind_arch_Remove(row); // remove arch from index ind_arch
+}
+
+// --- abt.FBuilddir.base.CopyOut
+// Copy fields out of row
+void abt::builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) {
+    out.builddir = row.builddir;
+    out.comment = row.comment;
+}
+
+// --- abt.FBuilddir.base.CopyIn
+// Copy fields in to row
+void abt::builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) {
+    row.builddir = in.builddir;
+    row.comment = in.comment;
+}
+
+// --- abt.FBuilddir.uname.Get
+algo::Smallstr50 abt::uname_Get(abt::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
+    return ret;
+}
+
+// --- abt.FBuilddir.compiler.Get
+algo::Smallstr50 abt::compiler_Get(abt::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
+    return ret;
+}
+
+// --- abt.FBuilddir.cfg.Get
+algo::Smallstr50 abt::cfg_Get(abt::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
+    return ret;
+}
+
+// --- abt.FBuilddir.arch.Get
+algo::Smallstr50 abt::arch_Get(abt::FBuilddir& builddir) {
+    algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
+    return ret;
+}
+
+// --- abt.FBuilddir..Init
+// Set all fields to initial values.
+void abt::FBuilddir_Init(abt::FBuilddir& builddir) {
+    builddir.select = bool(false);
+    builddir.p_compiler = NULL;
+    builddir.ind_builddir_next = (abt::FBuilddir*)-1; // (abt.FDb.ind_builddir) not-in-hash
+}
+
+// --- abt.FBuilddir..Uninit
+void abt::FBuilddir_Uninit(abt::FBuilddir& builddir) {
+    abt::FBuilddir &row = builddir; (void)row;
+    ind_builddir_Remove(row); // remove builddir from index ind_builddir
 }
 
 // --- abt.FCfg.msghdr.CopyOut
@@ -1519,7 +1574,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'c19adc35633653a85ee5ea1cc7565d6328cf53e5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'e6410c40f922d321b99d2a6d7a62d27f1d49a5ac'");
 }
 
 // --- abt.FDb._db.InsertStrptrMaybe
@@ -1614,6 +1669,12 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && ns_InputMaybe(elem);
             break;
         }
+        case abt_TableId_dev_Builddir: { // finput:abt.FDb.builddir
+            dev::Builddir elem;
+            retval = dev::Builddir_ReadStrptrMaybe(elem, str);
+            retval = retval && builddir_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -1647,6 +1708,7 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.compiler"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
+        retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -4402,6 +4464,236 @@ void abt::ind_filestat_Reserve(int n) {
     }
 }
 
+// --- abt.FDb.builddir.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+abt::FBuilddir& abt::builddir_Alloc() {
+    abt::FBuilddir* row = builddir_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("abt.out_of_mem  field:abt.FDb.builddir  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- abt.FDb.builddir.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+abt::FBuilddir* abt::builddir_AllocMaybe() {
+    abt::FBuilddir *row = (abt::FBuilddir*)builddir_AllocMem();
+    if (row) {
+        new (row) abt::FBuilddir; // call constructor
+    }
+    return row;
+}
+
+// --- abt.FDb.builddir.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+abt::FBuilddir* abt::builddir_InsertMaybe(const dev::Builddir &value) {
+    abt::FBuilddir *row = &builddir_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    builddir_CopyIn(*row,const_cast<dev::Builddir&>(value));
+    bool ok = builddir_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        builddir_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- abt.FDb.builddir.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* abt::builddir_AllocMem() {
+    u64 new_nelems     = _db.builddir_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    abt::FBuilddir*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.builddir_lary[bsr];
+        if (!lev) {
+            lev=(abt::FBuilddir*)abt::lpool_AllocMem(sizeof(abt::FBuilddir) * (u64(1)<<bsr));
+            _db.builddir_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.builddir_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- abt.FDb.builddir.RemoveAll
+// Remove all elements from Lary
+void abt::builddir_RemoveAll() {
+    for (u64 n = _db.builddir_n; n>0; ) {
+        n--;
+        builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
+        _db.builddir_n = i32(n);
+    }
+}
+
+// --- abt.FDb.builddir.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void abt::builddir_RemoveLast() {
+    u64 n = _db.builddir_n;
+    if (n > 0) {
+        n -= 1;
+        builddir_qFind(u64(n)).~FBuilddir();
+        _db.builddir_n = i32(n);
+    }
+}
+
+// --- abt.FDb.builddir.InputMaybe
+static bool abt::builddir_InputMaybe(dev::Builddir &elem) {
+    bool retval = true;
+    retval = builddir_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- abt.FDb.builddir.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool abt::builddir_XrefMaybe(abt::FBuilddir &row) {
+    bool retval = true;
+    (void)row;
+    // insert builddir into index ind_builddir
+    if (true) { // user-defined insert condition
+        bool success = ind_builddir_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "abt.duplicate_key  xref:abt.FDb.ind_builddir"; // check for duplicate key
+            return false;
+        }
+    }
+    abt::FCompiler* p_compiler = abt::ind_compiler_Find(compiler_Get(row));
+    if (UNLIKELY(!p_compiler)) {
+        algo_lib::ResetErrtext() << "abt.bad_xref  index:abt.FDb.ind_compiler" << Keyval("key", compiler_Get(row));
+        return false;
+    }
+    // builddir: save pointer to compiler
+    if (true) { // user-defined insert condition
+        row.p_compiler = p_compiler;
+    }
+    return retval;
+}
+
+// --- abt.FDb.ind_builddir.Find
+// Find row by key. Return NULL if not found.
+abt::FBuilddir* abt::ind_builddir_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
+    abt::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
+    abt::FBuilddir* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).builddir == key;
+        if (done) break;
+        e         = &ret->ind_builddir_next;
+    } while (true);
+    return ret;
+}
+
+// --- abt.FDb.ind_builddir.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+abt::FBuilddir& abt::ind_builddir_GetOrCreate(const algo::strptr& key) {
+    abt::FBuilddir* ret = ind_builddir_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &builddir_Alloc();
+        (*ret).builddir = key;
+        bool good = builddir_XrefMaybe(*ret);
+        if (!good) {
+            builddir_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "abt.create_error  table:ind_builddir  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- abt.FDb.ind_builddir.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) {
+    ind_builddir_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_builddir_next == (abt::FBuilddir*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        abt::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index];
+        do {
+            abt::FBuilddir* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).builddir == row.builddir) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_builddir_next;
+        } while (true);
+        if (retval) {
+            row.ind_builddir_next = *prev;
+            _db.ind_builddir_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- abt.FDb.ind_builddir.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void abt::ind_builddir_Remove(abt::FBuilddir& row) {
+    if (LIKELY(row.ind_builddir_next != (abt::FBuilddir*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        abt::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
+        while (abt::FBuilddir *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_builddir_next; // unlink (singly linked list)
+                _db.ind_builddir_n--;
+                row.ind_builddir_next = (abt::FBuilddir*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_builddir_next;
+        }
+    }
+}
+
+// --- abt.FDb.ind_builddir.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void abt::ind_builddir_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_builddir_buckets_n;
+    u32 new_nelems   = _db.ind_builddir_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(abt::FBuilddir*);
+        u32 new_size = new_nbuckets * sizeof(abt::FBuilddir*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        abt::FBuilddir* *new_buckets = (abt::FBuilddir**)abt::lpool_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("abt.out_of_memory  field:abt.FDb.ind_builddir");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_builddir_buckets_n; i++) {
+            abt::FBuilddir* elem = _db.ind_builddir_buckets_elems[i];
+            while (elem) {
+                abt::FBuilddir &row        = *elem;
+                abt::FBuilddir* next       = row.ind_builddir_next;
+                u32 index          = algo::Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
+                row.ind_builddir_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        abt::lpool_FreeMem(_db.ind_builddir_buckets_elems, old_size);
+        _db.ind_builddir_buckets_elems = new_buckets;
+        _db.ind_builddir_buckets_n = new_nbuckets;
+    }
+}
+
 // --- abt.FDb.zd_inclstack.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void abt::zd_inclstack_Insert(abt::FSrcfile& row) {
@@ -4630,7 +4922,6 @@ void abt::FDb_Init() {
         _db.target_lary[i]  = target_first;
         target_first    += 1ULL<<i;
     }
-    _db.c_compiler = NULL;
     // initialize hash table for abt::FTargsrc;
     _db.ind_targsrc_n             	= 0; // (abt.FDb.ind_targsrc)
     _db.ind_targsrc_buckets_n     	= 4; // (abt.FDb.ind_targsrc)
@@ -4874,6 +5165,26 @@ void abt::FDb_Init() {
         FatalErrorExit("out of memory"); // (abt.FDb.ind_filestat)
     }
     memset(_db.ind_filestat_buckets_elems, 0, sizeof(abt::FFilestat*)*_db.ind_filestat_buckets_n); // (abt.FDb.ind_filestat)
+    // initialize LAry builddir (abt.FDb.builddir)
+    _db.builddir_n = 0;
+    memset(_db.builddir_lary, 0, sizeof(_db.builddir_lary)); // zero out all level pointers
+    abt::FBuilddir* builddir_first = (abt::FBuilddir*)abt::lpool_AllocMem(sizeof(abt::FBuilddir) * (u64(1)<<4));
+    if (!builddir_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.builddir_lary[i]  = builddir_first;
+        builddir_first    += 1ULL<<i;
+    }
+    // initialize hash table for abt::FBuilddir;
+    _db.ind_builddir_n             	= 0; // (abt.FDb.ind_builddir)
+    _db.ind_builddir_buckets_n     	= 4; // (abt.FDb.ind_builddir)
+    _db.ind_builddir_buckets_elems 	= (abt::FBuilddir**)abt::lpool_AllocMem(sizeof(abt::FBuilddir*)*_db.ind_builddir_buckets_n); // initial buckets (abt.FDb.ind_builddir)
+    if (!_db.ind_builddir_buckets_elems) {
+        FatalErrorExit("out of memory"); // (abt.FDb.ind_builddir)
+    }
+    memset(_db.ind_builddir_buckets_elems, 0, sizeof(abt::FBuilddir*)*_db.ind_builddir_buckets_n); // (abt.FDb.ind_builddir)
+    _db.c_builddir = NULL;
     _db.zd_inclstack_head = NULL; // (abt.FDb.zd_inclstack)
     _db.zd_inclstack_n = 0; // (abt.FDb.zd_inclstack)
     _db.zd_inclstack_tail = NULL; // (abt.FDb.zd_inclstack)
@@ -4885,6 +5196,12 @@ void abt::FDb_Init() {
 // --- abt.FDb..Uninit
 void abt::FDb_Uninit() {
     abt::FDb &row = _db; (void)row;
+
+    // abt.FDb.ind_builddir.Uninit (Thash)  //
+    // skip destruction of ind_builddir in global scope
+
+    // abt.FDb.builddir.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // abt.FDb.ind_filestat.Uninit (Thash)  //
     // skip destruction of ind_filestat in global scope
@@ -5791,87 +6108,14 @@ void abt::c_alldep_Reserve(abt::FTarget& target, u32 n) {
     }
 }
 
-// --- abt.FTarget.c_alllib.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-void abt::c_alllib_Insert(abt::FTarget& target, abt::FSyslib& row) {
-    // reserve space
-    c_alllib_Reserve(target, 1);
-    u32 n  = target.c_alllib_n;
-    u32 at = n;
-    abt::FSyslib* *elems = target.c_alllib_elems;
-    elems[at] = &row;
-    target.c_alllib_n = n+1;
-
-}
-
-// --- abt.FTarget.c_alllib.ScanInsertMaybe
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Linear search is used to locate the element.
-// Return value: whether element was inserted into array.
-bool abt::c_alllib_ScanInsertMaybe(abt::FTarget& target, abt::FSyslib& row) {
-    bool retval = true;
-    u32 n  = target.c_alllib_n;
-    for (u32 i = 0; i < n; i++) {
-        if (target.c_alllib_elems[i] == &row) {
-            retval = false;
-            break;
-        }
-    }
-    if (retval) {
-        // reserve space
-        c_alllib_Reserve(target, 1);
-        target.c_alllib_elems[n] = &row;
-        target.c_alllib_n = n+1;
-    }
-    return retval;
-}
-
-// --- abt.FTarget.c_alllib.Remove
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_alllib_Remove(abt::FTarget& target, abt::FSyslib& row) {
-    int lim = target.c_alllib_n;
-    abt::FSyslib* *elems = target.c_alllib_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        abt::FSyslib* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(abt::FSyslib*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            target.c_alllib_n = lim - 1;
-            break;
-        }
-    }
-}
-
-// --- abt.FTarget.c_alllib.Reserve
-// Reserve space in index for N more elements;
-void abt::c_alllib_Reserve(abt::FTarget& target, u32 n) {
-    u32 old_max = target.c_alllib_max;
-    if (UNLIKELY(target.c_alllib_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(abt::FSyslib*);
-        u32 new_size = new_max * sizeof(abt::FSyslib*);
-        void *new_mem = abt::lpool_ReallocMem(target.c_alllib_elems, old_size, new_size);
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("abt.out_of_memory  field:abt.FTarget.c_alllib");
-        }
-        target.c_alllib_elems = (abt::FSyslib**)new_mem;
-        target.c_alllib_max = new_max;
-    }
-}
-
 // --- abt.FTarget..Init
 // Set all fields to initial values.
 void abt::FTarget_Init(abt::FTarget& target) {
     target.ood = bool(false);
-    target.targ_start = NULL;
-    target.targ_compile = NULL;
-    target.targ_link = NULL;
-    target.targ_end = NULL;
+    target.syscmd_start = NULL;
+    target.syscmd_compile = NULL;
+    target.syscmd_link = NULL;
+    target.syscmd_end = NULL;
     target.c_targsrc_elems = NULL; // (abt.FTarget.c_targsrc)
     target.c_targsrc_n = 0; // (abt.FTarget.c_targsrc)
     target.c_targsrc_max = 0; // (abt.FTarget.c_targsrc)
@@ -5888,11 +6132,9 @@ void abt::FTarget_Init(abt::FTarget& target) {
     target.c_alldep_elems = NULL; // (abt.FTarget.c_alldep)
     target.c_alldep_n = 0; // (abt.FTarget.c_alldep)
     target.c_alldep_max = 0; // (abt.FTarget.c_alldep)
-    target.c_alllib_elems = NULL; // (abt.FTarget.c_alllib)
-    target.c_alllib_n = 0; // (abt.FTarget.c_alllib)
-    target.c_alllib_max = 0; // (abt.FTarget.c_alllib)
     target.p_ns = NULL;
     target.libdep_visited = bool(false);
+    target.origsel = bool(false);
     target.ind_target_next = (abt::FTarget*)-1; // (abt.FDb.ind_target) not-in-hash
     target.zs_sel_target_next = (abt::FTarget*)-1; // (abt.FDb.zs_sel_target) not-in-list
     target.zs_origsel_target_next = (abt::FTarget*)-1; // (abt.FDb.zs_origsel_target) not-in-list
@@ -5904,9 +6146,6 @@ void abt::FTarget_Uninit(abt::FTarget& target) {
     ind_target_Remove(row); // remove target from index ind_target
     zs_sel_target_Remove(row); // remove target from index zs_sel_target
     zs_origsel_target_Remove(row); // remove target from index zs_origsel_target
-
-    // abt.FTarget.c_alllib.Uninit (Ptrary)  //Transitive closure of all libs for this target
-    abt::lpool_FreeMem(target.c_alllib_elems, sizeof(abt::FSyslib*)*target.c_alllib_max); // (abt.FTarget.c_alllib)
 
     // abt.FTarget.c_alldep.Uninit (Ptrary)  //Transitive closure of all dependencies for this target
     abt::lpool_FreeMem(target.c_alldep_elems, sizeof(abt::FTarget*)*target.c_alldep_max); // (abt.FTarget.c_alldep)
@@ -6081,12 +6320,6 @@ void abt::regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) {
     Regx_Print(tool_opt.regx_target, out);
 }
 
-// --- abt.FToolOpt..Init
-// Set all fields to initial values.
-void abt::FToolOpt_Init(abt::FToolOpt& tool_opt) {
-    tool_opt.select = bool(false);
-}
-
 // --- abt.FUname.msghdr.CopyOut
 // Copy fields out of row
 void abt::uname_CopyOut(abt::FUname &row, dev::Uname &out) {
@@ -6190,6 +6423,7 @@ const char* abt::value_ToCstr(const abt::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case abt_TableId_dev_Arch          : ret = "dev.Arch";  break;
+        case abt_TableId_dev_Builddir      : ret = "dev.Builddir";  break;
         case abt_TableId_dev_Cfg           : ret = "dev.Cfg";  break;
         case abt_TableId_dev_Compiler      : ret = "dev.Compiler";  break;
         case abt_TableId_dev_Include       : ret = "dev.Include";  break;
@@ -6327,8 +6561,16 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
         }
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','B','u','i','l'): {
+                    if (memcmp(rhs.elems+8,"ddir",4)==0) { value_SetEnum(parent,abt_TableId_dev_Builddir); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','C','o','m','p'): {
                     if (memcmp(rhs.elems+8,"iler",4)==0) { value_SetEnum(parent,abt_TableId_dev_Compiler); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','b','u','i','l'): {
+                    if (memcmp(rhs.elems+8,"ddir",4)==0) { value_SetEnum(parent,abt_TableId_dev_builddir); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','c','o','m','p'): {
@@ -6404,6 +6646,26 @@ bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) {
 // cfmt:abt.TableId.String  printfmt:Raw
 void abt::TableId_Print(abt::TableId& row, algo::cstring& str) {
     abt::value_Print(row, str);
+}
+
+// --- abt.config..Print
+// print string representation of ROW to string STR
+// cfmt:abt.config.String  printfmt:Tuple
+void abt::config_Print(abt::config& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "abt.config";
+
+    algo::Smallstr50_Print(row.builddir, temp);
+    PrintAttrSpaceReset(str,"builddir", temp);
+
+    i32_Print(row.ood_src, temp);
+    PrintAttrSpaceReset(str,"ood_src", temp);
+
+    i32_Print(row.ood_target, temp);
+    PrintAttrSpaceReset(str,"ood_target", temp);
+
+    algo::Smallstr20_Print(row.cache, temp);
+    PrintAttrSpaceReset(str,"cache", temp);
 }
 
 // --- abt...SizeCheck

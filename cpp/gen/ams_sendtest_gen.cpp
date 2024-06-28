@@ -664,7 +664,7 @@ void* ams_sendtest::child_AllocMem() {
     if (bsr < 32) {
         lev = _db.child_lary[bsr];
         if (!lev) {
-            lev=(ams_sendtest::FChild*)algo_lib::malloc_AllocMem(sizeof(ams_sendtest::FChild) * (u64(1)<<bsr));
+            lev=(ams_sendtest::FChild*)algo_lib::lpool_AllocMem(sizeof(ams_sendtest::FChild) * (u64(1)<<bsr));
             _db.child_lary[bsr] = lev;
         }
     }
@@ -725,7 +725,7 @@ void ams_sendtest::FDb_Init() {
     // initialize LAry child (ams_sendtest.FDb.child)
     _db.child_n = 0;
     memset(_db.child_lary, 0, sizeof(_db.child_lary)); // zero out all level pointers
-    ams_sendtest::FChild* child_first = (ams_sendtest::FChild*)algo_lib::malloc_AllocMem(sizeof(ams_sendtest::FChild) * (u64(1)<<4));
+    ams_sendtest::FChild* child_first = (ams_sendtest::FChild*)algo_lib::lpool_AllocMem(sizeof(ams_sendtest::FChild) * (u64(1)<<4));
     if (!child_first) {
         FatalErrorExit("out of memory");
     }

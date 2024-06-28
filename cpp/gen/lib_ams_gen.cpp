@@ -48,9 +48,14 @@ namespace lib_ams { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_gsymbol
     const char* amsdb_streamtype_0("0");
+    const char* amsdb_streamtype_ack("ack");
     const char* amsdb_streamtype_ctl("ctl");
+    const char* amsdb_streamtype_fetch("fetch");
     const char* amsdb_streamtype_io("io");
     const char* amsdb_streamtype_out("out");
+    const char* amsdb_streamtype_prod("prod");
+    const char* amsdb_streamtype_seq("seq");
+    const char* amsdb_streamtype_sup("sup");
     const char* amsdb_streamtype_trace("trace");
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_print_proto
@@ -1874,9 +1879,14 @@ static void lib_ams::streamtype_LoadStatic() {
         const char *s;
     } data[] = {
         { "amsdb.streamtype  streamtype:0  id:0  comment:\"No stream\"" }
+        ,{ "amsdb.streamtype  streamtype:ack  id:10  comment:\"Commit Ack messages\"" }
         ,{ "amsdb.streamtype  streamtype:ctl  id:1  comment:\"AMS control messages\"" }
+        ,{ "amsdb.streamtype  streamtype:fetch  id:11  comment:\"Consumer messages\"" }
         ,{ "amsdb.streamtype  streamtype:io  id:5  comment:\"Messages intended for file output\"" }
         ,{ "amsdb.streamtype  streamtype:out  id:2  comment:\"Log messages, alarms\"" }
+        ,{ "amsdb.streamtype  streamtype:prod  id:8  comment:\"Producer messages\"" }
+        ,{ "amsdb.streamtype  streamtype:seq  id:9  comment:\"Sequenced messages\"" }
+        ,{ "amsdb.streamtype  streamtype:sup  id:7  comment:\"Supervision messages\"" }
         ,{ "amsdb.streamtype  streamtype:trace  id:6  comment:\"Trace messages\"" }
         ,{NULL}
     };

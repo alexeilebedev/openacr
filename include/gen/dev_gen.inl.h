@@ -265,6 +265,49 @@ inline  dev::Linelim::Linelim() {
     dev::Linelim_Init(*this);
 }
 
+// --- dev.Mdmark..Ctor
+inline  dev::Mdmark::Mdmark() {
+}
+
+// --- dev.MdmarkCase.mdmark.GetEnum
+// Get value of field as enum type
+inline dev_MdmarkCaseEnum dev::mdmark_GetEnum(const dev::MdmarkCase& parent) {
+    return dev_MdmarkCaseEnum(parent.mdmark);
+}
+
+// --- dev.MdmarkCase.mdmark.SetEnum
+// Set value of field from enum type.
+inline void dev::mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) {
+    parent.mdmark = u8(rhs);
+}
+
+// --- dev.MdmarkCase.mdmark.Cast
+inline  dev::MdmarkCase::operator dev_MdmarkCaseEnum() const {
+    return dev_MdmarkCaseEnum((*this).mdmark);
+}
+
+// --- dev.MdmarkCase..Init
+// Set all fields to initial values.
+inline void dev::MdmarkCase_Init(dev::MdmarkCase& parent) {
+    parent.mdmark = u8(0);
+}
+
+// --- dev.MdmarkCase..Ctor
+inline  dev::MdmarkCase::MdmarkCase() {
+    dev::MdmarkCase_Init(*this);
+}
+
+// --- dev.MdmarkCase..FieldwiseCtor
+inline  dev::MdmarkCase::MdmarkCase(u8 in_mdmark)
+    : mdmark(in_mdmark)
+ {
+}
+
+// --- dev.MdmarkCase..EnumCtor
+inline  dev::MdmarkCase::MdmarkCase(dev_MdmarkCaseEnum arg) {
+    this->mdmark = u8(arg);
+}
+
 // --- dev.Mdsection..Ctor
 inline  dev::Mdsection::Mdsection() {
 }
@@ -361,8 +404,8 @@ inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in
  {
 }
 
-// --- dev.Readmecat..Ctor
-inline  dev::Readmecat::Readmecat() {
+// --- dev.Readmesort..Ctor
+inline  dev::Readmesort::Readmesort() {
 }
 
 // --- dev.Sandbox..Ctor
@@ -581,6 +624,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdmark &row) {// cfmt:dev.Mdmark.String
+    dev::Mdmark_Print(const_cast<dev::Mdmark&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdsection &row) {// cfmt:dev.Mdsection.String
     dev::Mdsection_Print(const_cast<dev::Mdsection&>(row), str);
     return str;
@@ -616,8 +664,8 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &r
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmecat &row) {// cfmt:dev.Readmecat.String
-    dev::Readmecat_Print(const_cast<dev::Readmecat&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmesort &row) {// cfmt:dev.Readmesort.String
+    dev::Readmesort_Print(const_cast<dev::Readmesort&>(row), str);
     return str;
 }
 

@@ -43,7 +43,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case command_FieldId_target        : ret = "target";  break;
         case command_FieldId_in            : ret = "in";  break;
-        case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_cfg           : ret = "cfg";  break;
         case command_FieldId_compiler      : ret = "compiler";  break;
         case command_FieldId_uname         : ret = "uname";  break;
@@ -53,6 +52,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_listincl      : ret = "listincl";  break;
         case command_FieldId_build         : ret = "build";  break;
         case command_FieldId_preproc       : ret = "preproc";  break;
+        case command_FieldId_srcfile       : ret = "srcfile";  break;
         case command_FieldId_clean         : ret = "clean";  break;
         case command_FieldId_dry_run       : ret = "dry_run";  break;
         case command_FieldId_maxjobs       : ret = "maxjobs";  break;
@@ -66,6 +66,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_report        : ret = "report";  break;
         case command_FieldId_jcdb          : ret = "jcdb";  break;
         case command_FieldId_cache         : ret = "cache";  break;
+        case command_FieldId_shortlink     : ret = "shortlink";  break;
         case command_FieldId_readme        : ret = "readme";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_section       : ret = "section";  break;
@@ -74,6 +75,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_link          : ret = "link";  break;
         case command_FieldId_anchor        : ret = "anchor";  break;
         case command_FieldId_print         : ret = "print";  break;
+        case command_FieldId_external      : ret = "external";  break;
+        case command_FieldId_evalcmd       : ret = "evalcmd";  break;
         case command_FieldId_query         : ret = "query";  break;
         case command_FieldId_where         : ret = "where";  break;
         case command_FieldId_del           : ret = "del";  break;
@@ -119,7 +122,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_create        : ret = "create";  break;
         case command_FieldId_finput        : ret = "finput";  break;
         case command_FieldId_foutput       : ret = "foutput";  break;
-        case command_FieldId_srcfile       : ret = "srcfile";  break;
         case command_FieldId_gstatic       : ret = "gstatic";  break;
         case command_FieldId_indexed       : ret = "indexed";  break;
         case command_FieldId_nstype        : ret = "nstype";  break;
@@ -166,6 +168,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_shell         : ret = "shell";  break;
         case command_FieldId_serv          : ret = "serv";  break;
         case command_FieldId_in_dir        : ret = "in_dir";  break;
+        case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
         case command_FieldId_trace         : ret = "trace";  break;
         case command_FieldId_key           : ret = "key";  break;
@@ -988,6 +991,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('d','r','y','_','r','u','n'): {
                     value_SetEnum(parent,command_FieldId_dry_run); ret = true; break;
                 }
+                case LE_STR7('e','v','a','l','c','m','d'): {
+                    value_SetEnum(parent,command_FieldId_evalcmd); ret = true; break;
+                }
                 case LE_STR7('e','x','c','l','u','d','e'): {
                     value_SetEnum(parent,command_FieldId_exclude); ret = true; break;
                 }
@@ -1125,6 +1131,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('d','a','t','a','_','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_data_dir); ret = true; break;
                 }
+                case LE_STR8('e','x','t','e','r','n','a','l'): {
+                    value_SetEnum(parent,command_FieldId_external); ret = true; break;
+                }
                 case LE_STR8('l','i','s','t','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_listfunc); ret = true; break;
                 }
@@ -1224,6 +1233,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','e','p','a','r','a','t','o'): {
                     if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,command_FieldId_separator); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','h','o','r','t','l','i','n'): {
+                    if (memcmp(rhs.elems+8,"k",1)==0) { value_SetEnum(parent,command_FieldId_shortlink); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','k','i','p','_','i','n','i'): {
@@ -1442,6 +1455,36 @@ bool command::target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
     return retval;
 }
 
+// --- command.abt.cfg.Print
+// Print back to string
+void command::cfg_Print(command::abt& parent, algo::cstring &out) {
+    Regx_Print(parent.cfg, out);
+}
+
+// --- command.abt.cfg.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::cfg_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.cfg, in, true);
+    return retval;
+}
+
+// --- command.abt.srcfile.Print
+// Print back to string
+void command::srcfile_Print(command::abt& parent, algo::cstring &out) {
+    Regx_Print(parent.srcfile, out);
+}
+
+// --- command.abt.srcfile.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::srcfile_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.srcfile, in, true);
+    return retval;
+}
+
 // --- command.abt.disas.Print
 // Print back to string
 void command::disas_Print(command::abt& parent, algo::cstring &out) {
@@ -1558,12 +1601,8 @@ bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo:
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
             break;
         }
-        case command_FieldId_out_dir: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.out_dir, strval);
-            break;
-        }
         case command_FieldId_cfg: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
+            retval = cfg_ReadStrptrMaybe(parent, strval);
             break;
         }
         case command_FieldId_compiler: {
@@ -1596,6 +1635,10 @@ bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo:
         }
         case command_FieldId_preproc: {
             retval = bool_ReadStrptrMaybe(parent.preproc, strval);
+            break;
+        }
+        case command_FieldId_srcfile: {
+            retval = srcfile_ReadStrptrMaybe(parent, strval);
             break;
         }
         case command_FieldId_clean: {
@@ -1650,6 +1693,10 @@ bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo:
             retval = cache_ReadStrptrMaybe(parent, strval);
             break;
         }
+        case command_FieldId_shortlink: {
+            retval = bool_ReadStrptrMaybe(parent.shortlink, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -1680,8 +1727,7 @@ bool command::abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple) {
 void command::abt_Init(command::abt& parent) {
     Regx_ReadSql(parent.target, "", true);
     parent.in = algo::strptr("data");
-    parent.out_dir = algo::strptr("");
-    parent.cfg = algo::strptr("");
+    Regx_ReadSql(parent.cfg, "", true);
     parent.compiler = algo::strptr("");
     parent.uname = algo::strptr("");
     parent.arch = algo::strptr("");
@@ -1690,6 +1736,7 @@ void command::abt_Init(command::abt& parent) {
     parent.listincl = bool(false);
     parent.build = bool(false);
     parent.preproc = bool(false);
+    Regx_ReadSql(parent.srcfile, "%", true);
     parent.clean = bool(false);
     parent.dry_run = bool(false);
     parent.maxjobs = i32(0);
@@ -1703,6 +1750,7 @@ void command::abt_Init(command::abt& parent) {
     parent.report = bool(true);
     parent.jcdb = algo::strptr("");
     parent.cache = u8(0);
+    parent.shortlink = bool(false);
 }
 
 // --- command.abt..ToCmdline
@@ -1739,15 +1787,9 @@ void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.out_dir == "")) {
+    if (!(row.cfg.expr == "")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.out_dir, temp);
-        str << " -out_dir:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.cfg == "")) {
-        ch_RemoveAll(temp);
-        Smallstr50_Print(row.cfg, temp);
+        command::cfg_Print(const_cast<command::abt&>(row), temp);
         str << " -cfg:";
         strptr_PrintBash(temp,str);
     }
@@ -1797,6 +1839,12 @@ void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         bool_Print(row.preproc, temp);
         str << " -preproc:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.srcfile.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::srcfile_Print(const_cast<command::abt&>(row), temp);
+        str << " -srcfile:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.clean == false)) {
@@ -1877,6 +1925,12 @@ void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
         str << " -cache:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.shortlink == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.shortlink, temp);
+        str << " -shortlink:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.abt..GetAnon
@@ -1899,9 +1953,6 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             *out_anon = true;
         } break;
         case command_FieldId_in: { // $comment
-            *out_anon = false;
-        } break;
-        case command_FieldId_out_dir: { // $comment
             *out_anon = false;
         } break;
         case command_FieldId_cfg: { // $comment
@@ -1940,6 +1991,9 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
             *out_anon = false;
             retval=0;
             out_dflt="Y";
+        } break;
+        case command_FieldId_srcfile: { // bool: no argument required but value may be specified as preproc:Y
+            *out_anon = false;
         } break;
         case command_FieldId_clean: { // bool: no argument required but value may be specified as preproc:Y
             *out_anon = false;
@@ -1993,6 +2047,11 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
         } break;
         case command_FieldId_cache: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
+        } break;
+        case command_FieldId_shortlink: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
         } break;
         default:
         retval=-1; // unrecognized
@@ -2091,6 +2150,14 @@ bool command::abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field,
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
             break;
         }
+        case command_FieldId_external: {
+            retval = bool_ReadStrptrMaybe(parent.external, strval);
+            break;
+        }
+        case command_FieldId_evalcmd: {
+            retval = bool_ReadStrptrMaybe(parent.evalcmd, strval);
+            break;
+        }
         default: break;
     }
     if (!retval) {
@@ -2129,6 +2196,8 @@ void command::abt_md_Init(command::abt_md& parent) {
     parent.anchor = bool(false);
     parent.print = bool(false);
     parent.dry_run = bool(false);
+    parent.external = bool(false);
+    parent.evalcmd = bool(true);
 }
 
 // --- command.abt_md..ToCmdline
@@ -2211,6 +2280,18 @@ void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.external == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.external, temp);
+        str << " -external:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.evalcmd == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.evalcmd, temp);
+        str << " -evalcmd:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.abt_md..GetAnon
@@ -2268,6 +2349,16 @@ i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
             out_dflt="Y";
         } break;
         case command_FieldId_dry_run: { // bool: no argument required but value may be specified as print:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_external: { // bool: no argument required but value may be specified as dry_run:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_evalcmd: { // bool: no argument required but value may be specified as external:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -2475,6 +2566,18 @@ void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args)
         *arg << "-dry_run:";
         bool_Print(parent.cmd.dry_run, *arg);
     }
+
+    if (parent.cmd.external != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-external:";
+        bool_Print(parent.cmd.external, *arg);
+    }
+
+    if (parent.cmd.evalcmd != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-evalcmd:";
+        bool_Print(parent.cmd.evalcmd, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -2638,16 +2741,10 @@ void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.out_dir != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-out_dir:";
-        cstring_Print(parent.cmd.out_dir, *arg);
-    }
-
-    if (parent.cmd.cfg != "") {
+    if (parent.cmd.cfg.expr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cfg:";
-        Smallstr50_Print(parent.cmd.cfg, *arg);
+        command::cfg_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.compiler != "") {
@@ -2696,6 +2793,12 @@ void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-preproc:";
         bool_Print(parent.cmd.preproc, *arg);
+    }
+
+    if (parent.cmd.srcfile.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfile:";
+        command::srcfile_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.clean != false) {
@@ -2774,6 +2877,12 @@ void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cache:";
         command::cache_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.shortlink != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-shortlink:";
+        bool_Print(parent.cmd.shortlink, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -10051,6 +10160,21 @@ void command::apm_proc_Uninit(command::apm_proc& parent) {
     apm_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.aqlite.ns.Print
+// Print back to string
+void command::ns_Print(command::aqlite& parent, algo::cstring &out) {
+    Regx_Print(parent.ns, out);
+}
+
+// --- command.aqlite.ns.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.ns, in, true);
+    return retval;
+}
+
 // --- command.aqlite..ReadFieldMaybe
 bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -10067,6 +10191,10 @@ bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field,
         }
         case command_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
+            break;
+        }
+        case command_FieldId_ns: {
+            retval = ns_ReadStrptrMaybe(parent, strval);
             break;
         }
         default: break;
@@ -10092,6 +10220,14 @@ bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple)
         }
     }ind_end;
     return retval;
+}
+
+// --- command.aqlite..Init
+// Set all fields to initial values.
+void command::aqlite_Init(command::aqlite& parent) {
+    parent.in = algo::strptr("data");
+    parent.data = algo::strptr("data");
+    Regx_ReadSql(parent.ns, "%", true);
 }
 
 // --- command.aqlite..ToCmdline
@@ -10134,6 +10270,12 @@ void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
     cstring_Print(row.cmd, temp);
     str << " -cmd:";
     strptr_PrintBash(temp,str);
+    if (!(row.ns.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::ns_Print(const_cast<command::aqlite&>(row), temp);
+        str << " -ns:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.aqlite..GetAnon
@@ -10160,6 +10302,9 @@ i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         } break;
         case command_FieldId_cmd: { // $comment
             *out_anon = true;
+        } break;
+        case command_FieldId_ns: { // $comment
+            *out_anon = false;
         } break;
         default:
         retval=-1; // unrecognized
@@ -10322,6 +10467,12 @@ void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args)
         cstring *arg = &ary_Alloc(args);
         *arg << "-cmd:";
         cstring_Print(parent.cmd.cmd, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -19057,6 +19208,242 @@ void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
     orgfile_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.samp_meng..ReadFieldMaybe
+bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.samp_meng..ReadTupleMaybe
+// Read fields of command::samp_meng from attributes of ascii tuple TUPLE
+bool command::samp_meng_ReadTupleMaybe(command::samp_meng &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = samp_meng_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.samp_meng..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::samp_meng_ToCmdline(command::samp_meng& row) {
+    tempstr ret;
+    ret << "bin/samp_meng ";
+    samp_meng_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.samp_meng..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.samp_meng.Argv  printfmt:Tuple
+void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.samp_meng..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    (void)out_dflt;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- command.samp_meng_proc.samp_meng.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::samp_meng_Start(command::samp_meng_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(samp_meng_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(samp_meng_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= samp_meng_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.samp_meng_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.samp_meng_proc.samp_meng.StartRead
+// Start subprocess & Read output
+algo::Fildes command::samp_meng_StartRead(command::samp_meng_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    samp_meng_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.samp_meng_proc.samp_meng.Kill
+// Kill subprocess and wait
+void command::samp_meng_Kill(command::samp_meng_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        samp_meng_Wait(parent);
+    }
+}
+
+// --- command.samp_meng_proc.samp_meng.Wait
+// Wait for subprocess to return
+void command::samp_meng_Wait(command::samp_meng_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.samp_meng_proc.samp_meng.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::samp_meng_Exec(command::samp_meng_proc& parent) {
+    samp_meng_Start(parent);
+    samp_meng_Wait(parent);
+    return parent.status;
+}
+
+// --- command.samp_meng_proc.samp_meng.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::samp_meng_ExecX(command::samp_meng_proc& parent) {
+    int rc = samp_meng_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",samp_meng_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.samp_meng_proc.samp_meng.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::samp_meng_Execv(command::samp_meng_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    samp_meng_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.samp_meng_proc.samp_meng.ToCmdline
+algo::tempstr command::samp_meng_ToCmdline(command::samp_meng_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::samp_meng_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.samp_meng_proc.samp_meng.ToArgv
+// Form array from the command line
+void command::samp_meng_ToArgv(command::samp_meng_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.samp_meng_proc..Uninit
+void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
+    command::samp_meng_proc &row = parent; (void)row;
+
+    // command.samp_meng_proc.samp_meng.Uninit (Exec)  //
+    samp_meng_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.samp_regx.style.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -23021,7 +23408,9 @@ const char* command::format_ToCstr(const command::ssimfilt& parent) {
         case command_ssimfilt_format_field : ret = "field";  break;
         case command_ssimfilt_format_cmd   : ret = "cmd";  break;
         case command_ssimfilt_format_json  : ret = "json";  break;
+        case command_ssimfilt_format_stablefld: ret = "stablefld";  break;
         case command_ssimfilt_format_table : ret = "table";  break;
+        case command_ssimfilt_format_mdtable: ret = "mdtable";  break;
     }
     return ret;
 }
@@ -23074,6 +23463,23 @@ bool command::format_SetStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs)
                 }
                 case LE_STR5('t','a','b','l','e'): {
                     format_SetEnum(parent,command_ssimfilt_format_table); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('m','d','t','a','b','l','e'): {
+                    format_SetEnum(parent,command_ssimfilt_format_mdtable); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('s','t','a','b','l','e','f','l'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { format_SetEnum(parent,command_ssimfilt_format_stablefld); ret = true; break; }
+                    break;
                 }
             }
             break;

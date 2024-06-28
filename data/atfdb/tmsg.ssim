@@ -64,15 +64,72 @@ atfdb.tmsg  tmsg:acr.UpdateGood/100010.in  istuple:N  msg:'dmmeta.ns  ns:acr    
 atfdb.tmsg  tmsg:acr.Where/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""'
 atfdb.tmsg  tmsg:acr.Where/100010.in  istuple:N  msg:'dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.Where/100020.in  istuple:N  msg:'dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""'
-atfdb.tmsg  tmsg:acr_compl.CustomData/100000.in  istuple:N  msg:"gclidb.gclicmdt  gclicmdt:mrreviewrm.ghp      gmethod:DELETE  uri:repos/$KEYID/pulls/$ISSUE/requested_reviewers     comment:github"
-atfdb.tmsg  tmsg:acr_compl.CustomData/100010.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mrsearch.ghp        gmethod:GET     uri:"search/issues?q=is:pr+repo:$KEYID$COND"          comment:github'
-atfdb.tmsg  tmsg:acr_compl.CustomData/100020.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.ghp          gmethod:GET     uri:"repos/$KEYID/milestones?state=open"              comment:github'
-atfdb.tmsg  tmsg:acr_compl.CustomData/100030.in  istuple:N  msg:'gclidb.gclicmdt  gclicmdt:mslist.glpat        gmethod:GET     uri:"api/v4/projects/$KEYID/milestones?active=true"   comment:gitlab'
+atfdb.tmsg  tmsg:acr_compl.Acr11/100000.in  istuple:N  msg:"garden.flower  flower:rose"
+atfdb.tmsg  tmsg:acr_compl.Acr11/100010.in  istuple:N  msg:"garden.flower  flower:tulip"
+atfdb.tmsg  tmsg:acr_compl.Acr11/100020.in  istuple:N  msg:"garden.fruit  fruit:apple"
+atfdb.tmsg  tmsg:acr_compl.Acr11/100030.in  istuple:N  msg:"garden.fruit  fruit:plum"
+atfdb.tmsg  tmsg:acr_compl.Acr11/100040.in  istuple:N  msg:"garden.fruit  fruit:peach"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100000.in  istuple:N  msg:'dmmeta.ns  ns:""'
+atfdb.tmsg  tmsg:acr_compl.Acr12/100010.in  istuple:N  msg:"dmmeta.ns  ns:acr"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100020.in  istuple:N  msg:"dmmeta.ns  ns:algo_lib"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100030.in  istuple:N  msg:"dmmeta.ns  ns:algo"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100040.in  istuple:N  msg:"dmmeta.ns  ns:command"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100050.in  istuple:N  msg:"dmmeta.ns  ns:dmmeta"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100060.in  istuple:N  msg:"dmmeta.ns  ns:garden"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100070.in  istuple:N  msg:'dmmeta.ctype  ctype:""'
+atfdb.tmsg  tmsg:acr_compl.Acr12/100080.in  istuple:N  msg:"dmmeta.ctype  ctype:algo.Smallstr50"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100090.in  istuple:N  msg:"dmmeta.ctype  ctype:algo.cstring"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100100.in  istuple:N  msg:"dmmeta.ctype  ctype:algo_lib.Cmdline"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100110.in  istuple:N  msg:"dmmeta.ctype  ctype:algo_lib.FDb"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100120.in  istuple:N  msg:"dmmeta.ctype  ctype:acr.FDb"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100130.in  istuple:N  msg:"dmmeta.ctype  ctype:command.acr"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100140.in  istuple:N  msg:"dmmeta.ctype  ctype:dmmeta.Ssimfile"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100150.in  istuple:N  msg:"dmmeta.ctype  ctype:garden.Flower"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100160.in  istuple:N  msg:"dmmeta.ctype  ctype:garden.Fruit"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100170.in  istuple:N  msg:'dmmeta.field  field:""'
+atfdb.tmsg  tmsg:acr_compl.Acr12/100180.in  istuple:N  msg:"dmmeta.field  field:acr.FDb.cmdline  arg:command.acr"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100190.in  istuple:N  msg:"dmmeta.field  field:dmmeta.Ssimfile.ssimfile  arg:algo.Smallstr50"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100200.in  istuple:N  msg:"dmmeta.field  field:algo_lib.FDb.cmdline  arg:algo_lib.Cmdline"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100210.in  istuple:N  msg:"dmmeta.field  field:command.acr.query arg:algo.cstring"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100220.in  istuple:N  msg:"dmmeta.field  field:garden.Flower.flower arg:algo.Smallstr50"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100230.in  istuple:N  msg:"dmmeta.field  field:garden.Fruit.fruit arg:algo.Smallstr50"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100240.in  istuple:N  msg:"dmmeta.ssimfile ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100250.in  istuple:N  msg:"dmmeta.ssimfile ssimfile:garden.flower  ctype:garden.Flower"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100260.in  istuple:N  msg:"dmmeta.ssimfile ssimfile:garden.fruit  ctype:garden.Fruit"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100270.in  istuple:N  msg:'dmmeta.fcmdline  field:acr.FDb.cmdline  basecmdline:""'
+atfdb.tmsg  tmsg:acr_compl.Acr12/100280.in  istuple:N  msg:"garden.flower  flower:rose"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100290.in  istuple:N  msg:"garden.flower  flower:tulip"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100300.in  istuple:N  msg:"garden.fruit  fruit:apple"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100310.in  istuple:N  msg:"garden.fruit  fruit:plum"
+atfdb.tmsg  tmsg:acr_compl.Acr12/100320.in  istuple:N  msg:"garden.fruit  fruit:peach"
 atfdb.tmsg  tmsg:aqlite.Smoke/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:i16                  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:i32                  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100020.in  istuple:N  msg:'dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100030.in  istuple:N  msg:'dmmeta.field  field:abt.FCfg.msghdr       arg:dev.Cfg         reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100040.in  istuple:N  msg:'dmmeta.field  field:abt.FCompiler.msghdr  arg:dev.Compiler    reftype:Base    dflt:""  comment:""'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100000.in  istuple:N  msg:'samp_meng.TextMsg text:"configure"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100010.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:A"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100020.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:B"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100030.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:C"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100040.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:D"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100050.in  istuple:N  msg:"samp_meng.NewUserReqMsg user:1"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100060.in  istuple:N  msg:"samp_meng.NewUserReqMsg user:2"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100070.in  istuple:N  msg:"samp_meng.NewUserReqMsg user:3"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100080.in  istuple:N  msg:"samp_meng.NewUserReqMsg user:4"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100090.in  istuple:N  msg:'samp_meng.TextMsg text:"place 2 buy orders on the book"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100100.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:1 symbol:A price:10.0 qty:100 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100110.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:1 symbol:A price:10.0 qty:100 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100120.in  istuple:N  msg:'samp_meng.TextMsg text:"sell order incoming, takes out both orders"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100130.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:2 symbol:A price:10.0 qty:-300 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100140.in  istuple:N  msg:'samp_meng.TextMsg text:"sell IOC order incoming, does nothing"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100150.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:2 symbol:A price:10.0 qty:-300 ioc:true"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100160.in  istuple:N  msg:'samp_meng.TextMsg text:"buy order incoming, matches sell side, price improved, rest cancels back"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100170.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:A price:11.0 qty:200 ioc:true"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100180.in  istuple:N  msg:'samp_meng.TextMsg text:"place a few orders; and mass-cancel others"'
+atfdb.tmsg  tmsg:samp_meng.Smoke/100190.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:B price:10.0 qty:100 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100200.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:B price:10.0 qty:100 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100210.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:B price:10.0 qty:100 ioc:false"
+atfdb.tmsg  tmsg:samp_meng.Smoke/100220.in  istuple:N  msg:"samp_meng.MassCancelReqMsg user:3"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
@@ -106,6 +163,8 @@ atfdb.tmsg  tmsg:ssimfilt.SelectField/100030.in  istuple:N  msg:'dmmeta.nstype  
 atfdb.tmsg  tmsg:ssimfilt.SelectField/100040.in  istuple:N  msg:'dmmeta.nstype  nstype:pch       comment:"Precompiled header"'
 atfdb.tmsg  tmsg:ssimfilt.SelectField/100050.in  istuple:N  msg:'dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"'
 atfdb.tmsg  tmsg:ssimfilt.SelectField/100060.in  istuple:N  msg:'dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"'
+atfdb.tmsg  tmsg:ssimfilt.Stable/100000.in  istuple:N  msg:"report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0"
+atfdb.tmsg  tmsg:ssimfilt.Stable/100010.in  istuple:N  msg:'dev.uname  uname:Linux    comment:"Ubuntu 17, CentOS 7.6, Debian"'
 atfdb.tmsg  tmsg:ssimfilt.Table/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
 atfdb.tmsg  tmsg:ssimfilt.Table/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
 atfdb.tmsg  tmsg:ssimfilt.Table/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'
