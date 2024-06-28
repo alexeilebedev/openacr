@@ -13,7 +13,7 @@ a.B  Month:DEC  _1958:337  _1959:405  _1960:432
 sv2ssim.report  n_line:13  n_nonempty_line:13  n_field:4  n_wideline:1
 dmmeta.ctype  ctype:a.B  comment:""
 dmmeta.cfmt  cfmt:a.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-dmmeta.field  field:a.B.Month  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1958  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1959  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1960  arg:u32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B.Month  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:Month
+dmmeta.field  field:a.B._1958  arg:u32  reftype:Val  dflt:""  comment:_1958
+dmmeta.field  field:a.B._1959  arg:u32  reftype:Val  dflt:""  comment:_1959
+dmmeta.field  field:a.B._1960  arg:u32  reftype:Val  dflt:""  comment:_1960

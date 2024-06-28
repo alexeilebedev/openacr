@@ -306,7 +306,7 @@ static void TmplPrefix(amc::FFunc& func, cstring &out, bool proto) {
         }ind_end;
         out << "> ";
     }
-    if (proto ? false : func.inl) {
+    if (func.inl && !func.extrn) {
         out << "inline ";
     }
     if (func.priv && (proto ? true : !func.glob)) {
@@ -323,12 +323,6 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
     if (func.prepcond != "") {
         out << "#if " << func.prepcond << eol;
     }
-    if (ctype_context && !func.member) {
-        out << "friend ";
-    }
-    if (ctype_context && func.isexplicit) {
-        out << "explicit ";
-    }
     // show function comment but omit it if it's just a friend declaration
     if (!(ctype_context && !func.member)) {
         ind_beg(Line_curs,comment,func.comment) {
@@ -339,11 +333,14 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
     if (func.extrn) {
         out << "// this function is 'extrn' and implemented by user"<<eol;
     }
+    if (ctype_context && !func.member) {
+        out << "friend ";
+    }
+    if (ctype_context && func.isexplicit) {
+        out << "explicit ";
+    }
     int start = ch_N(out);
     TmplPrefix(func,out,true);
-    if (func.oper) {
-        out << "operator ";
-    }
     out << func.ret;
     // some indentation for readability
     char_PrintNTimes(' ', out, start + 20 - ch_N(out));
@@ -354,7 +351,14 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
         }
     }
     out << func.proto;
-    PrintAttrs(func,out);
+    if (func.isconst) {
+        out <<"const ";
+    }
+    if (func.deleted) {
+        out <<" = delete";
+    } else {
+        PrintAttrs(func,out);
+    }
     out << ";";
     out << eol;
     if (func.prepcond != "") {
@@ -365,46 +369,50 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
 // -----------------------------------------------------------------------------
 
 void amc::PrintFuncBody(amc::FNs& ns, amc::FFunc& func) {
-    cstring &impl = (func.inl && !func.priv) ? *ns.inl : *ns.cpp;
+    if (!func.extrn && !func.deleted) {
+        cstring &impl = (func.inl && !func.priv) ? *ns.inl : *ns.cpp;
 
-    if (bool_Update(func.finalized,true)) {
-        FinalizeFunc(func);
-    }
-    amc::CppSection(impl, func.func, false);
-    ind_beg(Line_curs,comment,func.comment) {
-        impl << "// "<<comment<<'\n';
-    }ind_end;
-
-    tempstr proto;
-    TmplPrefix(func,proto,false);
-    if (func.oper) {
-        proto << NsToCpp(ctype_Get(func)) << "::operator ";
-    }
-    proto << func.ret << " ";
-    if (func.member) {
-        if (amc::FCtype *ctype = ind_ctype_Find(ctype_Get(func))) {
-            proto << ctype->cpp_type << "::";
+        if (bool_Update(func.finalized,true)) {
+            FinalizeFunc(func);
         }
-    } else {
-        if (!func.oper && !func.globns) {// namespace
+        amc::CppSection(impl, func.func, false);
+        ind_beg(Line_curs,comment,func.comment) {
+            impl << "// "<<comment<<'\n';
+        }ind_end;
+
+        tempstr proto;
+        TmplPrefix(func,proto,false);
+        proto << func.ret << " ";
+        if (func.member) {
+            if (amc::FCtype *ctype = ind_ctype_Find(ctype_Get(func))) {
+                proto << ctype->cpp_type << "::";
+            }
+        } else if (!func.globns) {// namespace
             if (ch_N(ns.ns)) {
                 proto << ns.ns << "::";
             }
         }
-    }
-    proto << func.proto;
-    proto << " {";
-    if (func.ismacro) {
-        proto << " // internal, automatically inlined";
-    }
-    if (func.prepcond != "") {
-        impl << "#if " << func.prepcond << eol;
-    }
-    impl << proto << eol;
-    algo::InsertIndent(impl, func.body, 1);
-    impl << "}" << eol;
-    if (func.prepcond != "") {
-        impl << "#endif" << eol;
+        proto << func.proto;
+        if (ary_N(func.initializer)) {
+            ind_beg(algo::StringAry_ary_curs,initializer,func.initializer) {
+                proto << (ind_curs(initializer).index==0 ? "\n    : " : "\n    , ");
+                proto << initializer;
+            }ind_end;
+            proto << eol;
+        }
+        proto << " {";
+        if (func.ismacro) {
+            proto << " // internal, automatically inlined";
+        }
+        if (func.prepcond != "") {
+            impl << "#if " << func.prepcond << eol;
+        }
+        impl << proto << eol;
+        algo::InsertIndent(impl, func.body, 1);
+        impl << "}" << eol;
+        if (func.prepcond != "") {
+            impl << "#endif" << eol;
+        }
     }
 }
 
@@ -418,7 +426,16 @@ bool amc::SetRetType(amc::FFunc &func, amc::FCtype &ctype) {
 // -----------------------------------------------------------------------------
 
 void amc::MaybeUnused(amc::FFunc &func, strptr name) {
-    if (FindStr(func.body, name, true)==-1) {
+    bool used = FindStr(func.body, name, true)!=-1;
+    if (!used) {
+        ind_beg(algo::StringAry_ary_curs,initializer,func.initializer) {
+            if (Pathcomp(initializer,"(LR)RL") == name) {
+                used=true;
+                break;
+            }
+        }ind_end;
+    }
+    if (!used) {
         func.body <<"(void)"<<name<<";//only to avoid -Wunused-parameter" << eol;
     }
 }

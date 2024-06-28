@@ -18,7 +18,7 @@ atfdb.targs  comptest:acr.Meta2  args:"ftuple -meta"
 atfdb.targs  comptest:acr.Meta3  args:"ftuple -meta -cmt"
 atfdb.targs  comptest:acr.NullTrunc  args:"ns -report:N"
 atfdb.targs  comptest:acr.QueryCtype  args:dmmeta.ctype:dmmeta.Ctype
-atfdb.targs  comptest:acr.RenameCollision  args:"uname:Linux -rename SunOS"
+atfdb.targs  comptest:acr.RenameCollision  args:"-in:- ns:ns1 -rename ns2"
 atfdb.targs  comptest:acr.RenameField  args:"-in:- field:dmmeta.Ns.nstype -rename dmmeta.Ns.blah"
 atfdb.targs  comptest:acr.RenameRecord  args:"-in:- target:samp -rename:xyz"
 atfdb.targs  comptest:acr.Replace  args:"-replace ns:ns%"
@@ -51,20 +51,25 @@ atfdb.targs  comptest:acr_compl.A06c  args:"-line:'atf_cmdline -- -STR -1 -0.000
 atfdb.targs  comptest:acr_compl.A07a  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3'"
 atfdb.targs  comptest:acr_compl.A07b  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3 '"
 atfdb.targs  comptest:acr_compl.A07c  args:"-line:'atf_cmdline -- -STR -1 -0.0001 Y -2 -3 ' -type:63"
-atfdb.targs  comptest:acr_compl.Acr01  args:'-line:"acr "'
-atfdb.targs  comptest:acr_compl.Acr02  args:'-line:"acr -query"'
-atfdb.targs  comptest:acr_compl.Acr03  args:'-line:"acr -query:"'
-atfdb.targs  comptest:acr_compl.Acr04  args:'-line:"acr -query "'
-atfdb.targs  comptest:acr_compl.Acr05  args:'-line:"acr dmmeta"'
-atfdb.targs  comptest:acr_compl.Acr06  args:'-line:"acr unittest"'
-atfdb.targs  comptest:acr_compl.Acr07  args:'-line:"acr nitte"'
-atfdb.targs  comptest:acr_compl.BadExe  args:"-line:'blah'"
+atfdb.targs  comptest:acr_compl.Acr01  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr "'
+atfdb.targs  comptest:acr_compl.Acr02  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr -query"'
+atfdb.targs  comptest:acr_compl.Acr03  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr -query:"'
+atfdb.targs  comptest:acr_compl.Acr04  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr -query "'
+atfdb.targs  comptest:acr_compl.Acr05  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr f"'
+atfdb.targs  comptest:acr_compl.Acr06  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr fruit"'
+atfdb.targs  comptest:acr_compl.Acr07  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr rui"'
+atfdb.targs  comptest:acr_compl.Acr08  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr garden.fruit:"'
+atfdb.targs  comptest:acr_compl.Acr09  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr garden.fruit:p"'
+atfdb.targs  comptest:acr_compl.Acr10  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:"acr garden.fruit:pe"'
+atfdb.targs  comptest:acr_compl.Acr11  args:'-schema:test/acr_compl.schema.ssim -data:- -line:"acr garden.fruit:pe"'
+atfdb.targs  comptest:acr_compl.Acr12  args:'-schema:- -data:- -line:"acr garden.fruit:pe"'
+atfdb.targs  comptest:acr_compl.Acr13  args:'-line:"acr field:command.atf_cmdline.%"'
+atfdb.targs  comptest:acr_compl.BadExe  args:"-schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:'blah'"
 atfdb.targs  comptest:acr_compl.BadOpt  args:"-line:'atf_cmdline -blah'"
 atfdb.targs  comptest:acr_compl.BadOptColon  args:"-line:'atf_cmdline -blah:'"
 atfdb.targs  comptest:acr_compl.BadOptColonSpace  args:"-line:'atf_cmdline -blah: '"
 atfdb.targs  comptest:acr_compl.BadOptSpace  args:"-line:'atf_cmdline -blah '"
 atfdb.targs  comptest:acr_compl.Bare  args:""
-atfdb.targs  comptest:acr_compl.CustomData  args:'-data:- -line:"acr -query:gclidb.gclicmdt:"'
 atfdb.targs  comptest:acr_compl.DblColon  args:'-line:"atf_cmdline -dbl:"'
 atfdb.targs  comptest:acr_compl.DblColonList  args:'-line:"atf_cmdline -dbl:" -type:63'
 atfdb.targs  comptest:acr_compl.DblSpace  args:'-line:"atf_cmdline -dbl "'
@@ -94,38 +99,38 @@ atfdb.targs  comptest:acr_compl.OptH  args:'-line:"atf_cmdline -h"'
 atfdb.targs  comptest:acr_compl.OptHList  args:'-line:"atf_cmdline -h -type:63"'
 atfdb.targs  comptest:acr_compl.OptNonCumul  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -help -'"
 atfdb.targs  comptest:acr_compl.OptNonCumulAlias  args:"-line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -h -'"
-atfdb.targs  comptest:acr_compl.OptPkeyColon  args:'-line:"atf_cmdline -dpkey:"'
-atfdb.targs  comptest:acr_compl.OptPkeyColonFull  args:'-line:"atf_cmdline -dpkey:atfdb.Unittest"'
-atfdb.targs  comptest:acr_compl.OptPkeyColonFullList  args:'-line:"atf_cmdline -dpkey:atfdb.Unittest" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeyColonList  args:'-line:"atf_cmdline -dpkey:" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeyColonPrefix  args:'-line:"atf_cmdline -dpkey:atfdb.Unit"'
-atfdb.targs  comptest:acr_compl.OptPkeyColonPrefixList  args:'-line:"atf_cmdline -dpkey:atfdb.Unit" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeyColonSubstr  args:'-line:"atf_cmdline -dpkey:nittes"'
-atfdb.targs  comptest:acr_compl.OptPkeyColonSubstrList  args:'-line:"atf_cmdline -dpkey:nittes" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeySpace  args:'-line:"atf_cmdline -dpkey "'
-atfdb.targs  comptest:acr_compl.OptPkeySpaceFull  args:'-line:"atf_cmdline -dpkey atfdb.Unittest"'
-atfdb.targs  comptest:acr_compl.OptPkeySpaceFullList  args:'-line:"atf_cmdline -dpkey atfdb.Unittest" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeySpaceList  args:'-line:"atf_cmdline -dpkey " -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeySpacePrefix  args:'-line:"atf_cmdline -dpkey atfdb.Unit"'
-atfdb.targs  comptest:acr_compl.OptPkeySpacePrefixList  args:'-line:"atf_cmdline -dpkey atfdb.Unit" -type:63'
-atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstr  args:'-line:"atf_cmdline -dpkey nittes"'
-atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstrList  args:'-line:"atf_cmdline -dpkey nittes" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxColon  args:'-line:"atf_cmdline -dregx:"'
-atfdb.targs  comptest:acr_compl.OptRegxColonFull  args:'-line:"atf_cmdline -dregx:atfdb.Unittest"'
-atfdb.targs  comptest:acr_compl.OptRegxColonFullList  args:'-line:"atf_cmdline -dregx:atfdb.Unittest" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxColonList  args:'-line:"atf_cmdline -dregx:" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxColonPrefix  args:'-line:"atf_cmdline -dregx:atfdb.Unit"'
-atfdb.targs  comptest:acr_compl.OptRegxColonPrefixList  args:'-line:"atf_cmdline -dregx:atfdb.Unit" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxColonSubstr  args:'-line:"atf_cmdline -dregx:nittes"'
-atfdb.targs  comptest:acr_compl.OptRegxColonSubstrList  args:'-line:"atf_cmdline -dregx:nittes" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxSpace  args:'-line:"atf_cmdline -dregx "'
-atfdb.targs  comptest:acr_compl.OptRegxSpaceFull  args:'-line:"atf_cmdline -dregx atfdb.Unittest"'
-atfdb.targs  comptest:acr_compl.OptRegxSpaceFullList  args:'-line:"atf_cmdline -dregx atfdb.Unittest" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxSpaceList  args:'-line:"atf_cmdline -dregx " -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxSpacePrefix  args:'-line:"atf_cmdline -dregx atfdb.Unit"'
-atfdb.targs  comptest:acr_compl.OptRegxSpacePrefixList  args:'-line:"atf_cmdline -dregx atfdb.Unit" -type:63'
-atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstr  args:'-line:"atf_cmdline -dregx nittes"'
-atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstrList  args:'-line:"atf_cmdline -dregx nittes" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColon  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonFull  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonFullList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:garden.Fruit" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonPrefix  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonPrefixList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:garden.F" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeyColonSubstr  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:rui"'
+atfdb.targs  comptest:acr_compl.OptPkeyColonSubstrList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey:rui" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpace  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey "'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceFull  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceFullList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey garden.Fruit" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey " -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpacePrefix  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptPkeySpacePrefixList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey garden.Fruit" -type:63'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstr  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey rui"'
+atfdb.targs  comptest:acr_compl.OptPkeySpaceSubstrList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dpkey rui" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColon  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:"'
+atfdb.targs  comptest:acr_compl.OptRegxColonFull  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptRegxColonFullList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:garden.Fruit" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonPrefix  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:garden.F"'
+atfdb.targs  comptest:acr_compl.OptRegxColonPrefixList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:garden.F" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxColonSubstr  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:rui"'
+atfdb.targs  comptest:acr_compl.OptRegxColonSubstrList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx:rui" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpace  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx "'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceFull  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx garden.Fruit"'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceFullList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx garden.Fruit" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx " -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpacePrefix  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx garden.F"'
+atfdb.targs  comptest:acr_compl.OptRegxSpacePrefixList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx garden.F" -type:63'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstr  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx rui"'
+atfdb.targs  comptest:acr_compl.OptRegxSpaceSubstrList  args:'-schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:"atf_cmdline -dregx rui" -type:63'
 atfdb.targs  comptest:acr_compl.OptSig  args:'-line:"atf_cmdline -sig"'
 atfdb.targs  comptest:acr_compl.OptSigList  args:'-line:"atf_cmdline -sig -type:63"'
 atfdb.targs  comptest:acr_compl.OptV  args:'-line:"atf_cmdline -v"'
@@ -161,8 +166,8 @@ atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.t
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
-atfdb.targs  comptest:aqlite.Number  args:"'select * from field where dflt = 0 and ns = \"dev\"'"
-atfdb.targs  comptest:aqlite.Smoke  args:'-data:- "select rowid,* from ctype; select rowid,* from field"'
+atfdb.targs  comptest:aqlite.Number  args:"-ns:dmmeta 'select * from field where dflt = 0 and ns = \"dev\"'"
+atfdb.targs  comptest:aqlite.Smoke  args:'-ns:dmmeta -data:- "select rowid,* from ctype; select rowid,* from field"'
 atfdb.targs  comptest:atf_cmdline.Bare  args:""
 atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"
 atfdb.targs  comptest:atf_cmdline.Help  args:-help
@@ -177,6 +182,7 @@ atfdb.targs  comptest:mdbg.OutOfOrderArgs  args:"-args:x y"
 atfdb.targs  comptest:mdbg.Smoke  args:"-dry_run mdbg mdbg"
 atfdb.targs  comptest:mdbg.SmokeBreak  args:"-dry_run -tui mdbg mdbg -b a,b,c,d,e"
 atfdb.targs  comptest:mdbg.SmokeBreak2  args:"-dry_run -tui mdbg mdbg -b a -b b -b c"
+atfdb.targs  comptest:samp_meng.Smoke  args:""
 atfdb.targs  comptest:ssimfilt.Csv  args:-format:csv
 atfdb.targs  comptest:ssimfilt.CsvField  args:"-format:csv -field:comment"
 atfdb.targs  comptest:ssimfilt.FirstTag  args:^
@@ -185,6 +191,7 @@ atfdb.targs  comptest:ssimfilt.JsonRecursive  args:"-format json"
 atfdb.targs  comptest:ssimfilt.MatchField  args:"% ns:b%"
 atfdb.targs  comptest:ssimfilt.MatchTag  args:dmmeta.%
 atfdb.targs  comptest:ssimfilt.SelectField  args:"-field:nstype -format:field"
+atfdb.targs  comptest:ssimfilt.Stable  args:-format:stablefld
 atfdb.targs  comptest:ssimfilt.Table  args:-t
 atfdb.targs  comptest:sv2ssim.Convert1  args:"test/csv/2.csv -ctype a.B -schema -data"
 atfdb.targs  comptest:sv2ssim.Convert1Signed  args:"test/csv/2.csv -ctype a.B -schema -data -prefer_signed"

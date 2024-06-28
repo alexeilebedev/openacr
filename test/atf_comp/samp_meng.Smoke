@@ -1,0 +1,69 @@
+input: samp_meng.TextMsg  text:configure
+
+input: samp_meng.NewSymbolReqMsg  symbol:A
+samp_meng.NewSymbolMsg  symbol:A
+
+input: samp_meng.NewSymbolReqMsg  symbol:B
+samp_meng.NewSymbolMsg  symbol:B
+
+input: samp_meng.NewSymbolReqMsg  symbol:C
+samp_meng.NewSymbolMsg  symbol:C
+
+input: samp_meng.NewSymbolReqMsg  symbol:D
+samp_meng.NewSymbolMsg  symbol:D
+
+input: samp_meng.NewUserReqMsg  user:1
+samp_meng.NewUserMsg  user:1
+
+input: samp_meng.NewUserReqMsg  user:2
+samp_meng.NewUserMsg  user:2
+
+input: samp_meng.NewUserReqMsg  user:3
+samp_meng.NewUserMsg  user:3
+
+input: samp_meng.NewUserReqMsg  user:4
+samp_meng.NewUserMsg  user:4
+
+input: samp_meng.TextMsg  text:"place 2 buy orders on the book"
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:100  price:10  symbol:A  user:1
+samp_meng.NewOrderMsg  time:***  price:10  order:1  symbol:A  qty:100
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:100  price:10  symbol:A  user:1
+samp_meng.NewOrderMsg  time:***  price:10  order:2  symbol:A  qty:100
+
+input: samp_meng.TextMsg  text:"sell order incoming, takes out both orders"
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:-300  price:10  symbol:A  user:2
+samp_meng.OrderTradeMsg  order:2  qty:100  price:10
+samp_meng.CancelOrderMsg  order:2
+samp_meng.OrderTradeMsg  order:1  qty:100  price:10
+samp_meng.CancelOrderMsg  order:1
+samp_meng.NewOrderMsg  time:***  price:10  order:3  symbol:A  qty:100
+
+input: samp_meng.TextMsg  text:"sell IOC order incoming, does nothing"
+
+input: samp_meng.NewOrderReqMsg  ioc:Y  qty:-300  price:10  symbol:A  user:2
+
+input: samp_meng.TextMsg  text:"buy order incoming, matches sell side, price improved, rest cancels back"
+
+input: samp_meng.NewOrderReqMsg  ioc:Y  qty:200  price:11  symbol:A  user:3
+samp_meng.OrderTradeMsg  order:3  qty:100  price:10
+samp_meng.CancelOrderMsg  order:3
+
+input: samp_meng.TextMsg  text:"place a few orders; and mass-cancel others"
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:100  price:10  symbol:B  user:3
+samp_meng.NewOrderMsg  time:***  price:10  order:6  symbol:B  qty:100
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:100  price:10  symbol:B  user:3
+samp_meng.NewOrderMsg  time:***  price:10  order:7  symbol:B  qty:100
+
+input: samp_meng.NewOrderReqMsg  ioc:N  qty:100  price:10  symbol:B  user:3
+samp_meng.NewOrderMsg  time:***  price:10  order:8  symbol:B  qty:100
+
+input: samp_meng.MassCancelReqMsg  user:3
+samp_meng.CancelOrderMsg  order:6
+samp_meng.CancelOrderMsg  order:7
+samp_meng.CancelOrderMsg  order:8
+

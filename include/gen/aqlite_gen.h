@@ -80,10 +80,13 @@ void                 trace_Print(aqlite::trace& row, algo::cstring& str) __attri
 // --- aqlite.FDb
 // create: aqlite.FDb._db (Global)
 struct FDb { // aqlite.FDb
-    command::aqlite   cmdline;       //
-    aqlite::FNs*      ns_lary[32];   // level array
-    i32               ns_n;          // number of elements in array
-    aqlite::trace     trace;         //
+    command::aqlite   cmdline;                //
+    aqlite::FNs*      ns_lary[32];            // level array
+    i32               ns_n;                   // number of elements in array
+    aqlite::FNs**     ind_ns_buckets_elems;   // pointer to bucket array
+    i32               ind_ns_buckets_n;       // number of elements in bucket array
+    i32               ind_ns_n;               // number of elements in the hash table
+    aqlite::trace     trace;                  //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -171,6 +174,31 @@ inline aqlite::FNs&  ns_qFind(u64 t) __attribute__((nothrow, pure));
 // func:aqlite.FDb.ns.XrefMaybe
 bool                 ns_XrefMaybe(aqlite::FNs &row);
 
+// Return true if hash is empty
+// func:aqlite.FDb.ind_ns.EmptyQ
+inline bool          ind_ns_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:aqlite.FDb.ind_ns.Find
+aqlite::FNs*         ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:aqlite.FDb.ind_ns.FindX
+aqlite::FNs&         ind_ns_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:aqlite.FDb.ind_ns.GetOrCreate
+aqlite::FNs&         ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:aqlite.FDb.ind_ns.N
+inline i32           ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:aqlite.FDb.ind_ns.InsertMaybe
+bool                 ind_ns_InsertMaybe(aqlite::FNs& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:aqlite.FDb.ind_ns.Remove
+void                 ind_ns_Remove(aqlite::FNs& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:aqlite.FDb.ind_ns.Reserve
+void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:aqlite.FDb.ns_curs.Reset
 inline void          _db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) __attribute__((nothrow));
@@ -192,14 +220,23 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // --- aqlite.FNs
 // create: aqlite.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
+// global access: ind_ns (Thash, hash field ns)
 struct FNs { // aqlite.FNs
-    algo::Smallstr16   ns;        // Namespace name (primary key)
-    algo::Smallstr50   nstype;    // Namespace type
-    algo::Smallstr50   license;   // Associated license
-    algo::Comment      comment;   //
+    aqlite::FNs*       ind_ns_next;   // hash next
+    algo::Smallstr16   ns;            // Namespace name (primary key)
+    algo::Smallstr50   nstype;        // Namespace type
+    algo::Smallstr50   license;       // Associated license
+    algo::Comment      comment;       //
+    bool               select;        //   false
+    // func:aqlite.FNs..AssignOp
+    inline aqlite::FNs&  operator =(const aqlite::FNs &rhs) = delete;
+    // func:aqlite.FNs..CopyCtor
+    inline               FNs(const aqlite::FNs &rhs) = delete;
 private:
     // func:aqlite.FNs..Ctor
     inline               FNs() __attribute__((nothrow));
+    // func:aqlite.FNs..Dtor
+    inline               ~FNs() __attribute__((nothrow));
     friend aqlite::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend aqlite::FNs*         ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ns_RemoveAll() __attribute__((nothrow));
@@ -213,6 +250,11 @@ void                 ns_CopyOut(aqlite::FNs &row, dmmeta::Ns &out) __attribute__
 // func:aqlite.FNs.base.CopyIn
 void                 ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
+// Set all fields to initial values.
+// func:aqlite.FNs..Init
+inline void          FNs_Init(aqlite::FNs& ns);
+// func:aqlite.FNs..Uninit
+void                 FNs_Uninit(aqlite::FNs& ns) __attribute__((nothrow));
 
 // --- aqlite.FieldId
 #pragma pack(push,1)

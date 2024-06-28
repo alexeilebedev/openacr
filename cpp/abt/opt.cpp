@@ -26,16 +26,16 @@
 
 // -----------------------------------------------------------------------------
 
-tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, abt::FSrcfile &srcfile) {
+tempstr abt::EvalSrcfileCmdline(abt::FBuilddir &builddir, abt::FTarget &target, abt::FSrcfile &srcfile) {
     tempstr out;
-
+    algo_lib::Replscope &R = builddir.R;
     // Detect source file language here
     bool c_file = ext_Get(srcfile) =="c";
     bool cpp_file = ext_Get(srcfile) =="cpp";
     bool hpp_file = ext_Get(srcfile) == "hpp";
     bool rc_file = ext_Get(srcfile) == "rc";
     if (rc_file) {
-        out << abt::_db.c_compiler->rc;
+        out << builddir.p_compiler->rc;
     } else {
         if (abt::_db.gcache) {
             out << "gcache ";
@@ -49,13 +49,13 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
         } else if (abt::_db.ccache) {
             out << "ccache ";
         }
-        out << abt::_db.cmdline.compiler;
+        out << compiler_Get(builddir);
     }
     // collect compiler options from tool_opt table
     // Ideally, ALL options are specified via tool_opt, but negative regexes are
     // a problem
     ind_beg(abt::_db_tool_opt_curs, tool_opt,abt::_db) {
-        if (tool_opt.select) {
+        if (Regx_Match(tool_opt.regx_opt,builddir.builddir) && Regx_Match(tool_opt.regx_target,target.target)) {
             bool ok = false;
             if (opt_type_Get(tool_opt) == dev_opt_type_CPP) {
                 ok = cpp_file;
@@ -68,7 +68,7 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
             } else if (opt_type_Get(tool_opt) == dev_opt_type_RC) {
                 ok = rc_file;
             }
-            if (ok && Regx_Match(tool_opt.regx_target,target.target)) {
+            if (ok) {
                 out << " " << Subst(R,opt_Get(tool_opt));
             }
         }
@@ -78,7 +78,7 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
     // re-enable color output which gets squashed because output during parallel build
     // goes to a temp file.
     if (c_file || cpp_file || hpp_file) {
-        if (abt::_db.cmdline.compiler == dev_Compiler_compiler_gPP && _db.tty) {
+        if (compiler_Get(builddir) == dev_Compiler_compiler_gPP && _db.tty) {
             out << " -fdiagnostics-color=always";
         }
     }
@@ -87,26 +87,26 @@ tempstr abt::EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, ab
 
 // -----------------------------------------------------------------------------
 
-static void ComputeLibdepObjlist(abt::FTarget &origtarget, abt::FTarget &target, cstring &objs, cstring &libs) {
+static void ComputeLibdepObjlist(abt::FBuilddir &builddir, abt::FTarget &origtarget, abt::FTarget &target, cstring &objs, cstring &libs) {
     // for lib dependencies, include the lib file as many time as needed
     if (&origtarget != &target && target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-        libs << " "<< target.outfile;
+        libs << " "<< GetOutfile(builddir,target);
     }
     if (bool_Update(target.libdep_visited,true)) {
         ind_beg(abt::target_c_targdep_curs,targdep,target) {
-            ComputeLibdepObjlist(origtarget,*targdep.p_parent,objs,libs);
+            ComputeLibdepObjlist(builddir,origtarget,*targdep.p_parent,objs,libs);
         }ind_end;
         if (&origtarget == &target || target.p_ns->nstype == dmmeta_Nstype_nstype_objlist) {
             ind_beg(abt::target_c_srcfile_curs, srcfile, target) {
                 if (!abt::HeaderExtQ(GetFileExt(srcfile.srcfile))) {
-                    objs << " "<< srcfile.objpath;
+                    objs << " "<< GetObjpath(builddir,srcfile);
                 }
             }ind_end;
         }
     }
     // for lib dependencies, include the lib file as many time as needed
     if (&origtarget != &target && target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-        libs << " "<< target.outfile;
+        libs << " "<< GetOutfile(builddir,target);
     }
 }
 
@@ -114,23 +114,28 @@ static void ComputeLibdepObjlist(abt::FTarget &origtarget, abt::FTarget &target,
 
 // Return list of object file pathnames and library pathnames for target TARGET
 // into output variables OBJS and LIBS
-void abt::DepsObjList(abt::FTarget &target, cstring &objs, cstring &libs) {
+void abt::DepsObjList(abt::FBuilddir &builddir, abt::FTarget &target, cstring &objs, cstring &libs) {
     ind_beg(abt::_db_target_curs,tgt,abt::_db) {
         tgt.libdep_visited=false;
     }ind_end;
-    ComputeLibdepObjlist(target,target,objs,libs);
-    ind_beg(abt::target_c_alllib_curs, syslib, target) {
-        libs << " -l" << syslib.syslib;
+    ComputeLibdepObjlist(builddir,target,target,objs,libs);
+    ind_beg(abt::target_c_alldep_curs, dep, target) {
+        ind_beg(abt::target_c_targsyslib_curs, targsyslib, dep) {
+            if (uname_Get(targsyslib) == uname_Get(builddir)) {
+                libs << " -l" << syslib_Get(targsyslib);
+            }
+        }ind_end;
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
-tempstr abt::EvalLinkCmdline(algo_lib::Replscope &R, abt::FTarget &target) {
+tempstr abt::EvalLinkCmdline(abt::FBuilddir &builddir, abt::FTarget &target) {
+    algo_lib::Replscope &R = builddir.R;
     cstring opts;
     // collect link options
     ind_beg(abt::_db_tool_opt_curs, tool_opt,abt::_db) {
-        if (tool_opt.select) {
+        if (Regx_Match(tool_opt.regx_opt,builddir.builddir)) {
             bool ok = opt_type_Get(tool_opt) == dev_opt_type_LINK;
             if (ok && Regx_Match(tool_opt.regx_target,target.target)) {
                 opts << " " << Subst(R,opt_Get(tool_opt));
@@ -145,7 +150,7 @@ tempstr abt::EvalLinkCmdline(algo_lib::Replscope &R, abt::FTarget &target) {
     // hack: add another algo_lib after gen_lib for exe targets.
     //solves the interdependency issue between gen_lib and algo_lib.
     if (FindStr(Subst(R,"$libs"),"/algo_lib-")!=-1) {
-        cmd<<" "<<abt::_db.cmdline.out_dir<<Subst(R,"/algo_lib-$arch$libext");
+        cmd<<" "<<builddir.path<<Subst(R,"/algo_lib-$arch$libext");
     }
 
     return cmd;

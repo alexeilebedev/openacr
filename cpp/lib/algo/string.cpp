@@ -1404,16 +1404,6 @@ void algo::MaybeDirSep(cstring &str) {
 
 // -----------------------------------------------------------------------------
 
-i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) {
-    int n = i32_Min(a.n_elems,b.n_elems);
-    for (int i=0; i<n; i++) {
-        if (a[i] != b[i]) return a[i]-b[i];
-    }
-    return i32_Cmp(a.n_elems, b.n_elems);
-}
-
-// -----------------------------------------------------------------------------
-
 algo::Attr_curs::Attr_curs() {
     valid=false;
 }

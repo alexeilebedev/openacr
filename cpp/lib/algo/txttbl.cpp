@@ -90,6 +90,18 @@ void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col) {
     AddCol(txttbl, col, algo_TextJust_j_left);
 }
 
+void algo_lib::AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify) {
+    ind_beg(algo::Sep_curs,token,csv,','){
+        AddCol(txttbl,token,justify);
+    }ind_end;
+}
+
+void algo_lib::AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv) {
+    ind_beg(algo::Sep_curs,token,csv,','){
+        AddCols(txttbl,token, algo_TextJust_j_left);
+    }ind_end;
+}
+
 algo::cstring &algo_lib::AddCell(algo_lib::FTxttbl &txttbl) {
     return AddCellEx(txttbl).text;
 }
@@ -106,7 +118,6 @@ void algo_lib::TxttblCsv(algo_lib::FTxttbl &tbl) {
         }ind_end;
     }ind_end;
 }
-
 
 bool algo::SaneTerminalQ() {
     strptr termtype = getenv("TERM");

@@ -38,19 +38,28 @@ Thash.curs       N
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Fcurs
 
 * file:[data/dmmeta/fcurs.ssim](/data/dmmeta/fcurs.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *field, ctype, curstype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fcurs|algo.Smallstr50|Val|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||<br>/RL of fcurs|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||<br>/RL.RL of fcurs|
-|curstype|[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)|Pkey||<br>/RR of fcurs|
-|comment|algo.Comment|Val|
+|fcurs|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of fcurs*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL.RL of fcurs*|
+|*curstype*|*[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of fcurs*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FFcurs
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FFcurs](/txt/exe/amc/internals.md#amc-ffcurs)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

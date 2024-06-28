@@ -1250,6 +1250,7 @@ void sv2ssim::FDb_Init() {
         FatalErrorExit("out of memory"); // (sv2ssim.FDb.ind_bltin)
     }
     memset(_db.ind_bltin_buckets_elems, 0, sizeof(sv2ssim::FBltin*)*_db.ind_bltin_buckets_n); // (sv2ssim.FDb.ind_bltin)
+    _db.cmt2fld_ok = bool(false);
 
     sv2ssim::InitReflection();
 }

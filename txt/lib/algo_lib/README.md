@@ -3,16 +3,20 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Printing / Process output](#printing---process-output)
-* [Printing to stderr](#printing-to-stderr)
-* [Log categories](#log-categories)
-* [Verblog](#verblog)
-* [Dbglog](#dbglog)
-* [Environment variables](#environment-variables)
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Printing / Process output](#printing---process-output)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Printing to stderr](#printing-to-stderr)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Log categories](#log-categories)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Verblog](#verblog)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dbglog](#dbglog)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Environment variables](#environment-variables)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Printing / Process output
 <a href="#printing---process-output"></a>
@@ -100,381 +104,9 @@ without being decremented.
 We specifically avoid using the environment block to pass verbose/debug flags, in order to maintain
 an exact correspondence between the command line and the process behavior.
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### algo_lib.Bitset - 
-<a href="#algo_lib-bitset"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|ary|u64|Tary|
-
-#### algo_lib.Cmdline - *can't move this to command namespace because of circular dependency*
-<a href="#algo_lib-cmdline"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|verbose|u8|Val||Verbosity level (0..255)|
-|debug|u8|Val||Debug level (0..255)|
-|help|bool|Val||Print help and exit|
-|version|bool|Val||Print version and exit|
-|signature|bool|Val||Show signatures and exit|
-|v|u8|Alias||Alias for verbose|
-|d|u8|Alias||Alias for debug|
-|sig|bool|Alias||Alias for signature|
-|h|bool|Alias||Alias for help|
-
-#### algo_lib.CsvParse - 
-<a href="#algo_lib-csvparse"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|input|algo.strptr|Val||Input string|
-|sep|char|Val|','|Input: separator|
-|quotechar1|char|Val|'\"'|Allow this quote|
-|quotechar2|char|Val|'\''|Allow this quote as well|
-|ary_tok|algo.cstring|Tary||Output: array of tokens|
-|openquote|bool|Val|true|On output: set if unbalanced quote found|
-
-#### algo_lib.ErrorX - 
-<a href="#algo_lib-errorx"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|str|algo.cstring|Val|
-
-#### algo_lib.FDb - In-memory database for algo_lib
-<a href="#algo_lib-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|cstring|algo.cstring|Cppstack|
-|sbrk|u8|Sbrk||Base allocator for everything|
-|lpool|u8|Lpool||private memory pool|
-|next_loop|algo.SchedTime|Val|
-|limit|algo.SchedTime|Val|0x7fffffffffffffff|
-|clocks_to_ms|double|Val|
-|n_iohook|u32|Val|0|Number of iohooks in epoll|
-|clock|algo.SchedTime|Val||Current cpu clock value|
-|mainloop_clock|algo.SchedTime|Val||Mainloop cpu clock value|
-|start_clock|algo.SchedTime|Val||cpu clock value at startup|
-|hz|double|Val|
-|t_last_signal|algo.SchedTime|Val||Time last async signal was processed|
-|exit_code|i32|Val|0|Exit code from main program. 0 = success (this is the unix exit code!)|
-|clocks_to_ns|double|Val|
-|n_temp|u32|Val|0|* initialization order is important *|
-|last_signal|u32|Val||Value of last signal (used by SetupExitSignals)|
-|eol|bool|Val|false|
-|cpu_hz|u64|Val||Cpu HZ, determined at startup|
-|fildes|algo_lib.FFildes|Cppstack||Provides default name for variables of this type|
-|temp_strings|algo.cstring|Inlary||* initialization order is important *|
-|ArgvIdent|algo.Charset|Charset|
-|BashQuotesafe|algo.Charset|Charset|
-|RegxSqlSpecial|algo.Charset|Charset|
-|SsimBreakName|algo.Charset|Charset|
-|SsimBreakValue|algo.Charset|Charset|
-|SsimQuotesafe|algo.Charset|Charset|
-|_db|algo_lib.FDb|Global||* initialization order is important *|
-|imtable|algo_lib.FImtable|Lary||Array of all in-memory tables linked into this process|
-|ind_imtable|algo_lib.FImtable|Thash|
-|iohook|algo_lib.FIohook|Cppstack||Provides default name for variables of this type|
-|timehook|algo_lib.FTimehook|Cppstack||Provides default name for variables of this type|
-|replscope|algo_lib.Replscope|Cppstack||Provides default name for variables of this type|
-|error|algo_lib.ErrorX|Malloc|
-|csvparse|algo_lib.CsvParse|Cppstack||Provides default name for variables of this type|
-|regxparse|algo_lib.RegxParse|Cppstack||Provides default name for variables of this type|
-|regx|algo_lib.Regx|Cppstack||Provides default name for variables of this type|
-|tabulate|algo_lib.Tabulate|Cppstack||Provides default name for variables of this type|
-|log_str|algo.cstring|Val|
-|bh_timehook|algo_lib.FTimehook|Bheap||Binary heap of time-based callbacks|
-|epoll_fd|i32|Val|-1|
-|lock_core|algo_lib.FLockfile|Val|
-|c_timehook|algo_lib.FTimehook|Ptr||TEMP: here only for dependency reasons|
-|_timehook|algo_lib.FTimehook|Val||Keep me here i'm special|
-|dispsigcheck|algo_lib.FDispsigcheck|Lary|
-|ind_dispsigcheck|algo_lib.FDispsigcheck|Thash|
-|imdb|algo_lib.FImdb|Inlary|
-|ind_imdb|algo_lib.FImdb|Thash|
-|malloc|u8|Malloc||Pool for everything else|
-|txtcell|algo_lib.FTxtcell|Tpool|
-|txtrow|algo_lib.FTxtrow|Tpool|
-|txttbl|algo_lib.FTxttbl|Cppstack||Provides default name for variables of this type|
-|argc|i32|Val||Argc from main|
-|argv|char*|Ptr||Argv from main|
-|xref_error|algo.cstring|Val|
-|errtext|algo.cstring|Val|
-|varlenbuf|algo.ByteAry|Ptr|
-|replvar|algo_lib.FReplvar|Tpool|
-|cmdline|algo_lib.Cmdline|Val|
-|h_fatalerror||Hook|
-|giveup_count|u64|Val|
-|fatalerr|algo.cstring|Val|
-|stringtofile_nwrite|u32|Val||Global counter of # of files written|
-|giveup_time|bool|Val|true|Trigger for giveup_time loop|
-|sleep_roundup|bool|Val|
-|last_sleep_clocks|u64|Val|
-|msgtemp|algo.ByteAry|Val|
-|show_insert_err_lim|u32|Val|
-|DigitChar|algo.Charset|Charset|
-|NewLineChar|algo.Charset|Charset|
-|WhiteChar|algo.Charset|Charset|
-|DirSep|algo.Charset|Charset|
-|IdentChar|algo.Charset|Charset|
-|IdentStart|algo.Charset|Charset|
-|AlphaChar|algo.Charset|Charset|
-|HexChar|algo.Charset|Charset|
-|UpperChar|algo.Charset|Charset|
-|CmdLineNameBreak|algo.Charset|Charset|
-|CmdLineValueBreak|algo.Charset|Charset|
-|WordSeparator|algo.Charset|Charset|
-|LowerChar|algo.Charset|Charset|
-|Urlsafe|algo.Charset|Charset|
-|winjob|u64|Val|
-|Prlog|algo.PrlogFcn|Val|algo::Prlog|
-|logcat|algo_lib.FLogcat|Inlary|
-|ind_logcat|algo_lib.FLogcat|Thash|
-|show_tstamp|bool|Val|
-|tstamp_fmt|algo.cstring|Val|"%Y/%m/%dT%H:%M:%S.%.6X "|
-|fildes_stdout|algo.Fildes|Val|1|
-|fildes_stderr|algo.Fildes|Val|2|
-|pending_eol|bool|Val|
-|exec_args|algo.cstring|Tary|
-|dirstack|algo.cstring|Tary||Directory stack for PushDir/PopDir|
-
-#### algo_lib.FDispsigcheck - 
-<a href="#algo_lib-fdispsigcheck"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|msghdr|[dmmeta.Dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Base|
-
-#### algo_lib.FFildes - Wrapper for unix file descritor, call close() on Uninit
-<a href="#algo_lib-ffildes"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|fd|algo.Fildes|Val|
-
-#### algo_lib.FImdb - 
-<a href="#algo_lib-fimdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|msghdr|algo.Imdb|Base|
-
-#### algo_lib.FImtable - 
-<a href="#algo_lib-fimtable"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|msghdr|algo.Imtable|Base|
-
-#### algo_lib.FIohook - 
-<a href="#algo_lib-fiohook"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|callback|algo_lib.FIohook|Hook|
-|fildes|algo.Fildes|Val||File descriptor, possibly in epoll|
-|evt_flags|algo.IOEvtFlags|Val||Flags subscribed to|
-|flags|algo.IOEvtFlags|Val||Flags during callback|
-|in_epoll|bool|Val||Registered in epoll?|
-|nodelete|bool|Val|false|File descriptor is shared -- do not close()|
-
-#### algo_lib.FLockfile - 
-<a href="#algo_lib-flockfile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|filename|algo.cstring|Val|
-|fildes|algo_lib.FFildes|Val|
-
-#### algo_lib.FLogcat - 
-<a href="#algo_lib-flogcat"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[dmmeta.Logcat](/txt/ssimdb/dmmeta/logcat.md)|Base|
-
-#### algo_lib.FReplvar - 
-<a href="#algo_lib-freplvar"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|p_replscope|algo_lib.Replscope|Upptr||Parent|
-|key|algo.cstring|Val||Key|
-|value|algo.cstring|Val||Value|
-|nsubst|i32|Val||Number of times variable accessed|
-
-#### algo_lib.FTempfile - 
-<a href="#algo_lib-ftempfile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|filename|algo.cstring|Val|
-|fildes|algo_lib.FFildes|Val|
-
-#### algo_lib.FTimehook - 
-<a href="#algo_lib-ftimehook"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|time|algo.SchedTime|Val||Time the hook is scheduled to expire|
-|delay|algo.SchedTime|Val||Minimum delay between iterations|
-|hook|algo_lib.FTimehook|Hook||Function to call|
-|recurrent|bool|Val||If true, automatically reschedule|
-
-#### algo_lib.FTxtcell - 
-<a href="#algo_lib-ftxtcell"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|p_txtrow|algo_lib.FTxtrow|Upptr|
-|justify|algo.TextJust|Val|algo_TextJust_j_left|Justification of text within cell|
-|style|algo.TermStyle|Val||Text style|
-|span|i32|Val|1|Span in columns|
-|width|i32|Val|0|Width in chars|
-|text|algo.cstring|Val||Cell contents|
-|rsep|algo.cstring|Val||Right separator|
-
-#### algo_lib.FTxtrow - Table row. Todo: absolute index for cells?
-<a href="#algo_lib-ftxtrow"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|p_txttbl|algo_lib.FTxttbl|Upptr|
-|select|bool|Val|true|Select for processing|
-|ishdr|bool|Val|false|Is header row|
-|sortkey|algo.cstring|Val||Sort key|
-|c_txtcell|algo_lib.FTxtcell|Ptrary|
-
-#### algo_lib.FTxttbl - Table row. Todo: absolute index for cells?
-<a href="#algo_lib-ftxttbl"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|c_txtrow|algo_lib.FTxtrow|Ptrary||Array of cells|
-|col_space|i32|Val|2|Extra space between columns|
-|hdr_row|i32|Val|0|Index of header row (default -1)|
-|normalized|bool|Val||Cell widths computed|
-
-#### algo_lib.InTextFile - 
-<a href="#algo_lib-intextfile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|file|algo_lib.FFildes|Val|
-|own_fd|bool|Val|true|
-|line_buf|algo.LineBuf|Val|
-|temp_buf|u8|Inlary|
-
-#### algo_lib.Mmap - 
-<a href="#algo_lib-mmap"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|mem|algo.memptr|Val||Memory that has been mmap()ed|
-
-#### algo_lib.MmapFile - 
-<a href="#algo_lib-mmapfile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|map|algo_lib.Mmap|Val||Pointer to shared memory|
-|fd|algo_lib.FFildes|Val||Associated file descriptor|
-|text|algo.strptr|Val||Alias to map.mem, accessible as text|
-
-#### algo_lib.Regx - Parsed regular expression
-<a href="#algo_lib-regx"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|expr|algo.cstring|Val||Original string expression in some unspecified regx dialect|
-|state|algo_lib.RegxState|Tary||Array of states|
-|front|algo_lib.Bitset|Val||Temporary front (for matching)|
-|next_front|algo_lib.Bitset|Val||Next front (for matching)|
-|start|algo_lib.Bitset|Val||Set of starting states|
-|accept|i32|Val||Accept state|
-|parseerror|bool|Val||Non-fatal error while parsing|
-|accepts_all|bool|Val||True if this regx matches anything|
-|literal|bool|Val||True if expr may be matched literally (set during translation)|
-
-#### algo_lib.RegxExpr - 
-<a href="#algo_lib-regxexpr"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|type|algo_lib.RegxToken|Val|
-|in|i32|Val||Input state|
-|out|algo_lib.Bitset|Val||Output states|
-
-#### algo_lib.RegxParse - Function to parse regx
-<a href="#algo_lib-regxparse"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|input|algo.strptr|Val||Input string|
-|p_regx|algo_lib.Regx|Upptr||Output regx -- by reference|
-|ary_expr|algo_lib.RegxExpr|Tary||Output expression array|
-
-#### algo_lib.RegxState - 
-<a href="#algo_lib-regxstate"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|ch_class|algo.i32_Range|Tary||What to match|
-|out|algo_lib.Bitset|Val||Where to go on a match|
-|accept_all|bool|Val||Regx always succeeds from here|
-
-#### algo_lib.RegxToken - 
-<a href="#algo_lib-regxtoken"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|type|i32|Val||State|
-
-#### algo_lib.Replscope - 
-<a href="#algo_lib-replscope"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|eatcomma|bool|Val|true|
-|fatal|bool|Val||Kill process on bad substitution|
-|ind_replvar|algo_lib.FReplvar|Thash|
-
-#### algo_lib.ShHdr - 
-<a href="#algo_lib-shhdr"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|magic|u32|Val|0x09202017|Signature|
-|name|algo.RspaceStr32|Val||User defined name|
-|dataoffset|u64|Val|4096|Offset to beginning of data|
-|eof|u64|Val|
-|sof|u64|Val|
-|bufsize|u64|Val|
-|pad|u64|Val|
-
-#### algo_lib.Srng - Command function, a single word
-<a href="#algo_lib-srng"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|z|u32|Val|123|
-|w|u32|Val|456|
-
-#### algo_lib.Tabulate - Function to tabulate a string
-<a href="#algo_lib-tabulate"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|width|i32|Tary|
-|temp|algo.cstring|Val|
-
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
@@ -753,9 +385,10 @@ i64 algo::GetFileSize(Fildes fd) NOTHROW
 ```
 
 ```c++
-// Strip directory name in PATH. and return the rest
-// This is equivalent to Pathcomp(path,"/RR");
-// c:\dir\file.txt -> file
+// Strip extension from PATH, then strip directory name from PATH,
+// and return the remainder.
+// c.d      -> c
+// /a/b/c.d -> c
 strptr algo::GetFileName(const strptr& path) NOTHROW 
 ```
 
@@ -766,10 +399,16 @@ tempstr algo::ReplaceFileName(const strptr& a, const strptr& b)
 ```
 
 ```c++
+// Return modification time of file FILENAME
+// If file is not found or is not accessible, return 0.
 algo::UnTime algo::ModTime(strptr filename) 
 ```
 
 ```c++
+// Remove directory.
+// Return TRUE if operaiton succeeds
+// The function will fail if the directory is not empty. For that case,
+// use RemDirRecurse.
 bool algo::RemDir(strptr name) 
 ```
 
@@ -782,10 +421,12 @@ bool algo::RemDirRecurse(strptr name, bool remove_topmost)
 ```
 
 ```c++
+// User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
 void algo::dir_handle_Cleanup(algo::DirEntry &dir_entry) 
 ```
 
 ```c++
+// User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
 void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) 
 ```
 
@@ -1378,6 +1019,10 @@ void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str)
 ```
 
 ```c++
+void algo_lib::FTxttbl_Markdown(algo_lib::FTxttbl &T_, algo::cstring &str) 
+```
+
+```c++
 void algo::URL_Print(algo::URL &url, algo::cstring &str) 
 ```
 
@@ -1652,6 +1297,10 @@ void algo::u64_PrintBase32(u64 k, algo::cstring &str)
 ```
 
 ```c++
+void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) 
+```
+
+```c++
 void algo_lib::IohookInit() 
 ```
 
@@ -1716,10 +1365,6 @@ void algo_lib::ReqExitMainLoop()
 
 ```c++
 void algo_lib::fd_Cleanup(algo_lib::FFildes &fildes) 
-```
-
-```c++
-bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2) 
 ```
 
 ```c++
@@ -2517,10 +2162,6 @@ void algo::MaybeDirSep(cstring &str)
 ```
 
 ```c++
-i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) 
-```
-
-```c++
 algo::Attr_curs::Attr_curs() 
 ```
 
@@ -2761,6 +2402,14 @@ void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col, algo_TextJust
 
 ```c++
 void algo_lib::AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col) 
+```
+
+```c++
+void algo_lib::AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify) 
+```
+
+```c++
+void algo_lib::AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv) 
 ```
 
 ```c++
@@ -4129,8 +3778,25 @@ inline u8 algo::u8_ReverseBits(u8 b)
 inline algo::UnTime algo::CurrUnTime() 
 ```
 
+```c++
+inline i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) 
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`algo_lib` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -4187,10 +3853,1200 @@ The following source files are part of this tool:
 |[include/u128.h](/include/u128.h)||
 |[include/win32.h](/include/win32.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`algo_lib` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`algo_lib` generated code creates the tables below.
+All allocations are done through global `algo_lib::_db` [algo_lib.FDb](#algo_lib-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[algo_lib.Bitset](#algo_lib-bitset)||
+|[algo_lib.Cmdline](#algo_lib-cmdline)||
+|[algo_lib.CsvParse](#algo_lib-csvparse)||FDb.csvparse (Cppstack)|
+|[algo_lib.ErrorX](#algo_lib-errorx)||FDb.error (Cppstack)|
+|[algo_lib.FFildes](#algo_lib-ffildes)||FDb.fildes (Cppstack)|
+|[algo_lib.FLockfile](#algo_lib-flockfile)||
+|[algo_lib.FTimehook](#algo_lib-ftimehook)||FDb.timehook (Cppstack)|bh_timehook (Bheap, sort field time)|c_timehook (Ptr)|
+||||FTimehook.hook (Hook)|
+|[algo_lib.FImdb](#algo_lib-fimdb)||FDb.imdb (Inlary)|ind_imdb (Thash, hash field imdb)|
+|[algo_lib.FLogcat](#algo_lib-flogcat)|[dmmeta.logcat](/txt/ssimdb/dmmeta/logcat.md)|FDb.logcat (Inlary)|**static**|ind_logcat (Thash, hash field logcat)|
+|[algo_lib.FDb](#algo_lib-fdb)||FDb._db (Global)|
+|[algo_lib.FDispsigcheck](#algo_lib-fdispsigcheck)|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|FDb.dispsigcheck (Lary)|dispsigcheck (Lary, by rowid)|ind_dispsigcheck (Thash, hash field dispsig)|
+|[algo_lib.FImtable](#algo_lib-fimtable)||FDb.imtable (Lary)|imtable (Lary, by rowid)|ind_imtable (Thash, hash field imtable)|
+|[algo_lib.FIohook](#algo_lib-fiohook)||FDb.iohook (Cppstack)|
+||||FIohook.callback (Hook)|
+|[algo_lib.FReplvar](#algo_lib-freplvar)||FDb.replvar (Tpool)|
+||||Replscope.ind_replvar (Thash)|
+|[algo_lib.FTempfile](#algo_lib-ftempfile)||
+|[algo_lib.FTxtcell](#algo_lib-ftxtcell)||FDb.txtcell (Tpool)|
+||||FTxtrow.c_txtcell (Ptrary)|
+|[algo_lib.FTxtrow](#algo_lib-ftxtrow)||FDb.txtrow (Tpool)|
+||||FTxtcell.p_txtrow (Upptr)|
+||||FTxttbl.c_txtrow (Ptrary)|
+|[algo_lib.FTxttbl](#algo_lib-ftxttbl)||FDb.txttbl (Cppstack)|
+||||FTxtrow.p_txttbl (Upptr)|
+|[algo_lib.InTextFile](#algo_lib-intextfile)||
+|[algo_lib.Mmap](#algo_lib-mmap)||
+|[algo_lib.MmapFile](#algo_lib-mmapfile)||
+|[algo_lib.Regx](#algo_lib-regx)||FDb.regx (Cppstack)|
+||||RegxParse.p_regx (Upptr)|
+|[algo_lib.RegxToken](#algo_lib-regxtoken)||
+|[algo_lib.RegxExpr](#algo_lib-regxexpr)||RegxParse.ary_expr (Tary)|
+|[algo_lib.RegxParse](#algo_lib-regxparse)||FDb.regxparse (Cppstack)|
+|[algo_lib.RegxState](#algo_lib-regxstate)||Regx.state (Tary)|
+|[algo_lib.Replscope](#algo_lib-replscope)||FDb.replscope (Cppstack)|
+||||FReplvar.p_replscope (Upptr)|
+|[algo_lib.ShHdr](#algo_lib-shhdr)||
+|[algo_lib.Srng](#algo_lib-srng)||
+|[algo_lib.Tabulate](#algo_lib-tabulate)||FDb.tabulate (Cppstack)|
+
+#### algo_lib.Bitset - 
+<a href="#algo_lib-bitset"></a>
+
+#### algo_lib.Bitset Fields
+<a href="#algo_lib-bitset-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Bitset.ary|u64|[Tary](/txt/exe/amc/reftypes.md#tary)|||
+
+#### Struct Bitset
+<a href="#struct-bitset"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Bitset { // algo_lib.Bitset
+    u64*   ary_elems;   // pointer to elements
+    u32    ary_n;       // number of elements in array
+    u32    ary_max;     // max. capacity of array before realloc
+    // Copy from aryptr (operator=)
+    // func:algo_lib.Bitset.ary.AssignAryptr
+    inline void          operator =(const algo::aryptr<u64> &rhs) __attribute__((nothrow));
+    // func:algo_lib.Bitset.ary.CtorAryptr
+    explicit inline               Bitset(const algo::aryptr<u64> &rhs) __attribute__((nothrow));
+    // func:algo_lib.Bitset..AssignOp
+    algo_lib::Bitset&    operator =(const algo_lib::Bitset &rhs) __attribute__((nothrow));
+    // func:algo_lib.Bitset..Ctor
+    inline               Bitset() __attribute__((nothrow));
+    // func:algo_lib.Bitset..Dtor
+    inline               ~Bitset() __attribute__((nothrow));
+    // func:algo_lib.Bitset..CopyCtor
+    Bitset(const algo_lib::Bitset &rhs) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Cmdline - *can't move this to command namespace because of circular dependency*
+<a href="#algo_lib-cmdline"></a>
+
+#### algo_lib.Cmdline Fields
+<a href="#algo_lib-cmdline-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Cmdline.verbose|u8|[Val](/txt/exe/amc/reftypes.md#val)||Verbosity level (0..255)|
+|algo_lib.Cmdline.debug|u8|[Val](/txt/exe/amc/reftypes.md#val)||Debug level (0..255)|
+|algo_lib.Cmdline.help|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print help and exit|
+|algo_lib.Cmdline.version|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print version and exit|
+|algo_lib.Cmdline.signature|bool|[Val](/txt/exe/amc/reftypes.md#val)||Show signatures and exit|
+|algo_lib.Cmdline.v|u8|[Alias](/txt/exe/amc/reftypes.md#alias)||Alias for verbose|
+|algo_lib.Cmdline.d|u8|[Alias](/txt/exe/amc/reftypes.md#alias)||Alias for debug|
+|algo_lib.Cmdline.sig|bool|[Alias](/txt/exe/amc/reftypes.md#alias)||Alias for signature|
+|algo_lib.Cmdline.h|bool|[Alias](/txt/exe/amc/reftypes.md#alias)||Alias for help|
+
+#### Struct Cmdline
+<a href="#struct-cmdline"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Cmdline { // algo_lib.Cmdline: *can't move this to command namespace because of circular dependency*
+    u8     verbose;     //   0  Verbosity level (0..255)
+    u8     debug;       //   0  Debug level (0..255)
+    bool   help;        //   false  Print help and exit
+    bool   version;     //   false  Print version and exit
+    bool   signature;   //   false  Show signatures and exit
+    // func:algo_lib.Cmdline..Ctor
+    inline               Cmdline() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.CsvParse - 
+<a href="#algo_lib-csvparse"></a>
+
+#### algo_lib.CsvParse Fields
+<a href="#algo_lib-csvparse-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.CsvParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Input string|
+|algo_lib.CsvParse.sep|char|[Val](/txt/exe/amc/reftypes.md#val)|','|Input: separator|
+|algo_lib.CsvParse.quotechar1|char|[Val](/txt/exe/amc/reftypes.md#val)|'\"'|Allow this quote|
+|algo_lib.CsvParse.quotechar2|char|[Val](/txt/exe/amc/reftypes.md#val)|'\''|Allow this quote as well|
+|algo_lib.CsvParse.ary_tok|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||Output: array of tokens|
+|algo_lib.CsvParse.openquote|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|On output: set if unbalanced quote found|
+
+#### Struct CsvParse
+<a href="#struct-csvparse"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct CsvParse { // algo_lib.CsvParse
+    algo::strptr     input;           // Input string
+    char             sep;             //   ','  Input: separator
+    char             quotechar1;      //   '\"'  Allow this quote
+    char             quotechar2;      //   '\''  Allow this quote as well
+    algo::cstring*   ary_tok_elems;   // pointer to elements
+    u32              ary_tok_n;       // number of elements in array
+    u32              ary_tok_max;     // max. capacity of array before realloc
+    bool             openquote;       //   true  On output: set if unbalanced quote found
+    // func:algo_lib.CsvParse..AssignOp
+    algo_lib::CsvParse&  operator =(const algo_lib::CsvParse &rhs) __attribute__((nothrow));
+    // func:algo_lib.CsvParse..Ctor
+    inline               CsvParse() __attribute__((nothrow));
+    // func:algo_lib.CsvParse..Dtor
+    inline               ~CsvParse() __attribute__((nothrow));
+    // func:algo_lib.CsvParse..CopyCtor
+    CsvParse(const algo_lib::CsvParse &rhs) __attribute__((nothrow));
+    // func:algo_lib.CsvParse..FieldwiseCtor
+    explicit inline               CsvParse(algo::strptr in_input, char in_sep, char in_quotechar1, char in_quotechar2, bool in_openquote) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.ErrorX - 
+<a href="#algo_lib-errorx"></a>
+
+#### algo_lib.ErrorX Fields
+<a href="#algo_lib-errorx-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.ErrorX.str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct ErrorX
+<a href="#struct-errorx"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct ErrorX { // algo_lib.ErrorX
+    algo::cstring   str;   //
+    // func:algo_lib.ErrorX..Ctor
+    inline               ErrorX() __attribute__((nothrow));
+    // func:algo_lib.ErrorX..FieldwiseCtor
+    explicit inline               ErrorX(const algo::strptr& in_str) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FFildes - Wrapper for unix file descritor, call close() on Uninit
+<a href="#algo_lib-ffildes"></a>
+
+#### algo_lib.FFildes Fields
+<a href="#algo_lib-ffildes-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FFildes.fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FFildes
+<a href="#struct-ffildes"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FFildes { // algo_lib.FFildes: Wrapper for unix file descritor, call close() on Uninit
+    algo::Fildes   fd;   //
+    // func:algo_lib.FFildes..Ctor
+    inline               FFildes() __attribute__((nothrow));
+    // func:algo_lib.FFildes..Dtor
+    inline               ~FFildes() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FLockfile - 
+<a href="#algo_lib-flockfile"></a>
+
+#### algo_lib.FLockfile Fields
+<a href="#algo_lib-flockfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FLockfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FLockfile.fildes|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FLockfile
+<a href="#struct-flockfile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FLockfile { // algo_lib.FLockfile
+    algo::cstring       filename;   //
+    algo_lib::FFildes   fildes;     //
+    // func:algo_lib.FLockfile..Ctor
+    inline               FLockfile() __attribute__((nothrow));
+    // func:algo_lib.FLockfile..Dtor
+    inline               ~FLockfile() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FTimehook - 
+<a href="#algo_lib-ftimehook"></a>
+
+#### algo_lib.FTimehook Fields
+<a href="#algo_lib-ftimehook-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FTimehook.time|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Time the hook is scheduled to expire|
+|algo_lib.FTimehook.delay|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Minimum delay between iterations|
+|algo_lib.FTimehook.hook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Hook](/txt/exe/amc/reftypes.md#hook)||Function to call|
+|algo_lib.FTimehook.recurrent|bool|[Val](/txt/exe/amc/reftypes.md#val)||If true, automatically reschedule|
+
+#### Struct FTimehook
+<a href="#struct-ftimehook"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FTimehook { // algo_lib.FTimehook
+    algo::SchedTime                time;              // Time the hook is scheduled to expire
+    algo::SchedTime                delay;             // Minimum delay between iterations
+    algo_lib::timehook_hook_hook   hook;              //   NULL  Pointer to a function
+    u64                            hook_ctx;          //   0  Callback context
+    bool                           recurrent;         //   false  If true, automatically reschedule
+    i32                            bh_timehook_idx;   // index in heap; -1 means not-in-heap
+    // reftype Hook of algo_lib.FTimehook.hook prohibits copy
+    // func:algo_lib.FTimehook..AssignOp
+    inline algo_lib::FTimehook& operator =(const algo_lib::FTimehook &rhs) = delete;
+    // func:algo_lib.FTimehook..Ctor
+    inline               FTimehook() __attribute__((nothrow));
+    // func:algo_lib.FTimehook..Dtor
+    inline               ~FTimehook() __attribute__((nothrow));
+    // reftype Hook of algo_lib.FTimehook.hook prohibits copy
+    // func:algo_lib.FTimehook..CopyCtor
+    inline               FTimehook(const algo_lib::FTimehook &rhs) = delete;
+};
+```
+
+#### algo_lib.FImdb - In-memory database descriptor (reflection)
+<a href="#algo_lib-fimdb"></a>
+
+#### algo_lib.FImdb Fields
+<a href="#algo_lib-fimdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FImdb.msghdr|[algo.Imdb](/txt/protocol/algo/README.md#algo-imdb)|[Base](#algo-imdb-fields)|||
+#### algo.Imdb Fields
+<a href="#algo-imdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo.Imdb.imdb|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)||Database name|
+|algo.Imdb.InsertStrptrMaybe|[algo.ImdbInsertStrptrMaybeFcn](/txt/protocol/algo/README.md#algo-imdbinsertstrptrmaybefcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Insert new element given a string|
+|algo.Imdb.Step|[algo.ImdbStepFcn](/txt/protocol/algo/README.md#algo-imdbstepfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Perform one step (may be NULL)|
+|algo.Imdb.MainLoop|[algo.ImdbMainLoopFcn](/txt/protocol/algo/README.md#algo-imdbmainloopfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Loop!|
+|algo.Imdb.GetTrace|[algo.ImdbGetTraceFcn](/txt/protocol/algo/README.md#algo-imdbgettracefcn)|[Val](/txt/exe/amc/reftypes.md#val)|0||
+|algo.Imdb.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FImdb
+<a href="#struct-fimdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FImdb { // algo_lib.FImdb
+    algo::Smallstr50                 imdb;                // Database name
+    algo::ImdbInsertStrptrMaybeFcn   InsertStrptrMaybe;   //   0  Insert new element given a string
+    algo::ImdbStepFcn                Step;                //   0  Perform one step (may be NULL)
+    algo::ImdbMainLoopFcn            MainLoop;            //   0  Loop!
+    algo::ImdbGetTraceFcn            GetTrace;            //   0
+    algo::Comment                    comment;             //
+    algo_lib::FImdb*                 ind_imdb_next;       // hash next
+    // func:algo_lib.FImdb..AssignOp
+    inline algo_lib::FImdb& operator =(const algo_lib::FImdb &rhs) = delete;
+    // func:algo_lib.FImdb..Ctor
+    inline               FImdb() __attribute__((nothrow));
+    // func:algo_lib.FImdb..Dtor
+    inline               ~FImdb() __attribute__((nothrow));
+    // func:algo_lib.FImdb..CopyCtor
+    inline               FImdb(const algo_lib::FImdb &rhs) = delete;
+};
+```
+
+#### algo_lib.FLogcat - Log category
+<a href="#algo_lib-flogcat"></a>
+
+#### algo_lib.FLogcat Fields
+<a href="#algo_lib-flogcat-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FLogcat.base|[dmmeta.Logcat](/txt/ssimdb/dmmeta/logcat.md)|[Base](/txt/ssimdb/dmmeta/logcat.md)|||
+
+#### Struct FLogcat
+<a href="#struct-flogcat"></a>
+*Note:* field ``algo_lib.FLogcat.base`` has reftype ``base`` so the fields of [dmmeta.Logcat](/txt/ssimdb/dmmeta/logcat.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FLogcat { // algo_lib.FLogcat
+    algo::Smallstr50     logcat;            //
+    bool                 enabled;           //   false
+    bool                 builtin;           //   false
+    algo::Comment        comment;           //
+    algo_lib::FLogcat*   ind_logcat_next;   // hash next
+    // func:algo_lib.FLogcat..AssignOp
+    inline algo_lib::FLogcat& operator =(const algo_lib::FLogcat &rhs) = delete;
+    // func:algo_lib.FLogcat..Ctor
+    inline               FLogcat() __attribute__((nothrow));
+    // func:algo_lib.FLogcat..Dtor
+    inline               ~FLogcat() __attribute__((nothrow));
+    // func:algo_lib.FLogcat..CopyCtor
+    inline               FLogcat(const algo_lib::FLogcat &rhs) = delete;
+};
+```
+
+#### algo_lib.FDb - In-memory database for algo_lib
+<a href="#algo_lib-fdb"></a>
+
+#### algo_lib.FDb Fields
+<a href="#algo_lib-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FDb.cstring|[algo.cstring](/txt/protocol/algo/cstring.md)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)|||
+|algo_lib.FDb.sbrk|u8|[Sbrk](/txt/exe/amc/reftypes.md#sbrk)||Base allocator for everything|
+|algo_lib.FDb.lpool|u8|[Lpool](/txt/exe/amc/reftypes.md#lpool)||private memory pool|
+|algo_lib.FDb.next_loop|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.limit|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)|0x7fffffffffffffff||
+|algo_lib.FDb.clocks_to_ms|double|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.n_iohook|u32|[Val](/txt/exe/amc/reftypes.md#val)|0|Number of iohooks in epoll|
+|algo_lib.FDb.clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Current cpu clock value|
+|algo_lib.FDb.mainloop_clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Mainloop cpu clock value|
+|algo_lib.FDb.start_clock|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||cpu clock value at startup|
+|algo_lib.FDb.hz|double|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.t_last_signal|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Time last async signal was processed|
+|algo_lib.FDb.exit_code|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Exit code from main program. 0 = success (this is the unix exit code!)|
+|algo_lib.FDb.clocks_to_ns|double|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.n_temp|u32|[Val](/txt/exe/amc/reftypes.md#val)|0|* initialization order is important *|
+|algo_lib.FDb.last_signal|u32|[Val](/txt/exe/amc/reftypes.md#val)||Value of last signal (used by SetupExitSignals)|
+|algo_lib.FDb.eol|bool|[Val](/txt/exe/amc/reftypes.md#val)|false||
+|algo_lib.FDb.cpu_hz|u64|[Val](/txt/exe/amc/reftypes.md#val)||Cpu HZ, determined at startup|
+|algo_lib.FDb.fildes|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.temp_strings|[algo.cstring](/txt/protocol/algo/cstring.md)|[Inlary](/txt/exe/amc/reftypes.md#inlary)||* initialization order is important *|
+|algo_lib.FDb.ArgvIdent|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.BashQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.RegxSqlSpecial|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.SsimBreakName|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.SsimBreakValue|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.SsimQuotesafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb._db|[algo_lib.FDb](/txt/lib/algo_lib/README.md#algo_lib-fdb)|[Global](/txt/exe/amc/reftypes.md#global)||* initialization order is important *|
+|algo_lib.FDb.imtable|[algo_lib.FImtable](/txt/lib/algo_lib/README.md#algo_lib-fimtable)|[Lary](/txt/exe/amc/reftypes.md#lary)||Array of all in-memory tables linked into this process|
+|algo_lib.FDb.ind_imtable|[algo_lib.FImtable](/txt/lib/algo_lib/README.md#algo_lib-fimtable)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|algo_lib.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/README.md#algo_lib-fiohook)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.timehook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.replscope|[algo_lib.Replscope](/txt/lib/algo_lib/README.md#algo_lib-replscope)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.error|[algo_lib.ErrorX](/txt/lib/algo_lib/README.md#algo_lib-errorx)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)|||
+|algo_lib.FDb.csvparse|[algo_lib.CsvParse](/txt/lib/algo_lib/README.md#algo_lib-csvparse)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.regxparse|[algo_lib.RegxParse](/txt/lib/algo_lib/README.md#algo_lib-regxparse)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.regx|[algo_lib.Regx](/txt/lib/algo_lib/README.md#algo_lib-regx)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.tabulate|[algo_lib.Tabulate](/txt/lib/algo_lib/README.md#algo_lib-tabulate)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.log_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.bh_timehook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Bheap](/txt/exe/amc/reftypes.md#bheap)||Binary heap of time-based callbacks|
+|algo_lib.FDb.epoll_fd|i32|[Val](/txt/exe/amc/reftypes.md#val)|-1||
+|algo_lib.FDb.lock_core|[algo_lib.FLockfile](/txt/lib/algo_lib/README.md#algo_lib-flockfile)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.c_timehook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Ptr](/txt/exe/amc/reftypes.md#ptr)||TEMP: here only for dependency reasons|
+|algo_lib.FDb._timehook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftypes.md#val)||Keep me here i'm special|
+|algo_lib.FDb.dispsigcheck|[algo_lib.FDispsigcheck](/txt/lib/algo_lib/README.md#algo_lib-fdispsigcheck)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|algo_lib.FDb.ind_dispsigcheck|[algo_lib.FDispsigcheck](/txt/lib/algo_lib/README.md#algo_lib-fdispsigcheck)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|algo_lib.FDb.imdb|[algo_lib.FImdb](/txt/lib/algo_lib/README.md#algo_lib-fimdb)|[Inlary](/txt/exe/amc/reftypes.md#inlary)|||
+|algo_lib.FDb.ind_imdb|[algo_lib.FImdb](/txt/lib/algo_lib/README.md#algo_lib-fimdb)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|algo_lib.FDb.malloc|u8|[Malloc](/txt/exe/amc/reftypes.md#malloc)||Pool for everything else|
+|algo_lib.FDb.txtcell|[algo_lib.FTxtcell](/txt/lib/algo_lib/README.md#algo_lib-ftxtcell)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|algo_lib.FDb.txtrow|[algo_lib.FTxtrow](/txt/lib/algo_lib/README.md#algo_lib-ftxtrow)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|algo_lib.FDb.txttbl|[algo_lib.FTxttbl](/txt/lib/algo_lib/README.md#algo_lib-ftxttbl)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|algo_lib.FDb.argc|i32|[Val](/txt/exe/amc/reftypes.md#val)||Argc from main|
+|algo_lib.FDb.argv|char*|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Argv from main|
+|algo_lib.FDb.xref_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.errtext|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.varlenbuf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|algo_lib.FDb.replvar|[algo_lib.FReplvar](/txt/lib/algo_lib/README.md#algo_lib-freplvar)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|algo_lib.FDb.cmdline|[algo_lib.Cmdline](/txt/lib/algo_lib/README.md#algo_lib-cmdline)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.h_fatalerror||[Hook](/txt/exe/amc/reftypes.md#hook)|||
+|algo_lib.FDb.giveup_count|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.fatalerr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.stringtofile_nwrite|u32|[Val](/txt/exe/amc/reftypes.md#val)||Global counter of # of files written|
+|algo_lib.FDb.giveup_time|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Trigger for giveup_time loop|
+|algo_lib.FDb.sleep_roundup|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.last_sleep_clocks|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.msgtemp|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.show_insert_err_lim|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.DigitChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.NewLineChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.WhiteChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.DirSep|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.IdentChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.IdentStart|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.AlphaChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.HexChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.UpperChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.CmdLineNameBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.CmdLineValueBreak|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.WordSeparator|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.LowerChar|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.Urlsafe|[algo.Charset](/txt/protocol/algo/Charset.md)|[Charset](/txt/exe/amc/reftypes.md#charset)|||
+|algo_lib.FDb.winjob|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftypes.md#val)|algo::Prlog||
+|algo_lib.FDb.logcat|[algo_lib.FLogcat](/txt/lib/algo_lib/README.md#algo_lib-flogcat)|[Inlary](/txt/exe/amc/reftypes.md#inlary)|||
+|algo_lib.FDb.ind_logcat|[algo_lib.FLogcat](/txt/lib/algo_lib/README.md#algo_lib-flogcat)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|algo_lib.FDb.show_tstamp|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.tstamp_fmt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"%Y/%m/%dT%H:%M:%S.%.6X "||
+|algo_lib.FDb.fildes_stdout|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)|1||
+|algo_lib.FDb.fildes_stderr|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)|2||
+|algo_lib.FDb.pending_eol|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FDb.exec_args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)|||
+|algo_lib.FDb.dirstack|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||Directory stack for PushDir/PopDir|
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FDb { // algo_lib.FDb: In-memory database for algo_lib
+    u64                               sbrk_huge_limit;                              // Huge page limit in bytes -- set to 0 with fork!
+    u64                               sbrk_huge_alloc;                              // Huge page bytes allocated
+    bool                              sbrk_zeromem;                                 // Zero allocated memory
+    lpool_Lpblock*                    lpool_free[36];                               // Lpool levels
+    algo::SchedTime                   next_loop;                                    //
+    algo::SchedTime                   limit;                                        //   0x7fffffffffffffff
+    double                            clocks_to_ms;                                 //   0.0
+    u32                               n_iohook;                                     //   0  Number of iohooks in epoll
+    algo::SchedTime                   clock;                                        // Current cpu clock value
+    algo::SchedTime                   mainloop_clock;                               // Mainloop cpu clock value
+    algo::SchedTime                   start_clock;                                  // cpu clock value at startup
+    double                            hz;                                           //   0.0
+    algo::SchedTime                   t_last_signal;                                // Time last async signal was processed
+    i32                               exit_code;                                    //   0  Exit code from main program. 0 = success (this is the unix exit code!)
+    double                            clocks_to_ns;                                 //   0.0
+    u32                               n_temp;                                       //   0  * initialization order is important *
+    u32                               last_signal;                                  //   0  Value of last signal (used by SetupExitSignals)
+    bool                              eol;                                          //   false
+    u64                               cpu_hz;                                       //   0  Cpu HZ, determined at startup
+    algo::cstring                     temp_strings_elems[8];                        // fixed array
+    algo::Charset                     ArgvIdent;                                    //
+    algo::Charset                     BashQuotesafe;                                //
+    algo::Charset                     RegxSqlSpecial;                               //
+    algo::Charset                     SsimBreakName;                                //
+    algo::Charset                     SsimBreakValue;                               //
+    algo::Charset                     SsimQuotesafe;                                //
+    algo_lib::FImtable*               imtable_lary[32];                             // level array
+    i32                               imtable_n;                                    // number of elements in array
+    algo_lib::FImtable**              ind_imtable_buckets_elems;                    // pointer to bucket array
+    i32                               ind_imtable_buckets_n;                        // number of elements in bucket array
+    i32                               ind_imtable_n;                                // number of elements in the hash table
+    algo::cstring                     log_str;                                      //
+    algo_lib::FTimehook**             bh_timehook_elems;                            // binary heap by time
+    i32                               bh_timehook_n;                                // number of elements in the heap
+    i32                               bh_timehook_max;                              // max elements in bh_timehook_elems
+    i32                               epoll_fd;                                     //   -1
+    algo_lib::FLockfile               lock_core;                                    //
+    algo_lib::FTimehook*              c_timehook;                                   // TEMP: here only for dependency reasons. optional pointer
+    algo_lib::FTimehook               _timehook;                                    // Keep me here i'm special
+    algo_lib::FDispsigcheck*          dispsigcheck_lary[32];                        // level array
+    i32                               dispsigcheck_n;                               // number of elements in array
+    algo_lib::FDispsigcheck**         ind_dispsigcheck_buckets_elems;               // pointer to bucket array
+    i32                               ind_dispsigcheck_buckets_n;                   // number of elements in bucket array
+    i32                               ind_dispsigcheck_n;                           // number of elements in the hash table
+    u128                              imdb_data[sizeu128(algo_lib::FImdb,32)];      // place for data
+    i32                               imdb_n;                                       // number of elems current in existence
+    enum { imdb_max = 32 };
+    algo_lib::FImdb**                 ind_imdb_buckets_elems;                       // pointer to bucket array
+    i32                               ind_imdb_buckets_n;                           // number of elements in bucket array
+    i32                               ind_imdb_n;                                   // number of elements in the hash table
+    u64                               txtcell_blocksize;                            // # bytes per block
+    algo_lib::FTxtcell*               txtcell_free;                                 //
+    u64                               txtrow_blocksize;                             // # bytes per block
+    algo_lib::FTxtrow*                txtrow_free;                                  //
+    i32                               argc;                                         //   0  Argc from main
+    char**                            argv;                                         // Argv from main. optional pointer
+    algo::cstring                     xref_error;                                   //
+    algo::cstring                     errtext;                                      //
+    algo::ByteAry*                    varlenbuf;                                    // optional pointer
+    u64                               replvar_blocksize;                            // # bytes per block
+    algo_lib::FReplvar*               replvar_free;                                 //
+    algo_lib::Cmdline                 cmdline;                                      //
+    algo_lib::_db_h_fatalerror_hook   h_fatalerror;                                 //   NULL  Pointer to a function
+    u64                               h_fatalerror_ctx;                             //   0  Callback context
+    u64                               giveup_count;                                 //   0
+    algo::cstring                     fatalerr;                                     //
+    u32                               stringtofile_nwrite;                          //   0  Global counter of # of files written
+    bool                              giveup_time;                                  //   true  Trigger for giveup_time loop
+    bool                              sleep_roundup;                                //   false
+    u64                               last_sleep_clocks;                            //   0
+    algo::ByteAry                     msgtemp;                                      //
+    u32                               show_insert_err_lim;                          //   0
+    algo::Charset                     Urlsafe;                                      //
+    u64                               winjob;                                       //   0
+    algo::PrlogFcn                    Prlog;                                        //   algo::Prlog
+    u128                              logcat_data[sizeu128(algo_lib::FLogcat,3)];   // place for data
+    i32                               logcat_n;                                     // number of elems current in existence
+    enum { logcat_max = 3 };
+    algo_lib::FLogcat**               ind_logcat_buckets_elems;                     // pointer to bucket array
+    i32                               ind_logcat_buckets_n;                         // number of elements in bucket array
+    i32                               ind_logcat_n;                                 // number of elements in the hash table
+    bool                              show_tstamp;                                  //   false
+    algo::cstring                     tstamp_fmt;                                   //   "%Y/%m/%dT%H:%M:%S.%.6X "
+    algo::Fildes                      fildes_stdout;                                //   1
+    algo::Fildes                      fildes_stderr;                                //   2
+    bool                              pending_eol;                                  //   false
+    algo::cstring*                    exec_args_elems;                              // pointer to elements
+    u32                               exec_args_n;                                  // number of elements in array
+    u32                               exec_args_max;                                // max. capacity of array before realloc
+    algo::cstring*                    dirstack_elems;                               // pointer to elements
+    u32                               dirstack_n;                                   // number of elements in array
+    u32                               dirstack_max;                                 // max. capacity of array before realloc
+    algo_lib::trace                   trace;                                        //
+};
+```
+
+#### algo_lib.FDispsigcheck - Check signature of input data against executable's version
+<a href="#algo_lib-fdispsigcheck"></a>
+
+#### algo_lib.FDispsigcheck Fields
+<a href="#algo_lib-fdispsigcheck-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FDispsigcheck.msghdr|[dmmeta.Dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|[Base](/txt/ssimdb/dmmeta/dispsigcheck.md)|||
+
+#### Struct FDispsigcheck
+<a href="#struct-fdispsigcheck"></a>
+*Note:* field ``algo_lib.FDispsigcheck.msghdr`` has reftype ``base`` so the fields of [dmmeta.Dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FDispsigcheck { // algo_lib.FDispsigcheck
+    algo_lib::FDispsigcheck*   ind_dispsigcheck_next;   // hash next
+    algo::Smallstr50           dispsig;                 //
+    algo::Sha1sig              signature;               //
+    // func:algo_lib.FDispsigcheck..AssignOp
+    inline algo_lib::FDispsigcheck& operator =(const algo_lib::FDispsigcheck &rhs) = delete;
+    // func:algo_lib.FDispsigcheck..CopyCtor
+    inline               FDispsigcheck(const algo_lib::FDispsigcheck &rhs) = delete;
+private:
+    // func:algo_lib.FDispsigcheck..Ctor
+    inline               FDispsigcheck() __attribute__((nothrow));
+    // func:algo_lib.FDispsigcheck..Dtor
+    inline               ~FDispsigcheck() __attribute__((nothrow));
+    friend algo_lib::FDispsigcheck& dispsigcheck_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend algo_lib::FDispsigcheck* dispsigcheck_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 dispsigcheck_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FImtable - In-memory table descriptor
+<a href="#algo_lib-fimtable"></a>
+
+#### algo_lib.FImtable Fields
+<a href="#algo_lib-fimtable-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FImtable.msghdr|[algo.Imtable](/txt/protocol/algo/Imtable.md)|[Base](#algo-imtable-fields)|||
+#### algo.Imtable Fields
+<a href="#algo-imtable-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo.Imtable.imtable|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)||Table name|
+|algo.Imtable.elem_type|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Element type name|
+|algo.Imtable.c_RowidFind|[algo.ImrowRowidFindFcn](/txt/protocol/algo/README.md#algo-imrowrowidfindfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Function to find element by rowid (may be NULL)|
+|algo.Imtable.XrefX|[algo.ImrowXrefXFcn](/txt/protocol/algo/README.md#algo-imrowxrefxfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Function to x-reference an element (may be NULL)|
+|algo.Imtable.NItems|[algo.ImrowNItemsFcn](/txt/protocol/algo/README.md#algo-imrownitemsfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Return number of elements in the table|
+|algo.Imtable.Print|[algo.ImrowPrintFcn](/txt/protocol/algo/README.md#algo-imrowprintfcn)|[Val](/txt/exe/amc/reftypes.md#val)|0|Convert specified element to string (may be NULL)|
+|algo.Imtable.size|i32|[Val](/txt/exe/amc/reftypes.md#val)||Size of one element (for fixed-width elements only)|
+|algo.Imtable.ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Ssimfile name (if associated)|
+|algo.Imtable.comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FImtable
+<a href="#struct-fimtable"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FImtable { // algo_lib.FImtable
+    algo_lib::FImtable*       ind_imtable_next;   // hash next
+    algo::Smallstr50          imtable;            // Table name
+    algo::Smallstr100         elem_type;          // Element type name
+    algo::ImrowRowidFindFcn   c_RowidFind;        //   0  Function to find element by rowid (may be NULL)
+    algo::ImrowXrefXFcn       XrefX;              //   0  Function to x-reference an element (may be NULL)
+    algo::ImrowNItemsFcn      NItems;             //   0  Return number of elements in the table
+    algo::ImrowPrintFcn       Print;              //   0  Convert specified element to string (may be NULL)
+    i32                       size;               //   0  Size of one element (for fixed-width elements only)
+    algo::Smallstr50          ssimfile;           // Ssimfile name (if associated)
+    algo::Comment             comment;            //
+    // func:algo_lib.FImtable..AssignOp
+    algo_lib::FImtable&  operator =(const algo_lib::FImtable &rhs) = delete;
+    // func:algo_lib.FImtable..CopyCtor
+    FImtable(const algo_lib::FImtable &rhs) = delete;
+private:
+    // func:algo_lib.FImtable..Ctor
+    inline               FImtable() __attribute__((nothrow));
+    // func:algo_lib.FImtable..Dtor
+    inline               ~FImtable() __attribute__((nothrow));
+    friend algo_lib::FImtable&  imtable_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend algo_lib::FImtable*  imtable_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 imtable_RemoveAll() __attribute__((nothrow));
+    friend void                 imtable_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FIohook - 
+<a href="#algo_lib-fiohook"></a>
+
+#### algo_lib.FIohook Fields
+<a href="#algo_lib-fiohook-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FIohook.callback|[algo_lib.FIohook](/txt/lib/algo_lib/README.md#algo_lib-fiohook)|[Hook](/txt/exe/amc/reftypes.md#hook)|||
+|algo_lib.FIohook.fildes|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)||File descriptor, possibly in epoll|
+|algo_lib.FIohook.evt_flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftypes.md#val)||Flags subscribed to|
+|algo_lib.FIohook.flags|[algo.IOEvtFlags](/txt/protocol/algo/IOEvtFlags.md)|[Val](/txt/exe/amc/reftypes.md#val)||Flags during callback|
+|algo_lib.FIohook.in_epoll|bool|[Val](/txt/exe/amc/reftypes.md#val)||Registered in epoll?|
+|algo_lib.FIohook.nodelete|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|File descriptor is shared -- do not close()|
+
+#### Struct FIohook
+<a href="#struct-fiohook"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FIohook { // algo_lib.FIohook
+    algo_lib::iohook_callback_hook   callback;       //   NULL  Pointer to a function
+    u64                              callback_ctx;   //   0  Callback context
+    algo::Fildes                     fildes;         // File descriptor, possibly in epoll
+    algo::IOEvtFlags                 evt_flags;      // Flags subscribed to
+    algo::IOEvtFlags                 flags;          // Flags during callback
+    bool                             in_epoll;       //   false  Registered in epoll?
+    bool                             nodelete;       //   false  File descriptor is shared -- do not close()
+    // func:algo_lib.FIohook..Ctor
+    inline               FIohook() __attribute__((nothrow));
+    // func:algo_lib.FIohook..Dtor
+    inline               ~FIohook() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FReplvar - 
+<a href="#algo_lib-freplvar"></a>
+
+#### algo_lib.FReplvar Fields
+<a href="#algo_lib-freplvar-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FReplvar.p_replscope|[algo_lib.Replscope](/txt/lib/algo_lib/README.md#algo_lib-replscope)|[Upptr](/txt/exe/amc/reftypes.md#upptr)||Parent|
+|algo_lib.FReplvar.key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Key|
+|algo_lib.FReplvar.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Value|
+|algo_lib.FReplvar.nsubst|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of times variable accessed|
+
+#### Struct FReplvar
+<a href="#struct-freplvar"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FReplvar { // algo_lib.FReplvar
+    algo_lib::FReplvar*    replvar_next;       // Pointer to next free element int tpool
+    algo_lib::Replscope*   p_replscope;        // reference to parent row
+    algo::cstring          key;                // Key
+    algo::cstring          value;              // Value
+    i32                    nsubst;             //   0  Number of times variable accessed
+    algo_lib::FReplvar*    ind_replvar_next;   // hash next
+    // func:algo_lib.FReplvar..AssignOp
+    inline algo_lib::FReplvar& operator =(const algo_lib::FReplvar &rhs) = delete;
+    // func:algo_lib.FReplvar..CopyCtor
+    inline               FReplvar(const algo_lib::FReplvar &rhs) = delete;
+private:
+    // func:algo_lib.FReplvar..Ctor
+    inline               FReplvar() __attribute__((nothrow));
+    // func:algo_lib.FReplvar..Dtor
+    inline               ~FReplvar() __attribute__((nothrow));
+    friend algo_lib::FReplvar&  replvar_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend algo_lib::FReplvar*  replvar_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 replvar_Delete(algo_lib::FReplvar &row) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FTempfile - 
+<a href="#algo_lib-ftempfile"></a>
+
+#### algo_lib.FTempfile Fields
+<a href="#algo_lib-ftempfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FTempfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.FTempfile.fildes|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FTempfile
+<a href="#struct-ftempfile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FTempfile { // algo_lib.FTempfile
+    algo::cstring       filename;   //
+    algo_lib::FFildes   fildes;     //
+    // func:algo_lib.FTempfile..Ctor
+    inline               FTempfile() __attribute__((nothrow));
+    // func:algo_lib.FTempfile..Dtor
+    inline               ~FTempfile() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FTxtcell - 
+<a href="#algo_lib-ftxtcell"></a>
+
+#### algo_lib.FTxtcell Fields
+<a href="#algo_lib-ftxtcell-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FTxtcell.p_txtrow|[algo_lib.FTxtrow](/txt/lib/algo_lib/README.md#algo_lib-ftxtrow)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|algo_lib.FTxtcell.justify|[algo.TextJust](/txt/protocol/algo/TextJust.md)|[Val](/txt/exe/amc/reftypes.md#val)|algo_TextJust_j_left|Justification of text within cell|
+|algo_lib.FTxtcell.style|[algo.TermStyle](/txt/protocol/algo/TermStyle.md)|[Val](/txt/exe/amc/reftypes.md#val)||Text style|
+|algo_lib.FTxtcell.span|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Span in columns|
+|algo_lib.FTxtcell.width|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Width in chars|
+|algo_lib.FTxtcell.text|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Cell contents|
+|algo_lib.FTxtcell.rsep|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Right separator|
+
+#### Struct FTxtcell
+<a href="#struct-ftxtcell"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FTxtcell { // algo_lib.FTxtcell
+    algo_lib::FTxtcell*   txtcell_next;              // Pointer to next free element int tpool
+    algo_lib::FTxtrow*    p_txtrow;                  // reference to parent row
+    algo::TextJust        justify;                   //   algo_TextJust_j_left  Justification of text within cell
+    algo::TermStyle       style;                     // Text style
+    i32                   span;                      //   1  Span in columns
+    i32                   width;                     //   0  Width in chars
+    algo::cstring         text;                      // Cell contents
+    algo::cstring         rsep;                      // Right separator
+    bool                  txtrow_c_txtcell_in_ary;   //   false  membership flag
+    // func:algo_lib.FTxtcell..AssignOp
+    inline algo_lib::FTxtcell& operator =(const algo_lib::FTxtcell &rhs) = delete;
+    // func:algo_lib.FTxtcell..CopyCtor
+    inline               FTxtcell(const algo_lib::FTxtcell &rhs) = delete;
+    // func:algo_lib.FTxtcell..FieldwiseCtor
+    explicit inline               FTxtcell(algo_lib::FTxtrow* in_p_txtrow, algo::TextJust in_justify, algo::TermStyle in_style, i32 in_span, i32 in_width, const algo::strptr& in_text, const algo::strptr& in_rsep, bool in_txtrow_c_txtcell_in_ary) __attribute__((nothrow));
+private:
+    // func:algo_lib.FTxtcell..Ctor
+    inline               FTxtcell() __attribute__((nothrow));
+    // func:algo_lib.FTxtcell..Dtor
+    inline               ~FTxtcell() __attribute__((nothrow));
+    friend algo_lib::FTxtcell&  txtcell_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend algo_lib::FTxtcell*  txtcell_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 txtcell_Delete(algo_lib::FTxtcell &row) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FTxtrow - Table row. Todo: absolute index for cells?
+<a href="#algo_lib-ftxtrow"></a>
+
+#### algo_lib.FTxtrow Fields
+<a href="#algo_lib-ftxtrow-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FTxtrow.p_txttbl|[algo_lib.FTxttbl](/txt/lib/algo_lib/README.md#algo_lib-ftxttbl)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|algo_lib.FTxtrow.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Select for processing|
+|algo_lib.FTxtrow.ishdr|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Is header row|
+|algo_lib.FTxtrow.sortkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Sort key|
+|algo_lib.FTxtrow.c_txtcell|[algo_lib.FTxtcell](/txt/lib/algo_lib/README.md#algo_lib-ftxtcell)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+
+#### Struct FTxtrow
+<a href="#struct-ftxtrow"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FTxtrow { // algo_lib.FTxtrow: Table row. Todo: absolute index for cells?
+    algo_lib::FTxtrow*     txtrow_next;              // Pointer to next free element int tpool
+    algo_lib::FTxttbl*     p_txttbl;                 // reference to parent row
+    bool                   select;                   //   true  Select for processing
+    bool                   ishdr;                    //   false  Is header row
+    algo::cstring          sortkey;                  // Sort key
+    algo_lib::FTxtcell**   c_txtcell_elems;          // array of pointers
+    u32                    c_txtcell_n;              // array of pointers
+    u32                    c_txtcell_max;            // capacity of allocated array
+    bool                   txttbl_c_txtrow_in_ary;   //   false  membership flag
+    // reftype Ptrary of algo_lib.FTxtrow.c_txtcell prohibits copy
+    // func:algo_lib.FTxtrow..AssignOp
+    inline algo_lib::FTxtrow& operator =(const algo_lib::FTxtrow &rhs) = delete;
+    // reftype Ptrary of algo_lib.FTxtrow.c_txtcell prohibits copy
+    // func:algo_lib.FTxtrow..CopyCtor
+    inline               FTxtrow(const algo_lib::FTxtrow &rhs) = delete;
+private:
+    // func:algo_lib.FTxtrow..Ctor
+    inline               FTxtrow() __attribute__((nothrow));
+    // func:algo_lib.FTxtrow..Dtor
+    inline               ~FTxtrow() __attribute__((nothrow));
+    friend algo_lib::FTxtrow&   txtrow_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend algo_lib::FTxtrow*   txtrow_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 txtrow_Delete(algo_lib::FTxtrow &row) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.FTxttbl - Table row. Todo: absolute index for cells?
+<a href="#algo_lib-ftxttbl"></a>
+
+#### algo_lib.FTxttbl Fields
+<a href="#algo_lib-ftxttbl-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.FTxttbl.c_txtrow|[algo_lib.FTxtrow](/txt/lib/algo_lib/README.md#algo_lib-ftxtrow)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)||Array of cells|
+|algo_lib.FTxttbl.col_space|i32|[Val](/txt/exe/amc/reftypes.md#val)|2|Extra space between columns|
+|algo_lib.FTxttbl.hdr_row|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Index of header row (default -1)|
+|algo_lib.FTxttbl.normalized|bool|[Val](/txt/exe/amc/reftypes.md#val)||Cell widths computed|
+
+#### Struct FTxttbl
+<a href="#struct-ftxttbl"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct FTxttbl { // algo_lib.FTxttbl: Table row. Todo: absolute index for cells?
+    algo_lib::FTxtrow**   c_txtrow_elems;   // array of pointers
+    u32                   c_txtrow_n;       // array of pointers
+    u32                   c_txtrow_max;     // capacity of allocated array
+    i32                   col_space;        //   2  Extra space between columns
+    i32                   hdr_row;          //   0  Index of header row (default -1)
+    bool                  normalized;       //   false  Cell widths computed
+    // func:algo_lib.FTxttbl..Ctor
+    inline               FTxttbl() __attribute__((nothrow));
+    // func:algo_lib.FTxttbl..Dtor
+    inline               ~FTxttbl() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.InTextFile - 
+<a href="#algo_lib-intextfile"></a>
+
+#### algo_lib.InTextFile Fields
+<a href="#algo_lib-intextfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.InTextFile.file|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.InTextFile.own_fd|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
+|algo_lib.InTextFile.line_buf|[algo.LineBuf](/txt/protocol/algo/LineBuf.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.InTextFile.temp_buf|u8|[Inlary](/txt/exe/amc/reftypes.md#inlary)|||
+
+#### Struct InTextFile
+<a href="#struct-intextfile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct InTextFile { // algo_lib.InTextFile
+    algo_lib::FFildes   file;                               //
+    bool                own_fd;                             //   true
+    algo::LineBuf       line_buf;                           //
+    u8                  temp_buf_data[sizeof(u8) * 8192];   // place for data
+    i32                 temp_buf_n;                         // number of elems current in existence
+    enum { temp_buf_max = 8192 };
+    // func:algo_lib.InTextFile..AssignOp
+    inline algo_lib::InTextFile& operator =(const algo_lib::InTextFile &rhs) __attribute__((nothrow));
+    // func:algo_lib.InTextFile..Ctor
+    inline               InTextFile() __attribute__((nothrow));
+    // func:algo_lib.InTextFile..Dtor
+    inline               ~InTextFile() __attribute__((nothrow));
+    // func:algo_lib.InTextFile..CopyCtor
+    inline               InTextFile(const algo_lib::InTextFile &rhs) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Mmap - 
+<a href="#algo_lib-mmap"></a>
+
+#### algo_lib.Mmap Fields
+<a href="#algo_lib-mmap-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Mmap.mem|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Memory that has been mmap()ed|
+
+#### Struct Mmap
+<a href="#struct-mmap"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Mmap { // algo_lib.Mmap
+    algo::memptr   mem;   // Memory that has been mmap()ed
+    // func:algo_lib.Mmap..Ctor
+    inline               Mmap() __attribute__((nothrow));
+    // func:algo_lib.Mmap..Dtor
+    inline               ~Mmap() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.MmapFile - 
+<a href="#algo_lib-mmapfile"></a>
+
+#### algo_lib.MmapFile Fields
+<a href="#algo_lib-mmapfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.MmapFile.map|[algo_lib.Mmap](/txt/lib/algo_lib/README.md#algo_lib-mmap)|[Val](/txt/exe/amc/reftypes.md#val)||Pointer to shared memory|
+|algo_lib.MmapFile.fd|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)||Associated file descriptor|
+|algo_lib.MmapFile.text|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Alias to map.mem, accessible as text|
+
+#### Struct MmapFile
+<a href="#struct-mmapfile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct MmapFile { // algo_lib.MmapFile
+    algo_lib::Mmap      map;    // Pointer to shared memory
+    algo_lib::FFildes   fd;     // Associated file descriptor
+    algo::strptr        text;   // Alias to map.mem, accessible as text
+    // func:algo_lib.MmapFile..Ctor
+    inline               MmapFile() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Regx - Parsed regular expression
+<a href="#algo_lib-regx"></a>
+
+#### algo_lib.Regx Fields
+<a href="#algo_lib-regx-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Regx.expr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Original string expression in some unspecified regx dialect|
+|algo_lib.Regx.state|[algo_lib.RegxState](/txt/lib/algo_lib/README.md#algo_lib-regxstate)|[Tary](/txt/exe/amc/reftypes.md#tary)||Array of states|
+|algo_lib.Regx.front|[algo_lib.Bitset](/txt/lib/algo_lib/README.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftypes.md#val)||Temporary front (for matching)|
+|algo_lib.Regx.next_front|[algo_lib.Bitset](/txt/lib/algo_lib/README.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftypes.md#val)||Next front (for matching)|
+|algo_lib.Regx.start|[algo_lib.Bitset](/txt/lib/algo_lib/README.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftypes.md#val)||Set of starting states|
+|algo_lib.Regx.accept|i32|[Val](/txt/exe/amc/reftypes.md#val)||Accept state|
+|algo_lib.Regx.parseerror|bool|[Val](/txt/exe/amc/reftypes.md#val)||Non-fatal error while parsing|
+|algo_lib.Regx.accepts_all|bool|[Val](/txt/exe/amc/reftypes.md#val)||True if this regx matches anything|
+|algo_lib.Regx.literal|bool|[Val](/txt/exe/amc/reftypes.md#val)||True if expr may be matched literally (set during translation)|
+
+#### Struct Regx
+<a href="#struct-regx"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Regx { // algo_lib.Regx: Parsed regular expression
+    algo::cstring          expr;          // Original string expression in some unspecified regx dialect
+    algo_lib::RegxState*   state_elems;   // pointer to elements
+    u32                    state_n;       // number of elements in array
+    u32                    state_max;     // max. capacity of array before realloc
+    algo_lib::Bitset       front;         // Temporary front (for matching)
+    algo_lib::Bitset       next_front;    // Next front (for matching)
+    algo_lib::Bitset       start;         // Set of starting states
+    i32                    accept;        //   0  Accept state
+    bool                   parseerror;    //   false  Non-fatal error while parsing
+    bool                   accepts_all;   //   false  True if this regx matches anything
+    bool                   literal;       //   false  True if expr may be matched literally (set during translation)
+    // func:algo_lib.Regx..AssignOp
+    algo_lib::Regx&      operator =(const algo_lib::Regx &rhs) __attribute__((nothrow));
+    // func:algo_lib.Regx..Ctor
+    inline               Regx() __attribute__((nothrow));
+    // func:algo_lib.Regx..Dtor
+    inline               ~Regx() __attribute__((nothrow));
+    // func:algo_lib.Regx..CopyCtor
+    Regx(const algo_lib::Regx &rhs) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.RegxToken - 
+<a href="#algo_lib-regxtoken"></a>
+
+#### algo_lib.RegxToken Fields
+<a href="#algo_lib-regxtoken-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.RegxToken.type|i32|[Val](/txt/exe/amc/reftypes.md#val)||State|
+
+#### Struct RegxToken
+<a href="#struct-regxtoken"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct RegxToken { // algo_lib.RegxToken
+    i32   type;   //   0  State
+    // func:algo_lib.RegxToken.type.Cast
+    inline               operator algo_lib_RegxToken_type_Enum() const __attribute__((nothrow));
+    // func:algo_lib.RegxToken..Ctor
+    inline               RegxToken() __attribute__((nothrow));
+    // func:algo_lib.RegxToken..FieldwiseCtor
+    explicit inline               RegxToken(i32 in_type) __attribute__((nothrow));
+    // func:algo_lib.RegxToken..EnumCtor
+    inline               RegxToken(algo_lib_RegxToken_type_Enum arg) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.RegxExpr - 
+<a href="#algo_lib-regxexpr"></a>
+
+#### algo_lib.RegxExpr Fields
+<a href="#algo_lib-regxexpr-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.RegxExpr.type|[algo_lib.RegxToken](/txt/lib/algo_lib/README.md#algo_lib-regxtoken)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.RegxExpr.in|i32|[Val](/txt/exe/amc/reftypes.md#val)||Input state|
+|algo_lib.RegxExpr.out|[algo_lib.Bitset](/txt/lib/algo_lib/README.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftypes.md#val)||Output states|
+
+#### Struct RegxExpr
+<a href="#struct-regxexpr"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct RegxExpr { // algo_lib.RegxExpr
+    algo_lib::RegxToken   type;   //
+    i32                   in;     //   0  Input state
+    algo_lib::Bitset      out;    // Output states
+    // func:algo_lib.RegxExpr..Ctor
+    inline               RegxExpr() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.RegxParse - Function to parse regx
+<a href="#algo_lib-regxparse"></a>
+
+#### algo_lib.RegxParse Fields
+<a href="#algo_lib-regxparse-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.RegxParse.input|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Input string|
+|algo_lib.RegxParse.p_regx|[algo_lib.Regx](/txt/lib/algo_lib/README.md#algo_lib-regx)|[Upptr](/txt/exe/amc/reftypes.md#upptr)||Output regx -- by reference|
+|algo_lib.RegxParse.ary_expr|[algo_lib.RegxExpr](/txt/lib/algo_lib/README.md#algo_lib-regxexpr)|[Tary](/txt/exe/amc/reftypes.md#tary)||Output expression array|
+
+#### Struct RegxParse
+<a href="#struct-regxparse"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct RegxParse { // algo_lib.RegxParse: Function to parse regx
+    algo::strptr          input;            // Input string
+    algo_lib::Regx*       p_regx;           // reference to parent row
+    algo_lib::RegxExpr*   ary_expr_elems;   // pointer to elements
+    u32                   ary_expr_n;       // number of elements in array
+    u32                   ary_expr_max;     // max. capacity of array before realloc
+    // func:algo_lib.RegxParse..AssignOp
+    algo_lib::RegxParse& operator =(const algo_lib::RegxParse &rhs) __attribute__((nothrow));
+    // func:algo_lib.RegxParse..Ctor
+    inline               RegxParse() __attribute__((nothrow));
+    // func:algo_lib.RegxParse..Dtor
+    inline               ~RegxParse() __attribute__((nothrow));
+    // func:algo_lib.RegxParse..CopyCtor
+    RegxParse(const algo_lib::RegxParse &rhs) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.RegxState - 
+<a href="#algo_lib-regxstate"></a>
+
+#### algo_lib.RegxState Fields
+<a href="#algo_lib-regxstate-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.RegxState.ch_class|[algo.i32_Range](/txt/protocol/algo/README.md#algo-i32_range)|[Tary](/txt/exe/amc/reftypes.md#tary)||What to match|
+|algo_lib.RegxState.out|[algo_lib.Bitset](/txt/lib/algo_lib/README.md#algo_lib-bitset)|[Val](/txt/exe/amc/reftypes.md#val)||Where to go on a match|
+|algo_lib.RegxState.accept_all|bool|[Val](/txt/exe/amc/reftypes.md#val)||Regx always succeeds from here|
+
+#### Struct RegxState
+<a href="#struct-regxstate"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct RegxState { // algo_lib.RegxState
+    algo::i32_Range*   ch_class_elems;   // pointer to elements
+    u32                ch_class_n;       // number of elements in array
+    u32                ch_class_max;     // max. capacity of array before realloc
+    algo_lib::Bitset   out;              // Where to go on a match
+    bool               accept_all;       //   false  Regx always succeeds from here
+    // func:algo_lib.RegxState..AssignOp
+    algo_lib::RegxState& operator =(const algo_lib::RegxState &rhs) __attribute__((nothrow));
+    // func:algo_lib.RegxState..Ctor
+    inline               RegxState() __attribute__((nothrow));
+    // func:algo_lib.RegxState..Dtor
+    inline               ~RegxState() __attribute__((nothrow));
+    // func:algo_lib.RegxState..CopyCtor
+    RegxState(const algo_lib::RegxState &rhs) __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Replscope - 
+<a href="#algo_lib-replscope"></a>
+
+#### algo_lib.Replscope Fields
+<a href="#algo_lib-replscope-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Replscope.eatcomma|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
+|algo_lib.Replscope.fatal|bool|[Val](/txt/exe/amc/reftypes.md#val)||Kill process on bad substitution|
+|algo_lib.Replscope.ind_replvar|[algo_lib.FReplvar](/txt/lib/algo_lib/README.md#algo_lib-freplvar)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+
+#### Struct Replscope
+<a href="#struct-replscope"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Replscope { // algo_lib.Replscope
+    bool                   eatcomma;                    //   true
+    bool                   fatal;                       //   false  Kill process on bad substitution
+    algo_lib::FReplvar**   ind_replvar_buckets_elems;   // pointer to bucket array
+    i32                    ind_replvar_buckets_n;       // number of elements in bucket array
+    i32                    ind_replvar_n;               // number of elements in the hash table
+    // func:algo_lib.Replscope..Ctor
+    inline               Replscope() __attribute__((nothrow));
+    // func:algo_lib.Replscope..Dtor
+    inline               ~Replscope() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.ShHdr - 
+<a href="#algo_lib-shhdr"></a>
+
+#### algo_lib.ShHdr Fields
+<a href="#algo_lib-shhdr-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.ShHdr.magic|u32|[Val](/txt/exe/amc/reftypes.md#val)|0x09202017|Signature|
+|algo_lib.ShHdr.name|[algo.RspaceStr32](/txt/protocol/algo/README.md#algo-rspacestr32)|[Val](/txt/exe/amc/reftypes.md#val)||User defined name|
+|algo_lib.ShHdr.dataoffset|u64|[Val](/txt/exe/amc/reftypes.md#val)|4096|Offset to beginning of data|
+|algo_lib.ShHdr.eof|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.ShHdr.sof|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.ShHdr.bufsize|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|algo_lib.ShHdr.pad|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct ShHdr
+<a href="#struct-shhdr"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct ShHdr { // algo_lib.ShHdr
+    u32                 magic;        //   0x09202017  Signature
+    algo::RspaceStr32   name;         // User defined name
+    u64                 dataoffset;   //   4096  Offset to beginning of data
+    u64                 eof;          //   0
+    u64                 sof;          //   0
+    u64                 bufsize;      //   0
+    u64                 pad;          //   0
+    // func:algo_lib.ShHdr..Ctor
+    inline               ShHdr() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Srng - Command function, a single word
+<a href="#algo_lib-srng"></a>
+
+#### algo_lib.Srng Fields
+<a href="#algo_lib-srng-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Srng.z|u32|[Val](/txt/exe/amc/reftypes.md#val)|123||
+|algo_lib.Srng.w|u32|[Val](/txt/exe/amc/reftypes.md#val)|456||
+
+#### Struct Srng
+<a href="#struct-srng"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Srng { // algo_lib.Srng: Command function, a single word
+    u32   z;   //   123
+    u32   w;   //   456
+    // func:algo_lib.Srng..Ctor
+    inline               Srng() __attribute__((nothrow));
+};
+```
+
+#### algo_lib.Tabulate - Function to tabulate a string
+<a href="#algo_lib-tabulate"></a>
+
+#### algo_lib.Tabulate Fields
+<a href="#algo_lib-tabulate-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|algo_lib.Tabulate.width|i32|[Tary](/txt/exe/amc/reftypes.md#tary)|||
+|algo_lib.Tabulate.temp|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct Tabulate
+<a href="#struct-tabulate"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/algo_lib_gen.h](/include/gen/algo_lib_gen.h)
+```
+struct Tabulate { // algo_lib.Tabulate: Function to tabulate a string
+    i32*            width_elems;   // pointer to elements
+    u32             width_n;       // number of elements in array
+    u32             width_max;     // max. capacity of array before realloc
+    algo::cstring   temp;          //
+    // func:algo_lib.Tabulate..AssignOp
+    algo_lib::Tabulate&  operator =(const algo_lib::Tabulate &rhs) __attribute__((nothrow));
+    // func:algo_lib.Tabulate..Ctor
+    inline               Tabulate() __attribute__((nothrow));
+    // func:algo_lib.Tabulate..Dtor
+    inline               ~Tabulate() __attribute__((nothrow));
+    // func:algo_lib.Tabulate..CopyCtor
+    Tabulate(const algo_lib::Tabulate &rhs) __attribute__((nothrow));
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 

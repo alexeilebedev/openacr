@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_fuzz - Internals](/txt/exe/atf_fuzz/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_fuzz: Generator of bad inputs for targets
 Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
@@ -31,8 +35,11 @@ Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 `atf_fuzz` is a tool for finding crash bugs in other tools (including itself).
 It uses `acr_in` to collect all the inputs for specified target,
@@ -47,9 +54,12 @@ atfdb.fuzzstrat  fuzzstrat:skip_inputs  comment:"Run target in sandbox with vari
 report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -reprofile -- File where repros are stored
 <a href="#-reprofile"></a>
 
@@ -89,24 +99,16 @@ skip_inputs  Run target in sandbox with various missing inputs
 Each test is invoked with this probability. This can be adjusted to sparse out the space
 of inputs in case it is too big.
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/atf/atf_fuzz.cpp](/cpp/atf/atf_fuzz.cpp)||
-|[cpp/gen/atf_fuzz_gen.cpp](/cpp/gen/atf_fuzz_gen.cpp)||
-|[include/atf_fuzz.h](/include/atf_fuzz.h)||
-|[include/gen/atf_fuzz_gen.h](/include/gen/atf_fuzz_gen.h)||
-|[include/gen/atf_fuzz_gen.inl.h](/include/gen/atf_fuzz_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_fuzz` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

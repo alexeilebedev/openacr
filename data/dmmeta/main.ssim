@@ -28,6 +28,7 @@ dmmeta.main  ns:gcli  ismodule:N
 dmmeta.main  ns:mdbg  ismodule:N
 dmmeta.main  ns:mysql2ssim  ismodule:N
 dmmeta.main  ns:orgfile  ismodule:N
+dmmeta.main  ns:samp_meng  ismodule:N
 dmmeta.main  ns:samp_regx  ismodule:N
 dmmeta.main  ns:sandbox  ismodule:N
 dmmeta.main  ns:src_func  ismodule:N

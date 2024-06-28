@@ -88,9 +88,11 @@ void amc::tfunc_Regx_Print() {
 void amc::tfunc_Regx_Init() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FFregx *fregx = field.c_fregx;
+    Set(R, "$full", (fregx && fregx->partial ? "false" : "true"));
 
     if (ch_N(field.dflt.value)) {
         amc::FFunc& init = amc::CreateCurFunc();
-        Ins(&R, init.body, "Regx_Read$Regxtype($parname.$name, $dflt, true);");
+        Ins(&R, init.body, "Regx_Read$Regxtype($parname.$name, $dflt, $full);");
     }
 }

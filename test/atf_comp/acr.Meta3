@@ -1,13 +1,18 @@
-# Ctype            Comment
-# dmmeta.Ctype     Struct
-# dmmeta.Ns        Namespace (for in-memory database, protocol, etc)
-# dmmeta.Cfmt      Specify options for printing/reading ctypes into multiple formats
-# dmmeta.Strfmt    Cfmt conversion type (misnomer, not necessarily a string)
-# dmmeta.Printfmt  Print format
-# bool             1-byte bool, c++ type.
-# dmmeta.Ctypelen  Size of Ctype
-# dmmeta.Field     Specify field of a struct
-# dmmeta.Reftype   Field type constructor (e.g. reference type)
+# Ctype             Comment
+# dmmeta.Ctype      Struct
+# algo.Smallstr100  inline string with length field
+# dmmeta.Ns         Namespace (for in-memory database, protocol, etc)
+# algo.Comment      Generic comment for ssim tuples
+# dmmeta.Cfmt       Specify options for printing/reading ctypes into multiple formats
+# dmmeta.Strfmt     Cfmt conversion type (misnomer, not necessarily a string)
+# dmmeta.Printfmt   Print format
+# bool              1-byte bool, c++ type.
+# algo.Smallstr20   inline string with length field
+# dmmeta.Ctypelen   Size of Ctype
+# dmmeta.Field      Specify field of a struct
+# algo.Smallstr50   inline string with length field
+# dmmeta.Reftype    Field type constructor (e.g. reference type)
+# algo.CppExpr      C++ expression
 
 # e.g. dmmeta.ctype  ctype:""  comment:""
 # e.g. dmmeta.cfmt  cfmt:""  printfmt:""  read:""  print:""  sep:""  genop:""  comment:""

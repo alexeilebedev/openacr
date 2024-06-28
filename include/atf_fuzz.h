@@ -31,7 +31,7 @@ namespace atf_fuzz { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/atf_fuzz.cpp
+    // cpp/atf_fuzz/atf_fuzz.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void fuzzstrat_skip_inputs();

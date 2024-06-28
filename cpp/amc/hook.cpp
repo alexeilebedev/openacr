@@ -18,7 +18,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/hook.cpp
+// Source: cpp/amc/hook.cpp -- Hook (function pointer)
 //
 // TODO: use hook arg to provide a parameter to the hook
 // add parentptr ability (make it all type safe)

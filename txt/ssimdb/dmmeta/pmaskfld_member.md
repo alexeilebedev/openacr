@@ -12,18 +12,27 @@ See [pmaskfld](pmaskfld.md) for more information.
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.PmaskfldMember
 
 * file:[data/dmmeta/pmaskfld_member.ssim](/data/dmmeta/pmaskfld_member.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *pmaskfld, field* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|pmaskfld_member|algo.Smallstr100|Val|
-|pmaskfld|[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)|Pkey||<br>/RL of pmaskfld_member|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||<br>/RR of pmaskfld_member|
-|comment|algo.Comment|Val|
+|pmaskfld_member|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|*pmaskfld*|*[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of pmaskfld_member*|
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of pmaskfld_member*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FPmaskfldMember
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FPmaskfldMember](/txt/exe/amc/internals.md#amc-fpmaskfldmember)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

@@ -520,17 +520,13 @@ void                 CsvParse_Uninit(algo_lib::CsvParse& csvparse) __attribute__
 void                 CsvParse_Print(algo_lib::CsvParse& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo_lib.ErrorX
-// create: algo_lib.FDb.error (Malloc)
+// create: algo_lib.FDb.error (Cppstack)
 struct ErrorX { // algo_lib.ErrorX
     algo::cstring   str;   //
-    // func:algo_lib.ErrorX..FieldwiseCtor
-    explicit inline               ErrorX(const algo::strptr& in_str) __attribute__((nothrow));
-private:
     // func:algo_lib.ErrorX..Ctor
     inline               ErrorX() __attribute__((nothrow));
-    friend algo_lib::ErrorX&    error_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend algo_lib::ErrorX*    error_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 error_Delete(algo_lib::ErrorX &row) __attribute__((nothrow));
+    // func:algo_lib.ErrorX..FieldwiseCtor
+    explicit inline               ErrorX(const algo::strptr& in_str) __attribute__((nothrow));
 };
 
 // print string representation of ROW to string STR
@@ -1030,26 +1026,6 @@ bool                 timehook_XrefMaybe(algo_lib::FTimehook &row);
 // func:algo_lib.FDb.replscope.XrefMaybe
 bool                 replscope_XrefMaybe(algo_lib::Replscope &row);
 
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:algo_lib.FDb.error.Alloc
-algo_lib::ErrorX&    error_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:algo_lib.FDb.error.AllocMaybe
-algo_lib::ErrorX*    error_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:algo_lib.FDb.error.Delete
-void                 error_Delete(algo_lib::ErrorX &row) __attribute__((nothrow));
-// Allocate n bytes. If no memory available, return NULL.
-// func:algo_lib.FDb.error.AllocMem
-void*                error_AllocMem(size_t n) __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:algo_lib.FDb.error.FreeMem
-void                 error_FreeMem(void *mem, size_t n) __attribute__((nothrow));
-// Reallocate n bytes. If the call fails, return value is NULL.
-// In this case, original MEM pointer is untouched.
-// func:algo_lib.FDb.error.ReallocMem
-void*                error_ReallocMem(void *mem, size_t old_size, size_t new_size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:algo_lib.FDb.error.XrefMaybe

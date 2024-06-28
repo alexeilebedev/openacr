@@ -1,12 +1,15 @@
-## txt/protocol/ams/ProcAddMsg.md
+## ams.ProcAddMsg - Add process to process group
 
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)ams.ProcAddMsg
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|base|ams.MsgHeader|Base|
+|base|ams.MsgHeader|Base|||
 |proc_id|ams.ProcId|Val||ID of process being added|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 

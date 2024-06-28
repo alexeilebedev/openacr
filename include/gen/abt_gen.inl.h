@@ -25,10 +25,10 @@
 #pragma once
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // --- abt.FArch..Init
@@ -45,6 +45,16 @@ inline  abt::FArch::FArch() {
 // --- abt.FArch..Dtor
 inline  abt::FArch::~FArch() {
     abt::FArch_Uninit(*this);
+}
+
+// --- abt.FBuilddir..Ctor
+inline  abt::FBuilddir::FBuilddir() {
+    abt::FBuilddir_Init(*this);
+}
+
+// --- abt.FBuilddir..Dtor
+inline  abt::FBuilddir::~FBuilddir() {
+    abt::FBuilddir_Uninit(*this);
 }
 
 // --- abt.FCfg..Init
@@ -1146,6 +1156,60 @@ inline i32 abt::ind_filestat_N() {
     return _db.ind_filestat_n;
 }
 
+// --- abt.FDb.builddir.EmptyQ
+// Return true if index is empty
+inline bool abt::builddir_EmptyQ() {
+    return _db.builddir_n == 0;
+}
+
+// --- abt.FDb.builddir.Find
+// Look up row by row id. Return NULL if out of range
+inline abt::FBuilddir* abt::builddir_Find(u64 t) {
+    abt::FBuilddir *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.builddir_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.builddir_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- abt.FDb.builddir.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline abt::FBuilddir* abt::builddir_Last() {
+    return builddir_Find(u64(_db.builddir_n-1));
+}
+
+// --- abt.FDb.builddir.N
+// Return number of items in the pool
+inline i32 abt::builddir_N() {
+    return _db.builddir_n;
+}
+
+// --- abt.FDb.builddir.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline abt::FBuilddir& abt::builddir_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.builddir_lary[bsr][index];
+}
+
+// --- abt.FDb.ind_builddir.EmptyQ
+// Return true if hash is empty
+inline bool abt::ind_builddir_EmptyQ() {
+    return _db.ind_builddir_n == 0;
+}
+
+// --- abt.FDb.ind_builddir.N
+// Return number of items in the hash
+inline i32 abt::ind_builddir_N() {
+    return _db.ind_builddir_n;
+}
+
 // --- abt.FDb.zd_inclstack.EmptyQ
 // Return true if index is empty
 inline bool abt::zd_inclstack_EmptyQ() {
@@ -1712,6 +1776,31 @@ inline void abt::_db_filestat_curs_Next(_db_filestat_curs &curs) {
 // item access
 inline abt::FFilestat& abt::_db_filestat_curs_Access(_db_filestat_curs &curs) {
     return filestat_qFind(u64(curs.index));
+}
+
+// --- abt.FDb.builddir_curs.Reset
+// cursor points to valid item
+inline void abt::_db_builddir_curs_Reset(_db_builddir_curs &curs, abt::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- abt.FDb.builddir_curs.ValidQ
+// cursor points to valid item
+inline bool abt::_db_builddir_curs_ValidQ(_db_builddir_curs &curs) {
+    return curs.index < _db.builddir_n;
+}
+
+// --- abt.FDb.builddir_curs.Next
+// proceed to next item
+inline void abt::_db_builddir_curs_Next(_db_builddir_curs &curs) {
+    curs.index++;
+}
+
+// --- abt.FDb.builddir_curs.Access
+// item access
+inline abt::FBuilddir& abt::_db_builddir_curs_Access(_db_builddir_curs &curs) {
+    return builddir_qFind(u64(curs.index));
 }
 
 // --- abt.FDb.zd_inclstack_curs.Reset
@@ -2386,54 +2475,6 @@ inline abt::FTarget& abt::c_alldep_qLast(abt::FTarget& target) {
     return *target.c_alldep_elems[target.c_alldep_n-1];
 }
 
-// --- abt.FTarget.c_alllib.EmptyQ
-// Return true if index is empty
-inline bool abt::c_alllib_EmptyQ(abt::FTarget& target) {
-    return target.c_alllib_n == 0;
-}
-
-// --- abt.FTarget.c_alllib.Find
-// Look up row by row id. Return NULL if out of range
-inline abt::FSyslib* abt::c_alllib_Find(abt::FTarget& target, u32 t) {
-    abt::FSyslib *retval = NULL;
-    u64 idx = t;
-    u64 lim = target.c_alllib_n;
-    if (idx < lim) {
-        retval = target.c_alllib_elems[idx];
-    }
-    return retval;
-}
-
-// --- abt.FTarget.c_alllib.Getary
-// Return array of pointers
-inline algo::aryptr<abt::FSyslib*> abt::c_alllib_Getary(abt::FTarget& target) {
-    return algo::aryptr<abt::FSyslib*>(target.c_alllib_elems, target.c_alllib_n);
-}
-
-// --- abt.FTarget.c_alllib.N
-// Return number of items in the pointer array
-inline i32 abt::c_alllib_N(const abt::FTarget& target) {
-    return target.c_alllib_n;
-}
-
-// --- abt.FTarget.c_alllib.RemoveAll
-// Empty the index. (The rows are not deleted)
-inline void abt::c_alllib_RemoveAll(abt::FTarget& target) {
-    target.c_alllib_n = 0;
-}
-
-// --- abt.FTarget.c_alllib.qFind
-// Return reference without bounds checking
-inline abt::FSyslib& abt::c_alllib_qFind(abt::FTarget& target, u32 idx) {
-    return *target.c_alllib_elems[idx];
-}
-
-// --- abt.FTarget.c_alllib.qLast
-// Reference to last element without bounds checking
-inline abt::FSyslib& abt::c_alllib_qLast(abt::FTarget& target) {
-    return *target.c_alllib_elems[target.c_alllib_n-1];
-}
-
 // --- abt.FTarget.c_targsrc_curs.Reset
 inline void abt::target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, abt::FTarget &parent) {
     curs.elems = parent.c_targsrc_elems;
@@ -2559,31 +2600,6 @@ inline abt::FTarget& abt::target_c_alldep_curs_Access(target_c_alldep_curs &curs
     return *curs.elems[curs.index];
 }
 
-// --- abt.FTarget.c_alllib_curs.Reset
-inline void abt::target_c_alllib_curs_Reset(target_c_alllib_curs &curs, abt::FTarget &parent) {
-    curs.elems = parent.c_alllib_elems;
-    curs.n_elems = parent.c_alllib_n;
-    curs.index = 0;
-}
-
-// --- abt.FTarget.c_alllib_curs.ValidQ
-// cursor points to valid item
-inline bool abt::target_c_alllib_curs_ValidQ(target_c_alllib_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- abt.FTarget.c_alllib_curs.Next
-// proceed to next item
-inline void abt::target_c_alllib_curs_Next(target_c_alllib_curs &curs) {
-    curs.index++;
-}
-
-// --- abt.FTarget.c_alllib_curs.Access
-// item access
-inline abt::FSyslib& abt::target_c_alllib_curs_Access(target_c_alllib_curs &curs) {
-    return *curs.elems[curs.index];
-}
-
 // --- abt.FTarget..Ctor
 inline  abt::FTarget::FTarget() {
     abt::FTarget_Init(*this);
@@ -2631,7 +2647,6 @@ inline  abt::FTargsyslib::~FTargsyslib() {
 
 // --- abt.FToolOpt..Ctor
 inline  abt::FToolOpt::FToolOpt() {
-    abt::FToolOpt_Init(*this);
 }
 
 // --- abt.FUname..Init
@@ -2728,6 +2743,27 @@ inline  abt::TableId::TableId(abt_TableIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- abt.config..Init
+// Set all fields to initial values.
+inline void abt::config_Init(abt::config& parent) {
+    parent.ood_src = i32(0);
+    parent.ood_target = i32(0);
+}
+
+// --- abt.config..Ctor
+inline  abt::config::config() {
+    abt::config_Init(*this);
+}
+
+// --- abt.config..FieldwiseCtor
+inline  abt::config::config(const algo::strptr& in_builddir, i32 in_ood_src, i32 in_ood_target, const algo::strptr& in_cache)
+    : builddir(in_builddir)
+    , ood_src(in_ood_src)
+    , ood_target(in_ood_target)
+    , cache(in_cache)
+ {
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const abt::trace &row) {// cfmt:abt.trace.String
     abt::trace_Print(const_cast<abt::trace&>(row), str);
     return str;
@@ -2740,5 +2776,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const abt::FieldId &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const abt::TableId &row) {// cfmt:abt.TableId.String
     abt::TableId_Print(const_cast<abt::TableId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const abt::config &row) {// cfmt:abt.config.String
+    abt::config_Print(const_cast<abt::config&>(row), str);
     return str;
 }

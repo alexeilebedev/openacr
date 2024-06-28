@@ -1,4 +1,4 @@
-## AMC release notes
+## amc release notes
 <a href="#amc-release-notes"></a>
 
 commit fd4e3e9e92da625d46253a9d13f1886454163331
