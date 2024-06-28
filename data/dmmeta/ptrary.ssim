@@ -1,7 +1,6 @@
 dmmeta.ptrary  field:abt.FSyscmd.c_next  unique:Y
 dmmeta.ptrary  field:abt.FSyscmd.c_prior  unique:Y
 dmmeta.ptrary  field:abt.FTarget.c_alldep  unique:N
-dmmeta.ptrary  field:abt.FTarget.c_alllib  unique:N
 dmmeta.ptrary  field:abt.FTarget.c_srcfile  unique:N
 dmmeta.ptrary  field:abt.FTarget.c_targdep  unique:Y
 dmmeta.ptrary  field:abt.FTarget.c_targsrc  unique:Y
@@ -12,6 +11,7 @@ dmmeta.ptrary  field:abt_md.FField.c_fconst  unique:Y
 dmmeta.ptrary  field:abt_md.FNs.c_comptest  unique:Y
 dmmeta.ptrary  field:abt_md.FNs.c_ctype  unique:Y
 dmmeta.ptrary  field:abt_md.FNs.c_targsrc  unique:Y
+dmmeta.ptrary  field:abt_md.FTarget.c_targdep  unique:Y
 dmmeta.ptrary  field:acr.FCheck.c_bad_rec  unique:N
 dmmeta.ptrary  field:acr.FCtype.c_child  unique:N
 dmmeta.ptrary  field:acr.FCtype.c_field  unique:Y
@@ -116,6 +116,7 @@ dmmeta.ptrary  field:lib_exec.FSyscmd.c_prior  unique:Y
 dmmeta.ptrary  field:lib_json.FNode.c_child  unique:Y
 dmmeta.ptrary  field:mdbg.FCfg.c_builddir  unique:Y
 dmmeta.ptrary  field:orgfile.FFilehash.c_filename  unique:Y
+dmmeta.ptrary  field:samp_meng.FSymbol.c_ordq  unique:Y
 dmmeta.ptrary  field:src_hdr.FTarget.c_targsrc  unique:Y
 dmmeta.ptrary  field:ssim2mysql.FCtype.c_field  unique:Y
 dmmeta.ptrary  field:ssim2mysql.FNs.c_ssimfile  unique:Y

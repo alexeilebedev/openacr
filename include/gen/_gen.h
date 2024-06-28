@@ -26,6 +26,13 @@
 // gen:ns_fwddecl2
 namespace lib_json { struct FNode; }
 
+// --- ResponseHeader
+struct ResponseHeader { // ResponseHeader
+    // func:ResponseHeader..Ctor
+    inline               ResponseHeader() __attribute__((nothrow));
+};
+
+
 // --- pad_byte
 #pragma pack(push,1)
 struct pad_byte { // pad_byte

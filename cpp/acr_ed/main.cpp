@@ -252,7 +252,7 @@ static void ExecuteTransaction() {
 void acr_ed::BuildTest() {
     command::abt_proc abt;
     abt.cmd.install = true;
-    abt.cmd.cfg = dev_Cfg_cfg_debug;
+    abt.cmd.cfg.expr = dev_Cfg_cfg_debug;
     abt.cmd.target.expr = "atf%|amc%|abt%|acr%";
     if (abt_Exec(abt)!=0) {
         algo_lib::_db.exit_code=1;

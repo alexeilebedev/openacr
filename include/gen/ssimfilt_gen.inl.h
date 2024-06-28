@@ -25,6 +25,7 @@
 #pragma once
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 
 // --- ssimfilt.trace..Ctor
@@ -157,6 +158,60 @@ inline ssimfilt::KVRegx& ssimfilt::selfield_qFind(u64 t) {
     return _db.selfield_lary[bsr][index];
 }
 
+// --- ssimfilt.FDb.unstablefld.EmptyQ
+// Return true if index is empty
+inline bool ssimfilt::unstablefld_EmptyQ() {
+    return _db.unstablefld_n == 0;
+}
+
+// --- ssimfilt.FDb.unstablefld.Find
+// Look up row by row id. Return NULL if out of range
+inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Find(u64 t) {
+    ssimfilt::FUnstablefld *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.unstablefld_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.unstablefld_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- ssimfilt.FDb.unstablefld.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Last() {
+    return unstablefld_Find(u64(_db.unstablefld_n-1));
+}
+
+// --- ssimfilt.FDb.unstablefld.N
+// Return number of items in the pool
+inline i32 ssimfilt::unstablefld_N() {
+    return _db.unstablefld_n;
+}
+
+// --- ssimfilt.FDb.unstablefld.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline ssimfilt::FUnstablefld& ssimfilt::unstablefld_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.unstablefld_lary[bsr][index];
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.EmptyQ
+// Return true if hash is empty
+inline bool ssimfilt::ind_unstablefld_EmptyQ() {
+    return _db.ind_unstablefld_n == 0;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.N
+// Return number of items in the hash
+inline i32 ssimfilt::ind_unstablefld_N() {
+    return _db.ind_unstablefld_n;
+}
+
 // --- ssimfilt.FDb.tuple_curs.Reset
 // cursor points to valid item
 inline void ssimfilt::_db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) {
@@ -232,6 +287,47 @@ inline ssimfilt::KVRegx& ssimfilt::_db_selfield_curs_Access(_db_selfield_curs &c
     return selfield_qFind(u64(curs.index));
 }
 
+// --- ssimfilt.FDb.unstablefld_curs.Reset
+// cursor points to valid item
+inline void ssimfilt::_db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, ssimfilt::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- ssimfilt.FDb.unstablefld_curs.ValidQ
+// cursor points to valid item
+inline bool ssimfilt::_db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) {
+    return curs.index < _db.unstablefld_n;
+}
+
+// --- ssimfilt.FDb.unstablefld_curs.Next
+// proceed to next item
+inline void ssimfilt::_db_unstablefld_curs_Next(_db_unstablefld_curs &curs) {
+    curs.index++;
+}
+
+// --- ssimfilt.FDb.unstablefld_curs.Access
+// item access
+inline ssimfilt::FUnstablefld& ssimfilt::_db_unstablefld_curs_Access(_db_unstablefld_curs &curs) {
+    return unstablefld_qFind(u64(curs.index));
+}
+
+// --- ssimfilt.FUnstablefld..Init
+// Set all fields to initial values.
+inline void ssimfilt::FUnstablefld_Init(ssimfilt::FUnstablefld& unstablefld) {
+    unstablefld.ind_unstablefld_next = (ssimfilt::FUnstablefld*)-1; // (ssimfilt.FDb.ind_unstablefld) not-in-hash
+}
+
+// --- ssimfilt.FUnstablefld..Ctor
+inline  ssimfilt::FUnstablefld::FUnstablefld() {
+    ssimfilt::FUnstablefld_Init(*this);
+}
+
+// --- ssimfilt.FUnstablefld..Dtor
+inline  ssimfilt::FUnstablefld::~FUnstablefld() {
+    ssimfilt::FUnstablefld_Uninit(*this);
+}
+
 // --- ssimfilt.FieldId.value.GetEnum
 // Get value of field as enum type
 inline ssimfilt_FieldIdEnum ssimfilt::value_GetEnum(const ssimfilt::FieldId& parent) {
@@ -275,6 +371,45 @@ inline  ssimfilt::FieldId::FieldId(ssimfilt_FieldIdEnum arg) {
 inline  ssimfilt::KVRegx::KVRegx() {
 }
 
+// --- ssimfilt.TableId.value.GetEnum
+// Get value of field as enum type
+inline ssimfilt_TableIdEnum ssimfilt::value_GetEnum(const ssimfilt::TableId& parent) {
+    return ssimfilt_TableIdEnum(parent.value);
+}
+
+// --- ssimfilt.TableId.value.SetEnum
+// Set value of field from enum type.
+inline void ssimfilt::value_SetEnum(ssimfilt::TableId& parent, ssimfilt_TableIdEnum rhs) {
+    parent.value = i32(rhs);
+}
+
+// --- ssimfilt.TableId.value.Cast
+inline  ssimfilt::TableId::operator ssimfilt_TableIdEnum() const {
+    return ssimfilt_TableIdEnum((*this).value);
+}
+
+// --- ssimfilt.TableId..Init
+// Set all fields to initial values.
+inline void ssimfilt::TableId_Init(ssimfilt::TableId& parent) {
+    parent.value = i32(-1);
+}
+
+// --- ssimfilt.TableId..Ctor
+inline  ssimfilt::TableId::TableId() {
+    ssimfilt::TableId_Init(*this);
+}
+
+// --- ssimfilt.TableId..FieldwiseCtor
+inline  ssimfilt::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ssimfilt.TableId..EnumCtor
+inline  ssimfilt::TableId::TableId(ssimfilt_TableIdEnum arg) {
+    this->value = i32(arg);
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssimfilt::trace &row) {// cfmt:ssimfilt.trace.String
     ssimfilt::trace_Print(const_cast<ssimfilt::trace&>(row), str);
     return str;
@@ -282,5 +417,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ssimfilt::trac
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssimfilt::FieldId &row) {// cfmt:ssimfilt.FieldId.String
     ssimfilt::FieldId_Print(const_cast<ssimfilt::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ssimfilt::TableId &row) {// cfmt:ssimfilt.TableId.String
+    ssimfilt::TableId_Print(const_cast<ssimfilt::TableId&>(row), str);
     return str;
 }

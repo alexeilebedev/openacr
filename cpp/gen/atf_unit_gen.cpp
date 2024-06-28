@@ -1192,6 +1192,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple  comment:\"\"", atf_unit::unittest_algo_lib_Tuple }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple1  comment:\"\"", atf_unit::unittest_algo_lib_Tuple1 }
         ,{ "atfdb.unittest  unittest:algo_lib.Tuple2  comment:\"\"", atf_unit::unittest_algo_lib_Tuple2 }
+        ,{ "atfdb.unittest  unittest:algo_lib.Txttbl  comment:\"\"", atf_unit::unittest_algo_lib_Txttbl }
         ,{ "atfdb.unittest  unittest:algo_lib.U128PrintHex  comment:\"\"", atf_unit::unittest_algo_lib_U128PrintHex }
         ,{ "atfdb.unittest  unittest:algo_lib.UnescapeC  comment:\"\"", atf_unit::unittest_algo_lib_UnescapeC }
         ,{ "atfdb.unittest  unittest:algo_lib.flock  comment:\"\"", atf_unit::unittest_algo_lib_flock }

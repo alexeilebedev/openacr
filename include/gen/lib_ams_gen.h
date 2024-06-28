@@ -106,9 +106,14 @@ namespace lib_ams { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_gsymbol
     extern const char* amsdb_streamtype_0; // "0"
+    extern const char* amsdb_streamtype_ack; // "ack"
     extern const char* amsdb_streamtype_ctl; // "ctl"
+    extern const char* amsdb_streamtype_fetch; // "fetch"
     extern const char* amsdb_streamtype_io; // "io"
     extern const char* amsdb_streamtype_out; // "out"
+    extern const char* amsdb_streamtype_prod; // "prod"
+    extern const char* amsdb_streamtype_seq; // "seq"
+    extern const char* amsdb_streamtype_sup; // "sup"
     extern const char* amsdb_streamtype_trace; // "trace"
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_pnew

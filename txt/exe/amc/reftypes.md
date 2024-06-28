@@ -1,4 +1,4 @@
-## AMC Reftypes
+## amc Reftypes
 <a href="#amc-reftypes"></a>
 The main attributes of a field are its name, arg, and `reftype`.
 Arg is the type, and reftype is a modifier, or 'type constructor'.
@@ -83,8 +83,8 @@ void                 u32val_Delete(atf_amc::DelType1& parent) __attribute__((not
 #### Fbuf - Byte buffer with epoll integration & message scanning
 <a href="#fbuf"></a>
 
-#### Global - Global variable -- root of all access paths
-<a href="#global---global-variable"></a>
+#### Global -- Global variable -- root of all access paths
+<a href="#global"></a>
 
 #### Hook - Pointer to a function
 <a href="#hook"></a>
@@ -128,22 +128,22 @@ ssim2mysql::FCtype*  ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__
 void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2mysql.FDb.ctype.EmptyQ
-bool                 ctype_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ctype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:ssim2mysql.FDb.ctype.Find
-ssim2mysql::FCtype*  ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline ssim2mysql::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:ssim2mysql.FDb.ctype.Last
-ssim2mysql::FCtype*  ctype_Last() __attribute__((nothrow, pure));
+inline ssim2mysql::FCtype* ctype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.ctype.N
-i32                  ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.ctype.RemoveLast
 void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssim2mysql.FDb.ctype.qFind
-ssim2mysql::FCtype&  ctype_qFind(u64 t) __attribute__((nothrow, pure));
+inline ssim2mysql::FCtype& ctype_qFind(u64 t) __attribute__((nothrow, pure));
 // func:ssim2mysql.FDb.ctype.InputMaybe
 static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
@@ -362,33 +362,33 @@ char&                buf_AllocAt(algo::LineBuf& parent, int at) __attribute__((_
 algo::aryptr<char>   buf_AllocN(algo::LineBuf& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo.LineBuf.buf.EmptyQ
-bool                 buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
+inline bool          buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo.LineBuf.buf.Find
-char*                buf_Find(algo::LineBuf& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline char*         buf_Find(algo::LineBuf& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:algo.LineBuf.buf.Getary
-algo::aryptr<char>   buf_Getary(const algo::LineBuf& parent) __attribute__((nothrow));
+inline algo::aryptr<char> buf_Getary(const algo::LineBuf& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:algo.LineBuf.buf.Last
-char*                buf_Last(algo::LineBuf& parent) __attribute__((nothrow, pure));
+inline char*         buf_Last(algo::LineBuf& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:algo.LineBuf.buf.Max
-i32                  buf_Max(algo::LineBuf& parent) __attribute__((nothrow));
+inline i32           buf_Max(algo::LineBuf& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:algo.LineBuf.buf.N
-i32                  buf_N(const algo::LineBuf& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           buf_N(const algo::LineBuf& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:algo.LineBuf.buf.Remove
 void                 buf_Remove(algo::LineBuf& parent, u32 i) __attribute__((nothrow));
 // func:algo.LineBuf.buf.RemoveAll
-void                 buf_RemoveAll(algo::LineBuf& parent) __attribute__((nothrow));
+inline void          buf_RemoveAll(algo::LineBuf& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:algo.LineBuf.buf.RemoveLast
 void                 buf_RemoveLast(algo::LineBuf& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:algo.LineBuf.buf.Reserve
-void                 buf_Reserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
+inline void          buf_Reserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:algo.LineBuf.buf.AbsReserve
 void                 buf_AbsReserve(algo::LineBuf& parent, int n) __attribute__((nothrow));
@@ -405,13 +405,13 @@ void                 buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) __att
 void                 buf_Setary(algo::LineBuf& parent, const algo::aryptr<char> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:algo.LineBuf.buf.qFind
-char&                buf_qFind(algo::LineBuf& parent, u64 t) __attribute__((nothrow));
+inline char&         buf_qFind(algo::LineBuf& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:algo.LineBuf.buf.qLast
-char&                buf_qLast(algo::LineBuf& parent) __attribute__((nothrow));
+inline char&         buf_qLast(algo::LineBuf& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:algo.LineBuf.buf.rowid_Get
-u64                  buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribute__((nothrow));
+inline u64           buf_rowid_Get(algo::LineBuf& parent, char &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.LineBuf.buf.AllocNVal
 algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) __attribute__((nothrow));

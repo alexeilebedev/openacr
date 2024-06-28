@@ -19,7 +19,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/fcast.cpp
+// Source: cpp/amc/fcast.cpp -- Implicit casts
 //
 
 #include "include/amc.h"
@@ -34,11 +34,13 @@ void amc::tfunc_Fcast_Cast() {
     amc::FFcast &fcast = *field.c_fcast;
 
     tempstr casttype;
-    if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
-        casttype = "algo::strptr";
-    } else if (ch_N(fcast.expr)) {
+    if (ch_N(fcast.expr)) {
         casttype = fcast.expr;
-    } else if (c_field_N(valtype)>0 && c_field_Find(valtype,0)->c_fcast) {
+    } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
+        casttype = "algo::aryptr<char>";
+    } else if (field.reftype == dmmeta_Reftype_reftype_Tary || field.reftype == dmmeta_Reftype_reftype_Inlary) {
+        casttype = Subst(R,"algo::aryptr<$Cpptype>");
+    }  else if (c_field_N(valtype)>0 && c_field_Find(valtype,0)->c_fcast) {
         casttype = c_field_Find(valtype,0)->c_fcast->expr;
     } else if (c_fconst_N(field) && !FieldStringQ(field)) {
         casttype = Enumtype(field);
@@ -49,16 +51,16 @@ void amc::tfunc_Fcast_Cast() {
     Set(R, "$casttype", casttype);
     Set(R, "$Get", FieldvalExpr(field.p_ctype, field, "(*this)"));
     amc::FFunc& get = amc::CreateCurFunc();
-    get.oper = true;
     get.inl = true;
-    get.ret = casttype;
-    Ins(&R, get.proto, "() const", false);
-    if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
-        Ins(&R, get.body, "return $name_Getary(*this);");
-    } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+    get.member = true;
+    //get.ret = casttype;
+    Ins(&R, get.proto, "operator $casttype() const", false);
+    if (field.reftype == dmmeta_Reftype_reftype_Smallstr
+        || field.reftype == dmmeta_Reftype_reftype_Tary
+        || field.reftype == dmmeta_Reftype_reftype_Inlary) {
         Ins(&R, get.body, "return $name_Getary(*this);");
     } else {
         Ins(&R, get.body, "return $casttype($Get);");
     }
-    InsStruct(R, field.p_ctype, "inline operator $casttype() const;");// hack?
+    //InsStruct(R, field.p_ctype, "inline operator $casttype() const;");// hack?
 }

@@ -12,18 +12,21 @@ adds a column, another removes a column.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Limitations](#limitations)
-* [Operation](#operation)
-* [Algorithm](#algorithm)
-* [Git integration](#git-integration)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Algorithm](#algorithm)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Git integration](#git-integration)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [acr_dm - Internals](/txt/exe/acr_dm/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr_dm: ACR Diff/Merge
 Usage: acr_dm [[-arg:]<string>] [options]
@@ -41,23 +44,7 @@ Usage: acr_dm [[-arg:]<string>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -arg -- Files to merge: older ours theirs...
-<a href="#-arg"></a>
-
-#### -write_ours -- Write result to ours file
-<a href="#-write_ours"></a>
-
-#### -msize -- Conflict marker size
-<a href="#-msize"></a>
-
-#### -rowid -- Output 'ours' rowid for merging into original ssimfiles
-<a href="#-rowid"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Limitations
 <a href="#limitations"></a>
@@ -208,33 +195,34 @@ inline-command: grep acr_dm .gitattributes
 *.ssim merge=acr_dm
 ```
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/acr_dm/acr_dm.cpp](/cpp/acr_dm/acr_dm.cpp)||
-|[cpp/gen/acr_dm_gen.cpp](/cpp/gen/acr_dm_gen.cpp)||
-|[include/acr_dm.h](/include/acr_dm.h)||
-|[include/gen/acr_dm_gen.h](/include/gen/acr_dm_gen.h)||
-|[include/gen/acr_dm_gen.inl.h](/include/gen/acr_dm_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -arg -- Files to merge: older ours theirs...
+<a href="#-arg"></a>
+
+#### -write_ours -- Write result to ours file
+<a href="#-write_ours"></a>
+
+#### -msize -- Conflict marker size
+<a href="#-msize"></a>
+
+#### -rowid -- Output 'ours' rowid for merging into original ssimfiles
+<a href="#-rowid"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_dm` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `acr_dm`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|acr_dm.Conflict||
-|acr_dm.Merge||
-|acr_dm.RenameTuple||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

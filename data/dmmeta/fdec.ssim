@@ -27,3 +27,4 @@ dmmeta.fdec  field:algo.U64Dec6.value  nplace:6  fixedfmt:Y  comment:"0 prints a
 dmmeta.fdec  field:algo.U64Dec7.value  nplace:7  fixedfmt:Y  comment:"0 prints as 0.0000000"
 dmmeta.fdec  field:algo.U64Dec8.value  nplace:8  fixedfmt:Y  comment:"0 prints as 0.00000000"
 dmmeta.fdec  field:algo.U64Dec9.value  nplace:9  fixedfmt:Y  comment:"0 prints as 0.000000000"
+dmmeta.fdec  field:samp_meng.I64Price8.value  nplace:8  fixedfmt:N  comment:""

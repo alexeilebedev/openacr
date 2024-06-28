@@ -26,24 +26,36 @@ If it's named `blah`, then the functions become `BlahQ`, `SetBlah`.
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Pmaskfld
 
 * file:[data/dmmeta/pmaskfld.ssim](/data/dmmeta/pmaskfld.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *ctype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||<br>.RL of field|
-|filter_print|bool|Val|true|Omit non-present fields when printing|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.RL of field*|
+|filter_print|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Omit non-present fields when printing|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Related
 <a href="#related"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.pmaskfld
 
-* [dmmeta.pmaskfld_member via pmaskfld](/txt/ssimdb/dmmeta/pmaskfld_member.md) - Explicit field-to-pmask association
+* [dmmeta.pmaskfld_member via pmaskfld](/txt/ssimdb/dmmeta/pmaskfld_member.md) - Explicit field-to-pmask association 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FPmaskfld
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FPmaskfld](/txt/exe/amc/internals.md#amc-fpmaskfld)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

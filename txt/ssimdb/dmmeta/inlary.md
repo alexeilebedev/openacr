@@ -22,25 +22,25 @@ The following functions are generated for a fixed array:
 inline-command: amc -report:N -proto algo_lib.FDb.temp_strings.%
 // Set all elements of fixed array to value RHS
 // func:algo_lib.FDb.temp_strings.Fill
-void                 temp_strings_Fill(const algo::cstring &rhs) __attribute__((nothrow));
+inline void          temp_strings_Fill(const algo::cstring &rhs) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:algo_lib.FDb.temp_strings.Find
-algo::cstring*       temp_strings_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* temp_strings_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Access fixed array temp_strings as aryptr.
 // func:algo_lib.FDb.temp_strings.Getary
-algo::aryptr<algo::cstring> temp_strings_Getary() __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> temp_strings_Getary() __attribute__((nothrow));
 // Return max number of items in the array
 // func:algo_lib.FDb.temp_strings.Max
-i32                  temp_strings_Max() __attribute__((nothrow));
+inline i32           temp_strings_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:algo_lib.FDb.temp_strings.N
-i32                  temp_strings_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           temp_strings_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 // func:algo_lib.FDb.temp_strings.Setary
-void                 temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+inline void          temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
 // func:algo_lib.FDb.temp_strings.qFind
-algo::cstring&       temp_strings_qFind(u64 t) __attribute__((nothrow));
+inline algo::cstring& temp_strings_qFind(u64 t) __attribute__((nothrow));
 // Read array from string
 // Convert string to field. Return success value
 // func:algo_lib.FDb.temp_strings.ReadStrptrMaybe
@@ -65,22 +65,22 @@ atf_amc::FTypeC*     typec_AllocMaybe(atf_amc::FTypeA& typea) __attribute__((__w
 atf_amc::FTypeC*     typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
 // func:atf_amc.FTypeA.typec.AllocMem
-void*                typec_AllocMem(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
+inline void*         typec_AllocMem(atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_amc.FTypeA.typec.EmptyQ
-bool                 typec_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline bool          typec_EmptyQ(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_amc.FTypeA.typec.Find
-atf_amc::FTypeC*     typec_Find(atf_amc::FTypeA& typea, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeC* typec_Find(atf_amc::FTypeA& typea, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_amc.FTypeA.typec.Getary
-algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline algo::aryptr<atf_amc::FTypeC> typec_Getary(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return constant 10 -- max. number of items in the pool
 // func:atf_amc.FTypeA.typec.Max
-i32                  typec_Max(atf_amc::FTypeA& typea) __attribute__((nothrow));
+inline i32           typec_Max(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_amc.FTypeA.typec.N
-i32                  typec_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           typec_N(const atf_amc::FTypeA& typea) __attribute__((__warn_unused_result__, nothrow, pure));
 // Destroy all elements of Inlary
 // func:atf_amc.FTypeA.typec.RemoveAll
 void                 typec_RemoveAll(atf_amc::FTypeA& typea) __attribute__((nothrow));
@@ -89,10 +89,10 @@ void                 typec_RemoveAll(atf_amc::FTypeA& typea) __attribute__((noth
 void                 typec_RemoveLast(atf_amc::FTypeA& typea) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking in release.
 // func:atf_amc.FTypeA.typec.qFind
-atf_amc::FTypeC&     typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((nothrow));
+inline atf_amc::FTypeC& typec_qFind(atf_amc::FTypeA& typea, u64 t) __attribute__((nothrow));
 // Compute row id of element given element's address
 // func:atf_amc.FTypeA.typec.rowid_Get
-u64                  typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
+inline u64           typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_amc.FTypeA.typec.XrefMaybe
@@ -102,18 +102,25 @@ bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Inlary
 
 * file:[data/dmmeta/inlary.ssim](/data/dmmeta/inlary.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|min|i32|Val||Min. elements to preallocate|
-|max|i32|Val||Max. elements|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|min|i32|[Val](/txt/exe/amc/reftypes.md#val)||Min. elements to preallocate|
+|max|i32|[Val](/txt/exe/amc/reftypes.md#val)||Max. elements|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FInlary
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FInlary](/txt/exe/amc/internals.md#amc-finlary)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

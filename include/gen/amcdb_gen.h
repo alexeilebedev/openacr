@@ -73,6 +73,7 @@ extern const char *  amcdb_Tclass_tclass_Count;      // Count       fconst:amcdb
 extern const char *  amcdb_Tclass_tclass_Cppfunc;    // Cppfunc     fconst:amcdb.Tclass.tclass/Cppfunc
 extern const char *  amcdb_Tclass_tclass_Cppstack;   // Cppstack    fconst:amcdb.Tclass.tclass/Cppstack
 extern const char *  amcdb_Tclass_tclass_Ctype;      // Ctype       fconst:amcdb.Tclass.tclass/Ctype
+extern const char *  amcdb_Tclass_tclass_Ctype2;     // Ctype2      fconst:amcdb.Tclass.tclass/Ctype2
 extern const char *  amcdb_Tclass_tclass_Dec;        // Dec         fconst:amcdb.Tclass.tclass/Dec
 extern const char *  amcdb_Tclass_tclass_Delptr;     // Delptr      fconst:amcdb.Tclass.tclass/Delptr
 extern const char *  amcdb_Tclass_tclass_Exec;       // Exec        fconst:amcdb.Tclass.tclass/Exec

@@ -505,12 +505,40 @@ bool amc::CheapCopyQ(amc::FField &field) {
     return tgttype.c_cpptype && tgttype.c_cpptype->cheap_copy;
 }
 
-static bool HasFcast(amc::FCtype& ctype){
+bool amc::HasFcast(amc::FCtype& ctype){
     int result =false;
     ind_beg(amc::ctype_c_field_curs,field,ctype) if(field.c_fcast) {
         result=true;
     }ind_end;
     return result;
+}
+
+// Determine if ctype should have a private constructor
+bool amc::CopyPrivQ(amc::FCtype &ctype) {
+    bool copy_priv=false;
+    vrfy(bool_Update(ctype.in_copy_priv,true),tempstr()<<"circular type definition in "<<ctype.ctype);
+    ind_beg(amc::ctype_c_field_curs, field, ctype) if (!copy_priv) {
+        if (field.reftype == dmmeta_Reftype_reftype_Global) {
+            copy_priv = true;
+        } else if (field.p_reftype->isval) {
+            if (CopyPrivQ(*field.p_arg)) {
+                copy_priv = true;
+            }
+        } else if (field.reftype == dmmeta_Reftype_reftype_Regx || field.reftype == dmmeta_Reftype_reftype_RegxSql) {
+        } else if (!field.p_reftype->cancopy) {
+            copy_priv = true;
+        } else if (field.c_xref != NULL) {
+            copy_priv = true;
+        } else if (field.c_cascdel != NULL) {
+            copy_priv = true;
+        } else if (field.c_fcleanup != NULL) {
+            copy_priv = true;
+        } else if (field.c_fuserinit != NULL) {
+            copy_priv = true;
+        }
+    }ind_end;
+    ctype.in_copy_priv=false;
+    return copy_priv;
 }
 
 // Return c++ type for rowid of FCtype
@@ -727,19 +755,15 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname
     if (nfound == 0) {
         ind_beg(amc::ctype_c_field_curs,child,*ctype) {
             ind_beg(amc::ctype_c_field_curs,subchild,*child.p_arg) if (&subchild==&field) {
-                path << "." << name_Get(child);
+                if (parname != "") {
+                    path << ".";
+                }
+                path << name_Get(child);
                 nfound++;
             }ind_end;
         }ind_end;
-        // why is this necessary? shouldn't we have cloned first?
-        // the answer is that sometimes FieldvalExpr is called before cloning.
-        if (base && !ctype->fields_cloned) {
-            ind_beg(amc::ctype_c_field_curs,child,*base) {
-                ind_beg(amc::ctype_c_field_curs,subchild,*child.p_arg) if (&subchild==&field) {
-                    path << "." << name_Get(child);
-                    nfound++;
-                }ind_end;
-            }ind_end;
+        if (base) {
+            vrfy(ctype->fields_cloned, "bad call to FieldvarExpr before fields were cloned");
         }
     }
     if (!nfound) {
@@ -761,7 +785,10 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname
     if (need_get) {
         ret << name_Get(field)<<"_Get("<<parname<<path<<")";
     } else {
-        ret << parname<<path<<"."<<name_Get(field);
+        if (parname != "" || path != "") {
+            ret << parname << path << ".";
+        }
+        ret << name_Get(field);
     }
     return ret;
 }

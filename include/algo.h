@@ -443,15 +443,24 @@ namespace algo { // update-hdr
     // On error, return zero.
     i64 GetFileSize(Fildes fd) __attribute__((nothrow));
 
-    // Strip directory name in PATH. and return the rest
-    // This is equivalent to Pathcomp(path,"/RR");
-    // c:\dir\file.txt -> file
+    // Strip extension from PATH, then strip directory name from PATH,
+    // and return the remainder.
+    // c.d      -> c
+    // /a/b/c.d -> c
     strptr GetFileName(const strptr& path) __attribute__((nothrow));
 
     // F  ("a.txt","b") -> "b.txt";
     // F  ("a.txt","/b.jpg") -> "b.jpg.txt"
     tempstr ReplaceFileName(const strptr& a, const strptr& b);
+
+    // Return modification time of file FILENAME
+    // If file is not found or is not accessible, return 0.
     algo::UnTime ModTime(strptr filename);
+
+    // Remove directory.
+    // Return TRUE if operaiton succeeds
+    // The function will fail if the directory is not empty. For that case,
+    // use RemDirRecurse.
     bool RemDir(strptr name);
 
     // Destroy directory NAME, and any subdirectories.
@@ -459,6 +468,8 @@ namespace algo { // update-hdr
     // (otherwise, only the contents are deleted).
     // If filesystem entry exists and is NOT a directory, return true.
     bool RemDirRecurse(strptr name, bool remove_topmost);
+
+    // User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
     void dir_handle_Cleanup(algo::DirEntry &dir_entry);
 
     // Open file FILENAME with flags FLAGS, return resulting file descriptor
@@ -928,6 +939,7 @@ namespace algo { // update-hdr
     bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
     bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
     void u64_PrintBase32(u64 k, algo::cstring &str);
+    void Uuid_Print(algo::Uuid &parent, algo::cstring &str);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
@@ -951,7 +963,6 @@ namespace algo { // update-hdr
     // cache.
     void Throw(strptr text, Errcode err) __attribute__((noreturn));
     void Throw() __attribute__((noreturn));
-    bool Tuple_EqualQ(Tuple &t1, Tuple &t2);
     Attr* attr_Find(Tuple &tuple, strptr name, int occurence = 0);
     strptr attr_GetString(Tuple &T, strptr name, strptr dflt = strptr());
 
@@ -1264,7 +1275,6 @@ namespace algo { // update-hdr
     // The separator is always /. To support windows-specific pathnames,
     // use ToWindows path where appropriate.
     void MaybeDirSep(cstring &str);
-    i32 strptr_Cmp(algo::strptr a, algo::strptr b);
     void Attr_curs_Reset(Attr_curs &curs, strptr line);
     void Attr_curs_Next(Attr_curs &curs);
 
@@ -1597,6 +1607,7 @@ namespace algo { // update-hdr
     // On Linux, this function calls clock_gettime() which takes about
     // 30ns and uses rdtsc() to increase underlying clock resolution
     inline algo::UnTime CurrUnTime();
+    inline i32 strptr_Cmp(algo::strptr a, algo::strptr b);
 }
 
 // -----------------------------------------------------------------------------
@@ -1694,6 +1705,8 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/file.cpp -- File functions
     //
+
+    // User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
     void fildes_Cleanup(algo_lib::FLockfile &lockfile);
 
     // If PATH is an existing path, leave it unchanged
@@ -1712,6 +1725,7 @@ namespace algo_lib { // update-hdr
     //
     void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str);
     void FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str);
+    void FTxttbl_Markdown(algo_lib::FTxttbl &T_, algo::cstring &str);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
@@ -1987,6 +2001,8 @@ namespace algo_lib { // update-hdr
     // Add column to the last row of table.
     void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col, algo_TextJustEnum justify);
     void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col);
+    void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify);
+    void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv);
     algo::cstring &AddCell(algo_lib::FTxttbl &txttbl);
 
     // Use prlog(txttbl) to print.

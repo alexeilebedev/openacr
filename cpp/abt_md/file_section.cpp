@@ -65,8 +65,16 @@ void abt_md::CheckSection(abt_md::FFileSection &file_section) {
     }
 }
 // -----------------------------------------------------------------------------
-static bool MarktocQ(strptr line){
-    return StartsWithQ(line,"<!-- TOC_");
+static bool MarktagQ(strptr line){
+    bool ret(false);
+
+    if (StartsWithQ(line,tempstr()<<"<!-- ")){
+        dev::Mdmark mdmark;
+        if (Mdmark_ReadStrptrMaybe(mdmark,Pathcomp(line," LR"))){
+            ret=EndsWithQ(mdmark.state,"_AUTO");
+        }
+    }
+    return ret;
 }
 // -----------------------------------------------------------------------------
 
@@ -77,14 +85,20 @@ static bool MarktocQ(strptr line){
 void abt_md::SaveHumanText(abt_md::FFileSection &file_section) {
     abt_md::FMdsection &mdsection = *file_section.p_mdsection;
     ind_human_text_Cascdel();
+    // drop AUTO inserted comment lines
+    tempstr text;
+    ind_beg(Line_curs,line,file_section.text) if (!MarktagQ(line)){
+        text<<line<<eol;
+    }ind_end;
+    file_section.text=text;
+
     if (mdsection.genlist != "") {
         abt_md::FHumanText *cur_human_text=&abt_md::ind_human_text_GetOrCreate("");// initial text
-        ind_beg(Line_curs,line,file_section.text) if (!MarktocQ(line)){
+        ind_beg(Line_curs,line,file_section.text) {
             if (StartsWithQ(line,mdsection.genlist)) {
                 tempstr name=LineKey(line);
                 abt_md::FHumanText &ht=abt_md::ind_human_text_GetOrCreate(name);
                 cur_human_text=&ht;
-                // don't save abt_md markers, they will be restored
             } else {
                 cur_human_text->text << line << eol;
             }
@@ -178,30 +192,47 @@ void abt_md::ScanLinksAnchors() {
             } else if (StartsWithQ(line,"~~~")) {
                 codeblock=!codeblock;
             } else if (!backticks && !codeblock) {
-                int bracket_start=-1;
-                int bracket_end=-1;
-                int paren_start=-1;
-                int paren_end=-1;
+                tempstr link_text;
+                tempstr link_target;
+                u8 state(0);
                 for (int i=0; i<line.n_elems; i++) {
-                    if (line.elems[i]=='[') {
-                        bracket_start=i;
-                    } else if (line.elems[i]==']') {
-                        bracket_end=i;
-                    } else if (line.elems[i]=='(') {
-                        paren_start=i;
-                    } else if (line.elems[i]==')') {
-                        paren_end=i;
-                        if (bracket_start!=-1 && bracket_end!=-1 && paren_start==bracket_end+1) {
-                            abt_md::FLink &link=link_Alloc();
-                            link.location << _db.c_readme->gitfile<<":"<<(file_section.firstline + 1 + ind_curs(line).i);
-                            link.text=ch_GetRegion(line,bracket_start+1,bracket_end-bracket_start-1);
-                            link.target=ch_GetRegion(line,paren_start+1,paren_end-paren_start-1);
-                            // link is taken, clear brackets
-                            bracket_start=-1;
-                            bracket_end=-1;
-                            paren_start=-1;
-                            paren_end=-1;
+                    char ch=line.elems[i];
+                    switch (state) {
+                    case 0: // start
+                        if (ch == '[') {
+                            state=1; // open bracket
                         }
+                        break;
+                    case 1: // open bracket
+                        if (ch != ']') {
+                            link_text<<ch;
+                        } else {
+                            state = 2; // close bracket
+                        }
+                        break;
+                    case 2: // close bracket
+                        if (ch == '(') {
+                            state = 3; // open parenthesis
+                        } else {
+                            // reset, ]( condition is not met
+                            state = 0; // start
+                            link_text="";
+                        }
+                        break;
+                    case 3: // open parenthesis
+                        if (ch != ')' && i<line.n_elems-1) {
+                            link_target << ch;
+                        } else {
+                            // Take action
+                            abt_md::FLink &link = link_Alloc();
+                            link.location << _db.c_readme->gitfile<<":"<<(file_section.firstline + 1 + ind_curs(line).i);
+                            link.text=link_text;
+                            link.target=link_target;
+                            link_text="";
+                            link_target="";
+                            state = 0; // start again
+                        }
+                        break;
                     }
                 }
                 if (StartsWithQ(line,"<a href=\"")) {
@@ -215,6 +246,99 @@ void abt_md::ScanLinksAnchors() {
             }
         }ind_end;
     }ind_end;
+}
+// -----------------------------------------------------------------------------
+
+static void InsertMarktag(abt_md::FFileSection &section, algo::cstring &text_in){
+    if (text_in!=""){
+        dev::Mdmark mdmark;
+        mdmark.mdmark=dev_Mdmark_mdmark_MDSECTION;
+        mdmark.param=section.p_mdsection->mdsection;
+        mdmark.state=dev_Mdmark_state_BEG_AUTO;
+
+        tempstr text;
+        text << abt_md::MdComment(tempstr()<<mdmark)<<eol;
+        text << text_in <<eol;
+        mdmark.state=dev_Mdmark_state_END_AUTO;
+        text << abt_md::MdComment(tempstr()<<mdmark)<<eol;
+        text_in = text;
+    }
+}
+// -----------------------------------------------------------------------------
+
+void abt_md::Marktag(abt_md::FFileSection &section){
+    if (section.p_mdsection->path!="%"){
+        InsertMarktag(section,section.text);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Execute commands marked by "inline-command: ..." inside backtick blocks,
+// and substitute their output into the section text
+void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
+    abt_md::FReadme &readme = *_db.c_readme;
+    cstring out;
+    bool inlinecommand=false;
+    bool backticks=false;// inside backticks block
+    bool codeblock=false;// inside code block
+    bool leadempty=true;
+    // expand inline-commands
+    ind_beg(algo::Line_curs,line,file_section.text) {
+        int lineno = file_section.firstline + ind_curs(line).i + 1/*skip title*/;
+        if (line=="" && leadempty) {
+            // ignore leading empty line
+        } else if ((codeblock || backticks) && StartsWithQ(line,"inline-command: ")) {
+            out << line << eol;
+            verblog(readme.gitfile<<": eval "<<line);
+            tempstr cmd(Pathcomp(line," LR"));
+            int rc=0;
+            algo::strptr tempfile("temp/abt_md.out");
+            if (readme.sandbox) {
+                command::sandbox_proc sandbox;
+                sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
+                cmd_Alloc(sandbox.cmd) << "bash";
+                cmd_Alloc(sandbox.cmd) << "-c";
+                cmd_Alloc(sandbox.cmd) << cmd;
+                sandbox.fstdout << ">" << tempfile;
+                sandbox.fstderr = ">&1";
+                rc = sandbox_Exec(sandbox);
+            } else {
+                command::bash_proc bash;
+                bash.cmd.c = cmd;
+                bash.fstdout << ">" << tempfile;
+                bash.fstderr = ">&1";
+                rc = bash_Exec(bash);
+            }
+            if (rc) {
+                prerr(readme.gitfile<<":"<<lineno<<": command failed: "<<cmd);
+                algo_lib::_db.exit_code=rc;
+            }
+            if (readme.filter == "") {
+                readme.filter = "cat";
+            }
+            out << SysEval(tempstr()<<readme.filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
+            inlinecommand=true;
+        } else if (StartsWithQ(line, "```")) {
+            out << line << eol;
+            inlinecommand=false;
+            backticks = !backticks;
+        } else if (StartsWithQ(line, "~~~")) {
+            out << line << eol;
+            inlinecommand=false;
+            codeblock = !codeblock;
+        } else {
+            // regular line : output unless it's part of command line output
+            // that's being replaced
+            if (!inlinecommand) {
+                out << line << eol;
+            }
+        }
+        if (line != "") {
+            leadempty =false;
+        }
+    }ind_end;
+    file_section.text=out;
 }
 
 // -----------------------------------------------------------------------------
@@ -246,76 +370,17 @@ void abt_md::UpdateSection(abt_md::FFileSection &file_section) {
     if (NeedSectionQ(mdsection,readme)) {
         // run generator function on section --
         // this may generate content and/or replace file section fields
+        // is section has 'genlist' defined, scan for human-entered text and save it in a hash
         SaveHumanText(file_section);
         file_section.p_mdsection->step(file_section);
+        // Mark generated part of the section
+        Marktag(file_section);
+        // restore human-entered text after section has been re-generated
         RestoreHumanText(file_section);
     }
-    cstring out;
-    bool inlinecommand=false;
-    bool backticks=false;// inside backticks block
-    bool codeblock=false;// inside code block
-    bool leadempty=true;
-    // expand inline-commands
-    ind_beg(algo::Line_curs,line,file_section.text) {
-        int lineno = file_section.firstline + ind_curs(line).i + 1/*skip title*/;
-        if (line=="" && leadempty) {
-            // ignore leading empty line
-        } else if ((codeblock || backticks) && StartsWithQ(line,"inline-command: ")) {
-            out << line << eol;
-            verblog(readme.gitfile<<": eval "<<line);
-            tempstr cmd(Pathcomp(line," LR"));
-            int rc=0;
-            if (readme.sandbox) {
-                command::sandbox_proc sandbox;
-                sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
-                cmd_Alloc(sandbox.cmd) << "bash";
-                cmd_Alloc(sandbox.cmd) << "-c";
-                cmd_Alloc(sandbox.cmd) << cmd;
-                sandbox.fstdout = ">temp/abt_md.out";
-                sandbox.fstderr = ">&1";
-                rc = sandbox_Exec(sandbox);
-            } else {
-                command::bash_proc bash;
-                bash.cmd.c = cmd;
-                bash.fstdout = ">temp/abt_md.out";
-                bash.fstderr = ">&1";
-                rc = bash_Exec(bash);
-            }
-            if (rc) {
-                prerr(readme.gitfile<<":"<<lineno<<": command failed: "<<cmd);
-                algo_lib::_db.exit_code=rc;
-            }
-            if (readme.filter == "") {
-                readme.filter = "cat";
-            }
-            cmd = tempstr()<<readme.filter<<" temp/abt_md.out";
-            try {
-                out << SysEval(cmd,FailokQ(true),1024*1024*10);
-            } catch (algo_lib::ErrorX &x) {
-                prerr(readme.gitfile<<":"<<lineno<<": command failed: "<<cmd);
-                algo_lib::_db.exit_code=1;
-            }
-            inlinecommand=true;
-        } else if (StartsWithQ(line, "```")) {
-            out << line << eol;
-            inlinecommand=false;
-            backticks = !backticks;
-        } else if (StartsWithQ(line, "~~~")) {
-            out << line << eol;
-            inlinecommand=false;
-            codeblock = !codeblock;
-        } else {
-            // regular line : output unless it's part of command line output
-            // that's being replaced
-            if (!inlinecommand) {
-                out << line << eol;
-            }
-        }
-        if (line != "") {
-            leadempty =false;
-        }
-    }ind_end;
-    file_section.text=out;
+    if (_db.cmdline.evalcmd) {
+        EvalInlineCommand(file_section);
+    }
     RewriteAnchors(file_section);
     CheckSection(file_section);
     verblog("abt_md.update_section_end"

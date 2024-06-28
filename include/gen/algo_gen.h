@@ -217,6 +217,7 @@ namespace algo { struct Sha1sig_sha1sig_curs; }
 namespace algo { struct StringAry_ary_curs; }
 namespace algo { struct Tuple_attrs_curs; }
 namespace algo { struct U64Ary_ary_curs; }
+namespace algo { struct Uuid_value_curs; }
 namespace lib_json { struct FNode; }
 namespace algo { struct cstring; }
 namespace algo { struct Attr; }
@@ -420,6 +421,7 @@ namespace algo { struct URL; }
 namespace algo { struct UnDiff; }
 namespace algo { struct UnixDiff; }
 namespace algo { struct UnixTime; }
+namespace algo { struct Uuid; }
 namespace algo { struct WDiff; }
 namespace algo { struct WTime; }
 namespace algo { struct i32_Range; }
@@ -427,7 +429,7 @@ namespace algo { // gen:ns_print_struct
 
 // --- algo.cstring
 // create: algo.StringAry.ary (Tary)
-struct cstring { // algo.cstring
+struct cstring { // algo.cstring: Array of characters (not NULL-terminated)
     char*   ch_elems;   // pointer to elements
     u32     ch_n;       // number of elements in array
     u32     ch_max;     // max. capacity of array before realloc
@@ -584,7 +586,7 @@ void                 cstring_Print(algo::cstring& row, algo::cstring& str) __att
 
 // --- algo.Attr
 // create: algo.Tuple.attrs (Tary)
-struct Attr { // algo.Attr
+struct Attr { // algo.Attr: Tuple attribute
     algo::cstring   name;    // attribute name
     algo::cstring   value;   // attribute value
     // func:algo.Attr..EqOp
@@ -612,7 +614,7 @@ inline bool          Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) __attribute__((no
 void                 Attr_Print(algo::Attr& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Bool
-struct Bool { // algo.Bool
+struct Bool { // algo.Bool: Bool type for converting booleans to string
     u8   value;   //   false
     // func:algo.Bool.value.Cast
     inline               operator algo_BoolEnum() const __attribute__((nothrow));
@@ -658,7 +660,7 @@ inline void          Bool_Init(algo::Bool& parent);
 void                 Bool_Print(algo::Bool row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.ByteAry
-struct ByteAry { // algo.ByteAry
+struct ByteAry { // algo.ByteAry: Byte array
     u8*   ary_elems;   // pointer to elements
     u32   ary_n;       // number of elements in array
     u32   ary_max;     // max. capacity of array before realloc
@@ -668,7 +670,7 @@ struct ByteAry { // algo.ByteAry
     // func:algo.ByteAry.ary.CtorAryptr
     explicit inline               ByteAry(const algo::aryptr<u8> &rhs) __attribute__((nothrow));
     // func:algo.ByteAry.ary.Cast
-    inline               operator algo::memptr() const __attribute__((nothrow));
+    inline               operator algo::aryptr<u8>() const __attribute__((nothrow));
     // func:algo.ByteAry..AssignOp
     algo::ByteAry&       operator =(const algo::ByteAry &rhs) __attribute__((nothrow));
     // func:algo.ByteAry..Ctor
@@ -772,7 +774,7 @@ inline void          ByteAry_Init(algo::ByteAry& parent);
 void                 ByteAry_Uninit(algo::ByteAry& parent) __attribute__((nothrow));
 
 // --- algo.Charset
-struct Charset { // algo.Charset
+struct Charset { // algo.Charset: Character set
     u64   ch_elems[8];   //   0  fixed array
     // func:algo.Charset..Ctor
     inline               Charset() __attribute__((nothrow));
@@ -887,7 +889,7 @@ bool                 Charset_ReadStrptrMaybe(algo::Charset &parent, algo::strptr
 inline void          Charset_Init(algo::Charset& parent);
 
 // --- algo.Smallstr150
-struct Smallstr150 { // algo.Smallstr150
+struct Smallstr150 { // algo.Smallstr150: inline string with length field
     enum { ch_max = 150 };
     u8 ch[150+1];
     u8 n_ch;
@@ -964,7 +966,7 @@ inline bool          Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& r
 void                 Smallstr150_Print(algo::Smallstr150& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Comment
-struct Comment { // algo.Comment
+struct Comment { // algo.Comment: Generic comment for ssim tuples
     algo::Smallstr150   value;   // 150 chars should be enough
     // func:algo.Comment.value.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
@@ -988,7 +990,7 @@ inline bool          Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) __attrib
 void                 Comment_Print(algo::Comment& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr250
-struct Smallstr250 { // algo.Smallstr250
+struct Smallstr250 { // algo.Smallstr250: inline string with length field
     enum { ch_max = 250 };
     u8 ch[250+1];
     u8 n_ch;
@@ -1065,7 +1067,7 @@ inline bool          Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& r
 void                 Smallstr250_Print(algo::Smallstr250& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.CppExpr
-struct CppExpr { // algo.CppExpr
+struct CppExpr { // algo.CppExpr: C++ expression
     algo::Smallstr250   value;   // expression
     // func:algo.CppExpr..Ctor
     inline               CppExpr() __attribute__((nothrow));
@@ -1084,7 +1086,7 @@ void                 CppExpr_Print(algo::CppExpr& row, algo::cstring& str) __att
 
 // --- algo.UnTime
 #pragma pack(push,1)
-struct UnTime { // algo.UnTime: Unix time * 1e9 + nanoseconds
+struct UnTime { // algo.UnTime: Unix time with nanosecond resolution (i64)
     i64   value;   //   0
     // func:algo.UnTime..EqOp
     inline bool          operator ==(const algo::UnTime &rhs) const __attribute__((nothrow));
@@ -1142,7 +1144,7 @@ inline bool          UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) __attrib
 void                 UnTime_Print(algo::UnTime row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.DateCache
-struct DateCache { // algo.DateCache
+struct DateCache { // algo.DateCache: Fast conversion of date to string
     algo::UnTime   min;   // Min input value
     algo::UnTime   max;   // Max input value
     // func:algo.DateCache..Ctor
@@ -1151,7 +1153,7 @@ struct DateCache { // algo.DateCache
 
 
 // --- algo.DayRange
-struct DayRange { // algo.DayRange
+struct DayRange { // algo.DayRange: Range of days
     algo::UnTime   start;   //
     algo::UnTime   end;     //
     // func:algo.DayRange..Ctor
@@ -1162,7 +1164,7 @@ struct DayRange { // algo.DayRange
 
 
 // --- algo.Decimal
-struct Decimal { // algo.Decimal
+struct Decimal { // algo.Decimal: Decimal type with dynamic exponent
     i32   exponent;   //   0  Decimal exponent (power of ten) -  allowed range [-63,63]
     i64   mantissa;   //   0  Mantissa, full i64 range allowed
     // func:algo.Decimal..EqOp
@@ -1193,7 +1195,7 @@ inline bool          Decimal_Eq(algo::Decimal lhs, algo::Decimal rhs) __attribut
 void                 Decimal_Print(algo::Decimal row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.DirEntry
-struct DirEntry { // algo.DirEntry
+struct DirEntry { // algo.DirEntry: Directory entry
     algo::cstring   dirname;      // Base directory name, e.g. /tmp
     algo::cstring   pattern;      // Shell wildcard to match, e.g. aa*bb
     algo::cstring   pathname;     // Current pathname, e.g. /tmp/aaCbb
@@ -1290,7 +1292,7 @@ void                 EchoQ_Print(algo::EchoQ row, algo::cstring& str) __attribut
 
 // --- algo.Errns
 // create: algo.Errcode.type (Bitfld)
-struct Errns { // algo.Errns: Error namespace.
+struct Errns { // algo.Errns: Error namespace
     u8   value;   //   0
     // func:algo.Errns.value.Cast
     inline               operator algo_ErrnsEnum() const __attribute__((nothrow));
@@ -1331,7 +1333,7 @@ void                 value_SetStrptr(algo::Errns& parent, algo::strptr rhs, algo
 inline void          Errns_Init(algo::Errns& parent);
 
 // --- algo.Errcode
-struct Errcode { // algo.Errcode
+struct Errcode { // algo.Errcode: Error code
     u64   value;   //   0
     // func:algo.Errcode..Ctor
     inline               Errcode() __attribute__((nothrow));
@@ -1508,7 +1510,7 @@ inline bool          Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) __attri
 void                 Fildes_Print(algo::Fildes& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.FileFlags
-struct FileFlags { // algo.FileFlags
+struct FileFlags { // algo.FileFlags: File flags used with file functions
     u32   value;   //   0
     // func:algo.FileFlags.value.Cast
     inline               operator algo_FileFlagsEnum() const __attribute__((nothrow));
@@ -1708,7 +1710,7 @@ inline void          I32Dec2_Init(algo::I32Dec2& parent);
 void                 I32Dec2_Print(algo::I32Dec2 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I32Dec3
-struct I32Dec3 { // algo.I32Dec3
+struct I32Dec3 { // algo.I32Dec3: signed i32, scale 1e3
     i32   value;   //   0
     // func:algo.I32Dec3.value.Cast
     inline               operator i32() const __attribute__((nothrow));
@@ -1758,7 +1760,7 @@ inline void          I32Dec3_Init(algo::I32Dec3& parent);
 void                 I32Dec3_Print(algo::I32Dec3 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I32Dec4
-struct I32Dec4 { // algo.I32Dec4
+struct I32Dec4 { // algo.I32Dec4: signed i32, scale 1e4
     i32   value;   //   0
     // func:algo.I32Dec4.value.Cast
     inline               operator i32() const __attribute__((nothrow));
@@ -1808,7 +1810,7 @@ inline void          I32Dec4_Init(algo::I32Dec4& parent);
 void                 I32Dec4_Print(algo::I32Dec4 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I32Dec5
-struct I32Dec5 { // algo.I32Dec5
+struct I32Dec5 { // algo.I32Dec5: signed i32, scale 1e5
     i32   value;   //   0
     // func:algo.I32Dec5.value.Cast
     inline               operator i32() const __attribute__((nothrow));
@@ -1858,7 +1860,7 @@ inline void          I32Dec5_Init(algo::I32Dec5& parent);
 void                 I32Dec5_Print(algo::I32Dec5 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I64Dec1
-struct I64Dec1 { // algo.I64Dec1
+struct I64Dec1 { // algo.I64Dec1: signed i64, scale 1e1
     i64   value;   //   0
     // func:algo.I64Dec1.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -1958,7 +1960,7 @@ inline void          I64Dec10_Init(algo::I64Dec10& parent);
 void                 I64Dec10_Print(algo::I64Dec10 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I64Dec2
-struct I64Dec2 { // algo.I64Dec2
+struct I64Dec2 { // algo.I64Dec2: signed i64, scale 1e2
     i64   value;   //   0
     // func:algo.I64Dec2.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -2008,7 +2010,7 @@ inline void          I64Dec2_Init(algo::I64Dec2& parent);
 void                 I64Dec2_Print(algo::I64Dec2 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I64Dec3
-struct I64Dec3 { // algo.I64Dec3
+struct I64Dec3 { // algo.I64Dec3: signed i64, scale 1e3
     i64   value;   //   0
     // func:algo.I64Dec3.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -2059,7 +2061,7 @@ void                 I64Dec3_Print(algo::I64Dec3 row, algo::cstring& str) __attr
 
 // --- algo.I64Dec4
 #pragma pack(push,1)
-struct I64Dec4 { // algo.I64Dec4
+struct I64Dec4 { // algo.I64Dec4: signed i64, scale 1e4
     i64   value;   //   0
     // func:algo.I64Dec4.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -2111,7 +2113,7 @@ void                 I64Dec4_Print(algo::I64Dec4 row, algo::cstring& str) __attr
 
 // --- algo.I64Dec5
 #pragma pack(push,1)
-struct I64Dec5 { // algo.I64Dec5
+struct I64Dec5 { // algo.I64Dec5: signed i64, scale 1e5
     i64   value;   //   0
     // func:algo.I64Dec5.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -2162,7 +2164,7 @@ inline void          I64Dec5_Init(algo::I64Dec5& parent);
 void                 I64Dec5_Print(algo::I64Dec5 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.I64Dec6
-struct I64Dec6 { // algo.I64Dec6
+struct I64Dec6 { // algo.I64Dec6: signed i64, scale 1e6
     i64   value;   //   0
     // func:algo.I64Dec6.value.Cast
     inline               operator i64() const __attribute__((nothrow));
@@ -2364,7 +2366,7 @@ inline void          I64Dec9_Init(algo::I64Dec9& parent);
 void                 I64Dec9_Print(algo::I64Dec9 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.IOEvtFlags
-struct IOEvtFlags { // algo.IOEvtFlags
+struct IOEvtFlags { // algo.IOEvtFlags: IO event flags, used in IOHook
     u32   value;   //   0
     // func:algo.IOEvtFlags.value.Cast
     inline               operator algo_IOEvtFlagsEnum() const __attribute__((nothrow));
@@ -2428,7 +2430,7 @@ void                 IOEvtFlags_Print(algo::IOEvtFlags& row, algo::cstring& str)
 algo::strptr         IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) __attribute__((nothrow));
 
 // --- algo.IPoint
-struct IPoint { // algo.IPoint
+struct IPoint { // algo.IPoint: i32 - x,y
     i32   x;   //   0
     i32   y;   //   0
     // func:algo.IPoint..Ctor
@@ -2451,7 +2453,7 @@ void                 IPoint_Print(algo::IPoint& row, algo::cstring& str) __attri
 
 // --- algo.Smallstr50
 #pragma pack(push,1)
-struct Smallstr50 { // algo.Smallstr50
+struct Smallstr50 { // algo.Smallstr50: inline string with length field
     enum { ch_max = 50 };
     u8 ch[50+1];
     u8 n_ch;
@@ -2542,7 +2544,7 @@ inline bool          Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& 
 void                 Smallstr50_Print(algo::Smallstr50& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Imdb
-struct Imdb { // algo.Imdb: In-memory database descriptor (what is algo.Db then?)
+struct Imdb { // algo.Imdb: In-memory database descriptor (reflection)
     algo::Smallstr50                 imdb;                // Database name
     algo::ImdbInsertStrptrMaybeFcn   InsertStrptrMaybe;   //   0  Insert new element given a string
     algo::ImdbStepFcn                Step;                //   0  Perform one step (may be NULL)
@@ -2564,7 +2566,7 @@ inline void          Imdb_Init(algo::Imdb& parent);
 void                 Imdb_Print(algo::Imdb& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.ImrowPtr
-struct ImrowPtr { // algo.ImrowPtr
+struct ImrowPtr { // algo.ImrowPtr: Pointer to a record in memory
     u64   value;   //   0
     // func:algo.ImrowPtr.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -2584,7 +2586,7 @@ void                 ImrowPtr_Print(algo::ImrowPtr& row, algo::cstring& str) __a
 
 // --- algo.Smallstr100
 #pragma pack(push,1)
-struct Smallstr100 { // algo.Smallstr100
+struct Smallstr100 { // algo.Smallstr100: inline string with length field
     enum { ch_max = 100 };
     u8 ch[100+1];
     u8 n_ch;
@@ -2724,7 +2726,7 @@ inline bool          strptr_Update(algo::strptr &lhs, algo::strptr rhs) __attrib
 lib_json::FNode *    strptr_FmtJson(algo::strptr row, lib_json::FNode *parent) __attribute__((nothrow));
 
 // --- algo.LineBuf
-struct LineBuf { // algo.LineBuf
+struct LineBuf { // algo.LineBuf: Line buffer
     char*          buf_elems;     // pointer to elements
     u32            buf_n;         // number of elements in array
     u32            buf_max;       // max. capacity of array before realloc
@@ -4681,7 +4683,7 @@ void                 LnumStr9_U64_Print(algo::LnumStr9_U64& row, algo::cstring& 
 
 // --- algo.LspaceStr10
 #pragma pack(push,1)
-struct LspaceStr10 { // algo.LspaceStr10
+struct LspaceStr10 { // algo.LspaceStr10: string padded on the left with spaces
     enum { ch_max = 10 };
     u8 ch[10];
     // Copy from strptr (operator=)
@@ -4749,7 +4751,7 @@ void                 LspaceStr10_Print(algo::LspaceStr10& row, algo::cstring& st
 
 // --- algo.LspaceStr12
 #pragma pack(push,1)
-struct LspaceStr12 { // algo.LspaceStr12
+struct LspaceStr12 { // algo.LspaceStr12: string padded on the left with spaces
     enum { ch_max = 12 };
     u8 ch[12];
     // Copy from strptr (operator=)
@@ -4817,7 +4819,7 @@ void                 LspaceStr12_Print(algo::LspaceStr12& row, algo::cstring& st
 
 // --- algo.LspaceStr14
 #pragma pack(push,1)
-struct LspaceStr14 { // algo.LspaceStr14
+struct LspaceStr14 { // algo.LspaceStr14: string padded on the left with spaces
     enum { ch_max = 14 };
     u8 ch[14];
     // Copy from strptr (operator=)
@@ -4885,7 +4887,7 @@ void                 LspaceStr14_Print(algo::LspaceStr14& row, algo::cstring& st
 
 // --- algo.LspaceStr15
 #pragma pack(push,1)
-struct LspaceStr15 { // algo.LspaceStr15
+struct LspaceStr15 { // algo.LspaceStr15: string padded on the left with spaces
     enum { ch_max = 15 };
     u8 ch[15];
     // Copy from strptr (operator=)
@@ -5127,7 +5129,7 @@ void                 LspaceStr20_U64_Print(algo::LspaceStr20_U64& row, algo::cst
 
 // --- algo.LspaceStr3
 #pragma pack(push,1)
-struct LspaceStr3 { // algo.LspaceStr3
+struct LspaceStr3 { // algo.LspaceStr3: string padded on the left with spaces
     enum { ch_max = 3 };
     u8 ch[3];
     // Copy from strptr (operator=)
@@ -5283,7 +5285,7 @@ void                 LspaceStr3_I16_Print(algo::LspaceStr3_I16& row, algo::cstri
 
 // --- algo.LspaceStr4
 #pragma pack(push,1)
-struct LspaceStr4 { // algo.LspaceStr4
+struct LspaceStr4 { // algo.LspaceStr4: string padded on the left with spaces
     enum { ch_max = 4 };
     u8 ch[4];
     // Copy from strptr (operator=)
@@ -5351,7 +5353,7 @@ void                 LspaceStr4_Print(algo::LspaceStr4& row, algo::cstring& str)
 
 // --- algo.LspaceStr5
 #pragma pack(push,1)
-struct LspaceStr5 { // algo.LspaceStr5
+struct LspaceStr5 { // algo.LspaceStr5: string padded on the left with spaces
     enum { ch_max = 5 };
     u8 ch[5];
     // Copy from strptr (operator=)
@@ -5419,7 +5421,7 @@ void                 LspaceStr5_Print(algo::LspaceStr5& row, algo::cstring& str)
 
 // --- algo.LspaceStr5_I16
 #pragma pack(push,1)
-struct LspaceStr5_I16 { // algo.LspaceStr5_I16
+struct LspaceStr5_I16 { // algo.LspaceStr5_I16: string padded on the left with spaces
     enum { ch_max = 5 };
     u8 ch[5];
     // Copy from strptr (operator=)
@@ -5507,7 +5509,7 @@ void                 LspaceStr5_I16_Print(algo::LspaceStr5_I16& row, algo::cstri
 
 // --- algo.LspaceStr6
 #pragma pack(push,1)
-struct LspaceStr6 { // algo.LspaceStr6
+struct LspaceStr6 { // algo.LspaceStr6: string padded on the left with spaces
     enum { ch_max = 6 };
     u8 ch[6];
     // Copy from strptr (operator=)
@@ -5747,7 +5749,7 @@ void                 LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36& ro
 
 // --- algo.LspaceStr8
 #pragma pack(push,1)
-struct LspaceStr8 { // algo.LspaceStr8
+struct LspaceStr8 { // algo.LspaceStr8: string padded on the left with spaces
     enum { ch_max = 8 };
     u8 ch[8];
     // Copy from strptr (operator=)
@@ -5815,7 +5817,7 @@ void                 LspaceStr8_Print(algo::LspaceStr8& row, algo::cstring& str)
 
 // --- algo.LspaceStr9
 #pragma pack(push,1)
-struct LspaceStr9 { // algo.LspaceStr9
+struct LspaceStr9 { // algo.LspaceStr9: string padded on the left with spaces
     enum { ch_max = 9 };
     u8 ch[9];
     // Copy from strptr (operator=)
@@ -5945,7 +5947,7 @@ inline void          Md5Digest_Init(algo::Md5Digest& parent);
 void                 Md5Digest_Print(algo::Md5Digest row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Month
-struct Month { // algo.Month
+struct Month { // algo.Month: Helper type for month names
     u32   value;   //   0
     // func:algo.Month.value.Cast
     inline               operator algo_MonthEnum() const __attribute__((nothrow));
@@ -6071,7 +6073,7 @@ algo::strptr         NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx)
 
 // --- algo.RnullStr1
 #pragma pack(push,1)
-struct RnullStr1 { // algo.RnullStr1
+struct RnullStr1 { // algo.RnullStr1: fixed-length string padded on the right with NUL characters
     enum { ch_max = 1 };
     u8 ch[1];
     // Copy from strptr (operator=)
@@ -6152,7 +6154,7 @@ void                 RnullStr1_Print(algo::RnullStr1 row, algo::cstring& str) __
 
 // --- algo.RnullStr10
 #pragma pack(push,1)
-struct RnullStr10 { // algo.RnullStr10
+struct RnullStr10 { // algo.RnullStr10: fixed-length string padded on the right with NUL characters
     enum { ch_max = 10 };
     u8 ch[10];
     // Copy from strptr (operator=)
@@ -6233,7 +6235,7 @@ void                 RnullStr10_Print(algo::RnullStr10 row, algo::cstring& str) 
 
 // --- algo.RnullStr100
 #pragma pack(push,1)
-struct RnullStr100 { // algo.RnullStr100
+struct RnullStr100 { // algo.RnullStr100: fixed-length string padded on the right with NUL characters
     enum { ch_max = 100 };
     u8 ch[100];
     // Copy from strptr (operator=)
@@ -6302,7 +6304,7 @@ void                 RnullStr100_Print(algo::RnullStr100& row, algo::cstring& st
 
 // --- algo.RnullStr1000
 #pragma pack(push,1)
-struct RnullStr1000 { // algo.RnullStr1000
+struct RnullStr1000 { // algo.RnullStr1000: fixed-length string padded on the right with NUL characters
     enum { ch_max = 1000 };
     u8 ch[1000];
     // Copy from strptr (operator=)
@@ -6383,7 +6385,7 @@ void                 RnullStr1000_Print(algo::RnullStr1000& row, algo::cstring& 
 
 // --- algo.RnullStr11
 #pragma pack(push,1)
-struct RnullStr11 { // algo.RnullStr11
+struct RnullStr11 { // algo.RnullStr11: fixed-length string padded on the right with NUL characters
     enum { ch_max = 11 };
     u8 ch[11];
     // Copy from strptr (operator=)
@@ -6464,7 +6466,7 @@ void                 RnullStr11_Print(algo::RnullStr11& row, algo::cstring& str)
 
 // --- algo.RnullStr12
 #pragma pack(push,1)
-struct RnullStr12 { // algo.RnullStr12
+struct RnullStr12 { // algo.RnullStr12: fixed-length string padded on the right with NUL characters
     enum { ch_max = 12 };
     u8 ch[12];
     // Copy from strptr (operator=)
@@ -6545,7 +6547,7 @@ void                 RnullStr12_Print(algo::RnullStr12& row, algo::cstring& str)
 
 // --- algo.RnullStr129
 #pragma pack(push,1)
-struct RnullStr129 { // algo.RnullStr129
+struct RnullStr129 { // algo.RnullStr129: fixed-length string padded on the right with NUL characters
     enum { ch_max = 129 };
     u8 ch[129];
     // Copy from strptr (operator=)
@@ -6626,7 +6628,7 @@ void                 RnullStr129_Print(algo::RnullStr129& row, algo::cstring& st
 
 // --- algo.RnullStr13
 #pragma pack(push,1)
-struct RnullStr13 { // algo.RnullStr13
+struct RnullStr13 { // algo.RnullStr13: fixed-length string padded on the right with NUL characters
     enum { ch_max = 13 };
     u8 ch[13];
     // Copy from strptr (operator=)
@@ -6707,7 +6709,7 @@ void                 RnullStr13_Print(algo::RnullStr13& row, algo::cstring& str)
 
 // --- algo.RnullStr14
 #pragma pack(push,1)
-struct RnullStr14 { // algo.RnullStr14
+struct RnullStr14 { // algo.RnullStr14: fixed-length string padded on the right with NUL characters
     enum { ch_max = 14 };
     u8 ch[14];
     // Copy from strptr (operator=)
@@ -6788,7 +6790,7 @@ void                 RnullStr14_Print(algo::RnullStr14& row, algo::cstring& str)
 
 // --- algo.RnullStr15
 #pragma pack(push,1)
-struct RnullStr15 { // algo.RnullStr15
+struct RnullStr15 { // algo.RnullStr15: fixed-length string padded on the right with NUL characters
     enum { ch_max = 15 };
     u8 ch[15];
     // Copy from strptr (operator=)
@@ -6869,7 +6871,7 @@ void                 RnullStr15_Print(algo::RnullStr15& row, algo::cstring& str)
 
 // --- algo.RnullStr151
 #pragma pack(push,1)
-struct RnullStr151 { // algo.RnullStr151
+struct RnullStr151 { // algo.RnullStr151: fixed-length string padded on the right with NUL characters
     enum { ch_max = 151 };
     u8 ch[151];
     // Copy from strptr (operator=)
@@ -6950,7 +6952,7 @@ void                 RnullStr151_Print(algo::RnullStr151& row, algo::cstring& st
 
 // --- algo.RnullStr16
 #pragma pack(push,1)
-struct RnullStr16 { // algo.RnullStr16
+struct RnullStr16 { // algo.RnullStr16: fixed-length string padded on the right with NUL characters
     enum { ch_max = 16 };
     u8 ch[16];
     // Copy from strptr (operator=)
@@ -7019,7 +7021,7 @@ void                 RnullStr16_Print(algo::RnullStr16 row, algo::cstring& str) 
 
 // --- algo.RnullStr17
 #pragma pack(push,1)
-struct RnullStr17 { // algo.RnullStr17
+struct RnullStr17 { // algo.RnullStr17: fixed-length string padded on the right with NUL characters
     enum { ch_max = 17 };
     u8 ch[17];
     // Copy from strptr (operator=)
@@ -7100,7 +7102,7 @@ void                 RnullStr17_Print(algo::RnullStr17& row, algo::cstring& str)
 
 // --- algo.RnullStr18
 #pragma pack(push,1)
-struct RnullStr18 { // algo.RnullStr18
+struct RnullStr18 { // algo.RnullStr18: fixed-length string padded on the right with NUL characters
     enum { ch_max = 18 };
     u8 ch[18];
     // Copy from strptr (operator=)
@@ -7181,7 +7183,7 @@ void                 RnullStr18_Print(algo::RnullStr18 row, algo::cstring& str) 
 
 // --- algo.RnullStr19
 #pragma pack(push,1)
-struct RnullStr19 { // algo.RnullStr19
+struct RnullStr19 { // algo.RnullStr19: fixed-length string padded on the right with NUL characters
     enum { ch_max = 19 };
     u8 ch[19];
     // Copy from strptr (operator=)
@@ -7250,7 +7252,7 @@ void                 RnullStr19_Print(algo::RnullStr19& row, algo::cstring& str)
 
 // --- algo.RnullStr2
 #pragma pack(push,1)
-struct RnullStr2 { // algo.RnullStr2
+struct RnullStr2 { // algo.RnullStr2: fixed-length string padded on the right with NUL characters
     enum { ch_max = 2 };
     u8 ch[2];
     // Copy from strptr (operator=)
@@ -7331,7 +7333,7 @@ void                 RnullStr2_Print(algo::RnullStr2 row, algo::cstring& str) __
 
 // --- algo.RnullStr20
 #pragma pack(push,1)
-struct RnullStr20 { // algo.RnullStr20
+struct RnullStr20 { // algo.RnullStr20: fixed-length string padded on the right with NUL characters
     enum { ch_max = 20 };
     u8 ch[20];
     // Copy from strptr (operator=)
@@ -7412,7 +7414,7 @@ void                 RnullStr20_Print(algo::RnullStr20 row, algo::cstring& str) 
 
 // --- algo.RnullStr21
 #pragma pack(push,1)
-struct RnullStr21 { // algo.RnullStr21
+struct RnullStr21 { // algo.RnullStr21: fixed-length string padded on the right with NUL characters
     enum { ch_max = 21 };
     u8 ch[21];
     // Copy from strptr (operator=)
@@ -7481,7 +7483,7 @@ void                 RnullStr21_Print(algo::RnullStr21& row, algo::cstring& str)
 
 // --- algo.RnullStr24
 #pragma pack(push,1)
-struct RnullStr24 { // algo.RnullStr24
+struct RnullStr24 { // algo.RnullStr24: fixed-length string padded on the right with NUL characters
     enum { ch_max = 24 };
     u8 ch[24];
     // Copy from strptr (operator=)
@@ -7562,7 +7564,7 @@ void                 RnullStr24_Print(algo::RnullStr24& row, algo::cstring& str)
 
 // --- algo.RnullStr25
 #pragma pack(push,1)
-struct RnullStr25 { // algo.RnullStr25
+struct RnullStr25 { // algo.RnullStr25: fixed-length string padded on the right with NUL characters
     enum { ch_max = 25 };
     u8 ch[25];
     // Copy from strptr (operator=)
@@ -7643,7 +7645,7 @@ void                 RnullStr25_Print(algo::RnullStr25& row, algo::cstring& str)
 
 // --- algo.RnullStr28
 #pragma pack(push,1)
-struct RnullStr28 { // algo.RnullStr28
+struct RnullStr28 { // algo.RnullStr28: fixed-length string padded on the right with NUL characters
     enum { ch_max = 28 };
     u8 ch[28];
     // Copy from strptr (operator=)
@@ -7724,7 +7726,7 @@ void                 RnullStr28_Print(algo::RnullStr28& row, algo::cstring& str)
 
 // --- algo.RnullStr3
 #pragma pack(push,1)
-struct RnullStr3 { // algo.RnullStr3
+struct RnullStr3 { // algo.RnullStr3: fixed-length string padded on the right with NUL characters
     enum { ch_max = 3 };
     u8 ch[3];
     // Copy from strptr (operator=)
@@ -7805,7 +7807,7 @@ void                 RnullStr3_Print(algo::RnullStr3 row, algo::cstring& str) __
 
 // --- algo.RnullStr30
 #pragma pack(push,1)
-struct RnullStr30 { // algo.RnullStr30
+struct RnullStr30 { // algo.RnullStr30: fixed-length string padded on the right with NUL characters
     enum { ch_max = 30 };
     u8 ch[30];
     // Copy from strptr (operator=)
@@ -7874,7 +7876,7 @@ void                 RnullStr30_Print(algo::RnullStr30 row, algo::cstring& str) 
 
 // --- algo.RnullStr32
 #pragma pack(push,1)
-struct RnullStr32 { // algo.RnullStr32
+struct RnullStr32 { // algo.RnullStr32: fixed-length string padded on the right with NUL characters
     enum { ch_max = 32 };
     u8 ch[32];
     // Copy from strptr (operator=)
@@ -7955,7 +7957,7 @@ void                 RnullStr32_Print(algo::RnullStr32 row, algo::cstring& str) 
 
 // --- algo.RnullStr33
 #pragma pack(push,1)
-struct RnullStr33 { // algo.RnullStr33
+struct RnullStr33 { // algo.RnullStr33: fixed-length string padded on the right with NUL characters
     enum { ch_max = 33 };
     u8 ch[33];
     // Copy from strptr (operator=)
@@ -8035,7 +8037,7 @@ inline bool          RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& 
 void                 RnullStr33_Print(algo::RnullStr33& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.RnullStr35
-struct RnullStr35 { // algo.RnullStr35
+struct RnullStr35 { // algo.RnullStr35: fixed-length string padded on the right with NUL characters
     enum { ch_max = 35 };
     u8 ch[35];
     // Copy from strptr (operator=)
@@ -8115,7 +8117,7 @@ void                 RnullStr35_Print(algo::RnullStr35& row, algo::cstring& str)
 
 // --- algo.RnullStr36
 #pragma pack(push,1)
-struct RnullStr36 { // algo.RnullStr36
+struct RnullStr36 { // algo.RnullStr36: fixed-length string padded on the right with NUL characters
     enum { ch_max = 36 };
     u8 ch[36];
     // Copy from strptr (operator=)
@@ -8196,7 +8198,7 @@ void                 RnullStr36_Print(algo::RnullStr36& row, algo::cstring& str)
 
 // --- algo.RnullStr4
 #pragma pack(push,1)
-struct RnullStr4 { // algo.RnullStr4
+struct RnullStr4 { // algo.RnullStr4: fixed-length string padded on the right with NUL characters
     enum { ch_max = 4 };
     u8 ch[4];
     // Copy from strptr (operator=)
@@ -8265,7 +8267,7 @@ void                 RnullStr4_Print(algo::RnullStr4 row, algo::cstring& str) __
 
 // --- algo.RnullStr40
 #pragma pack(push,1)
-struct RnullStr40 { // algo.RnullStr40
+struct RnullStr40 { // algo.RnullStr40: fixed-length string padded on the right with NUL characters
     enum { ch_max = 40 };
     u8 ch[40];
     // Copy from strptr (operator=)
@@ -8346,7 +8348,7 @@ void                 RnullStr40_Print(algo::RnullStr40& row, algo::cstring& str)
 
 // --- algo.RnullStr41
 #pragma pack(push,1)
-struct RnullStr41 { // algo.RnullStr41
+struct RnullStr41 { // algo.RnullStr41: fixed-length string padded on the right with NUL characters
     enum { ch_max = 41 };
     u8 ch[41];
     // Copy from strptr (operator=)
@@ -8427,7 +8429,7 @@ void                 RnullStr41_Print(algo::RnullStr41& row, algo::cstring& str)
 
 // --- algo.RnullStr43
 #pragma pack(push,1)
-struct RnullStr43 { // algo.RnullStr43
+struct RnullStr43 { // algo.RnullStr43: fixed-length string padded on the right with NUL characters
     enum { ch_max = 43 };
     u8 ch[43];
     // Copy from strptr (operator=)
@@ -8496,7 +8498,7 @@ void                 RnullStr43_Print(algo::RnullStr43& row, algo::cstring& str)
 
 // --- algo.RnullStr44
 #pragma pack(push,1)
-struct RnullStr44 { // algo.RnullStr44
+struct RnullStr44 { // algo.RnullStr44: fixed-length string padded on the right with NUL characters
     enum { ch_max = 44 };
     u8 ch[44];
     // Copy from strptr (operator=)
@@ -8565,7 +8567,7 @@ void                 RnullStr44_Print(algo::RnullStr44& row, algo::cstring& str)
 
 // --- algo.RnullStr48
 #pragma pack(push,1)
-struct RnullStr48 { // algo.RnullStr48
+struct RnullStr48 { // algo.RnullStr48: fixed-length string padded on the right with NUL characters
     enum { ch_max = 48 };
     u8 ch[48];
     // Copy from strptr (operator=)
@@ -8634,7 +8636,7 @@ void                 RnullStr48_Print(algo::RnullStr48& row, algo::cstring& str)
 
 // --- algo.RnullStr5
 #pragma pack(push,1)
-struct RnullStr5 { // algo.RnullStr5
+struct RnullStr5 { // algo.RnullStr5: fixed-length string padded on the right with NUL characters
     enum { ch_max = 5 };
     u8 ch[5];
     // Copy from strptr (operator=)
@@ -8703,7 +8705,7 @@ void                 RnullStr5_Print(algo::RnullStr5 row, algo::cstring& str) __
 
 // --- algo.RnullStr50
 #pragma pack(push,1)
-struct RnullStr50 { // algo.RnullStr50
+struct RnullStr50 { // algo.RnullStr50: fixed-length string padded on the right with NUL characters
     enum { ch_max = 50 };
     u8 ch[50];
     // Copy from strptr (operator=)
@@ -8772,7 +8774,7 @@ void                 RnullStr50_Print(algo::RnullStr50& row, algo::cstring& str)
 
 // --- algo.RnullStr54
 #pragma pack(push,1)
-struct RnullStr54 { // algo.RnullStr54
+struct RnullStr54 { // algo.RnullStr54: fixed-length string padded on the right with NUL characters
     enum { ch_max = 54 };
     u8 ch[54];
     // Copy from strptr (operator=)
@@ -8853,7 +8855,7 @@ void                 RnullStr54_Print(algo::RnullStr54& row, algo::cstring& str)
 
 // --- algo.RnullStr55
 #pragma pack(push,1)
-struct RnullStr55 { // algo.RnullStr55
+struct RnullStr55 { // algo.RnullStr55: fixed-length string padded on the right with NUL characters
     enum { ch_max = 55 };
     u8 ch[55];
     // Copy from strptr (operator=)
@@ -8922,7 +8924,7 @@ void                 RnullStr55_Print(algo::RnullStr55& row, algo::cstring& str)
 
 // --- algo.RnullStr6
 #pragma pack(push,1)
-struct RnullStr6 { // algo.RnullStr6
+struct RnullStr6 { // algo.RnullStr6: fixed-length string padded on the right with NUL characters
     enum { ch_max = 6 };
     u8 ch[6];
     // Copy from strptr (operator=)
@@ -9003,7 +9005,7 @@ void                 RnullStr6_Print(algo::RnullStr6 row, algo::cstring& str) __
 
 // --- algo.RnullStr60
 #pragma pack(push,1)
-struct RnullStr60 { // algo.RnullStr60
+struct RnullStr60 { // algo.RnullStr60: fixed-length string padded on the right with NUL characters
     enum { ch_max = 60 };
     u8 ch[60];
     // Copy from strptr (operator=)
@@ -9084,7 +9086,7 @@ void                 RnullStr60_Print(algo::RnullStr60& row, algo::cstring& str)
 
 // --- algo.RnullStr62
 #pragma pack(push,1)
-struct RnullStr62 { // algo.RnullStr62
+struct RnullStr62 { // algo.RnullStr62: fixed-length string padded on the right with NUL characters
     enum { ch_max = 62 };
     u8 ch[62];
     // Copy from strptr (operator=)
@@ -9165,7 +9167,7 @@ void                 RnullStr62_Print(algo::RnullStr62& row, algo::cstring& str)
 
 // --- algo.RnullStr66
 #pragma pack(push,1)
-struct RnullStr66 { // algo.RnullStr66
+struct RnullStr66 { // algo.RnullStr66: fixed-length string padded on the right with NUL characters
     enum { ch_max = 66 };
     u8 ch[66];
     // Copy from strptr (operator=)
@@ -9322,7 +9324,7 @@ void                 RnullStr6_U32_Print(algo::RnullStr6_U32& row, algo::cstring
 
 // --- algo.RnullStr7
 #pragma pack(push,1)
-struct RnullStr7 { // algo.RnullStr7
+struct RnullStr7 { // algo.RnullStr7: fixed-length string padded on the right with NUL characters
     enum { ch_max = 7 };
     u8 ch[7];
     // Copy from strptr (operator=)
@@ -9403,7 +9405,7 @@ void                 RnullStr7_Print(algo::RnullStr7 row, algo::cstring& str) __
 
 // --- algo.RnullStr8
 #pragma pack(push,1)
-struct RnullStr8 { // algo.RnullStr8
+struct RnullStr8 { // algo.RnullStr8: fixed-length string padded on the right with NUL characters
     enum { ch_max = 8 };
     u8 ch[8];
     // Copy from strptr (operator=)
@@ -9472,7 +9474,7 @@ void                 RnullStr8_Print(algo::RnullStr8 row, algo::cstring& str) __
 
 // --- algo.RnullStr80
 #pragma pack(push,1)
-struct RnullStr80 { // algo.RnullStr80
+struct RnullStr80 { // algo.RnullStr80: fixed-length string padded on the right with NUL characters
     enum { ch_max = 80 };
     u8 ch[80];
     // Copy from strptr (operator=)
@@ -9541,7 +9543,7 @@ void                 RnullStr80_Print(algo::RnullStr80& row, algo::cstring& str)
 
 // --- algo.RnullStr9
 #pragma pack(push,1)
-struct RnullStr9 { // algo.RnullStr9
+struct RnullStr9 { // algo.RnullStr9: fixed-length string padded on the right with NUL characters
     enum { ch_max = 9 };
     u8 ch[9];
     // Copy from strptr (operator=)
@@ -9622,7 +9624,7 @@ void                 RnullStr9_Print(algo::RnullStr9& row, algo::cstring& str) _
 
 // --- algo.RspaceStr10
 #pragma pack(push,1)
-struct RspaceStr10 { // algo.RspaceStr10
+struct RspaceStr10 { // algo.RspaceStr10: fixed-length string padded on the right with spaces
     enum { ch_max = 10 };
     u8 ch[10];
     // Copy from strptr (operator=)
@@ -9690,7 +9692,7 @@ void                 RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring& str
 
 // --- algo.RspaceStr100
 #pragma pack(push,1)
-struct RspaceStr100 { // algo.RspaceStr100
+struct RspaceStr100 { // algo.RspaceStr100: fixed-length string padded on the right with spaces
     enum { ch_max = 100 };
     u8 ch[100];
     // Copy from strptr (operator=)
@@ -9758,7 +9760,7 @@ void                 RspaceStr100_Print(algo::RspaceStr100& row, algo::cstring& 
 
 // --- algo.RspaceStr11
 #pragma pack(push,1)
-struct RspaceStr11 { // algo.RspaceStr11
+struct RspaceStr11 { // algo.RspaceStr11: fixed-length string padded on the right with spaces
     enum { ch_max = 11 };
     u8 ch[11];
     // Copy from strptr (operator=)
@@ -9826,7 +9828,7 @@ void                 RspaceStr11_Print(algo::RspaceStr11& row, algo::cstring& st
 
 // --- algo.RspaceStr12
 #pragma pack(push,1)
-struct RspaceStr12 { // algo.RspaceStr12
+struct RspaceStr12 { // algo.RspaceStr12: fixed-length string padded on the right with spaces
     enum { ch_max = 12 };
     u8 ch[12];
     // Copy from strptr (operator=)
@@ -9894,7 +9896,7 @@ void                 RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring& str
 
 // --- algo.RspaceStr128
 #pragma pack(push,1)
-struct RspaceStr128 { // algo.RspaceStr128
+struct RspaceStr128 { // algo.RspaceStr128: fixed-length string padded on the right with spaces
     enum { ch_max = 128 };
     u8 ch[128];
     // Copy from strptr (operator=)
@@ -9962,7 +9964,7 @@ void                 RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring& s
 
 // --- algo.RspaceStr14
 #pragma pack(push,1)
-struct RspaceStr14 { // algo.RspaceStr14
+struct RspaceStr14 { // algo.RspaceStr14: fixed-length string padded on the right with spaces
     enum { ch_max = 14 };
     u8 ch[14];
     // Copy from strptr (operator=)
@@ -10030,7 +10032,7 @@ void                 RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring& str
 
 // --- algo.RspaceStr15
 #pragma pack(push,1)
-struct RspaceStr15 { // algo.RspaceStr15
+struct RspaceStr15 { // algo.RspaceStr15: fixed-length string padded on the right with spaces
     enum { ch_max = 15 };
     u8 ch[15];
     // Copy from strptr (operator=)
@@ -10098,7 +10100,7 @@ void                 RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring& str
 
 // --- algo.RspaceStr16
 #pragma pack(push,1)
-struct RspaceStr16 { // algo.RspaceStr16
+struct RspaceStr16 { // algo.RspaceStr16: fixed-length string padded on the right with spaces
     enum { ch_max = 16 };
     u8 ch[16];
     // Copy from strptr (operator=)
@@ -10167,7 +10169,7 @@ void                 RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring& str
 
 // --- algo.RspaceStr18
 #pragma pack(push,1)
-struct RspaceStr18 { // algo.RspaceStr18
+struct RspaceStr18 { // algo.RspaceStr18: fixed-length string padded on the right with spaces
     enum { ch_max = 18 };
     u8 ch[18];
     // Copy from strptr (operator=)
@@ -10235,7 +10237,7 @@ void                 RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring& str
 
 // --- algo.RspaceStr2
 #pragma pack(push,1)
-struct RspaceStr2 { // algo.RspaceStr2
+struct RspaceStr2 { // algo.RspaceStr2: fixed-length string padded on the right with spaces
     enum { ch_max = 2 };
     u8 ch[2];
     // Copy from strptr (operator=)
@@ -10303,7 +10305,7 @@ void                 RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring& str) 
 
 // --- algo.RspaceStr20
 #pragma pack(push,1)
-struct RspaceStr20 { // algo.RspaceStr20
+struct RspaceStr20 { // algo.RspaceStr20: fixed-length string padded on the right with spaces
     enum { ch_max = 20 };
     u8 ch[20];
     // Copy from strptr (operator=)
@@ -10371,7 +10373,7 @@ void                 RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring& str
 
 // --- algo.RspaceStr200
 #pragma pack(push,1)
-struct RspaceStr200 { // algo.RspaceStr200
+struct RspaceStr200 { // algo.RspaceStr200: fixed-length string padded on the right with spaces
     enum { ch_max = 200 };
     u8 ch[200];
     // Copy from strptr (operator=)
@@ -10439,7 +10441,7 @@ void                 RspaceStr200_Print(algo::RspaceStr200& row, algo::cstring& 
 
 // --- algo.RspaceStr21
 #pragma pack(push,1)
-struct RspaceStr21 { // algo.RspaceStr21
+struct RspaceStr21 { // algo.RspaceStr21: fixed-length string padded on the right with spaces
     enum { ch_max = 21 };
     u8 ch[21];
     // Copy from strptr (operator=)
@@ -10507,7 +10509,7 @@ void                 RspaceStr21_Print(algo::RspaceStr21& row, algo::cstring& st
 
 // --- algo.RspaceStr24
 #pragma pack(push,1)
-struct RspaceStr24 { // algo.RspaceStr24
+struct RspaceStr24 { // algo.RspaceStr24: fixed-length string padded on the right with spaces
     enum { ch_max = 24 };
     u8 ch[24];
     // Copy from strptr (operator=)
@@ -10576,7 +10578,7 @@ void                 RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring& str
 
 // --- algo.RspaceStr240
 #pragma pack(push,1)
-struct RspaceStr240 { // algo.RspaceStr240
+struct RspaceStr240 { // algo.RspaceStr240: fixed-length string padded on the right with spaces
     enum { ch_max = 240 };
     u8 ch[240];
     // Copy from strptr (operator=)
@@ -10644,7 +10646,7 @@ void                 RspaceStr240_Print(algo::RspaceStr240& row, algo::cstring& 
 
 // --- algo.RspaceStr25
 #pragma pack(push,1)
-struct RspaceStr25 { // algo.RspaceStr25
+struct RspaceStr25 { // algo.RspaceStr25: fixed-length string padded on the right with spaces
     enum { ch_max = 25 };
     u8 ch[25];
     // Copy from strptr (operator=)
@@ -10713,7 +10715,7 @@ void                 RspaceStr25_Print(algo::RspaceStr25 row, algo::cstring& str
 
 // --- algo.RspaceStr26
 #pragma pack(push,1)
-struct RspaceStr26 { // algo.RspaceStr26
+struct RspaceStr26 { // algo.RspaceStr26: fixed-length string padded on the right with spaces
     enum { ch_max = 26 };
     u8 ch[26];
     // Copy from strptr (operator=)
@@ -10781,7 +10783,7 @@ void                 RspaceStr26_Print(algo::RspaceStr26& row, algo::cstring& st
 
 // --- algo.RspaceStr3
 #pragma pack(push,1)
-struct RspaceStr3 { // algo.RspaceStr3
+struct RspaceStr3 { // algo.RspaceStr3: fixed-length string padded on the right with spaces
     enum { ch_max = 3 };
     u8 ch[3];
     // Copy from strptr (operator=)
@@ -10849,7 +10851,7 @@ void                 RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring& str) 
 
 // --- algo.RspaceStr31
 #pragma pack(push,1)
-struct RspaceStr31 { // algo.RspaceStr31
+struct RspaceStr31 { // algo.RspaceStr31: fixed-length string padded on the right with spaces
     enum { ch_max = 31 };
     u8 ch[31];
     // Copy from strptr (operator=)
@@ -10917,7 +10919,7 @@ void                 RspaceStr31_Print(algo::RspaceStr31& row, algo::cstring& st
 
 // --- algo.RspaceStr32
 #pragma pack(push,1)
-struct RspaceStr32 { // algo.RspaceStr32
+struct RspaceStr32 { // algo.RspaceStr32: fixed-length string padded on the right with spaces
     enum { ch_max = 32 };
     u8 ch[32];
     // Copy from strptr (operator=)
@@ -10985,7 +10987,7 @@ void                 RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring& str
 
 // --- algo.RspaceStr4
 #pragma pack(push,1)
-struct RspaceStr4 { // algo.RspaceStr4
+struct RspaceStr4 { // algo.RspaceStr4: fixed-length string padded on the right with spaces
     enum { ch_max = 4 };
     u8 ch[4];
     // Copy from strptr (operator=)
@@ -11053,7 +11055,7 @@ void                 RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring& str) 
 
 // --- algo.RspaceStr40
 #pragma pack(push,1)
-struct RspaceStr40 { // algo.RspaceStr40
+struct RspaceStr40 { // algo.RspaceStr40: fixed-length string padded on the right with spaces
     enum { ch_max = 40 };
     u8 ch[40];
     // Copy from strptr (operator=)
@@ -11117,7 +11119,7 @@ void                 RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring& str
 
 // --- algo.RspaceStr5
 #pragma pack(push,1)
-struct RspaceStr5 { // algo.RspaceStr5
+struct RspaceStr5 { // algo.RspaceStr5: fixed-length string padded on the right with spaces
     enum { ch_max = 5 };
     u8 ch[5];
     // Copy from strptr (operator=)
@@ -11185,7 +11187,7 @@ void                 RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring& str) 
 
 // --- algo.RspaceStr50
 #pragma pack(push,1)
-struct RspaceStr50 { // algo.RspaceStr50
+struct RspaceStr50 { // algo.RspaceStr50: fixed-length string padded on the right with spaces
     enum { ch_max = 50 };
     u8 ch[50];
     // Copy from strptr (operator=)
@@ -11253,7 +11255,7 @@ void                 RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring& str
 
 // --- algo.RspaceStr6
 #pragma pack(push,1)
-struct RspaceStr6 { // algo.RspaceStr6
+struct RspaceStr6 { // algo.RspaceStr6: fixed-length string padded on the right with spaces
     enum { ch_max = 6 };
     u8 ch[6];
     // Copy from strptr (operator=)
@@ -11334,7 +11336,7 @@ void                 RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring& str) 
 
 // --- algo.RspaceStr64
 #pragma pack(push,1)
-struct RspaceStr64 { // algo.RspaceStr64
+struct RspaceStr64 { // algo.RspaceStr64: fixed-length string padded on the right with spaces
     enum { ch_max = 64 };
     u8 ch[64];
     // Copy from strptr (operator=)
@@ -11401,7 +11403,7 @@ inline bool          RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& r
 void                 RspaceStr64_Print(algo::RspaceStr64& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.RspaceStr7
-struct RspaceStr7 { // algo.RspaceStr7
+struct RspaceStr7 { // algo.RspaceStr7: fixed-length string padded on the right with spaces
     enum { ch_max = 7 };
     u8 ch[7];
     // Copy from strptr (operator=)
@@ -11468,7 +11470,7 @@ void                 RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring& str) 
 
 // --- algo.RspaceStr75
 #pragma pack(push,1)
-struct RspaceStr75 { // algo.RspaceStr75
+struct RspaceStr75 { // algo.RspaceStr75: fixed-length string padded on the right with spaces
     enum { ch_max = 75 };
     u8 ch[75];
     // Copy from strptr (operator=)
@@ -11536,7 +11538,7 @@ void                 RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring& str
 
 // --- algo.RspaceStr8
 #pragma pack(push,1)
-struct RspaceStr8 { // algo.RspaceStr8
+struct RspaceStr8 { // algo.RspaceStr8: fixed-length string padded on the right with spaces
     enum { ch_max = 8 };
     u8 ch[8];
     // Copy from strptr (operator=)
@@ -11605,7 +11607,7 @@ void                 RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring& str) 
 
 // --- algo.RspaceStr9
 #pragma pack(push,1)
-struct RspaceStr9 { // algo.RspaceStr9
+struct RspaceStr9 { // algo.RspaceStr9: fixed-length string padded on the right with spaces
     enum { ch_max = 9 };
     u8 ch[9];
     // Copy from strptr (operator=)
@@ -11673,7 +11675,7 @@ void                 RspaceStr9_Print(algo::RspaceStr9& row, algo::cstring& str)
 
 // --- algo.SchedTime
 #pragma pack(push,1)
-struct SchedTime { // algo.SchedTime
+struct SchedTime { // algo.SchedTime: CPU scheduler time (TSC value)
     u64   value;   //   0
     // func:algo.SchedTime.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -11707,7 +11709,7 @@ void                 SchedTime_Print(algo::SchedTime row, algo::cstring& str) __
 
 // --- algo.SeqType
 #pragma pack(push,1)
-struct SeqType { // algo.SeqType
+struct SeqType { // algo.SeqType: 64-bit sequence type
     u64   value;   //   0
     // func:algo.SeqType.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -11742,7 +11744,7 @@ inline bool          SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) __att
 void                 SeqType_Print(algo::SeqType row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Sha1sig
-struct Sha1sig { // algo.Sha1sig
+struct Sha1sig { // algo.Sha1sig: SHA1 signature
     u8   sha1sig_elems[20];   //   0  fixed array
     // func:algo.Sha1sig..EqOp
     inline bool          operator ==(const algo::Sha1sig &rhs) const __attribute__((nothrow));
@@ -11829,7 +11831,7 @@ inline bool          Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) __at
 void                 Sha1sig_Print(algo::Sha1sig& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr1
-struct Smallstr1 { // algo.Smallstr1
+struct Smallstr1 { // algo.Smallstr1: inline string with length field
     enum { ch_max = 1 };
     u8 ch[1+1];
     u8 n_ch;
@@ -11907,7 +11909,7 @@ void                 Smallstr1_Print(algo::Smallstr1& row, algo::cstring& str) _
 
 // --- algo.Smallstr10
 #pragma pack(push,1)
-struct Smallstr10 { // algo.Smallstr10
+struct Smallstr10 { // algo.Smallstr10: inline string with length field
     enum { ch_max = 10 };
     u8 ch[10+1];
     u8 n_ch;
@@ -11985,7 +11987,7 @@ inline bool          Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs)
 void                 Smallstr10_Print(algo::Smallstr10& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr16
-struct Smallstr16 { // algo.Smallstr16
+struct Smallstr16 { // algo.Smallstr16: inline string with length field
     enum { ch_max = 16 };
     u8 ch[16+1];
     u8 n_ch;
@@ -12062,7 +12064,7 @@ inline bool          Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs)
 void                 Smallstr16_Print(algo::Smallstr16& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr2
-struct Smallstr2 { // algo.Smallstr2
+struct Smallstr2 { // algo.Smallstr2: inline string with length field
     enum { ch_max = 2 };
     u8 ch[2+1];
     u8 n_ch;
@@ -12140,7 +12142,7 @@ void                 Smallstr2_Print(algo::Smallstr2& row, algo::cstring& str) _
 
 // --- algo.Smallstr20
 #pragma pack(push,1)
-struct Smallstr20 { // algo.Smallstr20
+struct Smallstr20 { // algo.Smallstr20: inline string with length field
     enum { ch_max = 20 };
     u8 ch[20+1];
     u8 n_ch;
@@ -12231,7 +12233,7 @@ inline bool          Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& 
 void                 Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr200
-struct Smallstr200 { // algo.Smallstr200
+struct Smallstr200 { // algo.Smallstr200: inline string with length field
     enum { ch_max = 200 };
     u8 ch[200+1];
     u8 n_ch;
@@ -12308,7 +12310,7 @@ inline bool          Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& r
 void                 Smallstr200_Print(algo::Smallstr200& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr25
-struct Smallstr25 { // algo.Smallstr25
+struct Smallstr25 { // algo.Smallstr25: inline string with length field
     enum { ch_max = 25 };
     u8 ch[25+1];
     u8 n_ch;
@@ -12385,7 +12387,7 @@ inline bool          Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs)
 void                 Smallstr25_Print(algo::Smallstr25& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr3
-struct Smallstr3 { // algo.Smallstr3
+struct Smallstr3 { // algo.Smallstr3: inline string with length field
     enum { ch_max = 3 };
     u8 ch[3+1];
     u8 n_ch;
@@ -12462,7 +12464,7 @@ inline bool          Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) __
 void                 Smallstr3_Print(algo::Smallstr3& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr30
-struct Smallstr30 { // algo.Smallstr30
+struct Smallstr30 { // algo.Smallstr30: inline string with length field
     enum { ch_max = 30 };
     u8 ch[30+1];
     u8 n_ch;
@@ -12553,7 +12555,7 @@ void                 Smallstr30_Print(algo::Smallstr30& row, algo::cstring& str)
 
 // --- algo.Smallstr32
 #pragma pack(push,1)
-struct Smallstr32 { // algo.Smallstr32
+struct Smallstr32 { // algo.Smallstr32: inline string with length field
     enum { ch_max = 32 };
     u8 ch[32+1];
     u8 n_ch;
@@ -12631,7 +12633,7 @@ inline bool          Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs)
 void                 Smallstr32_Print(algo::Smallstr32& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr4
-struct Smallstr4 { // algo.Smallstr4
+struct Smallstr4 { // algo.Smallstr4: inline string with length field
     enum { ch_max = 4 };
     u8 ch[4+1];
     u8 n_ch;
@@ -12708,7 +12710,7 @@ inline bool          Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) __
 void                 Smallstr4_Print(algo::Smallstr4& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr40
-struct Smallstr40 { // algo.Smallstr40
+struct Smallstr40 { // algo.Smallstr40: inline string with length field
     enum { ch_max = 40 };
     u8 ch[40+1];
     u8 n_ch;
@@ -12785,7 +12787,7 @@ inline bool          Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs)
 void                 Smallstr40_Print(algo::Smallstr40& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr5
-struct Smallstr5 { // algo.Smallstr5
+struct Smallstr5 { // algo.Smallstr5: inline string with length field
     enum { ch_max = 5 };
     u8 ch[5+1];
     u8 n_ch;
@@ -12862,7 +12864,7 @@ inline bool          Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) __
 void                 Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.StringAry
-struct StringAry { // algo.StringAry
+struct StringAry { // algo.StringAry: array of strings
     algo::cstring*   ary_elems;   // pointer to elements
     u32              ary_n;       // number of elements in array
     u32              ary_max;     // max. capacity of array before realloc
@@ -12871,6 +12873,8 @@ struct StringAry { // algo.StringAry
     inline void          operator =(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
     // func:algo.StringAry.ary.CtorAryptr
     explicit inline               StringAry(const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+    // func:algo.StringAry.ary.Cast
+    inline               operator algo::aryptr<algo::cstring>() const __attribute__((nothrow));
     // func:algo.StringAry..AssignOp
     algo::StringAry&     operator =(const algo::StringAry &rhs) __attribute__((nothrow));
     // func:algo.StringAry..Ctor
@@ -12980,7 +12984,7 @@ void                 StringAry_Uninit(algo::StringAry& parent) __attribute__((no
 void                 StringAry_Print(algo::StringAry& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.TermStyle
-struct TermStyle { // algo.TermStyle
+struct TermStyle { // algo.TermStyle: terminal style
     u32   value;   //   0
     // func:algo.TermStyle.value.Cast
     inline               operator algo_TermStyleEnum() const __attribute__((nothrow));
@@ -13032,7 +13036,7 @@ inline void          TermStyle_Init(algo::TermStyle& parent);
 void                 TermStyle_Print(algo::TermStyle row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.TextJust
-struct TextJust { // algo.TextJust
+struct TextJust { // algo.TextJust: terminal justification
     i32   value;   //   0
     // func:algo.TextJust.value.Cast
     inline               operator algo_TextJustEnum() const __attribute__((nothrow));
@@ -13084,7 +13088,7 @@ inline void          TextJust_Init(algo::TextJust& parent);
 void                 TextJust_Print(algo::TextJust row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.TstampCache
-struct TstampCache { // algo.TstampCache
+struct TstampCache { // algo.TstampCache: timestamp cache, for fast date to string conversion
     algo::UnTime    valid_beg;       //
     algo::UnTime    valid_end;       //
     algo::cstring   cached;          //
@@ -13109,6 +13113,10 @@ struct Tuple { // algo.Tuple: Describes a ssim tuple
     u32           attrs_n;       // number of elements in array
     u32           attrs_max;     // max. capacity of array before realloc
     algo::Attr    head;          // Type tag
+    // func:algo.Tuple..EqOp
+    inline bool          operator ==(const algo::Tuple &rhs) const __attribute__((nothrow));
+    // func:algo.Tuple..NeOp
+    inline bool          operator !=(const algo::Tuple &rhs) const __attribute__((nothrow));
     // func:algo.Tuple..AssignOp
     algo::Tuple&         operator =(const algo::Tuple &rhs) __attribute__((nothrow));
     // func:algo.Tuple..Ctor
@@ -13119,6 +13127,10 @@ struct Tuple { // algo.Tuple: Describes a ssim tuple
     Tuple(const algo::Tuple &rhs) __attribute__((nothrow));
 };
 
+// func:algo.Tuple.attrs.Eq
+bool                 attrs_Eq(const algo::Tuple& parent,const algo::Tuple &rhs) __attribute__((nothrow));
+// func:algo.Tuple.attrs.Cmp
+int                  attrs_Cmp(algo::Tuple& parent, algo::Tuple &rhs) __attribute__((nothrow));
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
@@ -13207,11 +13219,15 @@ inline algo::Attr&   Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) __attribute
 // func:algo.Tuple..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
 bool                 Tuple_ReadStrptrMaybe(algo::Tuple &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:algo.Tuple..Cmp
+inline i32           Tuple_Cmp(algo::Tuple& lhs, algo::Tuple& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:algo.Tuple..Init
 inline void          Tuple_Init(algo::Tuple& parent);
 // func:algo.Tuple..Uninit
 void                 Tuple_Uninit(algo::Tuple& parent) __attribute__((nothrow));
+// func:algo.Tuple..Eq
+inline bool          Tuple_Eq(algo::Tuple& lhs, algo::Tuple& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:algo.Tuple.String  printfmt:Extern
 // func:algo.Tuple..Print
@@ -13220,7 +13236,7 @@ void                 Tuple_Print(algo::Tuple& row, algo::cstring& str) __attribu
 
 // --- algo.U16Dec2
 #pragma pack(push,1)
-struct U16Dec2 { // algo.U16Dec2
+struct U16Dec2 { // algo.U16Dec2: u16, scale 1e2
     u16   value;   //   0
     // func:algo.U16Dec2.value.Cast
     inline               operator u16() const __attribute__((nothrow));
@@ -13272,7 +13288,7 @@ void                 U16Dec2_Print(algo::U16Dec2 row, algo::cstring& str) __attr
 
 // --- algo.U32Dec1
 #pragma pack(push,1)
-struct U32Dec1 { // algo.U32Dec1
+struct U32Dec1 { // algo.U32Dec1: u32, scale 1e1
     u32   value;   //   0
     // func:algo.U32Dec1.value.Cast
     inline               operator u32() const __attribute__((nothrow));
@@ -13323,7 +13339,7 @@ inline void          U32Dec1_Init(algo::U32Dec1& parent);
 void                 U32Dec1_Print(algo::U32Dec1 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U32Dec2
-struct U32Dec2 { // algo.U32Dec2
+struct U32Dec2 { // algo.U32Dec2: u32, scale 1e2
     u32   value;   //   0
     // func:algo.U32Dec2.value.Cast
     inline               operator u32() const __attribute__((nothrow));
@@ -13373,7 +13389,7 @@ inline void          U32Dec2_Init(algo::U32Dec2& parent);
 void                 U32Dec2_Print(algo::U32Dec2 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U32Dec3
-struct U32Dec3 { // algo.U32Dec3
+struct U32Dec3 { // algo.U32Dec3: u32, scale 1e3
     u32   value;   //   0
     // func:algo.U32Dec3.value.Cast
     inline               operator u32() const __attribute__((nothrow));
@@ -13423,7 +13439,7 @@ inline void          U32Dec3_Init(algo::U32Dec3& parent);
 void                 U32Dec3_Print(algo::U32Dec3 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U32Dec4
-struct U32Dec4 { // algo.U32Dec4
+struct U32Dec4 { // algo.U32Dec4: u32, scale 1e4
     u32   value;   //   0
     // func:algo.U32Dec4.value.Cast
     inline               operator u32() const __attribute__((nothrow));
@@ -13473,7 +13489,7 @@ inline void          U32Dec4_Init(algo::U32Dec4& parent);
 void                 U32Dec4_Print(algo::U32Dec4 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U32Dec5
-struct U32Dec5 { // algo.U32Dec5
+struct U32Dec5 { // algo.U32Dec5: u32, scale 1e5
     u32   value;   //   0
     // func:algo.U32Dec5.value.Cast
     inline               operator u32() const __attribute__((nothrow));
@@ -13523,7 +13539,7 @@ inline void          U32Dec5_Init(algo::U32Dec5& parent);
 void                 U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U64Ary
-struct U64Ary { // algo.U64Ary
+struct U64Ary { // algo.U64Ary: Array of u64
     u64*   ary_elems;   // pointer to elements
     u32    ary_n;       // number of elements in array
     u32    ary_max;     // max. capacity of array before realloc
@@ -13684,7 +13700,7 @@ void                 U64Dec10_Print(algo::U64Dec10 row, algo::cstring& str) __at
 
 // --- algo.U64Dec2
 #pragma pack(push,1)
-struct U64Dec2 { // algo.U64Dec2
+struct U64Dec2 { // algo.U64Dec2: u64, scale 1e2
     u64   value;   //   0
     // func:algo.U64Dec2.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -13736,7 +13752,7 @@ void                 U64Dec2_Print(algo::U64Dec2 row, algo::cstring& str) __attr
 
 // --- algo.U64Dec4
 #pragma pack(push,1)
-struct U64Dec4 { // algo.U64Dec4
+struct U64Dec4 { // algo.U64Dec4: u64, scale 1e4
     u64   value;   //   0
     // func:algo.U64Dec4.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -13787,7 +13803,7 @@ inline void          U64Dec4_Init(algo::U64Dec4& parent);
 void                 U64Dec4_Print(algo::U64Dec4 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U64Dec5
-struct U64Dec5 { // algo.U64Dec5
+struct U64Dec5 { // algo.U64Dec5: u64, scale 1e5
     u64   value;   //   0
     // func:algo.U64Dec5.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -13837,7 +13853,7 @@ inline void          U64Dec5_Init(algo::U64Dec5& parent);
 void                 U64Dec5_Print(algo::U64Dec5 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U64Dec6
-struct U64Dec6 { // algo.U64Dec6
+struct U64Dec6 { // algo.U64Dec6: u64, scale 1e6
     u64   value;   //   0
     // func:algo.U64Dec6.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -13887,7 +13903,7 @@ inline void          U64Dec6_Init(algo::U64Dec6& parent);
 void                 U64Dec6_Print(algo::U64Dec6 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U64Dec7
-struct U64Dec7 { // algo.U64Dec7: unsigned u64, scale 1e7
+struct U64Dec7 { // algo.U64Dec7: u64, scale 1e7
     u64   value;   //   0
     // func:algo.U64Dec7.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -13938,7 +13954,7 @@ void                 U64Dec7_Print(algo::U64Dec7 row, algo::cstring& str) __attr
 
 // --- algo.U64Dec8
 #pragma pack(push,1)
-struct U64Dec8 { // algo.U64Dec8: unsigned u64, scale 1e8
+struct U64Dec8 { // algo.U64Dec8: u64, scale 1e8
     u64   value;   //   0
     // func:algo.U64Dec8..Ctor
     inline               U64Dec8() __attribute__((nothrow));
@@ -13987,7 +14003,7 @@ inline void          U64Dec8_Init(algo::U64Dec8& parent);
 void                 U64Dec8_Print(algo::U64Dec8 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.U64Dec9
-struct U64Dec9 { // algo.U64Dec9: unsigned u64, scale 1e9
+struct U64Dec9 { // algo.U64Dec9: u64, scale 1e9
     u64   value;   //   0
     // func:algo.U64Dec9.value.Cast
     inline               operator u64() const __attribute__((nothrow));
@@ -14037,7 +14053,7 @@ inline void          U64Dec9_Init(algo::U64Dec9& parent);
 void                 U64Dec9_Print(algo::U64Dec9 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.URL
-struct URL { // algo.URL
+struct URL { // algo.URL: URL parsed into components
     algo::cstring   protocol;           //
     algo::cstring   username;           //
     algo::cstring   password;           // password
@@ -14067,7 +14083,7 @@ void                 URL_Print(algo::URL& row, algo::cstring& str) __attribute__
 
 // --- algo.UnDiff
 #pragma pack(push,1)
-struct UnDiff { // algo.UnDiff: Unix diff * 1e9 + nanoseconds
+struct UnDiff { // algo.UnDiff: Unix diff with nanosecond resolution (i64)
     i64   value;   //   0
     // func:algo.UnDiff..EqOp
     inline bool          operator ==(const algo::UnDiff &rhs) const __attribute__((nothrow));
@@ -14240,6 +14256,84 @@ inline bool          UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) __
 // this function is 'extrn' and implemented by user
 void                 UnixTime_Print(algo::UnixTime row, algo::cstring& str) __attribute__((nothrow));
 
+// --- algo.Uuid
+#pragma pack(push,1)
+struct Uuid { // algo.Uuid
+    u8   value_elems[16];   //   0  fixed array
+    // func:algo.Uuid..EqOp
+    inline bool          operator ==(const algo::Uuid &rhs) const __attribute__((nothrow));
+    // func:algo.Uuid..NeOp
+    inline bool          operator !=(const algo::Uuid &rhs) const __attribute__((nothrow));
+    // func:algo.Uuid..Ctor
+    inline               Uuid() __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Set all elements of fixed array to value RHS
+// func:algo.Uuid.value.Fill
+inline void          value_Fill(algo::Uuid& parent, const u8 &rhs) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:algo.Uuid.value.Find
+inline u8*           value_Find(algo::Uuid& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Access fixed array value as aryptr.
+// func:algo.Uuid.value.Getary
+inline algo::aryptr<u8> value_Getary(algo::Uuid& parent) __attribute__((nothrow));
+// Return max number of items in the array
+// func:algo.Uuid.value.Max
+inline i32           value_Max(algo::Uuid& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:algo.Uuid.value.N
+inline i32           value_N(const algo::Uuid& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+// func:algo.Uuid.value.Setary
+inline void          value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking in release.
+// func:algo.Uuid.value.qFind
+inline u8&           value_qFind(algo::Uuid& parent, u64 t) __attribute__((nothrow));
+// func:algo.Uuid.value.Eq
+bool                 value_Eq(algo::Uuid& parent, algo::Uuid &rhs) __attribute__((nothrow, pure));
+// func:algo.Uuid.value.Cmp
+int                  value_Cmp(algo::Uuid& parent, algo::Uuid &rhs) __attribute__((nothrow));
+// Convert value to a string.
+// Array is printed as a regular string.
+// func:algo.Uuid.value.Print
+void                 value_Print(algo::Uuid& parent, algo::cstring &rhs) __attribute__((nothrow));
+// Read array from string
+// Convert string to field. Return success value
+// func:algo.Uuid.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(algo::Uuid& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// cursor points to valid item
+// func:algo.Uuid.value_curs.Reset
+inline void          Uuid_value_curs_Reset(Uuid_value_curs &curs, algo::Uuid &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:algo.Uuid.value_curs.ValidQ
+inline bool          Uuid_value_curs_ValidQ(Uuid_value_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:algo.Uuid.value_curs.Next
+inline void          Uuid_value_curs_Next(Uuid_value_curs &curs) __attribute__((nothrow));
+// item access
+// func:algo.Uuid.value_curs.Access
+inline u8&           Uuid_value_curs_Access(Uuid_value_curs &curs) __attribute__((nothrow));
+// func:algo.Uuid..Hash
+inline u32           Uuid_Hash(u32 prev, const algo::Uuid& rhs) __attribute__((nothrow));
+// Read fields of algo::Uuid from an ascii string.
+// func:algo.Uuid..ReadStrptrMaybe
+// this function is 'extrn' and implemented by user
+bool                 Uuid_ReadStrptrMaybe(algo::Uuid &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:algo.Uuid..Cmp
+inline i32           Uuid_Cmp(algo::Uuid& lhs, algo::Uuid& rhs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:algo.Uuid..Init
+inline void          Uuid_Init(algo::Uuid& parent);
+// func:algo.Uuid..Eq
+inline bool          Uuid_Eq(algo::Uuid& lhs, algo::Uuid& rhs) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:algo.Uuid.String  printfmt:Extern
+// func:algo.Uuid..Print
+// this function is 'extrn' and implemented by user
+void                 Uuid_Print(algo::Uuid& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- algo.WDiff
 #pragma pack(push,1)
 struct WDiff { // algo.WDiff: Difference between two WinTimes
@@ -14359,7 +14453,7 @@ inline bool          WTime_Update(algo::WTime &lhs, algo::WTime rhs) __attribute
 void                 WTime_Print(algo::WTime row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.i32_Range
-struct i32_Range { // algo.i32_Range
+struct i32_Range { // algo.i32_Range: i32: beg,end
     i32   beg;   //   0
     i32   end;   //   0
     // func:algo.i32_Range..EqOp
@@ -14488,6 +14582,14 @@ struct U64Ary_ary_curs {// cursor
     U64Ary_ary_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
+
+struct Uuid_value_curs {// cursor
+    typedef u8 ChildType;
+    int index;
+    algo::Uuid *parent;
+    Uuid_value_curs() { parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace algo { // gen:ns_func
 // Test string conversion
@@ -14559,6 +14661,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::URL &row);// c
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnDiff &row);// cfmt:algo.UnDiff.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnixDiff &row);// cfmt:algo.UnixDiff.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::UnixTime &row);// cfmt:algo.UnixTime.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::Uuid &row);// cfmt:algo.Uuid.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::WDiff &row);// cfmt:algo.WDiff.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::WTime &row);// cfmt:algo.WTime.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::i32_Range &row);// cfmt:algo.i32_Range.String

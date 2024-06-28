@@ -37,18 +37,21 @@ int aqlite::exec_cb(void*, int na, char** av, char** cols) {
 void aqlite::Main() {
     lib_sqlite::Init();
     auto& conn = lib_sqlite::ind_conn_GetOrCreate(":memory:");
-    auto rc = sqlite3_open(algo::Zeroterm(conn.name), &conn.db);
+    auto rc = Open(conn);
     if (rc == SQLITE_OK) {
         rc = sqlite3_create_module(conn.db, "ssimdb", &lib_sqlite::SsimModule, 0);
     }
     if (rc == SQLITE_OK) {
         auto create = cstring();
         algo_lib::Replscope R;
-        ind_beg(_db_ns_curs,ns,_db) if (ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
+        ind_beg(_db_ns_curs,ns,_db) {
+            ns.select = Regx_Match(_db.cmdline.ns, ns.ns);
+        }ind_end;
+        ind_beg(_db_ns_curs,ns,_db) if (ns.select && ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
             Set(R,"$ns",ns.ns);
             Ins(&R,create, "attach ':memory:' as $ns;");
         }ind_end;
-        ind_beg(lib_ctype::_db_ssimfile_curs, ssimfile, lib_ctype::_db) {
+        ind_beg(lib_ctype::_db_ssimfile_curs, ssimfile, lib_ctype::_db) if (aqlite::ind_ns_Find(ns_Get(ssimfile))->select) {
             Set(R,"$data",_db.cmdline.data);
             Set(R,"$ssimfile",ssimfile.ssimfile);
             Ins(&R,create, "create virtual table $ssimfile using ssimdb( $data , $ssimfile );");

@@ -1554,6 +1554,10 @@ void                 unittest_algo_lib_Tuple1();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tuple2();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Txttbl
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Txttbl();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_U128PrintHex
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_U128PrintHex();

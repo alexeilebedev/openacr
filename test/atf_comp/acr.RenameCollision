@@ -1,23 +1,2 @@
-acr.delete  dev.uname  uname:Linux  comment:"Ubuntu 17, CentOS 7.6, Debian"
-
-acr.update  dev.builddir  builddir:SunOS-g++-9.coverage-x86_64  comment:""
-acr.update  dev.builddir  builddir:SunOS-g++-9.debug-x86_64    comment:""
-acr.update  dev.builddir  builddir:SunOS-g++-9.profile-x86_64  comment:""
-acr.update  dev.builddir  builddir:SunOS-g++-9.release-x86_64  comment:""
-acr.update  dev.builddir  builddir:SunOS-g++.coverage-x86_64   comment:""
-acr.update  dev.builddir  builddir:SunOS-g++.debug-x86_64      comment:""
-acr.update  dev.builddir  builddir:SunOS-g++.profile-x86_64    comment:""
-acr.update  dev.builddir  builddir:SunOS-g++.release-x86_64    comment:""
-
-acr.update  dev.targsyslib  targsyslib:SunOS/algo_lib.dl         comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/algo_lib.m          comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/algo_lib.stdc++     comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/amc.crypto          comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/amc.ssl             comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/gcache.crypto       comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/gcli.curl           comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/lib_ams.lz4         comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/lib_ams.rt          comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/lib_mysql.mariadb   comment:""
-acr.update  dev.targsyslib  targsyslib:SunOS/lib_sqlite.sqlite3  comment:""
-report.acr  n_select:20  n_insert:0  n_delete:1  n_ignore:0  n_update:20  n_file_mod:0
+acr.delete  dmmeta.ns  ns:ns1  nstype:exe  license:GPL  comment:""
+report.acr  n_select:1  n_insert:0  n_delete:1  n_ignore:0  n_update:1  n_file_mod:0

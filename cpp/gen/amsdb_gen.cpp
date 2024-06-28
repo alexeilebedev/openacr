@@ -43,6 +43,7 @@ const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case amsdb_FieldId_proctype        : ret = "proctype";  break;
         case amsdb_FieldId_id              : ret = "id";  break;
+        case amsdb_FieldId_ns              : ret = "ns";  break;
         case amsdb_FieldId_comment         : ret = "comment";  break;
         case amsdb_FieldId_streamtype      : ret = "streamtype";  break;
         case amsdb_FieldId_value           : ret = "value";  break;
@@ -73,6 +74,9 @@ bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('i','d'): {
                     value_SetEnum(parent,amsdb_FieldId_id); ret = true; break;
+                }
+                case LE_STR2('n','s'): {
+                    value_SetEnum(parent,amsdb_FieldId_ns); ret = true; break;
                 }
             }
             break;
@@ -162,6 +166,10 @@ bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field,
             retval = u32_ReadStrptrMaybe(parent.id, strval);
             break;
         }
+        case amsdb_FieldId_ns: {
+            retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
+            break;
+        }
         case amsdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
             break;
@@ -198,6 +206,9 @@ void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
 
     u32_Print(row.id, temp);
     PrintAttrSpaceReset(str,"id", temp);
+
+    algo::Smallstr16_Print(row.ns, temp);
+    PrintAttrSpaceReset(str,"ns", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

@@ -1,0 +1,2 @@
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+dev.uname  uname:Linux    comment:"Ubuntu 17, CentOS 7.6, Debian"

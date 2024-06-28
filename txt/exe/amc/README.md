@@ -1,49 +1,37 @@
 ## amc - Algo Model Compiler: generate code under include/gen and cpp/gen
 <a href="#amc"></a>
 For the philosophy behind the generative approach, and an explanation
-of concepts, see [Introduction To AMC](/txt/fun/cpp/intro.md)
-
-### Chapters
-<a href="#chapters"></a>
-
-<!-- TOC_BEG AUTO -->
-* [AMC Enumerated Types](/txt/exe/amc/enum.md)
-
-* [AMC Subprocess Invocation](/txt/exe/amc/exec.md)
-
-* [AMC Presence Masks](/txt/exe/amc/pmask.md)
-
-* [AMC Memory Pools](/txt/exe/amc/pools.md)
-
-* [AMC Protocols](/txt/exe/amc/proto.md)
-
-* [AMC Reflection](/txt/exe/amc/reflection.md)
-
-* [AMC Reftypes](/txt/exe/amc/reftypes.md)
-
-* [AMC release notes](/txt/exe/amc/relnotes.md)
-
-* [AMC Runtime](/txt/exe/amc/runtime.md)
-
-* [AMC Strings](/txt/exe/amc/strings.md)
-
-* [AMC Cross-References (xrefs)](/txt/exe/amc/xref.md)
-
-<!-- TOC_END AUTO -->
+of concepts, see [Intro](/txt/exe/amc/intro.md)
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Chapters](#chapters)
-* [Syntax](#syntax)
-* [Options](#options)
-* [Introduction](#introduction)
-* [Main Input Tables](#main-input-tables)
-* [Size and field offset assertions](#size-and-field-offset-assertions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Introduction](#introduction)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Main Input Tables](#main-input-tables)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Size and field offset assertions](#size-and-field-offset-assertions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [amc Enumerated Types](/txt/exe/amc/enum.md)<br/>
+&#128196; [amc Subprocess Invocation](/txt/exe/amc/exec.md)<br/>
+&#128196; [amc - fbuf](/txt/exe/amc/fbuf.md)<br/>
+&#128196; [amc - Internals](/txt/exe/amc/internals.md)<br/>
+&#128196; [amc Intro](/txt/exe/amc/intro.md)<br/>
+&#128196; [amc Presence Masks](/txt/exe/amc/pmask.md)<br/>
+&#128196; [amc Memory Pools](/txt/exe/amc/pools.md)<br/>
+&#128196; [amc Protocols](/txt/exe/amc/proto.md)<br/>
+&#128196; [amc Reflection](/txt/exe/amc/reflection.md)<br/>
+&#128196; [amc Reftypes](/txt/exe/amc/reftypes.md)<br/>
+&#128196; [amc release notes](/txt/exe/amc/relnotes.md)<br/>
+&#128196; [amc Runtime](/txt/exe/amc/runtime.md)<br/>
+&#128196; [amc Strings](/txt/exe/amc/strings.md)<br/>
+&#128196; [amc Cross-References (xrefs)](/txt/exe/amc/xref.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 amc: Algo Model Compiler: generate code under include/gen and cpp/gen
 Usage: amc [[-query:]<string>] [options]
@@ -63,38 +51,7 @@ Usage: amc [[-query:]<string>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in_dir -- Root of input ssim dir
-<a href="#-in_dir"></a>
-
-#### -query -- Query mode: generate code for specified object
-<a href="#-query"></a>
-
-When amc is given this argument, it runs in query mode.
-Instead of modifying source files it simply prints to stdout all internal code
-sections whose key matches the specified regex (typically it's a ctype name or a function name).
-This is the fastest way to check how a certain function is generated
-
-Example: output all functions which are used to compile amc itself
-    amc amc.%
-
-#### -out_dir -- Root of output cpp dir
-<a href="#-out_dir"></a>
-
-#### -proto -- Print prototype
-<a href="#-proto"></a>
-Used with `-query`, limits the output to just function prototypes
-
-#### -report -- Final report
-<a href="#-report"></a>
-
-#### -e -- Open matching records in editor
-<a href="#-e"></a>
-
-#### -trace -- Regx of something to trace code generation
-<a href="#-trace"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Introduction
 <a href="#introduction"></a>
@@ -153,102 +110,47 @@ They are
 * [fldoffset](/txt/ssimdb/dmmeta/fldoffset.md)
 * [ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/amc/alias.cpp](/cpp/amc/alias.cpp)||
-|[cpp/amc/avl.cpp](/cpp/amc/avl.cpp)||
-|[cpp/amc/base.cpp](/cpp/amc/base.cpp)||
-|[cpp/amc/bheap.cpp](/cpp/amc/bheap.cpp)|Binary heaps|
-|[cpp/amc/bitfld.cpp](/cpp/amc/bitfld.cpp)||
-|[cpp/amc/bitset.cpp](/cpp/amc/bitset.cpp)||
-|[cpp/amc/blkpool.cpp](/cpp/amc/blkpool.cpp)||
-|[cpp/amc/cget.cpp](/cpp/amc/cget.cpp)||
-|[cpp/amc/charset.cpp](/cpp/amc/charset.cpp)|Charset functions|
-|[cpp/amc/checkxref.cpp](/cpp/amc/checkxref.cpp)||
-|[cpp/amc/cmp.cpp](/cpp/amc/cmp.cpp)||
-|[cpp/amc/concat.cpp](/cpp/amc/concat.cpp)||
-|[cpp/amc/copypriv.cpp](/cpp/amc/copypriv.cpp)||
-|[cpp/amc/count.cpp](/cpp/amc/count.cpp)||
-|[cpp/amc/cppfunc.cpp](/cpp/amc/cppfunc.cpp)||
-|[cpp/amc/ctype.cpp](/cpp/amc/ctype.cpp)|Ctype code generators|
-|[cpp/amc/delptr.cpp](/cpp/amc/delptr.cpp)||
-|[cpp/amc/dflt.cpp](/cpp/amc/dflt.cpp)|Field default|
-|[cpp/amc/disp/call.cpp](/cpp/amc/disp/call.cpp)||
-|[cpp/amc/disp/casetype.cpp](/cpp/amc/disp/casetype.cpp)||
-|[cpp/amc/disp/filter.cpp](/cpp/amc/disp/filter.cpp)|Dispatch filter|
-|[cpp/amc/disp/main.cpp](/cpp/amc/disp/main.cpp)|Dispatch|
-|[cpp/amc/disp/msg.cpp](/cpp/amc/disp/msg.cpp)||
-|[cpp/amc/disp/print.cpp](/cpp/amc/disp/print.cpp)||
-|[cpp/amc/disp/read.cpp](/cpp/amc/disp/read.cpp)||
-|[cpp/amc/enum.cpp](/cpp/amc/enum.cpp)||
-|[cpp/amc/exec.cpp](/cpp/amc/exec.cpp)|reftype Exec|
-|[cpp/amc/fast.cpp](/cpp/amc/fast.cpp)||
-|[cpp/amc/fbuf.cpp](/cpp/amc/fbuf.cpp)|Byte buffer|
-|[cpp/amc/fcast.cpp](/cpp/amc/fcast.cpp)||
-|[cpp/amc/fcmap.cpp](/cpp/amc/fcmap.cpp)|Fcmap generation|
-|[cpp/amc/fconst.cpp](/cpp/amc/fconst.cpp)|Constants, string <-> int conversion|
-|[cpp/amc/fdec.cpp](/cpp/amc/fdec.cpp)||
-|[cpp/amc/field.cpp](/cpp/amc/field.cpp)||
-|[cpp/amc/func.cpp](/cpp/amc/func.cpp)|C++ function output|
-|[cpp/amc/fwddecl.cpp](/cpp/amc/fwddecl.cpp)||
-|[cpp/amc/gen.cpp](/cpp/amc/gen.cpp)||
-|[cpp/amc/global.cpp](/cpp/amc/global.cpp)||
-|[cpp/amc/gsymbol.cpp](/cpp/amc/gsymbol.cpp)|Generate strings from tables|
-|[cpp/amc/hook.cpp](/cpp/amc/hook.cpp)||
-|[cpp/amc/include.cpp](/cpp/amc/include.cpp)||
-|[cpp/amc/inlary.cpp](/cpp/amc/inlary.cpp)||
-|[cpp/amc/io.cpp](/cpp/amc/io.cpp)|I/O functions|
-|[cpp/amc/lary.cpp](/cpp/amc/lary.cpp)||
-|[cpp/amc/llist.cpp](/cpp/amc/llist.cpp)|Linked lists|
-|[cpp/amc/lpool.cpp](/cpp/amc/lpool.cpp)||
-|[cpp/amc/main.cpp](/cpp/amc/main.cpp)|Main driver|
-|[cpp/amc/malloc.cpp](/cpp/amc/malloc.cpp)||
-|[cpp/amc/msgcurs.cpp](/cpp/amc/msgcurs.cpp)|Message scanning cursor|
-|[cpp/amc/nstype.cpp](/cpp/amc/nstype.cpp)||
-|[cpp/amc/numstr.cpp](/cpp/amc/numstr.cpp)|Small strings|
-|[cpp/amc/opt.cpp](/cpp/amc/opt.cpp)||
-|[cpp/amc/outfile.cpp](/cpp/amc/outfile.cpp)||
-|[cpp/amc/pmask.cpp](/cpp/amc/pmask.cpp)||
-|[cpp/amc/pnew.cpp](/cpp/amc/pnew.cpp)|Custom constructors|
-|[cpp/amc/pool.cpp](/cpp/amc/pool.cpp)||
-|[cpp/amc/print.cpp](/cpp/amc/print.cpp)|Print ctype to string|
-|[cpp/amc/protocol.cpp](/cpp/amc/protocol.cpp)||
-|[cpp/amc/ptr.cpp](/cpp/amc/ptr.cpp)||
-|[cpp/amc/ptrary.cpp](/cpp/amc/ptrary.cpp)||
-|[cpp/amc/query.cpp](/cpp/amc/query.cpp)||
-|[cpp/amc/read.cpp](/cpp/amc/read.cpp)|Read ctype from string|
-|[cpp/amc/regx.cpp](/cpp/amc/regx.cpp)|Small strings|
-|[cpp/amc/sbrk.cpp](/cpp/amc/sbrk.cpp)||
-|[cpp/amc/signature.cpp](/cpp/amc/signature.cpp)||
-|[cpp/amc/size.cpp](/cpp/amc/size.cpp)|Compute struct sizes|
-|[cpp/amc/smallstr.cpp](/cpp/amc/smallstr.cpp)|Small strings|
-|[cpp/amc/sort.cpp](/cpp/amc/sort.cpp)|Comparison & Sorting routines|
-|[cpp/amc/step.cpp](/cpp/amc/step.cpp)||
-|[cpp/amc/struct.cpp](/cpp/amc/struct.cpp)||
-|[cpp/amc/substr.cpp](/cpp/amc/substr.cpp)||
-|[cpp/amc/tableid.cpp](/cpp/amc/tableid.cpp)|Per-namespace enum of tables|
-|[cpp/amc/tary.cpp](/cpp/amc/tary.cpp)||
-|[cpp/amc/tclass.cpp](/cpp/amc/tclass.cpp)||
-|[cpp/amc/thash.cpp](/cpp/amc/thash.cpp)|Hash tables|
-|[cpp/amc/tpool.cpp](/cpp/amc/tpool.cpp)||
-|[cpp/amc/trace.cpp](/cpp/amc/trace.cpp)|Generate trace code|
-|[cpp/amc/upptr.cpp](/cpp/amc/upptr.cpp)||
-|[cpp/amc/val.cpp](/cpp/amc/val.cpp)||
-|[cpp/amc/varlen.cpp](/cpp/amc/varlen.cpp)||
-|[cpp/gen/amc_gen.cpp](/cpp/gen/amc_gen.cpp)||
-|[include/amc.h](/include/amc.h)|Main header|
-|[include/gen/amc_gen.h](/include/gen/amc_gen.h)||
-|[include/gen/amc_gen.inl.h](/include/gen/amc_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in_dir -- Root of input ssim dir
+<a href="#-in_dir"></a>
+
+#### -query -- Query mode: generate code for specified object
+<a href="#-query"></a>
+
+When amc is given this argument, it runs in query mode.
+Instead of modifying source files it simply prints to stdout all internal code
+sections whose key matches the specified regex (typically it's a ctype name or a function name).
+This is the fastest way to check how a certain function is generated
+
+Example: output all functions which are used to compile amc itself
+    amc amc.%
+
+#### -out_dir -- Root of output cpp dir
+<a href="#-out_dir"></a>
+
+#### -proto -- Print prototype
+<a href="#-proto"></a>
+Used with `-query`, limits the output to just function prototypes
+
+#### -report -- Final report
+<a href="#-report"></a>
+
+#### -e -- Open matching records in editor
+<a href="#-e"></a>
+
+#### -trace -- Regx of something to trace code generation
+<a href="#-trace"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `amc` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dev.license](/txt/ssimdb/dev/license.md)|Source code license|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
@@ -258,10 +160,7 @@ The following source files are part of this tool:
 |[dmmeta.usertracefld](/txt/ssimdb/dmmeta/usertracefld.md)|Add custom user trace fields to process's trace struct|
 |[dmmeta.typefld](/txt/ssimdb/dmmeta/typefld.md)|Specifies which field of a message carries the type|
 |[dmmeta.thash](/txt/ssimdb/dmmeta/thash.md)|Hash index, required for fields with reftype Thash|
-|[amcdb.tcurs](/txt/ssimdb/amcdb/tcurs.md)|Cursor template|
 |[dmmeta.tary](/txt/ssimdb/dmmeta/tary.md)|Indirect linear dynamically alocated array (used for strings, arrays of data, etc)|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
@@ -320,6 +219,7 @@ The following source files are part of this tool:
 |[dmmeta.fcmap](/txt/ssimdb/dmmeta/fcmap.md)|Bidirectional mapping between fconst values|
 |[dmmeta.fcleanup](/txt/ssimdb/dmmeta/fcleanup.md)|Request user-implemented function to be called at Uninit time for a field|
 |[dmmeta.fcast](/txt/ssimdb/dmmeta/fcast.md)|Generate implicit conversion from field to c++ expression|
+|[dmmeta.fbuftype](/txt/ssimdb/dmmeta/fbuftype.md)|Buffer type|
 |[dmmeta.fbuf](/txt/ssimdb/dmmeta/fbuf.md)|Buffer for reading/writing messages, works with Iohook|
 |[dmmeta.fbitset](/txt/ssimdb/dmmeta/fbitset.md)|Generate bitset functions over integer field or array|
 |[dmmeta.fbigend](/txt/ssimdb/dmmeta/fbigend.md)|Annotate field as having big-endian storage|
@@ -327,6 +227,7 @@ The following source files are part of this tool:
 |[dmmeta.falias](/txt/ssimdb/dmmeta/falias.md)|Alias field|
 |[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
 |[dmmeta.disptrace](/txt/ssimdb/dmmeta/disptrace.md)|Generate trace fields (cycles, counts) for all dispatch branches|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.dispfilter](/txt/ssimdb/dmmeta/dispfilter.md)|Generate filter function on dispatch|
 |[dmmeta.dispctx](/txt/ssimdb/dmmeta/dispctx.md)|Use context with dispatch|
 |[dmmeta.dispatch_msg](/txt/ssimdb/dmmeta/dispatch_msg.md)|Add message to a dispatch|
@@ -344,10 +245,14 @@ The following source files are part of this tool:
 |[dmmeta.ccmp](/txt/ssimdb/dmmeta/ccmp.md)|Generate hash function|
 |[dmmeta.cascdel](/txt/ssimdb/dmmeta/cascdel.md)|Request cascading delete of referenced rows|
 |[dmmeta.cafter](/txt/ssimdb/dmmeta/cafter.md)|Control amc processing order for unrelated types (used in rare situations)|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.bitfld](/txt/ssimdb/dmmeta/bitfld.md)|Specify offset/width of a bitfield within another field|
 |[dmmeta.basepool](/txt/ssimdb/dmmeta/basepool.md)|Specify pool to be used for allocating elements of a type|
 |[dmmeta.argvtype](/txt/ssimdb/dmmeta/argvtype.md)|Customize parsing of command lines (rarely used)|
 |[dmmeta.anonfld](/txt/ssimdb/dmmeta/anonfld.md)|Omit field name where possible (command line, enums, constants)|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
+|[amcdb.tcurs](/txt/ssimdb/amcdb/tcurs.md)|Cursor template|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

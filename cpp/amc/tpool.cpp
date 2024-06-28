@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/tpool.cpp
+// Source: cpp/amc/tpool.cpp -- Tpool refetype (fixed-length freelist)
 //
 // See tex/amc/amc_alloc.tex
 

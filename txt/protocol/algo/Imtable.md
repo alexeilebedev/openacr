@@ -1,11 +1,12 @@
-## txt/protocol/algo/Imtable.md
+## algo.Imtable - In-memory table descriptor
 
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)algo.Imtable
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |imtable|algo.Smallstr50|Val||Table name|
 |elem_type|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||Element type name|
@@ -15,5 +16,7 @@
 |Print|algo.ImrowPrintFcn|Val|0|Convert specified element to string (may be NULL)|
 |size|i32|Val||Size of one element (for fixed-width elements only)|
 |ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|Pkey||Ssimfile name (if associated)|
-|comment|algo.Comment|Val|
+|comment|algo.Comment|Val|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 

@@ -3,6 +3,7 @@ dmmeta.cpptype  ctype:MYSQL_RES  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:SQLHANDLE  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:SQLLEN  ctor:N  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:ShStream  ctor:N  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:abt.config  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.FEvalattr  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.Queryop  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:acr.ReadMode  ctor:Y  dtor:Y  cheap_copy:N
@@ -169,6 +170,7 @@ dmmeta.cpptype  ctype:algo.UnDiff  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.UnTime  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.UnixDiff  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.UnixTime  ctor:Y  dtor:N  cheap_copy:Y
+dmmeta.cpptype  ctype:algo.Uuid  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.WDiff  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.WTime  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.cstring  ctor:Y  dtor:Y  cheap_copy:N
@@ -342,6 +344,20 @@ dmmeta.cpptype  ctype:report.abt  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.acr_check  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.gcache  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:report.gcache_hitrate  ctor:Y  dtor:Y  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.CancelOrderMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.CancelReqMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.I64Price8  ctor:Y  dtor:N  cheap_copy:Y
+dmmeta.cpptype  ctype:samp_meng.MassCancelReqMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.MsgHeader  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewOrderMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewOrderReqMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewSymbolMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewSymbolReqMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewUserMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.NewUserReqMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.OrderTradeMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.Symbol  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:samp_meng.TextMsg  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:u128  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u32  ctor:N  dtor:N  cheap_copy:Y

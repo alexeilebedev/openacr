@@ -1,3 +1,4 @@
--query:amcdb.bltin:
--query:amcdb.curstype:
--query:gclidb.user:
+-query:dmmeta.ctype:
+-query:dmmeta.ssimfile:
+-query:garden.flower:
+-query:garden.fruit:

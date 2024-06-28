@@ -39,6 +39,7 @@ dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
 dmmeta.ssimfile  ssimfile:dev.include  ctype:dev.Include
 dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
+dmmeta.ssimfile  ssimfile:dev.mdmark  ctype:dev.Mdmark
 dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
 dmmeta.ssimfile  ssimfile:dev.msgfile  ctype:dev.Msgfile
 dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
@@ -47,7 +48,7 @@ dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
 dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
-dmmeta.ssimfile  ssimfile:dev.readmecat  ctype:dev.Readmecat
+dmmeta.ssimfile  ssimfile:dev.readmesort  ctype:dev.Readmesort
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile

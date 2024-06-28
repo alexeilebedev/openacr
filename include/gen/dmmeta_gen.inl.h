@@ -581,9 +581,7 @@ inline  dmmeta::Fbufdir::Fbufdir() {
 // --- dmmeta.Fbuftype..Init
 // Set all fields to initial values.
 inline void dmmeta::Fbuftype_Init(dmmeta::Fbuftype& parent) {
-    parent.getmsg = bool(false);
     parent.skipbytes = bool(false);
-    parent.read = bool(false);
 }
 
 // --- dmmeta.Fbuftype..Ctor
@@ -863,6 +861,12 @@ inline  dmmeta::Ftrace::Ftrace() {
 
 // --- dmmeta.Ftuple..Ctor
 inline  dmmeta::Ftuple::Ftuple() {
+}
+
+// --- dmmeta.Func..Init
+// Set all fields to initial values.
+inline void dmmeta::Func_Init(dmmeta::Func& parent) {
+    parent.extrn = bool(false);
 }
 
 // --- dmmeta.Func..Ctor

@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/gen.cpp
+// Source: cpp/amc/gen.cpp -- AMC Generators (amcdb.gen)
 //
 // All the functions starting with gen_
 
@@ -1234,7 +1234,7 @@ void amc::gen_ns_print_proto() {
     Set(R, "$ns", ns.ns);
     amc::BeginNsBlock(*ns.cpp, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
-        bool print = func.priv && !func.ismacro && !func.globns && !func.oper && !func.disable && !func.member;
+        bool print = func.priv && !func.ismacro && !func.globns && !func.disable && !func.member;
         if (print) {
             tempstr proto;
             PrintFuncProto(func, NULL, proto);
@@ -1256,14 +1256,12 @@ void amc::gen_ns_print_struct() {
             int n_hdr = ch_N(*ns.hdr);
             ind_beg(amc::field_c_ffunc_curs, ffunc,field) {
                 if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
-                    if (!ffunc.priv && !ffunc.oper && !ffunc.member) {
+                    if (!ffunc.priv && !ffunc.member) {
                         tempstr proto;
                         PrintFuncProto(ffunc,NULL,proto);// goes to header
                         algo::InsertIndent(*ns.hdr, proto, 0);
                     }
-                    if (!ffunc.extrn) {
-                        PrintFuncBody(ns,ffunc);// goes to source
-                    }
+                    PrintFuncBody(ns,ffunc);// goes to source
                     ffunc.printed=true;
                 }
             }ind_end;
@@ -1273,12 +1271,12 @@ void amc::gen_ns_print_struct() {
         }ind_end;
         ind_beg(amc::ctype_c_ffunc_curs, ffunc, ctype) {
             if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
-                if (!ffunc.priv && !ffunc.oper && !ffunc.member) {
+                if (!ffunc.priv && !ffunc.member) {
                     tempstr proto;
                     PrintFuncProto(ffunc,NULL,proto);// goes to header
                     algo::InsertIndent(*ns.hdr, proto, 0);
                 }
-                if (!ffunc.extrn) {
+                if (!ffunc.extrn && !ffunc.deleted) {
                     PrintFuncBody(ns,ffunc);// goes to source
                 }
                 ffunc.printed=true;
@@ -1312,12 +1310,12 @@ void amc::gen_ns_func() {
     amc::BeginNsBlock(*ns.hdr, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
         if (!func.printed && !func.ismacro && !func.disable && !func.member && !func.globns) {
-            if (!func.priv && !func.oper) {
+            if (!func.priv) {
                 tempstr proto;
                 PrintFuncProto(func, NULL, proto);
                 algo::InsertIndent(*ns.hdr, proto, 0);
             }
-            if (!func.extrn) {
+            if (!func.extrn && !func.deleted) {
                 PrintFuncBody(ns, func);
             }
             func.printed = true;
@@ -1326,12 +1324,12 @@ void amc::gen_ns_func() {
     amc::EndNsBlock(*ns.hdr, ns, "");
     ind_beg(amc::ns_c_func_curs, func,ns) {
         if (!func.printed && !func.ismacro && !func.disable && !func.member && func.globns) {
-            if (!func.priv && !func.oper) {
+            if (!func.priv) {
                 tempstr proto;
                 PrintFuncProto(func, NULL, proto);
                 algo::InsertIndent(*ns.hdr, proto, 0);
             }
-            if (!func.extrn) {
+            if (!func.extrn && !func.deleted) {
                 PrintFuncBody(ns, func);
             }
             func.printed = true;

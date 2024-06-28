@@ -13104,6 +13104,33 @@ void algo::TstampCache_Init(algo::TstampCache& parent) {
     parent.gmtQ = bool(false);
 }
 
+// --- algo.Tuple.attrs.Eq
+bool algo::attrs_Eq(const algo::Tuple& parent,const algo::Tuple &rhs) {
+    int len = attrs_N(parent);
+    if (len != attrs_N(rhs)) {
+        return false;
+    }
+    for (int i = 0; i < len; i++) {
+        if (!(parent.attrs_elems[i] == rhs.attrs_elems[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.Tuple.attrs.Cmp
+int algo::attrs_Cmp(algo::Tuple& parent, algo::Tuple &rhs) {
+    int len = i32_Min(attrs_N(parent), attrs_N(rhs));
+    int retval = 0;
+    for (int i = 0; i < len; i++) {
+        retval = algo::Attr_Cmp(parent.attrs_elems[i], rhs.attrs_elems[i]);
+        if (retval != 0) {
+            return retval;
+        }
+    }
+    return i32_Cmp(attrs_N(parent), attrs_N(rhs));
+}
+
 // --- algo.Tuple.attrs.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -14633,6 +14660,47 @@ bool algo::U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) {
 // cfmt:algo.U64Dec9.String  printfmt:Raw
 void algo::U64Dec9_Print(algo::U64Dec9 row, algo::cstring& str) {
     algo::value_Print(row, str);
+}
+
+// --- algo.Uuid.value.Eq
+bool algo::value_Eq(algo::Uuid& parent, algo::Uuid &rhs) {
+    int len = 16;
+    for (int i = 0; i < len; i++) {
+        if (!(parent.value_elems[i] == value_qFind(rhs,i))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.Uuid.value.Cmp
+int algo::value_Cmp(algo::Uuid& parent, algo::Uuid &rhs) {
+    int len = 16;
+    int retval = 0;
+    for (int i = 0; i < len; i++) {
+        retval = u8_Cmp(parent.value_elems[i], value_qFind(rhs,i));
+        if (retval != 0) {
+            return retval;
+        }
+    }
+    return 0;
+}
+
+// --- algo.Uuid.value.Print
+// Convert value to a string.
+// Array is printed as a regular string.
+void algo::value_Print(algo::Uuid& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(value_Getary(parent));
+}
+
+// --- algo.Uuid.value.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool algo::value_ReadStrptrMaybe(algo::Uuid& parent, algo::strptr in_str) {
+    bool retval = true;
+    i32 newlen = i32_Min(in_str.n_elems, 16);
+    memcpy(parent.value_elems, in_str.elems, newlen);
+    return retval;
 }
 
 // --- algo...ForAllStrings

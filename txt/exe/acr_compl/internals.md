@@ -1,0 +1,916 @@
+## acr_compl - Internals
+
+
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+* [Description](#description)
+* [Sources](#sources)
+* [Dependencies](#dependencies)
+* [In Memory DB](#in-memory-db)
+* [Tests](#tests)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+
+### Description
+<a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
+for usage, see [acr_compl - ACR shell auto-complete for all targets](/txt/exe/acr_compl/README.md)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
+### Sources
+<a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
+The source code license is GPL
+The following source files are part of this tool:
+
+|Source File|Comment|
+|---|---|
+|[cpp/acr_compl/main.cpp](/cpp/acr_compl/main.cpp)||
+|[cpp/acr_compl/shell.cpp](/cpp/acr_compl/shell.cpp)||
+|[cpp/gen/acr_compl_gen.cpp](/cpp/gen/acr_compl_gen.cpp)||
+|[include/acr_compl.h](/include/acr_compl.h)||
+|[include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)||
+|[include/gen/acr_compl_gen.inl.h](/include/gen/acr_compl_gen.inl.h)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
+|---|---|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`acr_compl` generated code creates the tables below.
+All allocations are done through global `acr_compl::_db` [acr_compl.FDb](#acr_compl-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[acr_compl.Badness](#acr_compl-badness)||
+|[acr_compl.Completion](#acr_compl-completion)||
+||||FCompletion.msghdr (Base)|
+|[acr_compl.FAnonfld](#acr_compl-fanonfld)|[dmmeta.anonfld](/txt/ssimdb/dmmeta/anonfld.md)|FDb.anonfld (Lary)|anonfld (Lary, by rowid)|
+||||FField.c_anonfld (Ptr)|
+|[acr_compl.FArgvtype](#acr_compl-fargvtype)|[dmmeta.argvtype](/txt/ssimdb/dmmeta/argvtype.md)|FDb.argvtype (Lary)|argvtype (Lary, by rowid)|
+||||FCtype.c_argvtype (Ptr)|
+|[acr_compl.FCompletion](#acr_compl-fcompletion)||FDb.completion (Lary)|completion (Lary, by rowid)|bh_completion (Bheap, sort field badness)|
+|[acr_compl.FComplsource](#acr_compl-fcomplsource)||FDb.complsource (Lary)|complsource (Lary, by rowid)|
+|[acr_compl.FCtype](#acr_compl-fctype)|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|FDb.ctype (Lary)|ctype (Lary, by rowid)|ind_ctype (Thash, hash field ctype)|
+||||FField.p_arg (Upptr)|
+||||FField.p_ctype (Upptr)|
+||||FSsimfile.p_ctype (Upptr)|
+|[acr_compl.FDb](#acr_compl-fdb)||FDb._db (Global)|
+|[acr_compl.FFalias](#acr_compl-ffalias)|[dmmeta.falias](/txt/ssimdb/dmmeta/falias.md)|FDb.falias (Lary)|falias (Lary, by rowid)|
+||||FField.c_falias (Ptr)|
+||||FField.c_falias_srcfield (Ptrary)|
+|[acr_compl.FFcmdline](#acr_compl-ffcmdline)|[dmmeta.fcmdline](/txt/ssimdb/dmmeta/fcmdline.md)|FDb.fcmdline (Lary)|fcmdline (Lary, by rowid)|
+||||FNs.c_fcmdline (Ptr)|
+|[acr_compl.FFconst](#acr_compl-ffconst)|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|FDb.fconst (Lary)|fconst (Lary, by rowid)|
+||||FField.c_fconst (Ptrary)|
+|[acr_compl.FFflag](#acr_compl-ffflag)|[dmmeta.fflag](/txt/ssimdb/dmmeta/fflag.md)|FDb.fflag (Lary)|fflag (Lary, by rowid)|
+||||FField.c_fflag (Ptr)|
+|[acr_compl.FField](#acr_compl-ffield)|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|FDb.field (Lary)|field (Lary, by rowid)|ind_field (Thash, hash field field)|zd_cmd_field (Llist)|ind_cmd_field_name (Thash, hash field name)|
+||||FCompletion.field (Ptr)|
+||||FCtype.c_field (Ptrary)|
+||||FFalias.p_srcfield (Upptr)|
+||||FFalias.p_field (Upptr)|
+||||FFcmdline.p_field (Upptr)|
+||||FFcmdline.p_basecmdline (Upptr)|
+|[acr_compl.FNs](#acr_compl-fns)|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|FDb.ns (Lary)|ns (Lary, by rowid)|ind_ns (Thash, hash field ns)|
+|[acr_compl.FSsimfile](#acr_compl-fssimfile)|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|FDb.ssimfile (Lary)|ssimfile (Lary, by rowid)|ind_ssimfile (Thash, hash field ssimfile)|
+||||FCtype.c_ssimfile (Ptr)|
+|[acr_compl.Shellqtype](#acr_compl-shellqtype)||
+
+#### acr_compl.Badness - Trading Session
+<a href="#acr_compl-badness"></a>
+
+#### acr_compl.Badness Fields
+<a href="#acr_compl-badness-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.Badness.badness|u8|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.Badness.strkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct Badness
+<a href="#struct-badness"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct Badness { // acr_compl.Badness: Trading Session
+    u8              badness;   //   0
+    algo::cstring   strkey;    //
+    // func:acr_compl.Badness.badness.Cast
+    inline               operator acr_compl_BadnessEnum() const __attribute__((nothrow));
+    // func:acr_compl.Badness..EqOp
+    inline bool          operator ==(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..NeOp
+    inline bool          operator !=(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..LtOp
+    inline bool          operator <(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..GtOp
+    inline bool          operator >(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..LeOp
+    inline bool          operator <=(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..GeOp
+    inline bool          operator >=(const acr_compl::Badness &rhs) const __attribute__((nothrow));
+    // func:acr_compl.Badness..Ctor
+    inline               Badness() __attribute__((nothrow));
+    // func:acr_compl.Badness..FieldwiseCtor
+    explicit inline               Badness(u8 in_badness, const algo::strptr& in_strkey) __attribute__((nothrow));
+};
+```
+
+#### acr_compl.Completion - 
+<a href="#acr_compl-completion"></a>
+
+#### acr_compl.Completion Fields
+<a href="#acr_compl-completion-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftypes.md#val)||do not add space after the value|
+
+#### Struct Completion
+<a href="#struct-completion"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct Completion { // acr_compl.Completion
+    algo::cstring   value;     //
+    bool            nospace;   //   false  do not add space after the value
+    // func:acr_compl.Completion..Ctor
+    inline               Completion() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FAnonfld - Omit field name where possible (command line, enums, constants)
+<a href="#acr_compl-fanonfld"></a>
+
+#### acr_compl.FAnonfld Fields
+<a href="#acr_compl-fanonfld-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FAnonfld.msghdr|[dmmeta.Anonfld](/txt/ssimdb/dmmeta/anonfld.md)|[Base](/txt/ssimdb/dmmeta/anonfld.md)|||
+
+#### Struct FAnonfld
+<a href="#struct-fanonfld"></a>
+*Note:* field ``acr_compl.FAnonfld.msghdr`` has reftype ``base`` so the fields of [dmmeta.Anonfld](/txt/ssimdb/dmmeta/anonfld.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FAnonfld { // acr_compl.FAnonfld
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+    // func:acr_compl.FAnonfld..AssignOp
+    inline acr_compl::FAnonfld& operator =(const acr_compl::FAnonfld &rhs) = delete;
+    // func:acr_compl.FAnonfld..CopyCtor
+    inline               FAnonfld(const acr_compl::FAnonfld &rhs) = delete;
+private:
+    // func:acr_compl.FAnonfld..Ctor
+    inline               FAnonfld() __attribute__((nothrow));
+    // func:acr_compl.FAnonfld..Dtor
+    inline               ~FAnonfld() __attribute__((nothrow));
+    friend acr_compl::FAnonfld& anonfld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FAnonfld* anonfld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 anonfld_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FArgvtype - Customize parsing of command lines (rarely used)
+<a href="#acr_compl-fargvtype"></a>
+
+#### acr_compl.FArgvtype Fields
+<a href="#acr_compl-fargvtype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FArgvtype.base|[dmmeta.Argvtype](/txt/ssimdb/dmmeta/argvtype.md)|[Base](/txt/ssimdb/dmmeta/argvtype.md)|||
+
+#### Struct FArgvtype
+<a href="#struct-fargvtype"></a>
+*Note:* field ``acr_compl.FArgvtype.base`` has reftype ``base`` so the fields of [dmmeta.Argvtype](/txt/ssimdb/dmmeta/argvtype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FArgvtype { // acr_compl.FArgvtype
+    algo::Smallstr100   ctype;      //
+    algo::Smallstr50    argvtype;   //
+    algo::Comment       comment;    //
+    // func:acr_compl.FArgvtype..AssignOp
+    inline acr_compl::FArgvtype& operator =(const acr_compl::FArgvtype &rhs) = delete;
+    // func:acr_compl.FArgvtype..CopyCtor
+    inline               FArgvtype(const acr_compl::FArgvtype &rhs) = delete;
+private:
+    // func:acr_compl.FArgvtype..Ctor
+    inline               FArgvtype() __attribute__((nothrow));
+    // func:acr_compl.FArgvtype..Dtor
+    inline               ~FArgvtype() __attribute__((nothrow));
+    friend acr_compl::FArgvtype& argvtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FArgvtype* argvtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 argvtype_RemoveAll() __attribute__((nothrow));
+    friend void                 argvtype_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FCompletion - 
+<a href="#acr_compl-fcompletion"></a>
+
+#### acr_compl.FCompletion Fields
+<a href="#acr_compl-fcompletion-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FCompletion.msghdr|[acr_compl.Completion](/txt/exe/acr_compl/internals.md#acr_compl-completion)|[Base](#acr_compl-completion-fields)|||
+|acr_compl.FCompletion.badness|[acr_compl.Badness](/txt/exe/acr_compl/internals.md#acr_compl-badness)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FCompletion.field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+#### acr_compl.Completion Fields
+<a href="#acr_compl-completion-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.Completion.value|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.Completion.nospace|bool|[Val](/txt/exe/amc/reftypes.md#val)||do not add space after the value|
+
+#### Struct FCompletion
+<a href="#struct-fcompletion"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FCompletion { // acr_compl.FCompletion
+    algo::cstring        value;               //
+    bool                 nospace;             //   false  do not add space after the value
+    acr_compl::Badness   badness;             //
+    acr_compl::FField*   field;               // optional pointer
+    i32                  bh_completion_idx;   // index in heap; -1 means not-in-heap
+    // func:acr_compl.FCompletion..AssignOp
+    inline acr_compl::FCompletion& operator =(const acr_compl::FCompletion &rhs) = delete;
+    // func:acr_compl.FCompletion..CopyCtor
+    inline               FCompletion(const acr_compl::FCompletion &rhs) = delete;
+private:
+    // func:acr_compl.FCompletion..Ctor
+    inline               FCompletion() __attribute__((nothrow));
+    // func:acr_compl.FCompletion..Dtor
+    inline               ~FCompletion() __attribute__((nothrow));
+    friend acr_compl::FCompletion& completion_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FCompletion* completion_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 completion_RemoveAll() __attribute__((nothrow));
+    friend void                 completion_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FComplsource - 
+<a href="#acr_compl-fcomplsource"></a>
+
+#### acr_compl.FComplsource Fields
+<a href="#acr_compl-fcomplsource-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FComplsource.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FComplsource
+<a href="#struct-fcomplsource"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FComplsource { // acr_compl.FComplsource
+    algo::Tuple   tuple;   //
+private:
+    // func:acr_compl.FComplsource..Ctor
+    inline               FComplsource() __attribute__((nothrow));
+    friend acr_compl::FComplsource& complsource_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FComplsource* complsource_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 complsource_RemoveAll() __attribute__((nothrow));
+    friend void                 complsource_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FCtype - Struct
+<a href="#acr_compl-fctype"></a>
+
+#### acr_compl.FCtype Fields
+<a href="#acr_compl-fctype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FCtype.msghdr|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Base](/txt/ssimdb/dmmeta/ctype.md)|||
+|acr_compl.FCtype.c_field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|acr_compl.FCtype.c_ssimfile|[acr_compl.FSsimfile](/txt/exe/acr_compl/internals.md#acr_compl-fssimfile)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|acr_compl.FCtype.c_argvtype|[acr_compl.FArgvtype](/txt/exe/acr_compl/internals.md#acr_compl-fargvtype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+
+#### Struct FCtype
+<a href="#struct-fctype"></a>
+*Note:* field ``acr_compl.FCtype.msghdr`` has reftype ``base`` so the fields of [dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FCtype { // acr_compl.FCtype
+    algo::Smallstr100       ctype;            // Identifier. must be ns.typename
+    algo::Comment           comment;          //
+    acr_compl::FField**     c_field_elems;    // array of pointers
+    u32                     c_field_n;        // array of pointers
+    u32                     c_field_max;      // capacity of allocated array
+    acr_compl::FSsimfile*   c_ssimfile;       // optional pointer
+    acr_compl::FArgvtype*   c_argvtype;       // optional pointer
+    acr_compl::FCtype*      ind_ctype_next;   // hash next
+    // reftype Ptrary of acr_compl.FCtype.c_field prohibits copy
+    // x-reference on acr_compl.FCtype.c_ssimfile prevents copy
+    // x-reference on acr_compl.FCtype.c_argvtype prevents copy
+    // func:acr_compl.FCtype..AssignOp
+    inline acr_compl::FCtype& operator =(const acr_compl::FCtype &rhs) = delete;
+    // reftype Ptrary of acr_compl.FCtype.c_field prohibits copy
+    // x-reference on acr_compl.FCtype.c_ssimfile prevents copy
+    // x-reference on acr_compl.FCtype.c_argvtype prevents copy
+    // func:acr_compl.FCtype..CopyCtor
+    inline               FCtype(const acr_compl::FCtype &rhs) = delete;
+private:
+    // func:acr_compl.FCtype..Ctor
+    inline               FCtype() __attribute__((nothrow));
+    // func:acr_compl.FCtype..Dtor
+    inline               ~FCtype() __attribute__((nothrow));
+    friend acr_compl::FCtype&   ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FCtype*   ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ctype_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FDb - In-memory database for acr_compl
+<a href="#acr_compl-fdb"></a>
+
+#### acr_compl.FDb Fields
+<a href="#acr_compl-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FDb._db|[acr_compl.FDb](/txt/exe/acr_compl/internals.md#acr_compl-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|acr_compl.FDb.cmdline|[command.acr_compl](/txt/protocol/command/README.md#command-acr_compl)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FDb.point|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FDb.word|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)|||
+|acr_compl.FDb.ctype|[acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.ind_ctype|[acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|acr_compl.FDb.field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.ind_field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|acr_compl.FDb.ssimfile|[acr_compl.FSsimfile](/txt/exe/acr_compl/internals.md#acr_compl-fssimfile)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.ind_ssimfile|[acr_compl.FSsimfile](/txt/exe/acr_compl/internals.md#acr_compl-fssimfile)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|acr_compl.FDb.completion|[acr_compl.FCompletion](/txt/exe/acr_compl/internals.md#acr_compl-fcompletion)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.anonfld|[acr_compl.FAnonfld](/txt/exe/acr_compl/internals.md#acr_compl-fanonfld)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.bh_completion|[acr_compl.FCompletion](/txt/exe/acr_compl/internals.md#acr_compl-fcompletion)|[Bheap](/txt/exe/amc/reftypes.md#bheap)|||
+|acr_compl.FDb.ns|[acr_compl.FNs](/txt/exe/acr_compl/internals.md#acr_compl-fns)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.fconst|[acr_compl.FFconst](/txt/exe/acr_compl/internals.md#acr_compl-ffconst)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.fcmdline|[acr_compl.FFcmdline](/txt/exe/acr_compl/internals.md#acr_compl-ffcmdline)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.fflag|[acr_compl.FFflag](/txt/exe/acr_compl/internals.md#acr_compl-ffflag)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.zd_cmd_field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|acr_compl.FDb.ind_ns|[acr_compl.FNs](/txt/exe/acr_compl/internals.md#acr_compl-fns)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|acr_compl.FDb.ind_cmd_field_name|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|acr_compl.FDb.name|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||option name|
+|acr_compl.FDb.value|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||option value|
+|acr_compl.FDb.need_value|bool|[Val](/txt/exe/amc/reftypes.md#val)||next word is value|
+|acr_compl.FDb.anon_index|i32|[Val](/txt/exe/amc/reftypes.md#val)||current index of anon argument|
+|acr_compl.FDb.exact|bool|[Val](/txt/exe/amc/reftypes.md#val)||whether option name is considered as exact|
+|acr_compl.FDb.anon|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FDb.argvtype|[acr_compl.FArgvtype](/txt/exe/acr_compl/internals.md#acr_compl-fargvtype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.falias|[acr_compl.FFalias](/txt/exe/acr_compl/internals.md#acr_compl-ffalias)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.complsource|[acr_compl.FComplsource](/txt/exe/acr_compl/internals.md#acr_compl-fcomplsource)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|acr_compl.FDb.is_data_dir|bool|[Val](/txt/exe/amc/reftypes.md#val)||Input is a directory of ssimfiles|
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FDb { // acr_compl.FDb: In-memory database for acr_compl
+    command::acr_compl         cmdline;                            //
+    i32                        point;                              //   0
+    algo::cstring              line;                               //
+    algo::cstring*             word_elems;                         // pointer to elements
+    u32                        word_n;                             // number of elements in array
+    u32                        word_max;                           // max. capacity of array before realloc
+    acr_compl::FCtype*         ctype_lary[32];                     // level array
+    i32                        ctype_n;                            // number of elements in array
+    acr_compl::FCtype**        ind_ctype_buckets_elems;            // pointer to bucket array
+    i32                        ind_ctype_buckets_n;                // number of elements in bucket array
+    i32                        ind_ctype_n;                        // number of elements in the hash table
+    acr_compl::FField*         field_lary[32];                     // level array
+    i32                        field_n;                            // number of elements in array
+    acr_compl::FField**        ind_field_buckets_elems;            // pointer to bucket array
+    i32                        ind_field_buckets_n;                // number of elements in bucket array
+    i32                        ind_field_n;                        // number of elements in the hash table
+    acr_compl::FSsimfile*      ssimfile_lary[32];                  // level array
+    i32                        ssimfile_n;                         // number of elements in array
+    acr_compl::FSsimfile**     ind_ssimfile_buckets_elems;         // pointer to bucket array
+    i32                        ind_ssimfile_buckets_n;             // number of elements in bucket array
+    i32                        ind_ssimfile_n;                     // number of elements in the hash table
+    acr_compl::FCompletion*    completion_lary[32];                // level array
+    i32                        completion_n;                       // number of elements in array
+    acr_compl::FAnonfld*       anonfld_lary[32];                   // level array
+    i32                        anonfld_n;                          // number of elements in array
+    acr_compl::FCompletion**   bh_completion_elems;                // binary heap by badness
+    i32                        bh_completion_n;                    // number of elements in the heap
+    i32                        bh_completion_max;                  // max elements in bh_completion_elems
+    acr_compl::FNs*            ns_lary[32];                        // level array
+    i32                        ns_n;                               // number of elements in array
+    acr_compl::FFconst*        fconst_lary[32];                    // level array
+    i32                        fconst_n;                           // number of elements in array
+    acr_compl::FFcmdline*      fcmdline_lary[32];                  // level array
+    i32                        fcmdline_n;                         // number of elements in array
+    acr_compl::FFflag*         fflag_lary[32];                     // level array
+    i32                        fflag_n;                            // number of elements in array
+    acr_compl::FField*         zd_cmd_field_head;                  // zero-terminated doubly linked list
+    i32                        zd_cmd_field_n;                     // zero-terminated doubly linked list
+    acr_compl::FField*         zd_cmd_field_tail;                  // pointer to last element
+    acr_compl::FNs**           ind_ns_buckets_elems;               // pointer to bucket array
+    i32                        ind_ns_buckets_n;                   // number of elements in bucket array
+    i32                        ind_ns_n;                           // number of elements in the hash table
+    acr_compl::FField**        ind_cmd_field_name_buckets_elems;   // pointer to bucket array
+    i32                        ind_cmd_field_name_buckets_n;       // number of elements in bucket array
+    i32                        ind_cmd_field_name_n;               // number of elements in the hash table
+    algo::strptr               name;                               // option name
+    algo::strptr               value;                              // option value
+    bool                       need_value;                         //   false  next word is value
+    i32                        anon_index;                         //   0  current index of anon argument
+    bool                       exact;                              //   false  whether option name is considered as exact
+    bool                       anon;                               //   false
+    acr_compl::FArgvtype*      argvtype_lary[32];                  // level array
+    i32                        argvtype_n;                         // number of elements in array
+    acr_compl::FFalias*        falias_lary[32];                    // level array
+    i32                        falias_n;                           // number of elements in array
+    acr_compl::FComplsource*   complsource_lary[32];               // level array
+    i32                        complsource_n;                      // number of elements in array
+    bool                       is_data_dir;                        //   false  Input is a directory of ssimfiles
+    acr_compl::trace           trace;                              //
+};
+```
+
+#### acr_compl.FFalias - Alias field
+<a href="#acr_compl-ffalias"></a>
+
+#### acr_compl.FFalias Fields
+<a href="#acr_compl-ffalias-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FFalias.base|[dmmeta.Falias](/txt/ssimdb/dmmeta/falias.md)|[Base](/txt/ssimdb/dmmeta/falias.md)|||
+|acr_compl.FFalias.p_srcfield|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|acr_compl.FFalias.p_field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+
+#### Struct FFalias
+<a href="#struct-ffalias"></a>
+*Note:* field ``acr_compl.FFalias.base`` has reftype ``base`` so the fields of [dmmeta.Falias](/txt/ssimdb/dmmeta/falias.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FFalias { // acr_compl.FFalias
+    algo::Smallstr100    field;        //
+    algo::Smallstr100    srcfield;     //
+    algo::Comment        comment;      //
+    acr_compl::FField*   p_srcfield;   // reference to parent row
+    acr_compl::FField*   p_field;      // reference to parent row
+    // x-reference on acr_compl.FFalias.p_srcfield prevents copy
+    // x-reference on acr_compl.FFalias.p_field prevents copy
+    // func:acr_compl.FFalias..AssignOp
+    inline acr_compl::FFalias& operator =(const acr_compl::FFalias &rhs) = delete;
+    // x-reference on acr_compl.FFalias.p_srcfield prevents copy
+    // x-reference on acr_compl.FFalias.p_field prevents copy
+    // func:acr_compl.FFalias..CopyCtor
+    inline               FFalias(const acr_compl::FFalias &rhs) = delete;
+private:
+    // func:acr_compl.FFalias..Ctor
+    inline               FFalias() __attribute__((nothrow));
+    // func:acr_compl.FFalias..Dtor
+    inline               ~FFalias() __attribute__((nothrow));
+    friend acr_compl::FFalias&  falias_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFalias*  falias_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 falias_RemoveAll() __attribute__((nothrow));
+    friend void                 falias_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FFcmdline - Annotate field that holds process command line
+<a href="#acr_compl-ffcmdline"></a>
+
+#### acr_compl.FFcmdline Fields
+<a href="#acr_compl-ffcmdline-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FFcmdline.base|[dmmeta.Fcmdline](/txt/ssimdb/dmmeta/fcmdline.md)|[Base](/txt/ssimdb/dmmeta/fcmdline.md)|||
+|acr_compl.FFcmdline.p_field|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|acr_compl.FFcmdline.p_basecmdline|[acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+
+#### Struct FFcmdline
+<a href="#struct-ffcmdline"></a>
+*Note:* field ``acr_compl.FFcmdline.base`` has reftype ``base`` so the fields of [dmmeta.Fcmdline](/txt/ssimdb/dmmeta/fcmdline.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FFcmdline { // acr_compl.FFcmdline
+    algo::Smallstr100    field;           // Parent field
+    bool                 read;            //   true  Read the command line automatically from main?
+    algo::Smallstr100    basecmdline;     // Optional command line to merge with this one
+    algo::Comment        comment;         //
+    acr_compl::FField*   p_field;         // reference to parent row
+    acr_compl::FField*   p_basecmdline;   // reference to parent row
+    // x-reference on acr_compl.FFcmdline.p_field prevents copy
+    // x-reference on acr_compl.FFcmdline.p_basecmdline prevents copy
+    // func:acr_compl.FFcmdline..AssignOp
+    inline acr_compl::FFcmdline& operator =(const acr_compl::FFcmdline &rhs) = delete;
+    // x-reference on acr_compl.FFcmdline.p_field prevents copy
+    // x-reference on acr_compl.FFcmdline.p_basecmdline prevents copy
+    // func:acr_compl.FFcmdline..CopyCtor
+    inline               FFcmdline(const acr_compl::FFcmdline &rhs) = delete;
+private:
+    // func:acr_compl.FFcmdline..Ctor
+    inline               FFcmdline() __attribute__((nothrow));
+    // func:acr_compl.FFcmdline..Dtor
+    inline               ~FFcmdline() __attribute__((nothrow));
+    friend acr_compl::FFcmdline& fcmdline_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFcmdline* fcmdline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fcmdline_RemoveAll() __attribute__((nothrow));
+    friend void                 fcmdline_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FFconst - Specify enum value (integer + string constant) for a field
+<a href="#acr_compl-ffconst"></a>
+
+#### acr_compl.FFconst Fields
+<a href="#acr_compl-ffconst-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FFconst.base|[dmmeta.Fconst](/txt/ssimdb/dmmeta/fconst.md)|[Base](/txt/ssimdb/dmmeta/fconst.md)|||
+
+#### Struct FFconst
+<a href="#struct-ffconst"></a>
+*Note:* field ``acr_compl.FFconst.base`` has reftype ``base`` so the fields of [dmmeta.Fconst](/txt/ssimdb/dmmeta/fconst.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FFconst { // acr_compl.FFconst
+    algo::Smallstr100   fconst;                  //
+    algo::CppExpr       value;                   //
+    algo::Comment       comment;                 //
+    bool                field_c_fconst_in_ary;   //   false  membership flag
+    // func:acr_compl.FFconst..AssignOp
+    inline acr_compl::FFconst& operator =(const acr_compl::FFconst &rhs) = delete;
+    // func:acr_compl.FFconst..CopyCtor
+    inline               FFconst(const acr_compl::FFconst &rhs) = delete;
+private:
+    // func:acr_compl.FFconst..Ctor
+    inline               FFconst() __attribute__((nothrow));
+    // func:acr_compl.FFconst..Dtor
+    inline               ~FFconst() __attribute__((nothrow));
+    friend acr_compl::FFconst&  fconst_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFconst*  fconst_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fconst_RemoveAll() __attribute__((nothrow));
+    friend void                 fconst_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FFflag - Options for command-line flags
+<a href="#acr_compl-ffflag"></a>
+
+#### acr_compl.FFflag Fields
+<a href="#acr_compl-ffflag-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FFflag.base|[dmmeta.Fflag](/txt/ssimdb/dmmeta/fflag.md)|[Base](/txt/ssimdb/dmmeta/fflag.md)|||
+
+#### Struct FFflag
+<a href="#struct-ffflag"></a>
+*Note:* field ``acr_compl.FFflag.base`` has reftype ``base`` so the fields of [dmmeta.Fflag](/txt/ssimdb/dmmeta/fflag.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FFflag { // acr_compl.FFflag
+    algo::Smallstr100   field;        //
+    bool                cumulative;   //   false  Accumulate on every read
+    algo::cstring       emptyval;     //   ""
+    algo::Comment       comment;      //
+    // func:acr_compl.FFflag..AssignOp
+    inline acr_compl::FFflag& operator =(const acr_compl::FFflag &rhs) = delete;
+    // func:acr_compl.FFflag..CopyCtor
+    inline               FFflag(const acr_compl::FFflag &rhs) = delete;
+private:
+    // func:acr_compl.FFflag..Ctor
+    inline               FFflag() __attribute__((nothrow));
+    // func:acr_compl.FFflag..Dtor
+    inline               ~FFflag() __attribute__((nothrow));
+    friend acr_compl::FFflag&   fflag_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FFflag*   fflag_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fflag_RemoveAll() __attribute__((nothrow));
+    friend void                 fflag_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FField - Specify field of a struct
+<a href="#acr_compl-ffield"></a>
+
+#### acr_compl.FField Fields
+<a href="#acr_compl-ffield-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FField.msghdr|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Base](/txt/ssimdb/dmmeta/field.md)|||
+|acr_compl.FField.p_arg|[acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|acr_compl.FField.c_anonfld|[acr_compl.FAnonfld](/txt/exe/acr_compl/internals.md#acr_compl-fanonfld)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|acr_compl.FField.c_fconst|[acr_compl.FFconst](/txt/exe/acr_compl/internals.md#acr_compl-ffconst)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|acr_compl.FField.seen|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|acr_compl.FField.c_fflag|[acr_compl.FFflag](/txt/exe/acr_compl/internals.md#acr_compl-ffflag)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|acr_compl.FField.p_ctype|[acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|acr_compl.FField.c_falias|[acr_compl.FFalias](/txt/exe/acr_compl/internals.md#acr_compl-ffalias)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|acr_compl.FField.c_falias_srcfield|[acr_compl.FFalias](/txt/exe/acr_compl/internals.md#acr_compl-ffalias)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+
+#### Struct FField
+<a href="#struct-ffield"></a>
+*Note:* field ``acr_compl.FField.msghdr`` has reftype ``base`` so the fields of [dmmeta.Field](/txt/ssimdb/dmmeta/field.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FField { // acr_compl.FField
+    acr_compl::FField*     ind_field_next;            // hash next
+    acr_compl::FField*     zd_cmd_field_next;         // zslist link; -1 means not-in-list
+    acr_compl::FField*     zd_cmd_field_prev;         // previous element
+    acr_compl::FField*     ind_cmd_field_name_next;   // hash next
+    algo::Smallstr100      field;                     // Primary key, as ctype.name
+    algo::Smallstr100      arg;                       // Type of field
+    algo::Smallstr50       reftype;                   //   "Val"  Type constructor
+    algo::CppExpr          dflt;                      // Default value (c++ expression)
+    algo::Comment          comment;                   //
+    acr_compl::FCtype*     p_arg;                     // reference to parent row
+    acr_compl::FAnonfld*   c_anonfld;                 // optional pointer
+    acr_compl::FFconst**   c_fconst_elems;            // array of pointers
+    u32                    c_fconst_n;                // array of pointers
+    u32                    c_fconst_max;              // capacity of allocated array
+    bool                   seen;                      //   false
+    acr_compl::FFflag*     c_fflag;                   // optional pointer
+    acr_compl::FCtype*     p_ctype;                   // reference to parent row
+    acr_compl::FFalias*    c_falias;                  // optional pointer
+    acr_compl::FFalias**   c_falias_srcfield_elems;   // array of pointers
+    u32                    c_falias_srcfield_n;       // array of pointers
+    u32                    c_falias_srcfield_max;     // capacity of allocated array
+    bool                   ctype_c_field_in_ary;      //   false  membership flag
+    // x-reference on acr_compl.FField.p_arg prevents copy
+    // x-reference on acr_compl.FField.c_anonfld prevents copy
+    // reftype Ptrary of acr_compl.FField.c_fconst prohibits copy
+    // x-reference on acr_compl.FField.c_fflag prevents copy
+    // x-reference on acr_compl.FField.p_ctype prevents copy
+    // x-reference on acr_compl.FField.c_falias prevents copy
+    // reftype Ptrary of acr_compl.FField.c_falias_srcfield prohibits copy
+    // func:acr_compl.FField..AssignOp
+    acr_compl::FField&   operator =(const acr_compl::FField &rhs) = delete;
+    // x-reference on acr_compl.FField.p_arg prevents copy
+    // x-reference on acr_compl.FField.c_anonfld prevents copy
+    // reftype Ptrary of acr_compl.FField.c_fconst prohibits copy
+    // x-reference on acr_compl.FField.c_fflag prevents copy
+    // x-reference on acr_compl.FField.p_ctype prevents copy
+    // x-reference on acr_compl.FField.c_falias prevents copy
+    // reftype Ptrary of acr_compl.FField.c_falias_srcfield prohibits copy
+    // func:acr_compl.FField..CopyCtor
+    FField(const acr_compl::FField &rhs) = delete;
+private:
+    // func:acr_compl.FField..Ctor
+    inline               FField() __attribute__((nothrow));
+    // func:acr_compl.FField..Dtor
+    inline               ~FField() __attribute__((nothrow));
+    friend acr_compl::FField&   field_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FField*   field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 field_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FNs - Namespace (for in-memory database, protocol, etc)
+<a href="#acr_compl-fns"></a>
+
+#### acr_compl.FNs Fields
+<a href="#acr_compl-fns-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FNs.base|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[Base](/txt/ssimdb/dmmeta/ns.md)|||
+|acr_compl.FNs.c_fcmdline|[acr_compl.FFcmdline](/txt/exe/acr_compl/internals.md#acr_compl-ffcmdline)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+
+#### Struct FNs
+<a href="#struct-fns"></a>
+*Note:* field ``acr_compl.FNs.base`` has reftype ``base`` so the fields of [dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FNs { // acr_compl.FNs
+    acr_compl::FNs*         ind_ns_next;   // hash next
+    algo::Smallstr16        ns;            // Namespace name (primary key)
+    algo::Smallstr50        nstype;        // Namespace type
+    algo::Smallstr50        license;       // Associated license
+    algo::Comment           comment;       //
+    acr_compl::FFcmdline*   c_fcmdline;    // optional pointer
+    // x-reference on acr_compl.FNs.c_fcmdline prevents copy
+    // func:acr_compl.FNs..AssignOp
+    inline acr_compl::FNs& operator =(const acr_compl::FNs &rhs) = delete;
+    // x-reference on acr_compl.FNs.c_fcmdline prevents copy
+    // func:acr_compl.FNs..CopyCtor
+    inline               FNs(const acr_compl::FNs &rhs) = delete;
+private:
+    // func:acr_compl.FNs..Ctor
+    inline               FNs() __attribute__((nothrow));
+    // func:acr_compl.FNs..Dtor
+    inline               ~FNs() __attribute__((nothrow));
+    friend acr_compl::FNs&      ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FNs*      ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ns_RemoveAll() __attribute__((nothrow));
+    friend void                 ns_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.FSsimfile - File with ssim tuples
+<a href="#acr_compl-fssimfile"></a>
+
+#### acr_compl.FSsimfile Fields
+<a href="#acr_compl-fssimfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.FSsimfile.msghdr|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Base](/txt/ssimdb/dmmeta/ssimfile.md)|||
+|acr_compl.FSsimfile.p_ctype|[acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+
+#### Struct FSsimfile
+<a href="#struct-fssimfile"></a>
+*Note:* field ``acr_compl.FSsimfile.msghdr`` has reftype ``base`` so the fields of [dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct FSsimfile { // acr_compl.FSsimfile
+    acr_compl::FSsimfile*   ind_ssimfile_next;   // hash next
+    algo::Smallstr50        ssimfile;            //
+    algo::Smallstr100       ctype;               //
+    acr_compl::FCtype*      p_ctype;             // reference to parent row
+    // x-reference on acr_compl.FSsimfile.p_ctype prevents copy
+    // func:acr_compl.FSsimfile..AssignOp
+    inline acr_compl::FSsimfile& operator =(const acr_compl::FSsimfile &rhs) = delete;
+    // x-reference on acr_compl.FSsimfile.p_ctype prevents copy
+    // func:acr_compl.FSsimfile..CopyCtor
+    inline               FSsimfile(const acr_compl::FSsimfile &rhs) = delete;
+private:
+    // func:acr_compl.FSsimfile..Ctor
+    inline               FSsimfile() __attribute__((nothrow));
+    // func:acr_compl.FSsimfile..Dtor
+    inline               ~FSsimfile() __attribute__((nothrow));
+    friend acr_compl::FSsimfile& ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_compl::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### acr_compl.Shellqtype - 
+<a href="#acr_compl-shellqtype"></a>
+
+#### acr_compl.Shellqtype Fields
+<a href="#acr_compl-shellqtype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|acr_compl.Shellqtype.type|u8|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct Shellqtype
+<a href="#struct-shellqtype"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_compl_gen.h](/include/gen/acr_compl_gen.h)
+```
+struct Shellqtype { // acr_compl.Shellqtype
+    u8   type;   //   0
+    // func:acr_compl.Shellqtype..Ctor
+    inline               Shellqtype() __attribute__((nothrow));
+    // func:acr_compl.Shellqtype..FieldwiseCtor
+    explicit inline               Shellqtype(u8 in_type) __attribute__((nothrow));
+    // func:acr_compl.Shellqtype..EnumCtor
+    inline               Shellqtype(acr_compl_ShellqtypeEnum arg) __attribute__((nothrow));
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
+
+### Tests
+<a href="#tests"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Tests -->
+The following component tests are defined for `acr_compl`.
+These can be executed with `atf_comp <comptest> -v`
+|Comptest|Comment|
+|---|---|
+|[acr_compl.A01a](/test/atf_comp/acr_compl.A01a)||
+|[acr_compl.A01b](/test/atf_comp/acr_compl.A01b)||
+|[acr_compl.A01c](/test/atf_comp/acr_compl.A01c)||
+|[acr_compl.A02a](/test/atf_comp/acr_compl.A02a)||
+|[acr_compl.A02b](/test/atf_comp/acr_compl.A02b)||
+|[acr_compl.A02c](/test/atf_comp/acr_compl.A02c)||
+|[acr_compl.A03a](/test/atf_comp/acr_compl.A03a)||
+|[acr_compl.A03b](/test/atf_comp/acr_compl.A03b)||
+|[acr_compl.A03c](/test/atf_comp/acr_compl.A03c)||
+|[acr_compl.A04a](/test/atf_comp/acr_compl.A04a)||
+|[acr_compl.A04b](/test/atf_comp/acr_compl.A04b)||
+|[acr_compl.A04c](/test/atf_comp/acr_compl.A04c)||
+|[acr_compl.A05a](/test/atf_comp/acr_compl.A05a)||
+|[acr_compl.A05b](/test/atf_comp/acr_compl.A05b)||
+|[acr_compl.A05c](/test/atf_comp/acr_compl.A05c)||
+|[acr_compl.A06a](/test/atf_comp/acr_compl.A06a)||
+|[acr_compl.A06b](/test/atf_comp/acr_compl.A06b)||
+|[acr_compl.A06c](/test/atf_comp/acr_compl.A06c)||
+|[acr_compl.A07a](/test/atf_comp/acr_compl.A07a)||
+|[acr_compl.A07b](/test/atf_comp/acr_compl.A07b)||
+|[acr_compl.A07c](/test/atf_comp/acr_compl.A07c)||
+|[acr_compl.Acr01](/test/atf_comp/acr_compl.Acr01)||
+|[acr_compl.Acr02](/test/atf_comp/acr_compl.Acr02)||
+|[acr_compl.Acr03](/test/atf_comp/acr_compl.Acr03)||
+|[acr_compl.Acr04](/test/atf_comp/acr_compl.Acr04)||
+|[acr_compl.Acr05](/test/atf_comp/acr_compl.Acr05)||
+|[acr_compl.Acr06](/test/atf_comp/acr_compl.Acr06)||
+|[acr_compl.Acr07](/test/atf_comp/acr_compl.Acr07)||
+|[acr_compl.Acr08](/test/atf_comp/acr_compl.Acr08)||
+|[acr_compl.Acr09](/test/atf_comp/acr_compl.Acr09)||
+|[acr_compl.Acr10](/test/atf_comp/acr_compl.Acr10)||
+|[acr_compl.Acr11](/test/atf_comp/acr_compl.Acr11)||
+|[acr_compl.Acr12](/test/atf_comp/acr_compl.Acr12)||
+|[acr_compl.Acr13](/test/atf_comp/acr_compl.Acr13)||
+|[acr_compl.BadExe](/test/atf_comp/acr_compl.BadExe)||
+|[acr_compl.BadOpt](/test/atf_comp/acr_compl.BadOpt)||
+|[acr_compl.BadOptColon](/test/atf_comp/acr_compl.BadOptColon)||
+|[acr_compl.BadOptColonSpace](/test/atf_comp/acr_compl.BadOptColonSpace)||
+|[acr_compl.BadOptSpace](/test/atf_comp/acr_compl.BadOptSpace)||
+|[acr_compl.Bare](/test/atf_comp/acr_compl.Bare)||
+|[acr_compl.DblColon](/test/atf_comp/acr_compl.DblColon)||
+|[acr_compl.DblColonList](/test/atf_comp/acr_compl.DblColonList)||
+|[acr_compl.DblSpace](/test/atf_comp/acr_compl.DblSpace)||
+|[acr_compl.DblSpaceList](/test/atf_comp/acr_compl.DblSpaceList)||
+|[acr_compl.EnumCtypeColon](/test/atf_comp/acr_compl.EnumCtypeColon)||
+|[acr_compl.EnumCtypeColonList](/test/atf_comp/acr_compl.EnumCtypeColonList)||
+|[acr_compl.EnumCtypeSpace](/test/atf_comp/acr_compl.EnumCtypeSpace)||
+|[acr_compl.EnumCtypeSpaceList](/test/atf_comp/acr_compl.EnumCtypeSpaceList)||
+|[acr_compl.EnumFieldColon](/test/atf_comp/acr_compl.EnumFieldColon)||
+|[acr_compl.EnumFieldColonList](/test/atf_comp/acr_compl.EnumFieldColonList)||
+|[acr_compl.EnumFieldSpace](/test/atf_comp/acr_compl.EnumFieldSpace)||
+|[acr_compl.EnumFieldSpaceList](/test/atf_comp/acr_compl.EnumFieldSpaceList)||
+|[acr_compl.FlagColon](/test/atf_comp/acr_compl.FlagColon)||
+|[acr_compl.FlagColonList](/test/atf_comp/acr_compl.FlagColonList)||
+|[acr_compl.FlagSpace](/test/atf_comp/acr_compl.FlagSpace)||
+|[acr_compl.FlagSpaceList](/test/atf_comp/acr_compl.FlagSpaceList)||
+|[acr_compl.Install](/test/atf_comp/acr_compl.Install)||
+|[acr_compl.NumColon](/test/atf_comp/acr_compl.NumColon)||
+|[acr_compl.NumColonList](/test/atf_comp/acr_compl.NumColonList)||
+|[acr_compl.NumSpace](/test/atf_comp/acr_compl.NumSpace)||
+|[acr_compl.NumSpaceList](/test/atf_comp/acr_compl.NumSpaceList)||
+|[acr_compl.OptCumul](/test/atf_comp/acr_compl.OptCumul)||
+|[acr_compl.OptCumulAlias](/test/atf_comp/acr_compl.OptCumulAlias)||
+|[acr_compl.OptD](/test/atf_comp/acr_compl.OptD)||
+|[acr_compl.OptDList](/test/atf_comp/acr_compl.OptDList)||
+|[acr_compl.OptH](/test/atf_comp/acr_compl.OptH)||
+|[acr_compl.OptHList](/test/atf_comp/acr_compl.OptHList)||
+|[acr_compl.OptNonCumul](/test/atf_comp/acr_compl.OptNonCumul)||
+|[acr_compl.OptNonCumulAlias](/test/atf_comp/acr_compl.OptNonCumulAlias)||
+|[acr_compl.OptPkeyColon](/test/atf_comp/acr_compl.OptPkeyColon)||
+|[acr_compl.OptPkeyColonFull](/test/atf_comp/acr_compl.OptPkeyColonFull)||
+|[acr_compl.OptPkeyColonFullList](/test/atf_comp/acr_compl.OptPkeyColonFullList)||
+|[acr_compl.OptPkeyColonList](/test/atf_comp/acr_compl.OptPkeyColonList)||
+|[acr_compl.OptPkeyColonPrefix](/test/atf_comp/acr_compl.OptPkeyColonPrefix)||
+|[acr_compl.OptPkeyColonPrefixList](/test/atf_comp/acr_compl.OptPkeyColonPrefixList)||
+|[acr_compl.OptPkeyColonSubstr](/test/atf_comp/acr_compl.OptPkeyColonSubstr)||
+|[acr_compl.OptPkeyColonSubstrList](/test/atf_comp/acr_compl.OptPkeyColonSubstrList)||
+|[acr_compl.OptPkeySpace](/test/atf_comp/acr_compl.OptPkeySpace)||
+|[acr_compl.OptPkeySpaceFull](/test/atf_comp/acr_compl.OptPkeySpaceFull)||
+|[acr_compl.OptPkeySpaceFullList](/test/atf_comp/acr_compl.OptPkeySpaceFullList)||
+|[acr_compl.OptPkeySpaceList](/test/atf_comp/acr_compl.OptPkeySpaceList)||
+|[acr_compl.OptPkeySpacePrefix](/test/atf_comp/acr_compl.OptPkeySpacePrefix)||
+|[acr_compl.OptPkeySpacePrefixList](/test/atf_comp/acr_compl.OptPkeySpacePrefixList)||
+|[acr_compl.OptPkeySpaceSubstr](/test/atf_comp/acr_compl.OptPkeySpaceSubstr)||
+|[acr_compl.OptPkeySpaceSubstrList](/test/atf_comp/acr_compl.OptPkeySpaceSubstrList)||
+|[acr_compl.OptRegxColon](/test/atf_comp/acr_compl.OptRegxColon)||
+|[acr_compl.OptRegxColonFull](/test/atf_comp/acr_compl.OptRegxColonFull)||
+|[acr_compl.OptRegxColonFullList](/test/atf_comp/acr_compl.OptRegxColonFullList)||
+|[acr_compl.OptRegxColonList](/test/atf_comp/acr_compl.OptRegxColonList)||
+|[acr_compl.OptRegxColonPrefix](/test/atf_comp/acr_compl.OptRegxColonPrefix)||
+|[acr_compl.OptRegxColonPrefixList](/test/atf_comp/acr_compl.OptRegxColonPrefixList)||
+|[acr_compl.OptRegxColonSubstr](/test/atf_comp/acr_compl.OptRegxColonSubstr)||
+|[acr_compl.OptRegxColonSubstrList](/test/atf_comp/acr_compl.OptRegxColonSubstrList)||
+|[acr_compl.OptRegxSpace](/test/atf_comp/acr_compl.OptRegxSpace)||
+|[acr_compl.OptRegxSpaceFull](/test/atf_comp/acr_compl.OptRegxSpaceFull)||
+|[acr_compl.OptRegxSpaceFullList](/test/atf_comp/acr_compl.OptRegxSpaceFullList)||
+|[acr_compl.OptRegxSpaceList](/test/atf_comp/acr_compl.OptRegxSpaceList)||
+|[acr_compl.OptRegxSpacePrefix](/test/atf_comp/acr_compl.OptRegxSpacePrefix)||
+|[acr_compl.OptRegxSpacePrefixList](/test/atf_comp/acr_compl.OptRegxSpacePrefixList)||
+|[acr_compl.OptRegxSpaceSubstr](/test/atf_comp/acr_compl.OptRegxSpaceSubstr)||
+|[acr_compl.OptRegxSpaceSubstrList](/test/atf_comp/acr_compl.OptRegxSpaceSubstrList)||
+|[acr_compl.OptSig](/test/atf_comp/acr_compl.OptSig)||
+|[acr_compl.OptSigList](/test/atf_comp/acr_compl.OptSigList)||
+|[acr_compl.OptV](/test/atf_comp/acr_compl.OptV)||
+|[acr_compl.OptVList](/test/atf_comp/acr_compl.OptVList)||
+|[acr_compl.R01a](/test/atf_comp/acr_compl.R01a)||
+|[acr_compl.R01b](/test/atf_comp/acr_compl.R01b)||
+|[acr_compl.R01c](/test/atf_comp/acr_compl.R01c)||
+|[acr_compl.R01d](/test/atf_comp/acr_compl.R01d)||
+|[acr_compl.R02a](/test/atf_comp/acr_compl.R02a)||
+|[acr_compl.R02b](/test/atf_comp/acr_compl.R02b)||
+|[acr_compl.R02c](/test/atf_comp/acr_compl.R02c)||
+|[acr_compl.R02d](/test/atf_comp/acr_compl.R02d)||
+|[acr_compl.StrColon](/test/atf_comp/acr_compl.StrColon)||
+|[acr_compl.StrColonList](/test/atf_comp/acr_compl.StrColonList)||
+|[acr_compl.StrSpace](/test/atf_comp/acr_compl.StrSpace)||
+|[acr_compl.StrSpaceList](/test/atf_comp/acr_compl.StrSpaceList)||
+|[acr_compl.T01](/test/atf_comp/acr_compl.T01)||
+|[acr_compl.T02](/test/atf_comp/acr_compl.T02)||
+|[acr_compl.T03](/test/atf_comp/acr_compl.T03)||
+|[acr_compl.T04](/test/atf_comp/acr_compl.T04)||
+|[acr_compl.T05](/test/atf_comp/acr_compl.T05)||
+|[acr_compl.T06](/test/atf_comp/acr_compl.T06)||
+|[acr_compl.T07](/test/atf_comp/acr_compl.T07)||
+|[acr_compl.T08](/test/atf_comp/acr_compl.T08)||
+|[acr_compl.T09](/test/atf_comp/acr_compl.T09)||
+|[acr_compl.T10](/test/atf_comp/acr_compl.T10)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Tests -->
+
