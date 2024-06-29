@@ -44,17 +44,34 @@ typedef unsigned int       u32;
 typedef          float     f32;
 typedef          double    f64;
 typedef     long double    f80;
-#ifdef WIN32
+#if defined(WIN32)
 typedef __int64            i64;
 typedef i64                ssize_t;
 typedef unsigned __int64   u64;
 #else
+#if defined(__LP64__) || defined(_LP64) || defined(__x86_64__)
 typedef unsigned long      u64;
 typedef   signed long      i64;
+#else
+typedef unsigned long long u64;
+typedef   signed long long i64;
+#endif
 #endif
 typedef i64                int_ptr;
 typedef u64                uint_ptr;
 typedef void               *thread_ret_t;
+
+
+template<bool> struct SizeAssert;
+template<> struct SizeAssert<true> { static const bool value = true; };
+#define SIZE_ASSERT(type, expected_size) \
+    static_assert(SizeAssert<sizeof(type) == expected_size>::value, #type " is not " #expected_size " bytes")
+
+// these can be called for all the other types too, but only concerned about 64 bit for now
+// because some data models use different sizes for long
+SIZE_ASSERT(i64, 8);
+SIZE_ASSERT(u64, 8); 
+
 
 #if defined(__MACH__)
 typedef u64 off64_t;
