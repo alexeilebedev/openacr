@@ -58,7 +58,7 @@ int fork() {
     // https://www.microsoft.com/en-us/research/uploads/prod/2019/04/fork-hotos19.pdf
     // use posix_spawn instead
     prerr("fork(): not implemented\n");
-    return -1;
+    return -1;    
 }
 
 int alarm(int sec) {
@@ -301,14 +301,20 @@ DIR *opendir(const char *path) {
         _path << "*";
     }
     dir->handle = FindFirstFile(Zeroterm(_path),&dir->find_data);
+    if (dir->handle == INVALID_HANDLE_VALUE) {
+        delete dir;
+        return nullptr;
+    }
     dir->iter=0;
     dir->eof=dir->handle == INVALID_HANDLE_VALUE;
+    //dir->path = _strdup(path);
     return dir;
 }
 
 void closedir(DIR *dir) {
     if (dir) {
         FindClose(dir->handle);
+        //free(dir->path);
     }
     delete dir;
 }
@@ -560,11 +566,45 @@ int munmap(void *base_addr, i64 size) {
 
 typedef unsigned long (*WinThreadFunc)(void*);
 
+typedef struct {
+    
+} ThreadParams;
+
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg) {
-    (void)attr;
-    HANDLE h = CreateThread(NULL,8192/*staack*/,WinThreadFunc(func),arg,0,NULL);
-    *thread = pthread_t(h);
-    return h==INVALID_HANDLE_VALUE ? -1 : 0;
+    // (void)attr;
+    // HANDLE h = CreateThread(NULL,8192/*staack*/,WinThreadFunc(func),arg,0,NULL);
+    // *thread = pthread_t(h);
+    // return h==INVALID_HANDLE_VALUE ? -1 : 0;
+
+    unsigned int stack_size = 0;
+    DWORD creation_flags = 0;
+    int detach_state = 0;
+
+    if (attr) {
+        stack_size = (unsigned int) attr->stack_size;
+        creation_flags = attr->creation_flags;
+        detach_state = attr->detach_state;
+    }
+
+    struct ThreadStartInfo* info = malloc(sizeof(struct ThreadStartInfo));
+    if (!info) {
+        errno = ENOMEM;
+        return -1;
+    }
+    info->start_routine = func;
+    
+}
+
+int pthread_join(pthread_t thread, void** ret) {
+    DWORD result = WaitForSingleObject(thread, INFINITE);
+    if (result == WAIT_OBJECT_0) {
+        if (ret) {
+            GetExitCodeThread(thread, (LPDWORD)ret);
+        }
+        CloseHandle(thread);
+        return 0;
+    }
+    return -1;
 }
 
 pthread_t pthread_self() {

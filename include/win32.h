@@ -53,6 +53,7 @@ extern "C" {
     };
     struct dirent {
         char d_name[MAX_PATH];
+        unsigned char d_type;
     };
     struct DIR {
         WIN32_FIND_DATA find_data;
@@ -60,14 +61,34 @@ extern "C" {
         int iter;
         bool eof;
         struct dirent dirent;
+        //char* path;
     };
     typedef HANDLE pthread_t;
     struct pthread_attr_t {
+        DWORD stack_size     = 0;
+        DWORD creation_flags = 0;
+        int detach_state     = 0;
     };
     typedef void* (*ThreadFunc)(void*);
 };
+
+/*posix style thread implementations*/
+typedef CRITICAL_SECTION pthread_mutex_t;
+#define PTHREAD_CREATE_JOINABLE 0
+#define PTHREAD_CREATE_DETACHED 1
+
+typedef struct {
+    ThreadFunc func;
+    void* arg;
+} ThreadStartInfo;
+
+static unsigned __
+
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg);
 pthread_t pthread_self();
+int pthread_join(pthread_t thread, void** ret);
+
+
 typedef int pid_t;
 int fork();
 int alarm(int sec);
