@@ -34,21 +34,21 @@
 //#pragma endinclude
 namespace ams { // gen:ns_print_proto
     // func:ams.StreamFlags.write.ReadStrptrMaybe
-    static bool          write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.read.ReadStrptrMaybe
-    static bool          read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.nonblock.ReadStrptrMaybe
-    static bool          nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_read.ReadStrptrMaybe
-    static bool          trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_write.ReadStrptrMaybe
-    static bool          trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.write_err.ReadStrptrMaybe
-    static bool          write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_text.ReadStrptrMaybe
-    static bool          trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ams.AlarmSyncMsg.base.CopyOut
@@ -251,9 +251,14 @@ const char* ams::value_ToCstr(const ams::StreamType& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_StreamType_0              : ret = "0";  break;
+        case ams_StreamType_ack            : ret = "ack";  break;
         case ams_StreamType_ctl            : ret = "ctl";  break;
+        case ams_StreamType_fetch          : ret = "fetch";  break;
         case ams_StreamType_io             : ret = "io";  break;
         case ams_StreamType_out            : ret = "out";  break;
+        case ams_StreamType_prod           : ret = "prod";  break;
+        case ams_StreamType_seq            : ret = "seq";  break;
+        case ams_StreamType_sup            : ret = "sup";  break;
         case ams_StreamType_trace          : ret = "trace";  break;
     }
     return ret;
@@ -296,17 +301,37 @@ bool ams::value_SetStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','c','k'): {
+                    value_SetEnum(parent,ams_StreamType_ack); ret = true; break;
+                }
                 case LE_STR3('c','t','l'): {
                     value_SetEnum(parent,ams_StreamType_ctl); ret = true; break;
                 }
                 case LE_STR3('o','u','t'): {
                     value_SetEnum(parent,ams_StreamType_out); ret = true; break;
                 }
+                case LE_STR3('s','e','q'): {
+                    value_SetEnum(parent,ams_StreamType_seq); ret = true; break;
+                }
+                case LE_STR3('s','u','p'): {
+                    value_SetEnum(parent,ams_StreamType_sup); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('p','r','o','d'): {
+                    value_SetEnum(parent,ams_StreamType_prod); ret = true; break;
+                }
             }
             break;
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('f','e','t','c','h'): {
+                    value_SetEnum(parent,ams_StreamType_fetch); ret = true; break;
+                }
                 case LE_STR5('t','r','a','c','e'): {
                     value_SetEnum(parent,ams_StreamType_trace); ret = true; break;
                 }

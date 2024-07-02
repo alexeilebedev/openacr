@@ -87,9 +87,9 @@ namespace atf_cmdline { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_cmdline.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:atf_cmdline...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_cmdline.trace..Print
@@ -407,11 +407,6 @@ inline static i32 atf_cmdline::trace_N() {
 void atf_cmdline::FDb_Init() {
 
     atf_cmdline::InitReflection();
-}
-
-// --- atf_cmdline.FDb..Uninit
-void atf_cmdline::FDb_Uninit() {
-    atf_cmdline::FDb &row = _db; (void)row;
 }
 
 // --- atf_cmdline.FieldId.value.ToCstr

@@ -82,6 +82,7 @@ namespace src_lim { // gen:ns_print_struct
 
 // --- src_lim.FBadline
 // create: src_lim.FDb.badline (Lary)
+// global access: badline (Lary, by rowid)
 struct FBadline { // src_lim.FBadline
     algo::Smallstr50    badline;         //
     algo::Smallstr200   expr;            //
@@ -91,15 +92,12 @@ struct FBadline { // src_lim.FBadline
     algo_lib::Regx      _targsrc_regx;   //
     bool                select;          //   false
 private:
+    // func:src_lim.FBadline..Ctor
+    inline               FBadline() __attribute__((nothrow));
     friend src_lim::FBadline&   badline_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FBadline*   badline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 badline_RemoveAll() __attribute__((nothrow));
     friend void                 badline_RemoveLast() __attribute__((nothrow));
-    FBadline();
-    // value field src_lim.FBadline.regx is not copiable
-    // value field src_lim.FBadline._targsrc_regx is not copiable
-    FBadline(const FBadline&){ /*disallow copy constructor */}
-    void operator =(const FBadline&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -111,12 +109,13 @@ void                 badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) __
 
 // Set all fields to initial values.
 // func:src_lim.FBadline..Init
-void                 FBadline_Init(src_lim::FBadline& badline);
+inline void          FBadline_Init(src_lim::FBadline& badline);
 
 // --- src_lim.trace
 #pragma pack(push,1)
 struct trace { // src_lim.trace
-    trace();
+    // func:src_lim.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -162,22 +161,22 @@ src_lim::FInclude*   include_InsertMaybe(const dev::Include &value) __attribute_
 void*                include_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:src_lim.FDb.include.EmptyQ
-bool                 include_EmptyQ() __attribute__((nothrow, pure));
+inline bool          include_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:src_lim.FDb.include.Find
-src_lim::FInclude*   include_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FInclude* include_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:src_lim.FDb.include.Last
-src_lim::FInclude*   include_Last() __attribute__((nothrow, pure));
+inline src_lim::FInclude* include_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.include.N
-i32                  include_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           include_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.include.RemoveLast
 void                 include_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:src_lim.FDb.include.qFind
-src_lim::FInclude&   include_qFind(u64 t) __attribute__((nothrow, pure));
+inline src_lim::FInclude& include_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb.include.XrefMaybe
@@ -199,22 +198,22 @@ src_lim::FLinelim*   linelim_InsertMaybe(const dev::Linelim &value) __attribute_
 void*                linelim_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:src_lim.FDb.linelim.EmptyQ
-bool                 linelim_EmptyQ() __attribute__((nothrow, pure));
+inline bool          linelim_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:src_lim.FDb.linelim.Find
-src_lim::FLinelim*   linelim_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FLinelim* linelim_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:src_lim.FDb.linelim.Last
-src_lim::FLinelim*   linelim_Last() __attribute__((nothrow, pure));
+inline src_lim::FLinelim* linelim_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.linelim.N
-i32                  linelim_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           linelim_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.linelim.RemoveLast
 void                 linelim_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:src_lim.FDb.linelim.qFind
-src_lim::FLinelim&   linelim_qFind(u64 t) __attribute__((nothrow, pure));
+inline src_lim::FLinelim& linelim_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb.linelim.XrefMaybe
@@ -281,22 +280,22 @@ src_lim::FTargsrc*   targsrc_InsertMaybe(const dev::Targsrc &value) __attribute_
 void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:src_lim.FDb.targsrc.EmptyQ
-bool                 targsrc_EmptyQ() __attribute__((nothrow, pure));
+inline bool          targsrc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:src_lim.FDb.targsrc.Find
-src_lim::FTargsrc*   targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:src_lim.FDb.targsrc.Last
-src_lim::FTargsrc*   targsrc_Last() __attribute__((nothrow, pure));
+inline src_lim::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.targsrc.N
-i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:src_lim.FDb.targsrc.qFind
-src_lim::FTargsrc&   targsrc_qFind(u64 t) __attribute__((nothrow, pure));
+inline src_lim::FTargsrc& targsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb.targsrc.XrefMaybe
@@ -318,22 +317,22 @@ src_lim::FGitfile*   gitfile_InsertMaybe(const dev::Gitfile &value) __attribute_
 void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:src_lim.FDb.gitfile.EmptyQ
-bool                 gitfile_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gitfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:src_lim.FDb.gitfile.Find
-src_lim::FGitfile*   gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:src_lim.FDb.gitfile.Last
-src_lim::FGitfile*   gitfile_Last() __attribute__((nothrow, pure));
+inline src_lim::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.gitfile.N
-i32                  gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.gitfile.RemoveLast
 void                 gitfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:src_lim.FDb.gitfile.qFind
-src_lim::FGitfile&   gitfile_qFind(u64 t) __attribute__((nothrow, pure));
+inline src_lim::FGitfile& gitfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb.gitfile.XrefMaybe
@@ -341,7 +340,7 @@ bool                 gitfile_XrefMaybe(src_lim::FGitfile &row);
 
 // Return true if hash is empty
 // func:src_lim.FDb.ind_gitfile.EmptyQ
-bool                 ind_gitfile_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gitfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:src_lim.FDb.ind_gitfile.Find
 src_lim::FGitfile*   ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -353,7 +352,7 @@ src_lim::FGitfile&   ind_gitfile_FindX(const algo::strptr& key);
 src_lim::FGitfile&   ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:src_lim.FDb.ind_gitfile.N
-i32                  ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:src_lim.FDb.ind_gitfile.InsertMaybe
 bool                 ind_gitfile_InsertMaybe(src_lim::FGitfile& row) __attribute__((nothrow));
@@ -380,16 +379,16 @@ src_lim::FBadline*   badline_InsertMaybe(const dev::Badline &value) __attribute_
 void*                badline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:src_lim.FDb.badline.EmptyQ
-bool                 badline_EmptyQ() __attribute__((nothrow, pure));
+inline bool          badline_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:src_lim.FDb.badline.Find
-src_lim::FBadline*   badline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FBadline* badline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:src_lim.FDb.badline.Last
-src_lim::FBadline*   badline_Last() __attribute__((nothrow, pure));
+inline src_lim::FBadline* badline_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.badline.N
-i32                  badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_lim.FDb.badline.RemoveAll
 void                 badline_RemoveAll() __attribute__((nothrow));
@@ -398,7 +397,7 @@ void                 badline_RemoveAll() __attribute__((nothrow));
 void                 badline_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:src_lim.FDb.badline.qFind
-src_lim::FBadline&   badline_qFind(u64 t) __attribute__((nothrow, pure));
+inline src_lim::FBadline& badline_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb.badline.XrefMaybe
@@ -406,64 +405,64 @@ bool                 badline_XrefMaybe(src_lim::FBadline &row);
 
 // cursor points to valid item
 // func:src_lim.FDb.include_curs.Reset
-void                 _db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
+inline void          _db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.include_curs.ValidQ
-bool                 _db_include_curs_ValidQ(_db_include_curs &curs) __attribute__((nothrow));
+inline bool          _db_include_curs_ValidQ(_db_include_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.include_curs.Next
-void                 _db_include_curs_Next(_db_include_curs &curs) __attribute__((nothrow));
+inline void          _db_include_curs_Next(_db_include_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.include_curs.Access
-src_lim::FInclude&   _db_include_curs_Access(_db_include_curs &curs) __attribute__((nothrow));
+inline src_lim::FInclude& _db_include_curs_Access(_db_include_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.linelim_curs.Reset
-void                 _db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
+inline void          _db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.linelim_curs.ValidQ
-bool                 _db_linelim_curs_ValidQ(_db_linelim_curs &curs) __attribute__((nothrow));
+inline bool          _db_linelim_curs_ValidQ(_db_linelim_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.linelim_curs.Next
-void                 _db_linelim_curs_Next(_db_linelim_curs &curs) __attribute__((nothrow));
+inline void          _db_linelim_curs_Next(_db_linelim_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.linelim_curs.Access
-src_lim::FLinelim&   _db_linelim_curs_Access(_db_linelim_curs &curs) __attribute__((nothrow));
+inline src_lim::FLinelim& _db_linelim_curs_Access(_db_linelim_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
+inline void          _db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline bool          _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline void          _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.targsrc_curs.Access
-src_lim::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline src_lim::FTargsrc& _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.gitfile_curs.Reset
-void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
+inline void          _db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.gitfile_curs.ValidQ
-bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline bool          _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.gitfile_curs.Next
-void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline void          _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.gitfile_curs.Access
-src_lim::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline src_lim::FGitfile& _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.badline_curs.Reset
-void                 _db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
+inline void          _db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FDb.badline_curs.ValidQ
-bool                 _db_badline_curs_ValidQ(_db_badline_curs &curs) __attribute__((nothrow));
+inline bool          _db_badline_curs_ValidQ(_db_badline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FDb.badline_curs.Next
-void                 _db_badline_curs_Next(_db_badline_curs &curs) __attribute__((nothrow));
+inline void          _db_badline_curs_Next(_db_badline_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FDb.badline_curs.Access
-src_lim::FBadline&   _db_badline_curs_Access(_db_badline_curs &curs) __attribute__((nothrow));
+inline src_lim::FBadline& _db_badline_curs_Access(_db_badline_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.FDb..Init
 void                 FDb_Init();
@@ -472,7 +471,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- src_lim.FGitfile
 // create: src_lim.FDb.gitfile (Lary)
-// global access: ind_gitfile (Thash)
+// global access: gitfile (Lary, by rowid)
+// global access: ind_gitfile (Thash, hash field gitfile)
 // access: src_lim.FTargsrc.p_gitfile (Upptr)
 struct FGitfile { // src_lim.FGitfile
     src_lim::FGitfile*   ind_gitfile_next;   // hash next
@@ -482,14 +482,24 @@ struct FGitfile { // src_lim.FGitfile
     src_lim::FInclude*   zd_include_tail;    // pointer to last element
     src_lim::FLinelim*   c_linelim;          // optional pointer
     src_lim::FTargsrc*   c_targsrc;          // optional pointer
+    // reftype Llist of src_lim.FGitfile.zd_include prohibits copy
+    // x-reference on src_lim.FGitfile.c_linelim prevents copy
+    // x-reference on src_lim.FGitfile.c_targsrc prevents copy
+    // func:src_lim.FGitfile..AssignOp
+    inline src_lim::FGitfile& operator =(const src_lim::FGitfile &rhs) = delete;
+    // reftype Llist of src_lim.FGitfile.zd_include prohibits copy
+    // x-reference on src_lim.FGitfile.c_linelim prevents copy
+    // x-reference on src_lim.FGitfile.c_targsrc prevents copy
+    // func:src_lim.FGitfile..CopyCtor
+    inline               FGitfile(const src_lim::FGitfile &rhs) = delete;
 private:
+    // func:src_lim.FGitfile..Ctor
+    inline               FGitfile() __attribute__((nothrow));
+    // func:src_lim.FGitfile..Dtor
+    inline               ~FGitfile() __attribute__((nothrow));
     friend src_lim::FGitfile&   gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FGitfile*   gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gitfile_RemoveLast() __attribute__((nothrow));
-    FGitfile();
-    ~FGitfile();
-    FGitfile(const FGitfile&){ /*disallow copy constructor */}
-    void operator =(const FGitfile&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -504,28 +514,28 @@ algo::Smallstr50     ext_Get(src_lim::FGitfile& gitfile) __attribute__((__warn_u
 
 // Return true if index is empty
 // func:src_lim.FGitfile.zd_include.EmptyQ
-bool                 zd_include_EmptyQ(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_include_EmptyQ(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:src_lim.FGitfile.zd_include.First
-src_lim::FInclude*   zd_include_First(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FInclude* zd_include_First(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_lim.FGitfile.zd_include.InLlistQ
-bool                 zd_include_InLlistQ(src_lim::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_include_InLlistQ(src_lim::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_lim.FGitfile.zd_include.Insert
 void                 zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:src_lim.FGitfile.zd_include.Last
-src_lim::FInclude*   zd_include_Last(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline src_lim::FInclude* zd_include_Last(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:src_lim.FGitfile.zd_include.N
-i32                  zd_include_N(const src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_include_N(const src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_lim.FGitfile.zd_include.Next
-src_lim::FInclude*   zd_include_Next(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude* zd_include_Next(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:src_lim.FGitfile.zd_include.Prev
-src_lim::FInclude*   zd_include_Prev(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude* zd_include_Prev(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.zd_include.Remove
 void                 zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
@@ -537,42 +547,43 @@ void                 zd_include_RemoveAll(src_lim::FGitfile& gitfile) __attribut
 src_lim::FInclude*   zd_include_RemoveFirst(src_lim::FGitfile& gitfile) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:src_lim.FGitfile.zd_include.qLast
-src_lim::FInclude&   zd_include_qLast(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude& zd_include_qLast(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:src_lim.FGitfile.c_linelim.InsertMaybe
-bool                 c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
+inline bool          c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.c_linelim.Remove
-void                 c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
+inline void          c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:src_lim.FGitfile.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
+inline bool          c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.c_targsrc.Remove
-void                 c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
+inline void          c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FGitfile..Init
-void                 FGitfile_Init(src_lim::FGitfile& gitfile);
+inline void          FGitfile_Init(src_lim::FGitfile& gitfile);
 // cursor points to valid item
 // func:src_lim.FGitfile.zd_include_curs.Reset
-void                 gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) __attribute__((nothrow));
+inline void          gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:src_lim.FGitfile.zd_include_curs.ValidQ
-bool                 gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs) __attribute__((nothrow));
+inline bool          gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:src_lim.FGitfile.zd_include_curs.Next
-void                 gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) __attribute__((nothrow));
+inline void          gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // item access
 // func:src_lim.FGitfile.zd_include_curs.Access
-src_lim::FInclude&   gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) __attribute__((nothrow));
+inline src_lim::FInclude& gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) __attribute__((nothrow));
 // func:src_lim.FGitfile..Uninit
 void                 FGitfile_Uninit(src_lim::FGitfile& gitfile) __attribute__((nothrow));
 
 // --- src_lim.FInclude
 // create: src_lim.FDb.include (Lary)
+// global access: include (Lary, by rowid)
 // access: src_lim.FGitfile.zd_include (Llist)
 struct FInclude { // src_lim.FInclude
     src_lim::FInclude*   zd_include_next;   // zslist link; -1 means not-in-list
@@ -580,14 +591,18 @@ struct FInclude { // src_lim.FInclude
     algo::Smallstr200    include;           //
     bool                 sys;               //   false
     algo::Comment        comment;           //
+    // func:src_lim.FInclude..AssignOp
+    inline src_lim::FInclude& operator =(const src_lim::FInclude &rhs) = delete;
+    // func:src_lim.FInclude..CopyCtor
+    inline               FInclude(const src_lim::FInclude &rhs) = delete;
 private:
+    // func:src_lim.FInclude..Ctor
+    inline               FInclude() __attribute__((nothrow));
+    // func:src_lim.FInclude..Dtor
+    inline               ~FInclude() __attribute__((nothrow));
     friend src_lim::FInclude&   include_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FInclude*   include_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 include_RemoveLast() __attribute__((nothrow));
-    FInclude();
-    ~FInclude();
-    FInclude(const FInclude&){ /*disallow copy constructor */}
-    void operator =(const FInclude&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -605,12 +620,13 @@ algo::Smallstr200    filename_Get(src_lim::FInclude& include) __attribute__((__w
 
 // Set all fields to initial values.
 // func:src_lim.FInclude..Init
-void                 FInclude_Init(src_lim::FInclude& include);
+inline void          FInclude_Init(src_lim::FInclude& include);
 // func:src_lim.FInclude..Uninit
 void                 FInclude_Uninit(src_lim::FInclude& include) __attribute__((nothrow));
 
 // --- src_lim.FLinelim
 // create: src_lim.FDb.linelim (Lary)
+// global access: linelim (Lary, by rowid)
 // access: src_lim.FGitfile.c_linelim (Ptr)
 struct FLinelim { // src_lim.FLinelim
     algo::Smallstr200   gitfile;        //
@@ -622,14 +638,18 @@ struct FLinelim { // src_lim.FLinelim
     u32                 longestfunc;    //   0
     u32                 nmysteryfunc;   //   0
     algo::Smallstr50    badness;        //
+    // func:src_lim.FLinelim..AssignOp
+    src_lim::FLinelim&   operator =(const src_lim::FLinelim &rhs) = delete;
+    // func:src_lim.FLinelim..CopyCtor
+    FLinelim(const src_lim::FLinelim &rhs) = delete;
 private:
+    // func:src_lim.FLinelim..Ctor
+    inline               FLinelim() __attribute__((nothrow));
+    // func:src_lim.FLinelim..Dtor
+    inline               ~FLinelim() __attribute__((nothrow));
     friend src_lim::FLinelim&   linelim_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FLinelim*   linelim_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 linelim_RemoveLast() __attribute__((nothrow));
-    FLinelim();
-    ~FLinelim();
-    FLinelim(const FLinelim&){ /*disallow copy constructor */}
-    void operator =(const FLinelim&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -641,26 +661,33 @@ void                 linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) __
 
 // Set all fields to initial values.
 // func:src_lim.FLinelim..Init
-void                 FLinelim_Init(src_lim::FLinelim& linelim);
+inline void          FLinelim_Init(src_lim::FLinelim& linelim);
 // func:src_lim.FLinelim..Uninit
 void                 FLinelim_Uninit(src_lim::FLinelim& linelim) __attribute__((nothrow));
 
 // --- src_lim.FTargsrc
 // create: src_lim.FDb.targsrc (Lary)
+// global access: targsrc (Lary, by rowid)
 // access: src_lim.FGitfile.c_targsrc (Ptr)
 struct FTargsrc { // src_lim.FTargsrc
     algo::Smallstr100    targsrc;     //
     algo::Comment        comment;     //
     src_lim::FGitfile*   p_gitfile;   // reference to parent row
     bool                 select;      //   false
+    // x-reference on src_lim.FTargsrc.p_gitfile prevents copy
+    // func:src_lim.FTargsrc..AssignOp
+    inline src_lim::FTargsrc& operator =(const src_lim::FTargsrc &rhs) = delete;
+    // x-reference on src_lim.FTargsrc.p_gitfile prevents copy
+    // func:src_lim.FTargsrc..CopyCtor
+    inline               FTargsrc(const src_lim::FTargsrc &rhs) = delete;
 private:
+    // func:src_lim.FTargsrc..Ctor
+    inline               FTargsrc() __attribute__((nothrow));
+    // func:src_lim.FTargsrc..Dtor
+    inline               ~FTargsrc() __attribute__((nothrow));
     friend src_lim::FTargsrc&   targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend src_lim::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
-    FTargsrc();
-    ~FTargsrc();
-    FTargsrc(const FTargsrc&){ /*disallow copy constructor */}
-    void operator =(const FTargsrc&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -681,7 +708,7 @@ algo::Smallstr10     ext_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:src_lim.FTargsrc..Init
-void                 FTargsrc_Init(src_lim::FTargsrc& targsrc);
+inline void          FTargsrc_Init(src_lim::FTargsrc& targsrc);
 // func:src_lim.FTargsrc..Uninit
 void                 FTargsrc_Uninit(src_lim::FTargsrc& targsrc) __attribute__((nothrow));
 
@@ -689,19 +716,23 @@ void                 FTargsrc_Uninit(src_lim::FTargsrc& targsrc) __attribute__((
 #pragma pack(push,1)
 struct FieldId { // src_lim.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator src_lim_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(src_lim_FieldIdEnum arg);
-    FieldId();
+    // func:src_lim.FieldId.value.Cast
+    inline               operator src_lim_FieldIdEnum() const __attribute__((nothrow));
+    // func:src_lim.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:src_lim.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:src_lim.FieldId..EnumCtor
+    inline               FieldId(src_lim_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:src_lim.FieldId.value.GetEnum
-src_lim_FieldIdEnum  value_GetEnum(const src_lim::FieldId& parent) __attribute__((nothrow));
+inline src_lim_FieldIdEnum value_GetEnum(const src_lim::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:src_lim.FieldId.value.SetEnum
-void                 value_SetEnum(src_lim::FieldId& parent, src_lim_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(src_lim::FieldId& parent, src_lim_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:src_lim.FieldId.value.ToCstr
@@ -729,7 +760,7 @@ bool                 value_ReadStrptrMaybe(src_lim::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.FieldId..Init
-void                 FieldId_Init(src_lim::FieldId& parent);
+inline void          FieldId_Init(src_lim::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_lim.FieldId.String  printfmt:Raw
 // func:src_lim.FieldId..Print
@@ -738,18 +769,22 @@ void                 FieldId_Print(src_lim::FieldId& row, algo::cstring& str) __
 // --- src_lim.TableId
 struct TableId { // src_lim.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator src_lim_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(src_lim_TableIdEnum arg);
-    TableId();
+    // func:src_lim.TableId.value.Cast
+    inline               operator src_lim_TableIdEnum() const __attribute__((nothrow));
+    // func:src_lim.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:src_lim.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:src_lim.TableId..EnumCtor
+    inline               TableId(src_lim_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:src_lim.TableId.value.GetEnum
-src_lim_TableIdEnum  value_GetEnum(const src_lim::TableId& parent) __attribute__((nothrow));
+inline src_lim_TableIdEnum value_GetEnum(const src_lim::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:src_lim.TableId.value.SetEnum
-void                 value_SetEnum(src_lim::TableId& parent, src_lim_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(src_lim::TableId& parent, src_lim_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:src_lim.TableId.value.ToCstr
@@ -777,7 +812,7 @@ bool                 value_ReadStrptrMaybe(src_lim::TableId& parent, algo::strpt
 bool                 TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:src_lim.TableId..Init
-void                 TableId_Init(src_lim::TableId& parent);
+inline void          TableId_Init(src_lim::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_lim.TableId.String  printfmt:Raw
 // func:src_lim.TableId..Print

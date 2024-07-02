@@ -59,6 +59,11 @@ namespace abt_md { // update-hdr
 
     // Scan for links and anchors in section SECTION
     void ScanLinksAnchors();
+    void Marktag(abt_md::FFileSection &section);
+
+    // Execute commands marked by "inline-command: ..." inside backtick blocks,
+    // and substitute their output into the section text
+    void EvalInlineCommand(abt_md::FFileSection &file_section);
 
     // Update/evaluate specified section
     // The algorithm is as follows:
@@ -107,14 +112,18 @@ namespace abt_md { // update-hdr
     tempstr LineKey(algo::strptr line);
 
     // Translate characters to create a markdown link
-    tempstr MdEscape(algo::strptr str);
+    // : is skipped
+    // non-identifier characters are replaced with -
+    // All characters are lowercased
+    tempstr MdAnchor(algo::strptr str);
+    algo::strptr FileIcon();
+    algo::strptr FolderIcon();
 
     // Print anchor to OUT and add it to a global table
     void AddAnchor(algo::strptr name, cstring &out);
     tempstr Backticks(algo::strptr text);
     tempstr Preformatted(algo::strptr text);
     tempstr CodeBlock(algo::strptr text);
-    void AddRow(cstring &out, strptr text1, strptr text2, strptr text3 = "", strptr text4 = "", strptr text5 = "");
 
     // Return markdown link pointing to page URL and optional anchor ANCHOR
     // The displayed string is NAME
@@ -132,7 +141,23 @@ namespace abt_md { // update-hdr
     tempstr LinkToSsimfile(algo::strptr name, algo::strptr ssimfile, algo::strptr anchor = "");
 
     // Link to documentation for given namespace (could be lib,protocol,exe,ssimdb)
-    tempstr LinkToNs(strptr ns, strptr nstype, algo::strptr anchor = "");
+    tempstr LinkToNs(strptr ns, algo::strptr anchor = "");
+
+    // Link to internals documentation for given namespace (could be lib,protocol,exe,ssimdb)
+    // The link text is NAME
+    // the namespace is NS
+    // Optional anchor is ANCHOR
+    // For executables, a separate 'internals' file is used
+    tempstr LinkToInternals(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor = "");
+    tempstr LinkToReftype(algo::strptr reftype);
+    tempstr LinkToCtype(abt_md::FCtype &ctype);
+    tempstr TypeComment(abt_md::FCtype &ctype);
+
+    // Compute base type, or return CTYPE if none
+    abt_md::FCtype *GetBaseType(abt_md::FCtype &ctype);
+
+    // Create an HTML comment
+    tempstr MdComment(algo::strptr str);
 
     // Create table of contents link from string
     // The string should be a section heading for which markdown generates a link target;
@@ -142,7 +167,7 @@ namespace abt_md { // update-hdr
     // Populate global table DIRENT with a directory listing
     // matching PATTERN, that can be read in sorted order
     // (Dir_curs does not provide sorted order)
-    void PopulateDirent(strptr pattern);
+    void PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern);
     int Sortkey(abt_md::FMdsection &mdsection, int i);
 
     // Determine header depth level of current line by counting leading #'s
@@ -174,6 +199,11 @@ namespace abt_md { // update-hdr
     // void mdsection_Tables(abt_md::FFileSection &section);
     // void mdsection_Attributes(abt_md::FFileSection &section);
     // void mdsection_Inputs(abt_md::FFileSection &section);
+    abt_md::FCtype *GenerateFieldsTable(abt_md::FCtype &ctype, cstring &text_out, cstring &base_note);
+
+    // Extract generated info and combine into a table
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void mdsection_Imdb(abt_md::FFileSection &section);
     // void mdsection_Options(abt_md::FFileSection &section);
     // void mdsection_Ctypes(abt_md::FFileSection &section);
     // void mdsection_Functions(abt_md::FFileSection &section);
@@ -182,6 +212,7 @@ namespace abt_md { // update-hdr
     // - For namespace, pull namespace name and comment from ns table
     // - For script, use script name and comment from scriptfile table
     // For all other cases, leave title as-is
+    // Section contents are user-defined
     // void mdsection_Title(abt_md::FFileSection &section);
 
     // Update syntax string
@@ -191,12 +222,19 @@ namespace abt_md { // update-hdr
     // Table of contents
     // for README file, create links to subdirectories
     // for non-README file, create links to sections inside file
+    // The README.md files must form a tree covering all files.
+    // Thus, non-README must not include links to other files in the same directory into ToC,
+    // but can include those links outside of ToC
+    // README.md must not include a link to internals.md on the same level (this link has to come
+    // from above) to avoid contaminating ToC tree with unneeded details
+    // for more information see spnx
     // void mdsection_Toc(abt_md::FFileSection &section);
 
     // Create links to other files in the same directory
     // void mdsection_Chapters(abt_md::FFileSection &section);
     // void mdsection_Sources(abt_md::FFileSection &section);
-    // void mdsection_Description(abt_md::FFileSection &);
+    // void mdsection_Dependencies(abt_md::FFileSection &section);
+    // void mdsection_Description(abt_md::FFileSection &section);
     // void mdsection_Content(abt_md::FFileSection &);
     // void mdsection_Limitations(abt_md::FFileSection &);
     // void mdsection_Example(abt_md::FFileSection &);

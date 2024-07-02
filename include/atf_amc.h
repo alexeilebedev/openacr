@@ -379,6 +379,11 @@ namespace atf_amc { // update-hdr
     // void amctest_bytebuf_test2();
     // void amctest_bytebuf_dyn_test1();
 
+    // custom framer -- 4 bytes at a time
+    void in_custom_ScanMsg(atf_amc::Msgbuf &msgbuf);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void amctest_msgbuf_custom();
+
     // -------------------------------------------------------------------
     // cpp/atf_amc/fconst.cpp
     //

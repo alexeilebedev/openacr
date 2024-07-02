@@ -92,33 +92,33 @@ namespace ssim2mysql { // gen:ns_print_proto
     static void          zs_cmd_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:ssim2mysql.FDb.zs_cmd.UpdateCycles
-    static void          zs_cmd_UpdateCycles() __attribute__((nothrow));
+    inline static void   zs_cmd_UpdateCycles() __attribute__((nothrow));
     // func:ssim2mysql.FDb.zs_cmd.Call
-    static void          zs_cmd_Call() __attribute__((nothrow));
+    inline static void   zs_cmd_Call() __attribute__((nothrow));
     // First element of index changed.
     // func:ssim2mysql.FDb.cd_input_line.FirstChanged
     static void          cd_input_line_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:ssim2mysql.FDb.cd_input_line.UpdateCycles
-    static void          cd_input_line_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_input_line_UpdateCycles() __attribute__((nothrow));
     // func:ssim2mysql.FDb.cd_input_line.Call
-    static void          cd_input_line_Call() __attribute__((nothrow));
+    inline static void   cd_input_line_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:ssim2mysql.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:ssim2mysql.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Internal function to scan for a message
     //
-    // func:ssim2mysql.FInput.in_buf.Scanmsg
-    static void          in_buf_Scanmsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+    // func:ssim2mysql.FInput.in_buf.ScanMsg
+    static void          in_buf_ScanMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:ssim2mysql.FInput.in_buf.Shift
     static void          in_buf_Shift(ssim2mysql::FInput& input) __attribute__((nothrow));
     // func:ssim2mysql...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ssim2mysql.FCmd..Uninit
@@ -2811,11 +2811,11 @@ void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
 algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
     algo::aryptr<char> ret;
     if (!input.in_buf_msgvalid) {
-        in_buf_Scanmsg(input);
+        in_buf_ScanMsg(input);
         if (!input.in_buf_msgvalid) {
             bool readable = in_buf_Refill(input);
             if (readable) {
-                in_buf_Scanmsg(input);
+                in_buf_ScanMsg(input);
             }
         }
     }
@@ -2865,13 +2865,12 @@ void ssim2mysql::in_buf_RemoveAll(ssim2mysql::FInput& input) {
     input.in_buf_start    = 0;
     input.in_buf_end      = 0;
     input.in_buf_msgvalid = false;
-    input.in_buf_msglen   = 0; // reset message length -- important for delimited streams
 }
 
-// --- ssim2mysql.FInput.in_buf.Scanmsg
+// --- ssim2mysql.FInput.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void ssim2mysql::in_buf_Scanmsg(ssim2mysql::FInput& input) {
+static void ssim2mysql::in_buf_ScanMsg(ssim2mysql::FInput& input) {
     char *hdr = (char*)(input.in_buf_elems + input.in_buf_start);
     i32 avail = in_buf_N(input);
     i32 msglen;
@@ -2915,6 +2914,7 @@ void ssim2mysql::in_buf_SkipBytes(ssim2mysql::FInput& input, int n) {
     int avail = input.in_buf_end - input.in_buf_start;
     n = i32_Min(n,avail);
     input.in_buf_start += n;
+    input.in_buf_msgvalid = false;
 }
 
 // --- ssim2mysql.FInput.in_buf.SkipMsg

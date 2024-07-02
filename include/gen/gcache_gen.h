@@ -67,13 +67,10 @@ struct cleanreport { // gcache.cleanreport
     i32   n_logline;            //   0  Number of log lines
     i32   n_logline_del;        //   0  Number of log lines deleted
     i64   new_cachesize_mb;     //   0  New cache size in MB
-    explicit cleanreport(i32                            in_n_cachefile
-        ,i32                            in_n_cachefile_del
-        ,i32                            in_n_cachefile_recent
-        ,i32                            in_n_logline
-        ,i32                            in_n_logline_del
-        ,i64                            in_new_cachesize_mb);
-    cleanreport();
+    // func:gcache.cleanreport..Ctor
+    inline               cleanreport() __attribute__((nothrow));
+    // func:gcache.cleanreport..FieldwiseCtor
+    explicit inline               cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb) __attribute__((nothrow));
 };
 
 // func:gcache.cleanreport..ReadFieldMaybe
@@ -84,7 +81,7 @@ bool                 cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, alg
 bool                 cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.cleanreport..Init
-void                 cleanreport_Init(gcache::cleanreport& parent);
+inline void          cleanreport_Init(gcache::cleanreport& parent);
 // print string representation of ROW to string STR
 // cfmt:gcache.cleanreport.String  printfmt:Tuple
 // func:gcache.cleanreport..Print
@@ -93,7 +90,8 @@ void                 cleanreport_Print(gcache::cleanreport& row, algo::cstring& 
 // --- gcache.trace
 #pragma pack(push,1)
 struct trace { // gcache.trace
-    trace();
+    // func:gcache.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -180,16 +178,16 @@ gcache::FHeader*     header_AllocMaybe() __attribute__((__warn_unused_result__, 
 void*                header_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcache.FDb.header.EmptyQ
-bool                 header_EmptyQ() __attribute__((nothrow, pure));
+inline bool          header_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcache.FDb.header.Find
-gcache::FHeader*     header_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcache::FHeader* header_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcache.FDb.header.Last
-gcache::FHeader*     header_Last() __attribute__((nothrow, pure));
+inline gcache::FHeader* header_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcache.FDb.header.N
-i32                  header_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           header_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcache.FDb.header.RemoveAll
 void                 header_RemoveAll() __attribute__((nothrow));
@@ -198,7 +196,7 @@ void                 header_RemoveAll() __attribute__((nothrow));
 void                 header_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcache.FDb.header.qFind
-gcache::FHeader&     header_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcache::FHeader& header_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcache.FDb.header.XrefMaybe
@@ -206,16 +204,16 @@ bool                 header_XrefMaybe(gcache::FHeader &row);
 
 // cursor points to valid item
 // func:gcache.FDb.header_curs.Reset
-void                 _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) __attribute__((nothrow));
+inline void          _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcache.FDb.header_curs.ValidQ
-bool                 _db_header_curs_ValidQ(_db_header_curs &curs) __attribute__((nothrow));
+inline bool          _db_header_curs_ValidQ(_db_header_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcache.FDb.header_curs.Next
-void                 _db_header_curs_Next(_db_header_curs &curs) __attribute__((nothrow));
+inline void          _db_header_curs_Next(_db_header_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcache.FDb.header_curs.Access
-gcache::FHeader&     _db_header_curs_Access(_db_header_curs &curs) __attribute__((nothrow));
+inline gcache::FHeader& _db_header_curs_Access(_db_header_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.FDb..Init
 void                 FDb_Init();
@@ -224,6 +222,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- gcache.FHeader
 // create: gcache.FDb.header (Lary)
+// global access: header (Lary, by rowid)
 // access: gcache.FHeader.parent (Ptr)
 struct FHeader { // gcache.FHeader
     gcache::FHeader*   parent;          // optional pointer
@@ -233,16 +232,17 @@ struct FHeader { // gcache.FHeader
     i32                outer_end;       //   0
     bool               mlines_before;   //   false
 private:
+    // func:gcache.FHeader..Ctor
+    inline               FHeader() __attribute__((nothrow));
     friend gcache::FHeader&     header_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcache::FHeader*     header_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 header_RemoveAll() __attribute__((nothrow));
     friend void                 header_RemoveLast() __attribute__((nothrow));
-    FHeader();
 };
 
 // Set all fields to initial values.
 // func:gcache.FHeader..Init
-void                 FHeader_Init(gcache::FHeader& header);
+inline void          FHeader_Init(gcache::FHeader& header);
 // print string representation of ROW to string STR
 // cfmt:gcache.FHeader.String  printfmt:Tuple
 // func:gcache.FHeader..Print
@@ -252,19 +252,23 @@ void                 FHeader_Print(gcache::FHeader& row, algo::cstring& str) __a
 #pragma pack(push,1)
 struct FieldId { // gcache.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator gcache_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(gcache_FieldIdEnum arg);
-    FieldId();
+    // func:gcache.FieldId.value.Cast
+    inline               operator gcache_FieldIdEnum() const __attribute__((nothrow));
+    // func:gcache.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:gcache.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:gcache.FieldId..EnumCtor
+    inline               FieldId(gcache_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:gcache.FieldId.value.GetEnum
-gcache_FieldIdEnum   value_GetEnum(const gcache::FieldId& parent) __attribute__((nothrow));
+inline gcache_FieldIdEnum value_GetEnum(const gcache::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:gcache.FieldId.value.SetEnum
-void                 value_SetEnum(gcache::FieldId& parent, gcache_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(gcache::FieldId& parent, gcache_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:gcache.FieldId.value.ToCstr
@@ -292,7 +296,7 @@ bool                 value_ReadStrptrMaybe(gcache::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.FieldId..Init
-void                 FieldId_Init(gcache::FieldId& parent);
+inline void          FieldId_Init(gcache::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:gcache.FieldId.String  printfmt:Raw
 // func:gcache.FieldId..Print

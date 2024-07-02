@@ -73,7 +73,8 @@ namespace atf_fuzz { // gen:ns_print_struct
 // --- atf_fuzz.trace
 #pragma pack(push,1)
 struct trace { // atf_fuzz.trace
-    trace();
+    // func:atf_fuzz.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -158,16 +159,16 @@ atf_fuzz::FFuzzstrat* fuzzstrat_InsertMaybe(const atfdb::Fuzzstrat &value) __att
 void*                fuzzstrat_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_fuzz.FDb.fuzzstrat.EmptyQ
-bool                 fuzzstrat_EmptyQ() __attribute__((nothrow, pure));
+inline bool          fuzzstrat_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_fuzz.FDb.fuzzstrat.Find
-atf_fuzz::FFuzzstrat* fuzzstrat_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_fuzz::FFuzzstrat* fuzzstrat_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_fuzz.FDb.fuzzstrat.Last
-atf_fuzz::FFuzzstrat* fuzzstrat_Last() __attribute__((nothrow, pure));
+inline atf_fuzz::FFuzzstrat* fuzzstrat_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_fuzz.FDb.fuzzstrat.N
-i32                  fuzzstrat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           fuzzstrat_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_fuzz.FDb.fuzzstrat.RemoveAll
 void                 fuzzstrat_RemoveAll() __attribute__((nothrow));
@@ -176,7 +177,7 @@ void                 fuzzstrat_RemoveAll() __attribute__((nothrow));
 void                 fuzzstrat_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_fuzz.FDb.fuzzstrat.qFind
-atf_fuzz::FFuzzstrat& fuzzstrat_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_fuzz::FFuzzstrat& fuzzstrat_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_fuzz.FDb.fuzzstrat.XrefMaybe
@@ -198,16 +199,16 @@ atf_fuzz::FTarget*   target_InsertMaybe(const dev::Target &value) __attribute__(
 void*                target_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_fuzz.FDb.target.EmptyQ
-bool                 target_EmptyQ() __attribute__((nothrow, pure));
+inline bool          target_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_fuzz.FDb.target.Find
-atf_fuzz::FTarget*   target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_fuzz::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_fuzz.FDb.target.Last
-atf_fuzz::FTarget*   target_Last() __attribute__((nothrow, pure));
+inline atf_fuzz::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_fuzz.FDb.target.N
-i32                  target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_fuzz.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
@@ -216,7 +217,7 @@ void                 target_RemoveAll() __attribute__((nothrow));
 void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_fuzz.FDb.target.qFind
-atf_fuzz::FTarget&   target_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_fuzz::FTarget& target_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_fuzz.FDb.target.XrefMaybe
@@ -224,7 +225,7 @@ bool                 target_XrefMaybe(atf_fuzz::FTarget &row);
 
 // Return true if hash is empty
 // func:atf_fuzz.FDb.ind_target.EmptyQ
-bool                 ind_target_EmptyQ() __attribute__((nothrow));
+inline bool          ind_target_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_fuzz.FDb.ind_target.Find
 atf_fuzz::FTarget*   ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -236,7 +237,7 @@ atf_fuzz::FTarget&   ind_target_FindX(const algo::strptr& key);
 atf_fuzz::FTarget&   ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_fuzz.FDb.ind_target.N
-i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_fuzz.FDb.ind_target.InsertMaybe
 bool                 ind_target_InsertMaybe(atf_fuzz::FTarget& row) __attribute__((nothrow));
@@ -249,28 +250,28 @@ void                 ind_target_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_fuzz.FDb.fuzzstrat_curs.Reset
-void                 _db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
+inline void          _db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.fuzzstrat_curs.ValidQ
-bool                 _db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
+inline bool          _db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_fuzz.FDb.fuzzstrat_curs.Next
-void                 _db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
+inline void          _db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_fuzz.FDb.fuzzstrat_curs.Access
-atf_fuzz::FFuzzstrat& _db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
+inline atf_fuzz::FFuzzstrat& _db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
+inline void          _db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_fuzz.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
+inline bool          _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_fuzz.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
+inline void          _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_fuzz.FDb.target_curs.Access
-atf_fuzz::FTarget&   _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
+inline atf_fuzz::FTarget& _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.FDb..Init
 void                 FDb_Init();
@@ -279,19 +280,18 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_fuzz.FFuzzstrat
 // create: atf_fuzz.FDb.fuzzstrat (Lary)
+// global access: fuzzstrat (Lary, by rowid)
 struct FFuzzstrat { // atf_fuzz.FFuzzstrat
     algo::Smallstr50                fuzzstrat;   //
     algo::Comment                   comment;     //
     atf_fuzz::fuzzstrat_step_hook   step;        //   NULL  Pointer to a function
 private:
+    // func:atf_fuzz.FFuzzstrat..Ctor
+    inline               FFuzzstrat() __attribute__((nothrow));
     friend atf_fuzz::FFuzzstrat& fuzzstrat_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_fuzz::FFuzzstrat* fuzzstrat_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 fuzzstrat_RemoveAll() __attribute__((nothrow));
     friend void                 fuzzstrat_RemoveLast() __attribute__((nothrow));
-    FFuzzstrat();
-    // reftype Hook of atf_fuzz.FFuzzstrat.step prohibits copy
-    FFuzzstrat(const FFuzzstrat&){ /*disallow copy constructor */}
-    void operator =(const FFuzzstrat&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -303,28 +303,33 @@ void                 fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstra
 
 // Invoke function by pointer
 // func:atf_fuzz.FFuzzstrat.step.Call
-void                 step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) __attribute__((nothrow));
+inline void          step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_fuzz.FFuzzstrat..Init
-void                 FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat);
+inline void          FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat);
 
 // --- atf_fuzz.FTarget
 // create: atf_fuzz.FDb.target (Lary)
-// global access: ind_target (Thash)
+// global access: target (Lary, by rowid)
+// global access: ind_target (Thash, hash field target)
 // global access: c_target (Ptr)
 struct FTarget { // atf_fuzz.FTarget
     atf_fuzz::FTarget*   ind_target_next;   // hash next
     algo::Smallstr16     target;            // Primary key - name of target
+    // func:atf_fuzz.FTarget..AssignOp
+    inline atf_fuzz::FTarget& operator =(const atf_fuzz::FTarget &rhs) = delete;
+    // func:atf_fuzz.FTarget..CopyCtor
+    inline               FTarget(const atf_fuzz::FTarget &rhs) = delete;
 private:
+    // func:atf_fuzz.FTarget..Ctor
+    inline               FTarget() __attribute__((nothrow));
+    // func:atf_fuzz.FTarget..Dtor
+    inline               ~FTarget() __attribute__((nothrow));
     friend atf_fuzz::FTarget&   target_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_fuzz::FTarget*   target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 target_RemoveAll() __attribute__((nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
-    FTarget();
-    ~FTarget();
-    FTarget(const FTarget&){ /*disallow copy constructor */}
-    void operator =(const FTarget&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -336,7 +341,7 @@ void                 target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) __at
 
 // Set all fields to initial values.
 // func:atf_fuzz.FTarget..Init
-void                 FTarget_Init(atf_fuzz::FTarget& target);
+inline void          FTarget_Init(atf_fuzz::FTarget& target);
 // func:atf_fuzz.FTarget..Uninit
 void                 FTarget_Uninit(atf_fuzz::FTarget& target) __attribute__((nothrow));
 
@@ -344,19 +349,23 @@ void                 FTarget_Uninit(atf_fuzz::FTarget& target) __attribute__((no
 #pragma pack(push,1)
 struct FieldId { // atf_fuzz.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_fuzz_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_fuzz_FieldIdEnum arg);
-    FieldId();
+    // func:atf_fuzz.FieldId.value.Cast
+    inline               operator atf_fuzz_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf_fuzz.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf_fuzz.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf_fuzz.FieldId..EnumCtor
+    inline               FieldId(atf_fuzz_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf_fuzz.FieldId.value.GetEnum
-atf_fuzz_FieldIdEnum value_GetEnum(const atf_fuzz::FieldId& parent) __attribute__((nothrow));
+inline atf_fuzz_FieldIdEnum value_GetEnum(const atf_fuzz::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_fuzz.FieldId.value.SetEnum
-void                 value_SetEnum(atf_fuzz::FieldId& parent, atf_fuzz_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_fuzz::FieldId& parent, atf_fuzz_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_fuzz.FieldId.value.ToCstr
@@ -384,7 +393,7 @@ bool                 value_ReadStrptrMaybe(atf_fuzz::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.FieldId..Init
-void                 FieldId_Init(atf_fuzz::FieldId& parent);
+inline void          FieldId_Init(atf_fuzz::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.FieldId.String  printfmt:Raw
 // func:atf_fuzz.FieldId..Print
@@ -393,18 +402,22 @@ void                 FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) _
 // --- atf_fuzz.TableId
 struct TableId { // atf_fuzz.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator atf_fuzz_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(atf_fuzz_TableIdEnum arg);
-    TableId();
+    // func:atf_fuzz.TableId.value.Cast
+    inline               operator atf_fuzz_TableIdEnum() const __attribute__((nothrow));
+    // func:atf_fuzz.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:atf_fuzz.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:atf_fuzz.TableId..EnumCtor
+    inline               TableId(atf_fuzz_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:atf_fuzz.TableId.value.GetEnum
-atf_fuzz_TableIdEnum value_GetEnum(const atf_fuzz::TableId& parent) __attribute__((nothrow));
+inline atf_fuzz_TableIdEnum value_GetEnum(const atf_fuzz::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_fuzz.TableId.value.SetEnum
-void                 value_SetEnum(atf_fuzz::TableId& parent, atf_fuzz_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_fuzz::TableId& parent, atf_fuzz_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_fuzz.TableId.value.ToCstr
@@ -432,7 +445,7 @@ bool                 value_ReadStrptrMaybe(atf_fuzz::TableId& parent, algo::strp
 bool                 TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_fuzz.TableId..Init
-void                 TableId_Init(atf_fuzz::TableId& parent);
+inline void          TableId_Init(atf_fuzz::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.TableId.String  printfmt:Raw
 // func:atf_fuzz.TableId..Print

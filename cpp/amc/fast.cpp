@@ -16,7 +16,7 @@
 //
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/fast.cpp
+// Source: cpp/amc/fast.cpp -- Fixfast generator
 //
 
 #include "include/amc.h"

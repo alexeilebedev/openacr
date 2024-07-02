@@ -25,6 +25,7 @@
 #pragma once
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -36,6 +37,16 @@ enum ssimfilt_FieldIdEnum {        // ssimfilt.FieldId.value
 
 enum { ssimfilt_FieldIdEnum_N = 1 };
 
+
+// --- ssimfilt_TableIdEnum
+
+enum ssimfilt_TableIdEnum {                   // ssimfilt.TableId.value
+     ssimfilt_TableId_dev_Unstablefld   = 0   // dev.Unstablefld -> ssimfilt.FUnstablefld
+    ,ssimfilt_TableId_dev_unstablefld   = 0   // dev.unstablefld -> ssimfilt.FUnstablefld
+};
+
+enum { ssimfilt_TableIdEnum_N = 2 };
+
 namespace ssimfilt { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ssimfilt { // gen:ns_tclass_field
@@ -45,17 +56,21 @@ extern const char *ssimfilt_help;
 namespace ssimfilt { struct _db_tuple_curs; }
 namespace ssimfilt { struct _db_matchfield_curs; }
 namespace ssimfilt { struct _db_selfield_curs; }
+namespace ssimfilt { struct _db_unstablefld_curs; }
 namespace ssimfilt { struct trace; }
 namespace ssimfilt { struct FDb; }
+namespace ssimfilt { struct FUnstablefld; }
 namespace ssimfilt { struct FieldId; }
 namespace ssimfilt { struct KVRegx; }
+namespace ssimfilt { struct TableId; }
 namespace ssimfilt { extern struct ssimfilt::FDb _db; }
 namespace ssimfilt { // gen:ns_print_struct
 
 // --- ssimfilt.trace
 #pragma pack(push,1)
 struct trace { // ssimfilt.trace
-    trace();
+    // func:ssimfilt.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -67,15 +82,21 @@ void                 trace_Print(ssimfilt::trace& row, algo::cstring& str) __att
 // --- ssimfilt.FDb
 // create: ssimfilt.FDb._db (Global)
 struct FDb { // ssimfilt.FDb: In-memory database for ssimfilt
-    command::ssimfilt   cmdline;               //
-    algo::Tuple*        tuple_lary[32];        // level array
-    i32                 tuple_n;               // number of elements in array
-    ssimfilt::KVRegx*   matchfield_lary[32];   // level array
-    i32                 matchfield_n;          // number of elements in array
-    ssimfilt::KVRegx*   selfield_lary[32];     // level array
-    i32                 selfield_n;            // number of elements in array
-    bool                csv_locked;            //   false  CSV header locked
-    ssimfilt::trace     trace;                 //
+    command::ssimfilt          cmdline;                         //
+    algo::Tuple*               tuple_lary[32];                  // level array
+    i32                        tuple_n;                         // number of elements in array
+    ssimfilt::KVRegx*          matchfield_lary[32];             // level array
+    i32                        matchfield_n;                    // number of elements in array
+    ssimfilt::KVRegx*          selfield_lary[32];               // level array
+    i32                        selfield_n;                      // number of elements in array
+    bool                       csv_locked;                      //   false  CSV header locked
+    bool                       markdown;                        //   false  Use Markdown output
+    ssimfilt::FUnstablefld*    unstablefld_lary[32];            // level array
+    i32                        unstablefld_n;                   // number of elements in array
+    ssimfilt::FUnstablefld**   ind_unstablefld_buckets_elems;   // pointer to bucket array
+    i32                        ind_unstablefld_buckets_n;       // number of elements in bucket array
+    i32                        ind_unstablefld_n;               // number of elements in the hash table
+    ssimfilt::trace            trace;                           //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -135,16 +156,16 @@ algo::Tuple*         tuple_AllocMaybe() __attribute__((__warn_unused_result__, n
 void*                tuple_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssimfilt.FDb.tuple.EmptyQ
-bool                 tuple_EmptyQ() __attribute__((nothrow, pure));
+inline bool          tuple_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:ssimfilt.FDb.tuple.Find
-algo::Tuple*         tuple_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline algo::Tuple*  tuple_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:ssimfilt.FDb.tuple.Last
-algo::Tuple*         tuple_Last() __attribute__((nothrow, pure));
+inline algo::Tuple*  tuple_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.tuple.N
-i32                  tuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           tuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.tuple.RemoveAll
 void                 tuple_RemoveAll() __attribute__((nothrow));
@@ -153,7 +174,7 @@ void                 tuple_RemoveAll() __attribute__((nothrow));
 void                 tuple_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssimfilt.FDb.tuple.qFind
-algo::Tuple&         tuple_qFind(u64 t) __attribute__((nothrow, pure));
+inline algo::Tuple&  tuple_qFind(u64 t) __attribute__((nothrow, pure));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -167,16 +188,16 @@ ssimfilt::KVRegx*    matchfield_AllocMaybe() __attribute__((__warn_unused_result
 void*                matchfield_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssimfilt.FDb.matchfield.EmptyQ
-bool                 matchfield_EmptyQ() __attribute__((nothrow, pure));
+inline bool          matchfield_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:ssimfilt.FDb.matchfield.Find
-ssimfilt::KVRegx*    matchfield_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline ssimfilt::KVRegx* matchfield_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:ssimfilt.FDb.matchfield.Last
-ssimfilt::KVRegx*    matchfield_Last() __attribute__((nothrow, pure));
+inline ssimfilt::KVRegx* matchfield_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.matchfield.N
-i32                  matchfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           matchfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.matchfield.RemoveAll
 void                 matchfield_RemoveAll() __attribute__((nothrow));
@@ -185,7 +206,7 @@ void                 matchfield_RemoveAll() __attribute__((nothrow));
 void                 matchfield_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssimfilt.FDb.matchfield.qFind
-ssimfilt::KVRegx&    matchfield_qFind(u64 t) __attribute__((nothrow, pure));
+inline ssimfilt::KVRegx& matchfield_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ssimfilt.FDb.matchfield.XrefMaybe
@@ -203,16 +224,16 @@ ssimfilt::KVRegx*    selfield_AllocMaybe() __attribute__((__warn_unused_result__
 void*                selfield_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssimfilt.FDb.selfield.EmptyQ
-bool                 selfield_EmptyQ() __attribute__((nothrow, pure));
+inline bool          selfield_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:ssimfilt.FDb.selfield.Find
-ssimfilt::KVRegx*    selfield_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline ssimfilt::KVRegx* selfield_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:ssimfilt.FDb.selfield.Last
-ssimfilt::KVRegx*    selfield_Last() __attribute__((nothrow, pure));
+inline ssimfilt::KVRegx* selfield_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssimfilt.FDb.selfield.N
-i32                  selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           selfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssimfilt.FDb.selfield.RemoveAll
 void                 selfield_RemoveAll() __attribute__((nothrow));
@@ -221,67 +242,184 @@ void                 selfield_RemoveAll() __attribute__((nothrow));
 void                 selfield_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ssimfilt.FDb.selfield.qFind
-ssimfilt::KVRegx&    selfield_qFind(u64 t) __attribute__((nothrow, pure));
+inline ssimfilt::KVRegx& selfield_qFind(u64 t) __attribute__((nothrow, pure));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:ssimfilt.FDb.unstablefld.Alloc
+ssimfilt::FUnstablefld& unstablefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:ssimfilt.FDb.unstablefld.AllocMaybe
+ssimfilt::FUnstablefld* unstablefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:ssimfilt.FDb.unstablefld.InsertMaybe
+ssimfilt::FUnstablefld* unstablefld_InsertMaybe(const dev::Unstablefld &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:ssimfilt.FDb.unstablefld.AllocMem
+void*                unstablefld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:ssimfilt.FDb.unstablefld.EmptyQ
+inline bool          unstablefld_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:ssimfilt.FDb.unstablefld.Find
+inline ssimfilt::FUnstablefld* unstablefld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:ssimfilt.FDb.unstablefld.Last
+inline ssimfilt::FUnstablefld* unstablefld_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:ssimfilt.FDb.unstablefld.N
+inline i32           unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:ssimfilt.FDb.unstablefld.RemoveAll
+void                 unstablefld_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:ssimfilt.FDb.unstablefld.RemoveLast
+void                 unstablefld_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:ssimfilt.FDb.unstablefld.qFind
+inline ssimfilt::FUnstablefld& unstablefld_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ssimfilt.FDb.unstablefld.XrefMaybe
+bool                 unstablefld_XrefMaybe(ssimfilt::FUnstablefld &row);
+
+// Return true if hash is empty
+// func:ssimfilt.FDb.ind_unstablefld.EmptyQ
+inline bool          ind_unstablefld_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:ssimfilt.FDb.ind_unstablefld.Find
+ssimfilt::FUnstablefld* ind_unstablefld_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:ssimfilt.FDb.ind_unstablefld.FindX
+ssimfilt::FUnstablefld& ind_unstablefld_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:ssimfilt.FDb.ind_unstablefld.GetOrCreate
+ssimfilt::FUnstablefld& ind_unstablefld_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:ssimfilt.FDb.ind_unstablefld.N
+inline i32           ind_unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:ssimfilt.FDb.ind_unstablefld.InsertMaybe
+bool                 ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:ssimfilt.FDb.ind_unstablefld.Remove
+void                 ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:ssimfilt.FDb.ind_unstablefld.Reserve
+void                 ind_unstablefld_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:ssimfilt.FDb.tuple_curs.Reset
-void                 _db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
+inline void          _db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.tuple_curs.ValidQ
-bool                 _db_tuple_curs_ValidQ(_db_tuple_curs &curs) __attribute__((nothrow));
+inline bool          _db_tuple_curs_ValidQ(_db_tuple_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.tuple_curs.Next
-void                 _db_tuple_curs_Next(_db_tuple_curs &curs) __attribute__((nothrow));
+inline void          _db_tuple_curs_Next(_db_tuple_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.tuple_curs.Access
-algo::Tuple&         _db_tuple_curs_Access(_db_tuple_curs &curs) __attribute__((nothrow));
+inline algo::Tuple&  _db_tuple_curs_Access(_db_tuple_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.matchfield_curs.Reset
-void                 _db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
+inline void          _db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.matchfield_curs.ValidQ
-bool                 _db_matchfield_curs_ValidQ(_db_matchfield_curs &curs) __attribute__((nothrow));
+inline bool          _db_matchfield_curs_ValidQ(_db_matchfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.matchfield_curs.Next
-void                 _db_matchfield_curs_Next(_db_matchfield_curs &curs) __attribute__((nothrow));
+inline void          _db_matchfield_curs_Next(_db_matchfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.matchfield_curs.Access
-ssimfilt::KVRegx&    _db_matchfield_curs_Access(_db_matchfield_curs &curs) __attribute__((nothrow));
+inline ssimfilt::KVRegx& _db_matchfield_curs_Access(_db_matchfield_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.selfield_curs.Reset
-void                 _db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
+inline void          _db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ssimfilt.FDb.selfield_curs.ValidQ
-bool                 _db_selfield_curs_ValidQ(_db_selfield_curs &curs) __attribute__((nothrow));
+inline bool          _db_selfield_curs_ValidQ(_db_selfield_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ssimfilt.FDb.selfield_curs.Next
-void                 _db_selfield_curs_Next(_db_selfield_curs &curs) __attribute__((nothrow));
+inline void          _db_selfield_curs_Next(_db_selfield_curs &curs) __attribute__((nothrow));
 // item access
 // func:ssimfilt.FDb.selfield_curs.Access
-ssimfilt::KVRegx&    _db_selfield_curs_Access(_db_selfield_curs &curs) __attribute__((nothrow));
+inline ssimfilt::KVRegx& _db_selfield_curs_Access(_db_selfield_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:ssimfilt.FDb.unstablefld_curs.Reset
+inline void          _db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, ssimfilt::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ssimfilt.FDb.unstablefld_curs.ValidQ
+inline bool          _db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ssimfilt.FDb.unstablefld_curs.Next
+inline void          _db_unstablefld_curs_Next(_db_unstablefld_curs &curs) __attribute__((nothrow));
+// item access
+// func:ssimfilt.FDb.unstablefld_curs.Access
+inline ssimfilt::FUnstablefld& _db_unstablefld_curs_Access(_db_unstablefld_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssimfilt.FDb..Init
 void                 FDb_Init();
 // func:ssimfilt.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
+// --- ssimfilt.FUnstablefld
+// create: ssimfilt.FDb.unstablefld (Lary)
+// global access: unstablefld (Lary, by rowid)
+// global access: ind_unstablefld (Thash, hash field field)
+struct FUnstablefld { // ssimfilt.FUnstablefld
+    ssimfilt::FUnstablefld*   ind_unstablefld_next;   // hash next
+    algo::Smallstr100         field;                  //
+    algo::Comment             comment;                //
+    // func:ssimfilt.FUnstablefld..AssignOp
+    inline ssimfilt::FUnstablefld& operator =(const ssimfilt::FUnstablefld &rhs) = delete;
+    // func:ssimfilt.FUnstablefld..CopyCtor
+    inline               FUnstablefld(const ssimfilt::FUnstablefld &rhs) = delete;
+private:
+    // func:ssimfilt.FUnstablefld..Ctor
+    inline               FUnstablefld() __attribute__((nothrow));
+    // func:ssimfilt.FUnstablefld..Dtor
+    inline               ~FUnstablefld() __attribute__((nothrow));
+    friend ssimfilt::FUnstablefld& unstablefld_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend ssimfilt::FUnstablefld* unstablefld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 unstablefld_RemoveAll() __attribute__((nothrow));
+    friend void                 unstablefld_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:ssimfilt.FUnstablefld.base.CopyOut
+void                 unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:ssimfilt.FUnstablefld.base.CopyIn
+void                 unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstablefld &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ssimfilt.FUnstablefld..Init
+inline void          FUnstablefld_Init(ssimfilt::FUnstablefld& unstablefld);
+// func:ssimfilt.FUnstablefld..Uninit
+void                 FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) __attribute__((nothrow));
+
 // --- ssimfilt.FieldId
 #pragma pack(push,1)
 struct FieldId { // ssimfilt.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator ssimfilt_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(ssimfilt_FieldIdEnum arg);
-    FieldId();
+    // func:ssimfilt.FieldId.value.Cast
+    inline               operator ssimfilt_FieldIdEnum() const __attribute__((nothrow));
+    // func:ssimfilt.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:ssimfilt.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:ssimfilt.FieldId..EnumCtor
+    inline               FieldId(ssimfilt_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:ssimfilt.FieldId.value.GetEnum
-ssimfilt_FieldIdEnum value_GetEnum(const ssimfilt::FieldId& parent) __attribute__((nothrow));
+inline ssimfilt_FieldIdEnum value_GetEnum(const ssimfilt::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:ssimfilt.FieldId.value.SetEnum
-void                 value_SetEnum(ssimfilt::FieldId& parent, ssimfilt_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(ssimfilt::FieldId& parent, ssimfilt_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:ssimfilt.FieldId.value.ToCstr
@@ -309,7 +447,7 @@ bool                 value_ReadStrptrMaybe(ssimfilt::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ssimfilt.FieldId..Init
-void                 FieldId_Init(ssimfilt::FieldId& parent);
+inline void          FieldId_Init(ssimfilt::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.FieldId.String  printfmt:Raw
 // func:ssimfilt.FieldId..Print
@@ -318,10 +456,14 @@ void                 FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) _
 // --- ssimfilt.KVRegx
 // create: ssimfilt.FDb.matchfield (Lary)
 // create: ssimfilt.FDb.selfield (Lary)
+// global access: matchfield (Lary, by rowid)
+// global access: selfield (Lary, by rowid)
 struct KVRegx { // ssimfilt.KVRegx: Filters that must match input key/value pairs
     algo_lib::Regx   key;     // Sql Regx
     algo_lib::Regx   value;   // Sql Regx
 private:
+    // func:ssimfilt.KVRegx..Ctor
+    inline               KVRegx() __attribute__((nothrow));
     friend ssimfilt::KVRegx&    matchfield_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend ssimfilt::KVRegx*    matchfield_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 matchfield_RemoveAll() __attribute__((nothrow));
@@ -330,11 +472,6 @@ private:
     friend ssimfilt::KVRegx*    selfield_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 selfield_RemoveAll() __attribute__((nothrow));
     friend void                 selfield_RemoveLast() __attribute__((nothrow));
-    KVRegx();
-    // reftype Regx of ssimfilt.KVRegx.key prohibits copy
-    // reftype Regx of ssimfilt.KVRegx.value prohibits copy
-    KVRegx(const KVRegx&){ /*disallow copy constructor */}
-    void operator =(const KVRegx&){ /*disallow direct assignment */}
 };
 
 // Print back to string
@@ -345,6 +482,58 @@ void                 key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out)
 // func:ssimfilt.KVRegx.value.Print
 void                 value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) __attribute__((nothrow));
 
+
+// --- ssimfilt.TableId
+struct TableId { // ssimfilt.TableId: Index of table in this namespace
+    i32   value;   //   -1  index of table
+    // func:ssimfilt.TableId.value.Cast
+    inline               operator ssimfilt_TableIdEnum() const __attribute__((nothrow));
+    // func:ssimfilt.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:ssimfilt.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:ssimfilt.TableId..EnumCtor
+    inline               TableId(ssimfilt_TableIdEnum arg) __attribute__((nothrow));
+};
+
+// Get value of field as enum type
+// func:ssimfilt.TableId.value.GetEnum
+inline ssimfilt_TableIdEnum value_GetEnum(const ssimfilt::TableId& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ssimfilt.TableId.value.SetEnum
+inline void          value_SetEnum(ssimfilt::TableId& parent, ssimfilt_TableIdEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ssimfilt.TableId.value.ToCstr
+const char*          value_ToCstr(const ssimfilt::TableId& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:ssimfilt.TableId.value.Print
+void                 value_Print(const ssimfilt::TableId& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ssimfilt.TableId.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ssimfilt.TableId.value.SetStrptr
+void                 value_SetStrptr(ssimfilt::TableId& parent, algo::strptr rhs, ssimfilt_TableIdEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:ssimfilt.TableId.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of ssimfilt::TableId from an ascii string.
+// The format of the string is the format of the ssimfilt::TableId's only field
+// func:ssimfilt.TableId..ReadStrptrMaybe
+bool                 TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ssimfilt.TableId..Init
+inline void          TableId_Init(ssimfilt::TableId& parent);
+// print string representation of ROW to string STR
+// cfmt:ssimfilt.TableId.String  printfmt:Raw
+// func:ssimfilt.TableId..Print
+void                 TableId_Print(ssimfilt::TableId& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ssimfilt { // gen:ns_curstext
 
@@ -371,6 +560,14 @@ struct _db_selfield_curs {// cursor
     _db_selfield_curs(){ parent=NULL; index=0; }
 };
 
+
+struct _db_unstablefld_curs {// cursor
+    typedef ssimfilt::FUnstablefld ChildType;
+    ssimfilt::FDb *parent;
+    i64 index;
+    _db_unstablefld_curs(){ parent=NULL; index=0; }
+};
+
 } // gen:ns_curstext
 namespace ssimfilt { // gen:ns_func
 // func:ssimfilt...StaticCheck
@@ -386,4 +583,5 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssimfilt::trace &row);// cfmt:ssimfilt.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssimfilt::FieldId &row);// cfmt:ssimfilt.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ssimfilt::TableId &row);// cfmt:ssimfilt.TableId.String
 }

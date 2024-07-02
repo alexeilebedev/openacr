@@ -25,18 +25,15 @@
 #pragma once
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline bash2html::trace::trace() {
+
+// --- bash2html.trace..Ctor
+inline  bash2html::trace::trace() {
 }
 
-inline bash2html::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- bash2html.FDb..Uninit
+inline void bash2html::FDb_Uninit() {
+    bash2html::FDb &row = _db; (void)row;
 }
-inline bash2html::FieldId::FieldId(bash2html_FieldIdEnum arg) { this->value = i32(arg); }
-inline bash2html::FieldId::FieldId() {
-    bash2html::FieldId_Init(*this);
-}
-
 
 // --- bash2html.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -51,7 +48,7 @@ inline void bash2html::value_SetEnum(bash2html::FieldId& parent, bash2html_Field
 }
 
 // --- bash2html.FieldId.value.Cast
-inline bash2html::FieldId::operator bash2html_FieldIdEnum () const {
+inline  bash2html::FieldId::operator bash2html_FieldIdEnum() const {
     return bash2html_FieldIdEnum((*this).value);
 }
 
@@ -59,6 +56,22 @@ inline bash2html::FieldId::operator bash2html_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void bash2html::FieldId_Init(bash2html::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- bash2html.FieldId..Ctor
+inline  bash2html::FieldId::FieldId() {
+    bash2html::FieldId_Init(*this);
+}
+
+// --- bash2html.FieldId..FieldwiseCtor
+inline  bash2html::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- bash2html.FieldId..EnumCtor
+inline  bash2html::FieldId::FieldId(bash2html_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const bash2html::trace &row) {// cfmt:bash2html.trace.String

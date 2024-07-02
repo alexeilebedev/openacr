@@ -24,15 +24,6 @@
 
 #pragma once
 //#pragma endinclude
-inline lib_prot::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_prot::FieldId::FieldId(lib_prot_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_prot::FieldId::FieldId() {
-    lib_prot::FieldId_Init(*this);
-}
-
 
 // --- lib_prot.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -47,7 +38,7 @@ inline void lib_prot::value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdE
 }
 
 // --- lib_prot.FieldId.value.Cast
-inline lib_prot::FieldId::operator lib_prot_FieldIdEnum () const {
+inline  lib_prot::FieldId::operator lib_prot_FieldIdEnum() const {
     return lib_prot_FieldIdEnum((*this).value);
 }
 
@@ -55,6 +46,22 @@ inline lib_prot::FieldId::operator lib_prot_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_prot::FieldId_Init(lib_prot::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_prot.FieldId..Ctor
+inline  lib_prot::FieldId::FieldId() {
+    lib_prot::FieldId_Init(*this);
+}
+
+// --- lib_prot.FieldId..FieldwiseCtor
+inline  lib_prot::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_prot.FieldId..EnumCtor
+inline  lib_prot::FieldId::FieldId(lib_prot_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_prot::FieldId &row) {// cfmt:lib_prot.FieldId.String

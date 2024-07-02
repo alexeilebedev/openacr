@@ -25,18 +25,15 @@
 #pragma once
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline strconv::trace::trace() {
+
+// --- strconv.trace..Ctor
+inline  strconv::trace::trace() {
 }
 
-inline strconv::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- strconv.FDb..Uninit
+inline void strconv::FDb_Uninit() {
+    strconv::FDb &row = _db; (void)row;
 }
-inline strconv::FieldId::FieldId(strconv_FieldIdEnum arg) { this->value = i32(arg); }
-inline strconv::FieldId::FieldId() {
-    strconv::FieldId_Init(*this);
-}
-
 
 // --- strconv.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -51,7 +48,7 @@ inline void strconv::value_SetEnum(strconv::FieldId& parent, strconv_FieldIdEnum
 }
 
 // --- strconv.FieldId.value.Cast
-inline strconv::FieldId::operator strconv_FieldIdEnum () const {
+inline  strconv::FieldId::operator strconv_FieldIdEnum() const {
     return strconv_FieldIdEnum((*this).value);
 }
 
@@ -59,6 +56,22 @@ inline strconv::FieldId::operator strconv_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void strconv::FieldId_Init(strconv::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- strconv.FieldId..Ctor
+inline  strconv::FieldId::FieldId() {
+    strconv::FieldId_Init(*this);
+}
+
+// --- strconv.FieldId..FieldwiseCtor
+inline  strconv::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- strconv.FieldId..EnumCtor
+inline  strconv::FieldId::FieldId(strconv_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const strconv::trace &row) {// cfmt:strconv.trace.String

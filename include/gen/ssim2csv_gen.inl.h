@@ -27,9 +27,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline ssim2csv::trace::trace() {
-}
 
+// --- ssim2csv.trace..Ctor
+inline  ssim2csv::trace::trace() {
+}
 
 // --- ssim2csv.FDb.expand.EmptyQ
 // Return true if index is empty
@@ -464,46 +465,42 @@ inline bool ssim2csv::_db_flatten_curs_ValidQ(_db_flatten_curs &curs) {
 inline ssim2csv::FFlatten& ssim2csv::_db_flatten_curs_Access(_db_flatten_curs &curs) {
     return curs.elems[curs.index];
 }
-inline ssim2csv::FExpand::FExpand() {
-    ssim2csv::FExpand_Init(*this);
-}
-
-inline ssim2csv::FExpand::~FExpand() {
-    ssim2csv::FExpand_Uninit(*this);
-}
-
 
 // --- ssim2csv.FExpand..Init
 // Set all fields to initial values.
 inline void ssim2csv::FExpand_Init(ssim2csv::FExpand& expand) {
     expand.ind_expand_next = (ssim2csv::FExpand*)-1; // (ssim2csv.FDb.ind_expand) not-in-hash
 }
-inline ssim2csv::FFlatten::FFlatten() {
+
+// --- ssim2csv.FExpand..Ctor
+inline  ssim2csv::FExpand::FExpand() {
+    ssim2csv::FExpand_Init(*this);
 }
 
-inline ssim2csv::FOutfile::FOutfile() {
-    ssim2csv::FOutfile_Init(*this);
+// --- ssim2csv.FExpand..Dtor
+inline  ssim2csv::FExpand::~FExpand() {
+    ssim2csv::FExpand_Uninit(*this);
 }
 
-inline ssim2csv::FOutfile::~FOutfile() {
-    ssim2csv::FOutfile_Uninit(*this);
+// --- ssim2csv.FFlatten..Ctor
+inline  ssim2csv::FFlatten::FFlatten() {
 }
-
 
 // --- ssim2csv.FOutfile..Init
 // Set all fields to initial values.
 inline void ssim2csv::FOutfile_Init(ssim2csv::FOutfile& outfile) {
     outfile.ind_outfile_next = (ssim2csv::FOutfile*)-1; // (ssim2csv.FDb.ind_outfile) not-in-hash
 }
-inline ssim2csv::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ssim2csv::FieldId::FieldId(ssim2csv_FieldIdEnum arg) { this->value = i32(arg); }
-inline ssim2csv::FieldId::FieldId() {
-    ssim2csv::FieldId_Init(*this);
+
+// --- ssim2csv.FOutfile..Ctor
+inline  ssim2csv::FOutfile::FOutfile() {
+    ssim2csv::FOutfile_Init(*this);
 }
 
+// --- ssim2csv.FOutfile..Dtor
+inline  ssim2csv::FOutfile::~FOutfile() {
+    ssim2csv::FOutfile_Uninit(*this);
+}
 
 // --- ssim2csv.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -518,7 +515,7 @@ inline void ssim2csv::value_SetEnum(ssim2csv::FieldId& parent, ssim2csv_FieldIdE
 }
 
 // --- ssim2csv.FieldId.value.Cast
-inline ssim2csv::FieldId::operator ssim2csv_FieldIdEnum () const {
+inline  ssim2csv::FieldId::operator ssim2csv_FieldIdEnum() const {
     return ssim2csv_FieldIdEnum((*this).value);
 }
 
@@ -526,6 +523,22 @@ inline ssim2csv::FieldId::operator ssim2csv_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void ssim2csv::FieldId_Init(ssim2csv::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- ssim2csv.FieldId..Ctor
+inline  ssim2csv::FieldId::FieldId() {
+    ssim2csv::FieldId_Init(*this);
+}
+
+// --- ssim2csv.FieldId..FieldwiseCtor
+inline  ssim2csv::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ssim2csv.FieldId..EnumCtor
+inline  ssim2csv::FieldId::FieldId(ssim2csv_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssim2csv::trace &row) {// cfmt:ssim2csv.trace.String

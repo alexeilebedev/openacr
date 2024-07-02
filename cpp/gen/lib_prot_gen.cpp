@@ -28,7 +28,7 @@
 //#pragma endinclude
 namespace lib_prot { // gen:ns_print_proto
     // func:lib_prot...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_prot.FieldId.value.ToCstr

@@ -34,7 +34,7 @@ const char *atfdb_Msgdir_msgdir_in    = "in";
 
 namespace atfdb { // gen:ns_print_proto
     // func:atfdb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atfdb.Amctest..ReadFieldMaybe

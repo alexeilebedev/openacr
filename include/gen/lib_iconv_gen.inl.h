@@ -24,18 +24,15 @@
 
 #pragma once
 //#pragma endinclude
-inline lib_iconv::trace::trace() {
+
+// --- lib_iconv.trace..Ctor
+inline  lib_iconv::trace::trace() {
 }
 
-inline lib_iconv::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- lib_iconv.FDb..Uninit
+inline void lib_iconv::FDb_Uninit() {
+    lib_iconv::FDb &row = _db; (void)row;
 }
-inline lib_iconv::FieldId::FieldId(lib_iconv_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_iconv::FieldId::FieldId() {
-    lib_iconv::FieldId_Init(*this);
-}
-
 
 // --- lib_iconv.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -50,7 +47,7 @@ inline void lib_iconv::value_SetEnum(lib_iconv::FieldId& parent, lib_iconv_Field
 }
 
 // --- lib_iconv.FieldId.value.Cast
-inline lib_iconv::FieldId::operator lib_iconv_FieldIdEnum () const {
+inline  lib_iconv::FieldId::operator lib_iconv_FieldIdEnum() const {
     return lib_iconv_FieldIdEnum((*this).value);
 }
 
@@ -59,19 +56,43 @@ inline lib_iconv::FieldId::operator lib_iconv_FieldIdEnum () const {
 inline void lib_iconv::FieldId_Init(lib_iconv::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline lib_iconv::Icd::Icd() {
-    lib_iconv::Icd_Init(*this);
+
+// --- lib_iconv.FieldId..Ctor
+inline  lib_iconv::FieldId::FieldId() {
+    lib_iconv::FieldId_Init(*this);
 }
 
-inline lib_iconv::Icd::~Icd() {
-    lib_iconv::Icd_Uninit(*this);
+// --- lib_iconv.FieldId..FieldwiseCtor
+inline  lib_iconv::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- lib_iconv.FieldId..EnumCtor
+inline  lib_iconv::FieldId::FieldId(lib_iconv_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_iconv.Icd..Init
 // Set all fields to initial values.
 inline void lib_iconv::Icd_Init(lib_iconv::Icd& icd) {
     icd.icd = iconv_t(((iconv_t)-1));
+}
+
+// --- lib_iconv.Icd..Uninit
+inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
+    lib_iconv::Icd &row = icd; (void)row;
+    icd_Cleanup(icd); // dmmeta.fcleanup:lib_iconv.Icd.icd
+}
+
+// --- lib_iconv.Icd..Ctor
+inline  lib_iconv::Icd::Icd() {
+    lib_iconv::Icd_Init(*this);
+}
+
+// --- lib_iconv.Icd..Dtor
+inline  lib_iconv::Icd::~Icd() {
+    lib_iconv::Icd_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_iconv::trace &row) {// cfmt:lib_iconv.trace.String

@@ -27,40 +27,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline acr_compl::Badness::Badness(u8                             in_badness
-        ,const algo::strptr&            in_strkey)
-    : badness(in_badness)
-    , strkey(in_strkey)
-{
-}
-
-inline bool acr_compl::Badness::operator ==(const acr_compl::Badness &rhs) const {
-    return acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
-}
-
-inline bool acr_compl::Badness::operator !=(const acr_compl::Badness &rhs) const {
-    return !acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
-}
-
-inline bool acr_compl::Badness::operator <(const acr_compl::Badness &rhs) const {
-    return acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
-}
-
-inline bool acr_compl::Badness::operator >(const acr_compl::Badness &rhs) const {
-    return rhs < *this;
-}
-
-inline bool acr_compl::Badness::operator <=(const acr_compl::Badness &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool acr_compl::Badness::operator >=(const acr_compl::Badness &rhs) const {
-    return !(*this < rhs);
-}
-inline acr_compl::Badness::Badness() {
-    acr_compl::Badness_Init(*this);
-}
-
 
 // --- acr_compl.Badness.badness.GetEnum
 // Get value of field as enum type
@@ -75,8 +41,38 @@ inline void acr_compl::badness_SetEnum(acr_compl::Badness& parent, acr_compl_Bad
 }
 
 // --- acr_compl.Badness.badness.Cast
-inline acr_compl::Badness::operator acr_compl_BadnessEnum () const {
+inline  acr_compl::Badness::operator acr_compl_BadnessEnum() const {
     return acr_compl_BadnessEnum((*this).badness);
+}
+
+// --- acr_compl.Badness..EqOp
+inline bool acr_compl::Badness::operator ==(const acr_compl::Badness &rhs) const {
+    return acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
+}
+
+// --- acr_compl.Badness..NeOp
+inline bool acr_compl::Badness::operator !=(const acr_compl::Badness &rhs) const {
+    return !acr_compl::Badness_Eq(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
+}
+
+// --- acr_compl.Badness..LtOp
+inline bool acr_compl::Badness::operator <(const acr_compl::Badness &rhs) const {
+    return acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
+}
+
+// --- acr_compl.Badness..GtOp
+inline bool acr_compl::Badness::operator >(const acr_compl::Badness &rhs) const {
+    return acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(rhs),const_cast<acr_compl::Badness&>(*this));
+}
+
+// --- acr_compl.Badness..LeOp
+inline bool acr_compl::Badness::operator <=(const acr_compl::Badness &rhs) const {
+    return !acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(rhs),const_cast<acr_compl::Badness&>(*this));
+}
+
+// --- acr_compl.Badness..GeOp
+inline bool acr_compl::Badness::operator >=(const acr_compl::Badness &rhs) const {
+    return !acr_compl::Badness_Lt(const_cast<acr_compl::Badness&>(*this),const_cast<acr_compl::Badness&>(rhs));
 }
 
 // --- acr_compl.Badness..Lt
@@ -121,38 +117,47 @@ inline bool acr_compl::Badness_Update(acr_compl::Badness &lhs, acr_compl::Badnes
     }
     return ret;
 }
-inline acr_compl::Completion::Completion() {
-    acr_compl::Completion_Init(*this);
+
+// --- acr_compl.Badness..Ctor
+inline  acr_compl::Badness::Badness() {
+    acr_compl::Badness_Init(*this);
 }
 
+// --- acr_compl.Badness..FieldwiseCtor
+inline  acr_compl::Badness::Badness(u8 in_badness, const algo::strptr& in_strkey)
+    : badness(in_badness)
+    , strkey(in_strkey)
+ {
+}
 
 // --- acr_compl.Completion..Init
 // Set all fields to initial values.
 inline void acr_compl::Completion_Init(acr_compl::Completion& parent) {
     parent.nospace = bool(false);
 }
-inline acr_compl::FAnonfld::FAnonfld() {
+
+// --- acr_compl.Completion..Ctor
+inline  acr_compl::Completion::Completion() {
+    acr_compl::Completion_Init(*this);
 }
 
-inline acr_compl::FAnonfld::~FAnonfld() {
+// --- acr_compl.FAnonfld..Ctor
+inline  acr_compl::FAnonfld::FAnonfld() {
+}
+
+// --- acr_compl.FAnonfld..Dtor
+inline  acr_compl::FAnonfld::~FAnonfld() {
     acr_compl::FAnonfld_Uninit(*this);
 }
 
-inline acr_compl::FArgvtype::FArgvtype() {
+// --- acr_compl.FArgvtype..Ctor
+inline  acr_compl::FArgvtype::FArgvtype() {
 }
 
-inline acr_compl::FArgvtype::~FArgvtype() {
+// --- acr_compl.FArgvtype..Dtor
+inline  acr_compl::FArgvtype::~FArgvtype() {
     acr_compl::FArgvtype_Uninit(*this);
 }
-
-inline acr_compl::FCompletion::FCompletion() {
-    acr_compl::FCompletion_Init(*this);
-}
-
-inline acr_compl::FCompletion::~FCompletion() {
-    acr_compl::FCompletion_Uninit(*this);
-}
-
 
 // --- acr_compl.FCompletion.badness.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -175,17 +180,20 @@ inline void acr_compl::FCompletion_Init(acr_compl::FCompletion& completion) {
     completion.field = NULL;
     completion.bh_completion_idx = -1; // (acr_compl.FDb.bh_completion) not-in-heap
 }
-inline acr_compl::FComplsource::FComplsource() {
+
+// --- acr_compl.FCompletion..Ctor
+inline  acr_compl::FCompletion::FCompletion() {
+    acr_compl::FCompletion_Init(*this);
 }
 
-inline acr_compl::FCtype::FCtype() {
-    acr_compl::FCtype_Init(*this);
+// --- acr_compl.FCompletion..Dtor
+inline  acr_compl::FCompletion::~FCompletion() {
+    acr_compl::FCompletion_Uninit(*this);
 }
 
-inline acr_compl::FCtype::~FCtype() {
-    acr_compl::FCtype_Uninit(*this);
+// --- acr_compl.FComplsource..Ctor
+inline  acr_compl::FComplsource::FComplsource() {
 }
-
 
 // --- acr_compl.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -320,9 +328,20 @@ inline void acr_compl::FCtype_Init(acr_compl::FCtype& ctype) {
     ctype.c_argvtype = NULL;
     ctype.ind_ctype_next = (acr_compl::FCtype*)-1; // (acr_compl.FDb.ind_ctype) not-in-hash
 }
-inline acr_compl::trace::trace() {
+
+// --- acr_compl.FCtype..Ctor
+inline  acr_compl::FCtype::FCtype() {
+    acr_compl::FCtype_Init(*this);
 }
 
+// --- acr_compl.FCtype..Dtor
+inline  acr_compl::FCtype::~FCtype() {
+    acr_compl::FCtype_Uninit(*this);
+}
+
+// --- acr_compl.trace..Ctor
+inline  acr_compl::trace::trace() {
+}
 
 // --- acr_compl.FDb.word.EmptyQ
 // Return true if index is empty
@@ -1402,14 +1421,6 @@ inline void acr_compl::_db_complsource_curs_Next(_db_complsource_curs &curs) {
 inline acr_compl::FComplsource& acr_compl::_db_complsource_curs_Access(_db_complsource_curs &curs) {
     return complsource_qFind(u64(curs.index));
 }
-inline acr_compl::FFalias::FFalias() {
-    acr_compl::FFalias_Init(*this);
-}
-
-inline acr_compl::FFalias::~FFalias() {
-    acr_compl::FFalias_Uninit(*this);
-}
-
 
 // --- acr_compl.FFalias..Init
 // Set all fields to initial values.
@@ -1417,14 +1428,16 @@ inline void acr_compl::FFalias_Init(acr_compl::FFalias& falias) {
     falias.p_srcfield = NULL;
     falias.p_field = NULL;
 }
-inline acr_compl::FFcmdline::FFcmdline() {
-    acr_compl::FFcmdline_Init(*this);
+
+// --- acr_compl.FFalias..Ctor
+inline  acr_compl::FFalias::FFalias() {
+    acr_compl::FFalias_Init(*this);
 }
 
-inline acr_compl::FFcmdline::~FFcmdline() {
-    acr_compl::FFcmdline_Uninit(*this);
+// --- acr_compl.FFalias..Dtor
+inline  acr_compl::FFalias::~FFalias() {
+    acr_compl::FFalias_Uninit(*this);
 }
-
 
 // --- acr_compl.FFcmdline..Init
 // Set all fields to initial values.
@@ -1433,28 +1446,32 @@ inline void acr_compl::FFcmdline_Init(acr_compl::FFcmdline& fcmdline) {
     fcmdline.p_field = NULL;
     fcmdline.p_basecmdline = NULL;
 }
-inline acr_compl::FFconst::FFconst() {
-    acr_compl::FFconst_Init(*this);
+
+// --- acr_compl.FFcmdline..Ctor
+inline  acr_compl::FFcmdline::FFcmdline() {
+    acr_compl::FFcmdline_Init(*this);
 }
 
-inline acr_compl::FFconst::~FFconst() {
-    acr_compl::FFconst_Uninit(*this);
+// --- acr_compl.FFcmdline..Dtor
+inline  acr_compl::FFcmdline::~FFcmdline() {
+    acr_compl::FFcmdline_Uninit(*this);
 }
-
 
 // --- acr_compl.FFconst..Init
 // Set all fields to initial values.
 inline void acr_compl::FFconst_Init(acr_compl::FFconst& fconst) {
     fconst.field_c_fconst_in_ary = bool(false);
 }
-inline acr_compl::FFflag::FFflag() {
-    acr_compl::FFflag_Init(*this);
+
+// --- acr_compl.FFconst..Ctor
+inline  acr_compl::FFconst::FFconst() {
+    acr_compl::FFconst_Init(*this);
 }
 
-inline acr_compl::FFflag::~FFflag() {
-    acr_compl::FFflag_Uninit(*this);
+// --- acr_compl.FFconst..Dtor
+inline  acr_compl::FFconst::~FFconst() {
+    acr_compl::FFconst_Uninit(*this);
 }
-
 
 // --- acr_compl.FFflag..Init
 // Set all fields to initial values.
@@ -1462,14 +1479,16 @@ inline void acr_compl::FFflag_Init(acr_compl::FFflag& fflag) {
     fflag.cumulative = bool(false);
     fflag.emptyval = algo::strptr("");
 }
-inline acr_compl::FField::FField() {
-    acr_compl::FField_Init(*this);
+
+// --- acr_compl.FFflag..Ctor
+inline  acr_compl::FFflag::FFflag() {
+    acr_compl::FFflag_Init(*this);
 }
 
-inline acr_compl::FField::~FField() {
-    acr_compl::FField_Uninit(*this);
+// --- acr_compl.FFflag..Dtor
+inline  acr_compl::FFflag::~FFflag() {
+    acr_compl::FFflag_Uninit(*this);
 }
-
 
 // --- acr_compl.FField.c_anonfld.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1686,14 +1705,16 @@ inline void acr_compl::field_c_falias_srcfield_curs_Next(field_c_falias_srcfield
 inline acr_compl::FFalias& acr_compl::field_c_falias_srcfield_curs_Access(field_c_falias_srcfield_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline acr_compl::FNs::FNs() {
-    acr_compl::FNs_Init(*this);
+
+// --- acr_compl.FField..Ctor
+inline  acr_compl::FField::FField() {
+    acr_compl::FField_Init(*this);
 }
 
-inline acr_compl::FNs::~FNs() {
-    acr_compl::FNs_Uninit(*this);
+// --- acr_compl.FField..Dtor
+inline  acr_compl::FField::~FField() {
+    acr_compl::FField_Uninit(*this);
 }
-
 
 // --- acr_compl.FNs.c_fcmdline.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1721,14 +1742,16 @@ inline void acr_compl::FNs_Init(acr_compl::FNs& ns) {
     ns.c_fcmdline = NULL;
     ns.ind_ns_next = (acr_compl::FNs*)-1; // (acr_compl.FDb.ind_ns) not-in-hash
 }
-inline acr_compl::FSsimfile::FSsimfile() {
-    acr_compl::FSsimfile_Init(*this);
+
+// --- acr_compl.FNs..Ctor
+inline  acr_compl::FNs::FNs() {
+    acr_compl::FNs_Init(*this);
 }
 
-inline acr_compl::FSsimfile::~FSsimfile() {
-    acr_compl::FSsimfile_Uninit(*this);
+// --- acr_compl.FNs..Dtor
+inline  acr_compl::FNs::~FNs() {
+    acr_compl::FNs_Uninit(*this);
 }
-
 
 // --- acr_compl.FSsimfile..Init
 // Set all fields to initial values.
@@ -1736,15 +1759,16 @@ inline void acr_compl::FSsimfile_Init(acr_compl::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.ind_ssimfile_next = (acr_compl::FSsimfile*)-1; // (acr_compl.FDb.ind_ssimfile) not-in-hash
 }
-inline acr_compl::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_compl::FieldId::FieldId(acr_compl_FieldIdEnum arg) { this->value = i32(arg); }
-inline acr_compl::FieldId::FieldId() {
-    acr_compl::FieldId_Init(*this);
+
+// --- acr_compl.FSsimfile..Ctor
+inline  acr_compl::FSsimfile::FSsimfile() {
+    acr_compl::FSsimfile_Init(*this);
 }
 
+// --- acr_compl.FSsimfile..Dtor
+inline  acr_compl::FSsimfile::~FSsimfile() {
+    acr_compl::FSsimfile_Uninit(*this);
+}
 
 // --- acr_compl.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1759,7 +1783,7 @@ inline void acr_compl::value_SetEnum(acr_compl::FieldId& parent, acr_compl_Field
 }
 
 // --- acr_compl.FieldId.value.Cast
-inline acr_compl::FieldId::operator acr_compl_FieldIdEnum () const {
+inline  acr_compl::FieldId::operator acr_compl_FieldIdEnum() const {
     return acr_compl_FieldIdEnum((*this).value);
 }
 
@@ -1768,15 +1792,22 @@ inline acr_compl::FieldId::operator acr_compl_FieldIdEnum () const {
 inline void acr_compl::FieldId_Init(acr_compl::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline acr_compl::Shellqtype::Shellqtype(u8                             in_type)
-    : type(in_type)
-{
-}
-inline acr_compl::Shellqtype::Shellqtype(acr_compl_ShellqtypeEnum arg) { this->type = u8(arg); }
-inline acr_compl::Shellqtype::Shellqtype() {
-    acr_compl::Shellqtype_Init(*this);
+
+// --- acr_compl.FieldId..Ctor
+inline  acr_compl::FieldId::FieldId() {
+    acr_compl::FieldId_Init(*this);
 }
 
+// --- acr_compl.FieldId..FieldwiseCtor
+inline  acr_compl::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_compl.FieldId..EnumCtor
+inline  acr_compl::FieldId::FieldId(acr_compl_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- acr_compl.Shellqtype.type.GetEnum
 // Get value of field as enum type
@@ -1795,15 +1826,22 @@ inline void acr_compl::type_SetEnum(acr_compl::Shellqtype& parent, acr_compl_She
 inline void acr_compl::Shellqtype_Init(acr_compl::Shellqtype& parent) {
     parent.type = u8(0);
 }
-inline acr_compl::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_compl::TableId::TableId(acr_compl_TableIdEnum arg) { this->value = i32(arg); }
-inline acr_compl::TableId::TableId() {
-    acr_compl::TableId_Init(*this);
+
+// --- acr_compl.Shellqtype..Ctor
+inline  acr_compl::Shellqtype::Shellqtype() {
+    acr_compl::Shellqtype_Init(*this);
 }
 
+// --- acr_compl.Shellqtype..FieldwiseCtor
+inline  acr_compl::Shellqtype::Shellqtype(u8 in_type)
+    : type(in_type)
+ {
+}
+
+// --- acr_compl.Shellqtype..EnumCtor
+inline  acr_compl::Shellqtype::Shellqtype(acr_compl_ShellqtypeEnum arg) {
+    this->type = u8(arg);
+}
 
 // --- acr_compl.TableId.value.GetEnum
 // Get value of field as enum type
@@ -1818,7 +1856,7 @@ inline void acr_compl::value_SetEnum(acr_compl::TableId& parent, acr_compl_Table
 }
 
 // --- acr_compl.TableId.value.Cast
-inline acr_compl::TableId::operator acr_compl_TableIdEnum () const {
+inline  acr_compl::TableId::operator acr_compl_TableIdEnum() const {
     return acr_compl_TableIdEnum((*this).value);
 }
 
@@ -1826,6 +1864,22 @@ inline acr_compl::TableId::operator acr_compl_TableIdEnum () const {
 // Set all fields to initial values.
 inline void acr_compl::TableId_Init(acr_compl::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- acr_compl.TableId..Ctor
+inline  acr_compl::TableId::TableId() {
+    acr_compl::TableId_Init(*this);
+}
+
+// --- acr_compl.TableId..FieldwiseCtor
+inline  acr_compl::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_compl.TableId..EnumCtor
+inline  acr_compl::TableId::TableId(acr_compl_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_compl::Badness &row) {// cfmt:acr_compl.Badness.String

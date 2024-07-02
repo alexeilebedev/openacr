@@ -27,45 +27,52 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/fm_gen.inl.h"
 //#pragma endinclude
-inline lib_fm::FAlarm::FAlarm() {
+
+// --- lib_fm.FAlarm..Ctor
+inline  lib_fm::FAlarm::FAlarm() {
     lib_fm::FAlarm_Init(*this);
 }
 
-inline lib_fm::FAlarm::~FAlarm() {
+// --- lib_fm.FAlarm..Dtor
+inline  lib_fm::FAlarm::~FAlarm() {
     lib_fm::FAlarm_Uninit(*this);
 }
-
-inline lib_fm::FAlmCode::FAlmCode() {
-    lib_fm::FAlmCode_Init(*this);
-}
-
-inline lib_fm::FAlmCode::~FAlmCode() {
-    lib_fm::FAlmCode_Uninit(*this);
-}
-
 
 // --- lib_fm.FAlmCode..Init
 // Set all fields to initial values.
 inline void lib_fm::FAlmCode_Init(lib_fm::FAlmCode& alm_code) {
     alm_code.ind_alm_code_next = (lib_fm::FAlmCode*)-1; // (lib_fm.FDb.ind_alm_code) not-in-hash
 }
-inline lib_fm::FAlmObjtype::FAlmObjtype() {
-    lib_fm::FAlmObjtype_Init(*this);
+
+// --- lib_fm.FAlmCode..Ctor
+inline  lib_fm::FAlmCode::FAlmCode() {
+    lib_fm::FAlmCode_Init(*this);
 }
 
-inline lib_fm::FAlmObjtype::~FAlmObjtype() {
-    lib_fm::FAlmObjtype_Uninit(*this);
+// --- lib_fm.FAlmCode..Dtor
+inline  lib_fm::FAlmCode::~FAlmCode() {
+    lib_fm::FAlmCode_Uninit(*this);
 }
-
 
 // --- lib_fm.FAlmObjtype..Init
 // Set all fields to initial values.
 inline void lib_fm::FAlmObjtype_Init(lib_fm::FAlmObjtype& alm_objtype) {
     alm_objtype.ind_alm_objtype_next = (lib_fm::FAlmObjtype*)-1; // (lib_fm.FDb.ind_alm_objtype) not-in-hash
 }
-inline lib_fm::trace::trace() {
+
+// --- lib_fm.FAlmObjtype..Ctor
+inline  lib_fm::FAlmObjtype::FAlmObjtype() {
+    lib_fm::FAlmObjtype_Init(*this);
 }
 
+// --- lib_fm.FAlmObjtype..Dtor
+inline  lib_fm::FAlmObjtype::~FAlmObjtype() {
+    lib_fm::FAlmObjtype_Uninit(*this);
+}
+
+// --- lib_fm.trace..Ctor
+inline  lib_fm::trace::trace() {
+}
 
 // --- lib_fm.FDb.alarm.EmptyQ
 // Return true if index is empty
@@ -332,15 +339,6 @@ inline void lib_fm::_db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) {
 inline lib_fm::FAlmObjtype& lib_fm::_db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) {
     return alm_objtype_qFind(u64(curs.index));
 }
-inline lib_fm::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_fm::FieldId::FieldId(lib_fm_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_fm::FieldId::FieldId() {
-    lib_fm::FieldId_Init(*this);
-}
-
 
 // --- lib_fm.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -355,7 +353,7 @@ inline void lib_fm::value_SetEnum(lib_fm::FieldId& parent, lib_fm_FieldIdEnum rh
 }
 
 // --- lib_fm.FieldId.value.Cast
-inline lib_fm::FieldId::operator lib_fm_FieldIdEnum () const {
+inline  lib_fm::FieldId::operator lib_fm_FieldIdEnum() const {
     return lib_fm_FieldIdEnum((*this).value);
 }
 
@@ -364,15 +362,22 @@ inline lib_fm::FieldId::operator lib_fm_FieldIdEnum () const {
 inline void lib_fm::FieldId_Init(lib_fm::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline lib_fm::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_fm::TableId::TableId(lib_fm_TableIdEnum arg) { this->value = i32(arg); }
-inline lib_fm::TableId::TableId() {
-    lib_fm::TableId_Init(*this);
+
+// --- lib_fm.FieldId..Ctor
+inline  lib_fm::FieldId::FieldId() {
+    lib_fm::FieldId_Init(*this);
 }
 
+// --- lib_fm.FieldId..FieldwiseCtor
+inline  lib_fm::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_fm.FieldId..EnumCtor
+inline  lib_fm::FieldId::FieldId(lib_fm_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_fm.TableId.value.GetEnum
 // Get value of field as enum type
@@ -387,7 +392,7 @@ inline void lib_fm::value_SetEnum(lib_fm::TableId& parent, lib_fm_TableIdEnum rh
 }
 
 // --- lib_fm.TableId.value.Cast
-inline lib_fm::TableId::operator lib_fm_TableIdEnum () const {
+inline  lib_fm::TableId::operator lib_fm_TableIdEnum() const {
     return lib_fm_TableIdEnum((*this).value);
 }
 
@@ -395,6 +400,22 @@ inline lib_fm::TableId::operator lib_fm_TableIdEnum () const {
 // Set all fields to initial values.
 inline void lib_fm::TableId_Init(lib_fm::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_fm.TableId..Ctor
+inline  lib_fm::TableId::TableId() {
+    lib_fm::TableId_Init(*this);
+}
+
+// --- lib_fm.TableId..FieldwiseCtor
+inline  lib_fm::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_fm.TableId..EnumCtor
+inline  lib_fm::TableId::TableId(lib_fm_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_fm::trace &row) {// cfmt:lib_fm.trace.String

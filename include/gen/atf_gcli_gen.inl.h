@@ -28,9 +28,10 @@
 #include "include/gen/gclidb_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline atf_gcli::trace::trace() {
-}
 
+// --- atf_gcli.trace..Ctor
+inline  atf_gcli::trace::trace() {
+}
 
 // --- atf_gcli.FDb.gtblacttst.EmptyQ
 // Return true if index is empty
@@ -509,14 +510,6 @@ inline void atf_gcli::_db_gtblact_curs_Next(_db_gtblact_curs &curs) {
 inline atf_gcli::FGtblact& atf_gcli::_db_gtblact_curs_Access(_db_gtblact_curs &curs) {
     return gtblact_qFind(u64(curs.index));
 }
-inline atf_gcli::FGclienv::FGclienv() {
-    atf_gcli::FGclienv_Init(*this);
-}
-
-inline atf_gcli::FGclienv::~FGclienv() {
-    atf_gcli::FGclienv_Uninit(*this);
-}
-
 
 // --- atf_gcli.FGclienv.c_gclienvsub.EmptyQ
 // Return true if index is empty
@@ -609,14 +602,16 @@ inline void atf_gcli::gclienv_c_gclienvsub_curs_Next(gclienv_c_gclienvsub_curs &
 inline atf_gcli::FGclienvsub& atf_gcli::gclienv_c_gclienvsub_curs_Access(gclienv_c_gclienvsub_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline atf_gcli::FGclienvsub::FGclienvsub() {
-    atf_gcli::FGclienvsub_Init(*this);
+
+// --- atf_gcli.FGclienv..Ctor
+inline  atf_gcli::FGclienv::FGclienv() {
+    atf_gcli::FGclienv_Init(*this);
 }
 
-inline atf_gcli::FGclienvsub::~FGclienvsub() {
-    atf_gcli::FGclienvsub_Uninit(*this);
+// --- atf_gcli.FGclienv..Dtor
+inline  atf_gcli::FGclienv::~FGclienv() {
+    atf_gcli::FGclienv_Uninit(*this);
 }
-
 
 // --- atf_gcli.FGclienvsub..Init
 // Set all fields to initial values.
@@ -626,22 +621,26 @@ inline void atf_gcli::FGclienvsub_Init(atf_gcli::FGclienvsub& gclienvsub) {
     gclienvsub.gclienv_c_gclienvsub_in_ary = bool(false);
     gclienvsub.ind_gclienvsub_next = (atf_gcli::FGclienvsub*)-1; // (atf_gcli.FDb.ind_gclienvsub) not-in-hash
 }
-inline atf_gcli::FGtblact::FGtblact() {
+
+// --- atf_gcli.FGclienvsub..Ctor
+inline  atf_gcli::FGclienvsub::FGclienvsub() {
+    atf_gcli::FGclienvsub_Init(*this);
+}
+
+// --- atf_gcli.FGclienvsub..Dtor
+inline  atf_gcli::FGclienvsub::~FGclienvsub() {
+    atf_gcli::FGclienvsub_Uninit(*this);
+}
+
+// --- atf_gcli.FGtblact..Ctor
+inline  atf_gcli::FGtblact::FGtblact() {
     atf_gcli::FGtblact_Init(*this);
 }
 
-inline atf_gcli::FGtblact::~FGtblact() {
+// --- atf_gcli.FGtblact..Dtor
+inline  atf_gcli::FGtblact::~FGtblact() {
     atf_gcli::FGtblact_Uninit(*this);
 }
-
-inline atf_gcli::FGtblacttst::FGtblacttst() {
-    atf_gcli::FGtblacttst_Init(*this);
-}
-
-inline atf_gcli::FGtblacttst::~FGtblacttst() {
-    atf_gcli::FGtblacttst_Uninit(*this);
-}
-
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.EmptyQ
 // Return true if index is empty
@@ -725,14 +724,16 @@ inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Next(gtblacttst_c_gtblactt
 inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttst_c_gtblacttstout_curs_Access(gtblacttst_c_gtblacttstout_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline atf_gcli::FGtblacttstout::FGtblacttstout() {
-    atf_gcli::FGtblacttstout_Init(*this);
+
+// --- atf_gcli.FGtblacttst..Ctor
+inline  atf_gcli::FGtblacttst::FGtblacttst() {
+    atf_gcli::FGtblacttst_Init(*this);
 }
 
-inline atf_gcli::FGtblacttstout::~FGtblacttstout() {
-    atf_gcli::FGtblacttstout_Uninit(*this);
+// --- atf_gcli.FGtblacttst..Dtor
+inline  atf_gcli::FGtblacttst::~FGtblacttst() {
+    atf_gcli::FGtblacttst_Uninit(*this);
 }
-
 
 // --- atf_gcli.FGtblacttstout..Init
 // Set all fields to initial values.
@@ -740,15 +741,16 @@ inline void atf_gcli::FGtblacttstout_Init(atf_gcli::FGtblacttstout& gtblacttstou
     gtblacttstout.gtblacttst_c_gtblacttstout_in_ary = bool(false);
     gtblacttstout.ind_gtblacttstout_next = (atf_gcli::FGtblacttstout*)-1; // (atf_gcli.FDb.ind_gtblacttstout) not-in-hash
 }
-inline atf_gcli::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_gcli::FieldId::FieldId(atf_gcli_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_gcli::FieldId::FieldId() {
-    atf_gcli::FieldId_Init(*this);
+
+// --- atf_gcli.FGtblacttstout..Ctor
+inline  atf_gcli::FGtblacttstout::FGtblacttstout() {
+    atf_gcli::FGtblacttstout_Init(*this);
 }
 
+// --- atf_gcli.FGtblacttstout..Dtor
+inline  atf_gcli::FGtblacttstout::~FGtblacttstout() {
+    atf_gcli::FGtblacttstout_Uninit(*this);
+}
 
 // --- atf_gcli.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -763,7 +765,7 @@ inline void atf_gcli::value_SetEnum(atf_gcli::FieldId& parent, atf_gcli_FieldIdE
 }
 
 // --- atf_gcli.FieldId.value.Cast
-inline atf_gcli::FieldId::operator atf_gcli_FieldIdEnum () const {
+inline  atf_gcli::FieldId::operator atf_gcli_FieldIdEnum() const {
     return atf_gcli_FieldIdEnum((*this).value);
 }
 
@@ -772,15 +774,22 @@ inline atf_gcli::FieldId::operator atf_gcli_FieldIdEnum () const {
 inline void atf_gcli::FieldId_Init(atf_gcli::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_gcli::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_gcli::TableId::TableId(atf_gcli_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_gcli::TableId::TableId() {
-    atf_gcli::TableId_Init(*this);
+
+// --- atf_gcli.FieldId..Ctor
+inline  atf_gcli::FieldId::FieldId() {
+    atf_gcli::FieldId_Init(*this);
 }
 
+// --- atf_gcli.FieldId..FieldwiseCtor
+inline  atf_gcli::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_gcli.FieldId..EnumCtor
+inline  atf_gcli::FieldId::FieldId(atf_gcli_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_gcli.TableId.value.GetEnum
 // Get value of field as enum type
@@ -795,7 +804,7 @@ inline void atf_gcli::value_SetEnum(atf_gcli::TableId& parent, atf_gcli_TableIdE
 }
 
 // --- atf_gcli.TableId.value.Cast
-inline atf_gcli::TableId::operator atf_gcli_TableIdEnum () const {
+inline  atf_gcli::TableId::operator atf_gcli_TableIdEnum() const {
     return atf_gcli_TableIdEnum((*this).value);
 }
 
@@ -803,6 +812,22 @@ inline atf_gcli::TableId::operator atf_gcli_TableIdEnum () const {
 // Set all fields to initial values.
 inline void atf_gcli::TableId_Init(atf_gcli::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_gcli.TableId..Ctor
+inline  atf_gcli::TableId::TableId() {
+    atf_gcli::TableId_Init(*this);
+}
+
+// --- atf_gcli.TableId..FieldwiseCtor
+inline  atf_gcli::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_gcli.TableId..EnumCtor
+inline  atf_gcli::TableId::TableId(atf_gcli_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_gcli::trace &row) {// cfmt:atf_gcli.trace.String

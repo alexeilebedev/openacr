@@ -30,17 +30,24 @@ dmmeta.nsx  ns:algw1  genthrow:N  correct_getorcreate:Y  pool:algo_lib.FDb.lpool
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Pack
 
 * file:[data/dmmeta/pack.ssim](/data/dmmeta/pack.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||Target ctype|
-|comment|algo.Comment|Val|
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Target ctype|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [acr_ed](/txt/exe/acr_ed/README.md) as acr_ed.FPack
-* [amc](/txt/exe/amc/README.md) as amc.FPack
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FPack](/txt/exe/acr_ed/internals.md#acr_ed-fpack)
+* [amc](/txt/exe/amc/internals.md) as [amc.FPack](/txt/exe/amc/internals.md#amc-fpack)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

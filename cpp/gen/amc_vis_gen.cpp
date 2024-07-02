@@ -92,7 +92,7 @@ namespace amc_vis { // gen:ns_print_proto
     // func:amc_vis.FDb.bh_node.Upheap
     static int           bh_node_Upheap(amc_vis::FNode& row, int idx) __attribute__((nothrow));
     // func:amc_vis.FDb.bh_node.ElemLt
-    static bool          bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) __attribute__((nothrow));
+    inline static bool   bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) __attribute__((nothrow));
     // func:amc_vis.FDb.bh_node_curs.Add
     static void          _db_bh_node_curs_Add(_db_bh_node_curs &curs, amc_vis::FNode& row);
     // Find new location for ROW starting at IDX
@@ -104,7 +104,7 @@ namespace amc_vis { // gen:ns_print_proto
     // func:amc_vis.FDb.bh_link.Upheap
     static int           bh_link_Upheap(amc_vis::Link& row, int idx) __attribute__((nothrow));
     // func:amc_vis.FDb.bh_link.ElemLt
-    static bool          bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) __attribute__((nothrow));
+    inline static bool   bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) __attribute__((nothrow));
     // func:amc_vis.FDb.bh_link_curs.Add
     static void          _db_bh_link_curs_Add(_db_bh_link_curs &curs, amc_vis::Link& row);
     // func:amc_vis.FDb.reftype.InputMaybe
@@ -116,9 +116,9 @@ namespace amc_vis { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:amc_vis.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:amc_vis...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- amc_vis.FCtype.msghdr.CopyOut
@@ -4039,6 +4039,23 @@ void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) {
 
     amc_vis::text_Print(row, temp);
     PrintAttrSpaceReset(str,"text", temp);
+}
+
+// --- amc_vis.Outrow..AssignOp
+amc_vis::Outrow& amc_vis::Outrow::operator =(const amc_vis::Outrow &rhs) {
+    rowid = rhs.rowid;
+    text_Setary(*this, text_Getary(const_cast<amc_vis::Outrow&>(rhs)));
+    return *this;
+}
+
+// --- amc_vis.Outrow..CopyCtor
+ amc_vis::Outrow::Outrow(const amc_vis::Outrow &rhs)
+    : rowid(rhs.rowid)
+ {
+    text_elems 	= 0; // (amc_vis.Outrow.text)
+    text_n     	= 0; // (amc_vis.Outrow.text)
+    text_max   	= 0; // (amc_vis.Outrow.text)
+    text_Setary(*this, text_Getary(const_cast<amc_vis::Outrow&>(rhs)));
 }
 
 // --- amc_vis.TableId.value.ToCstr

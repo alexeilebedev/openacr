@@ -27,14 +27,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline amc_vis::FCtype::FCtype() {
-    amc_vis::FCtype_Init(*this);
-}
-
-inline amc_vis::FCtype::~FCtype() {
-    amc_vis::FCtype_Uninit(*this);
-}
-
 
 // --- amc_vis.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -132,9 +124,20 @@ inline void amc_vis::FCtype_Init(amc_vis::FCtype& ctype) {
     ctype.zd_select_next = (amc_vis::FCtype*)-1; // (amc_vis.FDb.zd_select) not-in-list
     ctype.zd_select_prev = NULL; // (amc_vis.FDb.zd_select)
 }
-inline amc_vis::trace::trace() {
+
+// --- amc_vis.FCtype..Ctor
+inline  amc_vis::FCtype::FCtype() {
+    amc_vis::FCtype_Init(*this);
 }
 
+// --- amc_vis.FCtype..Dtor
+inline  amc_vis::FCtype::~FCtype() {
+    amc_vis::FCtype_Uninit(*this);
+}
+
+// --- amc_vis.trace..Ctor
+inline  amc_vis::trace::trace() {
+}
 
 // --- amc_vis.FDb.ctype.EmptyQ
 // Return true if index is empty
@@ -1046,14 +1049,6 @@ inline void amc_vis::_db_finput_curs_Next(_db_finput_curs &curs) {
 inline amc_vis::FFinput& amc_vis::_db_finput_curs_Access(_db_finput_curs &curs) {
     return finput_qFind(u64(curs.index));
 }
-inline amc_vis::FField::FField() {
-    amc_vis::FField_Init(*this);
-}
-
-inline amc_vis::FField::~FField() {
-    amc_vis::FField_Uninit(*this);
-}
-
 
 // --- amc_vis.FField.c_finput.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1074,14 +1069,16 @@ inline void amc_vis::c_finput_Remove(amc_vis::FField& field, amc_vis::FFinput& r
         field.c_finput = NULL;
     }
 }
-inline amc_vis::FFinput::FFinput() {
-    amc_vis::FFinput_Init(*this);
+
+// --- amc_vis.FField..Ctor
+inline  amc_vis::FField::FField() {
+    amc_vis::FField_Init(*this);
 }
 
-inline amc_vis::FFinput::~FFinput() {
-    amc_vis::FFinput_Uninit(*this);
+// --- amc_vis.FField..Dtor
+inline  amc_vis::FField::~FField() {
+    amc_vis::FField_Uninit(*this);
 }
-
 
 // --- amc_vis.FFinput..Init
 // Set all fields to initial values.
@@ -1090,42 +1087,16 @@ inline void amc_vis::FFinput_Init(amc_vis::FFinput& finput) {
     finput.update = bool(false);
     finput.strict = bool(true);
 }
-inline amc_vis::Nodekey::Nodekey(u32                            in_n_ct_in
-        ,i32                            in_idx
-        ,i32                            in_prev_xpos)
-    : n_ct_in(in_n_ct_in)
-    , idx(in_idx)
-    , prev_xpos(in_prev_xpos)
-{
+
+// --- amc_vis.FFinput..Ctor
+inline  amc_vis::FFinput::FFinput() {
+    amc_vis::FFinput_Init(*this);
 }
 
-inline bool amc_vis::Nodekey::operator ==(const amc_vis::Nodekey &rhs) const {
-    return amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
+// --- amc_vis.FFinput..Dtor
+inline  amc_vis::FFinput::~FFinput() {
+    amc_vis::FFinput_Uninit(*this);
 }
-
-inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const {
-    return !amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
-}
-
-inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const {
-    return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
-}
-
-inline bool amc_vis::Nodekey::operator >(const amc_vis::Nodekey &rhs) const {
-    return rhs < *this;
-}
-
-inline bool amc_vis::Nodekey::operator <=(const amc_vis::Nodekey &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool amc_vis::Nodekey::operator >=(const amc_vis::Nodekey &rhs) const {
-    return !(*this < rhs);
-}
-inline amc_vis::Nodekey::Nodekey() {
-    amc_vis::Nodekey_Init(*this);
-}
-
 
 // --- amc_vis.Nodekey..Hash
 inline u32 amc_vis::Nodekey_Hash(u32 prev, amc_vis::Nodekey rhs) {
@@ -1133,6 +1104,36 @@ inline u32 amc_vis::Nodekey_Hash(u32 prev, amc_vis::Nodekey rhs) {
     prev = i32_Hash(prev, rhs.idx);
     prev = i32_Hash(prev, rhs.prev_xpos);
     return prev;
+}
+
+// --- amc_vis.Nodekey..EqOp
+inline bool amc_vis::Nodekey::operator ==(const amc_vis::Nodekey &rhs) const {
+    return amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
+}
+
+// --- amc_vis.Nodekey..NeOp
+inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const {
+    return !amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
+}
+
+// --- amc_vis.Nodekey..LtOp
+inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const {
+    return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
+}
+
+// --- amc_vis.Nodekey..GtOp
+inline bool amc_vis::Nodekey::operator >(const amc_vis::Nodekey &rhs) const {
+    return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(rhs),const_cast<amc_vis::Nodekey&>(*this));
+}
+
+// --- amc_vis.Nodekey..LeOp
+inline bool amc_vis::Nodekey::operator <=(const amc_vis::Nodekey &rhs) const {
+    return !amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(rhs),const_cast<amc_vis::Nodekey&>(*this));
+}
+
+// --- amc_vis.Nodekey..GeOp
+inline bool amc_vis::Nodekey::operator >=(const amc_vis::Nodekey &rhs) const {
+    return !amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 // --- amc_vis.Nodekey..Lt
@@ -1187,14 +1188,19 @@ inline bool amc_vis::Nodekey_Update(amc_vis::Nodekey &lhs, amc_vis::Nodekey rhs)
     }
     return ret;
 }
-inline amc_vis::FNode::FNode() {
-    amc_vis::FNode_Init(*this);
+
+// --- amc_vis.Nodekey..Ctor
+inline  amc_vis::Nodekey::Nodekey() {
+    amc_vis::Nodekey_Init(*this);
 }
 
-inline amc_vis::FNode::~FNode() {
-    amc_vis::FNode_Uninit(*this);
+// --- amc_vis.Nodekey..FieldwiseCtor
+inline  amc_vis::Nodekey::Nodekey(u32 in_n_ct_in, i32 in_idx, i32 in_prev_xpos)
+    : n_ct_in(in_n_ct_in)
+    , idx(in_idx)
+    , prev_xpos(in_prev_xpos)
+ {
 }
-
 
 // --- amc_vis.FNode.nodekey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -1527,32 +1533,16 @@ inline void amc_vis::node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) {
 inline amc_vis::Link& amc_vis::node_zd_link_in_curs_Access(node_zd_link_in_curs &curs) {
     return *curs.row;
 }
-inline amc_vis::FNodedep::FNodedep(i32                            in_row
-        ,i32                            in_rowid
-        ,bool                           in_up
-        ,bool                           in_inst
-        ,amc_vis::FNode*                in_p_node1
-        ,amc_vis::FNode*                in_p_node2
-        ,const algo::strptr&            in_name
-        ,const algo::strptr&            in_reftype)
-    : row(in_row)
-    , rowid(in_rowid)
-    , up(in_up)
-    , inst(in_inst)
-    , p_node1(in_p_node1)
-    , p_node2(in_p_node2)
-    , name(in_name)
-    , reftype(in_reftype)
-{
-}
-inline amc_vis::FNodedep::FNodedep() {
-    amc_vis::FNodedep_Init(*this);
+
+// --- amc_vis.FNode..Ctor
+inline  amc_vis::FNode::FNode() {
+    amc_vis::FNode_Init(*this);
 }
 
-inline amc_vis::FNodedep::~FNodedep() {
-    amc_vis::FNodedep_Uninit(*this);
+// --- amc_vis.FNode..Dtor
+inline  amc_vis::FNode::~FNode() {
+    amc_vis::FNode_Uninit(*this);
 }
-
 
 // --- amc_vis.FNodedep..Init
 // Set all fields to initial values.
@@ -1568,23 +1558,39 @@ inline void amc_vis::FNodedep_Init(amc_vis::FNodedep& nodedep) {
     nodedep.zd_nodedep_in_next = (amc_vis::FNodedep*)-1; // (amc_vis.FNode.zd_nodedep_in) not-in-list
     nodedep.zd_nodedep_in_prev = NULL; // (amc_vis.FNode.zd_nodedep_in)
 }
-inline amc_vis::FReftype::FReftype() {
+
+// --- amc_vis.FNodedep..Ctor
+inline  amc_vis::FNodedep::FNodedep() {
+    amc_vis::FNodedep_Init(*this);
+}
+
+// --- amc_vis.FNodedep..Dtor
+inline  amc_vis::FNodedep::~FNodedep() {
+    amc_vis::FNodedep_Uninit(*this);
+}
+
+// --- amc_vis.FNodedep..FieldwiseCtor
+inline  amc_vis::FNodedep::FNodedep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::FNode* in_p_node1, amc_vis::FNode* in_p_node2, const algo::strptr& in_name, const algo::strptr& in_reftype)
+    : row(in_row)
+    , rowid(in_rowid)
+    , up(in_up)
+    , inst(in_inst)
+    , p_node1(in_p_node1)
+    , p_node2(in_p_node2)
+    , name(in_name)
+    , reftype(in_reftype)
+ {
+}
+
+// --- amc_vis.FReftype..Ctor
+inline  amc_vis::FReftype::FReftype() {
     amc_vis::FReftype_Init(*this);
 }
 
-inline amc_vis::FReftype::~FReftype() {
+// --- amc_vis.FReftype..Dtor
+inline  amc_vis::FReftype::~FReftype() {
     amc_vis::FReftype_Uninit(*this);
 }
-
-inline amc_vis::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amc_vis::FieldId::FieldId(amc_vis_FieldIdEnum arg) { this->value = i32(arg); }
-inline amc_vis::FieldId::FieldId() {
-    amc_vis::FieldId_Init(*this);
-}
-
 
 // --- amc_vis.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1599,7 +1605,7 @@ inline void amc_vis::value_SetEnum(amc_vis::FieldId& parent, amc_vis_FieldIdEnum
 }
 
 // --- amc_vis.FieldId.value.Cast
-inline amc_vis::FieldId::operator amc_vis_FieldIdEnum () const {
+inline  amc_vis::FieldId::operator amc_vis_FieldIdEnum() const {
     return amc_vis_FieldIdEnum((*this).value);
 }
 
@@ -1608,44 +1614,22 @@ inline amc_vis::FieldId::operator amc_vis_FieldIdEnum () const {
 inline void amc_vis::FieldId_Init(amc_vis::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline amc_vis::Linkkey::Linkkey(u32                            in_n_link_in
-        ,i32                            in_samecol
-        ,i32                            in_colweight
-        ,i32                            in_topbot)
-    : n_link_in(in_n_link_in)
-    , samecol(in_samecol)
-    , colweight(in_colweight)
-    , topbot(in_topbot)
-{
+
+// --- amc_vis.FieldId..Ctor
+inline  amc_vis::FieldId::FieldId() {
+    amc_vis::FieldId_Init(*this);
 }
 
-inline bool amc_vis::Linkkey::operator ==(const amc_vis::Linkkey &rhs) const {
-    return amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+// --- amc_vis.FieldId..FieldwiseCtor
+inline  amc_vis::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
-inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const {
-    return !amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+// --- amc_vis.FieldId..EnumCtor
+inline  amc_vis::FieldId::FieldId(amc_vis_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
-
-inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const {
-    return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
-}
-
-inline bool amc_vis::Linkkey::operator >(const amc_vis::Linkkey &rhs) const {
-    return rhs < *this;
-}
-
-inline bool amc_vis::Linkkey::operator <=(const amc_vis::Linkkey &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool amc_vis::Linkkey::operator >=(const amc_vis::Linkkey &rhs) const {
-    return !(*this < rhs);
-}
-inline amc_vis::Linkkey::Linkkey() {
-    amc_vis::Linkkey_Init(*this);
-}
-
 
 // --- amc_vis.Linkkey..Hash
 inline u32 amc_vis::Linkkey_Hash(u32 prev, amc_vis::Linkkey rhs) {
@@ -1654,6 +1638,36 @@ inline u32 amc_vis::Linkkey_Hash(u32 prev, amc_vis::Linkkey rhs) {
     prev = i32_Hash(prev, rhs.colweight);
     prev = i32_Hash(prev, rhs.topbot);
     return prev;
+}
+
+// --- amc_vis.Linkkey..EqOp
+inline bool amc_vis::Linkkey::operator ==(const amc_vis::Linkkey &rhs) const {
+    return amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+}
+
+// --- amc_vis.Linkkey..NeOp
+inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const {
+    return !amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+}
+
+// --- amc_vis.Linkkey..LtOp
+inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const {
+    return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
+}
+
+// --- amc_vis.Linkkey..GtOp
+inline bool amc_vis::Linkkey::operator >(const amc_vis::Linkkey &rhs) const {
+    return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(rhs),const_cast<amc_vis::Linkkey&>(*this));
+}
+
+// --- amc_vis.Linkkey..LeOp
+inline bool amc_vis::Linkkey::operator <=(const amc_vis::Linkkey &rhs) const {
+    return !amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(rhs),const_cast<amc_vis::Linkkey&>(*this));
+}
+
+// --- amc_vis.Linkkey..GeOp
+inline bool amc_vis::Linkkey::operator >=(const amc_vis::Linkkey &rhs) const {
+    return !amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 // --- amc_vis.Linkkey..Lt
@@ -1679,14 +1693,20 @@ inline bool amc_vis::Linkkey_Update(amc_vis::Linkkey &lhs, amc_vis::Linkkey rhs)
     }
     return ret;
 }
-inline amc_vis::Link::Link() {
-    amc_vis::Link_Init(*this);
+
+// --- amc_vis.Linkkey..Ctor
+inline  amc_vis::Linkkey::Linkkey() {
+    amc_vis::Linkkey_Init(*this);
 }
 
-inline amc_vis::Link::~Link() {
-    amc_vis::Link_Uninit(*this);
+// --- amc_vis.Linkkey..FieldwiseCtor
+inline  amc_vis::Linkkey::Linkkey(u32 in_n_link_in, i32 in_samecol, i32 in_colweight, i32 in_topbot)
+    : n_link_in(in_n_link_in)
+    , samecol(in_samecol)
+    , colweight(in_colweight)
+    , topbot(in_topbot)
+ {
 }
-
 
 // --- amc_vis.Link.linkkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -1851,28 +1871,16 @@ inline void amc_vis::link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs)
 inline amc_vis::Linkdep& amc_vis::link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs) {
     return *curs.row;
 }
-inline amc_vis::Linkdep::Linkdep(i32                            in_row
-        ,i32                            in_rowid
-        ,bool                           in_up
-        ,bool                           in_inst
-        ,amc_vis::Link*                 in_p_link_from
-        ,amc_vis::Link*                 in_p_link_to)
-    : row(in_row)
-    , rowid(in_rowid)
-    , up(in_up)
-    , inst(in_inst)
-    , p_link_from(in_p_link_from)
-    , p_link_to(in_p_link_to)
-{
-}
-inline amc_vis::Linkdep::Linkdep() {
-    amc_vis::Linkdep_Init(*this);
+
+// --- amc_vis.Link..Ctor
+inline  amc_vis::Link::Link() {
+    amc_vis::Link_Init(*this);
 }
 
-inline amc_vis::Linkdep::~Linkdep() {
-    amc_vis::Linkdep_Uninit(*this);
+// --- amc_vis.Link..Dtor
+inline  amc_vis::Link::~Link() {
+    amc_vis::Link_Uninit(*this);
 }
-
 
 // --- amc_vis.Linkdep..Init
 // Set all fields to initial values.
@@ -1888,14 +1896,27 @@ inline void amc_vis::Linkdep_Init(amc_vis::Linkdep& linkdep) {
     linkdep.zd_linkdep_in_next = (amc_vis::Linkdep*)-1; // (amc_vis.Link.zd_linkdep_in) not-in-list
     linkdep.zd_linkdep_in_prev = NULL; // (amc_vis.Link.zd_linkdep_in)
 }
-inline amc_vis::Outrow::Outrow() {
-    amc_vis::Outrow_Init(*this);
+
+// --- amc_vis.Linkdep..Ctor
+inline  amc_vis::Linkdep::Linkdep() {
+    amc_vis::Linkdep_Init(*this);
 }
 
-inline amc_vis::Outrow::~Outrow() {
-    amc_vis::Outrow_Uninit(*this);
+// --- amc_vis.Linkdep..Dtor
+inline  amc_vis::Linkdep::~Linkdep() {
+    amc_vis::Linkdep_Uninit(*this);
 }
 
+// --- amc_vis.Linkdep..FieldwiseCtor
+inline  amc_vis::Linkdep::Linkdep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::Link* in_p_link_from, amc_vis::Link* in_p_link_to)
+    : row(in_row)
+    , rowid(in_rowid)
+    , up(in_up)
+    , inst(in_inst)
+    , p_link_from(in_p_link_from)
+    , p_link_to(in_p_link_to)
+ {
+}
 
 // --- amc_vis.Outrow.text.EmptyQ
 // Return true if index is empty
@@ -2003,15 +2024,16 @@ inline void amc_vis::Outrow_Init(amc_vis::Outrow& outrow) {
     outrow.text_n     	= 0; // (amc_vis.Outrow.text)
     outrow.text_max   	= 0; // (amc_vis.Outrow.text)
 }
-inline amc_vis::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amc_vis::TableId::TableId(amc_vis_TableIdEnum arg) { this->value = i32(arg); }
-inline amc_vis::TableId::TableId() {
-    amc_vis::TableId_Init(*this);
+
+// --- amc_vis.Outrow..Ctor
+inline  amc_vis::Outrow::Outrow() {
+    amc_vis::Outrow_Init(*this);
 }
 
+// --- amc_vis.Outrow..Dtor
+inline  amc_vis::Outrow::~Outrow() {
+    amc_vis::Outrow_Uninit(*this);
+}
 
 // --- amc_vis.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2026,7 +2048,7 @@ inline void amc_vis::value_SetEnum(amc_vis::TableId& parent, amc_vis_TableIdEnum
 }
 
 // --- amc_vis.TableId.value.Cast
-inline amc_vis::TableId::operator amc_vis_TableIdEnum () const {
+inline  amc_vis::TableId::operator amc_vis_TableIdEnum() const {
     return amc_vis_TableIdEnum((*this).value);
 }
 
@@ -2034,6 +2056,22 @@ inline amc_vis::TableId::operator amc_vis_TableIdEnum () const {
 // Set all fields to initial values.
 inline void amc_vis::TableId_Init(amc_vis::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- amc_vis.TableId..Ctor
+inline  amc_vis::TableId::TableId() {
+    amc_vis::TableId_Init(*this);
+}
+
+// --- amc_vis.TableId..FieldwiseCtor
+inline  amc_vis::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc_vis.TableId..EnumCtor
+inline  amc_vis::TableId::TableId(amc_vis_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amc_vis::trace &row) {// cfmt:amc_vis.trace.String
