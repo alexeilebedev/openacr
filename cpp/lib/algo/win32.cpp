@@ -154,10 +154,12 @@ int mkstemp(char *tmpl) {
     return ret;
 }
 
+#if ! defined(WIN32)
 int isatty(int fd) {
     (void)fd;
     return 0;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 
@@ -301,14 +303,20 @@ DIR *opendir(const char *path) {
         _path << "*";
     }
     dir->handle = FindFirstFile(Zeroterm(_path),&dir->find_data);
+    if (dir->handle == INVALID_HANDLE_VALUE) {
+        delete dir;
+        return nullptr;
+    }
     dir->iter=0;
     dir->eof=dir->handle == INVALID_HANDLE_VALUE;
+    //dir->path = _strdup(path);
     return dir;
 }
 
 void closedir(DIR *dir) {
     if (dir) {
         FindClose(dir->handle);
+        //free(dir->path);
     }
     delete dir;
 }
@@ -560,15 +568,31 @@ int munmap(void *base_addr, i64 size) {
 
 typedef unsigned long (*WinThreadFunc)(void*);
 
+typedef struct {
+    
+} ThreadParams;
+
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg) {
     (void)attr;
     HANDLE h = CreateThread(NULL,8192/*staack*/,WinThreadFunc(func),arg,0,NULL);
     *thread = pthread_t(h);
-    return h==INVALID_HANDLE_VALUE ? -1 : 0;
+    return h==INVALID_HANDLE_VALUE ? -1 : 0;    
+}
+
+int pthread_join(pthread_t thread, void** ret) {
+    DWORD result = WaitForSingleObject(thread, INFINITE);
+    if (result == WAIT_OBJECT_0) {
+        if (ret) {
+            GetExitCodeThread(thread, (LPDWORD)ret);
+        }
+        CloseHandle(thread);
+        return 0;
+    }
+    return -1;
 }
 
 pthread_t pthread_self() {
-    return pthread_t(GetCurrentThreadId());
+    return GetCurrentThread();
 }
 
 #endif

@@ -106,6 +106,9 @@ dev.gitfile  gitfile:bin/update-gitfile
 dev.gitfile  gitfile:bin/update-hdr
 dev.gitfile  gitfile:bin/update-linelim
 dev.gitfile  gitfile:bin/update-scriptfile
+dev.gitfile  gitfile:bin/win-GetPerl.ps1
+dev.gitfile  gitfile:bin/win-ai.bat
+dev.gitfile  gitfile:bin/win-select-bootstrap.bat
 dev.gitfile  gitfile:bin/zfs_snapshot.pl
 dev.gitfile  gitfile:conf/.license.txt
 dev.gitfile  gitfile:conf/GPL.license.txt

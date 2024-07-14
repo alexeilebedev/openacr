@@ -370,7 +370,11 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     Ins(&R, func.body, "        if (!algo::ParseHex1(c, val)) {");
     Ins(&R, func.body, "            break;");
     Ins(&R, func.body, "        }");
+    #if defined(WIN32)
+    Ins(&R, func.body, "        num = num*(u64)16 + (u64)val;");
+    #else
     Ins(&R, func.body, "        num = num*16 + val;");
+    #endif
     Ins(&R, func.body, "    }");
     Ins(&R, func.body, "} else {");
     Ins(&R, func.body, "    int lim = u32_Min(index+$maxdig-1, str.n_elems); // 1 digit already in num");
@@ -379,7 +383,11 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     Ins(&R, func.body, "        if (!algo_lib::DigitCharQ(c)) {");
     Ins(&R, func.body, "            break;");
     Ins(&R, func.body, "        }");
+    #if defined(WIN32)
+    Ins(&R, func.body, "        num = num*(u64)10 + (c-'0');");
+    #else
     Ins(&R, func.body, "        num = num*10 + (c-'0');");
+    #endif
     Ins(&R, func.body, "    }");
     if (check_overflow) {
         Ins(&R, func.body, "// 2nd batch of digits");
@@ -392,8 +400,13 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
         Ins(&R, func.body, "        if (!algo_lib::DigitCharQ(c)) {");
         Ins(&R, func.body, "            break;");
         Ins(&R, func.body, "        }");
+        #if defined(WIN32)
+        Ins(&R, func.body, "        num2 = num2*(u64)10 + (c-'0');");
+        Ins(&R, func.body, "        div = div*(u64)10;");
+        #else
         Ins(&R, func.body, "        num2 = num2*10 + (c-'0');");
         Ins(&R, func.body, "        div = div*10;");
+        #endif
         Ins(&R, func.body, "    }");
         Ins(&R, func.body, "    if (num > $maxval/div) {");
         Ins(&R, func.body, "        num = $maxval;");
