@@ -4,19 +4,20 @@ on: [push, pull_request]
   #   branches: [ master ]
   # pull_request:
   #   branches: [ master ]
-
+    
 jobs:
   build_and_test:
-    name: Build & test on ${{ matrix.os }}.
+    name: Build & test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu-22.04, windows-latest]
     if: "!contains(github.event.head_commit.message, 'ci skip')"
-
     steps:
       - uses: actions/checkout@v3
-      - name: Setup developers tools
+
+      - name: Setup developers tools (Ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update && sudo apt-get install -y \
               mariadb-client\
@@ -28,7 +29,20 @@ jobs:
               liblz4-dev \
               cppcheck \
               valgrind
-      - name: Build and test
+
+      - name: Setup Dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install openssl
+          choco install curl
+          choco install lz4
+
+      - name: Setup VS Developer Command Prompt (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build and test (Ubuntu)
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           export PATH=bin:$PATH
           git config --global user.email root@localhost
@@ -36,3 +50,12 @@ jobs:
           bin/normalize
           bin/atf_ci -cijob:comp
           bin/atf_ci -cijob:memcheck
+
+      - name: Build and test (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path = "bin;" + $env:Path
+          git config --global user.email root@localhost
+          git config --global user.name runner
+          bin\ai-win.bat
+        shell: pwsh
