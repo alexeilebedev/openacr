@@ -27,28 +27,22 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline mdbg::FBuilddir::FBuilddir() {
-    mdbg::FBuilddir_Init(*this);
-}
-
-inline mdbg::FBuilddir::~FBuilddir() {
-    mdbg::FBuilddir_Uninit(*this);
-}
-
 
 // --- mdbg.FBuilddir..Init
 // Set all fields to initial values.
 inline void mdbg::FBuilddir_Init(mdbg::FBuilddir& builddir) {
     builddir.cfg_c_builddir_in_ary = bool(false);
 }
-inline mdbg::FCfg::FCfg() {
-    mdbg::FCfg_Init(*this);
+
+// --- mdbg.FBuilddir..Ctor
+inline  mdbg::FBuilddir::FBuilddir() {
+    mdbg::FBuilddir_Init(*this);
 }
 
-inline mdbg::FCfg::~FCfg() {
-    mdbg::FCfg_Uninit(*this);
+// --- mdbg.FBuilddir..Dtor
+inline  mdbg::FBuilddir::~FBuilddir() {
+    mdbg::FBuilddir_Uninit(*this);
 }
-
 
 // --- mdbg.FCfg.c_builddir.EmptyQ
 // Return true if index is empty
@@ -141,9 +135,20 @@ inline void mdbg::FCfg_Init(mdbg::FCfg& cfg) {
     cfg.c_builddir_max = 0; // (mdbg.FCfg.c_builddir)
     cfg.ind_cfg_next = (mdbg::FCfg*)-1; // (mdbg.FDb.ind_cfg) not-in-hash
 }
-inline mdbg::trace::trace() {
+
+// --- mdbg.FCfg..Ctor
+inline  mdbg::FCfg::FCfg() {
+    mdbg::FCfg_Init(*this);
 }
 
+// --- mdbg.FCfg..Dtor
+inline  mdbg::FCfg::~FCfg() {
+    mdbg::FCfg_Uninit(*this);
+}
+
+// --- mdbg.trace..Ctor
+inline  mdbg::trace::trace() {
+}
 
 // --- mdbg.FDb.cfg.EmptyQ
 // Return true if index is empty
@@ -290,15 +295,6 @@ inline void mdbg::_db_builddir_curs_Next(_db_builddir_curs &curs) {
 inline mdbg::FBuilddir& mdbg::_db_builddir_curs_Access(_db_builddir_curs &curs) {
     return builddir_qFind(u64(curs.index));
 }
-inline mdbg::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline mdbg::FieldId::FieldId(mdbg_FieldIdEnum arg) { this->value = i32(arg); }
-inline mdbg::FieldId::FieldId() {
-    mdbg::FieldId_Init(*this);
-}
-
 
 // --- mdbg.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -313,7 +309,7 @@ inline void mdbg::value_SetEnum(mdbg::FieldId& parent, mdbg_FieldIdEnum rhs) {
 }
 
 // --- mdbg.FieldId.value.Cast
-inline mdbg::FieldId::operator mdbg_FieldIdEnum () const {
+inline  mdbg::FieldId::operator mdbg_FieldIdEnum() const {
     return mdbg_FieldIdEnum((*this).value);
 }
 
@@ -322,15 +318,22 @@ inline mdbg::FieldId::operator mdbg_FieldIdEnum () const {
 inline void mdbg::FieldId_Init(mdbg::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline mdbg::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline mdbg::TableId::TableId(mdbg_TableIdEnum arg) { this->value = i32(arg); }
-inline mdbg::TableId::TableId() {
-    mdbg::TableId_Init(*this);
+
+// --- mdbg.FieldId..Ctor
+inline  mdbg::FieldId::FieldId() {
+    mdbg::FieldId_Init(*this);
 }
 
+// --- mdbg.FieldId..FieldwiseCtor
+inline  mdbg::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- mdbg.FieldId..EnumCtor
+inline  mdbg::FieldId::FieldId(mdbg_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- mdbg.TableId.value.GetEnum
 // Get value of field as enum type
@@ -345,7 +348,7 @@ inline void mdbg::value_SetEnum(mdbg::TableId& parent, mdbg_TableIdEnum rhs) {
 }
 
 // --- mdbg.TableId.value.Cast
-inline mdbg::TableId::operator mdbg_TableIdEnum () const {
+inline  mdbg::TableId::operator mdbg_TableIdEnum() const {
     return mdbg_TableIdEnum((*this).value);
 }
 
@@ -353,6 +356,22 @@ inline mdbg::TableId::operator mdbg_TableIdEnum () const {
 // Set all fields to initial values.
 inline void mdbg::TableId_Init(mdbg::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- mdbg.TableId..Ctor
+inline  mdbg::TableId::TableId() {
+    mdbg::TableId_Init(*this);
+}
+
+// --- mdbg.TableId..FieldwiseCtor
+inline  mdbg::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- mdbg.TableId..EnumCtor
+inline  mdbg::TableId::TableId(mdbg_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const mdbg::trace &row) {// cfmt:mdbg.trace.String

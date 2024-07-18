@@ -1,0 +1,42 @@
+dmmeta.ns  ns:""
+dmmeta.ns  ns:acr
+dmmeta.ns  ns:algo_lib
+dmmeta.ns  ns:algo
+dmmeta.ns  ns:atf_cmdline
+dmmeta.ns  ns:command
+dmmeta.ns  ns:dmmeta
+dmmeta.ns  ns:garden
+
+dmmeta.ctype  ctype:""
+dmmeta.ctype  ctype:algo.Smallstr50
+dmmeta.ctype  ctype:algo.cstring
+dmmeta.ctype  ctype:algo_lib.Cmdline
+dmmeta.ctype  ctype:algo_lib.FDb
+dmmeta.ctype  ctype:acr.FDb
+dmmeta.ctype  ctype:atf_cmdline.FDb
+dmmeta.ctype  ctype:command.acr
+dmmeta.ctype  ctype:command.atf_cmdline
+dmmeta.ctype  ctype:dmmeta.Ctype
+dmmeta.ctype  ctype:dmmeta.Ssimfile
+dmmeta.ctype  ctype:garden.Flower
+dmmeta.ctype  ctype:garden.Fruit
+
+dmmeta.field  field:""
+dmmeta.field  field:acr.FDb.cmdline  arg:command.acr
+dmmeta.field  field:dmmeta.Ssimfile.ssimfile  arg:algo.Smallstr50
+dmmeta.field  field:dmmeta.Ctype.ctype  arg:algo.Smallstr50
+dmmeta.field  field:algo_lib.FDb.cmdline  arg:algo_lib.Cmdline
+dmmeta.field  field:atf_cmdline.FDb.cmdline  arg:command.atf_cmdline
+dmmeta.field  field:command.acr.query arg:algo.cstring
+dmmeta.field  field:command.atf_cmdline.dregx  arg:dmmeta.Ctype  reftype:RegxSql  dflt:'"%"'  comment:"Predefined regx"
+dmmeta.field  field:command.atf_cmdline.dpkey  arg:dmmeta.Ctype  reftype:Pkey  dflt:'""'  comment:"Predefined pkey"
+dmmeta.field  field:garden.Flower.flower arg:algo.Smallstr50
+dmmeta.field  field:garden.Fruit.fruit arg:algo.Smallstr50
+
+dmmeta.ssimfile ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+dmmeta.ssimfile ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
+dmmeta.ssimfile ssimfile:garden.flower  ctype:garden.Flower
+dmmeta.ssimfile ssimfile:garden.fruit  ctype:garden.Fruit
+
+dmmeta.fcmdline  field:acr.FDb.cmdline  basecmdline:""
+dmmeta.fcmdline  field:atf_cmdline.FDb.cmdline  basecmdline:algo_lib.FDb.cmdline  comment:""

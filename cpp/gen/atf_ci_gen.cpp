@@ -128,9 +128,9 @@ namespace atf_ci { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_ci.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:atf_ci...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf_ci.FBuilddir.base.CopyOut
@@ -433,7 +433,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'80862504e7d4c9c8414c25f2e6a7ade3fcd1ab6f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'7a8e5cb51bc025925f1aa7f6a12998146ebda21c'");
 }
 
 // --- atf_ci.FDb._db.InsertStrptrMaybe
@@ -713,13 +713,15 @@ static void atf_ci::citest_LoadStatic() {
         { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
         ,{ "atfdb.citest  citest:atf_amc  cijob:comp  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
         ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  comment:\"Update gitfile tables by scanning filesystem\"", atf_ci::citest_gitfile }
+        ,{ "atfdb.citest  citest:scanreadme  cijob:normalize  sandbox:N  comment:\"Update readme tables by scanning filesystem\"", atf_ci::citest_scanreadme }
+        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
         ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
         ,{ "atfdb.citest  citest:src_lim  cijob:normalize  sandbox:N  comment:\"Source code police\"", atf_ci::citest_src_lim }
         ,{ "atfdb.citest  citest:amc  cijob:normalize  sandbox:N  comment:\"Run amc\"", atf_ci::citest_amc }
         ,{ "atfdb.citest  citest:bootstrap  cijob:normalize  sandbox:N  comment:\"Re-generate bootstrap files\"", atf_ci::citest_bootstrap }
         ,{ "atfdb.citest  citest:shebang  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_shebang }
         ,{ "atfdb.citest  citest:encoding  cijob:normalize  sandbox:N  comment:\"Check Encoding of h/cpp files\"", atf_ci::citest_encoding }
-        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  comment:\"Re-generate README.md table of contents\"", atf_ci::citest_readme }
+        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  comment:\"Re-generate readme files\"", atf_ci::citest_readme }
         ,{ "atfdb.citest  citest:file_header  cijob:normalize  sandbox:N  comment:\"Update headers in source files\"", atf_ci::citest_file_header }
         ,{ "atfdb.citest  citest:non-copyrighted  cijob:normalize  sandbox:N  comment:\"Find non-copyrighted files\"", atf_ci::citest_non_copyrighted }
         ,{ "atfdb.citest  citest:iffy_src  cijob:normalize  sandbox:N  comment:\"Check for iffy source constructs with src_func\"", atf_ci::citest_iffy_src }
@@ -733,17 +735,16 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
         ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
         ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
+        ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
         ,{ "atfdb.citest  citest:atf_unit  cijob:comp  sandbox:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
         ,{ "atfdb.citest  citest:atf_comp  cijob:comp  sandbox:N  comment:\"Run component tests\"", atf_ci::citest_atf_comp }
         ,{ "atfdb.citest  citest:atf_comp_cov  cijob:comp  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
-        ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
+        ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
         ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
         ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
-        ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
         ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
-        ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
-        ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
+        ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
         ,{NULL, NULL}
     };
     (void)data;
@@ -3245,12 +3246,6 @@ void atf_ci::readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) {
     row.sandbox = in.sandbox;
     row.filter = in.filter;
     row.comment = in.comment;
-}
-
-// --- atf_ci.FReadme.readmecat.Get
-algo::Smallstr50 atf_ci::readmecat_Get(atf_ci::FReadme& readme) {
-    algo::Smallstr50 ret(algo::Pathcomp(readme.gitfile, "/LR/LL"));
-    return ret;
 }
 
 // --- atf_ci.FScriptfile.base.CopyOut

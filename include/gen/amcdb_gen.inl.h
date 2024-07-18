@@ -25,22 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline amcdb::Bltin::Bltin(const algo::strptr&            in_ctype
-        ,bool                           in_likeu64
-        ,bool                           in_bigendok
-        ,bool                           in_issigned
-        ,const algo::Comment&           in_comment)
-    : ctype(in_ctype)
-    , likeu64(in_likeu64)
-    , bigendok(in_bigendok)
-    , issigned(in_issigned)
-    , comment(in_comment)
-{
-}
-inline amcdb::Bltin::Bltin() {
-    amcdb::Bltin_Init(*this);
-}
-
 
 // --- amcdb.Bltin..Init
 // Set all fields to initial values.
@@ -49,18 +33,25 @@ inline void amcdb::Bltin_Init(amcdb::Bltin& parent) {
     parent.bigendok = bool(false);
     parent.issigned = bool(false);
 }
-inline amcdb::Curstype::Curstype() {
+
+// --- amcdb.Bltin..Ctor
+inline  amcdb::Bltin::Bltin() {
+    amcdb::Bltin_Init(*this);
 }
 
-inline amcdb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amcdb::FieldId::FieldId(amcdb_FieldIdEnum arg) { this->value = i32(arg); }
-inline amcdb::FieldId::FieldId() {
-    amcdb::FieldId_Init(*this);
+// --- amcdb.Bltin..FieldwiseCtor
+inline  amcdb::Bltin::Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool in_bigendok, bool in_issigned, const algo::Comment& in_comment)
+    : ctype(in_ctype)
+    , likeu64(in_likeu64)
+    , bigendok(in_bigendok)
+    , issigned(in_issigned)
+    , comment(in_comment)
+ {
 }
 
+// --- amcdb.Curstype..Ctor
+inline  amcdb::Curstype::Curstype() {
+}
 
 // --- amcdb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -75,7 +66,7 @@ inline void amcdb::value_SetEnum(amcdb::FieldId& parent, amcdb_FieldIdEnum rhs) 
 }
 
 // --- amcdb.FieldId.value.Cast
-inline amcdb::FieldId::operator amcdb_FieldIdEnum () const {
+inline  amcdb::FieldId::operator amcdb_FieldIdEnum() const {
     return amcdb_FieldIdEnum((*this).value);
 }
 
@@ -84,36 +75,57 @@ inline amcdb::FieldId::operator amcdb_FieldIdEnum () const {
 inline void amcdb::FieldId_Init(amcdb::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline amcdb::Gen::Gen() {
-    amcdb::Gen_Init(*this);
+
+// --- amcdb.FieldId..Ctor
+inline  amcdb::FieldId::FieldId() {
+    amcdb::FieldId_Init(*this);
 }
 
+// --- amcdb.FieldId..FieldwiseCtor
+inline  amcdb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amcdb.FieldId..EnumCtor
+inline  amcdb::FieldId::FieldId(amcdb_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- amcdb.Gen..Init
 // Set all fields to initial values.
 inline void amcdb::Gen_Init(amcdb::Gen& parent) {
     parent.perns = bool(false);
 }
-inline amcdb::Regxtype::Regxtype() {
+
+// --- amcdb.Gen..Ctor
+inline  amcdb::Gen::Gen() {
+    amcdb::Gen_Init(*this);
 }
 
-inline amcdb::Tclass::Tclass() {
+// --- amcdb.Regxtype..Ctor
+inline  amcdb::Regxtype::Regxtype() {
 }
 
-inline amcdb::Tcurs::Tcurs() {
-    amcdb::Tcurs_Init(*this);
+// --- amcdb.Tclass..Ctor
+inline  amcdb::Tclass::Tclass() {
 }
-
 
 // --- amcdb.Tcurs..Init
 // Set all fields to initial values.
 inline void amcdb::Tcurs_Init(amcdb::Tcurs& parent) {
     parent.dflt = bool(false);
 }
-inline amcdb::Tfunc::Tfunc() {
-    amcdb::Tfunc_Init(*this);
+
+// --- amcdb.Tcurs..Ctor
+inline  amcdb::Tcurs::Tcurs() {
+    amcdb::Tcurs_Init(*this);
 }
 
+// --- amcdb.Tfunc..Ctor
+inline  amcdb::Tfunc::Tfunc() {
+    amcdb::Tfunc_Init(*this);
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::FieldId &row) {// cfmt:amcdb.FieldId.String
     amcdb::FieldId_Print(const_cast<amcdb::FieldId&>(row), str);

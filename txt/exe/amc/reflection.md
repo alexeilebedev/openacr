@@ -1,4 +1,4 @@
-## AMC Reflection
+## amc Reflection
 <a href="#amc-reflection"></a>
 
 `amc` bakes some information about a process into the process itself.

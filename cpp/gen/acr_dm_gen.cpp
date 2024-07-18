@@ -78,7 +78,7 @@ namespace acr_dm { // gen:ns_print_proto
     // func:acr_dm.FDb.bh_tuple.Upheap
     static int           bh_tuple_Upheap(acr_dm::FTuple& row, int idx) __attribute__((nothrow));
     // func:acr_dm.FDb.bh_tuple.ElemLt
-    static bool          bh_tuple_ElemLt(acr_dm::FTuple &a, acr_dm::FTuple &b) __attribute__((nothrow));
+    inline static bool   bh_tuple_ElemLt(acr_dm::FTuple &a, acr_dm::FTuple &b) __attribute__((nothrow));
     // func:acr_dm.FDb.bh_tuple_curs.Add
     static void          _db_bh_tuple_curs_Add(_db_bh_tuple_curs &curs, acr_dm::FTuple& row);
     // find trace by row id (used to implement reflection)
@@ -86,9 +86,9 @@ namespace acr_dm { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:acr_dm.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:acr_dm...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- acr_dm.FAttr.zs_value.Insert

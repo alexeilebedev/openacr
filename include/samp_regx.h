@@ -31,7 +31,7 @@ namespace samp_regx { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/samp/samp_regx.cpp
+    // cpp/samp_regx/samp_regx.cpp
     //
     void Main();
 }

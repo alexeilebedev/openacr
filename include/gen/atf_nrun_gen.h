@@ -54,7 +54,8 @@ namespace atf_nrun { // gen:ns_print_struct
 // --- atf_nrun.trace
 #pragma pack(push,1)
 struct trace { // atf_nrun.trace
-    trace();
+    // func:atf_nrun.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -139,16 +140,16 @@ atf_nrun::FEntry*    fentry_AllocMaybe() __attribute__((__warn_unused_result__, 
 void*                fentry_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_nrun.FDb.fentry.EmptyQ
-bool                 fentry_EmptyQ() __attribute__((nothrow, pure));
+inline bool          fentry_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_nrun.FDb.fentry.Find
-atf_nrun::FEntry*    fentry_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_nrun::FEntry* fentry_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_nrun.FDb.fentry.Last
-atf_nrun::FEntry*    fentry_Last() __attribute__((nothrow, pure));
+inline atf_nrun::FEntry* fentry_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_nrun.FDb.fentry.N
-i32                  fentry_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           fentry_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_nrun.FDb.fentry.RemoveAll
 void                 fentry_RemoveAll() __attribute__((nothrow));
@@ -157,7 +158,7 @@ void                 fentry_RemoveAll() __attribute__((nothrow));
 void                 fentry_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_nrun.FDb.fentry.qFind
-atf_nrun::FEntry&    fentry_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_nrun::FEntry& fentry_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_nrun.FDb.fentry.XrefMaybe
@@ -165,7 +166,7 @@ bool                 fentry_XrefMaybe(atf_nrun::FEntry &row);
 
 // Return true if hash is empty
 // func:atf_nrun.FDb.ind_running.EmptyQ
-bool                 ind_running_EmptyQ() __attribute__((nothrow));
+inline bool          ind_running_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_nrun.FDb.ind_running.Find
 atf_nrun::FEntry*    ind_running_Find(i32 key) __attribute__((__warn_unused_result__, nothrow));
@@ -177,7 +178,7 @@ atf_nrun::FEntry&    ind_running_FindX(i32 key);
 atf_nrun::FEntry&    ind_running_GetOrCreate(i32 key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_nrun.FDb.ind_running.N
-i32                  ind_running_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_running_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_nrun.FDb.ind_running.InsertMaybe
 bool                 ind_running_InsertMaybe(atf_nrun::FEntry& row) __attribute__((nothrow));
@@ -197,28 +198,28 @@ void                 ind_running_SetDelay(algo::SchedTime delay) __attribute__((
 
 // Return true if index is empty
 // func:atf_nrun.FDb.zd_todo.EmptyQ
-bool                 zd_todo_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_todo_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:atf_nrun.FDb.zd_todo.First
-atf_nrun::FEntry*    zd_todo_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_nrun::FEntry* zd_todo_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:atf_nrun.FDb.zd_todo.InLlistQ
-bool                 zd_todo_InLlistQ(atf_nrun::FEntry& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_todo_InLlistQ(atf_nrun::FEntry& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:atf_nrun.FDb.zd_todo.Insert
 void                 zd_todo_Insert(atf_nrun::FEntry& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:atf_nrun.FDb.zd_todo.Last
-atf_nrun::FEntry*    zd_todo_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_nrun::FEntry* zd_todo_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:atf_nrun.FDb.zd_todo.N
-i32                  zd_todo_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_todo_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:atf_nrun.FDb.zd_todo.Next
-atf_nrun::FEntry*    zd_todo_Next(atf_nrun::FEntry &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_nrun::FEntry* zd_todo_Next(atf_nrun::FEntry &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:atf_nrun.FDb.zd_todo.Prev
-atf_nrun::FEntry*    zd_todo_Prev(atf_nrun::FEntry &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_nrun::FEntry* zd_todo_Prev(atf_nrun::FEntry &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_nrun.FDb.zd_todo.Remove
 void                 zd_todo_Remove(atf_nrun::FEntry& row) __attribute__((nothrow));
@@ -231,7 +232,7 @@ void                 zd_todo_RemoveAll() __attribute__((nothrow));
 atf_nrun::FEntry*    zd_todo_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_nrun.FDb.zd_todo.qLast
-atf_nrun::FEntry&    zd_todo_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline atf_nrun::FEntry& zd_todo_qLast() __attribute__((__warn_unused_result__, nothrow));
 // First element of index changed.
 // func:atf_nrun.FDb.zd_todo.FirstChanged
 void                 zd_todo_FirstChanged() __attribute__((nothrow));
@@ -245,28 +246,28 @@ void                 zd_todo_SetDelay(algo::SchedTime delay) __attribute__((noth
 
 // cursor points to valid item
 // func:atf_nrun.FDb.fentry_curs.Reset
-void                 _db_fentry_curs_Reset(_db_fentry_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
+inline void          _db_fentry_curs_Reset(_db_fentry_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.fentry_curs.ValidQ
-bool                 _db_fentry_curs_ValidQ(_db_fentry_curs &curs) __attribute__((nothrow));
+inline bool          _db_fentry_curs_ValidQ(_db_fentry_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_nrun.FDb.fentry_curs.Next
-void                 _db_fentry_curs_Next(_db_fentry_curs &curs) __attribute__((nothrow));
+inline void          _db_fentry_curs_Next(_db_fentry_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_nrun.FDb.fentry_curs.Access
-atf_nrun::FEntry&    _db_fentry_curs_Access(_db_fentry_curs &curs) __attribute__((nothrow));
+inline atf_nrun::FEntry& _db_fentry_curs_Access(_db_fentry_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.zd_todo_curs.Reset
-void                 _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_todo_curs_Reset(_db_zd_todo_curs &curs, atf_nrun::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_nrun.FDb.zd_todo_curs.ValidQ
-bool                 _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_todo_curs_ValidQ(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_nrun.FDb.zd_todo_curs.Next
-void                 _db_zd_todo_curs_Next(_db_zd_todo_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_todo_curs_Next(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_nrun.FDb.zd_todo_curs.Access
-atf_nrun::FEntry&    _db_zd_todo_curs_Access(_db_zd_todo_curs &curs) __attribute__((nothrow));
+inline atf_nrun::FEntry& _db_zd_todo_curs_Access(_db_zd_todo_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_nrun.FDb..Init
 void                 FDb_Init();
@@ -275,7 +276,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_nrun.FEntry
 // create: atf_nrun.FDb.fentry (Lary)
-// global access: ind_running (Thash)
+// global access: fentry (Lary, by rowid)
+// global access: ind_running (Thash, hash field pid)
 // global access: zd_todo (Llist)
 struct FEntry { // atf_nrun.FEntry
     atf_nrun::FEntry*   ind_running_next;   // hash next
@@ -291,15 +293,21 @@ struct FEntry { // atf_nrun.FEntry
     pid_t               job_pid;            //   0  pid of running child process
     i32                 job_timeout;        //   0  optional timeout for child process
     i32                 job_status;         //   0  last exit status of child process
+    // reftype Exec of atf_nrun.FEntry.job prohibits copy
+    // func:atf_nrun.FEntry..AssignOp
+    atf_nrun::FEntry&    operator =(const atf_nrun::FEntry &rhs) = delete;
+    // reftype Exec of atf_nrun.FEntry.job prohibits copy
+    // func:atf_nrun.FEntry..CopyCtor
+    FEntry(const atf_nrun::FEntry &rhs) = delete;
 private:
+    // func:atf_nrun.FEntry..Ctor
+    inline               FEntry() __attribute__((nothrow));
+    // func:atf_nrun.FEntry..Dtor
+    inline               ~FEntry() __attribute__((nothrow));
     friend atf_nrun::FEntry&    fentry_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_nrun::FEntry*    fentry_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 fentry_RemoveAll() __attribute__((nothrow));
     friend void                 fentry_RemoveLast() __attribute__((nothrow));
-    FEntry();
-    ~FEntry();
-    FEntry(const FEntry&){ /*disallow copy constructor */}
-    void operator =(const FEntry&){ /*disallow direct assignment */}
 };
 
 // Start subprocess
@@ -343,19 +351,23 @@ void                 FEntry_Uninit(atf_nrun::FEntry& fentry) __attribute__((noth
 #pragma pack(push,1)
 struct FieldId { // atf_nrun.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_nrun_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_nrun_FieldIdEnum arg);
-    FieldId();
+    // func:atf_nrun.FieldId.value.Cast
+    inline               operator atf_nrun_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf_nrun.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf_nrun.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf_nrun.FieldId..EnumCtor
+    inline               FieldId(atf_nrun_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf_nrun.FieldId.value.GetEnum
-atf_nrun_FieldIdEnum value_GetEnum(const atf_nrun::FieldId& parent) __attribute__((nothrow));
+inline atf_nrun_FieldIdEnum value_GetEnum(const atf_nrun::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_nrun.FieldId.value.SetEnum
-void                 value_SetEnum(atf_nrun::FieldId& parent, atf_nrun_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_nrun::FieldId& parent, atf_nrun_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_nrun.FieldId.value.ToCstr
@@ -383,7 +395,7 @@ bool                 value_ReadStrptrMaybe(atf_nrun::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_nrun.FieldId..Init
-void                 FieldId_Init(atf_nrun::FieldId& parent);
+inline void          FieldId_Init(atf_nrun::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.FieldId.String  printfmt:Raw
 // func:atf_nrun.FieldId..Print

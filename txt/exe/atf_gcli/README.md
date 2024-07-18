@@ -3,13 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&#128196; [atf_gcli - Internals](/txt/exe/atf_gcli/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_gcli: test harness for gcli
 Usage: atf_gcli [options]
@@ -31,9 +36,12 @@ Usage: atf_gcli [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -61,6 +69,23 @@ Usage: atf_gcli [options]
 #### -dry_run -- Print actions, do not perform
 <a href="#-dry_run"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`atf_gcli` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[gclidb.gclienv](/txt/ssimdb/gclidb/gclienv.md)||
+|[gclidb.gtblact](/txt/ssimdb/gclidb/gtblact.md)||
+|[gclidb.gtblacttst](/txt/ssimdb/gclidb/gtblacttst.md)||
+|[gclidb.gtblacttstout](/txt/ssimdb/gclidb/gtblacttstout.md)||
+|[gclidb.gclienvsub](/txt/ssimdb/gclidb/gclienvsub.md)||
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -73,16 +98,4 @@ The following source files are part of this tool:
 |[include/atf_gcli.h](/include/atf_gcli.h)||
 |[include/gen/atf_gcli_gen.h](/include/gen/atf_gcli_gen.h)||
 |[include/gen/atf_gcli_gen.inl.h](/include/gen/atf_gcli_gen.inl.h)||
-
-### Inputs
-<a href="#inputs"></a>
-`atf_gcli` takes the following tables on input:
-|ssimfile|comment|
-|---|---|
-|[gclidb.gclienv](/txt/ssimdb/gclidb/gclienv.md)||
-|[gclidb.gtblact](/txt/ssimdb/gclidb/gtblact.md)||
-|[gclidb.gtblacttst](/txt/ssimdb/gclidb/gtblacttst.md)||
-|[gclidb.gtblacttstout](/txt/ssimdb/gclidb/gtblacttstout.md)||
-|[gclidb.gclienvsub](/txt/ssimdb/gclidb/gclienvsub.md)||
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 

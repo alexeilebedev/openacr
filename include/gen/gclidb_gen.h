@@ -350,19 +350,23 @@ namespace gclidb { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // gclidb.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator gclidb_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(gclidb_FieldIdEnum arg);
-    FieldId();
+    // func:gclidb.FieldId.value.Cast
+    inline               operator gclidb_FieldIdEnum() const __attribute__((nothrow));
+    // func:gclidb.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:gclidb.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:gclidb.FieldId..EnumCtor
+    inline               FieldId(gclidb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:gclidb.FieldId.value.GetEnum
-gclidb_FieldIdEnum   value_GetEnum(const gclidb::FieldId& parent) __attribute__((nothrow));
+inline gclidb_FieldIdEnum value_GetEnum(const gclidb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:gclidb.FieldId.value.SetEnum
-void                 value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:gclidb.FieldId.value.ToCstr
@@ -390,7 +394,7 @@ bool                 value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.FieldId..Init
-void                 FieldId_Init(gclidb::FieldId& parent);
+inline void          FieldId_Init(gclidb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.FieldId.String  printfmt:Raw
 // func:gclidb.FieldId..Print
@@ -400,7 +404,8 @@ void                 FieldId_Print(gclidb::FieldId& row, algo::cstring& str) __a
 struct Gact { // gclidb.Gact: Action that may be performed on a table
     algo::Smallstr50   gact;      //
     algo::Comment      comment;   //
-    Gact();
+    // func:gclidb.Gact..Ctor
+    inline               Gact() __attribute__((nothrow));
 };
 
 // func:gclidb.Gact..ReadFieldMaybe
@@ -418,7 +423,8 @@ void                 Gact_Print(gclidb::Gact& row, algo::cstring& str) __attribu
 struct Gatv { // gclidb.Gatv
     algo::Smallstr50   gatv;      //
     algo::Comment      comment;   //
-    Gatv();
+    // func:gclidb.Gatv..Ctor
+    inline               Gatv() __attribute__((nothrow));
 };
 
 // func:gclidb.Gatv..ReadFieldMaybe
@@ -437,7 +443,8 @@ struct Gclicmd { // gclidb.Gclicmd
     algo::Smallstr250   gclicmd;      //
     algo::Smallstr250   gclicmdf2j;   // Base for gclicmdf2j
     algo::Comment       comment;      //
-    Gclicmd();
+    // func:gclidb.Gclicmd..Ctor
+    inline               Gclicmd() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclicmd..ReadFieldMaybe
@@ -456,7 +463,8 @@ struct Gclicmdf2j { // gclidb.Gclicmdf2j: Mapping of internal fields to JSON fie
     algo::Smallstr250   gclicmdf2j;   //
     bool                dup;          //   false
     algo::Comment       comment;      //
-    Gclicmdf2j();
+    // func:gclidb.Gclicmdf2j..Ctor
+    inline               Gclicmdf2j() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclicmdf2j.gclicmdf.Get
@@ -489,7 +497,7 @@ bool                 Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo:
 bool                 Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclicmdf2j..Init
-void                 Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent);
+inline void          Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmdf2j.String  printfmt:Tuple
 // func:gclidb.Gclicmdf2j..Print
@@ -501,7 +509,8 @@ struct Gclicmdt { // gclidb.Gclicmdt: Internal test
     algo::Smallstr50    gmethod;    //   "GET"
     algo::Comment       uri;        //
     algo::Comment       comment;    //
-    Gclicmdt();
+    // func:gclidb.Gclicmdt..Ctor
+    inline               Gclicmdt() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclicmdt.gclicmd.Get
@@ -524,7 +533,7 @@ bool                 Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::str
 bool                 Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclicmdt..Init
-void                 Gclicmdt_Init(gclidb::Gclicmdt& parent);
+inline void          Gclicmdt_Init(gclidb::Gclicmdt& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmdt.String  printfmt:Tuple
 // func:gclidb.Gclicmdt..Print
@@ -535,7 +544,8 @@ struct Gclienv { // gclidb.Gclienv
     algo::Smallstr50   gclienv;   //
     algo::cstring      addon;     //
     algo::Comment      comment;   //
-    Gclienv();
+    // func:gclidb.Gclienv..Ctor
+    inline               Gclienv() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclienv..ReadFieldMaybe
@@ -555,7 +565,8 @@ struct Gclienvsub { // gclidb.Gclienvsub
     bool               fwd;          //   false
     bool               rev;          //   false
     algo::cstring      uval;         //
-    Gclienvsub();
+    // func:gclidb.Gclienvsub..Ctor
+    inline               Gclienvsub() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclienvsub.gclienv.Get
@@ -578,7 +589,7 @@ bool                 Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo:
 bool                 Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gclienvsub..Init
-void                 Gclienvsub_Init(gclidb::Gclienvsub& parent);
+inline void          Gclienvsub_Init(gclidb::Gclienvsub& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
 // func:gclidb.Gclienvsub..Print
@@ -588,7 +599,8 @@ void                 Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& st
 struct Gclisub { // gclidb.Gclisub
     algo::Smallstr50   gclisub;   //
     algo::Comment      comment;   //
-    Gclisub();
+    // func:gclidb.Gclisub..Ctor
+    inline               Gclisub() __attribute__((nothrow));
 };
 
 // func:gclidb.Gclisub..ReadFieldMaybe
@@ -606,7 +618,8 @@ void                 Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) __a
 struct Gfld { // gclidb.Gfld: Gitlab/github field name
     algo::Smallstr50   gfld;      //
     algo::Comment      comment;   //
-    Gfld();
+    // func:gclidb.Gfld..Ctor
+    inline               Gfld() __attribute__((nothrow));
 };
 
 // func:gclidb.Gfld..ReadFieldMaybe
@@ -623,7 +636,8 @@ void                 Gfld_Print(gclidb::Gfld& row, algo::cstring& str) __attribu
 // --- gclidb.Githost
 struct Githost { // gclidb.Githost
     algo::Smallstr250   githost;   //
-    Githost();
+    // func:gclidb.Githost..Ctor
+    inline               Githost() __attribute__((nothrow));
 };
 
 // func:gclidb.Githost.git.Get
@@ -649,7 +663,8 @@ struct Gmethod { // gclidb.Gmethod: HTTP method list
     algo::Smallstr50   gmethod;   //
     u32                val;       //   0
     algo::Comment      comment;   //
-    Gmethod();
+    // func:gclidb.Gmethod..Ctor
+    inline               Gmethod() __attribute__((nothrow));
 };
 
 // func:gclidb.Gmethod..ReadFieldMaybe
@@ -660,7 +675,7 @@ bool                 Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strpt
 bool                 Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gmethod..Init
-void                 Gmethod_Init(gclidb::Gmethod& parent);
+inline void          Gmethod_Init(gclidb::Gmethod& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gmethod.String  printfmt:Tuple
 // func:gclidb.Gmethod..Print
@@ -678,7 +693,8 @@ struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
     algo::cstring       descr;            //
     bool                active;           //   true  set to false to ignore the line but keep it in the file
     algo::cstring       priv;             //
-    Grepo();
+    // func:gclidb.Grepo..Ctor
+    inline               Grepo() __attribute__((nothrow));
 };
 
 // func:gclidb.Grepo.host.Get
@@ -712,7 +728,8 @@ struct Grepogitport { // gclidb.Grepogitport: Default ports for repositories
     algo::Smallstr50   grepogitport;   // grepo git host
     algo::cstring      port;           // ssh port for config
     algo::Comment      comment;        //
-    Grepogitport();
+    // func:gclidb.Grepogitport..Ctor
+    inline               Grepogitport() __attribute__((nothrow));
 };
 
 // func:gclidb.Grepogitport..ReadFieldMaybe
@@ -731,7 +748,8 @@ struct Grepossh { // gclidb.Grepossh: Ssh key table
     algo::Smallstr50    grepossh;   // grepo project/repo name
     algo::Smallstr200   sshid;      // ssh id key name for ssh config
     algo::Comment       comment;    //
-    Grepossh();
+    // func:gclidb.Grepossh..Ctor
+    inline               Grepossh() __attribute__((nothrow));
 };
 
 // func:gclidb.Grepossh.name.Get
@@ -754,7 +772,8 @@ void                 Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) _
 struct Gstate { // gclidb.Gstate: Issue/MR state list
     algo::Smallstr50   gstate;    //
     algo::Comment      comment;   //
-    Gstate();
+    // func:gclidb.Gstate..Ctor
+    inline               Gstate() __attribute__((nothrow));
 };
 
 // func:gclidb.Gstate.st.Get
@@ -784,7 +803,8 @@ void                 Gstate_Print(gclidb::Gstate& row, algo::cstring& str) __att
 struct Gstatet { // gclidb.Gstatet: Internal
     algo::Smallstr50   gstatet;   //
     algo::cstring      state;     //
-    Gstatet();
+    // func:gclidb.Gstatet..Ctor
+    inline               Gstatet() __attribute__((nothrow));
 };
 
 // func:gclidb.Gstatet.gtype.Get
@@ -814,7 +834,8 @@ void                 Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) __a
 struct Gtbl { // gclidb.Gtbl: Supported gcli tables
     algo::Smallstr250   gtbl;      //
     algo::Comment       comment;   //
-    Gtbl();
+    // func:gclidb.Gtbl..Ctor
+    inline               Gtbl() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtbl..ReadFieldMaybe
@@ -834,7 +855,8 @@ struct Gtblact { // gclidb.Gtblact
     bool               t;         //   false
     bool               e;         //   false
     bool               auth;      //   false
-    Gtblact();
+    // func:gclidb.Gtblact..Ctor
+    inline               Gtblact() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtblact.gtbl.Get
@@ -857,7 +879,7 @@ bool                 Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strpt
 bool                 Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblact..Init
-void                 Gtblact_Init(gclidb::Gtblact& parent);
+inline void          Gtblact_Init(gclidb::Gtblact& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblact.String  printfmt:Tuple
 // func:gclidb.Gtblact..Print
@@ -871,7 +893,8 @@ struct Gtblactfld { // gclidb.Gtblactfld: List of available for each table & act
     bool               optional;          //   false
     bool               regx;              //   false
     algo::Comment      comment;           //
-    Gtblactfld();
+    // func:gclidb.Gtblactfld..Ctor
+    inline               Gtblactfld() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtblactfld.gtblact.Get
@@ -894,7 +917,7 @@ bool                 Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo:
 bool                 Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblactfld..Init
-void                 Gtblactfld_Init(gclidb::Gtblactfld& parent);
+inline void          Gtblactfld_Init(gclidb::Gtblactfld& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblactfld.String  printfmt:Tuple
 // func:gclidb.Gtblactfld..Print
@@ -906,7 +929,8 @@ struct Gtblacttst { // gclidb.Gtblacttst
     bool                working;      //   true
     algo::cstring       cmd;          //
     algo::Comment       comment;      //
-    Gtblacttst();
+    // func:gclidb.Gtblacttst..Ctor
+    inline               Gtblacttst() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtblacttst.gtblact.Get
@@ -932,7 +956,7 @@ bool                 Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo:
 bool                 Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.Gtblacttst..Init
-void                 Gtblacttst_Init(gclidb::Gtblacttst& parent);
+inline void          Gtblacttst_Init(gclidb::Gtblacttst& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
 // func:gclidb.Gtblacttst..Print
@@ -942,7 +966,8 @@ void                 Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& st
 struct Gtblacttstout { // gclidb.Gtblacttstout
     algo::Smallstr250   gtblacttstout;   //
     algo::cstring       text;            //
-    Gtblacttstout();
+    // func:gclidb.Gtblacttstout..Ctor
+    inline               Gtblacttstout() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtblacttstout.gtblacttst.Get
@@ -973,7 +998,8 @@ struct Gtype { // gclidb.Gtype: Platform type (ghp=github; glpat=gitlab)
     algo::Smallstr50   gtype;         //
     algo::cstring      default_url;   //
     algo::Comment      comment;       //
-    Gtype();
+    // func:gclidb.Gtype..Ctor
+    inline               Gtype() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtype..ReadFieldMaybe
@@ -991,7 +1017,8 @@ void                 Gtype_Print(gclidb::Gtype& row, algo::cstring& str) __attri
 struct Gtypeh { // gclidb.Gtypeh: HTTP heaaderes for user with platform
     algo::Smallstr250   gtypeh;   //
     algo::cstring       header;   //
-    Gtypeh();
+    // func:gclidb.Gtypeh..Ctor
+    inline               Gtypeh() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtypeh.gtype.Get
@@ -1021,7 +1048,8 @@ void                 Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) __att
 struct Gtypeprefix { // gclidb.Gtypeprefix: Token prefix mapping to platform
     algo::Smallstr50   gtypeprefix;   //
     algo::Comment      comment;       //
-    Gtypeprefix();
+    // func:gclidb.Gtypeprefix..Ctor
+    inline               Gtypeprefix() __attribute__((nothrow));
 };
 
 // func:gclidb.Gtypeprefix.gtype.Get
@@ -1060,7 +1088,8 @@ struct Issue { // gclidb.Issue: Gitlab project issue
     algo::cstring      state;           // issue state
     algo::cstring      mr;              // mr issue
     algo::cstring      description;     // issue description
-    Issue();
+    // func:gclidb.Issue..Ctor
+    inline               Issue() __attribute__((nothrow));
 };
 
 // func:gclidb.Issue.project.Get
@@ -1092,7 +1121,8 @@ struct Issuenote { // gclidb.Issuenote: Issue note
     algo::cstring       note;        // Body of issue note
     algo::cstring       system;      // System or user note (glab only)
     algo::cstring       author;      // Authtor of issue note
-    Issuenote();
+    // func:gclidb.Issuenote..Ctor
+    inline               Issuenote() __attribute__((nothrow));
 };
 
 // func:gclidb.Issuenote.issue.Get
@@ -1123,7 +1153,8 @@ struct Issuepipeline { // gclidb.Issuepipeline: Issue pipeline
     algo::Smallstr250   issuepipeline;   // Identifier. must be in form issue.id
     algo::cstring       id_in;           // Id portion of issue pipeline
     algo::cstring       status;          // Id portion of issue pipeline
-    Issuepipeline();
+    // func:gclidb.Issuepipeline..Ctor
+    inline               Issuepipeline() __attribute__((nothrow));
 };
 
 // func:gclidb.Issuepipeline.issue.Get
@@ -1153,7 +1184,8 @@ void                 Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstri
 struct Label { // gclidb.Label: List of labels for gitlab/github
     algo::Smallstr50   label;     //
     algo::Comment      comment;   //
-    Label();
+    // func:gclidb.Label..Ctor
+    inline               Label() __attribute__((nothrow));
 };
 
 // func:gclidb.Label..ReadFieldMaybe
@@ -1172,7 +1204,8 @@ struct Milestone { // gclidb.Milestone: Gclidb project milestone
     algo::Smallstr200   milestone;     // Milestone id
     algo::cstring       description;   // Milestone description
     algo::cstring       title;         // Milestone title
-    Milestone();
+    // func:gclidb.Milestone..Ctor
+    inline               Milestone() __attribute__((nothrow));
 };
 
 // func:gclidb.Milestone.project.Get
@@ -1212,7 +1245,8 @@ struct Mr { // gclidb.Mr: Gitlab project mr
     algo::cstring       pipeline_id;       // Pipeline id
     algo::cstring       draft;             // Some draft status
     algo::cstring       node_id;           // Node id for graphQL
-    Mr();
+    // func:gclidb.Mr..Ctor
+    inline               Mr() __attribute__((nothrow));
 };
 
 // func:gclidb.Mr.proj.Get
@@ -1247,7 +1281,8 @@ struct Mrjob { // gclidb.Mrjob: Mr job
     algo::cstring       pipeline_id;   // Pipeline id
     algo::cstring       status;        //
     algo::cstring       runner;        //
-    Mrjob();
+    // func:gclidb.Mrjob..Ctor
+    inline               Mrjob() __attribute__((nothrow));
 };
 
 // func:gclidb.Mrjob.mr.Get
@@ -1279,7 +1314,8 @@ struct Mrnote { // gclidb.Mrnote: Issue note
     algo::Smallstr250   mrnote;   // Identifier. must be in form issue.id
     algo::cstring       note;     // Body of mr note
     algo::cstring       author;   // Authtor of mr note
-    Mrnote();
+    // func:gclidb.Mrnote..Ctor
+    inline               Mrnote() __attribute__((nothrow));
 };
 
 // func:gclidb.Mrnote.nid.Get
@@ -1308,7 +1344,8 @@ void                 Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) __att
 // --- gclidb.Project
 struct Project { // gclidb.Project: Gitlab project mr
     algo::Smallstr50   project;   // Identifier
-    Project();
+    // func:gclidb.Project..Ctor
+    inline               Project() __attribute__((nothrow));
 };
 
 
@@ -1317,7 +1354,8 @@ struct User { // gclidb.User
     algo::Smallstr50   user;   //
     u32                id;     //   0
     algo::cstring      name;   //
-    User();
+    // func:gclidb.User..Ctor
+    inline               User() __attribute__((nothrow));
 };
 
 // func:gclidb.User..ReadFieldMaybe
@@ -1328,7 +1366,7 @@ bool                 User_ReadFieldMaybe(gclidb::User& parent, algo::strptr fiel
 bool                 User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gclidb.User..Init
-void                 User_Init(gclidb::User& parent);
+inline void          User_Init(gclidb::User& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.User.String  printfmt:Tuple
 // func:gclidb.User..Print

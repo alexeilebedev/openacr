@@ -75,7 +75,7 @@ cpp/amc/gen.cpp:614: void amc::gen_check_bigend()
 cpp/amc/gen.cpp:310: void amc::gen_check_bitfld() 
 cpp/amc/gen.cpp:110: void amc::gen_check_cascdel() 
 cpp/amc/gen.cpp:496: void amc::gen_check_cpptype() 
-cpp/amc/gen.cpp:1456: void amc::gen_check_fcurs() 
+cpp/amc/gen.cpp:1454: void amc::gen_check_fcurs() 
 cpp/amc/gen.cpp:215: void amc::gen_check_prefix() 
 cpp/amc/gen.cpp:432: void amc::gen_check_reftype() 
 cpp/amc/gen.cpp:136: void amc::gen_check_ssimsort() 
@@ -91,18 +91,28 @@ See [Hook](hook.md)
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Gstatic
 
 * file:[data/dmmeta/gstatic.ssim](/data/dmmeta/gstatic.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *ns* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|Pkey||<br>.LL of field|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.LL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FGstatic
-* [src_func](/txt/exe/src_func/README.md) as src_func.FGstatic
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FGstatic](/txt/exe/abt_md/internals.md#abt_md-fgstatic)
+* [amc](/txt/exe/amc/internals.md) as [amc.FGstatic](/txt/exe/amc/internals.md#amc-fgstatic)
+* [src_func](/txt/exe/src_func/internals.md) as [src_func.FGstatic](/txt/exe/src_func/internals.md#src_func-fgstatic)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

@@ -35,9 +35,9 @@ namespace lib_iconv { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:lib_iconv.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:lib_iconv...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_iconv.trace..Print
@@ -181,11 +181,6 @@ void lib_iconv::FDb_Init() {
     lib_iconv::InitReflection();
 }
 
-// --- lib_iconv.FDb..Uninit
-void lib_iconv::FDb_Uninit() {
-    lib_iconv::FDb &row = _db; (void)row;
-}
-
 // --- lib_iconv.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -260,12 +255,6 @@ bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr
 // cfmt:lib_iconv.FieldId.String  printfmt:Raw
 void lib_iconv::FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) {
     lib_iconv::value_Print(row, str);
-}
-
-// --- lib_iconv.Icd..Uninit
-void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
-    lib_iconv::Icd &row = icd; (void)row;
-    icd_Cleanup(icd); // dmmeta.fcleanup:lib_iconv.Icd.icd
 }
 
 // --- lib_iconv.Icd..Print

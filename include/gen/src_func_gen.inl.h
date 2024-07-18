@@ -30,14 +30,6 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-inline src_func::FCtypelen::FCtypelen() {
-    src_func::FCtypelen_Init(*this);
-}
-
-inline src_func::FCtypelen::~FCtypelen() {
-    src_func::FCtypelen_Uninit(*this);
-}
-
 
 // --- src_func.FCtypelen..Init
 // Set all fields to initial values.
@@ -48,9 +40,20 @@ inline void src_func::FCtypelen_Init(src_func::FCtypelen& ctypelen) {
     ctypelen.plaindata = bool(false);
     ctypelen.ind_ctypelen_next = (src_func::FCtypelen*)-1; // (src_func.FDb.ind_ctypelen) not-in-hash
 }
-inline src_func::trace::trace() {
+
+// --- src_func.FCtypelen..Ctor
+inline  src_func::FCtypelen::FCtypelen() {
+    src_func::FCtypelen_Init(*this);
 }
 
+// --- src_func.FCtypelen..Dtor
+inline  src_func::FCtypelen::~FCtypelen() {
+    src_func::FCtypelen_Uninit(*this);
+}
+
+// --- src_func.trace..Ctor
+inline  src_func::trace::trace() {
+}
 
 // --- src_func.FDb.genprefix.EmptyQ
 // Return true if index is empty
@@ -677,52 +680,51 @@ inline void src_func::_db_ctypelen_curs_Next(_db_ctypelen_curs &curs) {
 inline src_func::FCtypelen& src_func::_db_ctypelen_curs_Access(_db_ctypelen_curs &curs) {
     return ctypelen_qFind(u64(curs.index));
 }
-inline src_func::FDispatch::FDispatch() {
+
+// --- src_func.FDispatch..Ctor
+inline  src_func::FDispatch::FDispatch() {
     src_func::FDispatch_Init(*this);
 }
 
-inline src_func::FFstep::FFstep() {
+// --- src_func.FFstep..Ctor
+inline  src_func::FFstep::FFstep() {
 }
-
-inline src_func::FFunc::FFunc() {
-    src_func::FFunc_Init(*this);
-}
-
-inline src_func::FFunc::~FFunc() {
-    src_func::FFunc_Uninit(*this);
-}
-
 
 // --- src_func.FFunc.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 inline bool src_func::sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) {
     return sortkey_Cmp(func,rhs) < 0;
 }
-inline src_func::FGenprefix::FGenprefix() {
-    src_func::FGenprefix_Init(*this);
+
+// --- src_func.FFunc..Ctor
+inline  src_func::FFunc::FFunc() {
+    src_func::FFunc_Init(*this);
 }
 
-inline src_func::FGenprefix::~FGenprefix() {
-    src_func::FGenprefix_Uninit(*this);
+// --- src_func.FFunc..Dtor
+inline  src_func::FFunc::~FFunc() {
+    src_func::FFunc_Uninit(*this);
 }
-
 
 // --- src_func.FGenprefix..Init
 // Set all fields to initial values.
 inline void src_func::FGenprefix_Init(src_func::FGenprefix& genprefix) {
     genprefix.ind_genprefix_next = (src_func::FGenprefix*)-1; // (src_func.FDb.ind_genprefix) not-in-hash
 }
-inline src_func::FGstatic::FGstatic() {
+
+// --- src_func.FGenprefix..Ctor
+inline  src_func::FGenprefix::FGenprefix() {
+    src_func::FGenprefix_Init(*this);
 }
 
-inline src_func::FTarget::FTarget() {
-    src_func::FTarget_Init(*this);
+// --- src_func.FGenprefix..Dtor
+inline  src_func::FGenprefix::~FGenprefix() {
+    src_func::FGenprefix_Uninit(*this);
 }
 
-inline src_func::FTarget::~FTarget() {
-    src_func::FTarget_Uninit(*this);
+// --- src_func.FGstatic..Ctor
+inline  src_func::FGstatic::FGstatic() {
 }
-
 
 // --- src_func.FTarget.cd_targsrc.EmptyQ
 // Return true if index is empty
@@ -817,14 +819,16 @@ inline void src_func::target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) 
 inline src_func::FTargsrc& src_func::target_cd_targsrc_curs_Access(target_cd_targsrc_curs &curs) {
     return *curs.row;
 }
-inline src_func::FTargsrc::FTargsrc() {
-    src_func::FTargsrc_Init(*this);
+
+// --- src_func.FTarget..Ctor
+inline  src_func::FTarget::FTarget() {
+    src_func::FTarget_Init(*this);
 }
 
-inline src_func::FTargsrc::~FTargsrc() {
-    src_func::FTargsrc_Uninit(*this);
+// --- src_func.FTarget..Dtor
+inline  src_func::FTarget::~FTarget() {
+    src_func::FTarget_Uninit(*this);
 }
-
 
 // --- src_func.FTargsrc.zd_func.EmptyQ
 // Return true if index is empty
@@ -918,15 +922,16 @@ inline void src_func::targsrc_zd_func_curs_Next(targsrc_zd_func_curs &curs) {
 inline src_func::FFunc& src_func::targsrc_zd_func_curs_Access(targsrc_zd_func_curs &curs) {
     return *curs.row;
 }
-inline src_func::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_func::FieldId::FieldId(src_func_FieldIdEnum arg) { this->value = i32(arg); }
-inline src_func::FieldId::FieldId() {
-    src_func::FieldId_Init(*this);
+
+// --- src_func.FTargsrc..Ctor
+inline  src_func::FTargsrc::FTargsrc() {
+    src_func::FTargsrc_Init(*this);
 }
 
+// --- src_func.FTargsrc..Dtor
+inline  src_func::FTargsrc::~FTargsrc() {
+    src_func::FTargsrc_Uninit(*this);
+}
 
 // --- src_func.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -941,7 +946,7 @@ inline void src_func::value_SetEnum(src_func::FieldId& parent, src_func_FieldIdE
 }
 
 // --- src_func.FieldId.value.Cast
-inline src_func::FieldId::operator src_func_FieldIdEnum () const {
+inline  src_func::FieldId::operator src_func_FieldIdEnum() const {
     return src_func_FieldIdEnum((*this).value);
 }
 
@@ -950,15 +955,22 @@ inline src_func::FieldId::operator src_func_FieldIdEnum () const {
 inline void src_func::FieldId_Init(src_func::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline src_func::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_func::TableId::TableId(src_func_TableIdEnum arg) { this->value = i32(arg); }
-inline src_func::TableId::TableId() {
-    src_func::TableId_Init(*this);
+
+// --- src_func.FieldId..Ctor
+inline  src_func::FieldId::FieldId() {
+    src_func::FieldId_Init(*this);
 }
 
+// --- src_func.FieldId..FieldwiseCtor
+inline  src_func::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_func.FieldId..EnumCtor
+inline  src_func::FieldId::FieldId(src_func_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- src_func.TableId.value.GetEnum
 // Get value of field as enum type
@@ -973,7 +985,7 @@ inline void src_func::value_SetEnum(src_func::TableId& parent, src_func_TableIdE
 }
 
 // --- src_func.TableId.value.Cast
-inline src_func::TableId::operator src_func_TableIdEnum () const {
+inline  src_func::TableId::operator src_func_TableIdEnum() const {
     return src_func_TableIdEnum((*this).value);
 }
 
@@ -981,6 +993,22 @@ inline src_func::TableId::operator src_func_TableIdEnum () const {
 // Set all fields to initial values.
 inline void src_func::TableId_Init(src_func::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- src_func.TableId..Ctor
+inline  src_func::TableId::TableId() {
+    src_func::TableId_Init(*this);
+}
+
+// --- src_func.TableId..FieldwiseCtor
+inline  src_func::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_func.TableId..EnumCtor
+inline  src_func::TableId::TableId(src_func_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const src_func::trace &row) {// cfmt:src_func.trace.String

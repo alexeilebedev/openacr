@@ -159,6 +159,7 @@ void amc::tfunc_Smallstr_Init() {
     // init function
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = true;
+    init.ismacro = false; // cannot be a macro, participates in reflection
     Ins(&R, init.ret  , "void", false);
     Ins(&R, init.proto, "$name_Init($Partype &$parname)", false);
     if (smallstr.strtype == dmmeta_Strtype_strtype_rightpad || smallstr.strtype == dmmeta_Strtype_strtype_leftpad) {
@@ -367,61 +368,34 @@ void amc::tfunc_Smallstr_SetStrptr() {
 
 // -----------------------------------------------------------------------------
 
-// Copy from same type
-void amc::tfunc_Smallstr_Set() {
+// Assignment operator from strptr
+// Generated only if the containing struct has only one field
+void amc::tfunc_Smallstr_AssignStrptr() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FSmallstr& smallstr = *field.c_smallstr;
-
-    amc::FFunc& func = amc::CreateCurFunc();
-    func.member=true;
-    Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.comment, "Copy value from RHS.");
-    Ins(&R, func.proto, "operator =(const $Parent)", false);
-    if (smallstr.strtype == dmmeta_Strtype_strtype_rpascal) {
-        Ins(&R, func.body, "memcpy($name, parent.$name, parent.n_$name);");
-        Ins(&R, func.body, "n_$name = parent.n_$name;");
-    } else {
-        Ins(&R, func.body, "memcpy($name, parent.$name, $max_length);");
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (c_field_N(ctype)==1) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "operator =(const algo::strptr &str)", false);
+        Ins(&R, func.body, "$name_SetStrptr(*this, str);");
     }
 }
 
 // -----------------------------------------------------------------------------
 
-// Assignment operator from strptr
-void amc::tfunc_Smallstr_AssignStrptr() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-
-    amc::FFunc& func = amc::CreateCurFunc();
-    func.inl=true;
-    func.member=true;
-    Ins(&R, func.ret  , "void", false);
-    Ins(&R, func.proto, "operator =(const algo::strptr &str)", false);
-    Ins(&R, func.body, "$name_SetStrptr(*this, str);");
-}
-
-// -----------------------------------------------------------------------------
-
-// Construct from same type
-void amc::tfunc_Smallstr_Ctor() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FFunc& func = amc::CreateCurFunc();
-    func.inl=true;
-    func.comment="";// erase it
-    func.member=true;
-    Ins(&R, func.proto, "$Parname(const $Partype &rhs)", false);
-    Ins(&R, func.body, "operator =(rhs);");
-}
-
-// -----------------------------------------------------------------------------
-
 // Construct from strptr
+// Generated only if the containing struct has only one field
 void amc::tfunc_Smallstr_CtorStrptr() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FFunc& func = amc::CreateCurFunc();
-    func.inl=true;
-    func.comment="";// erase it
-    func.member=true;
-    Ins(&R, func.proto, "$Parname(const algo::strptr &rhs)", false);
-    Ins(&R, func.body, "$name_SetStrptr(*this, rhs);");
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (c_field_N(ctype)==1) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.comment="";// erase it
+        func.member=true;
+        Ins(&R, func.proto, "$Parname(const algo::strptr &rhs)", false);
+        Ins(&R, func.body, "$name_SetStrptr(*this, rhs);");
+    }
 }

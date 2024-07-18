@@ -29,14 +29,6 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 //#pragma endinclude
-inline atf_comp::FComptest::FComptest() {
-    atf_comp::FComptest_Init(*this);
-}
-
-inline atf_comp::FComptest::~FComptest() {
-    atf_comp::FComptest_Uninit(*this);
-}
-
 
 // --- atf_comp.FComptest.c_targs.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -158,9 +150,20 @@ inline void atf_comp::comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) {
 inline atf_comp::FTmsg& atf_comp::comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs) {
     return *curs.row;
 }
-inline atf_comp::trace::trace() {
+
+// --- atf_comp.FComptest..Ctor
+inline  atf_comp::FComptest::FComptest() {
+    atf_comp::FComptest_Init(*this);
 }
 
+// --- atf_comp.FComptest..Dtor
+inline  atf_comp::FComptest::~FComptest() {
+    atf_comp::FComptest_Uninit(*this);
+}
+
+// --- atf_comp.trace..Ctor
+inline  atf_comp::trace::trace() {
+}
 
 // --- atf_comp.FDb.comptest.EmptyQ
 // Return true if index is empty
@@ -726,14 +729,6 @@ inline void atf_comp::_db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) {
 inline atf_comp::FTargs& atf_comp::_db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) {
     return *curs.row;
 }
-inline atf_comp::FTargs::FTargs() {
-    atf_comp::FTargs_Init(*this);
-}
-
-inline atf_comp::FTargs::~FTargs() {
-    atf_comp::FTargs_Uninit(*this);
-}
-
 
 // --- atf_comp.FTargs..Init
 // Set all fields to initial values.
@@ -742,14 +737,16 @@ inline void atf_comp::FTargs_Init(atf_comp::FTargs& targs) {
     targs.zd_out_targs_next = (atf_comp::FTargs*)-1; // (atf_comp.FDb.zd_out_targs) not-in-list
     targs.zd_out_targs_prev = NULL; // (atf_comp.FDb.zd_out_targs)
 }
-inline atf_comp::FTfilt::FTfilt() {
-    atf_comp::FTfilt_Init(*this);
+
+// --- atf_comp.FTargs..Ctor
+inline  atf_comp::FTargs::FTargs() {
+    atf_comp::FTargs_Init(*this);
 }
 
-inline atf_comp::FTfilt::~FTfilt() {
-    atf_comp::FTfilt_Uninit(*this);
+// --- atf_comp.FTargs..Dtor
+inline  atf_comp::FTargs::~FTargs() {
+    atf_comp::FTargs_Uninit(*this);
 }
-
 
 // --- atf_comp.FTfilt..Init
 // Set all fields to initial values.
@@ -758,14 +755,16 @@ inline void atf_comp::FTfilt_Init(atf_comp::FTfilt& tfilt) {
     tfilt.zd_out_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.zd_out_tfilt) not-in-list
     tfilt.zd_out_tfilt_prev = NULL; // (atf_comp.FDb.zd_out_tfilt)
 }
-inline atf_comp::FTmsg::FTmsg() {
-    atf_comp::FTmsg_Init(*this);
+
+// --- atf_comp.FTfilt..Ctor
+inline  atf_comp::FTfilt::FTfilt() {
+    atf_comp::FTfilt_Init(*this);
 }
 
-inline atf_comp::FTmsg::~FTmsg() {
-    atf_comp::FTmsg_Uninit(*this);
+// --- atf_comp.FTfilt..Dtor
+inline  atf_comp::FTfilt::~FTfilt() {
+    atf_comp::FTfilt_Uninit(*this);
 }
-
 
 // --- atf_comp.FTmsg..Init
 // Set all fields to initial values.
@@ -777,15 +776,16 @@ inline void atf_comp::FTmsg_Init(atf_comp::FTmsg& tmsg) {
     tmsg.zd_out_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.zd_out_tmsg) not-in-list
     tmsg.zd_out_tmsg_prev = NULL; // (atf_comp.FDb.zd_out_tmsg)
 }
-inline atf_comp::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_comp::FieldId::FieldId(atf_comp_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_comp::FieldId::FieldId() {
-    atf_comp::FieldId_Init(*this);
+
+// --- atf_comp.FTmsg..Ctor
+inline  atf_comp::FTmsg::FTmsg() {
+    atf_comp::FTmsg_Init(*this);
 }
 
+// --- atf_comp.FTmsg..Dtor
+inline  atf_comp::FTmsg::~FTmsg() {
+    atf_comp::FTmsg_Uninit(*this);
+}
 
 // --- atf_comp.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -800,7 +800,7 @@ inline void atf_comp::value_SetEnum(atf_comp::FieldId& parent, atf_comp_FieldIdE
 }
 
 // --- atf_comp.FieldId.value.Cast
-inline atf_comp::FieldId::operator atf_comp_FieldIdEnum () const {
+inline  atf_comp::FieldId::operator atf_comp_FieldIdEnum() const {
     return atf_comp_FieldIdEnum((*this).value);
 }
 
@@ -809,15 +809,22 @@ inline atf_comp::FieldId::operator atf_comp_FieldIdEnum () const {
 inline void atf_comp::FieldId_Init(atf_comp::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_comp::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_comp::TableId::TableId(atf_comp_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_comp::TableId::TableId() {
-    atf_comp::TableId_Init(*this);
+
+// --- atf_comp.FieldId..Ctor
+inline  atf_comp::FieldId::FieldId() {
+    atf_comp::FieldId_Init(*this);
 }
 
+// --- atf_comp.FieldId..FieldwiseCtor
+inline  atf_comp::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_comp.FieldId..EnumCtor
+inline  atf_comp::FieldId::FieldId(atf_comp_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_comp.TableId.value.GetEnum
 // Get value of field as enum type
@@ -832,7 +839,7 @@ inline void atf_comp::value_SetEnum(atf_comp::TableId& parent, atf_comp_TableIdE
 }
 
 // --- atf_comp.TableId.value.Cast
-inline atf_comp::TableId::operator atf_comp_TableIdEnum () const {
+inline  atf_comp::TableId::operator atf_comp_TableIdEnum() const {
     return atf_comp_TableIdEnum((*this).value);
 }
 
@@ -840,6 +847,22 @@ inline atf_comp::TableId::operator atf_comp_TableIdEnum () const {
 // Set all fields to initial values.
 inline void atf_comp::TableId_Init(atf_comp::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_comp.TableId..Ctor
+inline  atf_comp::TableId::TableId() {
+    atf_comp::TableId_Init(*this);
+}
+
+// --- atf_comp.TableId..FieldwiseCtor
+inline  atf_comp::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_comp.TableId..EnumCtor
+inline  atf_comp::TableId::TableId(atf_comp_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_comp::trace &row) {// cfmt:atf_comp.trace.String

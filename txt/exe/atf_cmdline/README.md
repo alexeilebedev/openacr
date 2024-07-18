@@ -3,14 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_cmdline - Internals](/txt/exe/atf_cmdline/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_cmdline: Test tool for command line parsing
 Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]
@@ -48,9 +51,12 @@ Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<str
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -117,40 +123,15 @@ Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<str
 #### -dpkey -- Predefined pkey
 <a href="#-dpkey"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/atf/atf_cmdline.cpp](/cpp/atf/atf_cmdline.cpp)||
-|[cpp/gen/atf_cmdline_gen.cpp](/cpp/gen/atf_cmdline_gen.cpp)||
-|[include/atf_cmdline.h](/include/atf_cmdline.h)||
-|[include/gen/atf_cmdline_gen.h](/include/gen/atf_cmdline_gen.h)||
-|[include/gen/atf_cmdline_gen.inl.h](/include/gen/atf_cmdline_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_cmdline` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `atf_cmdline`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|atf_cmdline.Bare||
-|atf_cmdline.Debug||
-|atf_cmdline.Help||
-|atf_cmdline.Minimal||
-|atf_cmdline.MinimalExec||
-|atf_cmdline.Rich||
-|atf_cmdline.RichExec||
-|atf_cmdline.Sig||
-|atf_cmdline.Verbose||
-|atf_cmdline.Version||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

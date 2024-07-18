@@ -173,11 +173,6 @@ namespace lib_ams { // update-hdr
     // and it's at least 1 hour old
     void CleanOldStreamFiles();
 
-    // TODO remove: There is no simple way to do it on Win
-    // Scan stream/ directory for existing streams
-    // Create a stream record for each.
-    void DiscoverStreams();
-
     // return TRUE if shared memory region is attached to stream STREAM.
     bool ShmemOpenQ(lib_ams::FStream &stream);
 
@@ -235,6 +230,7 @@ namespace lib_ams { // update-hdr
 
     // Mark current message as read and move to the next message.
     void SkipMsg(lib_ams::FStream &stream);
+    int WriteBudget(lib_ams::FStream &stream);
 
     // Send heartbeat to control stream
     // Update
@@ -282,7 +278,7 @@ namespace lib_ams { // update-hdr
     void shm_handle_Cleanup(lib_ams::FStream &stream);
     void shm_file_Cleanup(lib_ams::FStream &stream);
 
-    // (This message could be unnecessary)
+    // Process joined the group
     //     (user-implemented function, prototype is in amc-generated header)
     // void CtlMsg_ProcAddMsg(ams::ProcAddMsg &msg);
 
@@ -304,7 +300,9 @@ namespace lib_ams { // update-hdr
     // Begin reading ams control messages from stdin
     void BeginReadStdin();
     lib_ams::FStream &ind_stream_GetOrCreate(ams::StreamId stream_id);
-    void DumpStreamTable();
+    void DumpStreamTableDflt();
+    void DumpStreamTableVisual();
+    void DumpStreamTable(int format = 0);
 
     // Close stream.
     // If stream is opened for writing, remove its file.

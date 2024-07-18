@@ -11,7 +11,7 @@ The source of the program is in these files:
 
 ```
 inline-command: acr targsrc:atf_nrun/% -report:N
-dev.targsrc  targsrc:atf_nrun/cpp/atf/atf_nrun.cpp            comment:""
+dev.targsrc  targsrc:atf_nrun/cpp/atf_nrun/atf_nrun.cpp       comment:""
 dev.targsrc  targsrc:atf_nrun/cpp/gen/atf_nrun_gen.cpp        comment:""
 dev.targsrc  targsrc:atf_nrun/include/atf_nrun.h              comment:""
 dev.targsrc  targsrc:atf_nrun/include/gen/atf_nrun_gen.h      comment:""

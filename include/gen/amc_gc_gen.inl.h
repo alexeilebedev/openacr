@@ -26,18 +26,15 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline amc_gc::trace::trace() {
+
+// --- amc_gc.trace..Ctor
+inline  amc_gc::trace::trace() {
 }
 
-inline amc_gc::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- amc_gc.FDb..Uninit
+inline void amc_gc::FDb_Uninit() {
+    amc_gc::FDb &row = _db; (void)row;
 }
-inline amc_gc::FieldId::FieldId(amc_gc_FieldIdEnum arg) { this->value = i32(arg); }
-inline amc_gc::FieldId::FieldId() {
-    amc_gc::FieldId_Init(*this);
-}
-
 
 // --- amc_gc.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -52,7 +49,7 @@ inline void amc_gc::value_SetEnum(amc_gc::FieldId& parent, amc_gc_FieldIdEnum rh
 }
 
 // --- amc_gc.FieldId.value.Cast
-inline amc_gc::FieldId::operator amc_gc_FieldIdEnum () const {
+inline  amc_gc::FieldId::operator amc_gc_FieldIdEnum() const {
     return amc_gc_FieldIdEnum((*this).value);
 }
 
@@ -60,6 +57,22 @@ inline amc_gc::FieldId::operator amc_gc_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void amc_gc::FieldId_Init(amc_gc::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- amc_gc.FieldId..Ctor
+inline  amc_gc::FieldId::FieldId() {
+    amc_gc::FieldId_Init(*this);
+}
+
+// --- amc_gc.FieldId..FieldwiseCtor
+inline  amc_gc::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc_gc.FieldId..EnumCtor
+inline  amc_gc::FieldId::FieldId(amc_gc_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amc_gc::trace &row) {// cfmt:amc_gc.trace.String

@@ -1,6 +1,6 @@
 dmmeta.sortfld  field:abt.FDb.bh_syscmd  sortfld:dev.Syscmd.execkey
-dmmeta.sortfld  field:abt_md.FDb.bh_dirent  sortfld:abt_md.FDirent.filename
 dmmeta.sortfld  field:abt_md.FDb.bh_file_section  sortfld:abt_md.FFileSection.sortkey
+dmmeta.sortfld  field:abt_md.FDirscan.bh_dirent  sortfld:abt_md.FDirent.sortfld
 dmmeta.sortfld  field:acr.FDb.bh_ctype_topo  sortfld:acr.FCtype.topokey
 dmmeta.sortfld  field:acr.FDb.bh_pline  sortfld:acr.FPline.key
 dmmeta.sortfld  field:acr_compl.FDb.bh_completion  sortfld:acr_compl.FCompletion.badness
@@ -18,5 +18,6 @@ dmmeta.sortfld  field:atf_amc.FDb.tr_avl  sortfld:atf_amc.FAvl.n
 dmmeta.sortfld  field:atf_amc.FTypeA.bh_typeb  sortfld:atf_amc.TypeB.j
 dmmeta.sortfld  field:atf_unit.FDb.tr_number  sortfld:atf_unit.FNumber.num
 dmmeta.sortfld  field:lib_exec.FDb.bh_syscmd  sortfld:dev.Syscmd.execkey
+dmmeta.sortfld  field:samp_meng.FOrdq.bh_order  sortfld:samp_meng.FOrder.ordkey
 dmmeta.sortfld  field:src_func.FDb.bh_func  sortfld:src_func.FFunc.sortkey
 dmmeta.sortfld  field:src_hdr.FDb.bh_copyright  sortfld:src_hdr.FCopyright.sortkey

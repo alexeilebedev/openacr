@@ -3,15 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [acr_in - Internals](/txt/exe/acr_in/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
 Usage: acr_in [[-ns:]<regx>] [options]
@@ -35,8 +38,11 @@ Usage: acr_in [[-ns:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 acr_in computes the names and the order of ssimfiles
 which constitute target's declared input.
@@ -81,9 +87,12 @@ references, and is independent of the target itself. This means that
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -ns -- Regx of matching namespace
 <a href="#-ns"></a>
 
@@ -162,43 +171,24 @@ With the `-r` option, one can supply a regex of a ssimfile and get a list
 of all namespaces that require the ssimfile. This includes any dependent namespaces
 via the targdep table.
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/acr_in/acr_in.cpp](/cpp/acr_in/acr_in.cpp)||
-|[cpp/acr_in/data.cpp](/cpp/acr_in/data.cpp)||
-|[cpp/gen/acr_in_gen.cpp](/cpp/gen/acr_in_gen.cpp)||
-|[include/acr_in.h](/include/acr_in.h)||
-|[include/gen/acr_in_gen.h](/include/gen/acr_in_gen.h)||
-|[include/gen/acr_in_gen.inl.h](/include/gen/acr_in_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_in` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.dispsig](/txt/ssimdb/dmmeta/dispsig.md)|Cryptographic signature of all dispatches|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
+|[dmmeta.dispsig](/txt/ssimdb/dmmeta/dispsig.md)|Cryptographic signature of all dispatches|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `acr_in`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|acr_in.Reverse||
-|acr_in.Simple||
-|acr_in.Tree||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

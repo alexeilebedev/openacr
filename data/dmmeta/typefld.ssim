@@ -1,3 +1,4 @@
 dmmeta.typefld  field:ams.MsgHeader.type  comment:""
 dmmeta.typefld  field:atf_amc.MsgHdrLT.type  comment:""
 dmmeta.typefld  field:atf_amc.MsgHeader.type  comment:""
+dmmeta.typefld  field:samp_meng.MsgHeader.type  comment:""

@@ -28,9 +28,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-inline acr_my::trace::trace() {
-}
 
+// --- acr_my.trace..Ctor
+inline  acr_my::trace::trace() {
+}
 
 // --- acr_my.FDb.ary_ns.EmptyQ
 // Return true if index is empty
@@ -257,28 +258,21 @@ inline void acr_my::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) {
 inline acr_my::FSsimfile& acr_my::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) {
     return ssimfile_qFind(u64(curs.index));
 }
-inline acr_my::FNsdb::FNsdb() {
-    acr_my::FNsdb_Init(*this);
-}
-
 
 // --- acr_my.FNsdb..Init
 // Set all fields to initial values.
 inline void acr_my::FNsdb_Init(acr_my::FNsdb& nsdb) {
     nsdb.select = bool(false);
 }
-inline acr_my::FSsimfile::FSsimfile() {
+
+// --- acr_my.FNsdb..Ctor
+inline  acr_my::FNsdb::FNsdb() {
+    acr_my::FNsdb_Init(*this);
 }
 
-inline acr_my::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- acr_my.FSsimfile..Ctor
+inline  acr_my::FSsimfile::FSsimfile() {
 }
-inline acr_my::FieldId::FieldId(acr_my_FieldIdEnum arg) { this->value = i32(arg); }
-inline acr_my::FieldId::FieldId() {
-    acr_my::FieldId_Init(*this);
-}
-
 
 // --- acr_my.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -293,7 +287,7 @@ inline void acr_my::value_SetEnum(acr_my::FieldId& parent, acr_my_FieldIdEnum rh
 }
 
 // --- acr_my.FieldId.value.Cast
-inline acr_my::FieldId::operator acr_my_FieldIdEnum () const {
+inline  acr_my::FieldId::operator acr_my_FieldIdEnum() const {
     return acr_my_FieldIdEnum((*this).value);
 }
 
@@ -302,15 +296,22 @@ inline acr_my::FieldId::operator acr_my_FieldIdEnum () const {
 inline void acr_my::FieldId_Init(acr_my::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline acr_my::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_my::TableId::TableId(acr_my_TableIdEnum arg) { this->value = i32(arg); }
-inline acr_my::TableId::TableId() {
-    acr_my::TableId_Init(*this);
+
+// --- acr_my.FieldId..Ctor
+inline  acr_my::FieldId::FieldId() {
+    acr_my::FieldId_Init(*this);
 }
 
+// --- acr_my.FieldId..FieldwiseCtor
+inline  acr_my::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_my.FieldId..EnumCtor
+inline  acr_my::FieldId::FieldId(acr_my_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- acr_my.TableId.value.GetEnum
 // Get value of field as enum type
@@ -325,7 +326,7 @@ inline void acr_my::value_SetEnum(acr_my::TableId& parent, acr_my_TableIdEnum rh
 }
 
 // --- acr_my.TableId.value.Cast
-inline acr_my::TableId::operator acr_my_TableIdEnum () const {
+inline  acr_my::TableId::operator acr_my_TableIdEnum() const {
     return acr_my_TableIdEnum((*this).value);
 }
 
@@ -333,6 +334,22 @@ inline acr_my::TableId::operator acr_my_TableIdEnum () const {
 // Set all fields to initial values.
 inline void acr_my::TableId_Init(acr_my::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- acr_my.TableId..Ctor
+inline  acr_my::TableId::TableId() {
+    acr_my::TableId_Init(*this);
+}
+
+// --- acr_my.TableId..FieldwiseCtor
+inline  acr_my::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_my.TableId..EnumCtor
+inline  acr_my::TableId::TableId(acr_my_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_my::trace &row) {// cfmt:acr_my.trace.String

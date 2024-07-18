@@ -50,7 +50,8 @@ namespace bash2html { // gen:ns_print_struct
 // --- bash2html.trace
 #pragma pack(push,1)
 struct trace { // bash2html.trace
-    trace();
+    // func:bash2html.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -115,25 +116,29 @@ bool                 _db_XrefMaybe();
 // func:bash2html.FDb..Init
 void                 FDb_Init();
 // func:bash2html.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- bash2html.FieldId
 #pragma pack(push,1)
 struct FieldId { // bash2html.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator bash2html_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(bash2html_FieldIdEnum arg);
-    FieldId();
+    // func:bash2html.FieldId.value.Cast
+    inline               operator bash2html_FieldIdEnum() const __attribute__((nothrow));
+    // func:bash2html.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:bash2html.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:bash2html.FieldId..EnumCtor
+    inline               FieldId(bash2html_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:bash2html.FieldId.value.GetEnum
-bash2html_FieldIdEnum value_GetEnum(const bash2html::FieldId& parent) __attribute__((nothrow));
+inline bash2html_FieldIdEnum value_GetEnum(const bash2html::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:bash2html.FieldId.value.SetEnum
-void                 value_SetEnum(bash2html::FieldId& parent, bash2html_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(bash2html::FieldId& parent, bash2html_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:bash2html.FieldId.value.ToCstr
@@ -161,7 +166,7 @@ bool                 value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::str
 bool                 FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:bash2html.FieldId..Init
-void                 FieldId_Init(bash2html::FieldId& parent);
+inline void          FieldId_Init(bash2html::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:bash2html.FieldId.String  printfmt:Raw
 // func:bash2html.FieldId..Print

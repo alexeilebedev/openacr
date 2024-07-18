@@ -32,7 +32,7 @@
 //#pragma endinclude
 namespace lib_amcdb { // gen:ns_print_proto
     // func:lib_amcdb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_amcdb.FieldId.value.ToCstr

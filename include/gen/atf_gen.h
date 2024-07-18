@@ -68,19 +68,23 @@ namespace atf { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // atf.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_FieldIdEnum arg);
-    FieldId();
+    // func:atf.FieldId.value.Cast
+    inline               operator atf_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf.FieldId..EnumCtor
+    inline               FieldId(atf_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf.FieldId.value.GetEnum
-atf_FieldIdEnum      value_GetEnum(const atf::FieldId& parent) __attribute__((nothrow));
+inline atf_FieldIdEnum value_GetEnum(const atf::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf.FieldId.value.SetEnum
-void                 value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf.FieldId.value.ToCstr
@@ -108,7 +112,7 @@ bool                 value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rh
 bool                 FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.FieldId..Init
-void                 FieldId_Init(atf::FieldId& parent);
+inline void          FieldId_Init(atf::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf.FieldId.String  printfmt:Raw
 // func:atf.FieldId..Print
@@ -117,18 +121,22 @@ void                 FieldId_Print(atf::FieldId& row, algo::cstring& str) __attr
 // --- atf.Testresult
 struct Testresult { // atf.Testresult
     u32   value;   //   0
-    inline operator atf_TestresultEnum() const;
-    explicit Testresult(u32                            in_value);
-    Testresult(atf_TestresultEnum arg);
-    Testresult();
+    // func:atf.Testresult.value.Cast
+    inline               operator atf_TestresultEnum() const __attribute__((nothrow));
+    // func:atf.Testresult..Ctor
+    inline               Testresult() __attribute__((nothrow));
+    // func:atf.Testresult..FieldwiseCtor
+    explicit inline               Testresult(u32 in_value) __attribute__((nothrow));
+    // func:atf.Testresult..EnumCtor
+    inline               Testresult(atf_TestresultEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:atf.Testresult.value.GetEnum
-atf_TestresultEnum   value_GetEnum(const atf::Testresult& parent) __attribute__((nothrow));
+inline atf_TestresultEnum value_GetEnum(const atf::Testresult& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf.Testresult.value.SetEnum
-void                 value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf.Testresult.value.ToCstr
@@ -156,7 +164,7 @@ bool                 value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr
 bool                 Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.Testresult..Init
-void                 Testresult_Init(atf::Testresult& parent);
+inline void          Testresult_Init(atf::Testresult& parent);
 // print string representation of ROW to string STR
 // cfmt:atf.Testresult.String  printfmt:Raw
 // func:atf.Testresult..Print
@@ -169,12 +177,10 @@ struct Testrun { // atf.Testrun
     u64                n_step;       //   0  Number of sub-steps
     u64                n_cmp;        //   0  Number of comparisons made during test
     algo::cstring      comment;      // Testcase comment
-    explicit Testrun(const algo::strptr&            in_testrun
-        ,const atf::Testresult&         in_testresult
-        ,u64                            in_n_step
-        ,u64                            in_n_cmp
-        ,const algo::strptr&            in_comment);
-    Testrun();
+    // func:atf.Testrun..Ctor
+    inline               Testrun() __attribute__((nothrow));
+    // func:atf.Testrun..FieldwiseCtor
+    explicit inline               Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment) __attribute__((nothrow));
 };
 
 // func:atf.Testrun..ReadFieldMaybe
@@ -185,7 +191,7 @@ bool                 Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr f
 bool                 Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf.Testrun..Init
-void                 Testrun_Init(atf::Testrun& parent);
+inline void          Testrun_Init(atf::Testrun& parent);
 // print string representation of ROW to string STR
 // cfmt:atf.Testrun.String  printfmt:Tuple
 // func:atf.Testrun..Print

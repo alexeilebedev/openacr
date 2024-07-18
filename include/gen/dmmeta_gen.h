@@ -96,9 +96,10 @@ enum { dmmeta_FastopCaseEnum_N = 7 };
 
 extern const char *  dmmeta_Fbufdir_fbufdir_in;    // in     fconst:dmmeta.Fbufdir.fbufdir/in
 extern const char *  dmmeta_Fbufdir_fbufdir_out;   // out    fconst:dmmeta.Fbufdir.fbufdir/out
-extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;   // Bytebuf    fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;   // Linebuf    fconst:dmmeta.Fbuftype.fbuftype/Linebuf
-extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;    // Msgbuf     fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Bytebuf;         // Bytebuf          fconst:dmmeta.Fbuftype.fbuftype/Bytebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_BytebufExtern;   // BytebufExtern    fconst:dmmeta.Fbuftype.fbuftype/BytebufExtern
+extern const char *  dmmeta_Fbuftype_fbuftype_Linebuf;         // Linebuf          fconst:dmmeta.Fbuftype.fbuftype/Linebuf
+extern const char *  dmmeta_Fbuftype_fbuftype_Msgbuf;          // Msgbuf           fconst:dmmeta.Fbuftype.fbuftype/Msgbuf
 
 // --- dmmeta_FieldIdEnum
 
@@ -169,127 +170,118 @@ enum dmmeta_FieldIdEnum {                        // dmmeta.FieldId.value
     ,dmmeta_FieldId_fbuftype              = 63
     ,dmmeta_FieldId_insready              = 64
     ,dmmeta_FieldId_inseof                = 65
-    ,dmmeta_FieldId_getmsg                = 66
-    ,dmmeta_FieldId_skipbytes             = 67
-    ,dmmeta_FieldId_fcmap                 = 68
-    ,dmmeta_FieldId_leftField             = 69
-    ,dmmeta_FieldId_leftVal               = 70
-    ,dmmeta_FieldId_rightVal              = 71
-    ,dmmeta_FieldId_rightField            = 72
-    ,dmmeta_FieldId_bidir                 = 73
-    ,dmmeta_FieldId_basecmdline           = 74
-    ,dmmeta_FieldId_versionsort           = 75
-    ,dmmeta_FieldId_casesens              = 76
-    ,dmmeta_FieldId_fconst                = 77
-    ,dmmeta_FieldId_value                 = 78
-    ,dmmeta_FieldId_fcurs                 = 79
-    ,dmmeta_FieldId_curstype              = 80
-    ,dmmeta_FieldId_nplace                = 81
-    ,dmmeta_FieldId_fixedfmt              = 82
-    ,dmmeta_FieldId_fstep                 = 83
-    ,dmmeta_FieldId_delay                 = 84
-    ,dmmeta_FieldId_scale                 = 85
-    ,dmmeta_FieldId_ffast                 = 86
-    ,dmmeta_FieldId_pos                   = 87
-    ,dmmeta_FieldId_optional              = 88
-    ,dmmeta_FieldId_op                    = 89
-    ,dmmeta_FieldId_cumulative            = 90
-    ,dmmeta_FieldId_emptyval              = 91
-    ,dmmeta_FieldId_arg                   = 92
-    ,dmmeta_FieldId_reftype               = 93
-    ,dmmeta_FieldId_update                = 94
-    ,dmmeta_FieldId_fprefix               = 95
-    ,dmmeta_FieldId_partial               = 96
-    ,dmmeta_FieldId_regxtype              = 97
-    ,dmmeta_FieldId_sorttype              = 98
-    ,dmmeta_FieldId_sortfld               = 99
-    ,dmmeta_FieldId_steptype              = 100
-    ,dmmeta_FieldId_func                  = 101
-    ,dmmeta_FieldId_inl                   = 102
-    ,dmmeta_FieldId_proto                 = 103
-    ,dmmeta_FieldId_body                  = 104
-    ,dmmeta_FieldId_deprecate             = 105
-    ,dmmeta_FieldId_ismacro               = 106
-    ,dmmeta_FieldId_glob                  = 107
-    ,dmmeta_FieldId_priv                  = 108
-    ,dmmeta_FieldId_ret                   = 109
-    ,dmmeta_FieldId_fwddecl               = 110
-    ,dmmeta_FieldId_namefld               = 111
-    ,dmmeta_FieldId_idfld                 = 112
-    ,dmmeta_FieldId_wantenum              = 113
-    ,dmmeta_FieldId_namefldctyp           = 114
-    ,dmmeta_FieldId_gsymbol               = 115
-    ,dmmeta_FieldId_ssimfile              = 116
-    ,dmmeta_FieldId_inc                   = 117
-    ,dmmeta_FieldId_symboltype            = 118
-    ,dmmeta_FieldId_min                   = 119
-    ,dmmeta_FieldId_extra                 = 120
-    ,dmmeta_FieldId_listtype              = 121
-    ,dmmeta_FieldId_circular              = 122
-    ,dmmeta_FieldId_haveprev              = 123
-    ,dmmeta_FieldId_instail               = 124
-    ,dmmeta_FieldId_havetail              = 125
-    ,dmmeta_FieldId_havecount             = 126
-    ,dmmeta_FieldId_logcat                = 127
-    ,dmmeta_FieldId_enabled               = 128
-    ,dmmeta_FieldId_builtin               = 129
-    ,dmmeta_FieldId_ismodule              = 130
-    ,dmmeta_FieldId_type                  = 131
-    ,dmmeta_FieldId_xref                  = 132
-    ,dmmeta_FieldId_nstype                = 133
-    ,dmmeta_FieldId_license               = 134
-    ,dmmeta_FieldId_nsinclude             = 135
-    ,dmmeta_FieldId_sys                   = 136
-    ,dmmeta_FieldId_version               = 137
-    ,dmmeta_FieldId_genthrow              = 138
-    ,dmmeta_FieldId_correct_getorcreate   = 139
-    ,dmmeta_FieldId_pool                  = 140
-    ,dmmeta_FieldId_sortxref              = 141
-    ,dmmeta_FieldId_pack                  = 142
-    ,dmmeta_FieldId_numtype               = 143
-    ,dmmeta_FieldId_min_len               = 144
-    ,dmmeta_FieldId_filter_print          = 145
-    ,dmmeta_FieldId_pmaskfld_member       = 146
-    ,dmmeta_FieldId_pmaskfld              = 147
-    ,dmmeta_FieldId_pnew                  = 148
-    ,dmmeta_FieldId_buftype               = 149
-    ,dmmeta_FieldId_unique                = 150
-    ,dmmeta_FieldId_isval                 = 151
-    ,dmmeta_FieldId_cascins               = 152
-    ,dmmeta_FieldId_usebasepool           = 153
-    ,dmmeta_FieldId_cancopy               = 154
-    ,dmmeta_FieldId_isxref                = 155
-    ,dmmeta_FieldId_del                   = 156
-    ,dmmeta_FieldId_up                    = 157
-    ,dmmeta_FieldId_isnew                 = 158
-    ,dmmeta_FieldId_hasalloc              = 159
-    ,dmmeta_FieldId_inst                  = 160
-    ,dmmeta_FieldId_varlen                = 161
-    ,dmmeta_FieldId_length                = 162
-    ,dmmeta_FieldId_strtype               = 163
-    ,dmmeta_FieldId_pad                   = 164
-    ,dmmeta_FieldId_ssimns                = 165
-    ,dmmeta_FieldId_ssimreq               = 166
-    ,dmmeta_FieldId_parent                = 167
-    ,dmmeta_FieldId_parent_field          = 168
-    ,dmmeta_FieldId_parent_ctype          = 169
-    ,dmmeta_FieldId_child_ssimfile        = 170
-    ,dmmeta_FieldId_child_key             = 171
-    ,dmmeta_FieldId_reqchild              = 172
-    ,dmmeta_FieldId_maxwid                = 173
-    ,dmmeta_FieldId_fixedwid1             = 174
-    ,dmmeta_FieldId_fixedwid2             = 175
-    ,dmmeta_FieldId_aliased               = 176
-    ,dmmeta_FieldId_hashfld               = 177
-    ,dmmeta_FieldId_tracefld              = 178
-    ,dmmeta_FieldId_tracerec              = 179
-    ,dmmeta_FieldId_inscond               = 180
-    ,dmmeta_FieldId_via                   = 181
-    ,dmmeta_FieldId_viafld                = 182
-    ,dmmeta_FieldId_keyfld                = 183
+    ,dmmeta_FieldId_skipbytes             = 66
+    ,dmmeta_FieldId_fcmap                 = 67
+    ,dmmeta_FieldId_leftField             = 68
+    ,dmmeta_FieldId_leftVal               = 69
+    ,dmmeta_FieldId_rightVal              = 70
+    ,dmmeta_FieldId_rightField            = 71
+    ,dmmeta_FieldId_bidir                 = 72
+    ,dmmeta_FieldId_basecmdline           = 73
+    ,dmmeta_FieldId_versionsort           = 74
+    ,dmmeta_FieldId_casesens              = 75
+    ,dmmeta_FieldId_fconst                = 76
+    ,dmmeta_FieldId_value                 = 77
+    ,dmmeta_FieldId_fcurs                 = 78
+    ,dmmeta_FieldId_curstype              = 79
+    ,dmmeta_FieldId_nplace                = 80
+    ,dmmeta_FieldId_fixedfmt              = 81
+    ,dmmeta_FieldId_fstep                 = 82
+    ,dmmeta_FieldId_delay                 = 83
+    ,dmmeta_FieldId_scale                 = 84
+    ,dmmeta_FieldId_ffast                 = 85
+    ,dmmeta_FieldId_pos                   = 86
+    ,dmmeta_FieldId_optional              = 87
+    ,dmmeta_FieldId_op                    = 88
+    ,dmmeta_FieldId_cumulative            = 89
+    ,dmmeta_FieldId_emptyval              = 90
+    ,dmmeta_FieldId_arg                   = 91
+    ,dmmeta_FieldId_reftype               = 92
+    ,dmmeta_FieldId_update                = 93
+    ,dmmeta_FieldId_fprefix               = 94
+    ,dmmeta_FieldId_partial               = 95
+    ,dmmeta_FieldId_regxtype              = 96
+    ,dmmeta_FieldId_sorttype              = 97
+    ,dmmeta_FieldId_sortfld               = 98
+    ,dmmeta_FieldId_steptype              = 99
+    ,dmmeta_FieldId_func                  = 100
+    ,dmmeta_FieldId_fwddecl               = 101
+    ,dmmeta_FieldId_namefld               = 102
+    ,dmmeta_FieldId_idfld                 = 103
+    ,dmmeta_FieldId_wantenum              = 104
+    ,dmmeta_FieldId_namefldctyp           = 105
+    ,dmmeta_FieldId_gsymbol               = 106
+    ,dmmeta_FieldId_ssimfile              = 107
+    ,dmmeta_FieldId_inc                   = 108
+    ,dmmeta_FieldId_symboltype            = 109
+    ,dmmeta_FieldId_min                   = 110
+    ,dmmeta_FieldId_extra                 = 111
+    ,dmmeta_FieldId_listtype              = 112
+    ,dmmeta_FieldId_circular              = 113
+    ,dmmeta_FieldId_haveprev              = 114
+    ,dmmeta_FieldId_instail               = 115
+    ,dmmeta_FieldId_havetail              = 116
+    ,dmmeta_FieldId_havecount             = 117
+    ,dmmeta_FieldId_logcat                = 118
+    ,dmmeta_FieldId_enabled               = 119
+    ,dmmeta_FieldId_builtin               = 120
+    ,dmmeta_FieldId_ismodule              = 121
+    ,dmmeta_FieldId_type                  = 122
+    ,dmmeta_FieldId_xref                  = 123
+    ,dmmeta_FieldId_nstype                = 124
+    ,dmmeta_FieldId_license               = 125
+    ,dmmeta_FieldId_nsinclude             = 126
+    ,dmmeta_FieldId_sys                   = 127
+    ,dmmeta_FieldId_version               = 128
+    ,dmmeta_FieldId_genthrow              = 129
+    ,dmmeta_FieldId_correct_getorcreate   = 130
+    ,dmmeta_FieldId_pool                  = 131
+    ,dmmeta_FieldId_sortxref              = 132
+    ,dmmeta_FieldId_pack                  = 133
+    ,dmmeta_FieldId_numtype               = 134
+    ,dmmeta_FieldId_min_len               = 135
+    ,dmmeta_FieldId_filter_print          = 136
+    ,dmmeta_FieldId_pmaskfld_member       = 137
+    ,dmmeta_FieldId_pmaskfld              = 138
+    ,dmmeta_FieldId_pnew                  = 139
+    ,dmmeta_FieldId_buftype               = 140
+    ,dmmeta_FieldId_unique                = 141
+    ,dmmeta_FieldId_isval                 = 142
+    ,dmmeta_FieldId_cascins               = 143
+    ,dmmeta_FieldId_usebasepool           = 144
+    ,dmmeta_FieldId_cancopy               = 145
+    ,dmmeta_FieldId_isxref                = 146
+    ,dmmeta_FieldId_del                   = 147
+    ,dmmeta_FieldId_up                    = 148
+    ,dmmeta_FieldId_isnew                 = 149
+    ,dmmeta_FieldId_hasalloc              = 150
+    ,dmmeta_FieldId_inst                  = 151
+    ,dmmeta_FieldId_varlen                = 152
+    ,dmmeta_FieldId_length                = 153
+    ,dmmeta_FieldId_strtype               = 154
+    ,dmmeta_FieldId_pad                   = 155
+    ,dmmeta_FieldId_ssimns                = 156
+    ,dmmeta_FieldId_ssimreq               = 157
+    ,dmmeta_FieldId_parent                = 158
+    ,dmmeta_FieldId_parent_field          = 159
+    ,dmmeta_FieldId_parent_ctype          = 160
+    ,dmmeta_FieldId_child_ssimfile        = 161
+    ,dmmeta_FieldId_child_key             = 162
+    ,dmmeta_FieldId_reqchild              = 163
+    ,dmmeta_FieldId_maxwid                = 164
+    ,dmmeta_FieldId_fixedwid1             = 165
+    ,dmmeta_FieldId_fixedwid2             = 166
+    ,dmmeta_FieldId_aliased               = 167
+    ,dmmeta_FieldId_hashfld               = 168
+    ,dmmeta_FieldId_tracefld              = 169
+    ,dmmeta_FieldId_tracerec              = 170
+    ,dmmeta_FieldId_inscond               = 171
+    ,dmmeta_FieldId_via                   = 172
+    ,dmmeta_FieldId_viafld                = 173
+    ,dmmeta_FieldId_keyfld                = 174
 };
 
-enum { dmmeta_FieldIdEnum_N = 184 };
+enum { dmmeta_FieldIdEnum_N = 175 };
 
 extern const char *  dmmeta_Hashtype_hashtype_Extern;   // Extern    fconst:dmmeta.Hashtype.hashtype/Extern
 extern const char *  dmmeta_Hashtype_hashtype_CRC32;    // CRC32     fconst:dmmeta.Hashtype.hashtype/CRC32
@@ -351,6 +343,7 @@ extern const char *  dmmeta_Ns_ns_mdbg;           // mdbg            fconst:dmme
 extern const char *  dmmeta_Ns_ns_mysql2ssim;     // mysql2ssim      fconst:dmmeta.Ns.ns/mysql2ssim
 extern const char *  dmmeta_Ns_ns_orgfile;        // orgfile         fconst:dmmeta.Ns.ns/orgfile
 extern const char *  dmmeta_Ns_ns_report;         // report          fconst:dmmeta.Ns.ns/report
+extern const char *  dmmeta_Ns_ns_samp_meng;      // samp_meng       fconst:dmmeta.Ns.ns/samp_meng
 extern const char *  dmmeta_Ns_ns_samp_regx;      // samp_regx       fconst:dmmeta.Ns.ns/samp_regx
 extern const char *  dmmeta_Ns_ns_sandbox;        // sandbox         fconst:dmmeta.Ns.ns/sandbox
 extern const char *  dmmeta_Ns_ns_src_func;       // src_func        fconst:dmmeta.Ns.ns/src_func
@@ -383,6 +376,7 @@ extern const char *  dmmeta_Reftype_reftype_Blkpool;    // Blkpool     fconst:dm
 extern const char *  dmmeta_Reftype_reftype_Charset;    // Charset     fconst:dmmeta.Reftype.reftype/Charset
 extern const char *  dmmeta_Reftype_reftype_Count;      // Count       fconst:dmmeta.Reftype.reftype/Count
 extern const char *  dmmeta_Reftype_reftype_Cppstack;   // Cppstack    fconst:dmmeta.Reftype.reftype/Cppstack
+extern const char *  dmmeta_Reftype_reftype_Ctype;      // Ctype       fconst:dmmeta.Reftype.reftype/Ctype
 extern const char *  dmmeta_Reftype_reftype_Delptr;     // Delptr      fconst:dmmeta.Reftype.reftype/Delptr
 extern const char *  dmmeta_Reftype_reftype_Exec;       // Exec        fconst:dmmeta.Reftype.reftype/Exec
 extern const char *  dmmeta_Reftype_reftype_Fbuf;       // Fbuf        fconst:dmmeta.Reftype.reftype/Fbuf
@@ -421,34 +415,35 @@ enum dmmeta_ReftypeCaseEnum {            // dmmeta.ReftypeCase.reftype
     ,dmmeta_ReftypeCase_Charset    = 7
     ,dmmeta_ReftypeCase_Count      = 8
     ,dmmeta_ReftypeCase_Cppstack   = 9
-    ,dmmeta_ReftypeCase_Delptr     = 10
-    ,dmmeta_ReftypeCase_Exec       = 11
-    ,dmmeta_ReftypeCase_Fbuf       = 12
-    ,dmmeta_ReftypeCase_Global     = 13
-    ,dmmeta_ReftypeCase_Hook       = 14
-    ,dmmeta_ReftypeCase_Inlary     = 15
-    ,dmmeta_ReftypeCase_Lary       = 16
-    ,dmmeta_ReftypeCase_Llist      = 17
-    ,dmmeta_ReftypeCase_Lpool      = 18
-    ,dmmeta_ReftypeCase_Malloc     = 19
-    ,dmmeta_ReftypeCase_Opt        = 20
-    ,dmmeta_ReftypeCase_Pkey       = 21
-    ,dmmeta_ReftypeCase_Ptr        = 22
-    ,dmmeta_ReftypeCase_Ptrary     = 23
-    ,dmmeta_ReftypeCase_Regx       = 24
-    ,dmmeta_ReftypeCase_RegxSql    = 25
-    ,dmmeta_ReftypeCase_Sbrk       = 26
-    ,dmmeta_ReftypeCase_Smallstr   = 27
-    ,dmmeta_ReftypeCase_Tary       = 28
-    ,dmmeta_ReftypeCase_Thash      = 29
-    ,dmmeta_ReftypeCase_Tpool      = 30
-    ,dmmeta_ReftypeCase_Upptr      = 31
-    ,dmmeta_ReftypeCase_Val        = 32
-    ,dmmeta_ReftypeCase_Varlen     = 33
-    ,dmmeta_ReftypeCase_ZSListMT   = 34
+    ,dmmeta_ReftypeCase_Ctype      = 10
+    ,dmmeta_ReftypeCase_Delptr     = 11
+    ,dmmeta_ReftypeCase_Exec       = 12
+    ,dmmeta_ReftypeCase_Fbuf       = 13
+    ,dmmeta_ReftypeCase_Global     = 14
+    ,dmmeta_ReftypeCase_Hook       = 15
+    ,dmmeta_ReftypeCase_Inlary     = 16
+    ,dmmeta_ReftypeCase_Lary       = 17
+    ,dmmeta_ReftypeCase_Llist      = 18
+    ,dmmeta_ReftypeCase_Lpool      = 19
+    ,dmmeta_ReftypeCase_Malloc     = 20
+    ,dmmeta_ReftypeCase_Opt        = 21
+    ,dmmeta_ReftypeCase_Pkey       = 22
+    ,dmmeta_ReftypeCase_Ptr        = 23
+    ,dmmeta_ReftypeCase_Ptrary     = 24
+    ,dmmeta_ReftypeCase_Regx       = 25
+    ,dmmeta_ReftypeCase_RegxSql    = 26
+    ,dmmeta_ReftypeCase_Sbrk       = 27
+    ,dmmeta_ReftypeCase_Smallstr   = 28
+    ,dmmeta_ReftypeCase_Tary       = 29
+    ,dmmeta_ReftypeCase_Thash      = 30
+    ,dmmeta_ReftypeCase_Tpool      = 31
+    ,dmmeta_ReftypeCase_Upptr      = 32
+    ,dmmeta_ReftypeCase_Val        = 33
+    ,dmmeta_ReftypeCase_Varlen     = 34
+    ,dmmeta_ReftypeCase_ZSListMT   = 35
 };
 
-enum { dmmeta_ReftypeCaseEnum_N = 34 };
+enum { dmmeta_ReftypeCaseEnum_N = 35 };
 
 extern const char *  dmmeta_Sorttype_sorttype_QuickSort;       // QuickSort        fconst:dmmeta.Sorttype.sorttype/QuickSort
 extern const char *  dmmeta_Sorttype_sorttype_InsertionSort;   // InsertionSort    fconst:dmmeta.Sorttype.sorttype/InsertionSort
@@ -494,6 +489,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_htmlentity;              // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_include;                 // dev.include                  fconst:dmmeta.Ssimfile.ssimfile/dev.include
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_license;                 // dev.license                  fconst:dmmeta.Ssimfile.ssimfile/dev.license
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_linelim;                 // dev.linelim                  fconst:dmmeta.Ssimfile.ssimfile/dev.linelim
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_mdmark;                  // dev.mdmark                   fconst:dmmeta.Ssimfile.ssimfile/dev.mdmark
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_mdsection;               // dev.mdsection                fconst:dmmeta.Ssimfile.ssimfile/dev.mdsection
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_msgfile;                 // dev.msgfile                  fconst:dmmeta.Ssimfile.ssimfile/dev.msgfile
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_noindent;                // dev.noindent                 fconst:dmmeta.Ssimfile.ssimfile/dev.noindent
@@ -502,7 +498,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_dev_package;                 // de
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgdep;                  // dev.pkgdep                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgdep
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_pkgkey;                  // dev.pkgkey                   fconst:dmmeta.Ssimfile.ssimfile/dev.pkgkey
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_readme;                  // dev.readme                   fconst:dmmeta.Ssimfile.ssimfile/dev.readme
-extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmecat;               // dev.readmecat                fconst:dmmeta.Ssimfile.ssimfile/dev.readmecat
+extern const char *  dmmeta_Ssimfile_ssimfile_dev_readmesort;              // dev.readmesort               fconst:dmmeta.Ssimfile.ssimfile/dev.readmesort
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sandbox;                 // dev.sandbox                  fconst:dmmeta.Ssimfile.ssimfile/dev.sandbox
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_sbpath;                  // dev.sbpath                   fconst:dmmeta.Ssimfile.ssimfile/dev.sbpath
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_scriptfile;              // dev.scriptfile               fconst:dmmeta.Ssimfile.ssimfile/dev.scriptfile
@@ -875,9 +871,10 @@ namespace dmmeta { // gen:ns_print_struct
 struct Anonfld { // dmmeta.Anonfld: Omit field name where possible (command line, enums, constants)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    explicit Anonfld(const algo::strptr&            in_field
-        ,const algo::Comment&           in_comment);
-    Anonfld();
+    // func:dmmeta.Anonfld..Ctor
+    inline               Anonfld() __attribute__((nothrow));
+    // func:dmmeta.Anonfld..FieldwiseCtor
+    explicit inline               Anonfld(const algo::strptr& in_field, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Anonfld..ReadFieldMaybe
@@ -896,7 +893,8 @@ struct Argvtype { // dmmeta.Argvtype: Customize parsing of command lines (rarely
     algo::Smallstr100   ctype;      //
     algo::Smallstr50    argvtype;   //
     algo::Comment       comment;    //
-    Argvtype();
+    // func:dmmeta.Argvtype..Ctor
+    inline               Argvtype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Argvtype..ReadFieldMaybe
@@ -914,9 +912,10 @@ void                 Argvtype_Print(dmmeta::Argvtype& row, algo::cstring& str) _
 struct Basepool { // dmmeta.Basepool: Specify pool to be used for allocating elements of a type
     algo::Smallstr100   field;   //
     algo::Smallstr100   base;    //
-    explicit Basepool(const algo::strptr&            in_field
-        ,const algo::strptr&            in_base);
-    Basepool();
+    // func:dmmeta.Basepool..Ctor
+    inline               Basepool() __attribute__((nothrow));
+    // func:dmmeta.Basepool..FieldwiseCtor
+    explicit inline               Basepool(const algo::strptr& in_field, const algo::strptr& in_base) __attribute__((nothrow));
 };
 
 // func:dmmeta.Basepool..ReadFieldMaybe
@@ -937,12 +936,10 @@ struct Bitfld { // dmmeta.Bitfld: Specify offset/width of a bitfield within anot
     i32                 width;      //   0  Width, in bits, within parent field.
     algo::Smallstr100   srcfield;   //
     algo::Comment       comment;    //
-    explicit Bitfld(const algo::strptr&            in_field
-        ,i32                            in_offset
-        ,i32                            in_width
-        ,const algo::strptr&            in_srcfield
-        ,const algo::Comment&           in_comment);
-    Bitfld();
+    // func:dmmeta.Bitfld..Ctor
+    inline               Bitfld() __attribute__((nothrow));
+    // func:dmmeta.Bitfld..FieldwiseCtor
+    explicit inline               Bitfld(const algo::strptr& in_field, i32 in_offset, i32 in_width, const algo::strptr& in_srcfield, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Bitfld.name.Get
@@ -958,7 +955,7 @@ bool                 Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr 
 bool                 Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Bitfld..Init
-void                 Bitfld_Init(dmmeta::Bitfld& parent);
+inline void          Bitfld_Init(dmmeta::Bitfld& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Bitfld.String  printfmt:Tuple
 // func:dmmeta.Bitfld..Print
@@ -968,9 +965,10 @@ void                 Bitfld_Print(dmmeta::Bitfld& row, algo::cstring& str) __att
 struct Buftype { // dmmeta.Buftype: Type of fbuf
     algo::Smallstr50   pnewtype;   //
     algo::Comment      comment;    //
-    explicit Buftype(const algo::strptr&            in_pnewtype
-        ,const algo::Comment&           in_comment);
-    Buftype();
+    // func:dmmeta.Buftype..Ctor
+    inline               Buftype() __attribute__((nothrow));
+    // func:dmmeta.Buftype..FieldwiseCtor
+    explicit inline               Buftype(const algo::strptr& in_pnewtype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Buftype..ReadFieldMaybe
@@ -988,7 +986,8 @@ void                 Buftype_Print(dmmeta::Buftype& row, algo::cstring& str) __a
 struct Cafter { // dmmeta.Cafter: Control amc processing order for unrelated types (used in rare situations)
     algo::Smallstr50   cafter;    //
     algo::Comment      comment;   //
-    Cafter();
+    // func:dmmeta.Cafter..Ctor
+    inline               Cafter() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cafter.ctype.Get
@@ -1018,9 +1017,10 @@ void                 Cafter_Print(dmmeta::Cafter& row, algo::cstring& str) __att
 struct Cascdel { // dmmeta.Cascdel: Request cascading delete of referenced rows
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    explicit Cascdel(const algo::strptr&            in_field
-        ,const algo::Comment&           in_comment);
-    Cascdel();
+    // func:dmmeta.Cascdel..Ctor
+    inline               Cascdel() __attribute__((nothrow));
+    // func:dmmeta.Cascdel..FieldwiseCtor
+    explicit inline               Cascdel(const algo::strptr& in_field, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Cascdel..ReadFieldMaybe
@@ -1042,13 +1042,10 @@ struct Ccmp { // dmmeta.Ccmp: Generate hash function
     bool                order;     //   false
     bool                minmax;    //   false
     algo::Comment       comment;   //
-    explicit Ccmp(const algo::strptr&            in_ctype
-        ,bool                           in_extrn
-        ,bool                           in_genop
-        ,bool                           in_order
-        ,bool                           in_minmax
-        ,const algo::Comment&           in_comment);
-    Ccmp();
+    // func:dmmeta.Ccmp..Ctor
+    inline               Ccmp() __attribute__((nothrow));
+    // func:dmmeta.Ccmp..FieldwiseCtor
+    explicit inline               Ccmp(const algo::strptr& in_ctype, bool in_extrn, bool in_genop, bool in_order, bool in_minmax, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ccmp..ReadFieldMaybe
@@ -1059,7 +1056,7 @@ bool                 Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr fiel
 bool                 Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ccmp..Init
-void                 Ccmp_Init(dmmeta::Ccmp& parent);
+inline void          Ccmp_Init(dmmeta::Ccmp& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ccmp.String  printfmt:Tuple
 // func:dmmeta.Ccmp..Print
@@ -1073,7 +1070,8 @@ struct Cdflt { // dmmeta.Cdflt: Specify default value for single-value types tha
     algo::Smallstr50    ssimdflt;   //
     algo::Smallstr50    jsdflt;     //
     algo::Comment       comment;    //
-    Cdflt();
+    // func:dmmeta.Cdflt..Ctor
+    inline               Cdflt() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cdflt..ReadFieldMaybe
@@ -1093,11 +1091,10 @@ struct Cextern { // dmmeta.Cextern: Externally defined ctype (a struct from syst
     bool                initmemset;   //   false  Initialize using memset? (set this to Y for all C structs)
     bool                isstruct;     //   false
     bool                plaindata;    //   false
-    explicit Cextern(const algo::strptr&            in_ctype
-        ,bool                           in_initmemset
-        ,bool                           in_isstruct
-        ,bool                           in_plaindata);
-    Cextern();
+    // func:dmmeta.Cextern..Ctor
+    inline               Cextern() __attribute__((nothrow));
+    // func:dmmeta.Cextern..FieldwiseCtor
+    explicit inline               Cextern(const algo::strptr& in_ctype, bool in_initmemset, bool in_isstruct, bool in_plaindata) __attribute__((nothrow));
 };
 
 // func:dmmeta.Cextern..ReadFieldMaybe
@@ -1108,7 +1105,7 @@ bool                 Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strpt
 bool                 Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cextern..Init
-void                 Cextern_Init(dmmeta::Cextern& parent);
+inline void          Cextern_Init(dmmeta::Cextern& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cextern.String  printfmt:Tuple
 // func:dmmeta.Cextern..Print
@@ -1121,7 +1118,8 @@ struct Cfast { // dmmeta.Cfast: FAST properties for ctype
     algo::Smallstr50    encoding;   //
     bool                reset;      //   false
     algo::Comment       comment;    //
-    Cfast();
+    // func:dmmeta.Cfast..Ctor
+    inline               Cfast() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cfast..ReadFieldMaybe
@@ -1132,7 +1130,7 @@ bool                 Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr fi
 bool                 Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cfast..Init
-void                 Cfast_Init(dmmeta::Cfast& parent);
+inline void          Cfast_Init(dmmeta::Cfast& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cfast.String  printfmt:Tuple
 // func:dmmeta.Cfast..Print
@@ -1147,14 +1145,10 @@ struct Cfmt { // dmmeta.Cfmt: Specify options for printing/reading ctypes into m
     algo::Smallstr20    sep;        //
     bool                genop;      //   false
     algo::Comment       comment;    //
-    explicit Cfmt(const algo::strptr&            in_cfmt
-        ,const algo::strptr&            in_printfmt
-        ,bool                           in_read
-        ,bool                           in_print
-        ,const algo::strptr&            in_sep
-        ,bool                           in_genop
-        ,const algo::Comment&           in_comment);
-    Cfmt();
+    // func:dmmeta.Cfmt..Ctor
+    inline               Cfmt() __attribute__((nothrow));
+    // func:dmmeta.Cfmt..FieldwiseCtor
+    explicit inline               Cfmt(const algo::strptr& in_cfmt, const algo::strptr& in_printfmt, bool in_read, bool in_print, const algo::strptr& in_sep, bool in_genop, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Cfmt.ctype.Get
@@ -1177,7 +1171,7 @@ bool                 Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr fiel
 bool                 Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cfmt..Init
-void                 Cfmt_Init(dmmeta::Cfmt& parent);
+inline void          Cfmt_Init(dmmeta::Cfmt& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cfmt.String  printfmt:Tuple
 // func:dmmeta.Cfmt..Print
@@ -1187,7 +1181,8 @@ void                 Cfmt_Print(dmmeta::Cfmt& row, algo::cstring& str) __attribu
 struct Cget { // dmmeta.Cget: Generate state functions for these ctypes
     algo::Smallstr100   ctype;     //
     algo::Comment       comment;   //
-    Cget();
+    // func:dmmeta.Cget..Ctor
+    inline               Cget() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cget..ReadFieldMaybe
@@ -1208,7 +1203,8 @@ struct Charset { // dmmeta.Charset: Generate functions to determine if a charact
     bool                charrange;   //   false
     bool                calc;        //   false
     algo::Comment       comment;     //
-    Charset();
+    // func:dmmeta.Charset..Ctor
+    inline               Charset() __attribute__((nothrow));
 };
 
 // func:dmmeta.Charset..ReadFieldMaybe
@@ -1219,7 +1215,7 @@ bool                 Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strpt
 bool                 Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Charset..Init
-void                 Charset_Init(dmmeta::Charset& parent);
+inline void          Charset_Init(dmmeta::Charset& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Charset.String  printfmt:Tuple
 // func:dmmeta.Charset..Print
@@ -1230,10 +1226,10 @@ struct Chash { // dmmeta.Chash: Generate hash function
     algo::Smallstr100   ctype;      // Target ctype
     algo::Smallstr50    hashtype;   // Hash type
     algo::Comment       comment;    //
-    explicit Chash(const algo::strptr&            in_ctype
-        ,const algo::strptr&            in_hashtype
-        ,const algo::Comment&           in_comment);
-    Chash();
+    // func:dmmeta.Chash..Ctor
+    inline               Chash() __attribute__((nothrow));
+    // func:dmmeta.Chash..FieldwiseCtor
+    explicit inline               Chash(const algo::strptr& in_ctype, const algo::strptr& in_hashtype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Chash..ReadFieldMaybe
@@ -1253,7 +1249,8 @@ struct Cppfunc { // dmmeta.Cppfunc: Value of field provided by this expression
     algo::CppExpr       expr;    //
     bool                print;   //   false
     bool                set;     //   false
-    Cppfunc();
+    // func:dmmeta.Cppfunc..Ctor
+    inline               Cppfunc() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cppfunc..ReadFieldMaybe
@@ -1264,7 +1261,7 @@ bool                 Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strpt
 bool                 Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cppfunc..Init
-void                 Cppfunc_Init(dmmeta::Cppfunc& parent);
+inline void          Cppfunc_Init(dmmeta::Cppfunc& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cppfunc.String  printfmt:Tuple
 // func:dmmeta.Cppfunc..Print
@@ -1273,8 +1270,10 @@ void                 Cppfunc_Print(dmmeta::Cppfunc& row, algo::cstring& str) __a
 // --- dmmeta.Cppkeyword
 struct Cppkeyword { // dmmeta.Cppkeyword: Built-in C++ keyword
     algo::Smallstr20   cppkeyword;   //
-    explicit Cppkeyword(const algo::strptr&            in_cppkeyword);
-    Cppkeyword();
+    // func:dmmeta.Cppkeyword..Ctor
+    inline               Cppkeyword() __attribute__((nothrow));
+    // func:dmmeta.Cppkeyword..FieldwiseCtor
+    explicit inline               Cppkeyword(const algo::strptr& in_cppkeyword) __attribute__((nothrow));
 };
 
 // func:dmmeta.Cppkeyword..ReadFieldMaybe
@@ -1294,11 +1293,10 @@ struct Cpptype { // dmmeta.Cpptype: Specify whether a ctype can be passed by val
     bool                ctor;         //   false  if true, generate non-default constructor from all fields
     bool                dtor;         //   true  generate non-default destructor
     bool                cheap_copy;   //   false  Pass by value whenever possible
-    explicit Cpptype(const algo::strptr&            in_ctype
-        ,bool                           in_ctor
-        ,bool                           in_dtor
-        ,bool                           in_cheap_copy);
-    Cpptype();
+    // func:dmmeta.Cpptype..Ctor
+    inline               Cpptype() __attribute__((nothrow));
+    // func:dmmeta.Cpptype..FieldwiseCtor
+    explicit inline               Cpptype(const algo::strptr& in_ctype, bool in_ctor, bool in_dtor, bool in_cheap_copy) __attribute__((nothrow));
 };
 
 // func:dmmeta.Cpptype..ReadFieldMaybe
@@ -1309,7 +1307,7 @@ bool                 Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strpt
 bool                 Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cpptype..Init
-void                 Cpptype_Init(dmmeta::Cpptype& parent);
+inline void          Cpptype_Init(dmmeta::Cpptype& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cpptype.String  printfmt:Tuple
 // func:dmmeta.Cpptype..Print
@@ -1321,11 +1319,10 @@ struct Csize { // dmmeta.Csize: Specify size/alignment for built-in C++ types
     u32                 size;        //   0
     u32                 alignment;   //   1
     algo::Comment       comment;     //
-    explicit Csize(const algo::strptr&            in_ctype
-        ,u32                            in_size
-        ,u32                            in_alignment
-        ,const algo::Comment&           in_comment);
-    Csize();
+    // func:dmmeta.Csize..Ctor
+    inline               Csize() __attribute__((nothrow));
+    // func:dmmeta.Csize..FieldwiseCtor
+    explicit inline               Csize(const algo::strptr& in_ctype, u32 in_size, u32 in_alignment, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Csize..ReadFieldMaybe
@@ -1336,7 +1333,7 @@ bool                 Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr fi
 bool                 Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Csize..Init
-void                 Csize_Init(dmmeta::Csize& parent);
+inline void          Csize_Init(dmmeta::Csize& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Csize.String  printfmt:Tuple
 // func:dmmeta.Csize..Print
@@ -1347,7 +1344,8 @@ struct Cstr { // dmmeta.Cstr: Specify that type behaves like a string
     algo::Smallstr100   ctype;      //
     bool                strequiv;   //   false  Use strptr instead of this type when possible
     algo::Comment       comment;    //
-    Cstr();
+    // func:dmmeta.Cstr..Ctor
+    inline               Cstr() __attribute__((nothrow));
 };
 
 // func:dmmeta.Cstr..ReadFieldMaybe
@@ -1358,7 +1356,7 @@ bool                 Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr fiel
 bool                 Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Cstr..Init
-void                 Cstr_Init(dmmeta::Cstr& parent);
+inline void          Cstr_Init(dmmeta::Cstr& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cstr.String  printfmt:Tuple
 // func:dmmeta.Cstr..Print
@@ -1368,9 +1366,10 @@ void                 Cstr_Print(dmmeta::Cstr& row, algo::cstring& str) __attribu
 struct Ctype { // dmmeta.Ctype: Struct
     algo::Smallstr100   ctype;     // Identifier. must be ns.typename
     algo::Comment       comment;   //
-    explicit Ctype(const algo::strptr&            in_ctype
-        ,const algo::Comment&           in_comment);
-    Ctype();
+    // func:dmmeta.Ctype..Ctor
+    inline               Ctype() __attribute__((nothrow));
+    // func:dmmeta.Ctype..FieldwiseCtor
+    explicit inline               Ctype(const algo::strptr& in_ctype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ctype.ns.Get
@@ -1403,12 +1402,10 @@ struct Ctypelen { // dmmeta.Ctypelen: Size of Ctype
     i32                 alignment;   //   0  (calculated) alignment for the struct
     i32                 padbytes;    //   0  (calculated) total # of pad bytes
     bool                plaindata;   //   false  (calculated) this struct can me safely memcpy'ed
-    explicit Ctypelen(const algo::strptr&            in_ctype
-        ,u32                            in_len
-        ,i32                            in_alignment
-        ,i32                            in_padbytes
-        ,bool                           in_plaindata);
-    Ctypelen();
+    // func:dmmeta.Ctypelen..Ctor
+    inline               Ctypelen() __attribute__((nothrow));
+    // func:dmmeta.Ctypelen..FieldwiseCtor
+    explicit inline               Ctypelen(const algo::strptr& in_ctype, u32 in_len, i32 in_alignment, i32 in_padbytes, bool in_plaindata) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ctypelen..ReadFieldMaybe
@@ -1419,7 +1416,7 @@ bool                 Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::str
 bool                 Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ctypelen..Init
-void                 Ctypelen_Init(dmmeta::Ctypelen& parent);
+inline void          Ctypelen_Init(dmmeta::Ctypelen& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ctypelen.String  printfmt:Tuple
 // func:dmmeta.Ctypelen..Print
@@ -1435,15 +1432,10 @@ struct Dispatch { // dmmeta.Dispatch: Generate code for a multi-way branch
     bool               call;       //   false  Generate call to user-defined function
     bool               strict;     //   false  Only dispatch if length matches exactly
     algo::Comment      comment;    //
-    explicit Dispatch(const algo::strptr&            in_dispatch
-        ,bool                           in_unk
-        ,bool                           in_read
-        ,bool                           in_print
-        ,bool                           in_haslen
-        ,bool                           in_call
-        ,bool                           in_strict
-        ,const algo::Comment&           in_comment);
-    Dispatch();
+    // func:dmmeta.Dispatch..Ctor
+    inline               Dispatch() __attribute__((nothrow));
+    // func:dmmeta.Dispatch..FieldwiseCtor
+    explicit inline               Dispatch(const algo::strptr& in_dispatch, bool in_unk, bool in_read, bool in_print, bool in_haslen, bool in_call, bool in_strict, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Dispatch.ns.Get
@@ -1476,9 +1468,10 @@ void                 Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) _
 struct DispatchMsg { // dmmeta.DispatchMsg: Add message to a dispatch
     algo::Smallstr100   dispatch_msg;   //
     algo::Comment       comment;        //
-    explicit DispatchMsg(const algo::strptr&            in_dispatch_msg
-        ,const algo::Comment&           in_comment);
-    DispatchMsg();
+    // func:dmmeta.DispatchMsg..Ctor
+    inline               DispatchMsg() __attribute__((nothrow));
+    // func:dmmeta.DispatchMsg..FieldwiseCtor
+    explicit inline               DispatchMsg(const algo::strptr& in_dispatch_msg, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.DispatchMsg.dispatch.Get
@@ -1509,7 +1502,8 @@ struct Dispctx { // dmmeta.Dispctx: Use context with dispatch
     algo::Smallstr50    dispatch;   //
     algo::Smallstr100   ctype;      //
     algo::Comment       comment;    //
-    Dispctx();
+    // func:dmmeta.Dispctx..Ctor
+    inline               Dispctx() __attribute__((nothrow));
 };
 
 // func:dmmeta.Dispctx..ReadFieldMaybe
@@ -1528,7 +1522,8 @@ struct Dispfilter { // dmmeta.Dispfilter: Generate filter function on dispatch
     algo::Smallstr50   dispatch;    //
     bool               match_all;   //   false
     algo::Comment      comment;     //
-    Dispfilter();
+    // func:dmmeta.Dispfilter..Ctor
+    inline               Dispfilter() __attribute__((nothrow));
 };
 
 // func:dmmeta.Dispfilter..ReadFieldMaybe
@@ -1539,7 +1534,7 @@ bool                 Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo:
 bool                 Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Dispfilter..Init
-void                 Dispfilter_Init(dmmeta::Dispfilter& parent);
+inline void          Dispfilter_Init(dmmeta::Dispfilter& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispfilter.String  printfmt:Tuple
 // func:dmmeta.Dispfilter..Print
@@ -1549,7 +1544,8 @@ void                 Dispfilter_Print(dmmeta::Dispfilter& row, algo::cstring& st
 struct Dispsig { // dmmeta.Dispsig: Cryptographic signature of all dispatches
     algo::Smallstr50   dispsig;     //
     algo::Sha1sig      signature;   //
-    Dispsig();
+    // func:dmmeta.Dispsig..Ctor
+    inline               Dispsig() __attribute__((nothrow));
 };
 
 // func:dmmeta.Dispsig.ns.Get
@@ -1579,9 +1575,10 @@ void                 Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) __a
 struct Dispsigcheck { // dmmeta.Dispsigcheck: Check signature of input data against executable's version
     algo::Smallstr50   dispsig;     //
     algo::Sha1sig      signature;   //
-    explicit Dispsigcheck(const algo::strptr&            in_dispsig
-        ,const algo::Sha1sig&           in_signature);
-    Dispsigcheck();
+    // func:dmmeta.Dispsigcheck..Ctor
+    inline               Dispsigcheck() __attribute__((nothrow));
+    // func:dmmeta.Dispsigcheck..FieldwiseCtor
+    explicit inline               Dispsigcheck(const algo::strptr& in_dispsig, const algo::Sha1sig& in_signature) __attribute__((nothrow));
 };
 
 // func:dmmeta.Dispsigcheck..ReadFieldMaybe
@@ -1600,7 +1597,8 @@ struct Disptrace { // dmmeta.Disptrace: Generate trace fields (cycles, counts) f
     algo::Smallstr50   dispatch;   //
     bool               cycle;      //   false
     algo::Comment      comment;    //
-    Disptrace();
+    // func:dmmeta.Disptrace..Ctor
+    inline               Disptrace() __attribute__((nothrow));
 };
 
 // func:dmmeta.Disptrace..ReadFieldMaybe
@@ -1611,7 +1609,7 @@ bool                 Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::s
 bool                 Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Disptrace..Init
-void                 Disptrace_Init(dmmeta::Disptrace& parent);
+inline void          Disptrace_Init(dmmeta::Disptrace& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Disptrace.String  printfmt:Tuple
 // func:dmmeta.Disptrace..Print
@@ -1622,7 +1620,8 @@ struct Falias { // dmmeta.Falias: Alias field
     algo::Smallstr100   field;      //
     algo::Smallstr100   srcfield;   //
     algo::Comment       comment;    //
-    Falias();
+    // func:dmmeta.Falias..Ctor
+    inline               Falias() __attribute__((nothrow));
 };
 
 // func:dmmeta.Falias..ReadFieldMaybe
@@ -1640,7 +1639,8 @@ void                 Falias_Print(dmmeta::Falias& row, algo::cstring& str) __att
 struct Fastenc { // dmmeta.Fastenc
     algo::Smallstr50   fastenc;   //
     algo::Comment      comment;   //
-    Fastenc();
+    // func:dmmeta.Fastenc..Ctor
+    inline               Fastenc() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fastenc..ReadFieldMaybe
@@ -1658,19 +1658,23 @@ void                 Fastenc_Print(dmmeta::Fastenc& row, algo::cstring& str) __a
 #pragma pack(push,1)
 struct FastencCase { // dmmeta.FastencCase: enum helper 
     u8   fastenc;   //   0
-    inline operator dmmeta_FastencCaseEnum() const;
-    explicit FastencCase(u8                             in_fastenc);
-    FastencCase(dmmeta_FastencCaseEnum arg);
-    FastencCase();
+    // func:dmmeta.FastencCase.fastenc.Cast
+    inline               operator dmmeta_FastencCaseEnum() const __attribute__((nothrow));
+    // func:dmmeta.FastencCase..Ctor
+    inline               FastencCase() __attribute__((nothrow));
+    // func:dmmeta.FastencCase..FieldwiseCtor
+    explicit inline               FastencCase(u8 in_fastenc) __attribute__((nothrow));
+    // func:dmmeta.FastencCase..EnumCtor
+    inline               FastencCase(dmmeta_FastencCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:dmmeta.FastencCase.fastenc.GetEnum
-dmmeta_FastencCaseEnum fastenc_GetEnum(const dmmeta::FastencCase& parent) __attribute__((nothrow));
+inline dmmeta_FastencCaseEnum fastenc_GetEnum(const dmmeta::FastencCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:dmmeta.FastencCase.fastenc.SetEnum
-void                 fastenc_SetEnum(dmmeta::FastencCase& parent, dmmeta_FastencCaseEnum rhs) __attribute__((nothrow));
+inline void          fastenc_SetEnum(dmmeta::FastencCase& parent, dmmeta_FastencCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:dmmeta.FastencCase.fastenc.ToCstr
@@ -1691,13 +1695,14 @@ void                 fastenc_SetStrptr(dmmeta::FastencCase& parent, algo::strptr
 
 // Set all fields to initial values.
 // func:dmmeta.FastencCase..Init
-void                 FastencCase_Init(dmmeta::FastencCase& parent);
+inline void          FastencCase_Init(dmmeta::FastencCase& parent);
 
 // --- dmmeta.Fastinstr
 struct Fastinstr { // dmmeta.Fastinstr
     algo::Smallstr50   fastinstr;   //
     algo::Comment      comment;     //
-    Fastinstr();
+    // func:dmmeta.Fastinstr..Ctor
+    inline               Fastinstr() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fastinstr..ReadFieldMaybe
@@ -1715,19 +1720,23 @@ void                 Fastinstr_Print(dmmeta::Fastinstr& row, algo::cstring& str)
 #pragma pack(push,1)
 struct FastinstrCase { // dmmeta.FastinstrCase: enum helper 
     u8   fastinstr;   //   0
-    inline operator dmmeta_FastinstrCaseEnum() const;
-    explicit FastinstrCase(u8                             in_fastinstr);
-    FastinstrCase(dmmeta_FastinstrCaseEnum arg);
-    FastinstrCase();
+    // func:dmmeta.FastinstrCase.fastinstr.Cast
+    inline               operator dmmeta_FastinstrCaseEnum() const __attribute__((nothrow));
+    // func:dmmeta.FastinstrCase..Ctor
+    inline               FastinstrCase() __attribute__((nothrow));
+    // func:dmmeta.FastinstrCase..FieldwiseCtor
+    explicit inline               FastinstrCase(u8 in_fastinstr) __attribute__((nothrow));
+    // func:dmmeta.FastinstrCase..EnumCtor
+    inline               FastinstrCase(dmmeta_FastinstrCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:dmmeta.FastinstrCase.fastinstr.GetEnum
-dmmeta_FastinstrCaseEnum fastinstr_GetEnum(const dmmeta::FastinstrCase& parent) __attribute__((nothrow));
+inline dmmeta_FastinstrCaseEnum fastinstr_GetEnum(const dmmeta::FastinstrCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:dmmeta.FastinstrCase.fastinstr.SetEnum
-void                 fastinstr_SetEnum(dmmeta::FastinstrCase& parent, dmmeta_FastinstrCaseEnum rhs) __attribute__((nothrow));
+inline void          fastinstr_SetEnum(dmmeta::FastinstrCase& parent, dmmeta_FastinstrCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:dmmeta.FastinstrCase.fastinstr.ToCstr
@@ -1748,13 +1757,14 @@ void                 fastinstr_SetStrptr(dmmeta::FastinstrCase& parent, algo::st
 
 // Set all fields to initial values.
 // func:dmmeta.FastinstrCase..Init
-void                 FastinstrCase_Init(dmmeta::FastinstrCase& parent);
+inline void          FastinstrCase_Init(dmmeta::FastinstrCase& parent);
 
 // --- dmmeta.Fastop
 struct Fastop { // dmmeta.Fastop
     algo::Smallstr50   fastop;    //
     algo::Comment      comment;   //
-    Fastop();
+    // func:dmmeta.Fastop..Ctor
+    inline               Fastop() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fastop..ReadFieldMaybe
@@ -1772,19 +1782,23 @@ void                 Fastop_Print(dmmeta::Fastop& row, algo::cstring& str) __att
 #pragma pack(push,1)
 struct FastopCase { // dmmeta.FastopCase: enum helper 
     u8   fastop;   //   0
-    inline operator dmmeta_FastopCaseEnum() const;
-    explicit FastopCase(u8                             in_fastop);
-    FastopCase(dmmeta_FastopCaseEnum arg);
-    FastopCase();
+    // func:dmmeta.FastopCase.fastop.Cast
+    inline               operator dmmeta_FastopCaseEnum() const __attribute__((nothrow));
+    // func:dmmeta.FastopCase..Ctor
+    inline               FastopCase() __attribute__((nothrow));
+    // func:dmmeta.FastopCase..FieldwiseCtor
+    explicit inline               FastopCase(u8 in_fastop) __attribute__((nothrow));
+    // func:dmmeta.FastopCase..EnumCtor
+    inline               FastopCase(dmmeta_FastopCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:dmmeta.FastopCase.fastop.GetEnum
-dmmeta_FastopCaseEnum fastop_GetEnum(const dmmeta::FastopCase& parent) __attribute__((nothrow));
+inline dmmeta_FastopCaseEnum fastop_GetEnum(const dmmeta::FastopCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:dmmeta.FastopCase.fastop.SetEnum
-void                 fastop_SetEnum(dmmeta::FastopCase& parent, dmmeta_FastopCaseEnum rhs) __attribute__((nothrow));
+inline void          fastop_SetEnum(dmmeta::FastopCase& parent, dmmeta_FastopCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:dmmeta.FastopCase.fastop.ToCstr
@@ -1805,14 +1819,15 @@ void                 fastop_SetStrptr(dmmeta::FastopCase& parent, algo::strptr r
 
 // Set all fields to initial values.
 // func:dmmeta.FastopCase..Init
-void                 FastopCase_Init(dmmeta::FastopCase& parent);
+inline void          FastopCase_Init(dmmeta::FastopCase& parent);
 
 // --- dmmeta.Fbase
 struct Fbase { // dmmeta.Fbase: Customize imported Base fields
     algo::Smallstr100   field;          //
     bool                stripcomment;   //   false
     algo::Comment       comment;        //
-    Fbase();
+    // func:dmmeta.Fbase..Ctor
+    inline               Fbase() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbase..ReadFieldMaybe
@@ -1823,7 +1838,7 @@ bool                 Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr fi
 bool                 Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbase..Init
-void                 Fbase_Init(dmmeta::Fbase& parent);
+inline void          Fbase_Init(dmmeta::Fbase& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbase.String  printfmt:Tuple
 // func:dmmeta.Fbase..Print
@@ -1833,7 +1848,8 @@ void                 Fbase_Print(dmmeta::Fbase& row, algo::cstring& str) __attri
 struct Fbigend { // dmmeta.Fbigend: Annotate field as having big-endian storage
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Fbigend();
+    // func:dmmeta.Fbigend..Ctor
+    inline               Fbigend() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbigend..ReadFieldMaybe
@@ -1851,9 +1867,10 @@ void                 Fbigend_Print(dmmeta::Fbigend& row, algo::cstring& str) __a
 struct Fbitset { // dmmeta.Fbitset: Generate bitset functions over integer field or array
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    explicit Fbitset(const algo::strptr&            in_field
-        ,const algo::Comment&           in_comment);
-    Fbitset();
+    // func:dmmeta.Fbitset..Ctor
+    inline               Fbitset() __attribute__((nothrow));
+    // func:dmmeta.Fbitset..FieldwiseCtor
+    explicit inline               Fbitset(const algo::strptr& in_field, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbitset..ReadFieldMaybe
@@ -1875,7 +1892,8 @@ struct Fbuf { // dmmeta.Fbuf: Buffer for reading/writing messages, works with Io
     algo::Smallstr100   insready;   //
     algo::Smallstr100   inseof;     //
     algo::Comment       comment;    //
-    Fbuf();
+    // func:dmmeta.Fbuf..Ctor
+    inline               Fbuf() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbuf.fbufdir.Get
@@ -1891,7 +1909,7 @@ bool                 Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr fiel
 bool                 Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbuf..Init
-void                 Fbuf_Init(dmmeta::Fbuf& parent);
+inline void          Fbuf_Init(dmmeta::Fbuf& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbuf.String  printfmt:Tuple
 // func:dmmeta.Fbuf..Print
@@ -1902,7 +1920,8 @@ struct Fbufdir { // dmmeta.Fbufdir: Buffer direction (in,out)
     algo::Smallstr50   fbufdir;   //
     bool               read;      //   false
     algo::Comment      comment;   //
-    Fbufdir();
+    // func:dmmeta.Fbufdir..Ctor
+    inline               Fbufdir() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbufdir..ReadFieldMaybe
@@ -1913,7 +1932,7 @@ bool                 Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strpt
 bool                 Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbufdir..Init
-void                 Fbufdir_Init(dmmeta::Fbufdir& parent);
+inline void          Fbufdir_Init(dmmeta::Fbufdir& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbufdir.String  printfmt:Tuple
 // func:dmmeta.Fbufdir..Print
@@ -1922,11 +1941,10 @@ void                 Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) __a
 // --- dmmeta.Fbuftype
 struct Fbuftype { // dmmeta.Fbuftype: Buffer type
     algo::Smallstr50   fbuftype;    //
-    bool               getmsg;      //   false  Has getmsg function?
     bool               skipbytes;   //   false  Has skipbytes function?
-    bool               read;        //   false
     algo::Comment      comment;     //
-    Fbuftype();
+    // func:dmmeta.Fbuftype..Ctor
+    inline               Fbuftype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fbuftype..ReadFieldMaybe
@@ -1937,7 +1955,7 @@ bool                 Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::str
 bool                 Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fbuftype..Init
-void                 Fbuftype_Init(dmmeta::Fbuftype& parent);
+inline void          Fbuftype_Init(dmmeta::Fbuftype& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbuftype.String  printfmt:Tuple
 // func:dmmeta.Fbuftype..Print
@@ -1948,10 +1966,10 @@ struct Fcast { // dmmeta.Fcast: Generate implicit conversion from field to c++ e
     algo::Smallstr100   field;     //
     algo::Smallstr100   expr;      //
     algo::Comment       comment;   //
-    explicit Fcast(const algo::strptr&            in_field
-        ,const algo::strptr&            in_expr
-        ,const algo::Comment&           in_comment);
-    Fcast();
+    // func:dmmeta.Fcast..Ctor
+    inline               Fcast() __attribute__((nothrow));
+    // func:dmmeta.Fcast..FieldwiseCtor
+    explicit inline               Fcast(const algo::strptr& in_field, const algo::strptr& in_expr, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcast..ReadFieldMaybe
@@ -1969,7 +1987,8 @@ void                 Fcast_Print(dmmeta::Fcast& row, algo::cstring& str) __attri
 struct Fcleanup { // dmmeta.Fcleanup: Request user-implemented function to be called at Uninit time for a field
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Fcleanup();
+    // func:dmmeta.Fcleanup..Ctor
+    inline               Fcleanup() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcleanup..ReadFieldMaybe
@@ -1988,7 +2007,8 @@ struct Fcmap { // dmmeta.Fcmap: Bidirectional mapping between fconst values
     algo::Smallstr250   fcmap;     // cstring maybe?
     bool                bidir;     //   true
     algo::Comment       comment;   //
-    Fcmap();
+    // func:dmmeta.Fcmap..Ctor
+    inline               Fcmap() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcmap.leftField.Get
@@ -2021,7 +2041,7 @@ bool                 Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr fi
 bool                 Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmap..Init
-void                 Fcmap_Init(dmmeta::Fcmap& parent);
+inline void          Fcmap_Init(dmmeta::Fcmap& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmap.String  printfmt:Tuple
 // func:dmmeta.Fcmap..Print
@@ -2033,7 +2053,8 @@ struct Fcmdline { // dmmeta.Fcmdline: Annotate field that holds process command 
     bool                read;          //   true  Read the command line automatically from main?
     algo::Smallstr100   basecmdline;   // Optional command line to merge with this one
     algo::Comment       comment;       //
-    Fcmdline();
+    // func:dmmeta.Fcmdline..Ctor
+    inline               Fcmdline() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcmdline.ns.Get
@@ -2049,7 +2070,7 @@ bool                 Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::str
 bool                 Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmdline..Init
-void                 Fcmdline_Init(dmmeta::Fcmdline& parent);
+inline void          Fcmdline_Init(dmmeta::Fcmdline& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmdline.String  printfmt:Tuple
 // func:dmmeta.Fcmdline..Print
@@ -2062,12 +2083,10 @@ struct Fcmp { // dmmeta.Fcmp: Request versionsort or case-insensitive sort for f
     bool                casesens;      //   true  Comparison is case-sensitive
     bool                extrn;         //   false  Whether implementation is external
     algo::Comment       comment;       //
-    explicit Fcmp(const algo::strptr&            in_field
-        ,bool                           in_versionsort
-        ,bool                           in_casesens
-        ,bool                           in_extrn
-        ,const algo::Comment&           in_comment);
-    Fcmp();
+    // func:dmmeta.Fcmp..Ctor
+    inline               Fcmp() __attribute__((nothrow));
+    // func:dmmeta.Fcmp..FieldwiseCtor
+    explicit inline               Fcmp(const algo::strptr& in_field, bool in_versionsort, bool in_casesens, bool in_extrn, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcmp..ReadFieldMaybe
@@ -2078,7 +2097,7 @@ bool                 Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr fiel
 bool                 Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fcmp..Init
-void                 Fcmp_Init(dmmeta::Fcmp& parent);
+inline void          Fcmp_Init(dmmeta::Fcmp& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmp.String  printfmt:Tuple
 // func:dmmeta.Fcmp..Print
@@ -2088,7 +2107,8 @@ void                 Fcmp_Print(dmmeta::Fcmp& row, algo::cstring& str) __attribu
 struct Fcompact { // dmmeta.Fcompact: Request compaction upon removal from index
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Fcompact();
+    // func:dmmeta.Fcompact..Ctor
+    inline               Fcompact() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcompact..ReadFieldMaybe
@@ -2106,12 +2126,13 @@ void                 Fcompact_Print(dmmeta::Fcompact& row, algo::cstring& str) _
 struct Fconst { // dmmeta.Fconst: Specify enum value (integer + string constant) for a field
     algo::Smallstr100   fconst;    //
     algo::CppExpr       value;     //
-    inline operator algo::CppExpr() const;
     algo::Comment       comment;   //
-    explicit Fconst(const algo::strptr&            in_fconst
-        ,const algo::CppExpr&           in_value
-        ,const algo::Comment&           in_comment);
-    Fconst();
+    // func:dmmeta.Fconst.value.Cast
+    inline               operator algo::CppExpr() const __attribute__((nothrow));
+    // func:dmmeta.Fconst..Ctor
+    inline               Fconst() __attribute__((nothrow));
+    // func:dmmeta.Fconst..FieldwiseCtor
+    explicit inline               Fconst(const algo::strptr& in_fconst, const algo::CppExpr& in_value, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Fconst.field.Get
@@ -2141,7 +2162,8 @@ void                 Fconst_Print(dmmeta::Fconst& row, algo::cstring& str) __att
 struct Fcurs { // dmmeta.Fcurs: Request generation of custom cursor
     algo::Smallstr50   fcurs;     //
     algo::Comment      comment;   //
-    Fcurs();
+    // func:dmmeta.Fcurs..Ctor
+    inline               Fcurs() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fcurs.field.Get
@@ -2178,7 +2200,8 @@ struct Fdec { // dmmeta.Fdec: Specify that field has an implied # of decimal pla
     i32                 nplace;     //   0  Number of implied decimal places
     bool                fixedfmt;   //   false  Print exactly SCALE chars after decimal point
     algo::Comment       comment;    //
-    Fdec();
+    // func:dmmeta.Fdec..Ctor
+    inline               Fdec() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fdec..ReadFieldMaybe
@@ -2189,7 +2212,7 @@ bool                 Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr fiel
 bool                 Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fdec..Init
-void                 Fdec_Init(dmmeta::Fdec& parent);
+inline void          Fdec_Init(dmmeta::Fdec& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fdec.String  printfmt:Tuple
 // func:dmmeta.Fdec..Print
@@ -2201,7 +2224,8 @@ struct Fdelay { // dmmeta.Fdelay: Control elapsed time between execution of a st
     algo::I64Dec9       delay;     // Delay between steps in seconds
     bool                scale;     //   false  Does delay apply to the whole list?
     algo::Comment       comment;   //
-    Fdelay();
+    // func:dmmeta.Fdelay..Ctor
+    inline               Fdelay() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fdelay..ReadFieldMaybe
@@ -2212,7 +2236,7 @@ bool                 Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr 
 bool                 Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fdelay..Init
-void                 Fdelay_Init(dmmeta::Fdelay& parent);
+inline void          Fdelay_Init(dmmeta::Fdelay& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fdelay.String  printfmt:Tuple
 // func:dmmeta.Fdelay..Print
@@ -2229,7 +2253,8 @@ struct Ffast { // dmmeta.Ffast: FAST properties for field
     algo::Smallstr50    op;         //
     algo::CppExpr       value;      //
     algo::Comment       comment;    //
-    Ffast();
+    // func:dmmeta.Ffast..Ctor
+    inline               Ffast() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ffast.field.Get
@@ -2269,7 +2294,8 @@ struct Fflag { // dmmeta.Fflag: Options for command-line flags
     bool                cumulative;   //   false  Accumulate on every read
     algo::cstring       emptyval;     //   ""
     algo::Comment       comment;      //
-    Fflag();
+    // func:dmmeta.Fflag..Ctor
+    inline               Fflag() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fflag..ReadFieldMaybe
@@ -2280,7 +2306,7 @@ bool                 Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr fi
 bool                 Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fflag..Init
-void                 Fflag_Init(dmmeta::Fflag& parent);
+inline void          Fflag_Init(dmmeta::Fflag& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fflag.String  printfmt:Tuple
 // func:dmmeta.Fflag..Print
@@ -2293,12 +2319,10 @@ struct Field { // dmmeta.Field: Specify field of a struct
     algo::Smallstr50    reftype;   //   "Val"  Type constructor
     algo::CppExpr       dflt;      // Default value (c++ expression)
     algo::Comment       comment;   //
-    explicit Field(const algo::strptr&            in_field
-        ,const algo::strptr&            in_arg
-        ,const algo::strptr&            in_reftype
-        ,const algo::CppExpr&           in_dflt
-        ,const algo::Comment&           in_comment);
-    Field();
+    // func:dmmeta.Field..Ctor
+    inline               Field() __attribute__((nothrow));
+    // func:dmmeta.Field..FieldwiseCtor
+    explicit inline               Field(const algo::strptr& in_field, const algo::strptr& in_arg, const algo::strptr& in_reftype, const algo::CppExpr& in_dflt, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Field.ctype.Get
@@ -2326,7 +2350,7 @@ bool                 Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr fi
 bool                 Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Field..Init
-void                 Field_Init(dmmeta::Field& parent);
+inline void          Field_Init(dmmeta::Field& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Field.String  printfmt:Tuple
 // func:dmmeta.Field..Print
@@ -2336,19 +2360,23 @@ void                 Field_Print(dmmeta::Field& row, algo::cstring& str) __attri
 #pragma pack(push,1)
 struct FieldId { // dmmeta.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator dmmeta_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(dmmeta_FieldIdEnum arg);
-    FieldId();
+    // func:dmmeta.FieldId.value.Cast
+    inline               operator dmmeta_FieldIdEnum() const __attribute__((nothrow));
+    // func:dmmeta.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:dmmeta.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:dmmeta.FieldId..EnumCtor
+    inline               FieldId(dmmeta_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:dmmeta.FieldId.value.GetEnum
-dmmeta_FieldIdEnum   value_GetEnum(const dmmeta::FieldId& parent) __attribute__((nothrow));
+inline dmmeta_FieldIdEnum value_GetEnum(const dmmeta::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:dmmeta.FieldId.value.SetEnum
-void                 value_SetEnum(dmmeta::FieldId& parent, dmmeta_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(dmmeta::FieldId& parent, dmmeta_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:dmmeta.FieldId.value.ToCstr
@@ -2376,7 +2404,7 @@ bool                 value_ReadStrptrMaybe(dmmeta::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.FieldId..Init
-void                 FieldId_Init(dmmeta::FieldId& parent);
+inline void          FieldId_Init(dmmeta::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.FieldId.String  printfmt:Raw
 // func:dmmeta.FieldId..Print
@@ -2386,7 +2414,8 @@ void                 FieldId_Print(dmmeta::FieldId& row, algo::cstring& str) __a
 struct Findrem { // dmmeta.Findrem: Request generation of FindRemove function
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Findrem();
+    // func:dmmeta.Findrem..Ctor
+    inline               Findrem() __attribute__((nothrow));
 };
 
 // func:dmmeta.Findrem..ReadFieldMaybe
@@ -2407,12 +2436,10 @@ struct Finput { // dmmeta.Finput: Describe input table of a program
     bool                update;    //   false
     bool                strict;    //   true  Exist process if record contains error
     algo::Comment       comment;   //
-    explicit Finput(const algo::strptr&            in_field
-        ,bool                           in_extrn
-        ,bool                           in_update
-        ,bool                           in_strict
-        ,const algo::Comment&           in_comment);
-    Finput();
+    // func:dmmeta.Finput..Ctor
+    inline               Finput() __attribute__((nothrow));
+    // func:dmmeta.Finput..FieldwiseCtor
+    explicit inline               Finput(const algo::strptr& in_field, bool in_extrn, bool in_update, bool in_strict, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Finput.ns.Get
@@ -2428,7 +2455,7 @@ bool                 Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr 
 bool                 Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Finput..Init
-void                 Finput_Init(dmmeta::Finput& parent);
+inline void          Finput_Init(dmmeta::Finput& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Finput.String  printfmt:Tuple
 // func:dmmeta.Finput..Print
@@ -2438,9 +2465,10 @@ void                 Finput_Print(dmmeta::Finput& row, algo::cstring& str) __att
 struct Fldoffset { // dmmeta.Fldoffset: Assert field offset - will result in compile-time error if violated
     algo::Smallstr100   field;    //
     i32                 offset;   //   0
-    explicit Fldoffset(const algo::strptr&            in_field
-        ,i32                            in_offset);
-    Fldoffset();
+    // func:dmmeta.Fldoffset..Ctor
+    inline               Fldoffset() __attribute__((nothrow));
+    // func:dmmeta.Fldoffset..FieldwiseCtor
+    explicit inline               Fldoffset(const algo::strptr& in_field, i32 in_offset) __attribute__((nothrow));
 };
 
 // func:dmmeta.Fldoffset..ReadFieldMaybe
@@ -2451,7 +2479,7 @@ bool                 Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::s
 bool                 Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fldoffset..Init
-void                 Fldoffset_Init(dmmeta::Fldoffset& parent);
+inline void          Fldoffset_Init(dmmeta::Fldoffset& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fldoffset.String  printfmt:Tuple
 // func:dmmeta.Fldoffset..Print
@@ -2461,7 +2489,8 @@ void                 Fldoffset_Print(dmmeta::Fldoffset& row, algo::cstring& str)
 struct Floadtuples { // dmmeta.Floadtuples: Request that process automatically load any input tables on startup
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Floadtuples();
+    // func:dmmeta.Floadtuples..Ctor
+    inline               Floadtuples() __attribute__((nothrow));
 };
 
 // func:dmmeta.Floadtuples.ctype.Get
@@ -2484,7 +2513,8 @@ void                 Floadtuples_Print(dmmeta::Floadtuples& row, algo::cstring& 
 struct Fnoremove { // dmmeta.Fnoremove: Omit any functions for removing elements from table; Table is append-only
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Fnoremove();
+    // func:dmmeta.Fnoremove..Ctor
+    inline               Fnoremove() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fnoremove..ReadFieldMaybe
@@ -2502,7 +2532,8 @@ void                 Fnoremove_Print(dmmeta::Fnoremove& row, algo::cstring& str)
 struct Foutput { // dmmeta.Foutput: Generate function to save index/table back to disk
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Foutput();
+    // func:dmmeta.Foutput..Ctor
+    inline               Foutput() __attribute__((nothrow));
 };
 
 // func:dmmeta.Foutput.ns.Get
@@ -2526,7 +2557,8 @@ struct Fprefix { // dmmeta.Fprefix: Mapping between field prefix and Reftype
     algo::Smallstr5    fprefix;   //
     algo::Smallstr50   reftype;   //
     algo::Comment      comment;   //
-    Fprefix();
+    // func:dmmeta.Fprefix..Ctor
+    inline               Fprefix() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fprefix..ReadFieldMaybe
@@ -2546,7 +2578,8 @@ struct Fregx { // dmmeta.Fregx: Specify options for command-line regx field
     bool                partial;    //   false
     algo::Smallstr50    regxtype;   //
     algo::Comment       comment;    //
-    Fregx();
+    // func:dmmeta.Fregx..Ctor
+    inline               Fregx() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fregx..ReadFieldMaybe
@@ -2557,7 +2590,7 @@ bool                 Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr fi
 bool                 Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Fregx..Init
-void                 Fregx_Init(dmmeta::Fregx& parent);
+inline void          Fregx_Init(dmmeta::Fregx& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fregx.String  printfmt:Tuple
 // func:dmmeta.Fregx..Print
@@ -2569,7 +2602,8 @@ struct Fsort { // dmmeta.Fsort: Generate custom sort function for array field
     algo::Smallstr50    sorttype;   // Kind of sort to generate
     algo::Smallstr100   sortfld;    // Field to sort on
     algo::Comment       comment;    //
-    Fsort();
+    // func:dmmeta.Fsort..Ctor
+    inline               Fsort() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fsort..ReadFieldMaybe
@@ -2588,7 +2622,8 @@ struct Fstep { // dmmeta.Fstep: Generate a main loop step to be executed wheneve
     algo::Smallstr100   fstep;      //
     algo::Smallstr50    steptype;   //
     algo::Comment       comment;    //
-    Fstep();
+    // func:dmmeta.Fstep..Ctor
+    inline               Fstep() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fstep.field.Get
@@ -2623,7 +2658,8 @@ void                 Fstep_Print(dmmeta::Fstep& row, algo::cstring& str) __attri
 struct Ftrace { // dmmeta.Ftrace: Generate cycle/step counting fields for a step
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Ftrace();
+    // func:dmmeta.Ftrace..Ctor
+    inline               Ftrace() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ftrace..ReadFieldMaybe
@@ -2641,7 +2677,8 @@ void                 Ftrace_Print(dmmeta::Ftrace& row, algo::cstring& str) __att
 struct Ftuple { // dmmeta.Ftuple
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Ftuple();
+    // func:dmmeta.Ftuple..Ctor
+    inline               Ftuple() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ftuple..ReadFieldMaybe
@@ -2657,18 +2694,11 @@ void                 Ftuple_Print(dmmeta::Ftuple& row, algo::cstring& str) __att
 
 // --- dmmeta.Func
 struct Func { // dmmeta.Func
-    algo::Smallstr100   func;        // Primary key
-    bool                inl;         //   false  Make inline?
-    algo::cstring       proto;       // Prototype
-    algo::cstring       body;        // Body of function
-    bool                deprecate;   //   false  Make deprecated?
-    bool                ismacro;     //   false  Always inline.
-    bool                extrn;       //   false  Implemented externally by user
-    bool                glob;        //   false  Function is not attached to a field (EXPLAIN!!)
-    bool                priv;        //   false  Private to translateion unit (static)
-    algo::cstring       ret;         // Return type (c++ expression)
-    algo::cstring       comment;     // Description
-    Func();
+    algo::Smallstr100   func;      // Primary key
+    bool                extrn;     //   false  Implemented externally by user
+    algo::cstring       comment;   // Description
+    // func:dmmeta.Func..Ctor
+    inline               Func() __attribute__((nothrow));
 };
 
 // func:dmmeta.Func.field.Get
@@ -2701,7 +2731,7 @@ bool                 Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr fiel
 bool                 Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Func..Init
-void                 Func_Init(dmmeta::Func& parent);
+inline void          Func_Init(dmmeta::Func& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Func.String  printfmt:Tuple
 // func:dmmeta.Func..Print
@@ -2711,7 +2741,8 @@ void                 Func_Print(dmmeta::Func& row, algo::cstring& str) __attribu
 struct Funique { // dmmeta.Funique: This field must be unique in the table. Not needed for primary key
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Funique();
+    // func:dmmeta.Funique..Ctor
+    inline               Funique() __attribute__((nothrow));
 };
 
 // func:dmmeta.Funique..ReadFieldMaybe
@@ -2729,7 +2760,8 @@ void                 Funique_Print(dmmeta::Funique& row, algo::cstring& str) __a
 struct Fuserinit { // dmmeta.Fuserinit: Add user-defined initialization function for field (see fcleanup)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Fuserinit();
+    // func:dmmeta.Fuserinit..Ctor
+    inline               Fuserinit() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fuserinit..ReadFieldMaybe
@@ -2747,7 +2779,8 @@ void                 Fuserinit_Print(dmmeta::Fuserinit& row, algo::cstring& str)
 struct Fwddecl { // dmmeta.Fwddecl: Request forward declaration of a field
     algo::Smallstr100   fwddecl;   //
     algo::Comment       comment;   //
-    Fwddecl();
+    // func:dmmeta.Fwddecl..Ctor
+    inline               Fwddecl() __attribute__((nothrow));
 };
 
 // func:dmmeta.Fwddecl.ns.Get
@@ -2779,11 +2812,10 @@ struct Gconst { // dmmeta.Gconst: Import ssim table columns as fconst for a fiel
     algo::Smallstr100   namefld;    // Field which gives the name of the constant
     algo::Smallstr100   idfld;      // Optional attribute of namefld that gives numeric ID for gconst
     bool                wantenum;   //   true
-    explicit Gconst(const algo::strptr&            in_field
-        ,const algo::strptr&            in_namefld
-        ,const algo::strptr&            in_idfld
-        ,bool                           in_wantenum);
-    Gconst();
+    // func:dmmeta.Gconst..Ctor
+    inline               Gconst() __attribute__((nothrow));
+    // func:dmmeta.Gconst..FieldwiseCtor
+    explicit inline               Gconst(const algo::strptr& in_field, const algo::strptr& in_namefld, const algo::strptr& in_idfld, bool in_wantenum) __attribute__((nothrow));
 };
 
 // func:dmmeta.Gconst.namefldctyp.Get
@@ -2799,7 +2831,7 @@ bool                 Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr 
 bool                 Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Gconst..Init
-void                 Gconst_Init(dmmeta::Gconst& parent);
+inline void          Gconst_Init(dmmeta::Gconst& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gconst.String  printfmt:Tuple
 // func:dmmeta.Gconst..Print
@@ -2809,9 +2841,10 @@ void                 Gconst_Print(dmmeta::Gconst& row, algo::cstring& str) __att
 struct Gstatic { // dmmeta.Gstatic: Load entries for this table at startup time
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    explicit Gstatic(const algo::strptr&            in_field
-        ,const algo::Comment&           in_comment);
-    Gstatic();
+    // func:dmmeta.Gstatic..Ctor
+    inline               Gstatic() __attribute__((nothrow));
+    // func:dmmeta.Gstatic..FieldwiseCtor
+    explicit inline               Gstatic(const algo::strptr& in_field, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Gstatic.ns.Get
@@ -2836,7 +2869,8 @@ struct Gsymbol { // dmmeta.Gsymbol: Create C++ symbols from entries in ssim tabl
     algo::Smallstr100   inc;          // Regex to filter rows
     algo::Smallstr100   symboltype;   //
     algo::Comment       comment;      //
-    Gsymbol();
+    // func:dmmeta.Gsymbol..Ctor
+    inline               Gsymbol() __attribute__((nothrow));
 };
 
 // func:dmmeta.Gsymbol.ns.Get
@@ -2866,9 +2900,10 @@ void                 Gsymbol_Print(dmmeta::Gsymbol& row, algo::cstring& str) __a
 struct Hashtype { // dmmeta.Hashtype: Hash function type
     algo::Smallstr50   hashtype;   //
     algo::Comment      comment;    //
-    explicit Hashtype(const algo::strptr&            in_hashtype
-        ,const algo::Comment&           in_comment);
-    Hashtype();
+    // func:dmmeta.Hashtype..Ctor
+    inline               Hashtype() __attribute__((nothrow));
+    // func:dmmeta.Hashtype..FieldwiseCtor
+    explicit inline               Hashtype(const algo::strptr& in_hashtype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Hashtype..ReadFieldMaybe
@@ -2886,7 +2921,8 @@ void                 Hashtype_Print(dmmeta::Hashtype& row, algo::cstring& str) _
 struct Hook { // dmmeta.Hook: Required on Hook fields
     algo::Smallstr100   field;     // The field
     algo::Comment       comment;   //
-    Hook();
+    // func:dmmeta.Hook..Ctor
+    inline               Hook() __attribute__((nothrow));
 };
 
 // func:dmmeta.Hook..ReadFieldMaybe
@@ -2906,11 +2942,10 @@ struct Inlary { // dmmeta.Inlary: Generate inline array of fixed or variable len
     i32                 min;       //   0  Min. elements to preallocate
     i32                 max;       //   0  Max. elements
     algo::Comment       comment;   //
-    explicit Inlary(const algo::strptr&            in_field
-        ,i32                            in_min
-        ,i32                            in_max
-        ,const algo::Comment&           in_comment);
-    Inlary();
+    // func:dmmeta.Inlary..Ctor
+    inline               Inlary() __attribute__((nothrow));
+    // func:dmmeta.Inlary..FieldwiseCtor
+    explicit inline               Inlary(const algo::strptr& in_field, i32 in_min, i32 in_max, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Inlary..ReadFieldMaybe
@@ -2921,7 +2956,7 @@ bool                 Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr 
 bool                 Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Inlary..Init
-void                 Inlary_Init(dmmeta::Inlary& parent);
+inline void          Inlary_Init(dmmeta::Inlary& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Inlary.String  printfmt:Tuple
 // func:dmmeta.Inlary..Print
@@ -2931,9 +2966,10 @@ void                 Inlary_Print(dmmeta::Inlary& row, algo::cstring& str) __att
 struct Lenfld { // dmmeta.Lenfld: Specify which gives length of varlen portion in bytes
     algo::Smallstr100   field;   // Name of length field
     i32                 extra;   //   0  Extra #bytes to add
-    explicit Lenfld(const algo::strptr&            in_field
-        ,i32                            in_extra);
-    Lenfld();
+    // func:dmmeta.Lenfld..Ctor
+    inline               Lenfld() __attribute__((nothrow));
+    // func:dmmeta.Lenfld..FieldwiseCtor
+    explicit inline               Lenfld(const algo::strptr& in_field, i32 in_extra) __attribute__((nothrow));
 };
 
 // func:dmmeta.Lenfld.ctype.Get
@@ -2949,7 +2985,7 @@ bool                 Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr 
 bool                 Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Lenfld..Init
-void                 Lenfld_Init(dmmeta::Lenfld& parent);
+inline void          Lenfld_Init(dmmeta::Lenfld& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Lenfld.String  printfmt:Tuple
 // func:dmmeta.Lenfld..Print
@@ -2962,7 +2998,8 @@ struct Listtype { // dmmeta.Listtype: Specify structure of linked list based on 
     bool              haveprev;   //   false  Previous link
     bool              instail;    //   false  Queue
     algo::Comment     comment;    //
-    Listtype();
+    // func:dmmeta.Listtype..Ctor
+    inline               Listtype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Listtype..ReadFieldMaybe
@@ -2973,7 +3010,7 @@ bool                 Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::str
 bool                 Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Listtype..Init
-void                 Listtype_Init(dmmeta::Listtype& parent);
+inline void          Listtype_Init(dmmeta::Listtype& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Listtype.String  printfmt:Tuple
 // func:dmmeta.Listtype..Print
@@ -2985,11 +3022,10 @@ struct Llist { // dmmeta.Llist: Options for Llist field
     bool                havetail;    //   true  Generate 'tail' field
     bool                havecount;   //   false  Generate count of elements
     algo::Comment       comment;     //
-    explicit Llist(const algo::strptr&            in_field
-        ,bool                           in_havetail
-        ,bool                           in_havecount
-        ,const algo::Comment&           in_comment);
-    Llist();
+    // func:dmmeta.Llist..Ctor
+    inline               Llist() __attribute__((nothrow));
+    // func:dmmeta.Llist..FieldwiseCtor
+    explicit inline               Llist(const algo::strptr& in_field, bool in_havetail, bool in_havecount, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Llist.listtype.Get
@@ -3005,7 +3041,7 @@ bool                 Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr fi
 bool                 Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Llist..Init
-void                 Llist_Init(dmmeta::Llist& parent);
+inline void          Llist_Init(dmmeta::Llist& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Llist.String  printfmt:Tuple
 // func:dmmeta.Llist..Print
@@ -3017,7 +3053,8 @@ struct Logcat { // dmmeta.Logcat: Log category
     bool               enabled;   //   false
     bool               builtin;   //   false
     algo::Comment      comment;   //
-    Logcat();
+    // func:dmmeta.Logcat..Ctor
+    inline               Logcat() __attribute__((nothrow));
 };
 
 // func:dmmeta.Logcat..ReadFieldMaybe
@@ -3028,7 +3065,7 @@ bool                 Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr 
 bool                 Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Logcat..Init
-void                 Logcat_Init(dmmeta::Logcat& parent);
+inline void          Logcat_Init(dmmeta::Logcat& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Logcat.String  printfmt:Tuple
 // func:dmmeta.Logcat..Print
@@ -3038,9 +3075,10 @@ void                 Logcat_Print(dmmeta::Logcat& row, algo::cstring& str) __att
 struct Main { // dmmeta.Main: Generate Main function for namespace
     algo::Smallstr16   ns;         //
     bool               ismodule;   //   false
-    explicit Main(const algo::strptr&            in_ns
-        ,bool                           in_ismodule);
-    Main();
+    // func:dmmeta.Main..Ctor
+    inline               Main() __attribute__((nothrow));
+    // func:dmmeta.Main..FieldwiseCtor
+    explicit inline               Main(const algo::strptr& in_ns, bool in_ismodule) __attribute__((nothrow));
 };
 
 // func:dmmeta.Main..ReadFieldMaybe
@@ -3051,7 +3089,7 @@ bool                 Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr fiel
 bool                 Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Main..Init
-void                 Main_Init(dmmeta::Main& parent);
+inline void          Main_Init(dmmeta::Main& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Main.String  printfmt:Tuple
 // func:dmmeta.Main..Print
@@ -3061,9 +3099,10 @@ void                 Main_Print(dmmeta::Main& row, algo::cstring& str) __attribu
 struct Msgtype { // dmmeta.Msgtype: Specify message type for each eligible message, controls dispatch
     algo::Smallstr100   ctype;   //
     algo::CppExpr       type;    //
-    explicit Msgtype(const algo::strptr&            in_ctype
-        ,const algo::CppExpr&           in_type);
-    Msgtype();
+    // func:dmmeta.Msgtype..Ctor
+    inline               Msgtype() __attribute__((nothrow));
+    // func:dmmeta.Msgtype..FieldwiseCtor
+    explicit inline               Msgtype(const algo::strptr& in_ctype, const algo::CppExpr& in_type) __attribute__((nothrow));
 };
 
 // func:dmmeta.Msgtype..ReadFieldMaybe
@@ -3081,7 +3120,8 @@ void                 Msgtype_Print(dmmeta::Msgtype& row, algo::cstring& str) __a
 struct Nocascdel { // dmmeta.Nocascdel: Remove cascade delete for this index
     algo::Smallstr100   xref;      //
     algo::Comment       comment;   //
-    Nocascdel();
+    // func:dmmeta.Nocascdel..Ctor
+    inline               Nocascdel() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nocascdel..ReadFieldMaybe
@@ -3099,7 +3139,8 @@ void                 Nocascdel_Print(dmmeta::Nocascdel& row, algo::cstring& str)
 struct Nossimfile { // dmmeta.Nossimfile: Indicates that ssimfile does not exist for this ssimdb ctype
     algo::Smallstr100   ctype;     //
     algo::Comment       comment;   //
-    Nossimfile();
+    // func:dmmeta.Nossimfile..Ctor
+    inline               Nossimfile() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nossimfile..ReadFieldMaybe
@@ -3117,7 +3158,8 @@ void                 Nossimfile_Print(dmmeta::Nossimfile& row, algo::cstring& st
 struct Noxref { // dmmeta.Noxref: Explicitly specify that no x-ref exists between tables (don't use unless forced)
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Noxref();
+    // func:dmmeta.Noxref..Ctor
+    inline               Noxref() __attribute__((nothrow));
 };
 
 // func:dmmeta.Noxref..ReadFieldMaybe
@@ -3137,11 +3179,10 @@ struct Ns { // dmmeta.Ns: Namespace (for in-memory database, protocol, etc)
     algo::Smallstr50   nstype;    // Namespace type
     algo::Smallstr50   license;   // Associated license
     algo::Comment      comment;   //
-    explicit Ns(const algo::strptr&            in_ns
-        ,const algo::strptr&            in_nstype
-        ,const algo::strptr&            in_license
-        ,const algo::Comment&           in_comment);
-    Ns();
+    // func:dmmeta.Ns..Ctor
+    inline               Ns() __attribute__((nothrow));
+    // func:dmmeta.Ns..FieldwiseCtor
+    explicit inline               Ns(const algo::strptr& in_ns, const algo::strptr& in_nstype, const algo::strptr& in_license, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ns..ReadFieldMaybe
@@ -3159,9 +3200,10 @@ void                 Ns_Print(dmmeta::Ns& row, algo::cstring& str) __attribute__
 struct Nscpp { // dmmeta.Nscpp: Generate C++ code for this namespace
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
-    explicit Nscpp(const algo::strptr&            in_ns
-        ,const algo::Comment&           in_comment);
-    Nscpp();
+    // func:dmmeta.Nscpp..Ctor
+    inline               Nscpp() __attribute__((nothrow));
+    // func:dmmeta.Nscpp..FieldwiseCtor
+    explicit inline               Nscpp(const algo::strptr& in_ns, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Nscpp..ReadFieldMaybe
@@ -3179,7 +3221,8 @@ void                 Nscpp_Print(dmmeta::Nscpp& row, algo::cstring& str) __attri
 struct Nsdb { // dmmeta.Nsdb: Annotate ssimdb namespaces
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
-    Nsdb();
+    // func:dmmeta.Nsdb..Ctor
+    inline               Nsdb() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsdb..ReadFieldMaybe
@@ -3197,7 +3240,8 @@ void                 Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) __attribu
 struct Nsfast { // dmmeta.Nsfast: Whether namespace is FAST
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
-    Nsfast();
+    // func:dmmeta.Nsfast..Ctor
+    inline               Nsfast() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsfast..ReadFieldMaybe
@@ -3216,7 +3260,8 @@ struct Nsinclude { // dmmeta.Nsinclude: Explicitly specify a C++ include file fo
     algo::Smallstr50   nsinclude;   //
     bool               sys;         //   false
     algo::Comment      comment;     //
-    Nsinclude();
+    // func:dmmeta.Nsinclude..Ctor
+    inline               Nsinclude() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsinclude.ns.Get
@@ -3239,7 +3284,7 @@ bool                 Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::s
 bool                 Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Nsinclude..Init
-void                 Nsinclude_Init(dmmeta::Nsinclude& parent);
+inline void          Nsinclude_Init(dmmeta::Nsinclude& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsinclude.String  printfmt:Tuple
 // func:dmmeta.Nsinclude..Print
@@ -3249,9 +3294,10 @@ void                 Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str)
 struct Nsproto { // dmmeta.Nsproto: Annotate protocol namespace (collection of types, no state)
     algo::Smallstr16   ns;        //
     algo::Comment      comment;   //
-    explicit Nsproto(const algo::strptr&            in_ns
-        ,const algo::Comment&           in_comment);
-    Nsproto();
+    // func:dmmeta.Nsproto..Ctor
+    inline               Nsproto() __attribute__((nothrow));
+    // func:dmmeta.Nsproto..FieldwiseCtor
+    explicit inline               Nsproto(const algo::strptr& in_ns, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsproto..ReadFieldMaybe
@@ -3269,9 +3315,10 @@ void                 Nsproto_Print(dmmeta::Nsproto& row, algo::cstring& str) __a
 struct Nstype { // dmmeta.Nstype: Namespace type
     algo::Smallstr50   nstype;    //
     algo::Comment      comment;   //
-    explicit Nstype(const algo::strptr&            in_nstype
-        ,const algo::Comment&           in_comment);
-    Nstype();
+    // func:dmmeta.Nstype..Ctor
+    inline               Nstype() __attribute__((nothrow));
+    // func:dmmeta.Nstype..FieldwiseCtor
+    explicit inline               Nstype(const algo::strptr& in_nstype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Nstype..ReadFieldMaybe
@@ -3290,7 +3337,8 @@ struct Nsversion { // dmmeta.Nsversion: Namespace version
     algo::Smallstr16   ns;        //
     algo::Smallstr10   version;   //
     algo::Comment      comment;   //
-    Nsversion();
+    // func:dmmeta.Nsversion..Ctor
+    inline               Nsversion() __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsversion..ReadFieldMaybe
@@ -3313,14 +3361,10 @@ struct Nsx { // dmmeta.Nsx: Control code-generation and exception handling optio
     bool                sortxref;              //   false
     bool                pack;                  //   false
     algo::Comment       comment;               //
-    explicit Nsx(const algo::strptr&            in_ns
-        ,bool                           in_genthrow
-        ,bool                           in_correct_getorcreate
-        ,const algo::strptr&            in_pool
-        ,bool                           in_sortxref
-        ,bool                           in_pack
-        ,const algo::Comment&           in_comment);
-    Nsx();
+    // func:dmmeta.Nsx..Ctor
+    inline               Nsx() __attribute__((nothrow));
+    // func:dmmeta.Nsx..FieldwiseCtor
+    explicit inline               Nsx(const algo::strptr& in_ns, bool in_genthrow, bool in_correct_getorcreate, const algo::strptr& in_pool, bool in_sortxref, bool in_pack, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Nsx..ReadFieldMaybe
@@ -3331,7 +3375,7 @@ bool                 Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field,
 bool                 Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Nsx..Init
-void                 Nsx_Init(dmmeta::Nsx& parent);
+inline void          Nsx_Init(dmmeta::Nsx& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsx.String  printfmt:Tuple
 // func:dmmeta.Nsx..Print
@@ -3343,11 +3387,10 @@ struct Numstr { // dmmeta.Numstr: Add functions to read numbers out of a string 
     algo::Smallstr100   numtype;   // Corresponding numeric type
     i32                 base;      //   0  Base for conversion
     i32                 min_len;   //   0  Mininum length of string
-    explicit Numstr(const algo::strptr&            in_field
-        ,const algo::strptr&            in_numtype
-        ,i32                            in_base
-        ,i32                            in_min_len);
-    Numstr();
+    // func:dmmeta.Numstr..Ctor
+    inline               Numstr() __attribute__((nothrow));
+    // func:dmmeta.Numstr..FieldwiseCtor
+    explicit inline               Numstr(const algo::strptr& in_field, const algo::strptr& in_numtype, i32 in_base, i32 in_min_len) __attribute__((nothrow));
 };
 
 // func:dmmeta.Numstr..ReadFieldMaybe
@@ -3358,7 +3401,7 @@ bool                 Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr 
 bool                 Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Numstr..Init
-void                 Numstr_Init(dmmeta::Numstr& parent);
+inline void          Numstr_Init(dmmeta::Numstr& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Numstr.String  printfmt:Tuple
 // func:dmmeta.Numstr..Print
@@ -3368,9 +3411,10 @@ void                 Numstr_Print(dmmeta::Numstr& row, algo::cstring& str) __att
 struct Pack { // dmmeta.Pack: Request byte-packing of structure fields
     algo::Smallstr100   ctype;     // Target ctype
     algo::Comment       comment;   //
-    explicit Pack(const algo::strptr&            in_ctype
-        ,const algo::Comment&           in_comment);
-    Pack();
+    // func:dmmeta.Pack..Ctor
+    inline               Pack() __attribute__((nothrow));
+    // func:dmmeta.Pack..FieldwiseCtor
+    explicit inline               Pack(const algo::strptr& in_ctype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Pack..ReadFieldMaybe
@@ -3389,10 +3433,10 @@ struct Pmaskfld { // dmmeta.Pmaskfld: Specify which field holds presence mask bi
     algo::Smallstr100   field;          //
     bool                filter_print;   //   true  Omit non-present fields when printing
     algo::Comment       comment;        //
-    explicit Pmaskfld(const algo::strptr&            in_field
-        ,bool                           in_filter_print
-        ,const algo::Comment&           in_comment);
-    Pmaskfld();
+    // func:dmmeta.Pmaskfld..Ctor
+    inline               Pmaskfld() __attribute__((nothrow));
+    // func:dmmeta.Pmaskfld..FieldwiseCtor
+    explicit inline               Pmaskfld(const algo::strptr& in_field, bool in_filter_print, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Pmaskfld.ctype.Get
@@ -3408,7 +3452,7 @@ bool                 Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::str
 bool                 Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Pmaskfld..Init
-void                 Pmaskfld_Init(dmmeta::Pmaskfld& parent);
+inline void          Pmaskfld_Init(dmmeta::Pmaskfld& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pmaskfld.String  printfmt:Tuple
 // func:dmmeta.Pmaskfld..Print
@@ -3418,7 +3462,8 @@ void                 Pmaskfld_Print(dmmeta::Pmaskfld& row, algo::cstring& str) _
 struct PmaskfldMember { // dmmeta.PmaskfldMember: Explicit field-to-pmask association
     algo::Smallstr100   pmaskfld_member;   //
     algo::Comment       comment;           //
-    PmaskfldMember();
+    // func:dmmeta.PmaskfldMember..Ctor
+    inline               PmaskfldMember() __attribute__((nothrow));
 };
 
 // func:dmmeta.PmaskfldMember.pmaskfld.Get
@@ -3448,9 +3493,10 @@ void                 PmaskfldMember_Print(dmmeta::PmaskfldMember& row, algo::cst
 struct Pnew { // dmmeta.Pnew: Generate custom constructor (placement new), for use with binary protocols
     algo::Smallstr100   pnew;      //
     algo::Comment       comment;   //
-    explicit Pnew(const algo::strptr&            in_pnew
-        ,const algo::Comment&           in_comment);
-    Pnew();
+    // func:dmmeta.Pnew..Ctor
+    inline               Pnew() __attribute__((nothrow));
+    // func:dmmeta.Pnew..FieldwiseCtor
+    explicit inline               Pnew(const algo::strptr& in_pnew, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Pnew.ns.Get
@@ -3485,7 +3531,8 @@ void                 Pnew_Print(dmmeta::Pnew& row, algo::cstring& str) __attribu
 struct Printfmt { // dmmeta.Printfmt: Print format
     algo::Smallstr50   printfmt;   //
     algo::Comment      comment;    //
-    Printfmt();
+    // func:dmmeta.Printfmt..Ctor
+    inline               Printfmt() __attribute__((nothrow));
 };
 
 // func:dmmeta.Printfmt..ReadFieldMaybe
@@ -3503,9 +3550,10 @@ void                 Printfmt_Print(dmmeta::Printfmt& row, algo::cstring& str) _
 struct Ptrary { // dmmeta.Ptrary: Required for fields with reftype:Ptrary
     algo::Smallstr100   field;    //
     bool                unique;   //   false  Search for and ignore duplicates
-    explicit Ptrary(const algo::strptr&            in_field
-        ,bool                           in_unique);
-    Ptrary();
+    // func:dmmeta.Ptrary..Ctor
+    inline               Ptrary() __attribute__((nothrow));
+    // func:dmmeta.Ptrary..FieldwiseCtor
+    explicit inline               Ptrary(const algo::strptr& in_field, bool in_unique) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ptrary..ReadFieldMaybe
@@ -3516,7 +3564,7 @@ bool                 Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr 
 bool                 Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Ptrary..Init
-void                 Ptrary_Init(dmmeta::Ptrary& parent);
+inline void          Ptrary_Init(dmmeta::Ptrary& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ptrary.String  printfmt:Tuple
 // func:dmmeta.Ptrary..Print
@@ -3536,7 +3584,8 @@ struct Reftype { // dmmeta.Reftype: Field type constructor (e.g. reference type)
     bool               hasalloc;      //   false  Generte Alloc/Delete functions for arg type
     bool               inst;          //   false  Field creates an instance of arg type (directly or indirectly)
     bool               varlen;        //   false  This pool supports varlen allocations
-    Reftype();
+    // func:dmmeta.Reftype..Ctor
+    inline               Reftype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Reftype..ReadFieldMaybe
@@ -3557,19 +3606,23 @@ void                 Reftype_Print(dmmeta::Reftype& row, algo::cstring& str) __a
 #pragma pack(push,1)
 struct ReftypeCase { // dmmeta.ReftypeCase: enum helper Field type constructor (e.g. reference type)
     u8   reftype;   //   0
-    inline operator dmmeta_ReftypeCaseEnum() const;
-    explicit ReftypeCase(u8                             in_reftype);
-    ReftypeCase(dmmeta_ReftypeCaseEnum arg);
-    ReftypeCase();
+    // func:dmmeta.ReftypeCase.reftype.Cast
+    inline               operator dmmeta_ReftypeCaseEnum() const __attribute__((nothrow));
+    // func:dmmeta.ReftypeCase..Ctor
+    inline               ReftypeCase() __attribute__((nothrow));
+    // func:dmmeta.ReftypeCase..FieldwiseCtor
+    explicit inline               ReftypeCase(u8 in_reftype) __attribute__((nothrow));
+    // func:dmmeta.ReftypeCase..EnumCtor
+    inline               ReftypeCase(dmmeta_ReftypeCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:dmmeta.ReftypeCase.reftype.GetEnum
-dmmeta_ReftypeCaseEnum reftype_GetEnum(const dmmeta::ReftypeCase& parent) __attribute__((nothrow));
+inline dmmeta_ReftypeCaseEnum reftype_GetEnum(const dmmeta::ReftypeCase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:dmmeta.ReftypeCase.reftype.SetEnum
-void                 reftype_SetEnum(dmmeta::ReftypeCase& parent, dmmeta_ReftypeCaseEnum rhs) __attribute__((nothrow));
+inline void          reftype_SetEnum(dmmeta::ReftypeCase& parent, dmmeta_ReftypeCaseEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:dmmeta.ReftypeCase.reftype.ToCstr
@@ -3590,13 +3643,14 @@ void                 reftype_SetStrptr(dmmeta::ReftypeCase& parent, algo::strptr
 
 // Set all fields to initial values.
 // func:dmmeta.ReftypeCase..Init
-void                 ReftypeCase_Init(dmmeta::ReftypeCase& parent);
+inline void          ReftypeCase_Init(dmmeta::ReftypeCase& parent);
 
 // --- dmmeta.Rowid
 struct Rowid { // dmmeta.Rowid: Initialize field to row id of element
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    Rowid();
+    // func:dmmeta.Rowid..Ctor
+    inline               Rowid() __attribute__((nothrow));
 };
 
 // func:dmmeta.Rowid..ReadFieldMaybe
@@ -3617,7 +3671,8 @@ struct Smallstr { // dmmeta.Smallstr: Generated fixed-length padded or length-de
     algo::Smallstr50    strtype;   // Data format for string
     algo::CppExpr       pad;       // Pad character (if applicable)
     bool                strict;    //   false
-    Smallstr();
+    // func:dmmeta.Smallstr..Ctor
+    inline               Smallstr() __attribute__((nothrow));
 };
 
 // func:dmmeta.Smallstr.ctype.Get
@@ -3633,7 +3688,7 @@ bool                 Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::str
 bool                 Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Smallstr..Init
-void                 Smallstr_Init(dmmeta::Smallstr& parent);
+inline void          Smallstr_Init(dmmeta::Smallstr& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Smallstr.String  printfmt:Tuple
 // func:dmmeta.Smallstr..Print
@@ -3643,9 +3698,10 @@ void                 Smallstr_Print(dmmeta::Smallstr& row, algo::cstring& str) _
 struct Sortfld { // dmmeta.Sortfld: Specify what field an index (Bheap,Atree) is sorted on
     algo::Smallstr100   field;     //
     algo::Smallstr100   sortfld;   // Field to sort by
-    explicit Sortfld(const algo::strptr&            in_field
-        ,const algo::strptr&            in_sortfld);
-    Sortfld();
+    // func:dmmeta.Sortfld..Ctor
+    inline               Sortfld() __attribute__((nothrow));
+    // func:dmmeta.Sortfld..FieldwiseCtor
+    explicit inline               Sortfld(const algo::strptr& in_field, const algo::strptr& in_sortfld) __attribute__((nothrow));
 };
 
 // func:dmmeta.Sortfld..ReadFieldMaybe
@@ -3663,7 +3719,8 @@ void                 Sortfld_Print(dmmeta::Sortfld& row, algo::cstring& str) __a
 struct Sorttype { // dmmeta.Sorttype: Sort type
     algo::Smallstr50   sorttype;   //
     algo::Comment      comment;    //
-    Sorttype();
+    // func:dmmeta.Sorttype..Ctor
+    inline               Sorttype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Sorttype..ReadFieldMaybe
@@ -3682,7 +3739,8 @@ struct Sqltype { // dmmeta.Sqltype: Mapping of ctype -> SQL expression
     algo::Smallstr100   ctype;     //
     algo::Smallstr100   expr;      //
     algo::Comment       comment;   //
-    Sqltype();
+    // func:dmmeta.Sqltype..Ctor
+    inline               Sqltype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Sqltype..ReadFieldMaybe
@@ -3700,9 +3758,10 @@ void                 Sqltype_Print(dmmeta::Sqltype& row, algo::cstring& str) __a
 struct Ssimfile { // dmmeta.Ssimfile: File with ssim tuples
     algo::Smallstr50    ssimfile;   //
     algo::Smallstr100   ctype;      //
-    explicit Ssimfile(const algo::strptr&            in_ssimfile
-        ,const algo::strptr&            in_ctype);
-    Ssimfile();
+    // func:dmmeta.Ssimfile..Ctor
+    inline               Ssimfile() __attribute__((nothrow));
+    // func:dmmeta.Ssimfile..FieldwiseCtor
+    explicit inline               Ssimfile(const algo::strptr& in_ssimfile, const algo::strptr& in_ctype) __attribute__((nothrow));
 };
 
 // func:dmmeta.Ssimfile.ssimns.Get
@@ -3738,7 +3797,8 @@ struct Ssimreq { // dmmeta.Ssimreq: Extended constraints for ssim records
     bool                reqchild;   //   false
     bool                bidir;      //   false
     algo::Comment       comment;    //
-    Ssimreq();
+    // func:dmmeta.Ssimreq..Ctor
+    inline               Ssimreq() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ssimreq.parent_field.Get
@@ -3787,7 +3847,8 @@ struct Ssimsort { // dmmeta.Ssimsort: Define sort order for ssimfile
     algo::Smallstr50    ssimfile;   //
     algo::Smallstr100   sortfld;    //
     algo::Comment       comment;    //
-    Ssimsort();
+    // func:dmmeta.Ssimsort..Ctor
+    inline               Ssimsort() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ssimsort..ReadFieldMaybe
@@ -3805,7 +3866,8 @@ void                 Ssimsort_Print(dmmeta::Ssimsort& row, algo::cstring& str) _
 struct Ssimvolatile { // dmmeta.Ssimvolatile: Types based on ssim files marked this way cannot be cross-referenced
     algo::Smallstr50   ssimfile;   //
     algo::Comment      comment;    //
-    Ssimvolatile();
+    // func:dmmeta.Ssimvolatile..Ctor
+    inline               Ssimvolatile() __attribute__((nothrow));
 };
 
 // func:dmmeta.Ssimvolatile..ReadFieldMaybe
@@ -3823,9 +3885,10 @@ void                 Ssimvolatile_Print(dmmeta::Ssimvolatile& row, algo::cstring
 struct Steptype { // dmmeta.Steptype: Type of scheduler step
     algo::Smallstr50   steptype;   //
     algo::Comment      comment;    //
-    explicit Steptype(const algo::strptr&            in_steptype
-        ,const algo::Comment&           in_comment);
-    Steptype();
+    // func:dmmeta.Steptype..Ctor
+    inline               Steptype() __attribute__((nothrow));
+    // func:dmmeta.Steptype..FieldwiseCtor
+    explicit inline               Steptype(const algo::strptr& in_steptype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Steptype..ReadFieldMaybe
@@ -3843,9 +3906,10 @@ void                 Steptype_Print(dmmeta::Steptype& row, algo::cstring& str) _
 struct Strfmt { // dmmeta.Strfmt: Cfmt conversion type (misnomer, not necessarily a string)
     algo::Smallstr50   strfmt;    //
     algo::Comment      comment;   //
-    explicit Strfmt(const algo::strptr&            in_strfmt
-        ,const algo::Comment&           in_comment);
-    Strfmt();
+    // func:dmmeta.Strfmt..Ctor
+    inline               Strfmt() __attribute__((nothrow));
+    // func:dmmeta.Strfmt..FieldwiseCtor
+    explicit inline               Strfmt(const algo::strptr& in_strfmt, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 
@@ -3853,9 +3917,10 @@ struct Strfmt { // dmmeta.Strfmt: Cfmt conversion type (misnomer, not necessaril
 struct Strtype { // dmmeta.Strtype: Type of small string
     algo::Smallstr50   strtype;   //
     algo::Comment      comment;   //
-    explicit Strtype(const algo::strptr&            in_strtype
-        ,const algo::Comment&           in_comment);
-    Strtype();
+    // func:dmmeta.Strtype..Ctor
+    inline               Strtype() __attribute__((nothrow));
+    // func:dmmeta.Strtype..FieldwiseCtor
+    explicit inline               Strtype(const algo::strptr& in_strtype, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Strtype..ReadFieldMaybe
@@ -3874,10 +3939,10 @@ struct Substr { // dmmeta.Substr: Specify that the field value is computed from 
     algo::Smallstr100   field;      //
     algo::CppExpr       expr;       //
     algo::Smallstr100   srcfield;   //
-    explicit Substr(const algo::strptr&            in_field
-        ,const algo::CppExpr&           in_expr
-        ,const algo::strptr&            in_srcfield);
-    Substr();
+    // func:dmmeta.Substr..Ctor
+    inline               Substr() __attribute__((nothrow));
+    // func:dmmeta.Substr..FieldwiseCtor
+    explicit inline               Substr(const algo::strptr& in_field, const algo::CppExpr& in_expr, const algo::strptr& in_srcfield) __attribute__((nothrow));
 };
 
 // func:dmmeta.Substr..ReadFieldMaybe
@@ -3898,7 +3963,8 @@ struct Svtype { // dmmeta.Svtype: Table for determining ctype from separated val
     i32                 fixedwid1;   //   0  Max chars before decimal point
     i32                 fixedwid2;   //   0  Max chars after decimal point
     algo::Comment       comment;     //
-    Svtype();
+    // func:dmmeta.Svtype..Ctor
+    inline               Svtype() __attribute__((nothrow));
 };
 
 // func:dmmeta.Svtype..ReadFieldMaybe
@@ -3909,7 +3975,7 @@ bool                 Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr 
 bool                 Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Svtype..Init
-void                 Svtype_Init(dmmeta::Svtype& parent);
+inline void          Svtype_Init(dmmeta::Svtype& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Svtype.String  printfmt:Tuple
 // func:dmmeta.Svtype..Print
@@ -3920,7 +3986,8 @@ struct Tary { // dmmeta.Tary: Indirect linear dynamically alocated array (used f
     algo::Smallstr100   field;     //
     bool                aliased;   //   false  Geneate functions to copy from aryptr
     algo::Comment       comment;   //
-    Tary();
+    // func:dmmeta.Tary..Ctor
+    inline               Tary() __attribute__((nothrow));
 };
 
 // func:dmmeta.Tary..ReadFieldMaybe
@@ -3931,7 +3998,7 @@ bool                 Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr fiel
 bool                 Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Tary..Init
-void                 Tary_Init(dmmeta::Tary& parent);
+inline void          Tary_Init(dmmeta::Tary& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tary.String  printfmt:Tuple
 // func:dmmeta.Tary..Print
@@ -3943,11 +4010,10 @@ struct Thash { // dmmeta.Thash: Hash index, required for fields with reftype Tha
     algo::Smallstr100   hashfld;   // Field on which hash function is computed
     bool                unique;    //   true  Enforce uniqueness of member elements
     algo::Comment       comment;   //
-    explicit Thash(const algo::strptr&            in_field
-        ,const algo::strptr&            in_hashfld
-        ,bool                           in_unique
-        ,const algo::Comment&           in_comment);
-    Thash();
+    // func:dmmeta.Thash..Ctor
+    inline               Thash() __attribute__((nothrow));
+    // func:dmmeta.Thash..FieldwiseCtor
+    explicit inline               Thash(const algo::strptr& in_field, const algo::strptr& in_hashfld, bool in_unique, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Thash..ReadFieldMaybe
@@ -3958,7 +4024,7 @@ bool                 Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr fi
 bool                 Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Thash..Init
-void                 Thash_Init(dmmeta::Thash& parent);
+inline void          Thash_Init(dmmeta::Thash& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Thash.String  printfmt:Tuple
 // func:dmmeta.Thash..Print
@@ -3968,9 +4034,10 @@ void                 Thash_Print(dmmeta::Thash& row, algo::cstring& str) __attri
 struct Tracefld { // dmmeta.Tracefld: Trace fields
     algo::Smallstr100   tracefld;   //
     algo::Comment       comment;    //
-    explicit Tracefld(const algo::strptr&            in_tracefld
-        ,const algo::Comment&           in_comment);
-    Tracefld();
+    // func:dmmeta.Tracefld..Ctor
+    inline               Tracefld() __attribute__((nothrow));
+    // func:dmmeta.Tracefld..FieldwiseCtor
+    explicit inline               Tracefld(const algo::strptr& in_tracefld, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Tracefld.tracerec.Get
@@ -4000,9 +4067,10 @@ void                 Tracefld_Print(dmmeta::Tracefld& row, algo::cstring& str) _
 struct Tracerec { // dmmeta.Tracerec: Trace record
     algo::Smallstr50   tracerec;   // e.g. rl_lib.trace
     algo::Comment      comment;    //
-    explicit Tracerec(const algo::strptr&            in_tracerec
-        ,const algo::Comment&           in_comment);
-    Tracerec();
+    // func:dmmeta.Tracerec..Ctor
+    inline               Tracerec() __attribute__((nothrow));
+    // func:dmmeta.Tracerec..FieldwiseCtor
+    explicit inline               Tracerec(const algo::strptr& in_tracerec, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Tracerec.name.Get
@@ -4032,9 +4100,10 @@ void                 Tracerec_Print(dmmeta::Tracerec& row, algo::cstring& str) _
 struct Typefld { // dmmeta.Typefld: Specifies which field of a message carries the type
     algo::Smallstr100   field;     //
     algo::Comment       comment;   //
-    explicit Typefld(const algo::strptr&            in_field
-        ,const algo::Comment&           in_comment);
-    Typefld();
+    // func:dmmeta.Typefld..Ctor
+    inline               Typefld() __attribute__((nothrow));
+    // func:dmmeta.Typefld..FieldwiseCtor
+    explicit inline               Typefld(const algo::strptr& in_field, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
 // func:dmmeta.Typefld.ctype.Get
@@ -4057,7 +4126,8 @@ void                 Typefld_Print(dmmeta::Typefld& row, algo::cstring& str) __a
 struct Usertracefld { // dmmeta.Usertracefld: Add custom user trace fields to process's trace struct
     algo::Smallstr100   tracefld;   //
     algo::Comment       comment;    //
-    Usertracefld();
+    // func:dmmeta.Usertracefld..Ctor
+    inline               Usertracefld() __attribute__((nothrow));
 };
 
 // func:dmmeta.Usertracefld..ReadFieldMaybe
@@ -4076,10 +4146,10 @@ struct Xref { // dmmeta.Xref: Specify how to cross-reference (i.e. project, or g
     algo::Smallstr100   field;     //
     algo::CppExpr       inscond;   //   "true"  Insert condition
     algo::Smallstr200   via;       //
-    explicit Xref(const algo::strptr&            in_field
-        ,const algo::CppExpr&           in_inscond
-        ,const algo::strptr&            in_via);
-    Xref();
+    // func:dmmeta.Xref..Ctor
+    inline               Xref() __attribute__((nothrow));
+    // func:dmmeta.Xref..FieldwiseCtor
+    explicit inline               Xref(const algo::strptr& in_field, const algo::CppExpr& in_inscond, const algo::strptr& in_via) __attribute__((nothrow));
 };
 
 // func:dmmeta.Xref.name.Get
@@ -4110,7 +4180,7 @@ bool                 Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr fiel
 bool                 Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:dmmeta.Xref..Init
-void                 Xref_Init(dmmeta::Xref& parent);
+inline void          Xref_Init(dmmeta::Xref& parent);
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Xref.String  printfmt:Tuple
 // func:dmmeta.Xref..Print

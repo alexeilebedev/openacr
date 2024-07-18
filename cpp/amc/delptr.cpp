@@ -18,7 +18,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/delptr.cpp
+// Source: cpp/amc/delptr.cpp -- Delptr reftype
 //
 
 #include "include/amc.h"
