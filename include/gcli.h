@@ -20,9 +20,9 @@
 //
 
 #include "include/algo.h"
+#include "include/lib_json.h"
 #include "include/gen/gcli_gen.h"
 #include "include/gen/gcli_gen.inl.h"
-#define old_intf false
 
 namespace gcli { // update-hdr
     // Dear human:

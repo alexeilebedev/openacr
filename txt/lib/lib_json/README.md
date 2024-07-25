@@ -6,6 +6,7 @@
 * [Ctypes](#ctypes)
 * [Functions](#functions)
 * [Sources](#sources)
+* [Inputs](#inputs)
 
 ### Ctypes
 <a href="#ctypes"></a>
@@ -279,4 +280,11 @@ The following source files are part of this tool:
 |[include/gen/lib_json_gen.inl.h](/include/gen/lib_json_gen.inl.h)||
 |[include/lib_json.h](/include/lib_json.h)||
 |[include/lib_json.inl.h](/include/lib_json.inl.h)||
+
+### Inputs
+<a href="#inputs"></a>
+`lib_json` takes the following tables on input:
+|ssimfile|comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 

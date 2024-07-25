@@ -27,15 +27,12 @@
 #include "include/gen/samp_regx_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_regx::FDb   samp_regx::_db;    // dependency found via dev.targdep
 
@@ -481,7 +478,6 @@ void samp_regx::StaticCheck() {
 // --- samp_regx...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         samp_regx::FDb_Init();
         algo_lib::_db.argc = argc;
@@ -499,7 +495,6 @@ int main(int argc, char **argv) {
     try {
         samp_regx::FDb_Uninit();
         algo_lib::FDb_Uninit();
-        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

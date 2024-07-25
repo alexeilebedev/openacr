@@ -29,8 +29,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
     algo_lib::lpool_FreeMem(temp_elems, sizeof(void*) * temp_max);

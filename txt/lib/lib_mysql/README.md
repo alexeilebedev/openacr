@@ -6,6 +6,7 @@
 * [Ctypes](#ctypes)
 * [Functions](#functions)
 * [Sources](#sources)
+* [Inputs](#inputs)
 
 ### Ctypes
 <a href="#ctypes"></a>
@@ -74,4 +75,11 @@ The following source files are part of this tool:
 |[include/gen/lib_mysql_gen.h](/include/gen/lib_mysql_gen.h)||
 |[include/gen/lib_mysql_gen.inl.h](/include/gen/lib_mysql_gen.inl.h)||
 |[include/lib_mysql.h](/include/lib_mysql.h)||
+
+### Inputs
+<a href="#inputs"></a>
+`lib_mysql` takes the following tables on input:
+|ssimfile|comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 

@@ -2053,8 +2053,5 @@ using algo::tempstr;
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 
-// presently cannot be avoided
-#include "include/lib_json.h"
-
 // Gcache pragma to precompile this header
 void __gcache_pragma_pch_preprocess();

@@ -25,6 +25,8 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_mysql_gen.h"
 #include "include/gen/lib_mysql_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_mysql { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
@@ -95,6 +97,7 @@ bool lib_mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_mysql::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && lib_mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -127,6 +130,7 @@ bool lib_mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -152,6 +156,7 @@ bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_mysql.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_mysql::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- lib_mysql.FDb._db.XrefMaybe

@@ -20,6 +20,7 @@
 //
 
 #include "include/algo.h"
+#include "include/lib_json.h"
 #include "include/ssimfilt.h"
 #include "include/lib_ctype.h"
 

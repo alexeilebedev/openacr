@@ -23,7 +23,6 @@
 //
 
 #include "include/acr_ed.h"
-#include "include/lib_git.h"
 
 
 void acr_ed::edaction_Create_Target() {

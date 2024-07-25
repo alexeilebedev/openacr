@@ -31,10 +31,10 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -47,8 +47,8 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
+lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 lib_ctype::FDb    lib_ctype::_db;     // dependency found via dev.targdep
 lib_sqlite::FDb   lib_sqlite::_db;    // dependency found via dev.targdep
 aqlite::FDb       aqlite::_db;        // dependency found via dev.targdep
@@ -732,8 +732,8 @@ void aqlite::StaticCheck() {
 // --- aqlite...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_json::FDb_Init();
         lib_ctype::FDb_Init();
         lib_sqlite::FDb_Init();
         aqlite::FDb_Init();
@@ -753,8 +753,8 @@ int main(int argc, char **argv) {
         aqlite::FDb_Uninit();
         lib_sqlite::FDb_Uninit();
         lib_ctype::FDb_Uninit();
-        algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
+        algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

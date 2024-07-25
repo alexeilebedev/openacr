@@ -41,8 +41,8 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 atf_gcli::FDb   atf_gcli::_db;    // dependency found via dev.targdep
 
 namespace atf_gcli {
@@ -2296,8 +2296,8 @@ void atf_gcli::StaticCheck() {
 // --- atf_gcli...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_json::FDb_Init();
         atf_gcli::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -2313,8 +2313,8 @@ int main(int argc, char **argv) {
     }
     try {
         atf_gcli::FDb_Uninit();
-        algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
+        algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;
