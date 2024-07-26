@@ -44,13 +44,18 @@ typedef unsigned int       u32;
 typedef          float     f32;
 typedef          double    f64;
 typedef     long double    f80;
-#ifdef WIN32
+#if defined(WIN32)
 typedef __int64            i64;
 typedef i64                ssize_t;
 typedef unsigned __int64   u64;
 #else
+#if defined(__LP64__) || defined(_LP64) || defined(__x86_64__)
 typedef unsigned long      u64;
 typedef   signed long      i64;
+#else
+typedef unsigned long long u64;
+typedef   signed long long i64;
+#endif
 #endif
 typedef i64                int_ptr;
 typedef u64                uint_ptr;
