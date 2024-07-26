@@ -25,7 +25,6 @@
 // Helper functions for mysql
 
 #include "include/lib_mysql.h"
-#include "include/lib_iconv.h"
 
 // LHS      output buffer
 // CONN     mysql context (includes collation info)

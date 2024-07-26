@@ -6,6 +6,7 @@
 * [Ctypes](#ctypes)
 * [Functions](#functions)
 * [Sources](#sources)
+* [Inputs](#inputs)
 
 ### Ctypes
 <a href="#ctypes"></a>
@@ -60,4 +61,11 @@ The following source files are part of this tool:
 |[include/gen/lib_iconv_gen.h](/include/gen/lib_iconv_gen.h)||
 |[include/gen/lib_iconv_gen.inl.h](/include/gen/lib_iconv_gen.inl.h)||
 |[include/lib_iconv.h](/include/lib_iconv.h)||
+
+### Inputs
+<a href="#inputs"></a>
+`lib_iconv` takes the following tables on input:
+|ssimfile|comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 

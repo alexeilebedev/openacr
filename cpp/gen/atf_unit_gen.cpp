@@ -35,10 +35,10 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.h"
 #include "include/gen/lib_exec_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
@@ -51,8 +51,8 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 lib_ams::FDb    lib_ams::_db;     // dependency found via dev.targdep
 lib_exec::FDb   lib_exec::_db;    // dependency found via dev.targdep
 lib_fm::FDb     lib_fm::_db;      // dependency found via dev.targdep
@@ -2926,8 +2926,8 @@ void atf_unit::StaticCheck() {
 // --- atf_unit...main
 int main(int argc, char **argv) {
     try {
-        lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_json::FDb_Init();
         lib_ams::FDb_Init();
         lib_exec::FDb_Init();
         lib_fm::FDb_Init();
@@ -2951,8 +2951,8 @@ int main(int argc, char **argv) {
         lib_fm::FDb_Uninit();
         lib_exec::FDb_Uninit();
         lib_ams::FDb_Uninit();
-        algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
+        algo_lib::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

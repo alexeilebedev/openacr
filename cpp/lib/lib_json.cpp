@@ -23,6 +23,7 @@
 //
 
 #include "include/algo.h"
+#include "include/lib_json.h"
 
 static void JsonParseError(lib_json::FParser &parser, strptr info) {
     if (lib_json::JsonParseOkQ(parser)) {

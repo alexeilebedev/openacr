@@ -31,8 +31,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);

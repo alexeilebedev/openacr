@@ -27,6 +27,8 @@
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_json { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
@@ -215,6 +217,7 @@ bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_json::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
+        retval = retval && lib_json::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
         algo_lib::SaveBadTag("path", root);
         algo_lib::SaveBadTag("comment", "Wrong working directory?");
@@ -247,6 +250,7 @@ bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
+            retval = retval && algo_lib::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -272,6 +276,7 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_json.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_json::Steps() {
+    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- lib_json.FDb._db.XrefMaybe
