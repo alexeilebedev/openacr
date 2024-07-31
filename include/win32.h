@@ -21,6 +21,11 @@
 //
 
 #ifdef WIN32
+
+#if !defined(WIN32)
+int isatty(int fd);
+#endif
+
 extern "C" {
     struct ucontext_t {
         // windows TODO: use GetThreadContext
@@ -63,8 +68,15 @@ extern "C" {
     };
     typedef HANDLE pthread_t;
     struct pthread_attr_t {
+        size_t stack_size;
+        DWORD creation_flags;
+        int detach_state;
     };
     typedef void* (*ThreadFunc)(void*);
+    struct ThreadStartInfo {
+        ThreadFunc func;
+        void* arg;
+    };
 };
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg);
 pthread_t pthread_self();
@@ -86,13 +98,13 @@ enum LockFlags {
     LOCK_UN=1
     ,LOCK_NB=2
     ,LOCK_EX=4
+    ,LOCK_SH=8
 };
 enum {
     STDIN_FILENO=0
     ,STDOUT_FILENO=1
     ,STDERR_FILENO=2
 };
-int isatty(int fd);
 int flock(int fd, int flags);
 void usleep(int microsec);
 // no better way to do it...

@@ -25,12 +25,12 @@
 // TODO Create entries for object files and add them as input dependencies to link step.
 // Currently, the out-of-date flag propagation is unconvincing
 
+#include "include/abt.h"
 #ifndef WIN32
 #include <sys/wait.h>
 #include <sys/utsname.h>
 #include <unistd.h>
 #endif
-#include "include/abt.h"
 
 // -----------------------------------------------------------------------------
 

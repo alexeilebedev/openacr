@@ -24,9 +24,13 @@
 
 #pragma once
 
-template<class T> inline tempstr &algo::operator <<(const tempstr &lhs, const T &rhs) {
-    (cstring&)lhs << rhs;
-    return (tempstr&)lhs;
+// cl requires 
+namespace algo { 
+    struct tempstr; 
+    template<class T> inline tempstr& operator<<(const tempstr &lhs, const T &rhs) {
+        (cstring&)lhs << rhs;
+        return (tempstr&)lhs;
+    }
 }
 
 // Refurbish: destroy and re-create object in place.
@@ -1358,8 +1362,71 @@ inline u8 algo::u8_ReverseBits(u8 b) {
 // 30ns and uses rdtsc() to increase underlying clock resolution
 inline algo::UnTime algo::CurrUnTime() {
     algo::UnTime ret;
-    struct timespec ts;
-    clock_gettime(CLOCK_REALTIME,&ts);
-    ret.value = i64(ts.tv_sec) * 1000000000 + ts.tv_nsec;
+    #if defined(WIN32)
+        static LARGE_INTEGER freq;
+        static BOOL qpc = QueryPerformanceCounter(&freq);
+        if (qpc) {
+            LARGE_INTEGER t_now;
+            QueryPerformanceCounter(&t_now);
+            ret.value = static_cast<i64>(t_now.QuadPart * 1000000000 / freq.QuadPart);
+        } else {
+            FILETIME ft;
+            GetSystemTimeAsFileTime(&ft);
+            ULARGE_INTEGER x;
+            x.LowPart = ft.dwLowDateTime;
+            x.HighPart = ft.dwHighDateTime;
+            x.QuadPart -= 116444736000000000ULL;
+            ret.value = x.QuadPart * 100;
+        }
+    #else
+        struct timespec ts;
+        clock_gettime(CLOCK_REALTIME,&ts);
+        ret.value = i64(ts.tv_sec) * 1000000000 + ts.tv_nsec;
+    #endif
     return ret;
 }
+
+
+
+
+/*
+
+#include <cstdint>
+
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <time.h>
+#endif
+
+namespace algo {
+
+struct UnTime {
+    int64_t value;
+};
+
+inline UnTime CurrUnTime() {
+    UnTime ret;
+
+#ifdef _WIN32
+    // Windows-specific implementation
+    FILETIME ft;
+    GetSystemTimeAsFileTime(&ft);
+    ULARGE_INTEGER li;
+    li.LowPart = ft.dwLowDateTime;
+    li.HighPart = ft.dwHighDateTime;
+    // Windows file time starts from 1601-01-01
+    // Need to convert it to Unix epoch (1970-01-01)
+    ret.value = (li.QuadPart - 116444736000000000LL) * 100; // in nanoseconds
+#else
+    // POSIX implementation
+    struct timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ret.value = static_cast<int64_t>(ts.tv_sec) * 1000000000 + ts.tv_nsec;
+#endif
+
+    return ret;
+}
+
+} // namespace algo
+ */

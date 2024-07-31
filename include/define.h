@@ -217,7 +217,7 @@
 
 // compiler instructions for reordering
 // not processor instructions!!!
-#if  WIN32
+#if  defined(WIN32)
 #define sfence() __faststorefence()
 #define lfence()
 #define mfence() sfence()

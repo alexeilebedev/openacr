@@ -25,7 +25,31 @@
 //------------------------------------------------------------------------------
 
 static bool Flock(Fildes fd, int flags) {
-    return  ValidQ(fd) && flock(fd.value,flags)==0;
+    #if defined(WIN32)
+        OVERLAPPED overlapped = {0}; // for async operations
+        DWORD dwFlags = 0;
+
+        // Exclusive on Windows equates to POSIX's shared
+        // No extra flags needed - exclusive is the default on Windows
+        if (flags & LOCK_SH) {
+            dwFlags |= LOCKFILE_EXCLUSIVE_LOCK; 
+        }
+
+        if (!(flags & LOCK_NB)) {
+            dwFlags &= ~LOCKFILE_FAIL_IMMEDIATELY; // remove for blocking
+        }
+        if (flags & LOCK_UN) {
+            return UnlockFileEx((HANDLE)(u64)fd.value, 0, MAXDWORD, MAXDWORD, &overlapped);        
+        } else {
+            BOOL result = LockFileEx((HANDLE)(u64)fd.value, dwFlags, 0, MAXDWORD, MAXDWORD, &overlapped);
+            if (!result && (flags & LOCK_NB) && GetLastError() == ERROR_LOCK_VIOLATION) {
+                return false;  // nonblocking lock failed b/c the file is locked
+            }
+        return result;
+    }
+    #else
+        return  ValidQ(fd) && flock(fd.value,flags)==0;
+    #endif    
 }
 
 // -----------------------------------------------------------------------------
@@ -287,10 +311,14 @@ bool gcache::FdToFile(algo::Fildes from, algo::cstring &to_fname) {
         bool ok =false;
         // try using in-kernel copy
         if (use_cfr) {
+            #if defined(WIN32)
+                //TODO: Win32 implementation
+            #else
             struct stat stat;
             errno_vrfy(fstat(from.value, &stat)==0,"fstat");
             ssize_t res= copy_file_range(from.value, NULL, to.fd.value, NULL, stat.st_size, 0);
             ok = res==stat.st_size;
+            #endif
             if (ok) {
                 _db.report.copy_file_range=true;
             }
@@ -483,7 +511,7 @@ void gcache::Pch() {
         }
         // Then try to acquire shared lock (or downgrade if already held),
         // this will protect gch from deletion.
-        bool use = FileQ(gch) && (!_db.cmdline.force || build) && Flock(_db.lockfd.fd,LOCK_SH|LOCK_NB);
+        bool use = FileQ(gch) && (!_db.cmdline.force || build) && Flock(_db.lockfd.fd, LOCK_SH | LOCK_NB);
         if (use) {
             FHeader *top = pch;
             for(; top->parent != &root; top = top->parent) {}
