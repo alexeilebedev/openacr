@@ -781,8 +781,8 @@ template <class T> static algo::NumParseFlags TParseNumber(algo::StringIter &S, 
                 break;
             }
             prev = num;
-            num = num*16 + val;
-            overflow |= num<prev;
+            num = num*(u64)16 + (u64)val;
+            overflow |= u32(num<prev);
         }
     } else {
         for (; index < elems_N(expr); index++) {
@@ -791,8 +791,8 @@ template <class T> static algo::NumParseFlags TParseNumber(algo::StringIter &S, 
                 break;
             }
             prev = num;
-            num = num*10 + (c-'0');
-            overflow |= num<prev;
+            num = num*(u64)10 + (c-'0');
+            overflow |= u32(num<prev);
         }
     }
     if (overflow) {

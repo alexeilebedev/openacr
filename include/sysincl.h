@@ -25,6 +25,15 @@
 
 #pragma once
 
+// ms compiler makes life more difficult
+#if !defined(_WIN32) && defined(WIN32)
+    #define _WIN32
+#endif
+#if defined(_WIN32) && !defined(WIN32)
+    #define WIN32
+#endif
+
+
 // necessary defines before we include any MS headers
 #ifdef WIN32
 // thanks Microsoft, but we won't switch to your proprietary versions

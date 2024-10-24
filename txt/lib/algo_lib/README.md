@@ -3012,15 +3012,19 @@ int munmap(void *base_addr, i64 size)
 ```
 
 ```c++
+typedef struct 
+```
+
+```c++
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, ThreadFunc func, void *arg) 
 ```
 
 ```c++
-pthread_t pthread_self() 
+int pthread_join(pthread_t thread, void** ret) 
 ```
 
 ```c++
-template<class T> inline tempstr &algo::operator <<(const tempstr &lhs, const T &rhs) 
+pthread_t pthread_self() 
 ```
 
 ```c++
@@ -4127,6 +4131,10 @@ inline u8 algo::u8_ReverseBits(u8 b)
 // On Linux, this function calls clock_gettime() which takes about
 // 30ns and uses rdtsc() to increase underlying clock resolution
 inline algo::UnTime algo::CurrUnTime() 
+```
+
+```c++
+inline UnTime CurrUnTime() 
 ```
 
 ### Sources
