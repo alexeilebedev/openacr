@@ -19,7 +19,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/pool.cpp
+// Source: cpp/amc/pool.cpp -- Generic pool functions
 //
 // #AL# TODO: Pool.Delete: HANDLE NOREMOVE
 // Problem is with insertion code, which is forced to remove

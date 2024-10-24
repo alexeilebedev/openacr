@@ -29,6 +29,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -55,13 +57,15 @@ const char *ssimfilt_help =
 "    [typetag]   regx    \"%\"     (filter) Match typetag. ^=first encountered typetag\n"
 "    [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)\n"
 "    -field...   string          (project) Select fields for output (regx)\n"
-"    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|json|table)\n"
+"    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)\n"
 "                                    ssim  Print selected/filtered tuples\n"
 "                                    csv  First tuple determines header. CSV quoting is used. Newlines are removed\n"
 "                                    field  Print selected fields, one per line\n"
 "                                    cmd  Emit command for each tuple (implied if -cmd is set)\n"
 "                                    json  Print JSON object for each tuple\n"
+"                                    stablefld  Filter unstable fields, leave the rest intact\n"
 "                                    table  ASCII table for each group of tuples\n"
+"                                    mdtable  ASCII Markdown table with | separators for each group of tuples\n"
 "    -t                          Alias for -format:table\n"
 "    -cmd        string  \"\"      Command to output\n"
 "    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
@@ -77,14 +81,16 @@ namespace ssimfilt { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:ssimfilt.FDb._db.InitReflection
     static void          InitReflection();
+    // func:ssimfilt.FDb.unstablefld.InputMaybe
+    static bool          unstablefld_InputMaybe(dev::Unstablefld &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:ssimfilt.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:ssimfilt.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:ssimfilt...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ssimfilt.trace..Print
@@ -269,7 +275,7 @@ void ssimfilt::Step() {
 // --- ssimfilt.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void ssimfilt::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("ssimfilt", NULL, NULL, ssimfilt::MainLoop, NULL, algo::Comment()));
+    algo_lib::imdb_InsertMaybe(algo::Imdb("ssimfilt", ssimfilt::InsertStrptrMaybe, NULL, ssimfilt::MainLoop, NULL, algo::Comment()));
 
     algo::Imtable t_trace;
     t_trace.imtable         = "ssimfilt.trace";
@@ -283,6 +289,7 @@ static void ssimfilt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssimfilt.Input'  signature:'b976bb282360112c9b3d35b51259c1977faae6ff'");
 }
 
 // --- ssimfilt.FDb._db.InsertStrptrMaybe
@@ -290,7 +297,21 @@ static void ssimfilt::InitReflection() {
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 bool ssimfilt::InsertStrptrMaybe(algo::strptr str) {
     bool retval = true;
-    (void)str;//only to avoid -Wunused-parameter
+    ssimfilt::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case ssimfilt_TableId_dev_Unstablefld: { // finput:ssimfilt.FDb.unstablefld
+            dev::Unstablefld elem;
+            retval = dev::Unstablefld_ReadStrptrMaybe(elem, str);
+            retval = retval && unstablefld_InputMaybe(elem);
+            break;
+        }
+        default:
+        break;
+    } //switch
+    if (!retval) {
+        algo_lib::NoteInsertErr(str); // increment error counter
+    }
     return retval;
 }
 
@@ -351,6 +372,7 @@ bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
             retval = retval && algo_lib::InsertStrptrMaybe(line);
             retval = retval && lib_ctype::InsertStrptrMaybe(line);
         }
+        retval = retval && ssimfilt::InsertStrptrMaybe(line);
         if (!retval) {
             algo_lib::_db.errtext << eol
             << fname << ":"
@@ -599,6 +621,235 @@ void ssimfilt::selfield_RemoveLast() {
     }
 }
 
+// --- ssimfilt.FDb.unstablefld.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+ssimfilt::FUnstablefld& ssimfilt::unstablefld_Alloc() {
+    ssimfilt::FUnstablefld* row = unstablefld_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("ssimfilt.out_of_mem  field:ssimfilt.FDb.unstablefld  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- ssimfilt.FDb.unstablefld.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+ssimfilt::FUnstablefld* ssimfilt::unstablefld_AllocMaybe() {
+    ssimfilt::FUnstablefld *row = (ssimfilt::FUnstablefld*)unstablefld_AllocMem();
+    if (row) {
+        new (row) ssimfilt::FUnstablefld; // call constructor
+    }
+    return row;
+}
+
+// --- ssimfilt.FDb.unstablefld.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+ssimfilt::FUnstablefld* ssimfilt::unstablefld_InsertMaybe(const dev::Unstablefld &value) {
+    ssimfilt::FUnstablefld *row = &unstablefld_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    unstablefld_CopyIn(*row,const_cast<dev::Unstablefld&>(value));
+    bool ok = unstablefld_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        unstablefld_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- ssimfilt.FDb.unstablefld.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* ssimfilt::unstablefld_AllocMem() {
+    u64 new_nelems     = _db.unstablefld_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    ssimfilt::FUnstablefld*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.unstablefld_lary[bsr];
+        if (!lev) {
+            lev=(ssimfilt::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(ssimfilt::FUnstablefld) * (u64(1)<<bsr));
+            _db.unstablefld_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.unstablefld_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- ssimfilt.FDb.unstablefld.RemoveAll
+// Remove all elements from Lary
+void ssimfilt::unstablefld_RemoveAll() {
+    for (u64 n = _db.unstablefld_n; n>0; ) {
+        n--;
+        unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
+        _db.unstablefld_n = i32(n);
+    }
+}
+
+// --- ssimfilt.FDb.unstablefld.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void ssimfilt::unstablefld_RemoveLast() {
+    u64 n = _db.unstablefld_n;
+    if (n > 0) {
+        n -= 1;
+        unstablefld_qFind(u64(n)).~FUnstablefld();
+        _db.unstablefld_n = i32(n);
+    }
+}
+
+// --- ssimfilt.FDb.unstablefld.InputMaybe
+static bool ssimfilt::unstablefld_InputMaybe(dev::Unstablefld &elem) {
+    bool retval = true;
+    retval = unstablefld_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- ssimfilt.FDb.unstablefld.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool ssimfilt::unstablefld_XrefMaybe(ssimfilt::FUnstablefld &row) {
+    bool retval = true;
+    (void)row;
+    // insert unstablefld into index ind_unstablefld
+    if (true) { // user-defined insert condition
+        bool success = ind_unstablefld_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "ssimfilt.duplicate_key  xref:ssimfilt.FDb.ind_unstablefld"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.Find
+// Find row by key. Return NULL if not found.
+ssimfilt::FUnstablefld* ssimfilt::ind_unstablefld_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_unstablefld_buckets_n - 1);
+    ssimfilt::FUnstablefld* *e = &_db.ind_unstablefld_buckets_elems[index];
+    ssimfilt::FUnstablefld* ret=NULL;
+    do {
+        ret       = *e;
+        bool done = !ret || (*ret).field == key;
+        if (done) break;
+        e         = &ret->ind_unstablefld_next;
+    } while (true);
+    return ret;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.FindX
+// Look up row by key and return reference. Throw exception if not found
+ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_FindX(const algo::strptr& key) {
+    ssimfilt::FUnstablefld* ret = ind_unstablefld_Find(key);
+    vrfy(ret, tempstr() << "ssimfilt.key_error  table:ind_unstablefld  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr& key) {
+    ssimfilt::FUnstablefld* ret = ind_unstablefld_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &unstablefld_Alloc();
+        (*ret).field = key;
+        bool good = unstablefld_XrefMaybe(*ret);
+        if (!good) {
+            unstablefld_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "ssimfilt.create_error  table:ind_unstablefld  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
+    ind_unstablefld_Reserve(1);
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_unstablefld_next == (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_unstablefld_buckets_n - 1);
+        ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index];
+        do {
+            ssimfilt::FUnstablefld* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).field == row.field) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_unstablefld_next;
+        } while (true);
+        if (retval) {
+            row.ind_unstablefld_next = *prev;
+            _db.ind_unstablefld_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) {
+    if (LIKELY(row.ind_unstablefld_next != (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
+        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_unstablefld_buckets_n - 1);
+        ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index]; // addr of pointer to current element
+        while (ssimfilt::FUnstablefld *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_unstablefld_next; // unlink (singly linked list)
+                _db.ind_unstablefld_n--;
+                row.ind_unstablefld_next = (ssimfilt::FUnstablefld*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_unstablefld_next;
+        }
+    }
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void ssimfilt::ind_unstablefld_Reserve(int n) {
+    u32 old_nbuckets = _db.ind_unstablefld_buckets_n;
+    u32 new_nelems   = _db.ind_unstablefld_n + n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(ssimfilt::FUnstablefld*);
+        u32 new_size = new_nbuckets * sizeof(ssimfilt::FUnstablefld*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        ssimfilt::FUnstablefld* *new_buckets = (ssimfilt::FUnstablefld**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("ssimfilt.out_of_memory  field:ssimfilt.FDb.ind_unstablefld");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_unstablefld_buckets_n; i++) {
+            ssimfilt::FUnstablefld* elem = _db.ind_unstablefld_buckets_elems[i];
+            while (elem) {
+                ssimfilt::FUnstablefld &row        = *elem;
+                ssimfilt::FUnstablefld* next       = row.ind_unstablefld_next;
+                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                row.ind_unstablefld_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_unstablefld_buckets_elems, old_size);
+        _db.ind_unstablefld_buckets_elems = new_buckets;
+        _db.ind_unstablefld_buckets_n = new_nbuckets;
+    }
+}
+
 // --- ssimfilt.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr ssimfilt::trace_RowidFind(int t) {
@@ -648,6 +899,26 @@ void ssimfilt::FDb_Init() {
         selfield_first    += 1ULL<<i;
     }
     _db.csv_locked = bool(false);
+    _db.markdown = bool(false);
+    // initialize LAry unstablefld (ssimfilt.FDb.unstablefld)
+    _db.unstablefld_n = 0;
+    memset(_db.unstablefld_lary, 0, sizeof(_db.unstablefld_lary)); // zero out all level pointers
+    ssimfilt::FUnstablefld* unstablefld_first = (ssimfilt::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(ssimfilt::FUnstablefld) * (u64(1)<<4));
+    if (!unstablefld_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.unstablefld_lary[i]  = unstablefld_first;
+        unstablefld_first    += 1ULL<<i;
+    }
+    // initialize hash table for ssimfilt::FUnstablefld;
+    _db.ind_unstablefld_n             	= 0; // (ssimfilt.FDb.ind_unstablefld)
+    _db.ind_unstablefld_buckets_n     	= 4; // (ssimfilt.FDb.ind_unstablefld)
+    _db.ind_unstablefld_buckets_elems 	= (ssimfilt::FUnstablefld**)algo_lib::malloc_AllocMem(sizeof(ssimfilt::FUnstablefld*)*_db.ind_unstablefld_buckets_n); // initial buckets (ssimfilt.FDb.ind_unstablefld)
+    if (!_db.ind_unstablefld_buckets_elems) {
+        FatalErrorExit("out of memory"); // (ssimfilt.FDb.ind_unstablefld)
+    }
+    memset(_db.ind_unstablefld_buckets_elems, 0, sizeof(ssimfilt::FUnstablefld*)*_db.ind_unstablefld_buckets_n); // (ssimfilt.FDb.ind_unstablefld)
 
     ssimfilt::InitReflection();
 }
@@ -655,6 +926,12 @@ void ssimfilt::FDb_Init() {
 // --- ssimfilt.FDb..Uninit
 void ssimfilt::FDb_Uninit() {
     ssimfilt::FDb &row = _db; (void)row;
+
+    // ssimfilt.FDb.ind_unstablefld.Uninit (Thash)  //
+    // skip destruction of ind_unstablefld in global scope
+
+    // ssimfilt.FDb.unstablefld.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // ssimfilt.FDb.selfield.Uninit (Lary)  //Select fields for output
     // skip destruction in global scope
@@ -664,6 +941,26 @@ void ssimfilt::FDb_Uninit() {
 
     // ssimfilt.FDb.tuple.Uninit (Lary)  //Accumulated tuples
     // skip destruction in global scope
+}
+
+// --- ssimfilt.FUnstablefld.base.CopyOut
+// Copy fields out of row
+void ssimfilt::unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) {
+    out.field = row.field;
+    out.comment = row.comment;
+}
+
+// --- ssimfilt.FUnstablefld.base.CopyIn
+// Copy fields in to row
+void ssimfilt::unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstablefld &in) {
+    row.field = in.field;
+    row.comment = in.comment;
+}
+
+// --- ssimfilt.FUnstablefld..Uninit
+void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) {
+    ssimfilt::FUnstablefld &row = unstablefld; (void)row;
+    ind_unstablefld_Remove(row); // remove unstablefld from index ind_unstablefld
 }
 
 // --- ssimfilt.FieldId.value.ToCstr
@@ -752,6 +1049,87 @@ void ssimfilt::key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
 // Print back to string
 void ssimfilt::value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
     Regx_Print(matchfield.value, out);
+}
+
+// --- ssimfilt.TableId.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ssimfilt::value_ToCstr(const ssimfilt::TableId& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case ssimfilt_TableId_dev_Unstablefld: ret = "dev.Unstablefld";  break;
+    }
+    return ret;
+}
+
+// --- ssimfilt.TableId.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void ssimfilt::value_Print(const ssimfilt::TableId& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- ssimfilt.TableId.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ssimfilt::value_SetStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','U','n','s','t'): {
+                    if (memcmp(rhs.elems+8,"ablefld",7)==0) { value_SetEnum(parent,ssimfilt_TableId_dev_Unstablefld); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','u','n','s','t'): {
+                    if (memcmp(rhs.elems+8,"ablefld",7)==0) { value_SetEnum(parent,ssimfilt_TableId_dev_unstablefld); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ssimfilt.TableId.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ssimfilt::value_SetStrptr(ssimfilt::TableId& parent, algo::strptr rhs, ssimfilt_TableIdEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- ssimfilt.TableId.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = i32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- ssimfilt.TableId..ReadStrptrMaybe
+// Read fields of ssimfilt::TableId from an ascii string.
+// The format of the string is the format of the ssimfilt::TableId's only field
+bool ssimfilt::TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- ssimfilt.TableId..Print
+// print string representation of ROW to string STR
+// cfmt:ssimfilt.TableId.String  printfmt:Raw
+void ssimfilt::TableId_Print(ssimfilt::TableId& row, algo::cstring& str) {
+    ssimfilt::value_Print(row, str);
 }
 
 // --- ssimfilt...SizeCheck

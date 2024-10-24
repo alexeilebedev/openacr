@@ -3,30 +3,34 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Running tests](#running-tests)
-* [Managing executable path](#managing-executable-path)
-* [Keeping target executables up to date](#keeping-target-executables-up-to-date)
-* [Capturing test output](#capturing-test-output)
-* [Checking untracked files](#checking-untracked-files)
-* [Continue testing after failure](#continue-testing-after-failure)
-* [Run tests under memory checker](#run-tests-under-memory-checker)
-* [Run tests under profiler](#run-tests-under-profiler)
-* [Measuring test coverage](#measuring-test-coverage)
-* [Finding artifacts from last run](#finding-artifacts-from-last-run)
-* [Printing testcase](#printing-testcase)
-* [Editing testcase](#editing-testcase)
-* [Inserting testcases](#inserting-testcases)
-* [Normalizing testcases](#normalizing-testcases)
-* [Debugging testcases](#debugging-testcases)
-* [Examples](#examples)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Running tests](#running-tests)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Managing executable path](#managing-executable-path)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Keeping target executables up to date](#keeping-target-executables-up-to-date)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Capturing test output](#capturing-test-output)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Checking untracked files](#checking-untracked-files)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Continue testing after failure](#continue-testing-after-failure)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Run tests under memory checker](#run-tests-under-memory-checker)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Run tests under profiler](#run-tests-under-profiler)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Measuring test coverage](#measuring-test-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Finding artifacts from last run](#finding-artifacts-from-last-run)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Printing testcase](#printing-testcase)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Editing testcase](#editing-testcase)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inserting testcases](#inserting-testcases)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Normalizing testcases](#normalizing-testcases)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Debugging testcases](#debugging-testcases)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_comp - Internals](/txt/exe/atf_comp/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_comp: Algo Test Framework - Component test execution
 Usage: atf_comp [[-comptest:]<regx>] [options]
@@ -65,8 +69,11 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Unlike unit test, which deals with source code testing,
 component test deals with black-box testing of ready-made
@@ -87,86 +94,7 @@ running tests in companion with other tools (NOT YET ALL IMPLEMENTED):
 - coverage measurement;
 - automatic fuzzing.
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -comptest -- Select comptest (SQL regex)
-<a href="#-comptest"></a>
-
-#### -mdbg -- (action) Run component test under debugger
-<a href="#-mdbg"></a>
-
-#### -run -- (action) Run selected component tests
-<a href="#-run"></a>
-
-#### -capture -- (action) Re-capture test results
-<a href="#-capture"></a>
-
-#### -print -- (action) Print testcase
-<a href="#-print"></a>
-
-#### -printinput -- (action) Print input of test case
-<a href="#-printinput"></a>
-
-#### -e -- (action) Open selected testcases in an editor
-<a href="#-e"></a>
-
-#### -normalize -- (action) Renumber and normalize tmsgs
-<a href="#-normalize"></a>
-
-#### -covcapture -- (action) Capture new coverage percentages and save back
-<a href="#-covcapture"></a>
-
-#### -covcheck -- (action) Check coverage percentages against tgtcov table
-<a href="#-covcheck"></a>
-
-#### -compdir -- Component image directory (exe)
-<a href="#-compdir"></a>
-
-#### -cfg -- Set config
-<a href="#-cfg"></a>
-
-#### -check_untracked -- Check for untracked file before allowing test to run
-<a href="#-check_untracked"></a>
-
-#### -maxerr -- Exit after this many errors
-<a href="#-maxerr"></a>
-
-#### -build -- Build given cfg before test
-<a href="#-build"></a>
-
-#### -ood -- Check given cfg for ood before test
-<a href="#-ood"></a>
-
-#### -memcheck -- Run under memory checker (valgrind)
-<a href="#-memcheck"></a>
-
-#### -force -- (With -memcheck) run suppressed memcheck
-<a href="#-force"></a>
-
-#### -callgrind -- Run under callgrind profiler (valgrind)
-<a href="#-callgrind"></a>
-
-#### -maxjobs -- Maximum number of tests run in parallel
-<a href="#-maxjobs"></a>
-
-#### -stream -- prints component's output
-<a href="#-stream"></a>
-
-#### -i -- Read and execute testcase from stdin
-<a href="#-i"></a>
-
-#### -write -- (implied with -e) Write any changes back to ssim tables
-<a href="#-write"></a>
-
-#### -report -- Print final report
-<a href="#-report"></a>
-
-#### -b -- Breakpoint passed to mdbg as-is
-<a href="#-b"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Running tests
 <a href="#running-tests"></a>
@@ -383,41 +311,113 @@ which accepts unfilterred data on stdin, and puts filtered data on stdout.
 Unix commands like sed, awk, grep and cat fit.
 For complex filter, dedicated executable is possible.
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/atf/comp/edit.cpp](/cpp/atf/comp/edit.cpp)|Edit comptest|
-|[cpp/atf/comp/main.cpp](/cpp/atf/comp/main.cpp)||
-|[cpp/atf/comp/read.cpp](/cpp/atf/comp/read.cpp)|Read comptest from input|
-|[cpp/gen/atf_comp_gen.cpp](/cpp/gen/atf_comp_gen.cpp)||
-|[include/atf_comp.h](/include/atf_comp.h)||
-|[include/gen/atf_comp_gen.h](/include/gen/atf_comp_gen.h)||
-|[include/gen/atf_comp_gen.inl.h](/include/gen/atf_comp_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -comptest -- Select comptest (SQL regex)
+<a href="#-comptest"></a>
+
+#### -mdbg -- (action) Run component test under debugger
+<a href="#-mdbg"></a>
+
+#### -run -- (action) Run selected component tests
+<a href="#-run"></a>
+
+#### -capture -- (action) Re-capture test results
+<a href="#-capture"></a>
+
+#### -print -- (action) Print testcase
+<a href="#-print"></a>
+
+#### -printinput -- (action) Print input of test case
+<a href="#-printinput"></a>
+
+#### -e -- (action) Open selected testcases in an editor
+<a href="#-e"></a>
+
+#### -normalize -- (action) Renumber and normalize tmsgs
+<a href="#-normalize"></a>
+
+#### -covcapture -- (action) Capture new coverage percentages and save back
+<a href="#-covcapture"></a>
+
+#### -covcheck -- (action) Check coverage percentages against tgtcov table
+<a href="#-covcheck"></a>
+
+#### -compdir -- Component image directory (exe)
+<a href="#-compdir"></a>
+
+#### -cfg -- Set config
+<a href="#-cfg"></a>
+
+#### -check_untracked -- Check for untracked file before allowing test to run
+<a href="#-check_untracked"></a>
+
+#### -maxerr -- Exit after this many errors
+<a href="#-maxerr"></a>
+
+#### -build -- Build given cfg before test
+<a href="#-build"></a>
+
+#### -ood -- Check given cfg for ood before test
+<a href="#-ood"></a>
+
+#### -memcheck -- Run under memory checker (valgrind)
+<a href="#-memcheck"></a>
+
+#### -force -- (With -memcheck) run suppressed memcheck
+<a href="#-force"></a>
+
+#### -callgrind -- Run under callgrind profiler (valgrind)
+<a href="#-callgrind"></a>
+
+#### -maxjobs -- Maximum number of tests run in parallel
+<a href="#-maxjobs"></a>
+
+#### -stream -- prints component's output
+<a href="#-stream"></a>
+
+#### -i -- Read and execute testcase from stdin
+<a href="#-i"></a>
+
+#### -write -- (implied with -e) Write any changes back to ssim tables
+<a href="#-write"></a>
+
+#### -report -- Print final report
+<a href="#-report"></a>
+
+#### -b -- Breakpoint passed to mdbg as-is
+<a href="#-b"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_comp` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
 |[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
 |[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
 |[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
 |[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
 |[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)||
 |[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
 |[atfdb.targs](/txt/ssimdb/atfdb/targs.md)||
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

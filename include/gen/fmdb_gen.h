@@ -87,7 +87,8 @@ struct Alarm { // fmdb.Alarm
     fm::Summary         summary;           // Alarm summary from inventory
     fm::Description     description;       // Alarm message from object
     fm::Source          source;            // Subsystem where alarm has been detected
-    Alarm();
+    // func:fmdb.Alarm..Ctor
+    inline               Alarm() __attribute__((nothrow));
 };
 
 // func:fmdb.Alarm.code.Get
@@ -139,7 +140,8 @@ struct AlmCode { // fmdb.AlmCode
     fm::Severity   severity;   // Assigned severity
     fm::Source     source;     //
     fm::Summary    summary;    // Alarm summary (slogan)
-    AlmCode();
+    // func:fmdb.AlmCode..Ctor
+    inline               AlmCode() __attribute__((nothrow));
 };
 
 // func:fmdb.AlmCode..ReadFieldMaybe
@@ -157,7 +159,8 @@ void                 AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) __att
 struct AlmObjtype { // fmdb.AlmObjtype: Alarm resource type
     fm::Objtype   alm_objtype;   // Object type
     fm::Summary   summary;       // Object type summary
-    AlmObjtype();
+    // func:fmdb.AlmObjtype..Ctor
+    inline               AlmObjtype() __attribute__((nothrow));
 };
 
 // func:fmdb.AlmObjtype..ReadFieldMaybe
@@ -175,7 +178,8 @@ void                 AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str)
 struct AlmSource { // fmdb.AlmSource: Subsystem where alarm has been detected
     fm::Source      alm_source;   //
     algo::Comment   comment;      //
-    AlmSource();
+    // func:fmdb.AlmSource..Ctor
+    inline               AlmSource() __attribute__((nothrow));
 };
 
 // func:fmdb.AlmSource..ReadFieldMaybe
@@ -193,19 +197,23 @@ void                 AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) _
 #pragma pack(push,1)
 struct FieldId { // fmdb.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator fmdb_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(fmdb_FieldIdEnum arg);
-    FieldId();
+    // func:fmdb.FieldId.value.Cast
+    inline               operator fmdb_FieldIdEnum() const __attribute__((nothrow));
+    // func:fmdb.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:fmdb.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:fmdb.FieldId..EnumCtor
+    inline               FieldId(fmdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:fmdb.FieldId.value.GetEnum
-fmdb_FieldIdEnum     value_GetEnum(const fmdb::FieldId& parent) __attribute__((nothrow));
+inline fmdb_FieldIdEnum value_GetEnum(const fmdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:fmdb.FieldId.value.SetEnum
-void                 value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:fmdb.FieldId.value.ToCstr
@@ -233,7 +241,7 @@ bool                 value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr r
 bool                 FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:fmdb.FieldId..Init
-void                 FieldId_Init(fmdb::FieldId& parent);
+inline void          FieldId_Init(fmdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:fmdb.FieldId.String  printfmt:Raw
 // func:fmdb.FieldId..Print

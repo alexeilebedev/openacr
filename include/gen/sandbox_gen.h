@@ -69,7 +69,8 @@ namespace sandbox { // gen:ns_print_struct
 // --- sandbox.trace
 #pragma pack(push,1)
 struct trace { // sandbox.trace
-    trace();
+    // func:sandbox.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -153,16 +154,16 @@ sandbox::FSandbox*   sandbox_InsertMaybe(const dev::Sandbox &value) __attribute_
 void*                sandbox_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sandbox.FDb.sandbox.EmptyQ
-bool                 sandbox_EmptyQ() __attribute__((nothrow, pure));
+inline bool          sandbox_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:sandbox.FDb.sandbox.Find
-sandbox::FSandbox*   sandbox_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline sandbox::FSandbox* sandbox_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sandbox.FDb.sandbox.Last
-sandbox::FSandbox*   sandbox_Last() __attribute__((nothrow, pure));
+inline sandbox::FSandbox* sandbox_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:sandbox.FDb.sandbox.N
-i32                  sandbox_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           sandbox_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:sandbox.FDb.sandbox.RemoveAll
 void                 sandbox_RemoveAll() __attribute__((nothrow));
@@ -171,7 +172,7 @@ void                 sandbox_RemoveAll() __attribute__((nothrow));
 void                 sandbox_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sandbox.FDb.sandbox.qFind
-sandbox::FSandbox&   sandbox_qFind(u64 t) __attribute__((nothrow, pure));
+inline sandbox::FSandbox& sandbox_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:sandbox.FDb.sandbox.XrefMaybe
@@ -179,7 +180,7 @@ bool                 sandbox_XrefMaybe(sandbox::FSandbox &row);
 
 // Return true if hash is empty
 // func:sandbox.FDb.ind_sandbox.EmptyQ
-bool                 ind_sandbox_EmptyQ() __attribute__((nothrow));
+inline bool          ind_sandbox_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:sandbox.FDb.ind_sandbox.Find
 sandbox::FSandbox*   ind_sandbox_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -191,7 +192,7 @@ sandbox::FSandbox&   ind_sandbox_FindX(const algo::strptr& key);
 sandbox::FSandbox&   ind_sandbox_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:sandbox.FDb.ind_sandbox.N
-i32                  ind_sandbox_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_sandbox_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:sandbox.FDb.ind_sandbox.InsertMaybe
 bool                 ind_sandbox_InsertMaybe(sandbox::FSandbox& row) __attribute__((nothrow));
@@ -218,16 +219,16 @@ sandbox::FSbpath*    sbpath_InsertMaybe(const dev::Sbpath &value) __attribute__(
 void*                sbpath_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sandbox.FDb.sbpath.EmptyQ
-bool                 sbpath_EmptyQ() __attribute__((nothrow, pure));
+inline bool          sbpath_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:sandbox.FDb.sbpath.Find
-sandbox::FSbpath*    sbpath_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline sandbox::FSbpath* sbpath_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:sandbox.FDb.sbpath.Last
-sandbox::FSbpath*    sbpath_Last() __attribute__((nothrow, pure));
+inline sandbox::FSbpath* sbpath_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:sandbox.FDb.sbpath.N
-i32                  sbpath_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           sbpath_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:sandbox.FDb.sbpath.RemoveAll
 void                 sbpath_RemoveAll() __attribute__((nothrow));
@@ -236,7 +237,7 @@ void                 sbpath_RemoveAll() __attribute__((nothrow));
 void                 sbpath_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:sandbox.FDb.sbpath.qFind
-sandbox::FSbpath&    sbpath_qFind(u64 t) __attribute__((nothrow, pure));
+inline sandbox::FSbpath& sbpath_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:sandbox.FDb.sbpath.XrefMaybe
@@ -244,28 +245,28 @@ bool                 sbpath_XrefMaybe(sandbox::FSbpath &row);
 
 // cursor points to valid item
 // func:sandbox.FDb.sandbox_curs.Reset
-void                 _db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
+inline void          _db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sandbox_curs.ValidQ
-bool                 _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) __attribute__((nothrow));
+inline bool          _db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sandbox.FDb.sandbox_curs.Next
-void                 _db_sandbox_curs_Next(_db_sandbox_curs &curs) __attribute__((nothrow));
+inline void          _db_sandbox_curs_Next(_db_sandbox_curs &curs) __attribute__((nothrow));
 // item access
 // func:sandbox.FDb.sandbox_curs.Access
-sandbox::FSandbox&   _db_sandbox_curs_Access(_db_sandbox_curs &curs) __attribute__((nothrow));
+inline sandbox::FSandbox& _db_sandbox_curs_Access(_db_sandbox_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sbpath_curs.Reset
-void                 _db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
+inline void          _db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:sandbox.FDb.sbpath_curs.ValidQ
-bool                 _db_sbpath_curs_ValidQ(_db_sbpath_curs &curs) __attribute__((nothrow));
+inline bool          _db_sbpath_curs_ValidQ(_db_sbpath_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:sandbox.FDb.sbpath_curs.Next
-void                 _db_sbpath_curs_Next(_db_sbpath_curs &curs) __attribute__((nothrow));
+inline void          _db_sbpath_curs_Next(_db_sbpath_curs &curs) __attribute__((nothrow));
 // item access
 // func:sandbox.FDb.sbpath_curs.Access
-sandbox::FSbpath&    _db_sbpath_curs_Access(_db_sbpath_curs &curs) __attribute__((nothrow));
+inline sandbox::FSbpath& _db_sbpath_curs_Access(_db_sbpath_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.FDb..Init
 void                 FDb_Init();
@@ -274,22 +275,27 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- sandbox.FSandbox
 // create: sandbox.FDb.sandbox (Lary)
-// global access: ind_sandbox (Thash)
+// global access: sandbox (Lary, by rowid)
+// global access: ind_sandbox (Thash, hash field sandbox)
 struct FSandbox { // sandbox.FSandbox
     sandbox::FSandbox*   ind_sandbox_next;   // hash next
     algo::Smallstr50     sandbox;            //
     algo::Comment        comment;            //
     algo::cstring        dir;                //
     bool                 select;             //   false
+    // func:sandbox.FSandbox..AssignOp
+    inline sandbox::FSandbox& operator =(const sandbox::FSandbox &rhs) = delete;
+    // func:sandbox.FSandbox..CopyCtor
+    inline               FSandbox(const sandbox::FSandbox &rhs) = delete;
 private:
+    // func:sandbox.FSandbox..Ctor
+    inline               FSandbox() __attribute__((nothrow));
+    // func:sandbox.FSandbox..Dtor
+    inline               ~FSandbox() __attribute__((nothrow));
     friend sandbox::FSandbox&   sandbox_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend sandbox::FSandbox*   sandbox_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 sandbox_RemoveAll() __attribute__((nothrow));
     friend void                 sandbox_RemoveLast() __attribute__((nothrow));
-    FSandbox();
-    ~FSandbox();
-    FSandbox(const FSandbox&){ /*disallow copy constructor */}
-    void operator =(const FSandbox&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -301,21 +307,23 @@ void                 sandbox_CopyIn(sandbox::FSandbox &row, dev::Sandbox &in) __
 
 // Set all fields to initial values.
 // func:sandbox.FSandbox..Init
-void                 FSandbox_Init(sandbox::FSandbox& sandbox);
+inline void          FSandbox_Init(sandbox::FSandbox& sandbox);
 // func:sandbox.FSandbox..Uninit
 void                 FSandbox_Uninit(sandbox::FSandbox& sandbox) __attribute__((nothrow));
 
 // --- sandbox.FSbpath
 // create: sandbox.FDb.sbpath (Lary)
+// global access: sbpath (Lary, by rowid)
 struct FSbpath { // sandbox.FSbpath
     algo::Smallstr50   sbpath;    //
     algo::Comment      comment;   //
 private:
+    // func:sandbox.FSbpath..Ctor
+    inline               FSbpath() __attribute__((nothrow));
     friend sandbox::FSbpath&    sbpath_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend sandbox::FSbpath*    sbpath_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 sbpath_RemoveAll() __attribute__((nothrow));
     friend void                 sbpath_RemoveLast() __attribute__((nothrow));
-    FSbpath();
 };
 
 // Copy fields out of row
@@ -330,19 +338,23 @@ void                 sbpath_CopyIn(sandbox::FSbpath &row, dev::Sbpath &in) __att
 #pragma pack(push,1)
 struct FieldId { // sandbox.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator sandbox_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(sandbox_FieldIdEnum arg);
-    FieldId();
+    // func:sandbox.FieldId.value.Cast
+    inline               operator sandbox_FieldIdEnum() const __attribute__((nothrow));
+    // func:sandbox.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:sandbox.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:sandbox.FieldId..EnumCtor
+    inline               FieldId(sandbox_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:sandbox.FieldId.value.GetEnum
-sandbox_FieldIdEnum  value_GetEnum(const sandbox::FieldId& parent) __attribute__((nothrow));
+inline sandbox_FieldIdEnum value_GetEnum(const sandbox::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:sandbox.FieldId.value.SetEnum
-void                 value_SetEnum(sandbox::FieldId& parent, sandbox_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(sandbox::FieldId& parent, sandbox_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:sandbox.FieldId.value.ToCstr
@@ -370,7 +382,7 @@ bool                 value_ReadStrptrMaybe(sandbox::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.FieldId..Init
-void                 FieldId_Init(sandbox::FieldId& parent);
+inline void          FieldId_Init(sandbox::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:sandbox.FieldId.String  printfmt:Raw
 // func:sandbox.FieldId..Print
@@ -379,18 +391,22 @@ void                 FieldId_Print(sandbox::FieldId& row, algo::cstring& str) __
 // --- sandbox.TableId
 struct TableId { // sandbox.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator sandbox_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(sandbox_TableIdEnum arg);
-    TableId();
+    // func:sandbox.TableId.value.Cast
+    inline               operator sandbox_TableIdEnum() const __attribute__((nothrow));
+    // func:sandbox.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:sandbox.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:sandbox.TableId..EnumCtor
+    inline               TableId(sandbox_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:sandbox.TableId.value.GetEnum
-sandbox_TableIdEnum  value_GetEnum(const sandbox::TableId& parent) __attribute__((nothrow));
+inline sandbox_TableIdEnum value_GetEnum(const sandbox::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:sandbox.TableId.value.SetEnum
-void                 value_SetEnum(sandbox::TableId& parent, sandbox_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(sandbox::TableId& parent, sandbox_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:sandbox.TableId.value.ToCstr
@@ -418,7 +434,7 @@ bool                 value_ReadStrptrMaybe(sandbox::TableId& parent, algo::strpt
 bool                 TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:sandbox.TableId..Init
-void                 TableId_Init(sandbox::TableId& parent);
+inline void          TableId_Init(sandbox::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:sandbox.TableId.String  printfmt:Raw
 // func:sandbox.TableId..Print

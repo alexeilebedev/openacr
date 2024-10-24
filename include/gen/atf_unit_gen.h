@@ -75,33 +75,36 @@ namespace atf_unit { // gen:ns_print_struct
 // --- atf_unit.Cstr
 struct Cstr { // atf_unit.Cstr
     algo::cstring   val;   //
-    inline operator algo::strptr() const;
-    explicit Cstr(const algo::strptr&            in_val);
-    Cstr();
+    // func:atf_unit.Cstr.val.Cast
+    inline               operator algo::strptr() const __attribute__((nothrow));
+    // func:atf_unit.Cstr..Ctor
+    inline               Cstr() __attribute__((nothrow));
+    // func:atf_unit.Cstr..FieldwiseCtor
+    explicit inline               Cstr(const algo::strptr& in_val) __attribute__((nothrow));
 };
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:atf_unit.Cstr.val.Lt
-bool                 val_Lt(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
+inline bool          val_Lt(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:atf_unit.Cstr.val.Cmp
-i32                  val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
+inline i32           val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) __attribute__((nothrow));
 
 // func:atf_unit.Cstr..Hash
-u32                  Cstr_Hash(u32 prev, const atf_unit::Cstr & rhs) __attribute__((nothrow));
+inline u32           Cstr_Hash(u32 prev, const atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Read fields of atf_unit::Cstr from an ascii string.
 // The format of the string is the format of the atf_unit::Cstr's only field
 // func:atf_unit.Cstr..ReadStrptrMaybe
 bool                 Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.Cstr..Lt
-bool                 Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+inline bool          Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // func:atf_unit.Cstr..Cmp
-i32                  Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+inline i32           Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // func:atf_unit.Cstr..Eq
-bool                 Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+inline bool          Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.Cstr..Update
-bool                 Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
+inline bool          Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) __attribute__((nothrow));
 // Create JSON representation of atf_unit::Cstr under PARENT node
 // cfmt:atf_unit.Cstr.Json  printfmt:Auto
 // func:atf_unit.Cstr..FmtJson
@@ -116,35 +119,44 @@ void                 Cstr_Print(atf_unit::Cstr& row, algo::cstring& str) __attri
 // create: atf_unit.FPerfSort.sorted (Tary)
 struct Dbl { // atf_unit.Dbl
     double   val;   //   0.0
-    inline operator double() const;
-    explicit Dbl(double                         in_val);
-    bool operator ==(const atf_unit::Dbl &rhs) const;
-    bool operator !=(const atf_unit::Dbl &rhs) const;
-    bool operator <(const atf_unit::Dbl &rhs) const;
-    bool operator >(const atf_unit::Dbl &rhs) const;
-    bool operator <=(const atf_unit::Dbl &rhs) const;
-    bool operator >=(const atf_unit::Dbl &rhs) const;
-    Dbl();
+    // func:atf_unit.Dbl.val.Cast
+    inline               operator double() const __attribute__((nothrow));
+    // func:atf_unit.Dbl..EqOp
+    inline bool          operator ==(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..NeOp
+    inline bool          operator !=(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..LtOp
+    inline bool          operator <(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..GtOp
+    inline bool          operator >(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..LeOp
+    inline bool          operator <=(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..GeOp
+    inline bool          operator >=(const atf_unit::Dbl &rhs) const __attribute__((nothrow));
+    // func:atf_unit.Dbl..Ctor
+    inline               Dbl() __attribute__((nothrow));
+    // func:atf_unit.Dbl..FieldwiseCtor
+    explicit inline               Dbl(double in_val) __attribute__((nothrow));
 };
 
 // func:atf_unit.Dbl..Hash
-u32                  Dbl_Hash(u32 prev, atf_unit::Dbl rhs) __attribute__((nothrow));
+inline u32           Dbl_Hash(u32 prev, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Read fields of atf_unit::Dbl from an ascii string.
 // The format of the string is the format of the atf_unit::Dbl's only field
 // func:atf_unit.Dbl..ReadStrptrMaybe
 bool                 Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.Dbl..Lt
-bool                 Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+inline bool          Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // func:atf_unit.Dbl..Cmp
-i32                  Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+inline i32           Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.Dbl..Init
-void                 Dbl_Init(atf_unit::Dbl& parent);
+inline void          Dbl_Init(atf_unit::Dbl& parent);
 // func:atf_unit.Dbl..Eq
-bool                 Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+inline bool          Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.Dbl..Update
-bool                 Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
+inline bool          Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) __attribute__((nothrow));
 // Create JSON representation of atf_unit::Dbl under PARENT node
 // cfmt:atf_unit.Dbl.Json  printfmt:Auto
 // func:atf_unit.Dbl..FmtJson
@@ -157,7 +169,8 @@ void                 Dbl_Print(atf_unit::Dbl row, algo::cstring& str) __attribut
 // --- atf_unit.trace
 #pragma pack(push,1)
 struct trace { // atf_unit.trace
-    trace();
+    // func:atf_unit.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -259,7 +272,7 @@ bool                 number_XrefMaybe(atf_unit::FNumber &row);
 
 // Return true if index is empty
 // func:atf_unit.FDb.tr_number.EmptyQ
-bool                 tr_number_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
+inline bool          tr_number_EmptyQ() __attribute__((__warn_unused_result__, nothrow));
 // func:atf_unit.FDb.tr_number.FirstImpl
 atf_unit::FNumber*   tr_number_FirstImpl(atf_unit::FNumber* root) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to the first(smallest) element in the tree
@@ -267,7 +280,7 @@ atf_unit::FNumber*   tr_number_FirstImpl(atf_unit::FNumber* root) __attribute__(
 atf_unit::FNumber*   tr_number_First() __attribute__((__warn_unused_result__, nothrow));
 // Return true if row is in the tree, false otherwise
 // func:atf_unit.FDb.tr_number.InTreeQ
-bool                 tr_number_InTreeQ(atf_unit::FNumber& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          tr_number_InTreeQ(atf_unit::FNumber& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into the tree. If row is already in the tree, do nothing.
 // func:atf_unit.FDb.tr_number.InsertImpl
 void                 tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) __attribute__((nothrow));
@@ -279,7 +292,7 @@ void                 tr_number_Insert(atf_unit::FNumber& row) __attribute__((not
 void                 tr_number_Remove(atf_unit::FNumber& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_unit.FDb.tr_number.RemoveAll
-void                 tr_number_RemoveAll() __attribute__((nothrow));
+inline void          tr_number_RemoveAll() __attribute__((nothrow));
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
 // func:atf_unit.FDb.tr_number.RemoveFirst
 void                 tr_number_RemoveFirst() __attribute__((nothrow));
@@ -329,16 +342,16 @@ atf_unit::FUnittest* unittest_InsertMaybe(const atfdb::Unittest &value) __attrib
 void*                unittest_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FDb.unittest.EmptyQ
-bool                 unittest_EmptyQ() __attribute__((nothrow, pure));
+inline bool          unittest_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_unit.FDb.unittest.Find
-atf_unit::FUnittest* unittest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_unit::FUnittest* unittest_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FDb.unittest.Last
-atf_unit::FUnittest* unittest_Last() __attribute__((nothrow, pure));
+inline atf_unit::FUnittest* unittest_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_unit.FDb.unittest.N
-i32                  unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_unit.FDb.unittest.RemoveAll
 void                 unittest_RemoveAll() __attribute__((nothrow));
@@ -347,7 +360,7 @@ void                 unittest_RemoveAll() __attribute__((nothrow));
 void                 unittest_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FDb.unittest.qFind
-atf_unit::FUnittest& unittest_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_unit::FUnittest& unittest_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_unit.FDb.unittest.XrefMaybe
@@ -400,7 +413,7 @@ bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
 // func:atf_unit.FDb.ind_unittest.EmptyQ
-bool                 ind_unittest_EmptyQ() __attribute__((nothrow));
+inline bool          ind_unittest_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_unit.FDb.ind_unittest.Find
 atf_unit::FUnittest* ind_unittest_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -412,7 +425,7 @@ atf_unit::FUnittest& ind_unittest_FindX(const algo::strptr& key);
 atf_unit::FUnittest& ind_unittest_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_unit.FDb.ind_unittest.N
-i32                  ind_unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_unittest_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_unit.FDb.ind_unittest.InsertMaybe
 bool                 ind_unittest_InsertMaybe(atf_unit::FUnittest& row) __attribute__((nothrow));
@@ -425,28 +438,28 @@ void                 ind_unittest_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.Reset
-void                 _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) __attribute__((nothrow));
+inline void          _db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.ValidQ
-bool                 _db_tr_number_curs_ValidQ(_db_tr_number_curs &curs) __attribute__((nothrow));
+inline bool          _db_tr_number_curs_ValidQ(_db_tr_number_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FDb.tr_number_curs.Next
-void                 _db_tr_number_curs_Next(_db_tr_number_curs &curs) __attribute__((nothrow));
+inline void          _db_tr_number_curs_Next(_db_tr_number_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FDb.tr_number_curs.Access
-atf_unit::FNumber&   _db_tr_number_curs_Access(_db_tr_number_curs &curs) __attribute__((nothrow));
+inline atf_unit::FNumber& _db_tr_number_curs_Access(_db_tr_number_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.unittest_curs.Reset
-void                 _db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent) __attribute__((nothrow));
+inline void          _db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FDb.unittest_curs.ValidQ
-bool                 _db_unittest_curs_ValidQ(_db_unittest_curs &curs) __attribute__((nothrow));
+inline bool          _db_unittest_curs_ValidQ(_db_unittest_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FDb.unittest_curs.Next
-void                 _db_unittest_curs_Next(_db_unittest_curs &curs) __attribute__((nothrow));
+inline void          _db_unittest_curs_Next(_db_unittest_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FDb.unittest_curs.Access
-atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs) __attribute__((nothrow));
+inline atf_unit::FUnittest& _db_unittest_curs_Access(_db_unittest_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FDb..Init
 void                 FDb_Init();
@@ -455,7 +468,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_unit.FNumber
 // create: atf_unit.FDb.number (Tpool)
-// global access: tr_number (Atree)
+// global access: tr_number (Atree, sort field num)
 struct FNumber { // atf_unit.FNumber
     atf_unit::FNumber*   number_next;       // Pointer to next free element int tpool
     atf_unit::FNumber*   tr_number_up;      // pointer to parent
@@ -463,19 +476,23 @@ struct FNumber { // atf_unit.FNumber
     atf_unit::FNumber*   tr_number_right;   // Right child
     i32                  tr_number_depth;   // Depth
     i32                  num;               //   0
+    // func:atf_unit.FNumber..AssignOp
+    inline atf_unit::FNumber& operator =(const atf_unit::FNumber &rhs) = delete;
+    // func:atf_unit.FNumber..CopyCtor
+    inline               FNumber(const atf_unit::FNumber &rhs) = delete;
 private:
+    // func:atf_unit.FNumber..Ctor
+    inline               FNumber() __attribute__((nothrow));
+    // func:atf_unit.FNumber..Dtor
+    inline               ~FNumber() __attribute__((nothrow));
     friend atf_unit::FNumber&   number_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_unit::FNumber*   number_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 number_Delete(atf_unit::FNumber &row) __attribute__((nothrow));
-    FNumber();
-    ~FNumber();
-    FNumber(const FNumber&){ /*disallow copy constructor */}
-    void operator =(const FNumber&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:atf_unit.FNumber..Init
-void                 FNumber_Init(atf_unit::FNumber& number);
+inline void          FNumber_Init(atf_unit::FNumber& number);
 // func:atf_unit.FNumber..Uninit
 void                 FNumber_Uninit(atf_unit::FNumber& number) __attribute__((nothrow));
 
@@ -490,15 +507,14 @@ struct FPerfSort { // atf_unit.FPerfSort: Function to test double sorting
     i32*             index_elems;    // pointer to elements
     u32              index_n;        // number of elements in array
     u32              index_max;      // max. capacity of array before realloc
-    FPerfSort();
-    ~FPerfSort();
-private:
-    // reftype Tary of atf_unit.FPerfSort.orig prohibits copy
-    // reftype Tary of atf_unit.FPerfSort.sorted prohibits copy
-    // reftype Tary of atf_unit.FPerfSort.index prohibits copy
-    // ... and several other reasons
-    FPerfSort(const FPerfSort&){ /*disallow copy constructor */}
-    void operator =(const FPerfSort&){ /*disallow direct assignment */}
+    // func:atf_unit.FPerfSort..AssignOp
+    atf_unit::FPerfSort& operator =(const atf_unit::FPerfSort &rhs) __attribute__((nothrow));
+    // func:atf_unit.FPerfSort..Ctor
+    inline               FPerfSort() __attribute__((nothrow));
+    // func:atf_unit.FPerfSort..Dtor
+    inline               ~FPerfSort() __attribute__((nothrow));
+    // func:atf_unit.FPerfSort..CopyCtor
+    FPerfSort(const atf_unit::FPerfSort &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -519,33 +535,33 @@ atf_unit::Dbl&       orig_AllocAt(atf_unit::FPerfSort& parent, int at) __attribu
 algo::aryptr<atf_unit::Dbl> orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.orig.EmptyQ
-bool                 orig_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline bool          orig_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_unit.FPerfSort.orig.Find
-atf_unit::Dbl*       orig_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_unit::Dbl* orig_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.orig.Getary
-algo::aryptr<atf_unit::Dbl> orig_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline algo::aryptr<atf_unit::Dbl> orig_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.orig.Last
-atf_unit::Dbl*       orig_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
+inline atf_unit::Dbl* orig_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_unit.FPerfSort.orig.Max
-i32                  orig_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline i32           orig_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_unit.FPerfSort.orig.N
-i32                  orig_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           orig_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_unit.FPerfSort.orig.Remove
 void                 orig_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.orig.RemoveAll
-void                 orig_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline void          orig_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_unit.FPerfSort.orig.RemoveLast
 void                 orig_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.orig.Reserve
-void                 orig_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
+inline void          orig_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.orig.AbsReserve
 void                 orig_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
@@ -558,13 +574,13 @@ void                 orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSor
 void                 orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FPerfSort.orig.qFind
-atf_unit::Dbl&       orig_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
+inline atf_unit::Dbl& orig_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:atf_unit.FPerfSort.orig.qLast
-atf_unit::Dbl&       orig_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline atf_unit::Dbl& orig_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:atf_unit.FPerfSort.orig.rowid_Get
-u64                  orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
+inline u64           orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.orig.AllocNVal
 algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
@@ -592,33 +608,33 @@ atf_unit::Dbl&       sorted_AllocAt(atf_unit::FPerfSort& parent, int at) __attri
 algo::aryptr<atf_unit::Dbl> sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.sorted.EmptyQ
-bool                 sorted_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline bool          sorted_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_unit.FPerfSort.sorted.Find
-atf_unit::Dbl*       sorted_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_unit::Dbl* sorted_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.sorted.Getary
-algo::aryptr<atf_unit::Dbl> sorted_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline algo::aryptr<atf_unit::Dbl> sorted_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.sorted.Last
-atf_unit::Dbl*       sorted_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
+inline atf_unit::Dbl* sorted_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_unit.FPerfSort.sorted.Max
-i32                  sorted_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline i32           sorted_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_unit.FPerfSort.sorted.N
-i32                  sorted_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           sorted_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_unit.FPerfSort.sorted.Remove
 void                 sorted_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.sorted.RemoveAll
-void                 sorted_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline void          sorted_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_unit.FPerfSort.sorted.RemoveLast
 void                 sorted_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.sorted.Reserve
-void                 sorted_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
+inline void          sorted_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.sorted.AbsReserve
 void                 sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
@@ -631,13 +647,13 @@ void                 sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfS
 void                 sorted_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FPerfSort.sorted.qFind
-atf_unit::Dbl&       sorted_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
+inline atf_unit::Dbl& sorted_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:atf_unit.FPerfSort.sorted.qLast
-atf_unit::Dbl&       sorted_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline atf_unit::Dbl& sorted_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:atf_unit.FPerfSort.sorted.rowid_Get
-u64                  sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
+inline u64           sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.sorted.AllocNVal
 algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) __attribute__((nothrow));
@@ -677,33 +693,33 @@ i32&                 index_AllocAt(atf_unit::FPerfSort& parent, int at) __attrib
 algo::aryptr<i32>    index_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.index.EmptyQ
-bool                 index_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline bool          index_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_unit.FPerfSort.index.Find
-i32*                 index_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline i32*          index_Find(atf_unit::FPerfSort& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:atf_unit.FPerfSort.index.Getary
-algo::aryptr<i32>    index_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline algo::aryptr<i32> index_Getary(const atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_unit.FPerfSort.index.Last
-i32*                 index_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
+inline i32*          index_Last(atf_unit::FPerfSort& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:atf_unit.FPerfSort.index.Max
-i32                  index_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline i32           index_Max(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:atf_unit.FPerfSort.index.N
-i32                  index_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           index_N(const atf_unit::FPerfSort& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:atf_unit.FPerfSort.index.Remove
 void                 index_Remove(atf_unit::FPerfSort& parent, u32 i) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.index.RemoveAll
-void                 index_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline void          index_RemoveAll(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:atf_unit.FPerfSort.index.RemoveLast
 void                 index_RemoveLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.index.Reserve
-void                 index_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
+inline void          index_Reserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:atf_unit.FPerfSort.index.AbsReserve
 void                 index_AbsReserve(atf_unit::FPerfSort& parent, int n) __attribute__((nothrow));
@@ -716,13 +732,13 @@ void                 index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSo
 void                 index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_unit.FPerfSort.index.qFind
-i32&                 index_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
+inline i32&          index_qFind(atf_unit::FPerfSort& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:atf_unit.FPerfSort.index.qLast
-i32&                 index_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
+inline i32&          index_qLast(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:atf_unit.FPerfSort.index.rowid_Get
-u64                  index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __attribute__((nothrow));
+inline u64           index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.index.AllocNVal
 algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) __attribute__((nothrow));
@@ -734,46 +750,47 @@ bool                 index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::st
 
 // proceed to next item
 // func:atf_unit.FPerfSort.orig_curs.Next
-void                 FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs) __attribute__((nothrow));
+inline void          FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.orig_curs.Reset
-void                 FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
+inline void          FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.orig_curs.ValidQ
-bool                 FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs) __attribute__((nothrow));
+inline bool          FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.orig_curs.Access
-atf_unit::Dbl&       FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs) __attribute__((nothrow));
+inline atf_unit::Dbl& FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FPerfSort.sorted_curs.Next
-void                 FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
+inline void          FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.sorted_curs.Reset
-void                 FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
+inline void          FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.sorted_curs.ValidQ
-bool                 FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
+inline bool          FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.sorted_curs.Access
-atf_unit::Dbl&       FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
+inline atf_unit::Dbl& FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_unit.FPerfSort.index_curs.Next
-void                 FPerfSort_index_curs_Next(FPerfSort_index_curs &curs) __attribute__((nothrow));
+inline void          FPerfSort_index_curs_Next(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // func:atf_unit.FPerfSort.index_curs.Reset
-void                 FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
+inline void          FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_unit.FPerfSort.index_curs.ValidQ
-bool                 FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs) __attribute__((nothrow));
+inline bool          FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_unit.FPerfSort.index_curs.Access
-i32&                 FPerfSort_index_curs_Access(FPerfSort_index_curs &curs) __attribute__((nothrow));
+inline i32&          FPerfSort_index_curs_Access(FPerfSort_index_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FPerfSort..Init
-void                 FPerfSort_Init(atf_unit::FPerfSort& parent);
+inline void          FPerfSort_Init(atf_unit::FPerfSort& parent);
 // func:atf_unit.FPerfSort..Uninit
 void                 FPerfSort_Uninit(atf_unit::FPerfSort& parent) __attribute__((nothrow));
 
 // --- atf_unit.FUnittest
 // create: atf_unit.FDb.unittest (Lary)
-// global access: ind_unittest (Thash)
+// global access: unittest (Lary, by rowid)
+// global access: ind_unittest (Thash, hash field unittest)
 // global access: c_curtest (Ptr)
 struct FUnittest { // atf_unit.FUnittest: Test function
     atf_unit::FUnittest*           ind_unittest_next;   // hash next
@@ -784,15 +801,21 @@ struct FUnittest { // atf_unit.FUnittest: Test function
     bool                           success;             //   false
     algo::cstring                  error;               //
     lib_exec::FSyscmd*             c_syscmd;            // optional pointer
+    // reftype Hook of atf_unit.FUnittest.step prohibits copy
+    // func:atf_unit.FUnittest..AssignOp
+    atf_unit::FUnittest& operator =(const atf_unit::FUnittest &rhs) = delete;
+    // reftype Hook of atf_unit.FUnittest.step prohibits copy
+    // func:atf_unit.FUnittest..CopyCtor
+    FUnittest(const atf_unit::FUnittest &rhs) = delete;
 private:
+    // func:atf_unit.FUnittest..Ctor
+    inline               FUnittest() __attribute__((nothrow));
+    // func:atf_unit.FUnittest..Dtor
+    inline               ~FUnittest() __attribute__((nothrow));
     friend atf_unit::FUnittest& unittest_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_unit::FUnittest* unittest_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 unittest_RemoveAll() __attribute__((nothrow));
     friend void                 unittest_RemoveLast() __attribute__((nothrow));
-    FUnittest();
-    ~FUnittest();
-    FUnittest(const FUnittest&){ /*disallow copy constructor */}
-    void operator =(const FUnittest&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -810,11 +833,11 @@ algo::Smallstr50     testname_Get(atf_unit::FUnittest& unittest) __attribute__((
 
 // Invoke function by pointer
 // func:atf_unit.FUnittest.step.Call
-void                 step_Call(atf_unit::FUnittest& unittest) __attribute__((nothrow));
+inline void          step_Call(atf_unit::FUnittest& unittest) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_unit.FUnittest..Init
-void                 FUnittest_Init(atf_unit::FUnittest& unittest);
+inline void          FUnittest_Init(atf_unit::FUnittest& unittest);
 // func:atf_unit.FUnittest..Uninit
 void                 FUnittest_Uninit(atf_unit::FUnittest& unittest) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -826,19 +849,23 @@ void                 FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& st
 #pragma pack(push,1)
 struct FieldId { // atf_unit.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_unit_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_unit_FieldIdEnum arg);
-    FieldId();
+    // func:atf_unit.FieldId.value.Cast
+    inline               operator atf_unit_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf_unit.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf_unit.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf_unit.FieldId..EnumCtor
+    inline               FieldId(atf_unit_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf_unit.FieldId.value.GetEnum
-atf_unit_FieldIdEnum value_GetEnum(const atf_unit::FieldId& parent) __attribute__((nothrow));
+inline atf_unit_FieldIdEnum value_GetEnum(const atf_unit::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_unit.FieldId.value.SetEnum
-void                 value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_unit.FieldId.value.ToCstr
@@ -866,7 +893,7 @@ bool                 value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.FieldId..Init
-void                 FieldId_Init(atf_unit::FieldId& parent);
+inline void          FieldId_Init(atf_unit::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_unit.FieldId.String  printfmt:Raw
 // func:atf_unit.FieldId..Print
@@ -875,33 +902,40 @@ void                 FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) _
 // --- atf_unit.TypeA
 struct TypeA { // atf_unit.TypeA
     i32   typea;   //   0
-    bool operator ==(const atf_unit::TypeA &rhs) const;
-    bool operator !=(const atf_unit::TypeA &rhs) const;
-    bool operator <(const atf_unit::TypeA &rhs) const;
-    bool operator >(const atf_unit::TypeA &rhs) const;
-    bool operator <=(const atf_unit::TypeA &rhs) const;
-    bool operator >=(const atf_unit::TypeA &rhs) const;
-    TypeA();
+    // func:atf_unit.TypeA..EqOp
+    inline bool          operator ==(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..NeOp
+    inline bool          operator !=(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..LtOp
+    inline bool          operator <(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..GtOp
+    inline bool          operator >(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..LeOp
+    inline bool          operator <=(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..GeOp
+    inline bool          operator >=(const atf_unit::TypeA &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeA..Ctor
+    inline               TypeA() __attribute__((nothrow));
 };
 
 // func:atf_unit.TypeA..Hash
-u32                  TypeA_Hash(u32 prev, const atf_unit::TypeA & rhs) __attribute__((nothrow));
+inline u32           TypeA_Hash(u32 prev, const atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Read fields of atf_unit::TypeA from an ascii string.
 // The format of the string is the format of the atf_unit::TypeA's only field
 // func:atf_unit.TypeA..ReadStrptrMaybe
 bool                 TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.TypeA..Lt
-bool                 TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // func:atf_unit.TypeA..Cmp
-i32                  TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+inline i32           TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.TypeA..Init
-void                 TypeA_Init(atf_unit::TypeA& parent);
+inline void          TypeA_Init(atf_unit::TypeA& parent);
 // func:atf_unit.TypeA..Eq
-bool                 TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.TypeA..Update
-bool                 TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
+inline bool          TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TypeA under PARENT node
 // cfmt:atf_unit.TypeA.Json  printfmt:Auto
 // func:atf_unit.TypeA..FmtJson
@@ -915,17 +949,24 @@ void                 TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) __att
 struct TypeB { // atf_unit.TypeB
     i32   typea;   //   0
     i32   j;       //   0
-    bool operator ==(const atf_unit::TypeB &rhs) const;
-    bool operator !=(const atf_unit::TypeB &rhs) const;
-    bool operator <(const atf_unit::TypeB &rhs) const;
-    bool operator >(const atf_unit::TypeB &rhs) const;
-    bool operator <=(const atf_unit::TypeB &rhs) const;
-    bool operator >=(const atf_unit::TypeB &rhs) const;
-    TypeB();
+    // func:atf_unit.TypeB..EqOp
+    inline bool          operator ==(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..NeOp
+    inline bool          operator !=(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..LtOp
+    inline bool          operator <(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..GtOp
+    inline bool          operator >(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..LeOp
+    inline bool          operator <=(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..GeOp
+    inline bool          operator >=(const atf_unit::TypeB &rhs) const __attribute__((nothrow));
+    // func:atf_unit.TypeB..Ctor
+    inline               TypeB() __attribute__((nothrow));
 };
 
 // func:atf_unit.TypeB..Hash
-u32                  TypeB_Hash(u32 prev, const atf_unit::TypeB & rhs) __attribute__((nothrow));
+inline u32           TypeB_Hash(u32 prev, const atf_unit::TypeB& rhs) __attribute__((nothrow));
 // func:atf_unit.TypeB..ReadFieldMaybe
 bool                 TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf_unit::TypeB from an ascii string.
@@ -933,17 +974,17 @@ bool                 TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr 
 // func:atf_unit.TypeB..ReadStrptrMaybe
 bool                 TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_unit.TypeB..Lt
-bool                 TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // func:atf_unit.TypeB..Cmp
-i32                  TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+inline i32           TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_unit.TypeB..Init
-void                 TypeB_Init(atf_unit::TypeB& parent);
+inline void          TypeB_Init(atf_unit::TypeB& parent);
 // func:atf_unit.TypeB..Eq
-bool                 TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_unit.TypeB..Update
-bool                 TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
+inline bool          TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) __attribute__((nothrow));
 // Create JSON representation of atf_unit::TypeB under PARENT node
 // cfmt:atf_unit.TypeB.Json  printfmt:Auto
 // func:atf_unit.TypeB..FmtJson
@@ -973,7 +1014,8 @@ struct TestJson { // atf_unit.TestJson
     atf_unit::Cstr    fld_atfcstr;    // wrapped cstring
     atf_unit::Dbl     fld_atfdbl;     // wrapped double
     atf_unit::TypeB   fld_atftypeb;   // wrapped complex type
-    TestJson();
+    // func:atf_unit.TestJson..Ctor
+    inline               TestJson() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
@@ -1511,6 +1553,10 @@ void                 unittest_algo_lib_Tuple1();
 // func:atf_unit...unittest_algo_lib_Tuple2
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Tuple2();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Txttbl
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Txttbl();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_U128PrintHex
 // this function is 'extrn' and implemented by user

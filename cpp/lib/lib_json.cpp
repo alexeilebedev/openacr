@@ -687,23 +687,27 @@ lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) {
     return (!node || node->type != lib_json_FNode_type_array) ? NULL : node;
 }
 
-// Get node value as u32, EXCEPTION on any error
+// Get node value as u32
+// If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
 //
 // PARENT    node to start from
 // PATH      dot-separated list of field keys
-u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path) {
+u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0)) {
     lib_json::FNode* node = lib_json::node_Find(parent,path);
-    vrfy(node,"u32_Get: path is not found");
-    u32 ret=0;
+    u32 ret=dflt;
     if (node) {
         switch (node->type) {
-        case lib_json_FNode_type_true  :   ret = 1;                             break;
-        case lib_json_FNode_type_false :   ret = 0;                             break;
-        case lib_json_FNode_type_number:
-            vrfy(u32_ReadStrptrMaybe(ret,node->value), algo_lib::_db.errtext);
+        case lib_json_FNode_type_true:
+            ret = 1;
             break;
-        default:                           vrfy(0,"u32_Get: non-numeric node"); break;
+        case lib_json_FNode_type_false:
+            ret = 0;
+            break;
+        case lib_json_FNode_type_number:
+            u32_ReadStrptrMaybe(ret,node->value);
+            break;
+        default: break;
         }
     }
     return ret;

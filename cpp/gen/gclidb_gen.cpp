@@ -203,7 +203,7 @@ const char *gclidb_Label_label_wontfix   = "wontfix";
 
 namespace gclidb { // gen:ns_print_proto
     // func:gclidb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- gclidb.FieldId.value.ToCstr

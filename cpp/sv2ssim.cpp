@@ -207,6 +207,7 @@ void sv2ssim::OutputSchema() {
         outfld.field = dmmeta::Field_Concat_ctype_name(ctype.ctype,field.name);
         outfld.reftype="Val";
         outfld.arg=bestmatch ? bestmatch->ctype : dmmeta::CtypePkey("algo.cstring");
+        outfld.comment.value = field.name;
         prlog(outfld);
     }ind_end;
 }

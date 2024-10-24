@@ -3,22 +3,31 @@
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Finput
 
 * file:[data/dmmeta/finput.ssim](/data/dmmeta/finput.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *ns* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||Target field to read|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|Pkey||<br>.LL of field|
-|extrn|bool|Val||Call user-provided function|
-|update|bool|Val|
-|strict|bool|Val|true|Exist process if record contains error|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Target field to read|
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.LL of field*|
+|extrn|bool|[Val](/txt/exe/amc/reftypes.md#val)||Call user-provided function|
+|update|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|strict|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Exist process if record contains error|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [acr_in](/txt/exe/acr_in/README.md) as acr_in.FFinput
-* [amc](/txt/exe/amc/README.md) as amc.FFinput
-* [amc_vis](/txt/exe/amc_vis/README.md) as amc_vis.FFinput
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FFinput](/txt/exe/acr_in/internals.md#acr_in-ffinput)
+* [amc](/txt/exe/amc/internals.md) as [amc.FFinput](/txt/exe/amc/internals.md#amc-ffinput)
+* [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FFinput](/txt/exe/amc_vis/internals.md#amc_vis-ffinput)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

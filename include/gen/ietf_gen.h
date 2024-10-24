@@ -53,19 +53,23 @@ namespace ietf { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // ietf.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator ietf_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(ietf_FieldIdEnum arg);
-    FieldId();
+    // func:ietf.FieldId.value.Cast
+    inline               operator ietf_FieldIdEnum() const __attribute__((nothrow));
+    // func:ietf.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:ietf.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:ietf.FieldId..EnumCtor
+    inline               FieldId(ietf_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:ietf.FieldId.value.GetEnum
-ietf_FieldIdEnum     value_GetEnum(const ietf::FieldId& parent) __attribute__((nothrow));
+inline ietf_FieldIdEnum value_GetEnum(const ietf::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:ietf.FieldId.value.SetEnum
-void                 value_SetEnum(ietf::FieldId& parent, ietf_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(ietf::FieldId& parent, ietf_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:ietf.FieldId.value.ToCstr
@@ -93,7 +97,7 @@ bool                 value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr r
 bool                 FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ietf.FieldId..Init
-void                 FieldId_Init(ietf::FieldId& parent);
+inline void          FieldId_Init(ietf::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ietf.FieldId.String  printfmt:Raw
 // func:ietf.FieldId..Print
@@ -103,35 +107,43 @@ void                 FieldId_Print(ietf::FieldId& row, algo::cstring& str) __att
 #pragma pack(push,1)
 struct Ipv4 { // ietf.Ipv4
     u32   ipv4;   //   0  IP address. First octet in bits 24..32
-    explicit Ipv4(u32                            in_ipv4);
-    bool operator ==(const ietf::Ipv4 &rhs) const;
-    bool operator !=(const ietf::Ipv4 &rhs) const;
-    bool operator <(const ietf::Ipv4 &rhs) const;
-    bool operator >(const ietf::Ipv4 &rhs) const;
-    bool operator <=(const ietf::Ipv4 &rhs) const;
-    bool operator >=(const ietf::Ipv4 &rhs) const;
-    Ipv4();
+    // func:ietf.Ipv4..EqOp
+    inline bool          operator ==(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..NeOp
+    inline bool          operator !=(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..LtOp
+    inline bool          operator <(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..GtOp
+    inline bool          operator >(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..LeOp
+    inline bool          operator <=(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..GeOp
+    inline bool          operator >=(const ietf::Ipv4 &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4..Ctor
+    inline               Ipv4() __attribute__((nothrow));
+    // func:ietf.Ipv4..FieldwiseCtor
+    explicit inline               Ipv4(u32 in_ipv4) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // func:ietf.Ipv4..Hash
-u32                  Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) __attribute__((nothrow));
+inline u32           Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4 from an ascii string.
 // func:ietf.Ipv4..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
 bool                 Ipv4_ReadStrptrMaybe(ietf::Ipv4 &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipv4..Lt
-bool                 Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
+inline bool          Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // func:ietf.Ipv4..Cmp
-i32                  Ipv4_Cmp(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
+inline i32           Ipv4_Cmp(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ietf.Ipv4..Init
-void                 Ipv4_Init(ietf::Ipv4& parent);
+inline void          Ipv4_Init(ietf::Ipv4& parent);
 // func:ietf.Ipv4..Eq
-bool                 Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
+inline bool          Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:ietf.Ipv4..Update
-bool                 Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
+inline bool          Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:ietf.Ipv4.String  printfmt:Extern
 // func:ietf.Ipv4..Print
@@ -143,36 +155,43 @@ void                 Ipv4_Print(ietf::Ipv4 row, algo::cstring& str) __attribute_
 struct Ipport { // ietf.Ipport: IP+Port: host format
     ietf::Ipv4   ip;     //
     u16          port;   //   0
-    explicit Ipport(ietf::Ipv4                     in_ip
-        ,u16                            in_port);
-    bool operator ==(const ietf::Ipport &rhs) const;
-    bool operator !=(const ietf::Ipport &rhs) const;
-    bool operator <(const ietf::Ipport &rhs) const;
-    bool operator >(const ietf::Ipport &rhs) const;
-    bool operator <=(const ietf::Ipport &rhs) const;
-    bool operator >=(const ietf::Ipport &rhs) const;
-    Ipport();
+    // func:ietf.Ipport..EqOp
+    inline bool          operator ==(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..NeOp
+    inline bool          operator !=(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..LtOp
+    inline bool          operator <(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..GtOp
+    inline bool          operator >(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..LeOp
+    inline bool          operator <=(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..GeOp
+    inline bool          operator >=(const ietf::Ipport &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipport..Ctor
+    inline               Ipport() __attribute__((nothrow));
+    // func:ietf.Ipport..FieldwiseCtor
+    explicit inline               Ipport(ietf::Ipv4 in_ip, u16 in_port) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // func:ietf.Ipport..Hash
-u32                  Ipport_Hash(u32 prev, ietf::Ipport rhs) __attribute__((nothrow));
+inline u32           Ipport_Hash(u32 prev, ietf::Ipport rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipport from an ascii string.
 // func:ietf.Ipport..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
 bool                 Ipport_ReadStrptrMaybe(ietf::Ipport &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipport..Lt
-bool                 Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
+inline bool          Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // func:ietf.Ipport..Cmp
-i32                  Ipport_Cmp(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
+inline i32           Ipport_Cmp(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ietf.Ipport..Init
-void                 Ipport_Init(ietf::Ipport& parent);
+inline void          Ipport_Init(ietf::Ipport& parent);
 // func:ietf.Ipport..Eq
-bool                 Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
+inline bool          Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:ietf.Ipport..Update
-bool                 Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) __attribute__((nothrow));
+inline bool          Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:ietf.Ipport.String  printfmt:Extern
 // func:ietf.Ipport..Print
@@ -183,40 +202,48 @@ void                 Ipport_Print(ietf::Ipport row, algo::cstring& str) __attrib
 #pragma pack(push,1)
 struct Ipv4Addr { // ietf.Ipv4Addr
     u32   addr_be;   //   0
-    explicit Ipv4Addr(u32                            in_addr);
-    bool operator ==(const ietf::Ipv4Addr &rhs) const;
-    bool operator !=(const ietf::Ipv4Addr &rhs) const;
-    bool operator <(const ietf::Ipv4Addr &rhs) const;
-    bool operator >(const ietf::Ipv4Addr &rhs) const;
-    bool operator <=(const ietf::Ipv4Addr &rhs) const;
-    bool operator >=(const ietf::Ipv4Addr &rhs) const;
-    Ipv4Addr();
+    // func:ietf.Ipv4Addr..EqOp
+    inline bool          operator ==(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..NeOp
+    inline bool          operator !=(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..LtOp
+    inline bool          operator <(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..GtOp
+    inline bool          operator >(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..LeOp
+    inline bool          operator <=(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..GeOp
+    inline bool          operator >=(const ietf::Ipv4Addr &rhs) const __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..Ctor
+    inline               Ipv4Addr() __attribute__((nothrow));
+    // func:ietf.Ipv4Addr..FieldwiseCtor
+    explicit inline               Ipv4Addr(u32 in_addr) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // func:ietf.Ipv4Addr.addr.Get
-u32                  addr_Get(const ietf::Ipv4Addr& parent) __attribute__((__warn_unused_result__, nothrow));
+inline u32           addr_Get(const ietf::Ipv4Addr& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:ietf.Ipv4Addr.addr.Set
-void                 addr_Set(ietf::Ipv4Addr& parent, u32 rhs) __attribute__((nothrow));
+inline void          addr_Set(ietf::Ipv4Addr& parent, u32 rhs) __attribute__((nothrow));
 
 // func:ietf.Ipv4Addr..Hash
-u32                  Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+inline u32           Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Read fields of ietf::Ipv4Addr from an ascii string.
 // func:ietf.Ipv4Addr..ReadStrptrMaybe
 // this function is 'extrn' and implemented by user
 bool                 Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:ietf.Ipv4Addr..Lt
-bool                 Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+inline bool          Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // func:ietf.Ipv4Addr..Cmp
-i32                  Ipv4Addr_Cmp(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+inline i32           Ipv4Addr_Cmp(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ietf.Ipv4Addr..Init
-void                 Ipv4Addr_Init(ietf::Ipv4Addr& parent);
+inline void          Ipv4Addr_Init(ietf::Ipv4Addr& parent);
 // func:ietf.Ipv4Addr..Eq
-bool                 Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+inline bool          Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:ietf.Ipv4Addr..Update
-bool                 Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
+inline bool          Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:ietf.Ipv4Addr.String  printfmt:Extern
 // func:ietf.Ipv4Addr..Print

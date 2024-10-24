@@ -62,16 +62,13 @@ struct AmsSendTest { // ams_sendtest.AmsSendTest
     u64                   n_msg_limit;        //   1000000  Limit of messages to send
     algo_lib::FTimehook   h_write;            //
     u64                   sum_recv_latency;   //   0
-    AmsSendTest();
-private:
-    // value field ams_sendtest.AmsSendTest.h_write is not copiable
-    AmsSendTest(const AmsSendTest&){ /*disallow copy constructor */}
-    void operator =(const AmsSendTest&){ /*disallow direct assignment */}
+    // func:ams_sendtest.AmsSendTest..Ctor
+    inline               AmsSendTest() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:ams_sendtest.AmsSendTest..Init
-void                 AmsSendTest_Init(ams_sendtest::AmsSendTest& parent);
+inline void          AmsSendTest_Init(ams_sendtest::AmsSendTest& parent);
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
 // func:ams_sendtest.AmsSendTest..Print
@@ -79,6 +76,7 @@ void                 AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cst
 
 // --- ams_sendtest.FChild
 // create: ams_sendtest.FDb.child (Lary)
+// global access: child (Lary, by rowid)
 struct FChild { // ams_sendtest.FChild
     algo::cstring           child_path;      //   "bin/ams_sendtest"  path for executable
     command::ams_sendtest   child_cmd;       // command line for child process
@@ -90,16 +88,14 @@ struct FChild { // ams_sendtest.FChild
     i32                     child_status;    //   0  last exit status of child process
     ams::ProcId             proc_id;         //
 private:
+    // func:ams_sendtest.FChild..Ctor
+    inline               FChild() __attribute__((nothrow));
+    // func:ams_sendtest.FChild..Dtor
+    inline               ~FChild() __attribute__((nothrow));
     friend ams_sendtest::FChild& child_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend ams_sendtest::FChild* child_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 child_RemoveAll() __attribute__((nothrow));
     friend void                 child_RemoveLast() __attribute__((nothrow));
-    FChild();
-    ~FChild();
-    // reftype Exec of ams_sendtest.FChild.child prohibits copy
-    // value field ams_sendtest.FChild.child_cmd is not copiable
-    FChild(const FChild&){ /*disallow copy constructor */}
-    void operator =(const FChild&){ /*disallow direct assignment */}
 };
 
 // Start subprocess
@@ -142,7 +138,8 @@ void                 FChild_Uninit(ams_sendtest::FChild& child) __attribute__((n
 // --- ams_sendtest.trace
 #pragma pack(push,1)
 struct trace { // ams_sendtest.trace
-    trace();
+    // func:ams_sendtest.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -219,16 +216,16 @@ ams_sendtest::FChild* child_AllocMaybe() __attribute__((__warn_unused_result__, 
 void*                child_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ams_sendtest.FDb.child.EmptyQ
-bool                 child_EmptyQ() __attribute__((nothrow, pure));
+inline bool          child_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:ams_sendtest.FDb.child.Find
-ams_sendtest::FChild* child_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline ams_sendtest::FChild* child_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:ams_sendtest.FDb.child.Last
-ams_sendtest::FChild* child_Last() __attribute__((nothrow, pure));
+inline ams_sendtest::FChild* child_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ams_sendtest.FDb.child.N
-i32                  child_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           child_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ams_sendtest.FDb.child.RemoveAll
 void                 child_RemoveAll() __attribute__((nothrow));
@@ -237,7 +234,7 @@ void                 child_RemoveAll() __attribute__((nothrow));
 void                 child_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:ams_sendtest.FDb.child.qFind
-ams_sendtest::FChild& child_qFind(u64 t) __attribute__((nothrow, pure));
+inline ams_sendtest::FChild& child_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ams_sendtest.FDb.child.XrefMaybe
@@ -245,16 +242,16 @@ bool                 child_XrefMaybe(ams_sendtest::FChild &row);
 
 // cursor points to valid item
 // func:ams_sendtest.FDb.child_curs.Reset
-void                 _db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent) __attribute__((nothrow));
+inline void          _db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:ams_sendtest.FDb.child_curs.ValidQ
-bool                 _db_child_curs_ValidQ(_db_child_curs &curs) __attribute__((nothrow));
+inline bool          _db_child_curs_ValidQ(_db_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:ams_sendtest.FDb.child_curs.Next
-void                 _db_child_curs_Next(_db_child_curs &curs) __attribute__((nothrow));
+inline void          _db_child_curs_Next(_db_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:ams_sendtest.FDb.child_curs.Access
-ams_sendtest::FChild& _db_child_curs_Access(_db_child_curs &curs) __attribute__((nothrow));
+inline ams_sendtest::FChild& _db_child_curs_Access(_db_child_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams_sendtest.FDb..Init
 void                 FDb_Init();
@@ -265,19 +262,23 @@ void                 FDb_Uninit() __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // ams_sendtest.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator ams_sendtest_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(ams_sendtest_FieldIdEnum arg);
-    FieldId();
+    // func:ams_sendtest.FieldId.value.Cast
+    inline               operator ams_sendtest_FieldIdEnum() const __attribute__((nothrow));
+    // func:ams_sendtest.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:ams_sendtest.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:ams_sendtest.FieldId..EnumCtor
+    inline               FieldId(ams_sendtest_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:ams_sendtest.FieldId.value.GetEnum
-ams_sendtest_FieldIdEnum value_GetEnum(const ams_sendtest::FieldId& parent) __attribute__((nothrow));
+inline ams_sendtest_FieldIdEnum value_GetEnum(const ams_sendtest::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:ams_sendtest.FieldId.value.SetEnum
-void                 value_SetEnum(ams_sendtest::FieldId& parent, ams_sendtest_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(ams_sendtest::FieldId& parent, ams_sendtest_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:ams_sendtest.FieldId.value.ToCstr
@@ -305,7 +306,7 @@ bool                 value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::
 bool                 FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:ams_sendtest.FieldId..Init
-void                 FieldId_Init(ams_sendtest::FieldId& parent);
+inline void          FieldId_Init(ams_sendtest::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.FieldId.String  printfmt:Raw
 // func:ams_sendtest.FieldId..Print

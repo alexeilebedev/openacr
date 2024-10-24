@@ -1,4 +1,4 @@
-## AMC Presence Masks
+## amc Presence Masks
 <a href="#amc-presence-masks"></a>
 AMC supports creation of presence masks. A presence mask is a bitset field
 which has one bit allocated for each field in the parent struct. A `<field>_Set` function

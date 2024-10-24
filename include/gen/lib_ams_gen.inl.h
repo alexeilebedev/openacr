@@ -28,15 +28,6 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/amsdb_gen.inl.h"
 //#pragma endinclude
-inline lib_ams::CtlConnCase::CtlConnCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_ams::CtlConnCase::CtlConnCase(lib_ams_CtlConnCaseEnum arg) { this->value = u32(arg); }
-inline lib_ams::CtlConnCase::CtlConnCase() {
-    lib_ams::CtlConnCase_Init(*this);
-}
-
 
 // --- lib_ams.CtlConnCase.value.GetEnum
 // Get value of field as enum type
@@ -51,7 +42,7 @@ inline void lib_ams::value_SetEnum(lib_ams::CtlConnCase& parent, lib_ams_CtlConn
 }
 
 // --- lib_ams.CtlConnCase.value.Cast
-inline lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum () const {
+inline  lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum() const {
     return lib_ams_CtlConnCaseEnum((*this).value);
 }
 
@@ -60,15 +51,22 @@ inline lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum () const {
 inline void lib_ams::CtlConnCase_Init(lib_ams::CtlConnCase& parent) {
     parent.value = u32(0);
 }
-inline lib_ams::CtlMsgCase::CtlMsgCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_ams::CtlMsgCase::CtlMsgCase(lib_ams_CtlMsgCaseEnum arg) { this->value = u32(arg); }
-inline lib_ams::CtlMsgCase::CtlMsgCase() {
-    lib_ams::CtlMsgCase_Init(*this);
+
+// --- lib_ams.CtlConnCase..Ctor
+inline  lib_ams::CtlConnCase::CtlConnCase() {
+    lib_ams::CtlConnCase_Init(*this);
 }
 
+// --- lib_ams.CtlConnCase..FieldwiseCtor
+inline  lib_ams::CtlConnCase::CtlConnCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_ams.CtlConnCase..EnumCtor
+inline  lib_ams::CtlConnCase::CtlConnCase(lib_ams_CtlConnCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- lib_ams.CtlMsgCase.value.GetEnum
 // Get value of field as enum type
@@ -83,7 +81,7 @@ inline void lib_ams::value_SetEnum(lib_ams::CtlMsgCase& parent, lib_ams_CtlMsgCa
 }
 
 // --- lib_ams.CtlMsgCase.value.Cast
-inline lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum () const {
+inline  lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum() const {
     return lib_ams_CtlMsgCaseEnum((*this).value);
 }
 
@@ -92,10 +90,22 @@ inline lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum () const {
 inline void lib_ams::CtlMsgCase_Init(lib_ams::CtlMsgCase& parent) {
     parent.value = u32(0);
 }
-inline lib_ams::trace::trace() {
-    lib_ams::trace_Init(*this);
+
+// --- lib_ams.CtlMsgCase..Ctor
+inline  lib_ams::CtlMsgCase::CtlMsgCase() {
+    lib_ams::CtlMsgCase_Init(*this);
 }
 
+// --- lib_ams.CtlMsgCase..FieldwiseCtor
+inline  lib_ams::CtlMsgCase::CtlMsgCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_ams.CtlMsgCase..EnumCtor
+inline  lib_ams::CtlMsgCase::CtlMsgCase(lib_ams_CtlMsgCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- lib_ams.trace..Init
 // Set all fields to initial values.
@@ -104,6 +114,11 @@ inline void lib_ams::trace_Init(lib_ams::trace& parent) {
     parent.n_fdin_posted = u64(0);
     parent.n_fdin_pushback = u64(0);
     parent.n_write_block_spin = u64(0);
+}
+
+// --- lib_ams.trace..Ctor
+inline  lib_ams::trace::trace() {
+    lib_ams::trace_Init(*this);
 }
 
 // --- lib_ams.FDb.fdin.EmptyQ
@@ -937,16 +952,6 @@ inline void lib_ams::_db_zd_proc_curs_Next(_db_zd_proc_curs &curs) {
 inline lib_ams::FProc& lib_ams::_db_zd_proc_curs_Access(_db_zd_proc_curs &curs) {
     return *curs.row;
 }
-inline lib_ams::FFdin::FFdin() {
-    lib_ams::FFdin_Init(*this);
-    // added because lib_ams.FFdin.in (Fbuf) does not need initialization
-    // coverity[uninit_member]
-}
-
-inline lib_ams::FFdin::~FFdin() {
-    lib_ams::FFdin_Uninit(*this);
-}
-
 
 // --- lib_ams.FFdin.in.Max
 // Return max. number of bytes in the buffer.
@@ -960,14 +965,18 @@ inline i32 lib_ams::in_Max(lib_ams::FFdin& fdin) {
 inline i32 lib_ams::in_N(lib_ams::FFdin& fdin) {
     return fdin.in_end - fdin.in_start;
 }
-inline lib_ams::FMember::FMember() {
-    lib_ams::FMember_Init(*this);
+
+// --- lib_ams.FFdin..Ctor
+inline  lib_ams::FFdin::FFdin() {
+    lib_ams::FFdin_Init(*this);
+    // added because lib_ams.FFdin.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
 }
 
-inline lib_ams::FMember::~FMember() {
-    lib_ams::FMember_Uninit(*this);
+// --- lib_ams.FFdin..Dtor
+inline  lib_ams::FFdin::~FFdin() {
+    lib_ams::FFdin_Uninit(*this);
 }
-
 
 // --- lib_ams.FMember..Init
 // Set all fields to initial values.
@@ -982,14 +991,16 @@ inline void lib_ams::FMember_Init(lib_ams::FMember& member) {
     member.zd_member_bystream_next = (lib_ams::FMember*)-1; // (lib_ams.FStream.zd_member_bystream) not-in-list
     member.zd_member_bystream_prev = NULL; // (lib_ams.FStream.zd_member_bystream)
 }
-inline lib_ams::FProc::FProc() {
-    lib_ams::FProc_Init(*this);
+
+// --- lib_ams.FMember..Ctor
+inline  lib_ams::FMember::FMember() {
+    lib_ams::FMember_Init(*this);
 }
 
-inline lib_ams::FProc::~FProc() {
-    lib_ams::FProc_Uninit(*this);
+// --- lib_ams.FMember..Dtor
+inline  lib_ams::FMember::~FMember() {
+    lib_ams::FMember_Uninit(*this);
 }
-
 
 // --- lib_ams.FProc.zd_member_byproc.EmptyQ
 // Return true if index is empty
@@ -1088,14 +1099,16 @@ inline void lib_ams::proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs 
 inline lib_ams::FMember& lib_ams::proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs) {
     return *curs.row;
 }
-inline lib_ams::FReadfile::FReadfile() {
-    lib_ams::FReadfile_Init(*this);
+
+// --- lib_ams.FProc..Ctor
+inline  lib_ams::FProc::FProc() {
+    lib_ams::FProc_Init(*this);
 }
 
-inline lib_ams::FReadfile::~FReadfile() {
-    lib_ams::FReadfile_Uninit(*this);
+// --- lib_ams.FProc..Dtor
+inline  lib_ams::FProc::~FProc() {
+    lib_ams::FProc_Uninit(*this);
 }
-
 
 // --- lib_ams.FReadfile.buf.EmptyQ
 // Return true if index is empty
@@ -1406,14 +1419,16 @@ inline void lib_ams::FReadfile_Init(lib_ams::FReadfile& parent) {
     parent.offset_n     	= 0; // (lib_ams.FReadfile.offset)
     parent.offset_max   	= 0; // (lib_ams.FReadfile.offset)
 }
-inline lib_ams::FStream::FStream() {
-    lib_ams::FStream_Init(*this);
+
+// --- lib_ams.FReadfile..Ctor
+inline  lib_ams::FReadfile::FReadfile() {
+    lib_ams::FReadfile_Init(*this);
 }
 
-inline lib_ams::FStream::~FStream() {
-    lib_ams::FStream_Uninit(*this);
+// --- lib_ams.FReadfile..Dtor
+inline  lib_ams::FReadfile::~FReadfile() {
+    lib_ams::FReadfile_Uninit(*this);
 }
-
 
 // --- lib_ams.FStream.h_msg.Call
 // Invoke function by pointer
@@ -1553,28 +1568,32 @@ inline void lib_ams::stream_zd_member_bystream_curs_Next(stream_zd_member_bystre
 inline lib_ams::FMember& lib_ams::stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs) {
     return *curs.row;
 }
-inline lib_ams::FStreamType::FStreamType() {
-    lib_ams::FStreamType_Init(*this);
+
+// --- lib_ams.FStream..Ctor
+inline  lib_ams::FStream::FStream() {
+    lib_ams::FStream_Init(*this);
 }
 
-inline lib_ams::FStreamType::~FStreamType() {
-    lib_ams::FStreamType_Uninit(*this);
+// --- lib_ams.FStream..Dtor
+inline  lib_ams::FStream::~FStream() {
+    lib_ams::FStream_Uninit(*this);
 }
-
 
 // --- lib_ams.FStreamType..Init
 // Set all fields to initial values.
 inline void lib_ams::FStreamType_Init(lib_ams::FStreamType& streamtype) {
     streamtype.ind_streamtype_next = (lib_ams::FStreamType*)-1; // (lib_ams.FDb.ind_streamtype) not-in-hash
 }
-inline lib_ams::FWritefile::FWritefile() {
-    lib_ams::FWritefile_Init(*this);
+
+// --- lib_ams.FStreamType..Ctor
+inline  lib_ams::FStreamType::FStreamType() {
+    lib_ams::FStreamType_Init(*this);
 }
 
-inline lib_ams::FWritefile::~FWritefile() {
-    lib_ams::FWritefile_Uninit(*this);
+// --- lib_ams.FStreamType..Dtor
+inline  lib_ams::FStreamType::~FStreamType() {
+    lib_ams::FStreamType_Uninit(*this);
 }
-
 
 // --- lib_ams.FWritefile.buf.EmptyQ
 // Return true if index is empty
@@ -1786,15 +1805,16 @@ inline bool lib_ams::writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs) {
 inline u8& lib_ams::writefile_cbuf_curs_Access(writefile_cbuf_curs &curs) {
     return curs.elems[curs.index];
 }
-inline lib_ams::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_ams::FieldId::FieldId(lib_ams_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_ams::FieldId::FieldId() {
-    lib_ams::FieldId_Init(*this);
+
+// --- lib_ams.FWritefile..Ctor
+inline  lib_ams::FWritefile::FWritefile() {
+    lib_ams::FWritefile_Init(*this);
 }
 
+// --- lib_ams.FWritefile..Dtor
+inline  lib_ams::FWritefile::~FWritefile() {
+    lib_ams::FWritefile_Uninit(*this);
+}
 
 // --- lib_ams.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1809,7 +1829,7 @@ inline void lib_ams::value_SetEnum(lib_ams::FieldId& parent, lib_ams_FieldIdEnum
 }
 
 // --- lib_ams.FieldId.value.Cast
-inline lib_ams::FieldId::operator lib_ams_FieldIdEnum () const {
+inline  lib_ams::FieldId::operator lib_ams_FieldIdEnum() const {
     return lib_ams_FieldIdEnum((*this).value);
 }
 
@@ -1817,6 +1837,22 @@ inline lib_ams::FieldId::operator lib_ams_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_ams::FieldId_Init(lib_ams::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_ams.FieldId..Ctor
+inline  lib_ams::FieldId::FieldId() {
+    lib_ams::FieldId_Init(*this);
+}
+
+// --- lib_ams.FieldId..FieldwiseCtor
+inline  lib_ams::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_ams.FieldId..EnumCtor
+inline  lib_ams::FieldId::FieldId(lib_ams_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_ams::trace &row) {// cfmt:lib_ams.trace.String

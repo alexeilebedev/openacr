@@ -72,20 +72,25 @@ namespace mdbg { // gen:ns_print_struct
 
 // --- mdbg.FBuilddir
 // create: mdbg.FDb.builddir (Lary)
+// global access: builddir (Lary, by rowid)
 // access: mdbg.FCfg.c_builddir (Ptrary)
 struct FBuilddir { // mdbg.FBuilddir
     algo::Smallstr50   builddir;                // Primary key - uname.compiler.cfg-arch
     algo::Comment      comment;                 //
     bool               cfg_c_builddir_in_ary;   //   false  membership flag
+    // func:mdbg.FBuilddir..AssignOp
+    inline mdbg::FBuilddir& operator =(const mdbg::FBuilddir &rhs) = delete;
+    // func:mdbg.FBuilddir..CopyCtor
+    inline               FBuilddir(const mdbg::FBuilddir &rhs) = delete;
 private:
+    // func:mdbg.FBuilddir..Ctor
+    inline               FBuilddir() __attribute__((nothrow));
+    // func:mdbg.FBuilddir..Dtor
+    inline               ~FBuilddir() __attribute__((nothrow));
     friend mdbg::FBuilddir&     builddir_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend mdbg::FBuilddir*     builddir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 builddir_RemoveAll() __attribute__((nothrow));
     friend void                 builddir_RemoveLast() __attribute__((nothrow));
-    FBuilddir();
-    ~FBuilddir();
-    FBuilddir(const FBuilddir&){ /*disallow copy constructor */}
-    void operator =(const FBuilddir&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -109,13 +114,14 @@ algo::Smallstr50     arch_Get(mdbg::FBuilddir& builddir) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:mdbg.FBuilddir..Init
-void                 FBuilddir_Init(mdbg::FBuilddir& builddir);
+inline void          FBuilddir_Init(mdbg::FBuilddir& builddir);
 // func:mdbg.FBuilddir..Uninit
 void                 FBuilddir_Uninit(mdbg::FBuilddir& builddir) __attribute__((nothrow));
 
 // --- mdbg.FCfg
 // create: mdbg.FDb.cfg (Lary)
-// global access: ind_cfg (Thash)
+// global access: cfg (Lary, by rowid)
+// global access: ind_cfg (Thash, hash field cfg)
 struct FCfg { // mdbg.FCfg
     algo::Smallstr50    cfg;                //
     algo::Smallstr5     suffix;             //
@@ -124,15 +130,21 @@ struct FCfg { // mdbg.FCfg
     u32                 c_builddir_n;       // array of pointers
     u32                 c_builddir_max;     // capacity of allocated array
     mdbg::FCfg*         ind_cfg_next;       // hash next
+    // reftype Ptrary of mdbg.FCfg.c_builddir prohibits copy
+    // func:mdbg.FCfg..AssignOp
+    inline mdbg::FCfg&   operator =(const mdbg::FCfg &rhs) = delete;
+    // reftype Ptrary of mdbg.FCfg.c_builddir prohibits copy
+    // func:mdbg.FCfg..CopyCtor
+    inline               FCfg(const mdbg::FCfg &rhs) = delete;
 private:
+    // func:mdbg.FCfg..Ctor
+    inline               FCfg() __attribute__((nothrow));
+    // func:mdbg.FCfg..Dtor
+    inline               ~FCfg() __attribute__((nothrow));
     friend mdbg::FCfg&          cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend mdbg::FCfg*          cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cfg_RemoveAll() __attribute__((nothrow));
     friend void                 cfg_RemoveLast() __attribute__((nothrow));
-    FCfg();
-    ~FCfg();
-    FCfg(const FCfg&){ /*disallow copy constructor */}
-    void operator =(const FCfg&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -144,13 +156,13 @@ void                 cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) __attribute__((no
 
 // Return true if index is empty
 // func:mdbg.FCfg.c_builddir.EmptyQ
-bool                 c_builddir_EmptyQ(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline bool          c_builddir_EmptyQ(mdbg::FCfg& cfg) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:mdbg.FCfg.c_builddir.Find
-mdbg::FBuilddir*     c_builddir_Find(mdbg::FCfg& cfg, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline mdbg::FBuilddir* c_builddir_Find(mdbg::FCfg& cfg, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:mdbg.FCfg.c_builddir.Getary
-algo::aryptr<mdbg::FBuilddir*> c_builddir_Getary(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline algo::aryptr<mdbg::FBuilddir*> c_builddir_Getary(mdbg::FCfg& cfg) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:mdbg.FCfg.c_builddir.Insert
@@ -162,47 +174,48 @@ void                 c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __
 bool                 c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:mdbg.FCfg.c_builddir.N
-i32                  c_builddir_N(const mdbg::FCfg& cfg) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_builddir_N(const mdbg::FCfg& cfg) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:mdbg.FCfg.c_builddir.Remove
 void                 c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:mdbg.FCfg.c_builddir.RemoveAll
-void                 c_builddir_RemoveAll(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline void          c_builddir_RemoveAll(mdbg::FCfg& cfg) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:mdbg.FCfg.c_builddir.Reserve
 void                 c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:mdbg.FCfg.c_builddir.qFind
-mdbg::FBuilddir&     c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) __attribute__((nothrow));
+inline mdbg::FBuilddir& c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:mdbg.FCfg.c_builddir.InAryQ
-bool                 cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) __attribute__((nothrow));
+inline bool          cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:mdbg.FCfg.c_builddir.qLast
-mdbg::FBuilddir&     c_builddir_qLast(mdbg::FCfg& cfg) __attribute__((nothrow));
+inline mdbg::FBuilddir& c_builddir_qLast(mdbg::FCfg& cfg) __attribute__((nothrow));
 
 // func:mdbg.FCfg.c_builddir_curs.Reset
-void                 cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) __attribute__((nothrow));
+inline void          cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FCfg.c_builddir_curs.ValidQ
-bool                 cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs) __attribute__((nothrow));
+inline bool          cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FCfg.c_builddir_curs.Next
-void                 cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) __attribute__((nothrow));
+inline void          cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FCfg.c_builddir_curs.Access
-mdbg::FBuilddir&     cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) __attribute__((nothrow));
+inline mdbg::FBuilddir& cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FCfg..Init
-void                 FCfg_Init(mdbg::FCfg& cfg);
+inline void          FCfg_Init(mdbg::FCfg& cfg);
 // func:mdbg.FCfg..Uninit
 void                 FCfg_Uninit(mdbg::FCfg& cfg) __attribute__((nothrow));
 
 // --- mdbg.trace
 #pragma pack(push,1)
 struct trace { // mdbg.trace
-    trace();
+    // func:mdbg.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -321,16 +334,16 @@ mdbg::FCfg*          cfg_InsertMaybe(const dev::Cfg &value) __attribute__((nothr
 void*                cfg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mdbg.FDb.cfg.EmptyQ
-bool                 cfg_EmptyQ() __attribute__((nothrow, pure));
+inline bool          cfg_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:mdbg.FDb.cfg.Find
-mdbg::FCfg*          cfg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline mdbg::FCfg*   cfg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mdbg.FDb.cfg.Last
-mdbg::FCfg*          cfg_Last() __attribute__((nothrow, pure));
+inline mdbg::FCfg*   cfg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:mdbg.FDb.cfg.N
-i32                  cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:mdbg.FDb.cfg.RemoveAll
 void                 cfg_RemoveAll() __attribute__((nothrow));
@@ -339,7 +352,7 @@ void                 cfg_RemoveAll() __attribute__((nothrow));
 void                 cfg_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mdbg.FDb.cfg.qFind
-mdbg::FCfg&          cfg_qFind(u64 t) __attribute__((nothrow, pure));
+inline mdbg::FCfg&   cfg_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:mdbg.FDb.cfg.XrefMaybe
@@ -347,7 +360,7 @@ bool                 cfg_XrefMaybe(mdbg::FCfg &row);
 
 // Return true if hash is empty
 // func:mdbg.FDb.ind_cfg.EmptyQ
-bool                 ind_cfg_EmptyQ() __attribute__((nothrow));
+inline bool          ind_cfg_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:mdbg.FDb.ind_cfg.Find
 mdbg::FCfg*          ind_cfg_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -356,7 +369,7 @@ mdbg::FCfg*          ind_cfg_Find(const algo::strptr& key) __attribute__((__warn
 mdbg::FCfg&          ind_cfg_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:mdbg.FDb.ind_cfg.N
-i32                  ind_cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:mdbg.FDb.ind_cfg.InsertMaybe
 bool                 ind_cfg_InsertMaybe(mdbg::FCfg& row) __attribute__((nothrow));
@@ -383,16 +396,16 @@ mdbg::FBuilddir*     builddir_InsertMaybe(const dev::Builddir &value) __attribut
 void*                builddir_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mdbg.FDb.builddir.EmptyQ
-bool                 builddir_EmptyQ() __attribute__((nothrow, pure));
+inline bool          builddir_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:mdbg.FDb.builddir.Find
-mdbg::FBuilddir*     builddir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline mdbg::FBuilddir* builddir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mdbg.FDb.builddir.Last
-mdbg::FBuilddir*     builddir_Last() __attribute__((nothrow, pure));
+inline mdbg::FBuilddir* builddir_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:mdbg.FDb.builddir.N
-i32                  builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           builddir_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:mdbg.FDb.builddir.RemoveAll
 void                 builddir_RemoveAll() __attribute__((nothrow));
@@ -401,7 +414,7 @@ void                 builddir_RemoveAll() __attribute__((nothrow));
 void                 builddir_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mdbg.FDb.builddir.qFind
-mdbg::FBuilddir&     builddir_qFind(u64 t) __attribute__((nothrow, pure));
+inline mdbg::FBuilddir& builddir_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:mdbg.FDb.builddir.XrefMaybe
@@ -409,28 +422,28 @@ bool                 builddir_XrefMaybe(mdbg::FBuilddir &row);
 
 // cursor points to valid item
 // func:mdbg.FDb.cfg_curs.Reset
-void                 _db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
+inline void          _db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.cfg_curs.ValidQ
-bool                 _db_cfg_curs_ValidQ(_db_cfg_curs &curs) __attribute__((nothrow));
+inline bool          _db_cfg_curs_ValidQ(_db_cfg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FDb.cfg_curs.Next
-void                 _db_cfg_curs_Next(_db_cfg_curs &curs) __attribute__((nothrow));
+inline void          _db_cfg_curs_Next(_db_cfg_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FDb.cfg_curs.Access
-mdbg::FCfg&          _db_cfg_curs_Access(_db_cfg_curs &curs) __attribute__((nothrow));
+inline mdbg::FCfg&   _db_cfg_curs_Access(_db_cfg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.builddir_curs.Reset
-void                 _db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
+inline void          _db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mdbg.FDb.builddir_curs.ValidQ
-bool                 _db_builddir_curs_ValidQ(_db_builddir_curs &curs) __attribute__((nothrow));
+inline bool          _db_builddir_curs_ValidQ(_db_builddir_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mdbg.FDb.builddir_curs.Next
-void                 _db_builddir_curs_Next(_db_builddir_curs &curs) __attribute__((nothrow));
+inline void          _db_builddir_curs_Next(_db_builddir_curs &curs) __attribute__((nothrow));
 // item access
 // func:mdbg.FDb.builddir_curs.Access
-mdbg::FBuilddir&     _db_builddir_curs_Access(_db_builddir_curs &curs) __attribute__((nothrow));
+inline mdbg::FBuilddir& _db_builddir_curs_Access(_db_builddir_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FDb..Init
 void                 FDb_Init();
@@ -441,19 +454,23 @@ void                 FDb_Uninit() __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // mdbg.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator mdbg_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(mdbg_FieldIdEnum arg);
-    FieldId();
+    // func:mdbg.FieldId.value.Cast
+    inline               operator mdbg_FieldIdEnum() const __attribute__((nothrow));
+    // func:mdbg.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:mdbg.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:mdbg.FieldId..EnumCtor
+    inline               FieldId(mdbg_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:mdbg.FieldId.value.GetEnum
-mdbg_FieldIdEnum     value_GetEnum(const mdbg::FieldId& parent) __attribute__((nothrow));
+inline mdbg_FieldIdEnum value_GetEnum(const mdbg::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:mdbg.FieldId.value.SetEnum
-void                 value_SetEnum(mdbg::FieldId& parent, mdbg_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(mdbg::FieldId& parent, mdbg_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:mdbg.FieldId.value.ToCstr
@@ -481,7 +498,7 @@ bool                 value_ReadStrptrMaybe(mdbg::FieldId& parent, algo::strptr r
 bool                 FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.FieldId..Init
-void                 FieldId_Init(mdbg::FieldId& parent);
+inline void          FieldId_Init(mdbg::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:mdbg.FieldId.String  printfmt:Raw
 // func:mdbg.FieldId..Print
@@ -490,18 +507,22 @@ void                 FieldId_Print(mdbg::FieldId& row, algo::cstring& str) __att
 // --- mdbg.TableId
 struct TableId { // mdbg.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator mdbg_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(mdbg_TableIdEnum arg);
-    TableId();
+    // func:mdbg.TableId.value.Cast
+    inline               operator mdbg_TableIdEnum() const __attribute__((nothrow));
+    // func:mdbg.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:mdbg.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:mdbg.TableId..EnumCtor
+    inline               TableId(mdbg_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:mdbg.TableId.value.GetEnum
-mdbg_TableIdEnum     value_GetEnum(const mdbg::TableId& parent) __attribute__((nothrow));
+inline mdbg_TableIdEnum value_GetEnum(const mdbg::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:mdbg.TableId.value.SetEnum
-void                 value_SetEnum(mdbg::TableId& parent, mdbg_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(mdbg::TableId& parent, mdbg_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:mdbg.TableId.value.ToCstr
@@ -529,7 +550,7 @@ bool                 value_ReadStrptrMaybe(mdbg::TableId& parent, algo::strptr r
 bool                 TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mdbg.TableId..Init
-void                 TableId_Init(mdbg::TableId& parent);
+inline void          TableId_Init(mdbg::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:mdbg.TableId.String  printfmt:Raw
 // func:mdbg.TableId..Print

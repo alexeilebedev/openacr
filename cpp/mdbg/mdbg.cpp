@@ -232,7 +232,14 @@ static void Main_Gdb(algo_lib::Replscope &R) {
         Ins(&R, mdbg::_db.gdbscript, tempstr()<<"cd "<< algo::GetCurDir());
     }
     Ins(&R, mdbg::_db.gdbscript, "file $localexe");
-    Ins(&R, mdbg::_db.gdbscript, "set args $args");
+
+    // join argrs and show final command line
+    mdbg::_db.gdbscript << "set args";
+    ind_beg(command::mdbg_args_curs,arg,mdbg::_db.cmdline) {
+        mdbg::_db.gdbscript << " " << strptr_ToBash(arg);
+    }ind_end;
+    mdbg::_db.gdbscript << eol;
+
     if (mdbg::_db.cmdline.attach) {
         u32 pid = Find_Pid(R);
         if (pid != 0) {
@@ -311,7 +318,7 @@ void mdbg::Main() {
 
     // compile executable first to avoid embarrassment
     command::abt_proc abt;
-    abt.cmd.cfg = mdbg::_db.cmdline.cfg;
+    abt.cmd.cfg.expr = mdbg::_db.cmdline.cfg;
     abt.cmd.target.expr = mdbg::_db.cmdline.target;
     if (_db.cmdline.dry_run) {
         prlog(abt_ToCmdline(abt.cmd));
@@ -325,15 +332,6 @@ void mdbg::Main() {
             vrfy(0, tempstr()<<"mdbg.nofile  file:"<<local_exe<<"  comment:\"File doesn't exist\"");
         }
     }
-
-    // join argrs and show final command line
-    tempstr join_args;
-    algo::ListSep ls(" ");
-    ind_beg(command::mdbg_args_curs,arg,_db.cmdline) {
-        join_args << ls << arg;
-    }ind_end;
-    Set(R, "$args", join_args, false);
-    prlog("#"<<mdbg::_db.cmdline.target <<" "<<join_args);
 
     Main_Gdb(R);
 

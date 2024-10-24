@@ -29,27 +29,26 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-inline atf_ci::FBuilddir::FBuilddir() {
-    atf_ci::FBuilddir_Init(*this);
-}
-
-inline atf_ci::FBuilddir::~FBuilddir() {
-    atf_ci::FBuilddir_Uninit(*this);
-}
-
 
 // --- atf_ci.FBuilddir..Init
 // Set all fields to initial values.
 inline void atf_ci::FBuilddir_Init(atf_ci::FBuilddir& builddir) {
     builddir.ind_builddir_next = (atf_ci::FBuilddir*)-1; // (atf_ci.FDb.ind_builddir) not-in-hash
 }
-inline atf_ci::FCfg::FCfg() {
+
+// --- atf_ci.FBuilddir..Ctor
+inline  atf_ci::FBuilddir::FBuilddir() {
+    atf_ci::FBuilddir_Init(*this);
 }
 
-inline atf_ci::FCipackage::FCipackage() {
-    atf_ci::FCipackage_Init(*this);
+// --- atf_ci.FBuilddir..Dtor
+inline  atf_ci::FBuilddir::~FBuilddir() {
+    atf_ci::FBuilddir_Uninit(*this);
 }
 
+// --- atf_ci.FCfg..Ctor
+inline  atf_ci::FCfg::FCfg() {
+}
 
 // --- atf_ci.FCipackage..Init
 // Set all fields to initial values.
@@ -57,14 +56,11 @@ inline void atf_ci::FCipackage_Init(atf_ci::FCipackage& cipackage) {
     cipackage.remove = bool(false);
     cipackage.build = bool(false);
 }
-inline atf_ci::FCitest::FCitest() {
-    atf_ci::FCitest_Init(*this);
-}
 
-inline atf_ci::FCitest::~FCitest() {
-    atf_ci::FCitest_Uninit(*this);
+// --- atf_ci.FCipackage..Ctor
+inline  atf_ci::FCipackage::FCipackage() {
+    atf_ci::FCipackage_Init(*this);
 }
-
 
 // --- atf_ci.FCitest.step.Call
 // Invoke function by pointer
@@ -83,9 +79,20 @@ inline void atf_ci::FCitest_Init(atf_ci::FCitest& citest) {
     citest.step = NULL;
     citest.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
 }
-inline atf_ci::trace::trace() {
+
+// --- atf_ci.FCitest..Ctor
+inline  atf_ci::FCitest::FCitest() {
+    atf_ci::FCitest_Init(*this);
 }
 
+// --- atf_ci.FCitest..Dtor
+inline  atf_ci::FCitest::~FCitest() {
+    atf_ci::FCitest_Uninit(*this);
+}
+
+// --- atf_ci.trace..Ctor
+inline  atf_ci::trace::trace() {
+}
 
 // --- atf_ci.FDb.citest.EmptyQ
 // Return true if index is empty
@@ -1041,17 +1048,10 @@ inline void atf_ci::_db_cipackage_curs_Next(_db_cipackage_curs &curs) {
 inline atf_ci::FCipackage& atf_ci::_db_cipackage_curs_Access(_db_cipackage_curs &curs) {
     return cipackage_qFind(u64(curs.index));
 }
-inline atf_ci::FExecLimit::FExecLimit() {
-}
 
-inline atf_ci::FGitfile::FGitfile() {
-    atf_ci::FGitfile_Init(*this);
+// --- atf_ci.FExecLimit..Ctor
+inline  atf_ci::FExecLimit::FExecLimit() {
 }
-
-inline atf_ci::FGitfile::~FGitfile() {
-    atf_ci::FGitfile_Uninit(*this);
-}
-
 
 // --- atf_ci.FGitfile.c_noindent.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1121,41 +1121,52 @@ inline void atf_ci::FGitfile_Init(atf_ci::FGitfile& gitfile) {
     gitfile.c_targsrc = NULL;
     gitfile.ind_gitfile_next = (atf_ci::FGitfile*)-1; // (atf_ci.FDb.ind_gitfile) not-in-hash
 }
-inline atf_ci::FMsgfile::FMsgfile() {
-    atf_ci::FMsgfile_Init(*this);
+
+// --- atf_ci.FGitfile..Ctor
+inline  atf_ci::FGitfile::FGitfile() {
+    atf_ci::FGitfile_Init(*this);
 }
 
+// --- atf_ci.FGitfile..Dtor
+inline  atf_ci::FGitfile::~FGitfile() {
+    atf_ci::FGitfile_Uninit(*this);
+}
 
 // --- atf_ci.FMsgfile..Init
 // Set all fields to initial values.
 inline void atf_ci::FMsgfile_Init(atf_ci::FMsgfile& msgfile) {
     msgfile.strict = bool(false);
 }
-inline atf_ci::FNoindent::FNoindent() {
+
+// --- atf_ci.FMsgfile..Ctor
+inline  atf_ci::FMsgfile::FMsgfile() {
+    atf_ci::FMsgfile_Init(*this);
 }
 
-inline atf_ci::FNoindent::~FNoindent() {
+// --- atf_ci.FNoindent..Ctor
+inline  atf_ci::FNoindent::FNoindent() {
+}
+
+// --- atf_ci.FNoindent..Dtor
+inline  atf_ci::FNoindent::~FNoindent() {
     atf_ci::FNoindent_Uninit(*this);
 }
-
-inline atf_ci::FNs::FNs() {
-    atf_ci::FNs_Init(*this);
-}
-
-inline atf_ci::FNs::~FNs() {
-    atf_ci::FNs_Uninit(*this);
-}
-
 
 // --- atf_ci.FNs..Init
 // Set all fields to initial values.
 inline void atf_ci::FNs_Init(atf_ci::FNs& ns) {
     ns.ind_ns_next = (atf_ci::FNs*)-1; // (atf_ci.FDb.ind_ns) not-in-hash
 }
-inline atf_ci::FReadme::FReadme() {
-    atf_ci::FReadme_Init(*this);
+
+// --- atf_ci.FNs..Ctor
+inline  atf_ci::FNs::FNs() {
+    atf_ci::FNs_Init(*this);
 }
 
+// --- atf_ci.FNs..Dtor
+inline  atf_ci::FNs::~FNs() {
+    atf_ci::FNs_Uninit(*this);
+}
 
 // --- atf_ci.FReadme..Init
 // Set all fields to initial values.
@@ -1163,50 +1174,52 @@ inline void atf_ci::FReadme_Init(atf_ci::FReadme& readme) {
     readme.inl = bool(false);
     readme.sandbox = bool(false);
 }
-inline atf_ci::FScriptfile::FScriptfile() {
-    atf_ci::FScriptfile_Init(*this);
-}
 
-inline atf_ci::FScriptfile::~FScriptfile() {
-    atf_ci::FScriptfile_Uninit(*this);
+// --- atf_ci.FReadme..Ctor
+inline  atf_ci::FReadme::FReadme() {
+    atf_ci::FReadme_Init(*this);
 }
-
 
 // --- atf_ci.FScriptfile..Init
 // Set all fields to initial values.
 inline void atf_ci::FScriptfile_Init(atf_ci::FScriptfile& scriptfile) {
     scriptfile.ind_scriptfile_next = (atf_ci::FScriptfile*)-1; // (atf_ci.FDb.ind_scriptfile) not-in-hash
 }
-inline atf_ci::FSsimfile::FSsimfile() {
-    atf_ci::FSsimfile_Init(*this);
+
+// --- atf_ci.FScriptfile..Ctor
+inline  atf_ci::FScriptfile::FScriptfile() {
+    atf_ci::FScriptfile_Init(*this);
 }
 
-inline atf_ci::FSsimfile::~FSsimfile() {
-    atf_ci::FSsimfile_Uninit(*this);
+// --- atf_ci.FScriptfile..Dtor
+inline  atf_ci::FScriptfile::~FScriptfile() {
+    atf_ci::FScriptfile_Uninit(*this);
 }
-
 
 // --- atf_ci.FSsimfile..Init
 // Set all fields to initial values.
 inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& ssimfile) {
     ssimfile.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
 }
-inline atf_ci::FTargsrc::FTargsrc() {
+
+// --- atf_ci.FSsimfile..Ctor
+inline  atf_ci::FSsimfile::FSsimfile() {
+    atf_ci::FSsimfile_Init(*this);
 }
 
-inline atf_ci::FTargsrc::~FTargsrc() {
+// --- atf_ci.FSsimfile..Dtor
+inline  atf_ci::FSsimfile::~FSsimfile() {
+    atf_ci::FSsimfile_Uninit(*this);
+}
+
+// --- atf_ci.FTargsrc..Ctor
+inline  atf_ci::FTargsrc::FTargsrc() {
+}
+
+// --- atf_ci.FTargsrc..Dtor
+inline  atf_ci::FTargsrc::~FTargsrc() {
     atf_ci::FTargsrc_Uninit(*this);
 }
-
-inline atf_ci::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_ci::FieldId::FieldId(atf_ci_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_ci::FieldId::FieldId() {
-    atf_ci::FieldId_Init(*this);
-}
-
 
 // --- atf_ci.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1221,7 +1234,7 @@ inline void atf_ci::value_SetEnum(atf_ci::FieldId& parent, atf_ci_FieldIdEnum rh
 }
 
 // --- atf_ci.FieldId.value.Cast
-inline atf_ci::FieldId::operator atf_ci_FieldIdEnum () const {
+inline  atf_ci::FieldId::operator atf_ci_FieldIdEnum() const {
     return atf_ci_FieldIdEnum((*this).value);
 }
 
@@ -1230,14 +1243,22 @@ inline atf_ci::FieldId::operator atf_ci_FieldIdEnum () const {
 inline void atf_ci::FieldId_Init(atf_ci::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_ci::File::File() {
-    atf_ci::File_Init(*this);
+
+// --- atf_ci.FieldId..Ctor
+inline  atf_ci::FieldId::FieldId() {
+    atf_ci::FieldId_Init(*this);
 }
 
-inline atf_ci::File::~File() {
-    atf_ci::File_Uninit(*this);
+// --- atf_ci.FieldId..FieldwiseCtor
+inline  atf_ci::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- atf_ci.FieldId..EnumCtor
+inline  atf_ci::FieldId::FieldId(atf_ci_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_ci.File..Init
 // Set all fields to initial values.
@@ -1246,15 +1267,16 @@ inline void atf_ci::File_Init(atf_ci::File& file) {
     file.record_exists = bool(false);
     file.ind_file_next = (atf_ci::File*)-1; // (atf_ci.FDb.ind_file) not-in-hash
 }
-inline atf_ci::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_ci::TableId::TableId(atf_ci_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_ci::TableId::TableId() {
-    atf_ci::TableId_Init(*this);
+
+// --- atf_ci.File..Ctor
+inline  atf_ci::File::File() {
+    atf_ci::File_Init(*this);
 }
 
+// --- atf_ci.File..Dtor
+inline  atf_ci::File::~File() {
+    atf_ci::File_Uninit(*this);
+}
 
 // --- atf_ci.TableId.value.GetEnum
 // Get value of field as enum type
@@ -1269,7 +1291,7 @@ inline void atf_ci::value_SetEnum(atf_ci::TableId& parent, atf_ci_TableIdEnum rh
 }
 
 // --- atf_ci.TableId.value.Cast
-inline atf_ci::TableId::operator atf_ci_TableIdEnum () const {
+inline  atf_ci::TableId::operator atf_ci_TableIdEnum() const {
     return atf_ci_TableIdEnum((*this).value);
 }
 
@@ -1277,6 +1299,22 @@ inline atf_ci::TableId::operator atf_ci_TableIdEnum () const {
 // Set all fields to initial values.
 inline void atf_ci::TableId_Init(atf_ci::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_ci.TableId..Ctor
+inline  atf_ci::TableId::TableId() {
+    atf_ci::TableId_Init(*this);
+}
+
+// --- atf_ci.TableId..FieldwiseCtor
+inline  atf_ci::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_ci.TableId..EnumCtor
+inline  atf_ci::TableId::TableId(atf_ci_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_ci::trace &row) {// cfmt:atf_ci.trace.String

@@ -37,9 +37,9 @@ namespace lib_git { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:lib_git.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:lib_git...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_git.trace..Print
@@ -175,11 +175,6 @@ inline static i32 lib_git::trace_N() {
 void lib_git::FDb_Init() {
 
     lib_git::InitReflection();
-}
-
-// --- lib_git.FDb..Uninit
-void lib_git::FDb_Uninit() {
-    lib_git::FDb &row = _db; (void)row;
 }
 
 // --- lib_git.FieldId.value.ToCstr

@@ -8,38 +8,43 @@ Examples are provided below
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Operation](#operation)
-* [Example: Get help (beyond command syntax)](#example-get-help--beyond-command-syntax-)
-* [Example: Get detailed help](#example-get-detailed-help)
-* [Example: create access to repository](#example-create-access-to-repository)
-* [Example: list remote repositories](#example-list-remote-repositories)
-* [Example: list known repositories](#example-list-known-repositories)
-* [Example: set default remote repo](#example-set-default-remote-repo)
-* [Example: edit list of repos](#example-edit-list-of-repos)
-* [Example: list issues](#example-list-issues)
-* [Example: list a single issue with details (notes etc)](#example-list-a-single-issue-with-details--notes-etc-)
-* [Example: create a new issue](#example-create-a-new-issue)
-* [Example: edit an existing issue](#example-edit-an-existing-issue)
-* [Example: reopen an issue](#example-reopen-an-issue)
-* [Example: change issue assignee](#example-change-issue-assignee)
-* [Example: display issues with filtering](#example-display-issues-with-filtering)
-* [Example: start working on an issue](#example-start-working-on-an-issue)
-* [Example: show multiple issues with filtering](#example-show-multiple-issues-with-filtering)
-* [Example: list merge requests](#example-list-merge-requests)
-* [Example: show status of CI pipelines for merge request](#example-show-status-of-ci-pipelines-for-merge-request)
-* [Example: show output of a CI pipeline](#example-show-output-of-a-ci-pipeline)
-* [Example: scan all CI pipelines for errors](#example-scan-all-ci-pipelines-for-errors)
-* [Example: create merge request](#example-create-merge-request)
-* [Example: start reviewing merge request](#example-start-reviewing-merge-request)
-* [Example: approve merge request](#example-approve-merge-request)
-* [Example: list remote users](#example-list-remote-users)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: Get help (beyond command syntax)](#example-get-help--beyond-command-syntax-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: Get detailed help](#example-get-detailed-help)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: create access to repository](#example-create-access-to-repository)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list remote repositories](#example-list-remote-repositories)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list known repositories](#example-list-known-repositories)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: set default remote repo](#example-set-default-remote-repo)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: edit list of repos](#example-edit-list-of-repos)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list issues](#example-list-issues)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list a single issue with details (notes etc)](#example-list-a-single-issue-with-details--notes-etc-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: create a new issue](#example-create-a-new-issue)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: edit an existing issue](#example-edit-an-existing-issue)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: reopen an issue](#example-reopen-an-issue)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: change issue assignee](#example-change-issue-assignee)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: display issues with filtering](#example-display-issues-with-filtering)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: start working on an issue](#example-start-working-on-an-issue)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: show multiple issues with filtering](#example-show-multiple-issues-with-filtering)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list merge requests](#example-list-merge-requests)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: show status of CI pipelines for merge request](#example-show-status-of-ci-pipelines-for-merge-request)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: show output of a CI pipeline](#example-show-output-of-a-ci-pipeline)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: scan all CI pipelines for errors](#example-scan-all-ci-pipelines-for-errors)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: create merge request](#example-create-merge-request)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: start reviewing merge request](#example-start-reviewing-merge-request)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: approve merge request](#example-approve-merge-request)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list remote users](#example-list-remote-users)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 gcli: Gcli - gitlab/github command-line client
 Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
@@ -69,59 +74,7 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -selector -- table:key, where table is issue,repo,mr, etc. and key is a regex.
-<a href="#-selector"></a>
-
-#### -fields -- additional key:value pairs for use with -create, -list, -update
-<a href="#-fields"></a>
-
-#### -accept -- (action) accept a slected merge request
-<a href="#-accept"></a>
-
-#### -start -- (action) start working on a selected issue
-<a href="#-start"></a>
-
-#### -list -- (action) show selected table
-<a href="#-list"></a>
-
-#### -create -- (action) create a table record(s)
-<a href="#-create"></a>
-
-#### -update -- (action) update fields of a selected issue or mergereq
-<a href="#-update"></a>
-
-#### -approve -- (action) remove draft desiognation from mergereq
-<a href="#-approve"></a>
-
-#### -needs_work -- (action) reopen an issue or put a draft designation on mergereq
-<a href="#-needs_work"></a>
-
-#### -stop -- (action) closes an issue, or remove mr branch after review
-<a href="#-stop"></a>
-
-#### -t -- Tree view: expand issue description
-<a href="#-t"></a>
-
-#### -e -- edit the input
-<a href="#-e"></a>
-
-#### -authdir -- (setup) Input directory for auth data
-<a href="#-authdir"></a>
-
-#### -dry_run -- Print actions, do not perform
-<a href="#-dry_run"></a>
-
-#### -gitdir -- (setup) Change directory of git repository
-<a href="#-gitdir"></a>
-
-#### -show_gitlab_system_notes -- (misc) Show issue and mr notes created by gitlab
-<a href="#-show_gitlab_system_notes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Operation
 <a href="#operation"></a>
@@ -434,6 +387,87 @@ gcli mr:arnd.121 -approve
 gcli user
 ```
 
+### Options
+<a href="#options"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -selector -- table:key, where table is issue,repo,mr, etc. and key is a regex.
+<a href="#-selector"></a>
+
+#### -fields -- additional key:value pairs for use with -create, -list, -update
+<a href="#-fields"></a>
+
+#### -accept -- (action) accept a slected merge request
+<a href="#-accept"></a>
+
+#### -start -- (action) start working on a selected issue
+<a href="#-start"></a>
+
+#### -list -- (action) show selected table
+<a href="#-list"></a>
+
+#### -create -- (action) create a table record(s)
+<a href="#-create"></a>
+
+#### -update -- (action) update fields of a selected issue or mergereq
+<a href="#-update"></a>
+
+#### -approve -- (action) remove draft desiognation from mergereq
+<a href="#-approve"></a>
+
+#### -needs_work -- (action) reopen an issue or put a draft designation on mergereq
+<a href="#-needs_work"></a>
+
+#### -stop -- (action) closes an issue, or remove mr branch after review
+<a href="#-stop"></a>
+
+#### -t -- Tree view: expand issue description
+<a href="#-t"></a>
+
+#### -e -- edit the input
+<a href="#-e"></a>
+
+#### -authdir -- (setup) Input directory for auth data
+<a href="#-authdir"></a>
+
+#### -dry_run -- Print actions, do not perform
+<a href="#-dry_run"></a>
+
+#### -gitdir -- (setup) Change directory of git repository
+<a href="#-gitdir"></a>
+
+#### -show_gitlab_system_notes -- (misc) Show issue and mr notes created by gitlab
+<a href="#-show_gitlab_system_notes"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`gcli` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[gclidb.gtype](/txt/ssimdb/gclidb/gtype.md)|Platform type (ghp=github; glpat=gitlab)|
+|[gclidb.gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|Token prefix mapping to platform|
+|[gclidb.gtypeh](/txt/ssimdb/gclidb/gtypeh.md)|HTTP heaaderes for user with platform|
+|[gclidb.gact](/txt/ssimdb/gclidb/gact.md)|Action that may be performed on a table|
+|[gclidb.gtbl](/txt/ssimdb/gclidb/gtbl.md)|Supported gcli tables|
+|[gclidb.gfld](/txt/ssimdb/gclidb/gfld.md)|Gitlab/github field name|
+|[gclidb.gtblactfld](/txt/ssimdb/gclidb/gtblactfld.md)|List of available for each table & action combination|
+|[gclidb.gstatet](/txt/ssimdb/gclidb/gstatet.md)|Internal|
+|[gclidb.grepossh](/txt/ssimdb/gclidb/grepossh.md)|Ssh key table|
+|[gclidb.grepogitport](/txt/ssimdb/gclidb/grepogitport.md)|Default ports for repositories|
+|[gclidb.grepo](/txt/ssimdb/gclidb/grepo.md)|Repo table (acr grepo -in ~/.ssim)|
+|[gclidb.gmethod](/txt/ssimdb/gclidb/gmethod.md)|HTTP method list|
+|[gclidb.gclicmdt](/txt/ssimdb/gclidb/gclicmdt.md)|Internal test|
+|[gclidb.gclicmdf2j](/txt/ssimdb/gclidb/gclicmdf2j.md)|Mapping of internal fields to JSON fields for gitlab/github|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -457,25 +491,4 @@ The following source files are part of this tool:
 |[include/gcli.h](/include/gcli.h)||
 |[include/gen/gcli_gen.h](/include/gen/gcli_gen.h)||
 |[include/gen/gcli_gen.inl.h](/include/gen/gcli_gen.inl.h)||
-
-### Inputs
-<a href="#inputs"></a>
-`gcli` takes the following tables on input:
-|ssimfile|comment|
-|---|---|
-|[gclidb.gtype](/txt/ssimdb/gclidb/gtype.md)|Platform type (ghp=github; glpat=gitlab)|
-|[gclidb.gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|Token prefix mapping to platform|
-|[gclidb.gtypeh](/txt/ssimdb/gclidb/gtypeh.md)|HTTP heaaderes for user with platform|
-|[gclidb.gfld](/txt/ssimdb/gclidb/gfld.md)|Gitlab/github field name|
-|[gclidb.gact](/txt/ssimdb/gclidb/gact.md)|Action that may be performed on a table|
-|[gclidb.gtbl](/txt/ssimdb/gclidb/gtbl.md)|Supported gcli tables|
-|[gclidb.gtblactfld](/txt/ssimdb/gclidb/gtblactfld.md)|List of available for each table & action combination|
-|[gclidb.gstatet](/txt/ssimdb/gclidb/gstatet.md)|Internal|
-|[gclidb.grepossh](/txt/ssimdb/gclidb/grepossh.md)|Ssh key table|
-|[gclidb.grepogitport](/txt/ssimdb/gclidb/grepogitport.md)|Default ports for repositories|
-|[gclidb.grepo](/txt/ssimdb/gclidb/grepo.md)|Repo table (acr grepo -in ~/.ssim)|
-|[gclidb.gmethod](/txt/ssimdb/gclidb/gmethod.md)|HTTP method list|
-|[gclidb.gclicmdt](/txt/ssimdb/gclidb/gclicmdt.md)|Internal test|
-|[gclidb.gclicmdf2j](/txt/ssimdb/gclidb/gclicmdf2j.md)|Mapping of internal fields to JSON fields for gitlab/github|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 

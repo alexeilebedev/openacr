@@ -33,12 +33,13 @@
 enum amsdb_FieldIdEnum {             // amsdb.FieldId.value
      amsdb_FieldId_proctype     = 0
     ,amsdb_FieldId_id           = 1
-    ,amsdb_FieldId_comment      = 2
-    ,amsdb_FieldId_streamtype   = 3
-    ,amsdb_FieldId_value        = 4
+    ,amsdb_FieldId_ns           = 2
+    ,amsdb_FieldId_comment      = 3
+    ,amsdb_FieldId_streamtype   = 4
+    ,amsdb_FieldId_value        = 5
 };
 
-enum { amsdb_FieldIdEnum_N = 5 };
+enum { amsdb_FieldIdEnum_N = 6 };
 
 namespace amsdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ProcTypePkey;
@@ -56,19 +57,23 @@ namespace amsdb { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // amsdb.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator amsdb_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(amsdb_FieldIdEnum arg);
-    FieldId();
+    // func:amsdb.FieldId.value.Cast
+    inline               operator amsdb_FieldIdEnum() const __attribute__((nothrow));
+    // func:amsdb.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:amsdb.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:amsdb.FieldId..EnumCtor
+    inline               FieldId(amsdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:amsdb.FieldId.value.GetEnum
-amsdb_FieldIdEnum    value_GetEnum(const amsdb::FieldId& parent) __attribute__((nothrow));
+inline amsdb_FieldIdEnum value_GetEnum(const amsdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:amsdb.FieldId.value.SetEnum
-void                 value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:amsdb.FieldId.value.ToCstr
@@ -96,7 +101,7 @@ bool                 value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr 
 bool                 FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.FieldId..Init
-void                 FieldId_Init(amsdb::FieldId& parent);
+inline void          FieldId_Init(amsdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:amsdb.FieldId.String  printfmt:Raw
 // func:amsdb.FieldId..Print
@@ -106,8 +111,10 @@ void                 FieldId_Print(amsdb::FieldId& row, algo::cstring& str) __at
 struct ProcType { // amsdb.ProcType
     algo::Smallstr50   proctype;   //
     u32                id;         //   0
+    algo::Smallstr16   ns;         //
     algo::Comment      comment;    //
-    ProcType();
+    // func:amsdb.ProcType..Ctor
+    inline               ProcType() __attribute__((nothrow));
 };
 
 // func:amsdb.ProcType..ReadFieldMaybe
@@ -118,7 +125,7 @@ bool                 ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strp
 bool                 ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amsdb.ProcType..Init
-void                 ProcType_Init(amsdb::ProcType& parent);
+inline void          ProcType_Init(amsdb::ProcType& parent);
 // print string representation of ROW to string STR
 // cfmt:amsdb.ProcType.String  printfmt:Tuple
 // func:amsdb.ProcType..Print
@@ -129,7 +136,8 @@ struct StreamType { // amsdb.StreamType
     algo::Smallstr50   streamtype;   //
     ams::StreamType    id;           //
     algo::Comment      comment;      //
-    StreamType();
+    // func:amsdb.StreamType..Ctor
+    inline               StreamType() __attribute__((nothrow));
 };
 
 // func:amsdb.StreamType..ReadFieldMaybe

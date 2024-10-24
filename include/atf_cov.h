@@ -32,7 +32,7 @@ namespace atf_cov { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/atf_cov.cpp
+    // cpp/atf_cov/atf_cov.cpp
     //
     void MergeCovline(dev::Covline &covline_in);
     void RunGcov(strptr covdir);

@@ -26,28 +26,23 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/fm_gen.inl.h"
 //#pragma endinclude
-inline fmdb::Alarm::Alarm() {
+
+// --- fmdb.Alarm..Ctor
+inline  fmdb::Alarm::Alarm() {
     fmdb::Alarm_Init(*this);
 }
 
-inline fmdb::AlmCode::AlmCode() {
+// --- fmdb.AlmCode..Ctor
+inline  fmdb::AlmCode::AlmCode() {
 }
 
-inline fmdb::AlmObjtype::AlmObjtype() {
+// --- fmdb.AlmObjtype..Ctor
+inline  fmdb::AlmObjtype::AlmObjtype() {
 }
 
-inline fmdb::AlmSource::AlmSource() {
+// --- fmdb.AlmSource..Ctor
+inline  fmdb::AlmSource::AlmSource() {
 }
-
-inline fmdb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline fmdb::FieldId::FieldId(fmdb_FieldIdEnum arg) { this->value = i32(arg); }
-inline fmdb::FieldId::FieldId() {
-    fmdb::FieldId_Init(*this);
-}
-
 
 // --- fmdb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -62,7 +57,7 @@ inline void fmdb::value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) {
 }
 
 // --- fmdb.FieldId.value.Cast
-inline fmdb::FieldId::operator fmdb_FieldIdEnum () const {
+inline  fmdb::FieldId::operator fmdb_FieldIdEnum() const {
     return fmdb_FieldIdEnum((*this).value);
 }
 
@@ -70,6 +65,22 @@ inline fmdb::FieldId::operator fmdb_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void fmdb::FieldId_Init(fmdb::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- fmdb.FieldId..Ctor
+inline  fmdb::FieldId::FieldId() {
+    fmdb::FieldId_Init(*this);
+}
+
+// --- fmdb.FieldId..FieldwiseCtor
+inline  fmdb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- fmdb.FieldId..EnumCtor
+inline  fmdb::FieldId::FieldId(fmdb_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const fmdb::Alarm &row) {// cfmt:fmdb.Alarm.String

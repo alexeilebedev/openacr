@@ -3,26 +3,29 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Disassembling](#disassembling)
-* [Output Directory](#output-directory)
-* [Target Definition](#target-definition)
-* [Debugging the build](#debugging-the-build)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Bootstrapping](#bootstrapping)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Target Definition](#target-definition)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Build Directory](#build-directory)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Debugging the build](#debugging-the-build)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [abt - Internals](/txt/exe/abt/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 abt: Algo Build Tool - build & link C++ targets
 Usage: abt [[-target:]<regx>] [options]
     OPTION      TYPE    DFLT    COMMENT
     [target]    regx    ""      Regx of target name
     -in         string  "data"  Root of input ssim dir
-    -out_dir    string  ""      Output directory
-    -cfg        string  ""      Set config
+    -cfg        regx    ""      Set config
     -compiler   string  ""      Set compiler.
     -uname      string  ""      Set uname (default: guess)
     -arch       string  ""      Set architecture (default: guess)
@@ -31,6 +34,7 @@ Usage: abt [[-target:]<regx>] [options]
     -listincl                   List includes
     -build                      If set, build specified target (all necessary steps)
     -preproc                    Preprocess file, produce .i file
+    -srcfile    regx    "%"     Build/disassemble/preprocess specific file
     -clean                      Delete all output files
     -dry_run                    Print actions, do not perform
     -maxjobs    int     0       Maximum number of child build processes. 0=pick good default
@@ -49,6 +53,7 @@ Usage: abt [[-target:]<regx>] [options]
                                     gcache  Select gcache if enabled (no cache if disabled)
                                     gcache-force  Pass --force to gcache (no cache if disabled)
                                     ccache  Select ccache if enabled (no cache if disabled)
+    -shortlink                  Try to shorten sort link if possible
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -57,8 +62,11 @@ Usage: abt [[-target:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 Abt is a build tool. The argument to abt is a target name regex.
 Target means 'build target'.
 
@@ -66,28 +74,59 @@ The ssimfiles `abt` reads describe which targets can be built,
 what are the sources files that comprise the targets, and the various options to use.
 
 Abt outputs are organized under the `build/` directory.
-`abt` supports multiple compilers and architectures within the same directory.
+`abt` supports multiple compilers and architectures.
 
 When building, `abt` builds a dependency dag based on #includes; 
-Invokes build commands, keeping up to N of them running at a time.
+Invokes build commands, several jobs running at a time.
 
 Builds happen in parallel by default. The default is picked
 based on the number of processors in the system. It can be overriden by specifying `-maxjobs`.
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
+### Bootstrapping
+<a href="#bootstrapping"></a>
+Initially, no executables exist. OpenACR uses a `bootstrap` file, which is a pre-computed
+script residing in `bin/bootstrap`, to build `abt`, after which `abt` itself is used to build the rest.
+There is one bootstrap file for each supported configuration. When the bootstrap file runs, it also
+sets up soft links `build/$cfg` (e.g. `build/release`, `build/debug`).
+Bootstrapping can be done by hand, or with the `ai` script. The `ai` script examines the current
+system to find a supported coniguration. Bootstrap files are prepared with `abt -printcmd`.
+
+### Target Definition
+<a href="#target-definition"></a>
+
+Build-related information for target X can be obtained with `acr target:X -t`.
+This includes the [target](/txt/ssimdb/dev/target.md), its [source files](/txt/ssimdb/dev/targsrc.md),
+and [dependencies](/txt/ssimdb/dev/targdep.md)
+
+### Build Directory
+<a href="#build-directory"></a>
+All object, libraries and executables are deposited into the directory
+`build/$uname-$compiler.$cfg-$arch`, for instance `build/Linux-g++.release-x86_64`.
+There are no subdirectories, all files are placed directly in the build directory.
+For source files, the object file is calculated by replacing `/` with `.` in the path,
+for instance `cpp/abt/main.cpp` becomes `build/Linux-g++.release-x86_64/cpp.abt.main.o`.
+
+For each executable, there is a soft link `bin/$target` usually pointing to `../build/release/$target`.
+
+### Debugging the build
+<a href="#debugging-the-build"></a>
+
+Just like with other programs, the verbosity level `-v` can be used to trace the execution.
+When run with `-v`, abt will show the commands that execute. Otherwise, only the commands that
+either fail or produce output are echoed to the screen. By default, they are hidden to keep output
+clean.
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -target -- Regx of target name
 <a href="#-target"></a>
 
 #### -in -- Root of input ssim dir
 <a href="#-in"></a>
-
-#### -out_dir -- Output directory
-<a href="#-out_dir"></a>
-
-Override output directory. Default is `build/$uname-$compiler.$cfg-$arch`,
-e.g. build/Linux-g++.release-x86_64
 
 #### -cfg -- Set config
 <a href="#-cfg"></a>
@@ -120,6 +159,9 @@ g++       ranlib       ar       g++       .a              .gch    .o
 g++-9     ranlib       ar       g++-9     .a              .gch    .o
 
 ```
+
+This option value can be a regex. Specifying `abt -cfg:% %` will build all targets
+in all configurations.
 
 #### -uname -- Set uname (default: guess)
 <a href="#-uname"></a>
@@ -177,18 +219,47 @@ List files belonging to selected targets
 #### -listincl -- List includes
 <a href="#-listincl"></a>
 
-List include files belonging to selected targets
+List include files belonging to selected targets.
+With `-srcfile`, narrow down the list to just the specified files.
+Example:
+
+```
+inline-command: abt -listincl abt -srcfile cpp/abt/%
+dev.include  include:cpp/abt/build.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/disas.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/main.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/ood.cpp:include/algo.h  sys:N  comment:""
+dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/opt.cpp:include/abt.h  sys:N  comment:""
+dev.include  include:cpp/abt/scan.cpp:include/algo.h  sys:N  comment:""
+dev.include  include:cpp/abt/scan.cpp:include/abt.h  sys:N  comment:""
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
+```
 
 #### -build -- If set, build specified target (all necessary steps)
 <a href="#-build"></a>
 
 This is the default unless other options are specified.
 
+For libraries, the `arch` suffix is applied, so the target `algo_lib` produces the library
+`build/Linux-g++.release-x86_64/algo_lib-x86_64.a`.
+
 #### -preproc -- Preprocess file, produce .i file
 <a href="#-preproc"></a>
 
+#### -srcfile -- Build/disassemble/preprocess specific file
+<a href="#-srcfile"></a>
+
+For `-preproc`, `-build`, `-disas`, `-clean`, `-list`, and `-listincl` commands, abt supports narrowing down each
+target to a specific set of source files. When this option is specified, the linking step
+will be suppressed. It can be used to compile a single file, or disassemble a function from
+a single file.
+
 #### -clean -- Delete all output files
 <a href="#-clean"></a>
+
+This command deletes all object files and target output files matching input filter.
 
 #### -dry_run -- Print actions, do not perform
 <a href="#-dry_run"></a>
@@ -205,10 +276,10 @@ This is the default unless other options are specified.
 #### -install -- Update soft-link under bin/
 <a href="#-install"></a>
 
-By default, the resulting files are left in the output directory.
+By default, the resulting files are left in the build directory.
 There are already soft links from `bin`/ to `../build/release`. If we want to re-point the default
 binary to a different version, the `-install` option will rewrite the soft link to point 
-to the new executable. For instance, we may want to install a debug sample version with
+to the new executable. For instance, we may want to install a debug version of target `sample` with
 `abt -install sample -cfg debug`. This will rewrite the soft link `bin/sample` to be
 `../build/Linux-clang++.debug-x86_64/sample`.
 
@@ -223,18 +294,6 @@ to the new executable. For instance, we may want to install a debug sample versi
 
 #### -disas -- Regex of function to disassemble
 <a href="#-disas"></a>
-
-#### -report -- Print final report
-<a href="#-report"></a>
-
-#### -jcdb -- Create JSON compilation database in specified file
-<a href="#-jcdb"></a>
-
-#### -cache -- Cache mode
-<a href="#-cache"></a>
-
-### Disassembling
-<a href="#disassembling"></a>
 
 The parameter is a regular expression that's matched against function names in the 
 compiler's assembler output.
@@ -258,11 +317,16 @@ compiler's assembler output.
       2a:	b9 01 00 00 00       	mov    $0x1,%ecx
 ```
 
+With `-cfg` selecting more than one configuration, you can quickly compare disassembled output
+for more than one configuration.
+
 #### -report -- Print final report
 <a href="#-report"></a>
 
 #### -jcdb -- Create JSON compilation database in specified file
 <a href="#-jcdb"></a>
+
+This output file is used with `cppcheck`. The parameter is the filename.
 
 #### -cache -- Cache mode
 <a href="#-cache"></a>
@@ -271,68 +335,26 @@ Specify which compiler cache to use. Default is "auto", which looks for
 a directory entry `.ccache` or `.gcache`. If one is found, corresponding
 cache is used. See [gcache][/txt/exe/gcache/README.md] for more information.
 
-### Output Directory
-<a href="#output-directory"></a>
+#### -shortlink -- Try to shorten sort link if possible
+<a href="#-shortlink"></a>
 
-The resulting object files are now in `build/release/sample`, 
-or more specifically `build/Linux-clang++.release-x86_64/sample`,
-since `build/release/sample` is a soft link.
+This option is used with `-printcmd` to make sure the installed binaries point to `../build/release`
+instead of `../build/Linux-g++.release-x86_64`.
 
-    $ ls -l build/Linux-clang++.release-x86_64/*sample*
-    -rwxrwxr-x. 1 alexei alexei 109128 May  3 18:35 build/Linux-clang++.release-x86_64/sample
-    -rw-rw-r--. 1 alexei alexei   1912 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.sample.sample.o
-    -rw-rw-r--. 1 alexei alexei  24776 May  3 18:34 build/Linux-clang++.release-x86_64/cpp.gen.sample_gen.o
-
-`abt` places all output files in the same output directory, with no subdirectories.
-Source file paths are flattened, substituting `/` with `.`. So, `cpp/sample/sample.cpp`
-becomes `cpp.sample.sample.o` in this directory.
-
-The output directory can be overriden with `-out_dir` option. 
-If not specified, `-cfg` defaults to `-release` and the output directory defaults to `build/$cfg`.
-Typically, `build/$cfg` is a soft link installed by whatever bootstrap script you ran.
-
-### Target Definition
-<a href="#target-definition"></a>
-
-Build-related information for target X can be obtained with `acr target:X -t`.
-This includes the [target](/txt/ssimdb/dev/target.md), its [source files](/txt/ssimdb/dev/targsrc.md),
-and [dependencies](/txt/ssimdb/dev/targdep.md)
-
-### Debugging the build
-<a href="#debugging-the-build"></a>
-
-Just like with other programs, the verbosity level `-v` can be used to trace the execution.
-When run with `-v`, abt will show the commands that execute. Otherwise, only the commands that
-either fail or produce output are echoed to the screen. By default, they are hidden to keep output
-clean.
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/abt/build.cpp](/cpp/abt/build.cpp)|Build dag execution|
-|[cpp/abt/disas.cpp](/cpp/abt/disas.cpp)|Disassemble|
-|[cpp/abt/main.cpp](/cpp/abt/main.cpp)|Algo Build Tool - Main file|
-|[cpp/abt/opt.cpp](/cpp/abt/opt.cpp)|Calculate compiler options|
-|[cpp/gen/abt_gen.cpp](/cpp/gen/abt_gen.cpp)||
-|[include/abt.h](/include/abt.h)|Main header|
-|[include/gen/abt_gen.h](/include/gen/abt_gen.h)||
-|[include/gen/abt_gen.inl.h](/include/gen/abt_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `abt` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.uname](/txt/ssimdb/dev/uname.md)|List of known unames|
 |[dev.tool_opt](/txt/ssimdb/dev/tool_opt.md)|Compiler/linker options to use|
-|[dev.syslib](/txt/ssimdb/dev/syslib.md)|Registered system library|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.syslib](/txt/ssimdb/dev/syslib.md)|Registered system library|
 |[dev.targsyslib](/txt/ssimdb/dev/targsyslib.md)|Use of system library by target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
@@ -342,4 +364,7 @@ The following source files are part of this tool:
 |[dev.compiler](/txt/ssimdb/dev/compiler.md)|One of the known compilers|
 |[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
 |[dev.arch](/txt/ssimdb/dev/arch.md)|System architecture|
+|[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

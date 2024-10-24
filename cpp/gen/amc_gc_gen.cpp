@@ -65,9 +65,9 @@ namespace amc_gc { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:amc_gc.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:amc_gc...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- amc_gc.trace..Print
@@ -362,11 +362,6 @@ void amc_gc::FDb_Init() {
     _db.n_total = u32(0);
 
     amc_gc::InitReflection();
-}
-
-// --- amc_gc.FDb..Uninit
-void amc_gc::FDb_Uninit() {
-    amc_gc::FDb &row = _db; (void)row;
 }
 
 // --- amc_gc.FieldId.value.ToCstr

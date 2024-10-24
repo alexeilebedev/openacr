@@ -3,68 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_exec.Cmdline - 
-<a href="#lib_exec-cmdline"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|dry_run|bool|Val|
-|q|bool|Val|true|Do not print node name|
-|maxjobs|i32|Val|8|Maximum number of parallel jobs|
-|complooo|bool|Val|false|Allow jobs to complete out-of-order|
-|merge_output|bool|Val|false|Merge stderr and stdout from child processes|
-
-#### lib_exec.FDb - 
-<a href="#lib_exec-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|_db|lib_exec.FDb|Global|
-|cmdline|lib_exec.Cmdline|Val|
-|syscmddep|lib_exec.FSyscmddep|Lary|
-|next_syscmd|u64|Val|
-|syscmd|lib_exec.FSyscmd|Lary|
-|ind_running|lib_exec.FSyscmd|Thash||Running subprocesses, hashed by pid|
-|bh_syscmd|lib_exec.FSyscmd|Bheap||Heap of all commands in dependency order|
-|zd_started|lib_exec.FSyscmd|Llist|
-
-#### lib_exec.FSyscmd - 
-<a href="#lib_exec-fsyscmd"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|msghdr|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|Base|
-|c_prior|lib_exec.FSyscmddep|Ptrary||Set of dependencies where this command is the 'after'|
-|c_next|lib_exec.FSyscmddep|Ptrary||Set of dependencies where this command is the 'before'|
-|rowid|i32|Val|
-|message|algo.cstring|Val||Message to print when command finishes|
-|redir_out|bool|Val|true|Redirect stdout/stderr to temp file|
-|show_out|bool|Val|true|Print stdout/stderr|
-|stdout_fd|algo_lib.FFildes|Val||Temporary file containing stdout of subprocess|
-|stderr_fd|algo_lib.FFildes|Val||Temporary file containing stderr of subprocess|
-|signal|i32|Val||Signal received by process (if any)|
-|args|algo.StringAry|Val||Overrides 'command'|
-
-#### lib_exec.FSyscmddep - 
-<a href="#lib_exec-fsyscmddep"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|msghdr|[dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md)|Base|
-|p_child|lib_exec.FSyscmd|Upptr||Command to execute after|
-|p_parent|lib_exec.FSyscmd|Upptr||Command to execute before (p = parent, prior, prerequisite..)|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
@@ -104,8 +54,21 @@ bool lib_exec::CompletedOKQ(lib_exec::FSyscmd &cmd)
 void lib_exec::RefurbishStd(lib_exec::FSyscmd &cmd) 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_exec` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -117,10 +80,217 @@ The following source files are part of this tool:
 |[include/gen/lib_exec_gen.inl.h](/include/gen/lib_exec_gen.inl.h)||
 |[include/lib_exec.h](/include/lib_exec.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`lib_exec` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_exec` generated code creates the tables below.
+All allocations are done through global `lib_exec::_db` [lib_exec.FDb](#lib_exec-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_exec.Cmdline](#lib_exec-cmdline)||
+|[lib_exec.FDb](#lib_exec-fdb)||FDb._db (Global)|
+|[lib_exec.FSyscmd](#lib_exec-fsyscmd)|[dev.syscmd](/txt/ssimdb/dev/syscmd.md)|FDb.syscmd (Lary)|syscmd (Lary, by rowid)|ind_running (Thash, hash field pid)|bh_syscmd (Bheap, sort field execkey)|zd_started (Llist)|
+||||FSyscmddep.p_child (Upptr)|
+||||FSyscmddep.p_parent (Upptr)|
+|[lib_exec.FSyscmddep](#lib_exec-fsyscmddep)|[dev.syscmddep](/txt/ssimdb/dev/syscmddep.md)|FDb.syscmddep (Lary)|syscmddep (Lary, by rowid)|
+||||FSyscmd.c_prior (Ptrary)|
+||||FSyscmd.c_next (Ptrary)|
+
+#### lib_exec.Cmdline - 
+<a href="#lib_exec-cmdline"></a>
+
+#### lib_exec.Cmdline Fields
+<a href="#lib_exec-cmdline-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_exec.Cmdline.dry_run|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_exec.Cmdline.q|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Do not print node name|
+|lib_exec.Cmdline.maxjobs|i32|[Val](/txt/exe/amc/reftypes.md#val)|8|Maximum number of parallel jobs|
+|lib_exec.Cmdline.complooo|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Allow jobs to complete out-of-order|
+|lib_exec.Cmdline.merge_output|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Merge stderr and stdout from child processes|
+
+#### Struct Cmdline
+<a href="#struct-cmdline"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_exec_gen.h](/include/gen/lib_exec_gen.h)
+```
+struct Cmdline { // lib_exec.Cmdline
+    bool   dry_run;        //   false
+    bool   q;              //   true  Do not print node name
+    i32    maxjobs;        //   8  Maximum number of parallel jobs
+    bool   complooo;       //   false  Allow jobs to complete out-of-order
+    bool   merge_output;   //   false  Merge stderr and stdout from child processes
+    // func:lib_exec.Cmdline..Ctor
+    inline               Cmdline() __attribute__((nothrow));
+};
+```
+
+#### lib_exec.FDb - 
+<a href="#lib_exec-fdb"></a>
+
+#### lib_exec.FDb Fields
+<a href="#lib_exec-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_exec.FDb._db|[lib_exec.FDb](/txt/lib/lib_exec/README.md#lib_exec-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_exec.FDb.cmdline|[lib_exec.Cmdline](/txt/lib/lib_exec/README.md#lib_exec-cmdline)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_exec.FDb.syscmddep|[lib_exec.FSyscmddep](/txt/lib/lib_exec/README.md#lib_exec-fsyscmddep)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_exec.FDb.next_syscmd|u64|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_exec.FDb.syscmd|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_exec.FDb.ind_running|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Thash](/txt/exe/amc/reftypes.md#thash)||Running subprocesses, hashed by pid|
+|lib_exec.FDb.bh_syscmd|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Bheap](/txt/exe/amc/reftypes.md#bheap)||Heap of all commands in dependency order|
+|lib_exec.FDb.zd_started|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_exec_gen.h](/include/gen/lib_exec_gen.h)
+```
+struct FDb { // lib_exec.FDb
+    lib_exec::Cmdline       cmdline;                     //
+    lib_exec::FSyscmddep*   syscmddep_lary[32];          // level array
+    i32                     syscmddep_n;                 // number of elements in array
+    u64                     next_syscmd;                 //   0
+    lib_exec::FSyscmd*      syscmd_lary[32];             // level array
+    i32                     syscmd_n;                    // number of elements in array
+    lib_exec::FSyscmd**     ind_running_buckets_elems;   // pointer to bucket array
+    i32                     ind_running_buckets_n;       // number of elements in bucket array
+    i32                     ind_running_n;               // number of elements in the hash table
+    lib_exec::FSyscmd**     bh_syscmd_elems;             // binary heap by execkey
+    i32                     bh_syscmd_n;                 // number of elements in the heap
+    i32                     bh_syscmd_max;               // max elements in bh_syscmd_elems
+    lib_exec::FSyscmd*      zd_started_head;             // zero-terminated doubly linked list
+    i32                     zd_started_n;                // zero-terminated doubly linked list
+    lib_exec::FSyscmd*      zd_started_tail;             // pointer to last element
+    lib_exec::trace         trace;                       //
+};
+```
+
+#### lib_exec.FSyscmd - System command to execute
+<a href="#lib_exec-fsyscmd"></a>
+
+#### lib_exec.FSyscmd Fields
+<a href="#lib_exec-fsyscmd-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_exec.FSyscmd.msghdr|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Base](/txt/ssimdb/dev/syscmd.md)|||
+|lib_exec.FSyscmd.c_prior|[lib_exec.FSyscmddep](/txt/lib/lib_exec/README.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)||Set of dependencies where this command is the 'after'|
+|lib_exec.FSyscmd.c_next|[lib_exec.FSyscmddep](/txt/lib/lib_exec/README.md#lib_exec-fsyscmddep)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)||Set of dependencies where this command is the 'before'|
+|lib_exec.FSyscmd.rowid|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_exec.FSyscmd.message|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Message to print when command finishes|
+|lib_exec.FSyscmd.redir_out|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Redirect stdout/stderr to temp file|
+|lib_exec.FSyscmd.show_out|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Print stdout/stderr|
+|lib_exec.FSyscmd.stdout_fd|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)||Temporary file containing stdout of subprocess|
+|lib_exec.FSyscmd.stderr_fd|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)||Temporary file containing stderr of subprocess|
+|lib_exec.FSyscmd.signal|i32|[Val](/txt/exe/amc/reftypes.md#val)||Signal received by process (if any)|
+|lib_exec.FSyscmd.args|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftypes.md#val)||Overrides 'command'|
+
+#### Struct FSyscmd
+<a href="#struct-fsyscmd"></a>
+*Note:* field ``lib_exec.FSyscmd.msghdr`` has reftype ``base`` so the fields of [dev.Syscmd](/txt/ssimdb/dev/syscmd.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_exec_gen.h](/include/gen/lib_exec_gen.h)
+```
+struct FSyscmd { // lib_exec.FSyscmd
+    lib_exec::FSyscmd*       ind_running_next;   // hash next
+    i32                      bh_syscmd_idx;      // index in heap; -1 means not-in-heap
+    lib_exec::FSyscmd*       zd_started_next;    // zslist link; -1 means not-in-list
+    lib_exec::FSyscmd*       zd_started_prev;    // previous element
+    i64                      syscmd;             //   0  Step number
+    algo::cstring            command;            // Command to execute
+    i32                      pid;                //   0  PID, if running
+    i32                      status;             //   0  Exit status (if command has completed)
+    i32                      nprereq;            //   0  Number of live pre-requisites
+    bool                     fail_prereq;        //   false  Set if one of pre-requisites fails
+    bool                     completed;          //   false  Completed?
+    i32                      maxtime;            //   0  Optional max running time (used to use SIGALRM)
+    lib_exec::FSyscmddep**   c_prior_elems;      // array of pointers
+    u32                      c_prior_n;          // array of pointers
+    u32                      c_prior_max;        // capacity of allocated array
+    lib_exec::FSyscmddep**   c_next_elems;       // array of pointers
+    u32                      c_next_n;           // array of pointers
+    u32                      c_next_max;         // capacity of allocated array
+    i32                      rowid;              //   0
+    algo::cstring            message;            // Message to print when command finishes
+    bool                     redir_out;          //   true  Redirect stdout/stderr to temp file
+    bool                     show_out;           //   true  Print stdout/stderr
+    algo_lib::FFildes        stdout_fd;          // Temporary file containing stdout of subprocess
+    algo_lib::FFildes        stderr_fd;          // Temporary file containing stderr of subprocess
+    i32                      signal;             //   0  Signal received by process (if any)
+    algo::StringAry          args;               // Overrides 'command'
+    // reftype Ptrary of lib_exec.FSyscmd.c_prior prohibits copy
+    // reftype Ptrary of lib_exec.FSyscmd.c_next prohibits copy
+    // func:lib_exec.FSyscmd..AssignOp
+    lib_exec::FSyscmd&   operator =(const lib_exec::FSyscmd &rhs) = delete;
+    // reftype Ptrary of lib_exec.FSyscmd.c_prior prohibits copy
+    // reftype Ptrary of lib_exec.FSyscmd.c_next prohibits copy
+    // func:lib_exec.FSyscmd..CopyCtor
+    FSyscmd(const lib_exec::FSyscmd &rhs) = delete;
+private:
+    // func:lib_exec.FSyscmd..Ctor
+    inline               FSyscmd() __attribute__((nothrow));
+    // func:lib_exec.FSyscmd..Dtor
+    inline               ~FSyscmd() __attribute__((nothrow));
+    friend lib_exec::FSyscmd&   syscmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_exec::FSyscmd*   syscmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 syscmd_RemoveAll() __attribute__((nothrow));
+    friend void                 syscmd_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_exec.FSyscmddep - Dependency between two commands
+<a href="#lib_exec-fsyscmddep"></a>
+
+#### lib_exec.FSyscmddep Fields
+<a href="#lib_exec-fsyscmddep-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_exec.FSyscmddep.msghdr|[dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md)|[Base](/txt/ssimdb/dev/syscmddep.md)|||
+|lib_exec.FSyscmddep.p_child|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftypes.md#upptr)||Command to execute after|
+|lib_exec.FSyscmddep.p_parent|[lib_exec.FSyscmd](/txt/lib/lib_exec/README.md#lib_exec-fsyscmd)|[Upptr](/txt/exe/amc/reftypes.md#upptr)||Command to execute before (p = parent, prior, prerequisite..)|
+
+#### Struct FSyscmddep
+<a href="#struct-fsyscmddep"></a>
+*Note:* field ``lib_exec.FSyscmddep.msghdr`` has reftype ``base`` so the fields of [dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_exec_gen.h](/include/gen/lib_exec_gen.h)
+```
+struct FSyscmddep { // lib_exec.FSyscmddep
+    i64                  child;                   //   0
+    i64                  parent;                  //   0
+    lib_exec::FSyscmd*   p_child;                 // reference to parent row
+    lib_exec::FSyscmd*   p_parent;                // reference to parent row
+    bool                 syscmd_c_next_in_ary;    //   false  membership flag
+    bool                 syscmd_c_prior_in_ary;   //   false  membership flag
+    // x-reference on lib_exec.FSyscmddep.p_child prevents copy
+    // x-reference on lib_exec.FSyscmddep.p_parent prevents copy
+    // func:lib_exec.FSyscmddep..AssignOp
+    inline lib_exec::FSyscmddep& operator =(const lib_exec::FSyscmddep &rhs) = delete;
+    // x-reference on lib_exec.FSyscmddep.p_child prevents copy
+    // x-reference on lib_exec.FSyscmddep.p_parent prevents copy
+    // func:lib_exec.FSyscmddep..CopyCtor
+    inline               FSyscmddep(const lib_exec::FSyscmddep &rhs) = delete;
+private:
+    // func:lib_exec.FSyscmddep..Ctor
+    inline               FSyscmddep() __attribute__((nothrow));
+    // func:lib_exec.FSyscmddep..Dtor
+    inline               ~FSyscmddep() __attribute__((nothrow));
+    friend lib_exec::FSyscmddep& syscmddep_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_exec::FSyscmddep* syscmddep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 syscmddep_RemoveAll() __attribute__((nothrow));
+    friend void                 syscmddep_RemoveLast() __attribute__((nothrow));
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 

@@ -24,15 +24,6 @@
 
 #pragma once
 //#pragma endinclude
-inline lib_amcdb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_amcdb::FieldId::FieldId(lib_amcdb_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_amcdb::FieldId::FieldId() {
-    lib_amcdb::FieldId_Init(*this);
-}
-
 
 // --- lib_amcdb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -47,7 +38,7 @@ inline void lib_amcdb::value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_Field
 }
 
 // --- lib_amcdb.FieldId.value.Cast
-inline lib_amcdb::FieldId::operator lib_amcdb_FieldIdEnum () const {
+inline  lib_amcdb::FieldId::operator lib_amcdb_FieldIdEnum() const {
     return lib_amcdb_FieldIdEnum((*this).value);
 }
 
@@ -55,6 +46,22 @@ inline lib_amcdb::FieldId::operator lib_amcdb_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_amcdb::FieldId_Init(lib_amcdb::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_amcdb.FieldId..Ctor
+inline  lib_amcdb::FieldId::FieldId() {
+    lib_amcdb::FieldId_Init(*this);
+}
+
+// --- lib_amcdb.FieldId..FieldwiseCtor
+inline  lib_amcdb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_amcdb.FieldId..EnumCtor
+inline  lib_amcdb::FieldId::FieldId(lib_amcdb_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_amcdb::FieldId &row) {// cfmt:lib_amcdb.FieldId.String

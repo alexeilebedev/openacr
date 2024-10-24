@@ -18,7 +18,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/disp/main.cpp -- Dispatch
+// Source: cpp/amc/disp/main.cpp -- Dispatch main
 //
 
 #include "include/amc.h"

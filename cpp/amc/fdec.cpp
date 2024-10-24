@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/fdec.cpp
+// Source: cpp/amc/fdec.cpp -- Decimal types
 //
 
 #include "include/amc.h"

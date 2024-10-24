@@ -37,9 +37,9 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 
 namespace algo_lib { // gen:ns_print_proto
     // func:algo_lib.Cmdline.verbose.ReadStrptrMaybe
-    static bool          verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.Cmdline.debug.ReadStrptrMaybe
-    static bool          debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
     // func:algo_lib.FDb._db.InitReflection
     static void          InitReflection();
@@ -52,7 +52,7 @@ namespace algo_lib { // gen:ns_print_proto
     // func:algo_lib.FDb.bh_timehook.Upheap
     static int           bh_timehook_Upheap(algo_lib::FTimehook& row, int idx) __attribute__((nothrow));
     // func:algo_lib.FDb.bh_timehook.ElemLt
-    static bool          bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
+    inline static bool   bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
     // func:algo_lib.FDb.bh_timehook_curs.Add
     static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
     // func:algo_lib.FDb.logcat.LoadStatic
@@ -62,16 +62,16 @@ namespace algo_lib { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:algo_lib.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Extract next character from STR and advance IDX
     // func:algo_lib.FTxtrow.sortkey.Nextchar
-    static u64           sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static u64    sortkey_Nextchar(const algo_lib::FTxtrow& txtrow, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:algo_lib.FTxttbl.c_txtrow.Swap
-    static void          c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
+    inline static void   c_txtrow_Swap(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:algo_lib.FTxttbl.c_txtrow.Rotleft
-    static void          c_txtrow_Rotleft(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b, algo_lib::FTxtrow* &elem_c) __attribute__((nothrow));
+    inline static void   c_txtrow_Rotleft(algo_lib::FTxtrow* &elem_a, algo_lib::FTxtrow* &elem_b, algo_lib::FTxtrow* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -88,10 +88,10 @@ namespace algo_lib { // gen:ns_print_proto
     static void          c_txtrow_IntQuickSort(algo_lib::FTxtrow* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:algo_lib.RegxState.ch_class.Swap
-    static void          ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
+    inline static void   ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:algo_lib.RegxState.ch_class.Rotleft
-    static void          ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
+    inline static void   ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -107,7 +107,7 @@ namespace algo_lib { // gen:ns_print_proto
     // func:algo_lib.RegxState.ch_class.IntQuickSort
     static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
     // func:algo_lib...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- algo_lib.Bitset.ary.ExpandBits
@@ -315,6 +315,20 @@ void algo_lib::Bitset_Uninit(algo_lib::Bitset& parent) {
 void algo_lib::Bitset_Print(algo_lib::Bitset& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
+}
+
+// --- algo_lib.Bitset..AssignOp
+algo_lib::Bitset& algo_lib::Bitset::operator =(const algo_lib::Bitset &rhs) {
+    ary_Setary(*this, ary_Getary(const_cast<algo_lib::Bitset&>(rhs)));
+    return *this;
+}
+
+// --- algo_lib.Bitset..CopyCtor
+ algo_lib::Bitset::Bitset(const algo_lib::Bitset &rhs) {
+    ary_elems 	= 0; // (algo_lib.Bitset.ary)
+    ary_n     	= 0; // (algo_lib.Bitset.ary)
+    ary_max   	= 0; // (algo_lib.Bitset.ary)
+    ary_Setary(*this, ary_Getary(const_cast<algo_lib::Bitset&>(rhs)));
 }
 
 // --- algo_lib.Cmdline.verbose.ReadStrptrMaybe
@@ -718,10 +732,29 @@ void algo_lib::CsvParse_Print(algo_lib::CsvParse& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"openquote", temp);
 }
 
-// --- algo_lib.FFildes..Uninit
-void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
-    algo_lib::FFildes &row = fildes; (void)row;
-    fd_Cleanup(fildes); // dmmeta.fcleanup:algo_lib.FFildes.fd
+// --- algo_lib.CsvParse..AssignOp
+algo_lib::CsvParse& algo_lib::CsvParse::operator =(const algo_lib::CsvParse &rhs) {
+    input = rhs.input;
+    sep = rhs.sep;
+    quotechar1 = rhs.quotechar1;
+    quotechar2 = rhs.quotechar2;
+    ary_tok_Setary(*this, ary_tok_Getary(const_cast<algo_lib::CsvParse&>(rhs)));
+    openquote = rhs.openquote;
+    return *this;
+}
+
+// --- algo_lib.CsvParse..CopyCtor
+ algo_lib::CsvParse::CsvParse(const algo_lib::CsvParse &rhs)
+    : input(rhs.input)
+    , sep(rhs.sep)
+    , quotechar1(rhs.quotechar1)
+    , quotechar2(rhs.quotechar2)
+    , openquote(rhs.openquote)
+ {
+    ary_tok_elems 	= 0; // (algo_lib.CsvParse.ary_tok)
+    ary_tok_n     	= 0; // (algo_lib.CsvParse.ary_tok)
+    ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
+    ary_tok_Setary(*this, ary_tok_Getary(const_cast<algo_lib::CsvParse&>(rhs)));
 }
 
 // --- algo_lib.FFildes..Print
@@ -729,12 +762,6 @@ void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
 // cfmt:algo_lib.FFildes.String  printfmt:Raw
 void algo_lib::FFildes_Print(algo_lib::FFildes& row, algo::cstring& str) {
     algo::Fildes_Print(row.fd, str);
-}
-
-// --- algo_lib.FLockfile..Uninit
-void algo_lib::FLockfile_Uninit(algo_lib::FLockfile& parent) {
-    algo_lib::FLockfile &row = parent; (void)row;
-    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FLockfile.fildes
 }
 
 // --- algo_lib.FTimehook..ReadFieldMaybe
@@ -1499,64 +1526,6 @@ bool algo_lib::replscope_XrefMaybe(algo_lib::Replscope &row) {
     bool retval = true;
     (void)row;
     return retval;
-}
-
-// --- algo_lib.FDb.error.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-algo_lib::ErrorX& algo_lib::error_Alloc() {
-    algo_lib::ErrorX* row = error_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("algo_lib.out_of_mem  field:algo_lib.FDb.error  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- algo_lib.FDb.error.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-algo_lib::ErrorX* algo_lib::error_AllocMaybe() {
-    algo_lib::ErrorX *row = (algo_lib::ErrorX*)error_AllocMem(sizeof(algo_lib::ErrorX));
-    if (row) {
-        new (row) algo_lib::ErrorX; // call constructor
-    }
-    return row;
-}
-
-// --- algo_lib.FDb.error.Delete
-// Remove row from all global and cross indices, then deallocate row
-void algo_lib::error_Delete(algo_lib::ErrorX &row) {
-    int length = sizeof(algo_lib::ErrorX);
-    row.~ErrorX();
-    error_FreeMem(&row, length);
-}
-
-// --- algo_lib.FDb.error.AllocMem
-// Allocate n bytes. If no memory available, return NULL.
-void* algo_lib::error_AllocMem(size_t n) {
-    void* mem = malloc(n);
-    ++algo_lib::_db.trace.alloc__db_malloc; // update global malloc counter
-    return mem;
-}
-
-// --- algo_lib.FDb.error.FreeMem
-// Remove mem from all global and cross indices, then deallocate mem
-void algo_lib::error_FreeMem(void *mem, size_t n) {
-    (void)n;
-    if (mem) {
-        ++algo_lib::_db.trace.del__db_malloc; // update global malloc counter
-        free(mem);
-    }
-}
-
-// --- algo_lib.FDb.error.ReallocMem
-// Reallocate n bytes. If the call fails, return value is NULL.
-// In this case, original MEM pointer is untouched.
-void* algo_lib::error_ReallocMem(void *mem, size_t old_size, size_t new_size) {
-    (void)old_size;
-    algo_lib::_db.trace.alloc__db_malloc += old_size == 0; // update global malloc counter
-    algo_lib::_db.trace.del__db_malloc += new_size == 0; // update global malloc counter
-    void* new_mem = realloc(mem, new_size);
-    return new_mem;
 }
 
 // --- algo_lib.FDb.error.XrefMaybe
@@ -3419,12 +3388,6 @@ void algo_lib::FImtable_Uninit(algo_lib::FImtable& imtable) {
     ind_imtable_Remove(row); // remove imtable from index ind_imtable
 }
 
-// --- algo_lib.FIohook..Uninit
-void algo_lib::FIohook_Uninit(algo_lib::FIohook& iohook) {
-    algo_lib::FIohook &row = iohook; (void)row;
-    fildes_Cleanup(iohook); // dmmeta.fcleanup:algo_lib.FIohook.fildes
-}
-
 // --- algo_lib.FReplvar..Uninit
 void algo_lib::FReplvar_Uninit(algo_lib::FReplvar& replvar) {
     algo_lib::FReplvar &row = replvar; (void)row;
@@ -3432,12 +3395,6 @@ void algo_lib::FReplvar_Uninit(algo_lib::FReplvar& replvar) {
     if (p_p_replscope)  {
         ind_replvar_Remove(*p_p_replscope, row);// remove replvar from index ind_replvar
     }
-}
-
-// --- algo_lib.FTempfile..Uninit
-void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
-    algo_lib::FTempfile &row = parent; (void)row;
-    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FTempfile.fildes
 }
 
 // --- algo_lib.FTxtcell..Uninit
@@ -4149,10 +4106,23 @@ void algo_lib::InTextFile_Uninit(algo_lib::InTextFile& parent) {
     temp_buf_RemoveAll(parent);
 }
 
-// --- algo_lib.Mmap..Uninit
-void algo_lib::Mmap_Uninit(algo_lib::Mmap& parent) {
-    algo_lib::Mmap &row = parent; (void)row;
-    mem_Cleanup(parent); // dmmeta.fcleanup:algo_lib.Mmap.mem
+// --- algo_lib.Regx.state.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo_lib::RegxState> algo_lib::state_Addary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= regx.state_elems && rhs.elems < regx.state_elems + regx.state_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    state_Reserve(regx, nnew); // reserve space
+    int at = regx.state_n;
+    for (int i = 0; i < nnew; i++) {
+        new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
+        regx.state_n++;
+    }
+    return algo::aryptr<algo_lib::RegxState>(regx.state_elems + at, nnew);
 }
 
 // --- algo_lib.Regx.state.Alloc
@@ -4246,6 +4216,40 @@ void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
     }
 }
 
+// --- algo_lib.Regx.state.Setary
+// Copy contents of RHS to PARENT.
+void algo_lib::state_Setary(algo_lib::Regx& regx, algo_lib::Regx &rhs) {
+    state_RemoveAll(regx);
+    int nnew = rhs.state_n;
+    state_Reserve(regx, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (regx.state_elems + i) algo_lib::RegxState(state_qFind(rhs, i));
+        regx.state_n = i + 1;
+    }
+}
+
+// --- algo_lib.Regx.state.Setary2
+// Copy specified array into state, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo_lib::state_Setary(algo_lib::Regx& regx, const algo::aryptr<algo_lib::RegxState> &rhs) {
+    state_RemoveAll(regx);
+    state_Addary(regx, rhs);
+}
+
+// --- algo_lib.Regx.state.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx, int n_elems, const algo_lib::RegxState& val) {
+    state_Reserve(regx, n_elems);
+    int old_n  = regx.state_n;
+    int new_n = old_n + n_elems;
+    algo_lib::RegxState *elems = regx.state_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo_lib::RegxState(val);
+    }
+    regx.state_n = new_n;
+    return algo::aryptr<algo_lib::RegxState>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.Regx..Uninit
 void algo_lib::Regx_Uninit(algo_lib::Regx& regx) {
     algo_lib::Regx &row = regx; (void)row;
@@ -4255,6 +4259,37 @@ void algo_lib::Regx_Uninit(algo_lib::Regx& regx) {
     state_RemoveAll(regx);
     // free memory for Tary algo_lib.Regx.state
     algo_lib::lpool_FreeMem(regx.state_elems, sizeof(algo_lib::RegxState)*regx.state_max); // (algo_lib.Regx.state)
+}
+
+// --- algo_lib.Regx..AssignOp
+algo_lib::Regx& algo_lib::Regx::operator =(const algo_lib::Regx &rhs) {
+    expr = rhs.expr;
+    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
+    front = rhs.front;
+    next_front = rhs.next_front;
+    start = rhs.start;
+    accept = rhs.accept;
+    parseerror = rhs.parseerror;
+    accepts_all = rhs.accepts_all;
+    literal = rhs.literal;
+    return *this;
+}
+
+// --- algo_lib.Regx..CopyCtor
+ algo_lib::Regx::Regx(const algo_lib::Regx &rhs)
+    : expr(rhs.expr)
+    , front(rhs.front)
+    , next_front(rhs.next_front)
+    , start(rhs.start)
+    , accept(rhs.accept)
+    , parseerror(rhs.parseerror)
+    , accepts_all(rhs.accepts_all)
+    , literal(rhs.literal)
+ {
+    state_elems 	= 0; // (algo_lib.Regx.state)
+    state_n     	= 0; // (algo_lib.Regx.state)
+    state_max   	= 0; // (algo_lib.Regx.state)
+    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
 }
 
 // --- algo_lib.RegxToken.type.ToCstr
@@ -4406,6 +4441,25 @@ void algo_lib::RegxExpr_Print(algo_lib::RegxExpr& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"out", temp);
 }
 
+// --- algo_lib.RegxParse.ary_expr.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Addary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= regxparse.ary_expr_elems && rhs.elems < regxparse.ary_expr_elems + regxparse.ary_expr_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.RegxParse.ary_expr  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_expr_Reserve(regxparse, nnew); // reserve space
+    int at = regxparse.ary_expr_n;
+    for (int i = 0; i < nnew; i++) {
+        new (regxparse.ary_expr_elems + at + i) algo_lib::RegxExpr(rhs[i]);
+        regxparse.ary_expr_n++;
+    }
+    return algo::aryptr<algo_lib::RegxExpr>(regxparse.ary_expr_elems + at, nnew);
+}
+
 // --- algo_lib.RegxParse.ary_expr.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
@@ -4497,6 +4551,40 @@ void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, int n) {
     }
 }
 
+// --- algo_lib.RegxParse.ary_expr.Setary
+// Copy contents of RHS to PARENT.
+void algo_lib::ary_expr_Setary(algo_lib::RegxParse& regxparse, algo_lib::RegxParse &rhs) {
+    ary_expr_RemoveAll(regxparse);
+    int nnew = rhs.ary_expr_n;
+    ary_expr_Reserve(regxparse, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (regxparse.ary_expr_elems + i) algo_lib::RegxExpr(ary_expr_qFind(rhs, i));
+        regxparse.ary_expr_n = i + 1;
+    }
+}
+
+// --- algo_lib.RegxParse.ary_expr.Setary2
+// Copy specified array into ary_expr, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo_lib::ary_expr_Setary(algo_lib::RegxParse& regxparse, const algo::aryptr<algo_lib::RegxExpr> &rhs) {
+    ary_expr_RemoveAll(regxparse);
+    ary_expr_Addary(regxparse, rhs);
+}
+
+// --- algo_lib.RegxParse.ary_expr.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNVal(algo_lib::RegxParse& regxparse, int n_elems, const algo_lib::RegxExpr& val) {
+    ary_expr_Reserve(regxparse, n_elems);
+    int old_n  = regxparse.ary_expr_n;
+    int new_n = old_n + n_elems;
+    algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo_lib::RegxExpr(val);
+    }
+    regxparse.ary_expr_n = new_n;
+    return algo::aryptr<algo_lib::RegxExpr>(elems + old_n, n_elems);
+}
+
 // --- algo_lib.RegxParse.ary_expr.ReadStrptrMaybe
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
@@ -4539,6 +4627,25 @@ void algo_lib::RegxParse_Print(algo_lib::RegxParse& row, algo::cstring& str) {
         name << ind_curs(ary_expr).index;
         PrintAttrSpaceReset(str, name, temp);
     }ind_end;
+}
+
+// --- algo_lib.RegxParse..AssignOp
+algo_lib::RegxParse& algo_lib::RegxParse::operator =(const algo_lib::RegxParse &rhs) {
+    input = rhs.input;
+    p_regx = rhs.p_regx;
+    ary_expr_Setary(*this, ary_expr_Getary(const_cast<algo_lib::RegxParse&>(rhs)));
+    return *this;
+}
+
+// --- algo_lib.RegxParse..CopyCtor
+ algo_lib::RegxParse::RegxParse(const algo_lib::RegxParse &rhs)
+    : input(rhs.input)
+    , p_regx(rhs.p_regx)
+ {
+    ary_expr_elems 	= 0; // (algo_lib.RegxParse.ary_expr)
+    ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
+    ary_expr_max   	= 0; // (algo_lib.RegxParse.ary_expr)
+    ary_expr_Setary(*this, ary_expr_Getary(const_cast<algo_lib::RegxParse&>(rhs)));
 }
 
 // --- algo_lib.RegxState.ch_class.Addary
@@ -4851,6 +4958,25 @@ void algo_lib::RegxState_Uninit(algo_lib::RegxState& parent) {
     ch_class_RemoveAll(parent);
     // free memory for Tary algo_lib.RegxState.ch_class
     algo_lib::lpool_FreeMem(parent.ch_class_elems, sizeof(algo::i32_Range)*parent.ch_class_max); // (algo_lib.RegxState.ch_class)
+}
+
+// --- algo_lib.RegxState..AssignOp
+algo_lib::RegxState& algo_lib::RegxState::operator =(const algo_lib::RegxState &rhs) {
+    ch_class_Setary(*this, ch_class_Getary(const_cast<algo_lib::RegxState&>(rhs)));
+    out = rhs.out;
+    accept_all = rhs.accept_all;
+    return *this;
+}
+
+// --- algo_lib.RegxState..CopyCtor
+ algo_lib::RegxState::RegxState(const algo_lib::RegxState &rhs)
+    : out(rhs.out)
+    , accept_all(rhs.accept_all)
+ {
+    ch_class_elems 	= 0; // (algo_lib.RegxState.ch_class)
+    ch_class_n     	= 0; // (algo_lib.RegxState.ch_class)
+    ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
+    ch_class_Setary(*this, ch_class_Getary(const_cast<algo_lib::RegxState&>(rhs)));
 }
 
 // --- algo_lib.Replscope.ind_replvar.Cascdel
@@ -5269,6 +5395,23 @@ void algo_lib::Tabulate_Print(algo_lib::Tabulate& row, algo::cstring& str) {
 
     algo::cstring_Print(row.temp, temp);
     PrintAttrSpaceReset(str,"temp", temp);
+}
+
+// --- algo_lib.Tabulate..AssignOp
+algo_lib::Tabulate& algo_lib::Tabulate::operator =(const algo_lib::Tabulate &rhs) {
+    width_Setary(*this, width_Getary(const_cast<algo_lib::Tabulate&>(rhs)));
+    temp = rhs.temp;
+    return *this;
+}
+
+// --- algo_lib.Tabulate..CopyCtor
+ algo_lib::Tabulate::Tabulate(const algo_lib::Tabulate &rhs)
+    : temp(rhs.temp)
+ {
+    width_elems 	= 0; // (algo_lib.Tabulate.width)
+    width_n     	= 0; // (algo_lib.Tabulate.width)
+    width_max   	= 0; // (algo_lib.Tabulate.width)
+    width_Setary(*this, width_Getary(const_cast<algo_lib::Tabulate&>(rhs)));
 }
 
 // --- algo_lib...SizeCheck

@@ -26,9 +26,10 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline atf_nrun::trace::trace() {
-}
 
+// --- atf_nrun.trace..Ctor
+inline  atf_nrun::trace::trace() {
+}
 
 // --- atf_nrun.FDb.fentry.EmptyQ
 // Return true if index is empty
@@ -189,23 +190,16 @@ inline void atf_nrun::_db_zd_todo_curs_Next(_db_zd_todo_curs &curs) {
 inline atf_nrun::FEntry& atf_nrun::_db_zd_todo_curs_Access(_db_zd_todo_curs &curs) {
     return *curs.row;
 }
-inline atf_nrun::FEntry::FEntry() {
+
+// --- atf_nrun.FEntry..Ctor
+inline  atf_nrun::FEntry::FEntry() {
     atf_nrun::FEntry_Init(*this);
 }
 
-inline atf_nrun::FEntry::~FEntry() {
+// --- atf_nrun.FEntry..Dtor
+inline  atf_nrun::FEntry::~FEntry() {
     atf_nrun::FEntry_Uninit(*this);
 }
-
-inline atf_nrun::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_nrun::FieldId::FieldId(atf_nrun_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_nrun::FieldId::FieldId() {
-    atf_nrun::FieldId_Init(*this);
-}
-
 
 // --- atf_nrun.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -220,7 +214,7 @@ inline void atf_nrun::value_SetEnum(atf_nrun::FieldId& parent, atf_nrun_FieldIdE
 }
 
 // --- atf_nrun.FieldId.value.Cast
-inline atf_nrun::FieldId::operator atf_nrun_FieldIdEnum () const {
+inline  atf_nrun::FieldId::operator atf_nrun_FieldIdEnum() const {
     return atf_nrun_FieldIdEnum((*this).value);
 }
 
@@ -228,6 +222,22 @@ inline atf_nrun::FieldId::operator atf_nrun_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void atf_nrun::FieldId_Init(atf_nrun::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_nrun.FieldId..Ctor
+inline  atf_nrun::FieldId::FieldId() {
+    atf_nrun::FieldId_Init(*this);
+}
+
+// --- atf_nrun.FieldId..FieldwiseCtor
+inline  atf_nrun::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_nrun.FieldId..EnumCtor
+inline  atf_nrun::FieldId::FieldId(atf_nrun_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_nrun::trace &row) {// cfmt:atf_nrun.trace.String

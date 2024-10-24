@@ -33,17 +33,22 @@ in the package repo corresponding to the last synchronization point.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Limitations](#limitations)
-* [Package definition](#package-definition)
-* [Merge conflicts](#merge-conflicts)
-* [Sandboxes](#sandboxes)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Package definition](#package-definition)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Merge conflicts](#merge-conflicts)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sandboxes](#sandboxes)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 apm: Algo Package Manager
 Usage: apm [[-package:]<regx>] [options]
@@ -82,130 +87,7 @@ Usage: apm [[-package:]<regx>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -pkgdata -- Load package definitions from here
-<a href="#-pkgdata"></a>
-
-#### -package -- Regx of package
-<a href="#-package"></a>
-
-#### -ns -- Operate on specified namespace only
-<a href="#-ns"></a>
-
-#### -install -- Install new package (specify -origin)
-<a href="#-install"></a>
-
-#### -update -- Update package (-origin)
-<a href="#-update"></a>
-
-APM will perform a 3-way merge between the base (attribute dev.package.baseref),
-the current directory, and the most recent version of the package.
-This results in a git diff which must be committed.
-
-#### -list -- List installed packages
-<a href="#-list"></a>
-
-#### -diff -- Diff package with respect to installed version
-<a href="#-diff"></a>
-
-Apm shows the difference between package's base version (as defined by attribute dev.package.baseref)
-and its current state in the current directory.
-
-#### -push -- Evaluate package diff and push it to origin
-<a href="#-push"></a>
-
-Apm pushes any files/records corresponding to selected packages into the origin
-directory, disregarding any base commit.
-
-#### -check -- Consistency check
-<a href="#-check"></a>
-
-#### -remove -- Remove specified package
-<a href="#-remove"></a>
-
-The specified package and all dependent packages are removed.
-This results in a git diff which then must be committed.
-
-#### -origin -- Upstream URL of new package
-<a href="#-origin"></a>
-
-This option must be specified with `-install`. But it can also be used
-to override package's `origin` attribute when invoked with `-diff`, `-push`, or `-update`.
-
-#### -ref -- (with -create) Gitref or branch to fetch
-<a href="#-ref"></a>
-
-#### -dry_run -- Do not execute transaction
-<a href="#-dry_run"></a>
-
-#### -showrec -- Show records belonging to package
-<a href="#-showrec"></a>
-
-#### -showfile -- List package files (gitfile records)
-<a href="#-showfile"></a>
-
-#### -R -- reverse the diff direction
-<a href="#-r"></a>
-
-When used with `-diff`, this reverses the patch direction.
-
-#### -l -- Use local package definition on the remote side
-<a href="#-l"></a>
-
-If the remote side (i.e. the origin repo) doesn't have the definition
-of the package in question, this option will use the local `pkgkey`/`pkgdep` records
-when evaluating package contents on the remote side.
-
-#### -reset -- Reset package baseref/origin to those provided by the command line
-<a href="#-reset"></a>
-
-This option updates the local `package` record with values provided in
-`-ref` and `-origin`.
-
-#### -checkclean -- Ensure that changes are applied to a clean directory
-<a href="#-checkclean"></a>
-
-Normally, `apm` will refuse to update a non-clean repo. Use this option to override
-that behavior.
-
-#### -t -- Select parent packages for operation
-<a href="#-t"></a>
-
-With `-install`, this option is forced to true.
-With all other operations, the selection of packages is extended to include all parents
-before proceeding.
-
-#### -stat -- (with -diff) show stats
-<a href="#-stat"></a>
-
-#### -annotate -- Read file and annotate each input tuple with package(s) it belongs to
-<a href="#-annotate"></a>
-
-This option is used for package definitions. With it, you can check packages any given ssim record
-belongs to. The argument is the file to read, `-` for stdin.
-
-```
-$ acr gitfile:README.md | apm -annotate -
-dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfile:README.md
-```
-
-Apm will print each input line, appending all the pkgkeys which capture the record.
-The last pkgkey determines which package the record belongs to. To check files,
-simply use the `gitfile` table.
-
-#### -data_in -- Dataset from which package records are loaded
-<a href="#-data_in"></a>
-
-#### -e -- Open selected records in editor
-<a href="#-e"></a>
-
-#### -binpath -- (internal use)
-<a href="#-binpath"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Limitations
 <a href="#limitations"></a>
@@ -399,6 +281,161 @@ After running `-update`, `apm-theirs` contains the new version and `apm-base` co
 ancestor version. This is useful when resolving conflicts.
 The `-install` command is essentially the same as `-update` with current commit as the common ancestor.
 
+### Options
+<a href="#options"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -pkgdata -- Load package definitions from here
+<a href="#-pkgdata"></a>
+
+#### -package -- Regx of package
+<a href="#-package"></a>
+
+#### -ns -- Operate on specified namespace only
+<a href="#-ns"></a>
+
+#### -install -- Install new package (specify -origin)
+<a href="#-install"></a>
+
+#### -update -- Update package (-origin)
+<a href="#-update"></a>
+
+APM will perform a 3-way merge between the base (attribute dev.package.baseref),
+the current directory, and the most recent version of the package.
+This results in a git diff which must be committed.
+
+#### -list -- List installed packages
+<a href="#-list"></a>
+
+#### -diff -- Diff package with respect to installed version
+<a href="#-diff"></a>
+
+Apm shows the difference between package's base version (as defined by attribute dev.package.baseref)
+and its current state in the current directory.
+
+#### -push -- Evaluate package diff and push it to origin
+<a href="#-push"></a>
+
+Apm pushes any files/records corresponding to selected packages into the origin
+directory, disregarding any base commit.
+
+#### -check -- Consistency check
+<a href="#-check"></a>
+
+#### -remove -- Remove specified package
+<a href="#-remove"></a>
+
+The specified package and all dependent packages are removed.
+This results in a git diff which then must be committed.
+
+#### -origin -- Upstream URL of new package
+<a href="#-origin"></a>
+
+This option must be specified with `-install`. But it can also be used
+to override package's `origin` attribute when invoked with `-diff`, `-push`, or `-update`.
+
+#### -ref -- (with -create) Gitref or branch to fetch
+<a href="#-ref"></a>
+
+#### -dry_run -- Do not execute transaction
+<a href="#-dry_run"></a>
+
+#### -showrec -- Show records belonging to package
+<a href="#-showrec"></a>
+
+#### -showfile -- List package files (gitfile records)
+<a href="#-showfile"></a>
+
+#### -R -- reverse the diff direction
+<a href="#-r"></a>
+
+When used with `-diff`, this reverses the patch direction.
+
+#### -l -- Use local package definition on the remote side
+<a href="#-l"></a>
+
+If the remote side (i.e. the origin repo) doesn't have the definition
+of the package in question, this option will use the local `pkgkey`/`pkgdep` records
+when evaluating package contents on the remote side.
+
+#### -reset -- Reset package baseref/origin to those provided by the command line
+<a href="#-reset"></a>
+
+This option updates the local `package` record with values provided in
+`-ref` and `-origin`.
+
+#### -checkclean -- Ensure that changes are applied to a clean directory
+<a href="#-checkclean"></a>
+
+Normally, `apm` will refuse to update a non-clean repo. Use this option to override
+that behavior.
+
+#### -t -- Select parent packages for operation
+<a href="#-t"></a>
+
+With `-install`, this option is forced to true.
+With all other operations, the selection of packages is extended to include all parents
+before proceeding.
+
+#### -stat -- (with -diff) show stats
+<a href="#-stat"></a>
+
+#### -annotate -- Read file and annotate each input tuple with package(s) it belongs to
+<a href="#-annotate"></a>
+
+This option is used for package definitions. With it, you can check packages any given ssim record
+belongs to. The argument is the file to read, `-` for stdin.
+
+```
+$ acr gitfile:README.md | apm -annotate -
+dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfile:README.md
+```
+
+Apm will print each input line, appending all the pkgkeys which capture the record.
+The last pkgkey determines which package the record belongs to. To check files,
+simply use the `gitfile` table.
+
+#### -data_in -- Dataset from which package records are loaded
+<a href="#-data_in"></a>
+
+#### -e -- Open selected records in editor
+<a href="#-e"></a>
+
+#### -binpath -- (internal use)
+<a href="#-binpath"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`apm` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
+|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
+|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
+|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
 The source code license is GPL
@@ -421,28 +458,4 @@ The following source files are part of this tool:
 |[include/apm.h](/include/apm.h)||
 |[include/gen/apm_gen.h](/include/gen/apm_gen.h)||
 |[include/gen/apm_gen.inl.h](/include/gen/apm_gen.inl.h)||
-
-### Inputs
-<a href="#inputs"></a>
-`apm` takes the following tables on input:
-|ssimfile|comment|
-|---|---|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
-|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
-|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
