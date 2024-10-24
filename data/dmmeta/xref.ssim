@@ -29,6 +29,8 @@ dmmeta.xref  field:abt.FDb.ind_ns  inscond:true  via:""
 dmmeta.xref  field:abt.FTarget.p_ns  inscond:true  via:abt.FDb.ind_ns/dev.Target.target
 dmmeta.xref  field:abt.FDb.ind_filestat  inscond:true  via:""
 dmmeta.xref  field:abt.FDb.zd_inclstack  inscond:false  via:""
+dmmeta.xref  field:abt.FDb.ind_builddir  inscond:true  via:""
+dmmeta.xref  field:abt.FBuilddir.p_compiler  inscond:true  via:abt.FDb.ind_compiler/dev.Builddir.compiler
 dmmeta.xref  field:abt_md.FDb.ind_readme  inscond:true  via:""
 dmmeta.xref  field:abt_md.FDb.bh_file_section  inscond:true  via:""
 dmmeta.xref  field:abt_md.FDb.ind_ns  inscond:true  via:""
@@ -48,7 +50,7 @@ dmmeta.xref  field:abt_md.FCtype.p_ns  inscond:true  via:abt_md.FDb.ind_ns/dmmet
 dmmeta.xref  field:abt_md.FSubstr.p_srcfield  inscond:true  via:abt_md.FDb.ind_field/dmmeta.Substr.srcfield
 dmmeta.xref  field:abt_md.FDb.ind_scriptfile  inscond:true  via:""
 dmmeta.xref  field:abt_md.FDb.ind_nstype  inscond:true  via:""
-dmmeta.xref  field:abt_md.FDb.bh_dirent  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDirscan.bh_dirent  inscond:true  via:abt_md.FDirent.p_dirscan
 dmmeta.xref  field:abt_md.FMdsection.zd_file_section  inscond:true  via:abt_md.FFileSection.p_mdsection
 dmmeta.xref  field:abt_md.FNs.c_comptest  inscond:true  via:abt_md.FDb.ind_ns/atfdb.Comptest.target
 dmmeta.xref  field:abt_md.FDb.ind_anchor  inscond:true  via:""
@@ -57,7 +59,13 @@ dmmeta.xref  field:abt_md.FReftype.p_tclass  inscond:true  via:abt_md.FDb.ind_tc
 dmmeta.xref  field:abt_md.FCtype.c_field_arg  inscond:true  via:abt_md.FDb.ind_ctype/dmmeta.Field.arg
 dmmeta.xref  field:abt_md.FField.c_fconst  inscond:true  via:abt_md.FDb.ind_field/dmmeta.Fconst.field
 dmmeta.xref  field:abt_md.FField.c_gconst  inscond:true  via:abt_md.FDb.ind_field/dmmeta.Gconst.field
-dmmeta.xref  field:abt_md.FDb.ind_readmecat  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.ind_readmesort  inscond:true  via:""
+dmmeta.xref  field:abt_md.FDb.ind_gstatic  inscond:true  via:""
+dmmeta.xref  field:abt_md.FNs.c_target  inscond:true  via:abt_md.FDb.ind_ns/dev.Target.target
+dmmeta.xref  field:abt_md.FDb.ind_target  inscond:true  via:""
+dmmeta.xref  field:abt_md.FTarget.c_targdep  inscond:true  via:abt_md.FDb.ind_target/dev.Targdep.target
+dmmeta.xref  field:abt_md.FTarget.p_ns  inscond:true  via:abt_md.FDb.ind_ns/dev.Target.target
+dmmeta.xref  field:abt_md.FTargdep.p_parent  inscond:true  via:abt_md.FDb.ind_target/dev.Targdep.parent
 dmmeta.xref  field:acr.FDb.zd_pline  inscond:true  via:""
 dmmeta.xref  field:acr.FDb.zd_pdep  inscond:true  via:""
 dmmeta.xref  field:acr.FPline.zd_child  inscond:true  via:acr.FPdep.p_parent
@@ -433,6 +441,8 @@ dmmeta.xref  field:amc.FPmaskfldMember.p_pmaskfld  inscond:true  via:amc.FDb.ind
 dmmeta.xref  field:amc.FField.c_pmaskfld_member  inscond:true  via:amc.FDb.ind_field/dmmeta.PmaskfldMember.field
 dmmeta.xref  field:amc.FSsimsort.p_ssimfile  inscond:true  via:amc.FDb.ind_ssimfile/dmmeta.Ssimsort.ssimfile
 dmmeta.xref  field:amc.FSsimsort.p_sortfld  inscond:true  via:amc.FDb.ind_field/dmmeta.Ssimsort.sortfld
+dmmeta.xref  field:amc.FDb.ind_fbuftype  inscond:true  via:""
+dmmeta.xref  field:amc.FFbuf.p_fbuftype  inscond:true  via:amc.FDb.ind_fbuftype/dmmeta.Fbuf.fbuftype
 dmmeta.xref  field:amc_vis.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:amc_vis.FDb.ind_node  inscond:true  via:""
@@ -486,6 +496,7 @@ dmmeta.xref  field:apm.FSsimreq.p_child_ssimfile  inscond:true  via:apm.FDb.ind_
 dmmeta.xref  field:apm.FSsimreq.p_ctype  inscond:true  via:apm.FDb.ind_ctype/dmmeta.Ssimreq.parent_ctype
 dmmeta.xref  field:apm.FSsimreq.p_field  inscond:true  via:apm.FDb.ind_field/dmmeta.Ssimreq.parent_field
 dmmeta.xref  field:apm.FDb.ind_mkdir  inscond:true  via:""
+dmmeta.xref  field:aqlite.FDb.ind_ns  inscond:true  via:""
 dmmeta.xref  field:atf_amc.FDb.zsl_h_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zs_t_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zs_mt_typec  inscond:false  via:""
@@ -658,6 +669,14 @@ dmmeta.xref  field:orgfile.FDb.ind_filename  inscond:true  via:""
 dmmeta.xref  field:orgfile.FDb.ind_filehash  inscond:true  via:""
 dmmeta.xref  field:orgfile.FFilehash.c_filename  inscond:true  via:orgfile.FDb.ind_filehash/orgfile.FFilename.filehash
 dmmeta.xref  field:orgfile.FFilename.p_filehash  inscond:true  via:orgfile.FDb.ind_filehash/orgfile.FFilename.filehash
+dmmeta.xref  field:samp_meng.FDb.ind_symbol  inscond:true  via:""
+dmmeta.xref  field:samp_meng.FDb.cd_fdin_eof  inscond:false  via:""
+dmmeta.xref  field:samp_meng.FDb.cd_fdin_read  inscond:false  via:""
+dmmeta.xref  field:samp_meng.FDb.ind_order  inscond:true  via:""
+dmmeta.xref  field:samp_meng.FOrdq.bh_order  inscond:true  via:samp_meng.FOrder.p_ordq
+dmmeta.xref  field:samp_meng.FSymbol.c_ordq  inscond:true  via:samp_meng.FOrdq.p_symbol
+dmmeta.xref  field:samp_meng.FDb.ind_user  inscond:true  via:""
+dmmeta.xref  field:samp_meng.FUser.zd_order  inscond:true  via:samp_meng.FOrder.p_user
 dmmeta.xref  field:sandbox.FDb.ind_sandbox  inscond:true  via:""
 dmmeta.xref  field:src_func.FDb.ind_target  inscond:true  via:""
 dmmeta.xref  field:src_func.FTarget.cd_targsrc  inscond:true  via:src_func.FDb.ind_target/dev.Targsrc.target
@@ -706,6 +725,7 @@ dmmeta.xref  field:ssim2mysql.FNs.c_ssimfile  inscond:true  via:ssim2mysql.FDb.i
 dmmeta.xref  field:ssim2mysql.FSsimfile.p_ctype  inscond:true  via:ssim2mysql.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:ssim2mysql.FSsimfile.c_column  inscond:true  via:ssim2mysql.FDb.ind_ssimfile/ssim2mysql.FColumn.ssimfile
 dmmeta.xref  field:ssim2mysql.FSubstr.p_field  inscond:true  via:ssim2mysql.FDb.ind_field/dmmeta.Substr.field
+dmmeta.xref  field:ssimfilt.FDb.ind_unstablefld  inscond:true  via:""
 dmmeta.xref  field:sv2ssim.FDb.ind_field  inscond:true  via:""
 dmmeta.xref  field:sv2ssim.FDb.zd_selfield  inscond:false  via:""
 dmmeta.xref  field:sv2ssim.FDb.ind_bltin  inscond:true  via:""

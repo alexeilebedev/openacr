@@ -213,7 +213,7 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
             }
         }ind_end;
         // mark record as modified if something changed
-        if (!file.autoloaded && !ret->isnew && !Tuple_EqualQ(prev,ret->tuple)) {
+        if (!file.autoloaded && !ret->isnew && !Tuple_Eq(prev,ret->tuple)) {
             ret->mod = true;
         }
         UpdateSortkey(*ret,rowid);

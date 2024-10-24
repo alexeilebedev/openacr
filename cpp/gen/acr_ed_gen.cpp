@@ -159,9 +159,9 @@ namespace acr_ed { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:acr_ed.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:acr_ed...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- acr_ed.FCfmt.base.CopyOut
@@ -2921,16 +2921,10 @@ void acr_ed::abt_ToArgv(algo::StringAry& args) {
         cstring_Print(_db.abt_cmd.in, *arg);
     }
 
-    if (_db.abt_cmd.out_dir != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-out_dir:";
-        cstring_Print(_db.abt_cmd.out_dir, *arg);
-    }
-
-    if (_db.abt_cmd.cfg != "") {
+    if (_db.abt_cmd.cfg.expr != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cfg:";
-        Smallstr50_Print(_db.abt_cmd.cfg, *arg);
+        command::cfg_Print(_db.abt_cmd, *arg);
     }
 
     if (_db.abt_cmd.compiler != "") {
@@ -2979,6 +2973,12 @@ void acr_ed::abt_ToArgv(algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-preproc:";
         bool_Print(_db.abt_cmd.preproc, *arg);
+    }
+
+    if (_db.abt_cmd.srcfile.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-srcfile:";
+        command::srcfile_Print(_db.abt_cmd, *arg);
     }
 
     if (_db.abt_cmd.clean != false) {
@@ -3057,6 +3057,12 @@ void acr_ed::abt_ToArgv(algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cache:";
         u8_Print(_db.abt_cmd.cache, *arg);
+    }
+
+    if (_db.abt_cmd.shortlink != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-shortlink:";
+        bool_Print(_db.abt_cmd.shortlink, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

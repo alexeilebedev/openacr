@@ -85,26 +85,6 @@ void lib_ams::CleanOldStreamFiles() {
 
 // -----------------------------------------------------------------------------
 
-// TODO remove: There is no simple way to do it on Win
-// Scan stream/ directory for existing streams
-// Create a stream record for each.
-void lib_ams::DiscoverStreams() {
-#ifndef WIN32
-    ind_beg(algo::Dir_curs,entry,"/dev/shm/*.ams") {
-        ams::StreamId stream_id;
-        // example entry.filename: blah-amstest-0.ctl-0.ams
-        algo::strptr prefix = Pathcomp(entry.filename,"-LL");// blah
-        algo::strptr name = Pathcomp(entry.filename,"-LR.RL");// amstest-0.ctl-0
-        if (prefix == _db.file_prefix && StreamId_ReadStrptrMaybe(stream_id,name)) {
-            lib_ams::FStream &stream = lib_ams::ind_stream_GetOrCreate(stream_id);
-            (void)stream;
-        }
-    }ind_end;
-#endif
-}
-
-// -----------------------------------------------------------------------------
-
 // return TRUE if shared memory region is attached to stream STREAM.
 bool lib_ams::ShmemOpenQ(lib_ams::FStream &stream) {
 #ifdef WIN32
@@ -398,6 +378,10 @@ void lib_ams::SkipMsg(lib_ams::FStream &stream) {
     }
 }
 
+int lib_ams::WriteBudget(lib_ams::FStream &stream) {
+    return u64_Max(stream.limit, stream.wpos.off) - stream.wpos.off;
+}
+
 // Send heartbeat to control stream
 // Update
 void lib_ams::SendHb(lib_ams::FStream &stream) {
@@ -408,8 +392,7 @@ void lib_ams::SendHb(lib_ams::FStream &stream) {
         }
         // report on this stream's writing progress
         if (write_Get(stream.flags)) {
-            u32 wbudget = u64_Min(u64_Max(stream.limit, stream.wpos.off) - stream.wpos.off, 0x7fffffff);
-            lib_ams::StreamHbMsg_FmtAmsStream(*lib_ams::_db.c_stream_ctl,ams::Member(_db.proc_id,stream.stream_id,ams_Member_mode_w),stream.wpos,wbudget);
+            lib_ams::StreamHbMsg_FmtAmsStream(*lib_ams::_db.c_stream_ctl,ams::Member(_db.proc_id,stream.stream_id,ams_Member_mode_w),stream.wpos,WriteBudget(stream));
         }
     }
 }
@@ -578,7 +561,7 @@ bool lib_ams::Init(algo::strptr file_prefix, ams::ProcId proc_id) {
     bool shmem_mode = file_prefix != "";
     lib_ams::_db.file_prefix = file_prefix;
     lib_ams::_db.proc_id = proc_id;
-    if (bool_Update(lib_ams::_db.stream_files_cleaned,true)) {
+    if (shmem_mode && bool_Update(lib_ams::_db.stream_files_cleaned,true)) {
         lib_ams::CleanOldStreamFiles();
     }
     lib_ams::_db.shmem_mode = shmem_mode;
@@ -642,7 +625,7 @@ void lib_ams::shm_file_Cleanup(lib_ams::FStream &stream) {// fcleanup:lib_ams.FS
 
 // -----------------------------------------------------------------------------
 
-// (This message could be unnecessary)
+// Process joined the group
 void lib_ams::CtlMsg_ProcAddMsg(ams::ProcAddMsg &msg) {
     lib_ams::FProc &proc = ind_proc_GetOrCreate(msg.proc_id);
     (void)proc;
@@ -790,8 +773,7 @@ lib_ams::FStream &lib_ams::ind_stream_GetOrCreate(ams::StreamId stream_id) {
     return *ret;
 }
 
-void lib_ams::DumpStreamTable() {
-    // global counter
+void lib_ams::DumpStreamTableDflt() {
     prlog(Keyval("n_write_block_spin",lib_ams::_db.trace.n_write_block_spin));
     ind_beg(lib_ams::_db_stream_curs,stream,lib_ams::_db) {
         prlog(lib_ams::_db.proc_id
@@ -816,6 +798,84 @@ void lib_ams::DumpStreamTable() {
                   <<Keyval("budget",member.budget));
         }ind_end;
     }ind_end;
+}
+
+void lib_ams::DumpStreamTableVisual() {
+    algo_lib::FTxttbl tbl;
+    AddRow(tbl);
+    prlog("ctl:" <<(_db.c_stream_ctl ? (tempstr()<<_db.c_stream_ctl->stream_id) : (tempstr())));
+    prlog("out:" <<(_db.c_stream_out ? (tempstr()<<_db.c_stream_out->stream_id) : (tempstr())));
+    prlog("dflt:" <<_db.dflt_stream_id);
+    AddCols(tbl,"stream,size,eof,budget");
+    ind_beg(lib_ams::_db_zd_proc_curs,proc,lib_ams::_db) {
+        AddCol(tbl,tempstr()<<proc.proc_id);
+        AddCol(tbl,"gap");
+    }ind_end;
+    ind_beg(lib_ams::_db_stream_curs,stream,lib_ams::_db) {
+        algo_lib::FTxtrow &row= AddRow(tbl);
+        u64 eof=stream.wpos.seq;
+        ind_beg(lib_ams::stream_zd_member_bystream_curs,member,stream) {
+            if (member.member.mode==ams_Member_mode_w) {
+                eof=u64_Max(member.pos.seq,eof);
+            }
+        }ind_end;
+        AddCol(tbl,tempstr()<<stream.stream_id);
+        AddCol(tbl,tempstr()<<stream.shm_region.n_elems);
+        AddCol(tbl,tempstr()<<eof);
+        AddCol(tbl,write_Get(stream.flags) ? (tempstr()<<stream.limit - stream.wpos.off) : (tempstr()));
+        //AddCol(tbl,tempstr()<<stream.flags);
+        ind_beg(lib_ams::_db_zd_proc_curs,proc,lib_ams::_db) {
+            algo_lib::FTxtcell &cell = algo_lib::AddCell(row,"",algo_TextJust_j_left,1);
+            ams::Member rmember(proc.proc_id,stream.stream_id,ams_Member_mode_r);
+            ams::Member wmember(proc.proc_id,stream.stream_id,ams_Member_mode_w);
+            algo::ListSep ls(",");
+            algo::UnTime last_hb;
+            ams::StreamPos rpos;
+            ams::StreamPos wpos;
+            lib_ams::FMember *read_member = ind_member_Find(rmember);
+            lib_ams::FMember *write_member = ind_member_Find(wmember);
+            if (proc.proc_id == lib_ams::_db.proc_id) {
+                rpos = stream.rpos;
+                wpos = stream.wpos;
+                last_hb = algo::CurrUnTime();
+            } else {
+                if (read_member) {
+                    rpos = read_member->pos;
+                    last_hb = read_member->last_hb;
+                }
+                if (write_member) {
+                    wpos = write_member->pos;
+                }
+            }
+            if (read_member) {
+                cell.text << ls<<"R";
+            }
+            if (write_member) {
+                cell.text <<"W";
+            }
+            if (read_Get(stream.flags) && read_member) {
+                algo::UnDiff hbbehind = algo::CurrUnTime() - last_hb;
+                bool online = ToSecs(hbbehind) < 2.0;
+                cell.style = online ? algo_TermStyle_green : algo_TermStyle_red;
+            }
+            algo_lib::FTxtcell &gapcell = algo_lib::AddCell(row,"",algo_TextJust_j_left,1);
+            if (read_Get(stream.flags) && read_member) {
+                u64 msgbehind = algo::u64_SubClip(eof,rpos.seq);
+                if (msgbehind>10) {
+                    gapcell.text << " "<<msgbehind;
+                }
+            }
+        }ind_end;
+    }ind_end;
+    prlog("");
+    prlog(tbl);
+}
+
+void lib_ams::DumpStreamTable(int format DFLTVAL(0)) {
+    switch (format) {
+    case 0: DumpStreamTableDflt(); break;
+    case 1: DumpStreamTableVisual(); break;
+    }
 }
 
 // -----------------------------------------------------------------------------

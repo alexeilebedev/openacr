@@ -3,7 +3,6 @@ variables:
   GIT_AUTHOR_NAME: "sandbox"
   GIT_COMMITTER_NAME: "sandbox"
   EMAIL: "sandbox@algo"
-  TZ: UTC
 
 cache:
   paths:
@@ -12,14 +11,28 @@ cache:
 stages:
   - build
   - test
+  - master-only
+  - sched-only
 
-.testjob:
-  stage: test
+# skip pipeline for master, and for temporary branches not eligible to be merged
+.excludes: &excludes
+  except:
+    - master
+    - /^tmp.*/
+    - schedules
+
+# execute pipeline on when master changes
+.masteronly: &masteronly
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-  interruptible: true
-  script:
-    - bin/normalize "${CI_JOB_NAME}"
+  - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE != "schedule"'
+    changes:
+    - "**/*"
+
+# execute pipeline on schedule only
+.schedonly: &schedonly
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: always
 
 before_script:
   - 'echo "${CI_JOB_STAGE}:${CI_JOB_NAME} host:$(hostname) pwd:$(pwd) user:$(whoami) date:$(date)"'
@@ -27,25 +40,29 @@ before_script:
 
 build:
   stage: build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
   script:
     - bin/ai
   artifacts:
     paths:
       - build
     expire_in: 1 week
+  <<: *excludes
 
 normalize:
-  extends: .testjob
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
   artifacts:
     when: on_failure
     paths:
       - temp/*.log
     expire_in: 1 week
+  <<: *excludes
 
 comp:
-  extends: .testjob
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
   artifacts:
     reports:
       coverage_report:
@@ -55,6 +72,43 @@ comp:
     paths:
       - temp/*.log
     expire_in: 1 week
+  <<: *excludes
 
 memcheck:
-  extends: .testjob
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
+  <<: *excludes
+
+# Master only actions
+
+deploy-html-docs:
+# build pages for gitlab deployment
+  stage: master-only
+  script:
+   - bin/gitlab_master_ci deploy-html-docs
+  <<: *masteronly
+
+backup-master-to-github:
+# push master to github
+  stage: master-only
+  script:
+   - bin/gitlab_master_ci backup-master-to-github
+  <<: *masteronly
+
+backup-issues-to-github:
+# read all open issue and create files based on them
+# create commit and push it as issue branch
+  stage: master-only
+  script:
+   - bin/gitlab_master_ci backup-issues-to-github
+  <<: *masteronly
+
+# Schedule only actions
+
+future-scheduled-actions:
+# Do some task
+  stage: sched-only  
+  script:
+   - echo HELLO SCHED
+  <<: *schedonly

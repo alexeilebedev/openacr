@@ -24,18 +24,15 @@
 
 #pragma once
 //#pragma endinclude
-inline lib_git::trace::trace() {
+
+// --- lib_git.trace..Ctor
+inline  lib_git::trace::trace() {
 }
 
-inline lib_git::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- lib_git.FDb..Uninit
+inline void lib_git::FDb_Uninit() {
+    lib_git::FDb &row = _db; (void)row;
 }
-inline lib_git::FieldId::FieldId(lib_git_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_git::FieldId::FieldId() {
-    lib_git::FieldId_Init(*this);
-}
-
 
 // --- lib_git.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -50,7 +47,7 @@ inline void lib_git::value_SetEnum(lib_git::FieldId& parent, lib_git_FieldIdEnum
 }
 
 // --- lib_git.FieldId.value.Cast
-inline lib_git::FieldId::operator lib_git_FieldIdEnum () const {
+inline  lib_git::FieldId::operator lib_git_FieldIdEnum() const {
     return lib_git_FieldIdEnum((*this).value);
 }
 
@@ -58,6 +55,22 @@ inline lib_git::FieldId::operator lib_git_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_git::FieldId_Init(lib_git::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_git.FieldId..Ctor
+inline  lib_git::FieldId::FieldId() {
+    lib_git::FieldId_Init(*this);
+}
+
+// --- lib_git.FieldId..FieldwiseCtor
+inline  lib_git::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_git.FieldId..EnumCtor
+inline  lib_git::FieldId::FieldId(lib_git_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_git::trace &row) {// cfmt:lib_git.trace.String

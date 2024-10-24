@@ -25,14 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline lib_sql::FAttr::FAttr() {
-    lib_sql::FAttr_Init(*this);
-}
-
-inline lib_sql::FAttr::~FAttr() {
-    lib_sql::FAttr_Uninit(*this);
-}
-
 
 // --- lib_sql.FAttr..Init
 // Set all fields to initial values.
@@ -40,9 +32,20 @@ inline void lib_sql::FAttr_Init(lib_sql::FAttr& attr) {
     attr.isbool = bool(false);
     attr.ind_attr_next = (lib_sql::FAttr*)-1; // (lib_sql.FDb.ind_attr) not-in-hash
 }
-inline lib_sql::trace::trace() {
+
+// --- lib_sql.FAttr..Ctor
+inline  lib_sql::FAttr::FAttr() {
+    lib_sql::FAttr_Init(*this);
 }
 
+// --- lib_sql.FAttr..Dtor
+inline  lib_sql::FAttr::~FAttr() {
+    lib_sql::FAttr_Uninit(*this);
+}
+
+// --- lib_sql.trace..Ctor
+inline  lib_sql::trace::trace() {
+}
 
 // --- lib_sql.FDb.attr.EmptyQ
 // Return true if index is empty
@@ -122,15 +125,6 @@ inline void lib_sql::_db_attr_curs_Next(_db_attr_curs &curs) {
 inline lib_sql::FAttr& lib_sql::_db_attr_curs_Access(_db_attr_curs &curs) {
     return attr_qFind(u64(curs.index));
 }
-inline lib_sql::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_sql::FieldId::FieldId(lib_sql_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_sql::FieldId::FieldId() {
-    lib_sql::FieldId_Init(*this);
-}
-
 
 // --- lib_sql.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -145,7 +139,7 @@ inline void lib_sql::value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum
 }
 
 // --- lib_sql.FieldId.value.Cast
-inline lib_sql::FieldId::operator lib_sql_FieldIdEnum () const {
+inline  lib_sql::FieldId::operator lib_sql_FieldIdEnum() const {
     return lib_sql_FieldIdEnum((*this).value);
 }
 
@@ -153,6 +147,22 @@ inline lib_sql::FieldId::operator lib_sql_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_sql::FieldId_Init(lib_sql::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_sql.FieldId..Ctor
+inline  lib_sql::FieldId::FieldId() {
+    lib_sql::FieldId_Init(*this);
+}
+
+// --- lib_sql.FieldId..FieldwiseCtor
+inline  lib_sql::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_sql.FieldId..EnumCtor
+inline  lib_sql::FieldId::FieldId(lib_sql_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_sql::trace &row) {// cfmt:lib_sql.trace.String

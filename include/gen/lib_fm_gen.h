@@ -81,7 +81,8 @@ namespace lib_fm { // gen:ns_print_struct
 
 // --- lib_fm.FAlarm
 // create: lib_fm.FDb.alarm (Lary)
-// global access: ind_alarm (Thash)
+// global access: alarm (Lary, by rowid)
+// global access: ind_alarm (Thash, hash field alarm)
 // global access: h_alarm (Hook)
 struct FAlarm { // lib_fm.FAlarm
     algo::Smallstr200   alarm;             // Alarm identity: code@object
@@ -97,15 +98,19 @@ struct FAlarm { // lib_fm.FAlarm
     fm::Description     description;       // Alarm message from object
     fm::Source          source;            // Subsystem where alarm has been detected
     lib_fm::FAlarm*     ind_alarm_next;    // hash next
+    // func:lib_fm.FAlarm..AssignOp
+    lib_fm::FAlarm&      operator =(const lib_fm::FAlarm &rhs) = delete;
+    // func:lib_fm.FAlarm..CopyCtor
+    FAlarm(const lib_fm::FAlarm &rhs) = delete;
 private:
+    // func:lib_fm.FAlarm..Ctor
+    inline               FAlarm() __attribute__((nothrow));
+    // func:lib_fm.FAlarm..Dtor
+    inline               ~FAlarm() __attribute__((nothrow));
     friend lib_fm::FAlarm&      alarm_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_fm::FAlarm*      alarm_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 alarm_RemoveAll() __attribute__((nothrow));
     friend void                 alarm_RemoveLast() __attribute__((nothrow));
-    FAlarm();
-    ~FAlarm();
-    FAlarm(const FAlarm&){ /*disallow copy constructor */}
-    void operator =(const FAlarm&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -138,22 +143,27 @@ void                 FAlarm_Uninit(lib_fm::FAlarm& alarm) __attribute__((nothrow
 
 // --- lib_fm.FAlmCode
 // create: lib_fm.FDb.alm_code (Lary)
-// global access: ind_alm_code (Thash)
+// global access: alm_code (Lary, by rowid)
+// global access: ind_alm_code (Thash, hash field alm_code)
 struct FAlmCode { // lib_fm.FAlmCode
     fm::Code            alm_code;            // Alarm code
     fm::Severity        severity;            // Assigned severity
     fm::Source          source;              //
     fm::Summary         summary;             // Alarm summary (slogan)
     lib_fm::FAlmCode*   ind_alm_code_next;   // hash next
+    // func:lib_fm.FAlmCode..AssignOp
+    inline lib_fm::FAlmCode& operator =(const lib_fm::FAlmCode &rhs) = delete;
+    // func:lib_fm.FAlmCode..CopyCtor
+    inline               FAlmCode(const lib_fm::FAlmCode &rhs) = delete;
 private:
+    // func:lib_fm.FAlmCode..Ctor
+    inline               FAlmCode() __attribute__((nothrow));
+    // func:lib_fm.FAlmCode..Dtor
+    inline               ~FAlmCode() __attribute__((nothrow));
     friend lib_fm::FAlmCode&    alm_code_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_fm::FAlmCode*    alm_code_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 alm_code_RemoveAll() __attribute__((nothrow));
     friend void                 alm_code_RemoveLast() __attribute__((nothrow));
-    FAlmCode();
-    ~FAlmCode();
-    FAlmCode(const FAlmCode&){ /*disallow copy constructor */}
-    void operator =(const FAlmCode&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -165,26 +175,31 @@ void                 alm_code_CopyIn(lib_fm::FAlmCode &row, fmdb::AlmCode &in) _
 
 // Set all fields to initial values.
 // func:lib_fm.FAlmCode..Init
-void                 FAlmCode_Init(lib_fm::FAlmCode& alm_code);
+inline void          FAlmCode_Init(lib_fm::FAlmCode& alm_code);
 // func:lib_fm.FAlmCode..Uninit
 void                 FAlmCode_Uninit(lib_fm::FAlmCode& alm_code) __attribute__((nothrow));
 
 // --- lib_fm.FAlmObjtype
 // create: lib_fm.FDb.alm_objtype (Lary)
-// global access: ind_alm_objtype (Thash)
+// global access: alm_objtype (Lary, by rowid)
+// global access: ind_alm_objtype (Thash, hash field alm_objtype)
 struct FAlmObjtype { // lib_fm.FAlmObjtype
     fm::Objtype            alm_objtype;            // Object type
     fm::Summary            summary;                // Object type summary
     lib_fm::FAlmObjtype*   ind_alm_objtype_next;   // hash next
+    // func:lib_fm.FAlmObjtype..AssignOp
+    inline lib_fm::FAlmObjtype& operator =(const lib_fm::FAlmObjtype &rhs) = delete;
+    // func:lib_fm.FAlmObjtype..CopyCtor
+    inline               FAlmObjtype(const lib_fm::FAlmObjtype &rhs) = delete;
 private:
+    // func:lib_fm.FAlmObjtype..Ctor
+    inline               FAlmObjtype() __attribute__((nothrow));
+    // func:lib_fm.FAlmObjtype..Dtor
+    inline               ~FAlmObjtype() __attribute__((nothrow));
     friend lib_fm::FAlmObjtype& alm_objtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_fm::FAlmObjtype* alm_objtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 alm_objtype_RemoveAll() __attribute__((nothrow));
     friend void                 alm_objtype_RemoveLast() __attribute__((nothrow));
-    FAlmObjtype();
-    ~FAlmObjtype();
-    FAlmObjtype(const FAlmObjtype&){ /*disallow copy constructor */}
-    void operator =(const FAlmObjtype&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -196,14 +211,15 @@ void                 alm_objtype_CopyIn(lib_fm::FAlmObjtype &row, fmdb::AlmObjty
 
 // Set all fields to initial values.
 // func:lib_fm.FAlmObjtype..Init
-void                 FAlmObjtype_Init(lib_fm::FAlmObjtype& alm_objtype);
+inline void          FAlmObjtype_Init(lib_fm::FAlmObjtype& alm_objtype);
 // func:lib_fm.FAlmObjtype..Uninit
 void                 FAlmObjtype_Uninit(lib_fm::FAlmObjtype& alm_objtype) __attribute__((nothrow));
 
 // --- lib_fm.trace
 #pragma pack(push,1)
 struct trace { // lib_fm.trace
-    trace();
+    // func:lib_fm.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -284,16 +300,16 @@ lib_fm::FAlarm*      alarm_InsertMaybe(const fmdb::Alarm &value) __attribute__((
 void*                alarm_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:lib_fm.FDb.alarm.EmptyQ
-bool                 alarm_EmptyQ() __attribute__((nothrow, pure));
+inline bool          alarm_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:lib_fm.FDb.alarm.Find
-lib_fm::FAlarm*      alarm_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline lib_fm::FAlarm* alarm_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_fm.FDb.alarm.Last
-lib_fm::FAlarm*      alarm_Last() __attribute__((nothrow, pure));
+inline lib_fm::FAlarm* alarm_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_fm.FDb.alarm.N
-i32                  alarm_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           alarm_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_fm.FDb.alarm.RemoveAll
 void                 alarm_RemoveAll() __attribute__((nothrow));
@@ -302,7 +318,7 @@ void                 alarm_RemoveAll() __attribute__((nothrow));
 void                 alarm_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_fm.FDb.alarm.qFind
-lib_fm::FAlarm&      alarm_qFind(u64 t) __attribute__((nothrow, pure));
+inline lib_fm::FAlarm& alarm_qFind(u64 t) __attribute__((nothrow, pure));
 // Save table to ssimfile
 // func:lib_fm.FDb.alarm.SaveSsimfile
 bool                 alarm_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
@@ -313,7 +329,7 @@ bool                 alarm_XrefMaybe(lib_fm::FAlarm &row);
 
 // Return true if hash is empty
 // func:lib_fm.FDb.ind_alarm.EmptyQ
-bool                 ind_alarm_EmptyQ() __attribute__((nothrow));
+inline bool          ind_alarm_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_fm.FDb.ind_alarm.Find
 lib_fm::FAlarm*      ind_alarm_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -325,7 +341,7 @@ lib_fm::FAlarm&      ind_alarm_FindX(const algo::strptr& key);
 lib_fm::FAlarm&      ind_alarm_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_fm.FDb.ind_alarm.N
-i32                  ind_alarm_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_alarm_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_fm.FDb.ind_alarm.InsertMaybe
 bool                 ind_alarm_InsertMaybe(lib_fm::FAlarm& row) __attribute__((nothrow));
@@ -352,16 +368,16 @@ lib_fm::FAlmCode*    alm_code_InsertMaybe(const fmdb::AlmCode &value) __attribut
 void*                alm_code_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:lib_fm.FDb.alm_code.EmptyQ
-bool                 alm_code_EmptyQ() __attribute__((nothrow, pure));
+inline bool          alm_code_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:lib_fm.FDb.alm_code.Find
-lib_fm::FAlmCode*    alm_code_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline lib_fm::FAlmCode* alm_code_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_fm.FDb.alm_code.Last
-lib_fm::FAlmCode*    alm_code_Last() __attribute__((nothrow, pure));
+inline lib_fm::FAlmCode* alm_code_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_fm.FDb.alm_code.N
-i32                  alm_code_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           alm_code_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_fm.FDb.alm_code.RemoveAll
 void                 alm_code_RemoveAll() __attribute__((nothrow));
@@ -370,7 +386,7 @@ void                 alm_code_RemoveAll() __attribute__((nothrow));
 void                 alm_code_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_fm.FDb.alm_code.qFind
-lib_fm::FAlmCode&    alm_code_qFind(u64 t) __attribute__((nothrow, pure));
+inline lib_fm::FAlmCode& alm_code_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_fm.FDb.alm_code.XrefMaybe
@@ -378,7 +394,7 @@ bool                 alm_code_XrefMaybe(lib_fm::FAlmCode &row);
 
 // Return true if hash is empty
 // func:lib_fm.FDb.ind_alm_code.EmptyQ
-bool                 ind_alm_code_EmptyQ() __attribute__((nothrow));
+inline bool          ind_alm_code_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_fm.FDb.ind_alm_code.Find
 lib_fm::FAlmCode*    ind_alm_code_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -390,7 +406,7 @@ lib_fm::FAlmCode&    ind_alm_code_FindX(const algo::strptr& key);
 lib_fm::FAlmCode&    ind_alm_code_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_fm.FDb.ind_alm_code.N
-i32                  ind_alm_code_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_alm_code_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_fm.FDb.ind_alm_code.InsertMaybe
 bool                 ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) __attribute__((nothrow));
@@ -417,16 +433,16 @@ lib_fm::FAlmObjtype* alm_objtype_InsertMaybe(const fmdb::AlmObjtype &value) __at
 void*                alm_objtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:lib_fm.FDb.alm_objtype.EmptyQ
-bool                 alm_objtype_EmptyQ() __attribute__((nothrow, pure));
+inline bool          alm_objtype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:lib_fm.FDb.alm_objtype.Find
-lib_fm::FAlmObjtype* alm_objtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline lib_fm::FAlmObjtype* alm_objtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_fm.FDb.alm_objtype.Last
-lib_fm::FAlmObjtype* alm_objtype_Last() __attribute__((nothrow, pure));
+inline lib_fm::FAlmObjtype* alm_objtype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_fm.FDb.alm_objtype.N
-i32                  alm_objtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           alm_objtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_fm.FDb.alm_objtype.RemoveAll
 void                 alm_objtype_RemoveAll() __attribute__((nothrow));
@@ -435,7 +451,7 @@ void                 alm_objtype_RemoveAll() __attribute__((nothrow));
 void                 alm_objtype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_fm.FDb.alm_objtype.qFind
-lib_fm::FAlmObjtype& alm_objtype_qFind(u64 t) __attribute__((nothrow, pure));
+inline lib_fm::FAlmObjtype& alm_objtype_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_fm.FDb.alm_objtype.XrefMaybe
@@ -443,7 +459,7 @@ bool                 alm_objtype_XrefMaybe(lib_fm::FAlmObjtype &row);
 
 // Return true if hash is empty
 // func:lib_fm.FDb.ind_alm_objtype.EmptyQ
-bool                 ind_alm_objtype_EmptyQ() __attribute__((nothrow));
+inline bool          ind_alm_objtype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_fm.FDb.ind_alm_objtype.Find
 lib_fm::FAlmObjtype* ind_alm_objtype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -455,7 +471,7 @@ lib_fm::FAlmObjtype& ind_alm_objtype_FindX(const algo::strptr& key);
 lib_fm::FAlmObjtype& ind_alm_objtype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_fm.FDb.ind_alm_objtype.N
-i32                  ind_alm_objtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_alm_objtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_fm.FDb.ind_alm_objtype.InsertMaybe
 bool                 ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) __attribute__((nothrow));
@@ -468,53 +484,53 @@ void                 ind_alm_objtype_Reserve(int n) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:lib_fm.FDb.h_alarm.Call
-void                 h_alarm_Call(lib_fm::FAlarm& arg) __attribute__((nothrow));
+inline void          h_alarm_Call(lib_fm::FAlarm& arg) __attribute__((nothrow));
 // Assign 0-argument hook with no context pointer
 // func:lib_fm.FDb.h_alarm.Set0
-void                 h_alarm_Set0(void (*fcn)() ) __attribute__((nothrow));
+inline void          h_alarm_Set0(void (*fcn)() ) __attribute__((nothrow));
 // Assign 1-argument hook with context pointer
 // func:lib_fm.FDb.h_alarm.Set1
-template<class T> void h_alarm_Set1(T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+template<class T> inline void h_alarm_Set1(T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
 // Assign 2-argument hook with context pointer
 // func:lib_fm.FDb.h_alarm.Set2
-template<class T> void h_alarm_Set2(T& ctx, void (*fcn)(T&, lib_fm::FAlarm& arg) ) __attribute__((nothrow));
+template<class T> inline void h_alarm_Set2(T& ctx, void (*fcn)(T&, lib_fm::FAlarm& arg) ) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:lib_fm.FDb.alarm_curs.Reset
-void                 _db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
+inline void          _db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alarm_curs.ValidQ
-bool                 _db_alarm_curs_ValidQ(_db_alarm_curs &curs) __attribute__((nothrow));
+inline bool          _db_alarm_curs_ValidQ(_db_alarm_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alarm_curs.Next
-void                 _db_alarm_curs_Next(_db_alarm_curs &curs) __attribute__((nothrow));
+inline void          _db_alarm_curs_Next(_db_alarm_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alarm_curs.Access
-lib_fm::FAlarm&      _db_alarm_curs_Access(_db_alarm_curs &curs) __attribute__((nothrow));
+inline lib_fm::FAlarm& _db_alarm_curs_Access(_db_alarm_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_code_curs.Reset
-void                 _db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
+inline void          _db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_code_curs.ValidQ
-bool                 _db_alm_code_curs_ValidQ(_db_alm_code_curs &curs) __attribute__((nothrow));
+inline bool          _db_alm_code_curs_ValidQ(_db_alm_code_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alm_code_curs.Next
-void                 _db_alm_code_curs_Next(_db_alm_code_curs &curs) __attribute__((nothrow));
+inline void          _db_alm_code_curs_Next(_db_alm_code_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alm_code_curs.Access
-lib_fm::FAlmCode&    _db_alm_code_curs_Access(_db_alm_code_curs &curs) __attribute__((nothrow));
+inline lib_fm::FAlmCode& _db_alm_code_curs_Access(_db_alm_code_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_objtype_curs.Reset
-void                 _db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
+inline void          _db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_fm.FDb.alm_objtype_curs.ValidQ
-bool                 _db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs) __attribute__((nothrow));
+inline bool          _db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_fm.FDb.alm_objtype_curs.Next
-void                 _db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) __attribute__((nothrow));
+inline void          _db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_fm.FDb.alm_objtype_curs.Access
-lib_fm::FAlmObjtype& _db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) __attribute__((nothrow));
+inline lib_fm::FAlmObjtype& _db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.FDb..Init
 void                 FDb_Init();
@@ -525,19 +541,23 @@ void                 FDb_Uninit() __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // lib_fm.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_fm_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_fm_FieldIdEnum arg);
-    FieldId();
+    // func:lib_fm.FieldId.value.Cast
+    inline               operator lib_fm_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_fm.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_fm.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_fm.FieldId..EnumCtor
+    inline               FieldId(lib_fm_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_fm.FieldId.value.GetEnum
-lib_fm_FieldIdEnum   value_GetEnum(const lib_fm::FieldId& parent) __attribute__((nothrow));
+inline lib_fm_FieldIdEnum value_GetEnum(const lib_fm::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_fm.FieldId.value.SetEnum
-void                 value_SetEnum(lib_fm::FieldId& parent, lib_fm_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_fm::FieldId& parent, lib_fm_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_fm.FieldId.value.ToCstr
@@ -565,7 +585,7 @@ bool                 value_ReadStrptrMaybe(lib_fm::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.FieldId..Init
-void                 FieldId_Init(lib_fm::FieldId& parent);
+inline void          FieldId_Init(lib_fm::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_fm.FieldId.String  printfmt:Raw
 // func:lib_fm.FieldId..Print
@@ -574,18 +594,22 @@ void                 FieldId_Print(lib_fm::FieldId& row, algo::cstring& str) __a
 // --- lib_fm.TableId
 struct TableId { // lib_fm.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator lib_fm_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(lib_fm_TableIdEnum arg);
-    TableId();
+    // func:lib_fm.TableId.value.Cast
+    inline               operator lib_fm_TableIdEnum() const __attribute__((nothrow));
+    // func:lib_fm.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:lib_fm.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:lib_fm.TableId..EnumCtor
+    inline               TableId(lib_fm_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:lib_fm.TableId.value.GetEnum
-lib_fm_TableIdEnum   value_GetEnum(const lib_fm::TableId& parent) __attribute__((nothrow));
+inline lib_fm_TableIdEnum value_GetEnum(const lib_fm::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_fm.TableId.value.SetEnum
-void                 value_SetEnum(lib_fm::TableId& parent, lib_fm_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_fm::TableId& parent, lib_fm_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_fm.TableId.value.ToCstr
@@ -613,7 +637,7 @@ bool                 value_ReadStrptrMaybe(lib_fm::TableId& parent, algo::strptr
 bool                 TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_fm.TableId..Init
-void                 TableId_Init(lib_fm::TableId& parent);
+inline void          TableId_Init(lib_fm::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_fm.TableId.String  printfmt:Raw
 // func:lib_fm.TableId..Print

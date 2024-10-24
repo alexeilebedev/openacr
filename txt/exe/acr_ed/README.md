@@ -3,15 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [acr_ed - Internals](/txt/exe/acr_ed/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr_ed: Script generator for common dev tasks
 Usage: acr_ed [options]
@@ -69,8 +72,11 @@ Usage: acr_ed [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 `Acr_ed` is a script generator for common tasks such as creating,
 deleting, and renaming targets, ctypes, ssimfiles, xrefs, and source files.
@@ -104,9 +110,12 @@ Rename_Target    -target <target> -rename <newtarget>
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -578,56 +587,31 @@ transaction in sandbox.
 #### -anonfld -- Create anonfld
 <a href="#-anonfld"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/acr_ed/ctype.cpp](/cpp/acr_ed/ctype.cpp)|Create, delete, rename ctype|
-|[cpp/acr_ed/field.cpp](/cpp/acr_ed/field.cpp)|Create, delete, rename field|
-|[cpp/acr_ed/finput.cpp](/cpp/acr_ed/finput.cpp)||
-|[cpp/acr_ed/main.cpp](/cpp/acr_ed/main.cpp)||
-|[cpp/acr_ed/srcfile.cpp](/cpp/acr_ed/srcfile.cpp)|Create, delete, rename source file|
-|[cpp/acr_ed/ssimfile.cpp](/cpp/acr_ed/ssimfile.cpp)|Create, delete, rename ssim file|
-|[cpp/acr_ed/target.cpp](/cpp/acr_ed/target.cpp)|Create, delete, rename target|
-|[cpp/acr_ed/unittest.cpp](/cpp/acr_ed/unittest.cpp)|Create, delete, rename unit test|
-|[cpp/gen/acr_ed_gen.cpp](/cpp/gen/acr_ed_gen.cpp)||
-|[include/acr_ed.h](/include/acr_ed.h)||
-|[include/gen/acr_ed_gen.h](/include/gen/acr_ed_gen.h)||
-|[include/gen/acr_ed_gen.inl.h](/include/gen/acr_ed_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_ed` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.typefld](/txt/ssimdb/dmmeta/typefld.md)|Specifies which field of a message carries the type|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 |[dmmeta.pack](/txt/ssimdb/dmmeta/pack.md)|Request byte-packing of structure fields|
 |[dmmeta.fprefix](/txt/ssimdb/dmmeta/fprefix.md)|Mapping between field prefix and Reftype|
 |[dmmeta.listtype](/txt/ssimdb/dmmeta/listtype.md)|Specify structure of linked list based on field prefix|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.cstr](/txt/ssimdb/dmmeta/cstr.md)|Specify that type behaves like a string|
 |[dmmeta.cpptype](/txt/ssimdb/dmmeta/cpptype.md)|Specify whether a ctype can be passed by value, and other c++ options|
 |[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `acr_ed`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|acr_ed.CreateCtype|Create a regular ctype|
-|acr_ed.CreateSrcfileTarget|Create a source file in a non-standard location for its target|
-|acr_ed.CreateSsimfileBadNs|Create a ssimfile for a non-existence namespace|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

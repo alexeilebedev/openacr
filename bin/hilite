@@ -62,13 +62,18 @@ my $colors  = {
         ,white       =>15
         ,off         =>$nocolor
 };
+my $revcolors = {};
+foreach my $key (keys %$colors) {
+    $revcolors->{$colors->{$key}} = $key;
+}
+my $html_mode;
 
 #--------------------------------------------------------------------------------
 
 # return ascii escape code for specified color number
 sub asciicode($) {
-    my $colornum=$_[0];
     my $ret="\033[";
+    my $colornum=$_[0];
     if ($colornum==$nocolor) {
         $ret .= "0;0m";
     } elsif ($colornum >= 8) {
@@ -118,6 +123,8 @@ sub readcolors($$) {
             $pattern = '^.*$' if !$pattern;  # match entire line if not specified
             my $blotter=int($4);
             push(@$patterns, [$pattern          ,$colors->{$2}, $blotter, 0]);
+        } elsif ($pattern eq "-html") {
+            $html_mode=1;
         } else {
             push(@$patterns, [$pattern          ,$colors->{nextcolor()}, 0, 0]);
         }
@@ -129,6 +136,7 @@ sub readcolors($$) {
 # return string $_[0] colorized with code $_[1]
 sub colorized($$) {
     return ($_[1]==$nocolor) ? $_[0]
+        : $html_mode ? ("<span style='color:$revcolors->{$_[1]}'>" . $_[0] . "</span>")
         : asciicode($_[1]) . $_[0] . asciicode($nocolor);
 }
 

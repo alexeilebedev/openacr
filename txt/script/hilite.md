@@ -5,7 +5,7 @@ The hilite tool is a perl script for highlighting strings in some output.
 
 Usage:
 
-    <some command> | hilite <expr1> <expr2> ...
+    <some command> | hilite [-md] <expr1> <expr2> ...
 
 Each expr is a perl regex that is highlighted using a separate color.
 colors are picked automatically from a default sequence.
@@ -15,6 +15,10 @@ The list of available colors is black, red, green, yellow, blue, magenta, cyan, 
 darkred, darkgreen, darkyellow, darkblue, darkmagenta, darkcyan, darkwhite.
 
 Omitting `expr` matches the entire line, so `hilite :green` makes all lines green.
+
+Optional flag ``-md`` prints selected items surronded by markdown color markers like this ``<span style="background-color: grey; color:green;">ITEM</span>``.
+It is useful with the output of [ssimfilt - Tuple utility](/txt/exe/ssimfilt/README.md) with ``-mdtable`` option.
+It provided the ability to color table items in markdown.
 
 #### Blotter Mode
 <a href="#blotter-mode"></a>
@@ -55,7 +59,10 @@ interactive tool intended to ease readibility or terminal-based output.
 
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 
 Source file: [bin/hilite](/bin/hilite)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
 

@@ -67,7 +67,8 @@ namespace aqlite { // gen:ns_print_struct
 // --- aqlite.trace
 #pragma pack(push,1)
 struct trace { // aqlite.trace
-    trace();
+    // func:aqlite.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -79,10 +80,13 @@ void                 trace_Print(aqlite::trace& row, algo::cstring& str) __attri
 // --- aqlite.FDb
 // create: aqlite.FDb._db (Global)
 struct FDb { // aqlite.FDb
-    command::aqlite   cmdline;       //
-    aqlite::FNs*      ns_lary[32];   // level array
-    i32               ns_n;          // number of elements in array
-    aqlite::trace     trace;         //
+    command::aqlite   cmdline;                //
+    aqlite::FNs*      ns_lary[32];            // level array
+    i32               ns_n;                   // number of elements in array
+    aqlite::FNs**     ind_ns_buckets_elems;   // pointer to bucket array
+    i32               ind_ns_buckets_n;       // number of elements in bucket array
+    i32               ind_ns_n;               // number of elements in the hash table
+    aqlite::trace     trace;                  //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -146,16 +150,16 @@ aqlite::FNs*         ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((noth
 void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:aqlite.FDb.ns.EmptyQ
-bool                 ns_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ns_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:aqlite.FDb.ns.Find
-aqlite::FNs*         ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline aqlite::FNs*  ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:aqlite.FDb.ns.Last
-aqlite::FNs*         ns_Last() __attribute__((nothrow, pure));
+inline aqlite::FNs*  ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:aqlite.FDb.ns.N
-i32                  ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:aqlite.FDb.ns.RemoveAll
 void                 ns_RemoveAll() __attribute__((nothrow));
@@ -164,24 +168,49 @@ void                 ns_RemoveAll() __attribute__((nothrow));
 void                 ns_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:aqlite.FDb.ns.qFind
-aqlite::FNs&         ns_qFind(u64 t) __attribute__((nothrow, pure));
+inline aqlite::FNs&  ns_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:aqlite.FDb.ns.XrefMaybe
 bool                 ns_XrefMaybe(aqlite::FNs &row);
 
+// Return true if hash is empty
+// func:aqlite.FDb.ind_ns.EmptyQ
+inline bool          ind_ns_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:aqlite.FDb.ind_ns.Find
+aqlite::FNs*         ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:aqlite.FDb.ind_ns.FindX
+aqlite::FNs&         ind_ns_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:aqlite.FDb.ind_ns.GetOrCreate
+aqlite::FNs&         ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:aqlite.FDb.ind_ns.N
+inline i32           ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:aqlite.FDb.ind_ns.InsertMaybe
+bool                 ind_ns_InsertMaybe(aqlite::FNs& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:aqlite.FDb.ind_ns.Remove
+void                 ind_ns_Remove(aqlite::FNs& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:aqlite.FDb.ind_ns.Reserve
+void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:aqlite.FDb.ns_curs.Reset
-void                 _db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) __attribute__((nothrow));
+inline void          _db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:aqlite.FDb.ns_curs.ValidQ
-bool                 _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
+inline bool          _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:aqlite.FDb.ns_curs.Next
-void                 _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
+inline void          _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
 // item access
 // func:aqlite.FDb.ns_curs.Access
-aqlite::FNs&         _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
+inline aqlite::FNs&  _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:aqlite.FDb..Init
 void                 FDb_Init();
@@ -190,17 +219,28 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- aqlite.FNs
 // create: aqlite.FDb.ns (Lary)
+// global access: ns (Lary, by rowid)
+// global access: ind_ns (Thash, hash field ns)
 struct FNs { // aqlite.FNs
-    algo::Smallstr16   ns;        // Namespace name (primary key)
-    algo::Smallstr50   nstype;    // Namespace type
-    algo::Smallstr50   license;   // Associated license
-    algo::Comment      comment;   //
+    aqlite::FNs*       ind_ns_next;   // hash next
+    algo::Smallstr16   ns;            // Namespace name (primary key)
+    algo::Smallstr50   nstype;        // Namespace type
+    algo::Smallstr50   license;       // Associated license
+    algo::Comment      comment;       //
+    bool               select;        //   false
+    // func:aqlite.FNs..AssignOp
+    inline aqlite::FNs&  operator =(const aqlite::FNs &rhs) = delete;
+    // func:aqlite.FNs..CopyCtor
+    inline               FNs(const aqlite::FNs &rhs) = delete;
 private:
+    // func:aqlite.FNs..Ctor
+    inline               FNs() __attribute__((nothrow));
+    // func:aqlite.FNs..Dtor
+    inline               ~FNs() __attribute__((nothrow));
     friend aqlite::FNs&         ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend aqlite::FNs*         ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ns_RemoveAll() __attribute__((nothrow));
     friend void                 ns_RemoveLast() __attribute__((nothrow));
-    FNs();
 };
 
 // Copy fields out of row
@@ -210,24 +250,33 @@ void                 ns_CopyOut(aqlite::FNs &row, dmmeta::Ns &out) __attribute__
 // func:aqlite.FNs.base.CopyIn
 void                 ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
 
+// Set all fields to initial values.
+// func:aqlite.FNs..Init
+inline void          FNs_Init(aqlite::FNs& ns);
+// func:aqlite.FNs..Uninit
+void                 FNs_Uninit(aqlite::FNs& ns) __attribute__((nothrow));
 
 // --- aqlite.FieldId
 #pragma pack(push,1)
 struct FieldId { // aqlite.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator aqlite_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(aqlite_FieldIdEnum arg);
-    FieldId();
+    // func:aqlite.FieldId.value.Cast
+    inline               operator aqlite_FieldIdEnum() const __attribute__((nothrow));
+    // func:aqlite.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:aqlite.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:aqlite.FieldId..EnumCtor
+    inline               FieldId(aqlite_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:aqlite.FieldId.value.GetEnum
-aqlite_FieldIdEnum   value_GetEnum(const aqlite::FieldId& parent) __attribute__((nothrow));
+inline aqlite_FieldIdEnum value_GetEnum(const aqlite::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:aqlite.FieldId.value.SetEnum
-void                 value_SetEnum(aqlite::FieldId& parent, aqlite_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(aqlite::FieldId& parent, aqlite_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:aqlite.FieldId.value.ToCstr
@@ -255,7 +304,7 @@ bool                 value_ReadStrptrMaybe(aqlite::FieldId& parent, algo::strptr
 bool                 FieldId_ReadStrptrMaybe(aqlite::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:aqlite.FieldId..Init
-void                 FieldId_Init(aqlite::FieldId& parent);
+inline void          FieldId_Init(aqlite::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:aqlite.FieldId.String  printfmt:Raw
 // func:aqlite.FieldId..Print
@@ -264,18 +313,22 @@ void                 FieldId_Print(aqlite::FieldId& row, algo::cstring& str) __a
 // --- aqlite.TableId
 struct TableId { // aqlite.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator aqlite_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(aqlite_TableIdEnum arg);
-    TableId();
+    // func:aqlite.TableId.value.Cast
+    inline               operator aqlite_TableIdEnum() const __attribute__((nothrow));
+    // func:aqlite.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:aqlite.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:aqlite.TableId..EnumCtor
+    inline               TableId(aqlite_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:aqlite.TableId.value.GetEnum
-aqlite_TableIdEnum   value_GetEnum(const aqlite::TableId& parent) __attribute__((nothrow));
+inline aqlite_TableIdEnum value_GetEnum(const aqlite::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:aqlite.TableId.value.SetEnum
-void                 value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:aqlite.TableId.value.ToCstr
@@ -303,7 +356,7 @@ bool                 value_ReadStrptrMaybe(aqlite::TableId& parent, algo::strptr
 bool                 TableId_ReadStrptrMaybe(aqlite::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:aqlite.TableId..Init
-void                 TableId_Init(aqlite::TableId& parent);
+inline void          TableId_Init(aqlite::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:aqlite.TableId.String  printfmt:Raw
 // func:aqlite.TableId..Print

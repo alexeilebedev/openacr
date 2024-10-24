@@ -29,43 +29,46 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/report_gen.inl.h"
 //#pragma endinclude
-inline acr::AttrRegx::AttrRegx() {
+
+// --- acr.AttrRegx..Ctor
+inline  acr::AttrRegx::AttrRegx() {
 }
 
+// --- acr.CtypeTopoKey..Hash
+inline u32 acr::CtypeTopoKey_Hash(u32 prev, const acr::CtypeTopoKey& rhs) {
+    prev = i32_Hash(prev, rhs.alldep);
+    prev = i32_Hash(prev, rhs.rowid);
+    return prev;
+}
 
+// --- acr.CtypeTopoKey..EqOp
 inline bool acr::CtypeTopoKey::operator ==(const acr::CtypeTopoKey &rhs) const {
     return acr::CtypeTopoKey_Eq(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
 
+// --- acr.CtypeTopoKey..NeOp
 inline bool acr::CtypeTopoKey::operator !=(const acr::CtypeTopoKey &rhs) const {
     return !acr::CtypeTopoKey_Eq(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
 
+// --- acr.CtypeTopoKey..LtOp
 inline bool acr::CtypeTopoKey::operator <(const acr::CtypeTopoKey &rhs) const {
     return acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
 
+// --- acr.CtypeTopoKey..GtOp
 inline bool acr::CtypeTopoKey::operator >(const acr::CtypeTopoKey &rhs) const {
-    return rhs < *this;
+    return acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(rhs),const_cast<acr::CtypeTopoKey&>(*this));
 }
 
+// --- acr.CtypeTopoKey..LeOp
 inline bool acr::CtypeTopoKey::operator <=(const acr::CtypeTopoKey &rhs) const {
-    return !(rhs < *this);
+    return !acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(rhs),const_cast<acr::CtypeTopoKey&>(*this));
 }
 
+// --- acr.CtypeTopoKey..GeOp
 inline bool acr::CtypeTopoKey::operator >=(const acr::CtypeTopoKey &rhs) const {
-    return !(*this < rhs);
-}
-inline acr::CtypeTopoKey::CtypeTopoKey() {
-    acr::CtypeTopoKey_Init(*this);
-}
-
-
-// --- acr.CtypeTopoKey..Hash
-inline u32 acr::CtypeTopoKey_Hash(u32 prev, const acr::CtypeTopoKey & rhs) {
-    prev = i32_Hash(prev, rhs.alldep);
-    prev = i32_Hash(prev, rhs.rowid);
-    return prev;
+    return !acr::CtypeTopoKey_Lt(const_cast<acr::CtypeTopoKey&>(*this),const_cast<acr::CtypeTopoKey&>(rhs));
 }
 
 // --- acr.CtypeTopoKey..Lt
@@ -111,10 +114,11 @@ inline bool acr::CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey& 
     }
     return ret;
 }
-inline acr::Err::Err() {
-    acr::Err_Init(*this);
-}
 
+// --- acr.CtypeTopoKey..Ctor
+inline  acr::CtypeTopoKey::CtypeTopoKey() {
+    acr::CtypeTopoKey_Init(*this);
+}
 
 // --- acr.Err..Init
 // Set all fields to initial values.
@@ -124,17 +128,15 @@ inline void acr::Err_Init(acr::Err& parent) {
     parent.rec = NULL;
     parent.fld = NULL;
 }
-inline acr::FAnonfld::FAnonfld() {
+
+// --- acr.Err..Ctor
+inline  acr::Err::Err() {
+    acr::Err_Init(*this);
 }
 
-inline acr::FBltin::FBltin() {
-    acr::FBltin_Init(*this);
+// --- acr.FAnonfld..Ctor
+inline  acr::FAnonfld::FAnonfld() {
 }
-
-inline acr::FBltin::~FBltin() {
-    acr::FBltin_Uninit(*this);
-}
-
 
 // --- acr.FBltin..Init
 // Set all fields to initial values.
@@ -143,21 +145,25 @@ inline void acr::FBltin_Init(acr::FBltin& bltin) {
     bltin.bigendok = bool(false);
     bltin.issigned = bool(false);
 }
-inline acr::FCdflt::FCdflt() {
+
+// --- acr.FBltin..Ctor
+inline  acr::FBltin::FBltin() {
+    acr::FBltin_Init(*this);
 }
 
-inline acr::FCdflt::~FCdflt() {
+// --- acr.FBltin..Dtor
+inline  acr::FBltin::~FBltin() {
+    acr::FBltin_Uninit(*this);
+}
+
+// --- acr.FCdflt..Ctor
+inline  acr::FCdflt::FCdflt() {
+}
+
+// --- acr.FCdflt..Dtor
+inline  acr::FCdflt::~FCdflt() {
     acr::FCdflt_Uninit(*this);
 }
-
-inline acr::FCheck::FCheck() {
-    acr::FCheck_Init(*this);
-}
-
-inline acr::FCheck::~FCheck() {
-    acr::FCheck_Uninit(*this);
-}
-
 
 // --- acr.FCheck.c_bad_rec.EmptyQ
 // Return true if index is empty
@@ -337,10 +343,16 @@ inline void acr::FCheck_Init(acr::FCheck& check) {
     check.ary_name_n     	= 0; // (acr.FCheck.ary_name)
     check.ary_name_max   	= 0; // (acr.FCheck.ary_name)
 }
-inline acr::FCppfunc::FCppfunc() {
-    acr::FCppfunc_Init(*this);
+
+// --- acr.FCheck..Ctor
+inline  acr::FCheck::FCheck() {
+    acr::FCheck_Init(*this);
 }
 
+// --- acr.FCheck..Dtor
+inline  acr::FCheck::~FCheck() {
+    acr::FCheck_Uninit(*this);
+}
 
 // --- acr.FCppfunc..Init
 // Set all fields to initial values.
@@ -348,14 +360,11 @@ inline void acr::FCppfunc_Init(acr::FCppfunc& cppfunc) {
     cppfunc.print = bool(false);
     cppfunc.set = bool(false);
 }
-inline acr::FCtype::FCtype() {
-    acr::FCtype_Init(*this);
-}
 
-inline acr::FCtype::~FCtype() {
-    acr::FCtype_Uninit(*this);
+// --- acr.FCppfunc..Ctor
+inline  acr::FCppfunc::FCppfunc() {
+    acr::FCppfunc_Init(*this);
 }
-
 
 // --- acr.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -935,9 +944,20 @@ inline void acr::ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) {
 inline acr::FSsimreq& acr::ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline acr::trace::trace() {
+
+// --- acr.FCtype..Ctor
+inline  acr::FCtype::FCtype() {
+    acr::FCtype_Init(*this);
 }
 
+// --- acr.FCtype..Dtor
+inline  acr::FCtype::~FCtype() {
+    acr::FCtype_Uninit(*this);
+}
+
+// --- acr.trace..Ctor
+inline  acr::trace::trace() {
+}
 
 // --- acr.FDb.zd_pline.EmptyQ
 // Return true if index is empty
@@ -2776,14 +2796,6 @@ inline void acr::_db_sortkey_curs_Next(_db_sortkey_curs &curs) {
 inline acr::FSortkey& acr::_db_sortkey_curs_Access(_db_sortkey_curs &curs) {
     return sortkey_qFind(u64(curs.index));
 }
-inline acr::FErr::FErr() {
-    acr::FErr_Init(*this);
-}
-
-inline acr::FErr::~FErr() {
-    acr::FErr_Uninit(*this);
-}
-
 
 // --- acr.FErr..Init
 // Set all fields to initial values.
@@ -2796,24 +2808,16 @@ inline void acr::FErr_Init(acr::FErr& err) {
     err.zd_all_err_next = (acr::FErr*)-1; // (acr.FDb.zd_all_err) not-in-list
     err.zd_all_err_prev = NULL; // (acr.FDb.zd_all_err)
 }
-inline acr::FEvalattr::FEvalattr(bool                           in_pick_dflt
-        ,bool                           in_normalize
-        ,acr::FField*                   in_field
-        ,algo::Attr*                    in_attr
-        ,const algo::strptr&            in_value
-        ,const algo::i32_Range&         in_val_range)
-    : pick_dflt(in_pick_dflt)
-    , normalize(in_normalize)
-    , field(in_field)
-    , attr(in_attr)
-    , value(in_value)
-    , val_range(in_val_range)
-{
-}
-inline acr::FEvalattr::FEvalattr() {
-    acr::FEvalattr_Init(*this);
+
+// --- acr.FErr..Ctor
+inline  acr::FErr::FErr() {
+    acr::FErr_Init(*this);
 }
 
+// --- acr.FErr..Dtor
+inline  acr::FErr::~FErr() {
+    acr::FErr_Uninit(*this);
+}
 
 // --- acr.FEvalattr..Init
 // Set all fields to initial values.
@@ -2823,14 +2827,22 @@ inline void acr::FEvalattr_Init(acr::FEvalattr& parent) {
     parent.field = NULL;
     parent.attr = NULL;
 }
-inline acr::FField::FField() {
-    acr::FField_Init(*this);
+
+// --- acr.FEvalattr..Ctor
+inline  acr::FEvalattr::FEvalattr() {
+    acr::FEvalattr_Init(*this);
 }
 
-inline acr::FField::~FField() {
-    acr::FField_Uninit(*this);
+// --- acr.FEvalattr..FieldwiseCtor
+inline  acr::FEvalattr::FEvalattr(bool in_pick_dflt, bool in_normalize, acr::FField* in_field, algo::Attr* in_attr, const algo::strptr& in_value, const algo::i32_Range& in_val_range)
+    : pick_dflt(in_pick_dflt)
+    , normalize(in_normalize)
+    , field(in_field)
+    , attr(in_attr)
+    , value(in_value)
+    , val_range(in_val_range)
+ {
 }
-
 
 // --- acr.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -2851,14 +2863,16 @@ inline void acr::c_substr_Remove(acr::FField& field, acr::FSubstr& row) {
         field.c_substr = NULL;
     }
 }
-inline acr::FFile::FFile() {
-    acr::FFile_Init(*this);
+
+// --- acr.FField..Ctor
+inline  acr::FField::FField() {
+    acr::FField_Init(*this);
 }
 
-inline acr::FFile::~FFile() {
-    acr::FFile_Uninit(*this);
+// --- acr.FField..Dtor
+inline  acr::FField::~FField() {
+    acr::FField_Uninit(*this);
 }
-
 
 // --- acr.FFile.zd_frec.EmptyQ
 // Return true if index is empty
@@ -2946,17 +2960,20 @@ inline void acr::file_zd_frec_curs_Next(file_zd_frec_curs &curs) {
 inline acr::FRec& acr::file_zd_frec_curs_Access(file_zd_frec_curs &curs) {
     return *curs.row;
 }
-inline acr::FFunique::FFunique() {
+
+// --- acr.FFile..Ctor
+inline  acr::FFile::FFile() {
+    acr::FFile_Init(*this);
 }
 
-inline acr::FPdep::FPdep() {
-    acr::FPdep_Init(*this);
+// --- acr.FFile..Dtor
+inline  acr::FFile::~FFile() {
+    acr::FFile_Uninit(*this);
 }
 
-inline acr::FPdep::~FPdep() {
-    acr::FPdep_Uninit(*this);
+// --- acr.FFunique..Ctor
+inline  acr::FFunique::FFunique() {
 }
-
 
 // --- acr.FPdep..Init
 // Set all fields to initial values.
@@ -2972,41 +2989,53 @@ inline void acr::FPdep_Init(acr::FPdep& pdep) {
     pdep.zd_child_prev = NULL; // (acr.FPline.zd_child)
 }
 
-inline bool acr::RecSortkey::operator ==(const acr::RecSortkey &rhs) const {
-    return acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+// --- acr.FPdep..Ctor
+inline  acr::FPdep::FPdep() {
+    acr::FPdep_Init(*this);
 }
 
-inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
-    return !acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+// --- acr.FPdep..Dtor
+inline  acr::FPdep::~FPdep() {
+    acr::FPdep_Uninit(*this);
 }
-
-inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {
-    return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
-}
-
-inline bool acr::RecSortkey::operator >(const acr::RecSortkey &rhs) const {
-    return rhs < *this;
-}
-
-inline bool acr::RecSortkey::operator <=(const acr::RecSortkey &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool acr::RecSortkey::operator >=(const acr::RecSortkey &rhs) const {
-    return !(*this < rhs);
-}
-inline acr::RecSortkey::RecSortkey() {
-    acr::RecSortkey_Init(*this);
-}
-
 
 // --- acr.RecSortkey..Hash
-inline u32 acr::RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) {
+inline u32 acr::RecSortkey_Hash(u32 prev, const acr::RecSortkey& rhs) {
     prev = Smallstr100_Hash(prev, rhs.ctype);
     prev = double_Hash(prev, rhs.num);
     prev = cstring_Hash(prev, rhs.str);
     prev = float_Hash(prev, rhs.rowid);
     return prev;
+}
+
+// --- acr.RecSortkey..EqOp
+inline bool acr::RecSortkey::operator ==(const acr::RecSortkey &rhs) const {
+    return acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+// --- acr.RecSortkey..NeOp
+inline bool acr::RecSortkey::operator !=(const acr::RecSortkey &rhs) const {
+    return !acr::RecSortkey_Eq(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+// --- acr.RecSortkey..LtOp
+inline bool acr::RecSortkey::operator <(const acr::RecSortkey &rhs) const {
+    return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
+}
+
+// --- acr.RecSortkey..GtOp
+inline bool acr::RecSortkey::operator >(const acr::RecSortkey &rhs) const {
+    return acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(rhs),const_cast<acr::RecSortkey&>(*this));
+}
+
+// --- acr.RecSortkey..LeOp
+inline bool acr::RecSortkey::operator <=(const acr::RecSortkey &rhs) const {
+    return !acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(rhs),const_cast<acr::RecSortkey&>(*this));
+}
+
+// --- acr.RecSortkey..GeOp
+inline bool acr::RecSortkey::operator >=(const acr::RecSortkey &rhs) const {
+    return !acr::RecSortkey_Lt(const_cast<acr::RecSortkey&>(*this),const_cast<acr::RecSortkey&>(rhs));
 }
 
 // --- acr.RecSortkey..Lt
@@ -3031,41 +3060,48 @@ inline bool acr::RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey& rhs) {
     return ret;
 }
 
-inline bool acr::PlineKey::operator ==(const acr::PlineKey &rhs) const {
-    return acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
+// --- acr.RecSortkey..Ctor
+inline  acr::RecSortkey::RecSortkey() {
+    acr::RecSortkey_Init(*this);
 }
-
-inline bool acr::PlineKey::operator !=(const acr::PlineKey &rhs) const {
-    return !acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
-}
-
-inline bool acr::PlineKey::operator <(const acr::PlineKey &rhs) const {
-    return acr::PlineKey_Lt(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
-}
-
-inline bool acr::PlineKey::operator >(const acr::PlineKey &rhs) const {
-    return rhs < *this;
-}
-
-inline bool acr::PlineKey::operator <=(const acr::PlineKey &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool acr::PlineKey::operator >=(const acr::PlineKey &rhs) const {
-    return !(*this < rhs);
-}
-inline acr::PlineKey::PlineKey() {
-    acr::PlineKey_Init(*this);
-}
-
 
 // --- acr.PlineKey..Hash
-inline u32 acr::PlineKey_Hash(u32 prev, const acr::PlineKey & rhs) {
+inline u32 acr::PlineKey_Hash(u32 prev, const acr::PlineKey& rhs) {
     prev = i32_Hash(prev, rhs.alldep);
     prev = i32_Hash(prev, rhs.negdepth);
     prev = i32_Hash(prev, rhs.ctype_rank);
     prev = RecSortkey_Hash(prev, rhs.sortkey);
     return prev;
+}
+
+// --- acr.PlineKey..EqOp
+inline bool acr::PlineKey::operator ==(const acr::PlineKey &rhs) const {
+    return acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
+}
+
+// --- acr.PlineKey..NeOp
+inline bool acr::PlineKey::operator !=(const acr::PlineKey &rhs) const {
+    return !acr::PlineKey_Eq(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
+}
+
+// --- acr.PlineKey..LtOp
+inline bool acr::PlineKey::operator <(const acr::PlineKey &rhs) const {
+    return acr::PlineKey_Lt(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
+}
+
+// --- acr.PlineKey..GtOp
+inline bool acr::PlineKey::operator >(const acr::PlineKey &rhs) const {
+    return acr::PlineKey_Lt(const_cast<acr::PlineKey&>(rhs),const_cast<acr::PlineKey&>(*this));
+}
+
+// --- acr.PlineKey..LeOp
+inline bool acr::PlineKey::operator <=(const acr::PlineKey &rhs) const {
+    return !acr::PlineKey_Lt(const_cast<acr::PlineKey&>(rhs),const_cast<acr::PlineKey&>(*this));
+}
+
+// --- acr.PlineKey..GeOp
+inline bool acr::PlineKey::operator >=(const acr::PlineKey &rhs) const {
+    return !acr::PlineKey_Lt(const_cast<acr::PlineKey&>(*this),const_cast<acr::PlineKey&>(rhs));
 }
 
 // --- acr.PlineKey..Lt
@@ -3090,14 +3126,11 @@ inline bool acr::PlineKey_Update(acr::PlineKey &lhs, acr::PlineKey& rhs) {
     }
     return ret;
 }
-inline acr::FPline::FPline() {
-    acr::FPline_Init(*this);
-}
 
-inline acr::FPline::~FPline() {
-    acr::FPline_Uninit(*this);
+// --- acr.PlineKey..Ctor
+inline  acr::PlineKey::PlineKey() {
+    acr::PlineKey_Init(*this);
 }
-
 
 // --- acr.FPline.key.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -3199,14 +3232,16 @@ inline void acr::pline_zd_child_curs_Next(pline_zd_child_curs &curs) {
 inline acr::FPdep& acr::pline_zd_child_curs_Access(pline_zd_child_curs &curs) {
     return *curs.row;
 }
-inline acr::FPrint::FPrint() {
-    acr::FPrint_Init(*this);
+
+// --- acr.FPline..Ctor
+inline  acr::FPline::FPline() {
+    acr::FPline_Init(*this);
 }
 
-inline acr::FPrint::~FPrint() {
-    acr::FPrint_Uninit(*this);
+// --- acr.FPline..Dtor
+inline  acr::FPline::~FPline() {
+    acr::FPline_Uninit(*this);
 }
-
 
 // --- acr.FPrint.ind_printattr.EmptyQ
 // Return true if hash is empty
@@ -3292,14 +3327,16 @@ inline void acr::print_c_pline_curs_Next(print_c_pline_curs &curs) {
 inline acr::FPline& acr::print_c_pline_curs_Access(print_c_pline_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline acr::FPrintAttr::FPrintAttr() {
-    acr::FPrintAttr_Init(*this);
+
+// --- acr.FPrint..Ctor
+inline  acr::FPrint::FPrint() {
+    acr::FPrint_Init(*this);
 }
 
-inline acr::FPrintAttr::~FPrintAttr() {
-    acr::FPrintAttr_Uninit(*this);
+// --- acr.FPrint..Dtor
+inline  acr::FPrint::~FPrint() {
+    acr::FPrint_Uninit(*this);
 }
-
 
 // --- acr.FPrintAttr..Init
 // Set all fields to initial values.
@@ -3309,15 +3346,16 @@ inline void acr::FPrintAttr_Init(acr::FPrintAttr& printattr) {
     printattr.width = u32(0);
     printattr.ind_printattr_next = (acr::FPrintAttr*)-1; // (acr.FPrint.ind_printattr) not-in-hash
 }
-inline acr::Queryop::Queryop(u8                             in_value)
-    : value(in_value)
-{
-}
-inline acr::Queryop::Queryop(acr_Queryop_value_Enum arg) { this->value = u8(arg); }
-inline acr::Queryop::Queryop() {
-    acr::Queryop_Init(*this);
+
+// --- acr.FPrintAttr..Ctor
+inline  acr::FPrintAttr::FPrintAttr() {
+    acr::FPrintAttr_Init(*this);
 }
 
+// --- acr.FPrintAttr..Dtor
+inline  acr::FPrintAttr::~FPrintAttr() {
+    acr::FPrintAttr_Uninit(*this);
+}
 
 // --- acr.Queryop.value.GetEnum
 // Get value of field as enum type
@@ -3332,7 +3370,7 @@ inline void acr::value_SetEnum(acr::Queryop& parent, acr_Queryop_value_Enum rhs)
 }
 
 // --- acr.Queryop.value.Cast
-inline acr::Queryop::operator acr_Queryop_value_Enum () const {
+inline  acr::Queryop::operator acr_Queryop_value_Enum() const {
     return acr_Queryop_value_Enum((*this).value);
 }
 
@@ -3341,14 +3379,22 @@ inline acr::Queryop::operator acr_Queryop_value_Enum () const {
 inline void acr::Queryop_Init(acr::Queryop& parent) {
     parent.value = u8(0);
 }
-inline acr::FQuery::FQuery() {
-    acr::FQuery_Init(*this);
+
+// --- acr.Queryop..Ctor
+inline  acr::Queryop::Queryop() {
+    acr::Queryop_Init(*this);
 }
 
-inline acr::FQuery::~FQuery() {
-    acr::FQuery_Uninit(*this);
+// --- acr.Queryop..FieldwiseCtor
+inline  acr::Queryop::Queryop(u8 in_value)
+    : value(in_value)
+ {
 }
 
+// --- acr.Queryop..EnumCtor
+inline  acr::Queryop::Queryop(acr_Queryop_value_Enum arg) {
+    this->value = u8(arg);
+}
 
 // --- acr.FQuery.where.EmptyQ
 // Return true if index is empty
@@ -3661,14 +3707,16 @@ inline void acr::query_c_rec_curs_Next(query_c_rec_curs &curs) {
 inline acr::FRec& acr::query_c_rec_curs_Access(query_c_rec_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline acr::FRec::FRec() {
-    acr::FRec_Init(*this);
+
+// --- acr.FQuery..Ctor
+inline  acr::FQuery::FQuery() {
+    acr::FQuery_Init(*this);
 }
 
-inline acr::FRec::~FRec() {
-    acr::FRec_Uninit(*this);
+// --- acr.FQuery..Dtor
+inline  acr::FQuery::~FQuery() {
+    acr::FQuery_Uninit(*this);
 }
-
 
 // --- acr.FRec.c_pline.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -3689,10 +3737,16 @@ inline void acr::c_pline_Remove(acr::FRec& rec, acr::FPline& row) {
         rec.c_pline = NULL;
     }
 }
-inline acr::FSmallstr::FSmallstr() {
-    acr::FSmallstr_Init(*this);
+
+// --- acr.FRec..Ctor
+inline  acr::FRec::FRec() {
+    acr::FRec_Init(*this);
 }
 
+// --- acr.FRec..Dtor
+inline  acr::FRec::~FRec() {
+    acr::FRec_Uninit(*this);
+}
 
 // --- acr.FSmallstr..Init
 // Set all fields to initial values.
@@ -3700,14 +3754,11 @@ inline void acr::FSmallstr_Init(acr::FSmallstr& smallstr) {
     smallstr.length = i32(0);
     smallstr.strict = bool(false);
 }
-inline acr::FSortkey::FSortkey() {
-    acr::FSortkey_Init(*this);
-}
 
-inline acr::FSortkey::~FSortkey() {
-    acr::FSortkey_Uninit(*this);
+// --- acr.FSmallstr..Ctor
+inline  acr::FSmallstr::FSmallstr() {
+    acr::FSmallstr_Init(*this);
 }
-
 
 // --- acr.FSortkey..Init
 // Set all fields to initial values.
@@ -3715,14 +3766,16 @@ inline void acr::FSortkey_Init(acr::FSortkey& sortkey) {
     sortkey.next_rowid = double(0);
     sortkey.ind_sortkey_next = (acr::FSortkey*)-1; // (acr.FDb.ind_sortkey) not-in-hash
 }
-inline acr::FSsimfile::FSsimfile() {
-    acr::FSsimfile_Init(*this);
+
+// --- acr.FSortkey..Ctor
+inline  acr::FSortkey::FSortkey() {
+    acr::FSortkey_Init(*this);
 }
 
-inline acr::FSsimfile::~FSsimfile() {
-    acr::FSsimfile_Uninit(*this);
+// --- acr.FSortkey..Dtor
+inline  acr::FSortkey::~FSortkey() {
+    acr::FSortkey_Uninit(*this);
 }
-
 
 // --- acr.FSsimfile.c_ssimsort.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -3752,57 +3805,67 @@ inline void acr::FSsimfile_Init(acr::FSsimfile& ssimfile) {
     ssimfile.c_ssimsort = NULL;
     ssimfile.ind_ssimfile_next = (acr::FSsimfile*)-1; // (acr.FDb.ind_ssimfile) not-in-hash
 }
-inline acr::FSsimreq::FSsimreq() {
+
+// --- acr.FSsimfile..Ctor
+inline  acr::FSsimfile::FSsimfile() {
+    acr::FSsimfile_Init(*this);
+}
+
+// --- acr.FSsimfile..Dtor
+inline  acr::FSsimfile::~FSsimfile() {
+    acr::FSsimfile_Uninit(*this);
+}
+
+// --- acr.FSsimreq..Ctor
+inline  acr::FSsimreq::FSsimreq() {
     acr::FSsimreq_Init(*this);
 }
 
-inline acr::FSsimreq::~FSsimreq() {
+// --- acr.FSsimreq..Dtor
+inline  acr::FSsimreq::~FSsimreq() {
     acr::FSsimreq_Uninit(*this);
 }
-
-inline acr::FSsimsort::FSsimsort() {
-    acr::FSsimsort_Init(*this);
-}
-
-inline acr::FSsimsort::~FSsimsort() {
-    acr::FSsimsort_Uninit(*this);
-}
-
 
 // --- acr.FSsimsort..Init
 // Set all fields to initial values.
 inline void acr::FSsimsort_Init(acr::FSsimsort& ssimsort) {
     ssimsort.ind_ssimsort_next = (acr::FSsimsort*)-1; // (acr.FDb.ind_ssimsort) not-in-hash
 }
-inline acr::FSubstr::FSubstr() {
+
+// --- acr.FSsimsort..Ctor
+inline  acr::FSsimsort::FSsimsort() {
+    acr::FSsimsort_Init(*this);
 }
 
-inline acr::FSubstr::~FSubstr() {
+// --- acr.FSsimsort..Dtor
+inline  acr::FSsimsort::~FSsimsort() {
+    acr::FSsimsort_Uninit(*this);
+}
+
+// --- acr.FSubstr..Ctor
+inline  acr::FSubstr::FSubstr() {
+}
+
+// --- acr.FSubstr..Dtor
+inline  acr::FSubstr::~FSubstr() {
     acr::FSubstr_Uninit(*this);
 }
-
-inline acr::FTempkey::FTempkey() {
-    acr::FTempkey_Init(*this);
-}
-
-inline acr::FTempkey::~FTempkey() {
-    acr::FTempkey_Uninit(*this);
-}
-
 
 // --- acr.FTempkey..Init
 // Set all fields to initial values.
 inline void acr::FTempkey_Init(acr::FTempkey& tempkey) {
     tempkey.ind_tempkey_next = (acr::FTempkey*)-1; // (acr.FDb.ind_tempkey) not-in-hash
 }
-inline acr::FUniqueattr::FUniqueattr() {
-    acr::FUniqueattr_Init(*this);
+
+// --- acr.FTempkey..Ctor
+inline  acr::FTempkey::FTempkey() {
+    acr::FTempkey_Init(*this);
 }
 
-inline acr::FUniqueattr::~FUniqueattr() {
-    acr::FUniqueattr_Uninit(*this);
+// --- acr.FTempkey..Dtor
+inline  acr::FTempkey::~FTempkey() {
+    acr::FTempkey_Uninit(*this);
 }
-
 
 // --- acr.FUniqueattr..Init
 // Set all fields to initial values.
@@ -3810,14 +3873,16 @@ inline void acr::FUniqueattr_Init(acr::FUniqueattr& uniqueattr) {
     uniqueattr.uniqueattr_next = (acr::FUniqueattr*)-1; // (acr.FDb.uniqueattr) not-in-tpool's freelist
     uniqueattr.ind_uniqueattr_next = (acr::FUniqueattr*)-1; // (acr.FDb.ind_uniqueattr) not-in-hash
 }
-inline acr::FWrite::FWrite() {
-    acr::FWrite_Init(*this);
+
+// --- acr.FUniqueattr..Ctor
+inline  acr::FUniqueattr::FUniqueattr() {
+    acr::FUniqueattr_Init(*this);
 }
 
-inline acr::FWrite::~FWrite() {
-    acr::FWrite_Uninit(*this);
+// --- acr.FUniqueattr..Dtor
+inline  acr::FUniqueattr::~FUniqueattr() {
+    acr::FUniqueattr_Uninit(*this);
 }
-
 
 // --- acr.FWrite.c_cmtrec.EmptyQ
 // Return true if index is empty
@@ -3899,15 +3964,16 @@ inline void acr::FWrite_Init(acr::FWrite& write) {
     write.c_cmtrec_n = 0; // (acr.FWrite.c_cmtrec)
     write.c_cmtrec_max = 0; // (acr.FWrite.c_cmtrec)
 }
-inline acr::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr::FieldId::FieldId(acr_FieldIdEnum arg) { this->value = i32(arg); }
-inline acr::FieldId::FieldId() {
-    acr::FieldId_Init(*this);
+
+// --- acr.FWrite..Ctor
+inline  acr::FWrite::FWrite() {
+    acr::FWrite_Init(*this);
 }
 
+// --- acr.FWrite..Dtor
+inline  acr::FWrite::~FWrite() {
+    acr::FWrite_Uninit(*this);
+}
 
 // --- acr.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -3922,7 +3988,7 @@ inline void acr::value_SetEnum(acr::FieldId& parent, acr_FieldIdEnum rhs) {
 }
 
 // --- acr.FieldId.value.Cast
-inline acr::FieldId::operator acr_FieldIdEnum () const {
+inline  acr::FieldId::operator acr_FieldIdEnum() const {
     return acr_FieldIdEnum((*this).value);
 }
 
@@ -3931,15 +3997,22 @@ inline acr::FieldId::operator acr_FieldIdEnum () const {
 inline void acr::FieldId_Init(acr::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline acr::ReadMode::ReadMode(u8                             in_read_mode)
-    : read_mode(in_read_mode)
-{
-}
-inline acr::ReadMode::ReadMode(acr_ReadModeEnum arg) { this->read_mode = u8(arg); }
-inline acr::ReadMode::ReadMode() {
-    acr::ReadMode_Init(*this);
+
+// --- acr.FieldId..Ctor
+inline  acr::FieldId::FieldId() {
+    acr::FieldId_Init(*this);
 }
 
+// --- acr.FieldId..FieldwiseCtor
+inline  acr::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr.FieldId..EnumCtor
+inline  acr::FieldId::FieldId(acr_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- acr.ReadMode.read_mode.GetEnum
 // Get value of field as enum type
@@ -3954,7 +4027,7 @@ inline void acr::read_mode_SetEnum(acr::ReadMode& parent, acr_ReadModeEnum rhs) 
 }
 
 // --- acr.ReadMode.read_mode.Cast
-inline acr::ReadMode::operator acr_ReadModeEnum () const {
+inline  acr::ReadMode::operator acr_ReadModeEnum() const {
     return acr_ReadModeEnum((*this).read_mode);
 }
 
@@ -3977,15 +4050,22 @@ inline bool acr::ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) {
     retval = u8_Eq(lhs.read_mode, rhs.read_mode);
     return retval;
 }
-inline acr::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr::TableId::TableId(acr_TableIdEnum arg) { this->value = i32(arg); }
-inline acr::TableId::TableId() {
-    acr::TableId_Init(*this);
+
+// --- acr.ReadMode..Ctor
+inline  acr::ReadMode::ReadMode() {
+    acr::ReadMode_Init(*this);
 }
 
+// --- acr.ReadMode..FieldwiseCtor
+inline  acr::ReadMode::ReadMode(u8 in_read_mode)
+    : read_mode(in_read_mode)
+ {
+}
+
+// --- acr.ReadMode..EnumCtor
+inline  acr::ReadMode::ReadMode(acr_ReadModeEnum arg) {
+    this->read_mode = u8(arg);
+}
 
 // --- acr.TableId.value.GetEnum
 // Get value of field as enum type
@@ -4000,7 +4080,7 @@ inline void acr::value_SetEnum(acr::TableId& parent, acr_TableIdEnum rhs) {
 }
 
 // --- acr.TableId.value.Cast
-inline acr::TableId::operator acr_TableIdEnum () const {
+inline  acr::TableId::operator acr_TableIdEnum() const {
     return acr_TableIdEnum((*this).value);
 }
 
@@ -4008,6 +4088,22 @@ inline acr::TableId::operator acr_TableIdEnum () const {
 // Set all fields to initial values.
 inline void acr::TableId_Init(acr::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- acr.TableId..Ctor
+inline  acr::TableId::TableId() {
+    acr::TableId_Init(*this);
+}
+
+// --- acr.TableId..FieldwiseCtor
+inline  acr::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr.TableId..EnumCtor
+inline  acr::TableId::TableId(acr_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr::CtypeTopoKey &row) {// cfmt:acr.CtypeTopoKey.String

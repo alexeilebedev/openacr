@@ -26,14 +26,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline acr_dm::FAttr::FAttr() {
-    acr_dm::FAttr_Init(*this);
-}
-
-inline acr_dm::FAttr::~FAttr() {
-    acr_dm::FAttr_Uninit(*this);
-}
-
 
 // --- acr_dm.FAttr.zs_value.EmptyQ
 // Return true if index is empty
@@ -119,9 +111,20 @@ inline void acr_dm::FAttr_Init(acr_dm::FAttr& attr) {
     attr.zs_value_tail = NULL; // (acr_dm.FAttr.zs_value)
     attr.zs_attr_next = (acr_dm::FAttr*)-1; // (acr_dm.FTuple.zs_attr) not-in-list
 }
-inline acr_dm::trace::trace() {
+
+// --- acr_dm.FAttr..Ctor
+inline  acr_dm::FAttr::FAttr() {
+    acr_dm::FAttr_Init(*this);
 }
 
+// --- acr_dm.FAttr..Dtor
+inline  acr_dm::FAttr::~FAttr() {
+    acr_dm::FAttr_Uninit(*this);
+}
+
+// --- acr_dm.trace..Ctor
+inline  acr_dm::trace::trace() {
+}
 
 // --- acr_dm.FDb.tuple.EmptyQ
 // Return true if index is empty
@@ -377,42 +380,36 @@ inline acr_dm::FTuple& acr_dm::_db_bh_tuple_curs_Access(_db_bh_tuple_curs &curs)
 inline bool acr_dm::_db_bh_tuple_curs_ValidQ(_db_bh_tuple_curs &curs) {
     return curs.temp_n > 0;
 }
-inline acr_dm::Rowid::Rowid(i32                            in_f1
-        ,i32                            in_f2
-        ,i32                            in_f3)
-    : f1(in_f1)
-    , f2(in_f2)
-    , f3(in_f3)
-{
-}
 
+// --- acr_dm.Rowid..EqOp
 inline bool acr_dm::Rowid::operator ==(const acr_dm::Rowid &rhs) const {
     return acr_dm::Rowid_Eq(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
 }
 
+// --- acr_dm.Rowid..NeOp
 inline bool acr_dm::Rowid::operator !=(const acr_dm::Rowid &rhs) const {
     return !acr_dm::Rowid_Eq(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
 }
 
+// --- acr_dm.Rowid..LtOp
 inline bool acr_dm::Rowid::operator <(const acr_dm::Rowid &rhs) const {
     return acr_dm::Rowid_Lt(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
 }
 
+// --- acr_dm.Rowid..GtOp
 inline bool acr_dm::Rowid::operator >(const acr_dm::Rowid &rhs) const {
-    return rhs < *this;
+    return acr_dm::Rowid_Lt(const_cast<acr_dm::Rowid&>(rhs),const_cast<acr_dm::Rowid&>(*this));
 }
 
+// --- acr_dm.Rowid..LeOp
 inline bool acr_dm::Rowid::operator <=(const acr_dm::Rowid &rhs) const {
-    return !(rhs < *this);
+    return !acr_dm::Rowid_Lt(const_cast<acr_dm::Rowid&>(rhs),const_cast<acr_dm::Rowid&>(*this));
 }
 
+// --- acr_dm.Rowid..GeOp
 inline bool acr_dm::Rowid::operator >=(const acr_dm::Rowid &rhs) const {
-    return !(*this < rhs);
+    return !acr_dm::Rowid_Lt(const_cast<acr_dm::Rowid&>(*this),const_cast<acr_dm::Rowid&>(rhs));
 }
-inline acr_dm::Rowid::Rowid() {
-    acr_dm::Rowid_Init(*this);
-}
-
 
 // --- acr_dm.Rowid..Lt
 inline bool acr_dm::Rowid_Lt(acr_dm::Rowid& lhs, acr_dm::Rowid& rhs) {
@@ -466,10 +463,19 @@ inline bool acr_dm::Rowid_Update(acr_dm::Rowid &lhs, acr_dm::Rowid& rhs) {
     }
     return ret;
 }
-inline acr_dm::Source::Source() {
-    acr_dm::Source_Init(*this);
+
+// --- acr_dm.Rowid..Ctor
+inline  acr_dm::Rowid::Rowid() {
+    acr_dm::Rowid_Init(*this);
 }
 
+// --- acr_dm.Rowid..FieldwiseCtor
+inline  acr_dm::Rowid::Rowid(i32 in_f1, i32 in_f2, i32 in_f3)
+    : f1(in_f1)
+    , f2(in_f2)
+    , f3(in_f3)
+ {
+}
 
 // --- acr_dm.Source.source.N
 // Return constant 1
@@ -668,14 +674,11 @@ inline int& acr_dm::Source_source_bitcurs_Access(Source_source_bitcurs &curs) {
 inline void acr_dm::Source_Init(acr_dm::Source& parent) {
     parent.source = u8(0);
 }
-inline acr_dm::FTuple::FTuple() {
-    acr_dm::FTuple_Init(*this);
-}
 
-inline acr_dm::FTuple::~FTuple() {
-    acr_dm::FTuple_Uninit(*this);
+// --- acr_dm.Source..Ctor
+inline  acr_dm::Source::Source() {
+    acr_dm::Source_Init(*this);
 }
-
 
 // --- acr_dm.FTuple.rowid.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -775,14 +778,16 @@ inline void acr_dm::tuple_zs_attr_curs_Next(tuple_zs_attr_curs &curs) {
 inline acr_dm::FAttr& acr_dm::tuple_zs_attr_curs_Access(tuple_zs_attr_curs &curs) {
     return *curs.row;
 }
-inline acr_dm::FValue::FValue() {
-    acr_dm::FValue_Init(*this);
+
+// --- acr_dm.FTuple..Ctor
+inline  acr_dm::FTuple::FTuple() {
+    acr_dm::FTuple_Init(*this);
 }
 
-inline acr_dm::FValue::~FValue() {
-    acr_dm::FValue_Uninit(*this);
+// --- acr_dm.FTuple..Dtor
+inline  acr_dm::FTuple::~FTuple() {
+    acr_dm::FTuple_Uninit(*this);
 }
-
 
 // --- acr_dm.FValue..Init
 // Set all fields to initial values.
@@ -790,15 +795,16 @@ inline void acr_dm::FValue_Init(acr_dm::FValue& value) {
     value.p_attr = NULL;
     value.zs_value_next = (acr_dm::FValue*)-1; // (acr_dm.FAttr.zs_value) not-in-list
 }
-inline acr_dm::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_dm::FieldId::FieldId(acr_dm_FieldIdEnum arg) { this->value = i32(arg); }
-inline acr_dm::FieldId::FieldId() {
-    acr_dm::FieldId_Init(*this);
+
+// --- acr_dm.FValue..Ctor
+inline  acr_dm::FValue::FValue() {
+    acr_dm::FValue_Init(*this);
 }
 
+// --- acr_dm.FValue..Dtor
+inline  acr_dm::FValue::~FValue() {
+    acr_dm::FValue_Uninit(*this);
+}
 
 // --- acr_dm.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -813,7 +819,7 @@ inline void acr_dm::value_SetEnum(acr_dm::FieldId& parent, acr_dm_FieldIdEnum rh
 }
 
 // --- acr_dm.FieldId.value.Cast
-inline acr_dm::FieldId::operator acr_dm_FieldIdEnum () const {
+inline  acr_dm::FieldId::operator acr_dm_FieldIdEnum() const {
     return acr_dm_FieldIdEnum((*this).value);
 }
 
@@ -821,6 +827,22 @@ inline acr_dm::FieldId::operator acr_dm_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void acr_dm::FieldId_Init(acr_dm::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- acr_dm.FieldId..Ctor
+inline  acr_dm::FieldId::FieldId() {
+    acr_dm::FieldId_Init(*this);
+}
+
+// --- acr_dm.FieldId..FieldwiseCtor
+inline  acr_dm::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_dm.FieldId..EnumCtor
+inline  acr_dm::FieldId::FieldId(acr_dm_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_dm::trace &row) {// cfmt:acr_dm.trace.String

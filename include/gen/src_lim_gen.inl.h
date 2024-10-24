@@ -28,19 +28,21 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline src_lim::FBadline::FBadline() {
-    src_lim::FBadline_Init(*this);
-}
-
 
 // --- src_lim.FBadline..Init
 // Set all fields to initial values.
 inline void src_lim::FBadline_Init(src_lim::FBadline& badline) {
     badline.select = bool(false);
 }
-inline src_lim::trace::trace() {
+
+// --- src_lim.FBadline..Ctor
+inline  src_lim::FBadline::FBadline() {
+    src_lim::FBadline_Init(*this);
 }
 
+// --- src_lim.trace..Ctor
+inline  src_lim::trace::trace() {
+}
 
 // --- src_lim.FDb.include.EmptyQ
 // Return true if index is empty
@@ -388,14 +390,6 @@ inline void src_lim::_db_badline_curs_Next(_db_badline_curs &curs) {
 inline src_lim::FBadline& src_lim::_db_badline_curs_Access(_db_badline_curs &curs) {
     return badline_qFind(u64(curs.index));
 }
-inline src_lim::FGitfile::FGitfile() {
-    src_lim::FGitfile_Init(*this);
-}
-
-inline src_lim::FGitfile::~FGitfile() {
-    src_lim::FGitfile_Uninit(*this);
-}
-
 
 // --- src_lim.FGitfile.zd_include.EmptyQ
 // Return true if index is empty
@@ -528,14 +522,16 @@ inline void src_lim::gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs)
 inline src_lim::FInclude& src_lim::gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) {
     return *curs.row;
 }
-inline src_lim::FInclude::FInclude() {
-    src_lim::FInclude_Init(*this);
+
+// --- src_lim.FGitfile..Ctor
+inline  src_lim::FGitfile::FGitfile() {
+    src_lim::FGitfile_Init(*this);
 }
 
-inline src_lim::FInclude::~FInclude() {
-    src_lim::FInclude_Uninit(*this);
+// --- src_lim.FGitfile..Dtor
+inline  src_lim::FGitfile::~FGitfile() {
+    src_lim::FGitfile_Uninit(*this);
 }
-
 
 // --- src_lim.FInclude..Init
 // Set all fields to initial values.
@@ -544,14 +540,16 @@ inline void src_lim::FInclude_Init(src_lim::FInclude& include) {
     include.zd_include_next = (src_lim::FInclude*)-1; // (src_lim.FGitfile.zd_include) not-in-list
     include.zd_include_prev = NULL; // (src_lim.FGitfile.zd_include)
 }
-inline src_lim::FLinelim::FLinelim() {
-    src_lim::FLinelim_Init(*this);
+
+// --- src_lim.FInclude..Ctor
+inline  src_lim::FInclude::FInclude() {
+    src_lim::FInclude_Init(*this);
 }
 
-inline src_lim::FLinelim::~FLinelim() {
-    src_lim::FLinelim_Uninit(*this);
+// --- src_lim.FInclude..Dtor
+inline  src_lim::FInclude::~FInclude() {
+    src_lim::FInclude_Uninit(*this);
 }
-
 
 // --- src_lim.FLinelim..Init
 // Set all fields to initial values.
@@ -564,14 +562,16 @@ inline void src_lim::FLinelim_Init(src_lim::FLinelim& linelim) {
     linelim.longestfunc = u32(0);
     linelim.nmysteryfunc = u32(0);
 }
-inline src_lim::FTargsrc::FTargsrc() {
-    src_lim::FTargsrc_Init(*this);
+
+// --- src_lim.FLinelim..Ctor
+inline  src_lim::FLinelim::FLinelim() {
+    src_lim::FLinelim_Init(*this);
 }
 
-inline src_lim::FTargsrc::~FTargsrc() {
-    src_lim::FTargsrc_Uninit(*this);
+// --- src_lim.FLinelim..Dtor
+inline  src_lim::FLinelim::~FLinelim() {
+    src_lim::FLinelim_Uninit(*this);
 }
-
 
 // --- src_lim.FTargsrc..Init
 // Set all fields to initial values.
@@ -579,15 +579,16 @@ inline void src_lim::FTargsrc_Init(src_lim::FTargsrc& targsrc) {
     targsrc.p_gitfile = NULL;
     targsrc.select = bool(false);
 }
-inline src_lim::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_lim::FieldId::FieldId(src_lim_FieldIdEnum arg) { this->value = i32(arg); }
-inline src_lim::FieldId::FieldId() {
-    src_lim::FieldId_Init(*this);
+
+// --- src_lim.FTargsrc..Ctor
+inline  src_lim::FTargsrc::FTargsrc() {
+    src_lim::FTargsrc_Init(*this);
 }
 
+// --- src_lim.FTargsrc..Dtor
+inline  src_lim::FTargsrc::~FTargsrc() {
+    src_lim::FTargsrc_Uninit(*this);
+}
 
 // --- src_lim.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -602,7 +603,7 @@ inline void src_lim::value_SetEnum(src_lim::FieldId& parent, src_lim_FieldIdEnum
 }
 
 // --- src_lim.FieldId.value.Cast
-inline src_lim::FieldId::operator src_lim_FieldIdEnum () const {
+inline  src_lim::FieldId::operator src_lim_FieldIdEnum() const {
     return src_lim_FieldIdEnum((*this).value);
 }
 
@@ -611,15 +612,22 @@ inline src_lim::FieldId::operator src_lim_FieldIdEnum () const {
 inline void src_lim::FieldId_Init(src_lim::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline src_lim::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_lim::TableId::TableId(src_lim_TableIdEnum arg) { this->value = i32(arg); }
-inline src_lim::TableId::TableId() {
-    src_lim::TableId_Init(*this);
+
+// --- src_lim.FieldId..Ctor
+inline  src_lim::FieldId::FieldId() {
+    src_lim::FieldId_Init(*this);
 }
 
+// --- src_lim.FieldId..FieldwiseCtor
+inline  src_lim::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_lim.FieldId..EnumCtor
+inline  src_lim::FieldId::FieldId(src_lim_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- src_lim.TableId.value.GetEnum
 // Get value of field as enum type
@@ -634,7 +642,7 @@ inline void src_lim::value_SetEnum(src_lim::TableId& parent, src_lim_TableIdEnum
 }
 
 // --- src_lim.TableId.value.Cast
-inline src_lim::TableId::operator src_lim_TableIdEnum () const {
+inline  src_lim::TableId::operator src_lim_TableIdEnum() const {
     return src_lim_TableIdEnum((*this).value);
 }
 
@@ -642,6 +650,22 @@ inline src_lim::TableId::operator src_lim_TableIdEnum () const {
 // Set all fields to initial values.
 inline void src_lim::TableId_Init(src_lim::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- src_lim.TableId..Ctor
+inline  src_lim::TableId::TableId() {
+    src_lim::TableId_Init(*this);
+}
+
+// --- src_lim.TableId..FieldwiseCtor
+inline  src_lim::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_lim.TableId..EnumCtor
+inline  src_lim::TableId::TableId(src_lim_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const src_lim::trace &row) {// cfmt:src_lim.trace.String

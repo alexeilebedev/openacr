@@ -3,19 +3,23 @@
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Ns
 
 * file:[data/dmmeta/ns.ssim](/data/dmmeta/ns.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ns|algo.Smallstr16|Val||Namespace name (primary key)|
-|nstype|[dmmeta.Nstype](/txt/ssimdb/dmmeta/nstype.md)|Pkey||Namespace type|
-|license|[dev.License](/txt/ssimdb/dev/license.md)|Pkey||Associated license|
-|comment|algo.Comment|Val|
+|ns|[algo.Smallstr16](/txt/protocol/algo/README.md#algo-smallstr16)|[Val](/txt/exe/amc/reftypes.md#val)||Namespace name (primary key)|
+|nstype|[dmmeta.Nstype](/txt/ssimdb/dmmeta/nstype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Namespace type|
+|license|[dev.License](/txt/ssimdb/dev/license.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Associated license|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Subsets
 <a href="#subsets"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
 These ssimfiles are subsets of dmmeta.ns
 
 * [dev.Target](/txt/ssimdb/dev/target.md) - Build target 
@@ -25,12 +29,16 @@ These ssimfiles are subsets of dmmeta.ns
 * [dmmeta.Nsfast](/txt/ssimdb/dmmeta/nsfast.md) - Whether namespace is FAST 
 * [dmmeta.Nsproto](/txt/ssimdb/dmmeta/nsproto.md) - Annotate protocol namespace (collection of types, no state) 
 * [dmmeta.Nsversion](/txt/ssimdb/dmmeta/nsversion.md) - Namespace version 
-* [dmmeta.Nsx](/txt/ssimdb/dmmeta/nsx.md) - Control code-generation and exception handling options for process/library
+* [dmmeta.Nsx](/txt/ssimdb/dmmeta/nsx.md) - Control code-generation and exception handling options for process/library 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
 
 ### Related
 <a href="#related"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.ns
 
+* [amsdb.proctype via ns](/txt/ssimdb/amsdb/proctype.md) -  
 * [atfdb.comptest via target](/txt/ssimdb/atfdb/comptest.md) -  
 * [atfdb.unittest via target](/txt/ssimdb/atfdb/unittest.md) -  
 * [dmmeta.ctype via ns](/txt/ssimdb/dmmeta/ctype.md) - Parent namespace 
@@ -49,25 +57,36 @@ These ssimfiles reference dmmeta.ns
 * [dmmeta.pnew via ns](/txt/ssimdb/dmmeta/pnew.md) - Generate custom constructor (placement new), for use with binary protocols 
 * [dmmeta.ssimfile via ns](/txt/ssimdb/dmmeta/ssimfile.md) - File with ssim tuples 
 * [dmmeta.tracerec via ns](/txt/ssimdb/dmmeta/tracerec.md) - e.g. rl_lib 
-* [dmmeta.xref via ns](/txt/ssimdb/dmmeta/xref.md) - Ns with which this xref is a member
+* [dmmeta.xref via ns](/txt/ssimdb/dmmeta/xref.md) - Ns with which this xref is a member 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
 ### Used In Commands
 <a href="#used-in-commands"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
+
 * [abt_md -ns](/txt/exe/abt_md/README.md) - (overrides -readme) Process readmes for this namespace 
 * [acr_in -ns](/txt/exe/acr_in/README.md) - Regx of matching namespace 
-* [apm -ns](/txt/exe/apm/README.md) - Operate on specified namespace only
+* [apm -ns](/txt/exe/apm/README.md) - Operate on specified namespace only 
+* [aqlite -ns](/txt/exe/aqlite/README.md) - Regx of databases to attach 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [abt](/txt/exe/abt/README.md) as abt.FNs
-* [abt_md](/txt/exe/abt_md/README.md) as abt_md.FNs
-* [acr_compl](/txt/exe/acr_compl/README.md) as acr_compl.FNs
-* [acr_ed](/txt/exe/acr_ed/README.md) as acr_ed.FNs
-* [acr_in](/txt/exe/acr_in/README.md) as acr_in.FNs
-* [amc](/txt/exe/amc/README.md) as amc.FNs
-* [apm](/txt/exe/apm/README.md) as apm.FNs
-* [aqlite](/txt/exe/aqlite/README.md) as aqlite.FNs
-* [atf_ci](/txt/exe/atf_ci/README.md) as atf_ci.FNs
-* [src_hdr](/txt/exe/src_hdr/README.md) as src_hdr.FNs
-* [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FNs
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [abt](/txt/exe/abt/internals.md) as [abt.FNs](/txt/exe/abt/internals.md#abt-fns)
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FNs](/txt/exe/abt_md/internals.md#abt_md-fns)
+* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FNs](/txt/exe/acr_compl/internals.md#acr_compl-fns)
+* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FNs](/txt/exe/acr_ed/internals.md#acr_ed-fns)
+* [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FNs](/txt/exe/acr_in/internals.md#acr_in-fns)
+* [amc](/txt/exe/amc/internals.md) as [amc.FNs](/txt/exe/amc/internals.md#amc-fns)
+* [apm](/txt/exe/apm/internals.md) as [apm.FNs](/txt/exe/apm/internals.md#apm-fns)
+* [aqlite](/txt/exe/aqlite/internals.md) as [aqlite.FNs](/txt/exe/aqlite/internals.md#aqlite-fns)
+* [atf_ci](/txt/exe/atf_ci/internals.md) as [atf_ci.FNs](/txt/exe/atf_ci/internals.md#atf_ci-fns)
+* [src_hdr](/txt/exe/src_hdr/internals.md) as [src_hdr.FNs](/txt/exe/src_hdr/internals.md#src_hdr-fns)
+* [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FNs](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fns)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

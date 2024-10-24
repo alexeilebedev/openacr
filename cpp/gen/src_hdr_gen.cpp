@@ -97,7 +97,7 @@ namespace src_hdr { // gen:ns_print_proto
     // func:src_hdr.FDb.bh_copyright.Upheap
     static int           bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) __attribute__((nothrow));
     // func:src_hdr.FDb.bh_copyright.ElemLt
-    static bool          bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) __attribute__((nothrow));
+    inline static bool   bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) __attribute__((nothrow));
     // func:src_hdr.FDb.bh_copyright_curs.Add
     static void          _db_bh_copyright_curs_Add(_db_bh_copyright_curs &curs, src_hdr::FCopyright& row);
     // find trace by row id (used to implement reflection)
@@ -105,9 +105,9 @@ namespace src_hdr { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:src_hdr.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:src_hdr...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- src_hdr.FCopyline..Uninit

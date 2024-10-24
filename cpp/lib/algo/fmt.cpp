@@ -1365,6 +1365,32 @@ void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str) {
     }ind_end;
 }
 
+static tempstr NewlineToBr(strptr s) {
+    tempstr ret(s);
+    Replace(ret,"\n","<br>");
+    return ret;
+}
+
+void algo_lib::FTxttbl_Markdown(algo_lib::FTxttbl &T_, algo::cstring &str) {
+    algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
+    // First row of the table is always the header
+    // Second row have to be inserted as |---| for markdown
+    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select && c_txtcell_N(txtrow)) {
+        str<<"|";
+        ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
+            // markdown is thrown away by \n in the cells, so it has to be replaced with <br>
+            str<<NewlineToBr(txtcell.text)<<"|";
+        }ind_end;
+        str<<eol;
+        if (ind_curs(txtrow).index==0) {
+            frep_(i,c_txtcell_N(txtrow)) {
+                str<<"|---";
+            };
+            str<<"|"<<eol;
+        }
+    }ind_end;
+}
+
 void algo::URL_Print(algo::URL &url, algo::cstring &str) {
     if (ch_N(url.protocol)) {
         str<<url.protocol<<"://";
@@ -2156,4 +2182,28 @@ void algo::u64_PrintBase32(u64 k, algo::cstring &str) {
         k>>=5;
     } while (k);
     ch_Addary(str, algo::strptr(buf+start, MAXCHARS-start));
+}
+
+void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) {
+    ch_Reserve(str,16+4);
+    algo::u64_PrintHex(parent.value_elems[0],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[1],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[2],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[3],str,2,false,false);
+    str << "-";
+    algo::u64_PrintHex(parent.value_elems[4],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[5],str,2,false,false);
+    str << "-";
+    algo::u64_PrintHex(parent.value_elems[6],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[7],str,2,false,false);
+    str << "-";
+    algo::u64_PrintHex(parent.value_elems[8],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[9],str,2,false,false);
+    str << "-";
+    algo::u64_PrintHex(parent.value_elems[10],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[11],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[12],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[13],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[14],str,2,false,false);
+    algo::u64_PrintHex(parent.value_elems[15],str,2,false,false);
 }

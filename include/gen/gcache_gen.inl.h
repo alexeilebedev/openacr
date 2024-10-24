@@ -28,24 +28,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline gcache::cleanreport::cleanreport(i32                            in_n_cachefile
-        ,i32                            in_n_cachefile_del
-        ,i32                            in_n_cachefile_recent
-        ,i32                            in_n_logline
-        ,i32                            in_n_logline_del
-        ,i64                            in_new_cachesize_mb)
-    : n_cachefile(in_n_cachefile)
-    , n_cachefile_del(in_n_cachefile_del)
-    , n_cachefile_recent(in_n_cachefile_recent)
-    , n_logline(in_n_logline)
-    , n_logline_del(in_n_logline_del)
-    , new_cachesize_mb(in_new_cachesize_mb)
-{
-}
-inline gcache::cleanreport::cleanreport() {
-    gcache::cleanreport_Init(*this);
-}
-
 
 // --- gcache.cleanreport..Init
 // Set all fields to initial values.
@@ -57,9 +39,26 @@ inline void gcache::cleanreport_Init(gcache::cleanreport& parent) {
     parent.n_logline_del = i32(0);
     parent.new_cachesize_mb = i64(0);
 }
-inline gcache::trace::trace() {
+
+// --- gcache.cleanreport..Ctor
+inline  gcache::cleanreport::cleanreport() {
+    gcache::cleanreport_Init(*this);
 }
 
+// --- gcache.cleanreport..FieldwiseCtor
+inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb)
+    : n_cachefile(in_n_cachefile)
+    , n_cachefile_del(in_n_cachefile_del)
+    , n_cachefile_recent(in_n_cachefile_recent)
+    , n_logline(in_n_logline)
+    , n_logline_del(in_n_logline_del)
+    , new_cachesize_mb(in_new_cachesize_mb)
+ {
+}
+
+// --- gcache.trace..Ctor
+inline  gcache::trace::trace() {
+}
 
 // --- gcache.FDb.header.EmptyQ
 // Return true if index is empty
@@ -127,10 +126,6 @@ inline void gcache::_db_header_curs_Next(_db_header_curs &curs) {
 inline gcache::FHeader& gcache::_db_header_curs_Access(_db_header_curs &curs) {
     return header_qFind(u64(curs.index));
 }
-inline gcache::FHeader::FHeader() {
-    gcache::FHeader_Init(*this);
-}
-
 
 // --- gcache.FHeader..Init
 // Set all fields to initial values.
@@ -141,15 +136,11 @@ inline void gcache::FHeader_Init(gcache::FHeader& header) {
     header.outer_end = i32(0);
     header.mlines_before = bool(false);
 }
-inline gcache::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline gcache::FieldId::FieldId(gcache_FieldIdEnum arg) { this->value = i32(arg); }
-inline gcache::FieldId::FieldId() {
-    gcache::FieldId_Init(*this);
-}
 
+// --- gcache.FHeader..Ctor
+inline  gcache::FHeader::FHeader() {
+    gcache::FHeader_Init(*this);
+}
 
 // --- gcache.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -164,7 +155,7 @@ inline void gcache::value_SetEnum(gcache::FieldId& parent, gcache_FieldIdEnum rh
 }
 
 // --- gcache.FieldId.value.Cast
-inline gcache::FieldId::operator gcache_FieldIdEnum () const {
+inline  gcache::FieldId::operator gcache_FieldIdEnum() const {
     return gcache_FieldIdEnum((*this).value);
 }
 
@@ -172,6 +163,22 @@ inline gcache::FieldId::operator gcache_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void gcache::FieldId_Init(gcache::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- gcache.FieldId..Ctor
+inline  gcache::FieldId::FieldId() {
+    gcache::FieldId_Init(*this);
+}
+
+// --- gcache.FieldId..FieldwiseCtor
+inline  gcache::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- gcache.FieldId..EnumCtor
+inline  gcache::FieldId::FieldId(gcache_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gcache::cleanreport &row) {// cfmt:gcache.cleanreport.String

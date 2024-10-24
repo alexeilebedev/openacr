@@ -29,14 +29,6 @@
 static algo_lib::FLogcat &algo_lib_logcat_expect   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
 static algo_lib::FLogcat &algo_lib_logcat_stderr   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
 static algo_lib::FLogcat &algo_lib_logcat_stdout   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
-inline algo_lib::Bitset::Bitset() {
-    algo_lib::Bitset_Init(*this);
-}
-
-inline algo_lib::Bitset::~Bitset() {
-    algo_lib::Bitset_Uninit(*this);
-}
-
 
 // --- algo_lib.Bitset.ary.NBits
 // Get max # of bits in the bitset
@@ -224,6 +216,20 @@ inline u64* algo_lib::ary_Last(algo_lib::Bitset& parent) {
     return ary_Find(parent, u64(parent.ary_n-1));
 }
 
+// --- algo_lib.Bitset.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo_lib::Bitset::operator =(const algo::aryptr<u64> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo_lib.Bitset.ary.CtorAryptr
+inline  algo_lib::Bitset::Bitset(const algo::aryptr<u64> &rhs) {
+    ary_elems 	= 0; // (algo_lib.Bitset.ary)
+    ary_n     	= 0; // (algo_lib.Bitset.ary)
+    ary_max   	= 0; // (algo_lib.Bitset.ary)
+    ary_Addary(*this, rhs);
+}
+
 // --- algo_lib.Bitset.ary.Max
 // Return max. number of items in the array
 inline i32 algo_lib::ary_Max(algo_lib::Bitset& parent) {
@@ -322,10 +328,16 @@ inline void algo_lib::Bitset_Init(algo_lib::Bitset& parent) {
     parent.ary_n     	= 0; // (algo_lib.Bitset.ary)
     parent.ary_max   	= 0; // (algo_lib.Bitset.ary)
 }
-inline algo_lib::Cmdline::Cmdline() {
-    algo_lib::Cmdline_Init(*this);
+
+// --- algo_lib.Bitset..Ctor
+inline  algo_lib::Bitset::Bitset() {
+    algo_lib::Bitset_Init(*this);
 }
 
+// --- algo_lib.Bitset..Dtor
+inline  algo_lib::Bitset::~Bitset() {
+    algo_lib::Bitset_Uninit(*this);
+}
 
 // --- algo_lib.Cmdline.v.Get
 // Alias: value is retrieved from verbose
@@ -360,26 +372,11 @@ inline void algo_lib::Cmdline_Init(algo_lib::Cmdline& parent) {
     parent.version = bool(false);
     parent.signature = bool(false);
 }
-inline algo_lib::CsvParse::CsvParse(algo::strptr                   in_input
-        ,char                           in_sep
-        ,char                           in_quotechar1
-        ,char                           in_quotechar2
-        ,bool                           in_openquote)
-    : input(in_input)
-    , sep(in_sep)
-    , quotechar1(in_quotechar1)
-    , quotechar2(in_quotechar2)
-    , openquote(in_openquote)
-{
-}
-inline algo_lib::CsvParse::CsvParse() {
-    algo_lib::CsvParse_Init(*this);
-}
 
-inline algo_lib::CsvParse::~CsvParse() {
-    algo_lib::CsvParse_Uninit(*this);
+// --- algo_lib.Cmdline..Ctor
+inline  algo_lib::Cmdline::Cmdline() {
+    algo_lib::Cmdline_Init(*this);
 }
-
 
 // --- algo_lib.CsvParse.ary_tok.EmptyQ
 // Return true if index is empty
@@ -485,35 +482,66 @@ inline void algo_lib::CsvParse_Init(algo_lib::CsvParse& csvparse) {
     csvparse.ary_tok_max   	= 0; // (algo_lib.CsvParse.ary_tok)
     csvparse.openquote = bool(true);
 }
-inline algo_lib::ErrorX::ErrorX(const algo::strptr&            in_str)
+
+// --- algo_lib.CsvParse..Ctor
+inline  algo_lib::CsvParse::CsvParse() {
+    algo_lib::CsvParse_Init(*this);
+}
+
+// --- algo_lib.CsvParse..Dtor
+inline  algo_lib::CsvParse::~CsvParse() {
+    algo_lib::CsvParse_Uninit(*this);
+}
+
+// --- algo_lib.CsvParse..FieldwiseCtor
+inline  algo_lib::CsvParse::CsvParse(algo::strptr in_input, char in_sep, char in_quotechar1, char in_quotechar2, bool in_openquote)
+    : input(in_input)
+    , sep(in_sep)
+    , quotechar1(in_quotechar1)
+    , quotechar2(in_quotechar2)
+    , openquote(in_openquote)
+ {
+}
+
+// --- algo_lib.ErrorX..Ctor
+inline  algo_lib::ErrorX::ErrorX() {
+}
+
+// --- algo_lib.ErrorX..FieldwiseCtor
+inline  algo_lib::ErrorX::ErrorX(const algo::strptr& in_str)
     : str(in_str)
-{
-}
-inline algo_lib::ErrorX::ErrorX() {
+ {
 }
 
-inline algo_lib::FFildes::FFildes() {
+// --- algo_lib.FFildes..Uninit
+inline void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
+    algo_lib::FFildes &row = fildes; (void)row;
+    fd_Cleanup(fildes); // dmmeta.fcleanup:algo_lib.FFildes.fd
 }
 
-inline algo_lib::FFildes::~FFildes() {
+// --- algo_lib.FFildes..Ctor
+inline  algo_lib::FFildes::FFildes() {
+}
+
+// --- algo_lib.FFildes..Dtor
+inline  algo_lib::FFildes::~FFildes() {
     algo_lib::FFildes_Uninit(*this);
 }
 
-inline algo_lib::FLockfile::FLockfile() {
+// --- algo_lib.FLockfile..Uninit
+inline void algo_lib::FLockfile_Uninit(algo_lib::FLockfile& parent) {
+    algo_lib::FLockfile &row = parent; (void)row;
+    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FLockfile.fildes
 }
 
-inline algo_lib::FLockfile::~FLockfile() {
+// --- algo_lib.FLockfile..Ctor
+inline  algo_lib::FLockfile::FLockfile() {
+}
+
+// --- algo_lib.FLockfile..Dtor
+inline  algo_lib::FLockfile::~FLockfile() {
     algo_lib::FLockfile_Uninit(*this);
 }
-
-inline algo_lib::FTimehook::FTimehook() {
-    algo_lib::FTimehook_Init(*this);
-}
-
-inline algo_lib::FTimehook::~FTimehook() {
-    algo_lib::FTimehook_Uninit(*this);
-}
-
 
 // --- algo_lib.FTimehook.time.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -566,14 +594,16 @@ inline void algo_lib::FTimehook_Init(algo_lib::FTimehook& timehook) {
     timehook.hook_ctx = 0;
     timehook.bh_timehook_idx = -1; // (algo_lib.FDb.bh_timehook) not-in-heap
 }
-inline algo_lib::FImdb::FImdb() {
-    algo_lib::FImdb_Init(*this);
+
+// --- algo_lib.FTimehook..Ctor
+inline  algo_lib::FTimehook::FTimehook() {
+    algo_lib::FTimehook_Init(*this);
 }
 
-inline algo_lib::FImdb::~FImdb() {
-    algo_lib::FImdb_Uninit(*this);
+// --- algo_lib.FTimehook..Dtor
+inline  algo_lib::FTimehook::~FTimehook() {
+    algo_lib::FTimehook_Uninit(*this);
 }
-
 
 // --- algo_lib.FImdb..Init
 // Set all fields to initial values.
@@ -584,14 +614,16 @@ inline void algo_lib::FImdb_Init(algo_lib::FImdb& imdb) {
     memset(&imdb.GetTrace, 0, sizeof(imdb.GetTrace));
     imdb.ind_imdb_next = (algo_lib::FImdb*)-1; // (algo_lib.FDb.ind_imdb) not-in-hash
 }
-inline algo_lib::FLogcat::FLogcat() {
-    algo_lib::FLogcat_Init(*this);
+
+// --- algo_lib.FImdb..Ctor
+inline  algo_lib::FImdb::FImdb() {
+    algo_lib::FImdb_Init(*this);
 }
 
-inline algo_lib::FLogcat::~FLogcat() {
-    algo_lib::FLogcat_Uninit(*this);
+// --- algo_lib.FImdb..Dtor
+inline  algo_lib::FImdb::~FImdb() {
+    algo_lib::FImdb_Uninit(*this);
 }
-
 
 // --- algo_lib.FLogcat..Init
 // Set all fields to initial values.
@@ -600,10 +632,21 @@ inline void algo_lib::FLogcat_Init(algo_lib::FLogcat& logcat) {
     logcat.builtin = bool(false);
     logcat.ind_logcat_next = (algo_lib::FLogcat*)-1; // (algo_lib.FDb.ind_logcat) not-in-hash
 }
-inline algo_lib::trace::trace() {
-    algo_lib::trace_Init(*this);
+
+// --- algo_lib.FLogcat..Ctor
+inline  algo_lib::FLogcat::FLogcat() {
+    algo_lib::FLogcat_Init(*this);
 }
 
+// --- algo_lib.FLogcat..Dtor
+inline  algo_lib::FLogcat::~FLogcat() {
+    algo_lib::FLogcat_Uninit(*this);
+}
+
+// --- algo_lib.trace..Ctor
+inline  algo_lib::trace::trace() {
+    algo_lib::trace_Init(*this);
+}
 
 // --- algo_lib.FDb.temp_strings.Fill
 // Set all elements of fixed array to value RHS
@@ -643,7 +686,7 @@ inline i32 algo_lib::temp_strings_N() {
 // --- algo_lib.FDb.temp_strings.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void algo_lib::temp_strings_Setary(const algo::aryptr<algo::cstring> &rhs) {
-    int n = 8 < rhs.n_elems ? 8 : rhs.n_elems;
+    int n = i32_Min(8, rhs.n_elems);
     for (int i = 0; i < n; i++) {
         _db.temp_strings_elems[i] = rhs[i];
     }
@@ -1450,28 +1493,22 @@ inline bool algo_lib::_db_dirstack_curs_ValidQ(_db_dirstack_curs &curs) {
 inline algo::cstring& algo_lib::_db_dirstack_curs_Access(_db_dirstack_curs &curs) {
     return curs.elems[curs.index];
 }
-inline algo_lib::FDispsigcheck::FDispsigcheck() {
-    algo_lib::FDispsigcheck_Init(*this);
-}
-
-inline algo_lib::FDispsigcheck::~FDispsigcheck() {
-    algo_lib::FDispsigcheck_Uninit(*this);
-}
-
 
 // --- algo_lib.FDispsigcheck..Init
 // Set all fields to initial values.
 inline void algo_lib::FDispsigcheck_Init(algo_lib::FDispsigcheck& dispsigcheck) {
     dispsigcheck.ind_dispsigcheck_next = (algo_lib::FDispsigcheck*)-1; // (algo_lib.FDb.ind_dispsigcheck) not-in-hash
 }
-inline algo_lib::FImtable::FImtable() {
-    algo_lib::FImtable_Init(*this);
+
+// --- algo_lib.FDispsigcheck..Ctor
+inline  algo_lib::FDispsigcheck::FDispsigcheck() {
+    algo_lib::FDispsigcheck_Init(*this);
 }
 
-inline algo_lib::FImtable::~FImtable() {
-    algo_lib::FImtable_Uninit(*this);
+// --- algo_lib.FDispsigcheck..Dtor
+inline  algo_lib::FDispsigcheck::~FDispsigcheck() {
+    algo_lib::FDispsigcheck_Uninit(*this);
 }
-
 
 // --- algo_lib.FImtable..Init
 // Set all fields to initial values.
@@ -1483,14 +1520,16 @@ inline void algo_lib::FImtable_Init(algo_lib::FImtable& imtable) {
     imtable.size = i32(0);
     imtable.ind_imtable_next = (algo_lib::FImtable*)-1; // (algo_lib.FDb.ind_imtable) not-in-hash
 }
-inline algo_lib::FIohook::FIohook() {
-    algo_lib::FIohook_Init(*this);
+
+// --- algo_lib.FImtable..Ctor
+inline  algo_lib::FImtable::FImtable() {
+    algo_lib::FImtable_Init(*this);
 }
 
-inline algo_lib::FIohook::~FIohook() {
-    algo_lib::FIohook_Uninit(*this);
+// --- algo_lib.FImtable..Dtor
+inline  algo_lib::FImtable::~FImtable() {
+    algo_lib::FImtable_Uninit(*this);
 }
-
 
 // --- algo_lib.FIohook.callback.Call
 // Invoke function by pointer
@@ -1529,14 +1568,22 @@ inline void algo_lib::FIohook_Init(algo_lib::FIohook& iohook) {
     iohook.callback = NULL;
     iohook.callback_ctx = 0;
 }
-inline algo_lib::FReplvar::FReplvar() {
-    algo_lib::FReplvar_Init(*this);
+
+// --- algo_lib.FIohook..Uninit
+inline void algo_lib::FIohook_Uninit(algo_lib::FIohook& iohook) {
+    algo_lib::FIohook &row = iohook; (void)row;
+    fildes_Cleanup(iohook); // dmmeta.fcleanup:algo_lib.FIohook.fildes
 }
 
-inline algo_lib::FReplvar::~FReplvar() {
-    algo_lib::FReplvar_Uninit(*this);
+// --- algo_lib.FIohook..Ctor
+inline  algo_lib::FIohook::FIohook() {
+    algo_lib::FIohook_Init(*this);
 }
 
+// --- algo_lib.FIohook..Dtor
+inline  algo_lib::FIohook::~FIohook() {
+    algo_lib::FIohook_Uninit(*this);
+}
 
 // --- algo_lib.FReplvar..Init
 // Set all fields to initial values.
@@ -1546,39 +1593,31 @@ inline void algo_lib::FReplvar_Init(algo_lib::FReplvar& replvar) {
     replvar.replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.FDb.replvar) not-in-tpool's freelist
     replvar.ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
 }
-inline algo_lib::FTempfile::FTempfile() {
+
+// --- algo_lib.FReplvar..Ctor
+inline  algo_lib::FReplvar::FReplvar() {
+    algo_lib::FReplvar_Init(*this);
 }
 
-inline algo_lib::FTempfile::~FTempfile() {
+// --- algo_lib.FReplvar..Dtor
+inline  algo_lib::FReplvar::~FReplvar() {
+    algo_lib::FReplvar_Uninit(*this);
+}
+
+// --- algo_lib.FTempfile..Uninit
+inline void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
+    algo_lib::FTempfile &row = parent; (void)row;
+    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FTempfile.fildes
+}
+
+// --- algo_lib.FTempfile..Ctor
+inline  algo_lib::FTempfile::FTempfile() {
+}
+
+// --- algo_lib.FTempfile..Dtor
+inline  algo_lib::FTempfile::~FTempfile() {
     algo_lib::FTempfile_Uninit(*this);
 }
-
-inline algo_lib::FTxtcell::FTxtcell(algo_lib::FTxtrow*             in_p_txtrow
-        ,algo::TextJust                 in_justify
-        ,algo::TermStyle                in_style
-        ,i32                            in_span
-        ,i32                            in_width
-        ,const algo::strptr&            in_text
-        ,const algo::strptr&            in_rsep
-        ,bool                           in_txtrow_c_txtcell_in_ary)
-    : p_txtrow(in_p_txtrow)
-    , justify(in_justify)
-    , style(in_style)
-    , span(in_span)
-    , width(in_width)
-    , text(in_text)
-    , rsep(in_rsep)
-    , txtrow_c_txtcell_in_ary(in_txtrow_c_txtcell_in_ary)
-{
-}
-inline algo_lib::FTxtcell::FTxtcell() {
-    algo_lib::FTxtcell_Init(*this);
-}
-
-inline algo_lib::FTxtcell::~FTxtcell() {
-    algo_lib::FTxtcell_Uninit(*this);
-}
-
 
 // --- algo_lib.FTxtcell..Init
 // Set all fields to initial values.
@@ -1590,14 +1629,29 @@ inline void algo_lib::FTxtcell_Init(algo_lib::FTxtcell& txtcell) {
     txtcell.txtrow_c_txtcell_in_ary = bool(false);
     txtcell.txtcell_next = (algo_lib::FTxtcell*)-1; // (algo_lib.FDb.txtcell) not-in-tpool's freelist
 }
-inline algo_lib::FTxtrow::FTxtrow() {
-    algo_lib::FTxtrow_Init(*this);
+
+// --- algo_lib.FTxtcell..Ctor
+inline  algo_lib::FTxtcell::FTxtcell() {
+    algo_lib::FTxtcell_Init(*this);
 }
 
-inline algo_lib::FTxtrow::~FTxtrow() {
-    algo_lib::FTxtrow_Uninit(*this);
+// --- algo_lib.FTxtcell..Dtor
+inline  algo_lib::FTxtcell::~FTxtcell() {
+    algo_lib::FTxtcell_Uninit(*this);
 }
 
+// --- algo_lib.FTxtcell..FieldwiseCtor
+inline  algo_lib::FTxtcell::FTxtcell(algo_lib::FTxtrow* in_p_txtrow, algo::TextJust in_justify, algo::TermStyle in_style, i32 in_span, i32 in_width, const algo::strptr& in_text, const algo::strptr& in_rsep, bool in_txtrow_c_txtcell_in_ary)
+    : p_txtrow(in_p_txtrow)
+    , justify(in_justify)
+    , style(in_style)
+    , span(in_span)
+    , width(in_width)
+    , text(in_text)
+    , rsep(in_rsep)
+    , txtrow_c_txtcell_in_ary(in_txtrow_c_txtcell_in_ary)
+ {
+}
 
 // --- algo_lib.FTxtrow.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -1700,14 +1754,16 @@ inline void algo_lib::txtrow_c_txtcell_curs_Next(txtrow_c_txtcell_curs &curs) {
 inline algo_lib::FTxtcell& algo_lib::txtrow_c_txtcell_curs_Access(txtrow_c_txtcell_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline algo_lib::FTxttbl::FTxttbl() {
-    algo_lib::FTxttbl_Init(*this);
+
+// --- algo_lib.FTxtrow..Ctor
+inline  algo_lib::FTxtrow::FTxtrow() {
+    algo_lib::FTxtrow_Init(*this);
 }
 
-inline algo_lib::FTxttbl::~FTxttbl() {
-    algo_lib::FTxttbl_Uninit(*this);
+// --- algo_lib.FTxtrow..Dtor
+inline  algo_lib::FTxtrow::~FTxtrow() {
+    algo_lib::FTxtrow_Uninit(*this);
 }
-
 
 // --- algo_lib.FTxttbl.c_txtrow.EmptyQ
 // Return true if index is empty
@@ -1802,15 +1858,16 @@ inline void algo_lib::FTxttbl_Init(algo_lib::FTxttbl& txttbl) {
     txttbl.hdr_row = i32(0);
     txttbl.normalized = bool(false);
 }
-inline algo_lib::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo_lib::FieldId::FieldId(algo_lib_FieldIdEnum arg) { this->value = i32(arg); }
-inline algo_lib::FieldId::FieldId() {
-    algo_lib::FieldId_Init(*this);
+
+// --- algo_lib.FTxttbl..Ctor
+inline  algo_lib::FTxttbl::FTxttbl() {
+    algo_lib::FTxttbl_Init(*this);
 }
 
+// --- algo_lib.FTxttbl..Dtor
+inline  algo_lib::FTxttbl::~FTxttbl() {
+    algo_lib::FTxttbl_Uninit(*this);
+}
 
 // --- algo_lib.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1825,7 +1882,7 @@ inline void algo_lib::value_SetEnum(algo_lib::FieldId& parent, algo_lib_FieldIdE
 }
 
 // --- algo_lib.FieldId.value.Cast
-inline algo_lib::FieldId::operator algo_lib_FieldIdEnum () const {
+inline  algo_lib::FieldId::operator algo_lib_FieldIdEnum() const {
     return algo_lib_FieldIdEnum((*this).value);
 }
 
@@ -1834,16 +1891,22 @@ inline algo_lib::FieldId::operator algo_lib_FieldIdEnum () const {
 inline void algo_lib::FieldId_Init(algo_lib::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline algo_lib::InTextFile::InTextFile() {
-    algo_lib::InTextFile_Init(*this);
-    // added because algo_lib.InTextFile.temp_buf (Inlary) does not need initialization
-    // coverity[uninit_member]
+
+// --- algo_lib.FieldId..Ctor
+inline  algo_lib::FieldId::FieldId() {
+    algo_lib::FieldId_Init(*this);
 }
 
-inline algo_lib::InTextFile::~InTextFile() {
-    algo_lib::InTextFile_Uninit(*this);
+// --- algo_lib.FieldId..FieldwiseCtor
+inline  algo_lib::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- algo_lib.FieldId..EnumCtor
+inline  algo_lib::FieldId::FieldId(algo_lib_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- algo_lib.InTextFile.temp_buf.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
@@ -1888,6 +1951,13 @@ inline i32 algo_lib::temp_buf_N(const algo_lib::InTextFile& parent) {
     return parent.temp_buf_n;
 }
 
+// --- algo_lib.InTextFile.temp_buf.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void algo_lib::temp_buf_Setary(algo_lib::InTextFile& parent, const algo::aryptr<u8> &rhs) {
+    int n = i32_Min(8192, rhs.n_elems);
+    memcpy(reinterpret_cast<u8*>(parent.temp_buf_data), rhs.elems, sizeof(u8)*n);
+}
+
 // --- algo_lib.InTextFile.temp_buf.qFind
 // 'quick' Access row by row id. No bounds checking in release.
 inline u8& algo_lib::temp_buf_qFind(algo_lib::InTextFile& parent, u64 t) {
@@ -1925,24 +1995,56 @@ inline void algo_lib::InTextFile_temp_buf_curs_Next(InTextFile_temp_buf_curs &cu
 inline u8& algo_lib::InTextFile_temp_buf_curs_Access(InTextFile_temp_buf_curs &curs) {
     return temp_buf_qFind((*curs.parent), u64(curs.index));
 }
-inline algo_lib::Mmap::Mmap() {
+
+// --- algo_lib.InTextFile..AssignOp
+inline algo_lib::InTextFile& algo_lib::InTextFile::operator =(const algo_lib::InTextFile &rhs) {
+    file = rhs.file;
+    own_fd = rhs.own_fd;
+    line_buf = rhs.line_buf;
+    temp_buf_Setary(*this, temp_buf_Getary(const_cast<algo_lib::InTextFile&>(rhs)));
+    return *this;
 }
 
-inline algo_lib::Mmap::~Mmap() {
+// --- algo_lib.InTextFile..Ctor
+inline  algo_lib::InTextFile::InTextFile() {
+    algo_lib::InTextFile_Init(*this);
+    // added because algo_lib.InTextFile.temp_buf (Inlary) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- algo_lib.InTextFile..Dtor
+inline  algo_lib::InTextFile::~InTextFile() {
+    algo_lib::InTextFile_Uninit(*this);
+}
+
+// --- algo_lib.InTextFile..CopyCtor
+inline  algo_lib::InTextFile::InTextFile(const algo_lib::InTextFile &rhs)
+    : file(rhs.file)
+    , own_fd(rhs.own_fd)
+    , line_buf(rhs.line_buf)
+ {
+    temp_buf_n = 0; // temp_buf: initialize count
+    temp_buf_Setary(*this, temp_buf_Getary(const_cast<algo_lib::InTextFile&>(rhs)));
+}
+
+// --- algo_lib.Mmap..Uninit
+inline void algo_lib::Mmap_Uninit(algo_lib::Mmap& parent) {
+    algo_lib::Mmap &row = parent; (void)row;
+    mem_Cleanup(parent); // dmmeta.fcleanup:algo_lib.Mmap.mem
+}
+
+// --- algo_lib.Mmap..Ctor
+inline  algo_lib::Mmap::Mmap() {
+}
+
+// --- algo_lib.Mmap..Dtor
+inline  algo_lib::Mmap::~Mmap() {
     algo_lib::Mmap_Uninit(*this);
 }
 
-inline algo_lib::MmapFile::MmapFile() {
+// --- algo_lib.MmapFile..Ctor
+inline  algo_lib::MmapFile::MmapFile() {
 }
-
-inline algo_lib::Regx::Regx() {
-    algo_lib::Regx_Init(*this);
-}
-
-inline algo_lib::Regx::~Regx() {
-    algo_lib::Regx_Uninit(*this);
-}
-
 
 // --- algo_lib.Regx.state.EmptyQ
 // Return true if index is empty
@@ -2048,15 +2150,16 @@ inline void algo_lib::Regx_Init(algo_lib::Regx& regx) {
     regx.accepts_all = bool(false);
     regx.literal = bool(false);
 }
-inline algo_lib::RegxToken::RegxToken(i32                            in_type)
-    : type(in_type)
-{
-}
-inline algo_lib::RegxToken::RegxToken(algo_lib_RegxToken_type_Enum arg) { this->type = i32(arg); }
-inline algo_lib::RegxToken::RegxToken() {
-    algo_lib::RegxToken_Init(*this);
+
+// --- algo_lib.Regx..Ctor
+inline  algo_lib::Regx::Regx() {
+    algo_lib::Regx_Init(*this);
 }
 
+// --- algo_lib.Regx..Dtor
+inline  algo_lib::Regx::~Regx() {
+    algo_lib::Regx_Uninit(*this);
+}
 
 // --- algo_lib.RegxToken.type.GetEnum
 // Get value of field as enum type
@@ -2071,7 +2174,7 @@ inline void algo_lib::type_SetEnum(algo_lib::RegxToken& parent, algo_lib_RegxTok
 }
 
 // --- algo_lib.RegxToken.type.Cast
-inline algo_lib::RegxToken::operator algo_lib_RegxToken_type_Enum () const {
+inline  algo_lib::RegxToken::operator algo_lib_RegxToken_type_Enum() const {
     return algo_lib_RegxToken_type_Enum((*this).type);
 }
 
@@ -2080,24 +2183,33 @@ inline algo_lib::RegxToken::operator algo_lib_RegxToken_type_Enum () const {
 inline void algo_lib::RegxToken_Init(algo_lib::RegxToken& parent) {
     parent.type = i32(0);
 }
-inline algo_lib::RegxExpr::RegxExpr() {
-    algo_lib::RegxExpr_Init(*this);
+
+// --- algo_lib.RegxToken..Ctor
+inline  algo_lib::RegxToken::RegxToken() {
+    algo_lib::RegxToken_Init(*this);
 }
 
+// --- algo_lib.RegxToken..FieldwiseCtor
+inline  algo_lib::RegxToken::RegxToken(i32 in_type)
+    : type(in_type)
+ {
+}
+
+// --- algo_lib.RegxToken..EnumCtor
+inline  algo_lib::RegxToken::RegxToken(algo_lib_RegxToken_type_Enum arg) {
+    this->type = i32(arg);
+}
 
 // --- algo_lib.RegxExpr..Init
 // Set all fields to initial values.
 inline void algo_lib::RegxExpr_Init(algo_lib::RegxExpr& parent) {
     parent.in = i32(0);
 }
-inline algo_lib::RegxParse::RegxParse() {
-    algo_lib::RegxParse_Init(*this);
-}
 
-inline algo_lib::RegxParse::~RegxParse() {
-    algo_lib::RegxParse_Uninit(*this);
+// --- algo_lib.RegxExpr..Ctor
+inline  algo_lib::RegxExpr::RegxExpr() {
+    algo_lib::RegxExpr_Init(*this);
 }
-
 
 // --- algo_lib.RegxParse.ary_expr.EmptyQ
 // Return true if index is empty
@@ -2200,14 +2312,16 @@ inline void algo_lib::RegxParse_Init(algo_lib::RegxParse& regxparse) {
     regxparse.ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
     regxparse.ary_expr_max   	= 0; // (algo_lib.RegxParse.ary_expr)
 }
-inline algo_lib::RegxState::RegxState() {
-    algo_lib::RegxState_Init(*this);
+
+// --- algo_lib.RegxParse..Ctor
+inline  algo_lib::RegxParse::RegxParse() {
+    algo_lib::RegxParse_Init(*this);
 }
 
-inline algo_lib::RegxState::~RegxState() {
-    algo_lib::RegxState_Uninit(*this);
+// --- algo_lib.RegxParse..Dtor
+inline  algo_lib::RegxParse::~RegxParse() {
+    algo_lib::RegxParse_Uninit(*this);
 }
-
 
 // --- algo_lib.RegxState.ch_class.EmptyQ
 // Return true if index is empty
@@ -2315,14 +2429,16 @@ inline void algo_lib::RegxState_Init(algo_lib::RegxState& parent) {
     parent.ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
     parent.accept_all = bool(false);
 }
-inline algo_lib::Replscope::Replscope() {
-    algo_lib::Replscope_Init(*this);
+
+// --- algo_lib.RegxState..Ctor
+inline  algo_lib::RegxState::RegxState() {
+    algo_lib::RegxState_Init(*this);
 }
 
-inline algo_lib::Replscope::~Replscope() {
-    algo_lib::Replscope_Uninit(*this);
+// --- algo_lib.RegxState..Dtor
+inline  algo_lib::RegxState::~RegxState() {
+    algo_lib::RegxState_Uninit(*this);
 }
-
 
 // --- algo_lib.Replscope.ind_replvar.EmptyQ
 // Return true if hash is empty
@@ -2358,10 +2474,16 @@ inline void algo_lib::replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs
 inline algo_lib::FReplvar& algo_lib::replscope_ind_replvar_curs_Access(replscope_ind_replvar_curs &curs) {
     return **curs.prow;
 }
-inline algo_lib::ShHdr::ShHdr() {
-    algo_lib::ShHdr_Init(*this);
+
+// --- algo_lib.Replscope..Ctor
+inline  algo_lib::Replscope::Replscope() {
+    algo_lib::Replscope_Init(*this);
 }
 
+// --- algo_lib.Replscope..Dtor
+inline  algo_lib::Replscope::~Replscope() {
+    algo_lib::Replscope_Uninit(*this);
+}
 
 // --- algo_lib.ShHdr..Init
 // Set all fields to initial values.
@@ -2373,10 +2495,11 @@ inline void algo_lib::ShHdr_Init(algo_lib::ShHdr& parent) {
     parent.bufsize = u64(0);
     parent.pad = u64(0);
 }
-inline algo_lib::Srng::Srng() {
-    algo_lib::Srng_Init(*this);
-}
 
+// --- algo_lib.ShHdr..Ctor
+inline  algo_lib::ShHdr::ShHdr() {
+    algo_lib::ShHdr_Init(*this);
+}
 
 // --- algo_lib.Srng..Init
 // Set all fields to initial values.
@@ -2384,15 +2507,11 @@ inline void algo_lib::Srng_Init(algo_lib::Srng& parent) {
     parent.z = u32(123);
     parent.w = u32(456);
 }
-inline algo_lib::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline algo_lib::TableId::TableId(algo_lib_TableIdEnum arg) { this->value = i32(arg); }
-inline algo_lib::TableId::TableId() {
-    algo_lib::TableId_Init(*this);
-}
 
+// --- algo_lib.Srng..Ctor
+inline  algo_lib::Srng::Srng() {
+    algo_lib::Srng_Init(*this);
+}
 
 // --- algo_lib.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2407,7 +2526,7 @@ inline void algo_lib::value_SetEnum(algo_lib::TableId& parent, algo_lib_TableIdE
 }
 
 // --- algo_lib.TableId.value.Cast
-inline algo_lib::TableId::operator algo_lib_TableIdEnum () const {
+inline  algo_lib::TableId::operator algo_lib_TableIdEnum() const {
     return algo_lib_TableIdEnum((*this).value);
 }
 
@@ -2416,14 +2535,22 @@ inline algo_lib::TableId::operator algo_lib_TableIdEnum () const {
 inline void algo_lib::TableId_Init(algo_lib::TableId& parent) {
     parent.value = i32(-1);
 }
-inline algo_lib::Tabulate::Tabulate() {
-    algo_lib::Tabulate_Init(*this);
+
+// --- algo_lib.TableId..Ctor
+inline  algo_lib::TableId::TableId() {
+    algo_lib::TableId_Init(*this);
 }
 
-inline algo_lib::Tabulate::~Tabulate() {
-    algo_lib::Tabulate_Uninit(*this);
+// --- algo_lib.TableId..FieldwiseCtor
+inline  algo_lib::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- algo_lib.TableId..EnumCtor
+inline  algo_lib::TableId::TableId(algo_lib_TableIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- algo_lib.Tabulate.width.EmptyQ
 // Return true if index is empty
@@ -2529,6 +2656,16 @@ inline void algo_lib::Tabulate_Init(algo_lib::Tabulate& tabulate) {
     tabulate.width_elems 	= 0; // (algo_lib.Tabulate.width)
     tabulate.width_n     	= 0; // (algo_lib.Tabulate.width)
     tabulate.width_max   	= 0; // (algo_lib.Tabulate.width)
+}
+
+// --- algo_lib.Tabulate..Ctor
+inline  algo_lib::Tabulate::Tabulate() {
+    algo_lib::Tabulate_Init(*this);
+}
+
+// --- algo_lib.Tabulate..Dtor
+inline  algo_lib::Tabulate::~Tabulate() {
+    algo_lib::Tabulate_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Bitset &row) {// cfmt:algo_lib.Bitset.String

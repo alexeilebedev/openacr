@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/env bash
 # Copyright (C) 2023-2024 AlgoRND
 #
 # License: GPL
@@ -18,10 +18,4 @@
 # this script is used to stabilize output of inline-command
 # blocks in *.md files
 
-$SIG{INT} = sub { die "input error" };
-while (<>) {
-    s/^(report.abt|report.amc|report.acr|abt.outofdate)  .*/$1  ***/;
-    s/ (time|cache|hitrate|records):(.*?) / $1:*** /;
-    print;
-}
-1;
+ssimfilt -format stablefld

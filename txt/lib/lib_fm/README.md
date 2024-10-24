@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Introduction](#introduction)
-* [Restrictions and limitations](#restrictions-and-limitations)
-* [Concepts](#concepts)
-* [Lib_fm](#lib_fm)
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Introduction](#introduction)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Restrictions and limitations](#restrictions-and-limitations)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Concepts](#concepts)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Lib_fm](#lib_fm)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Introduction
 <a href="#introduction"></a>
@@ -302,48 +306,9 @@ Alarm log file name follows the convention:
    file_prefix%Y-%b-%d.ssim
 ```
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_fm.FAlarm - 
-<a href="#lib_fm-falarm"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[fmdb.Alarm](/txt/ssimdb/fmdb/alarm.md)|Base|
-
-#### lib_fm.FAlmCode - 
-<a href="#lib_fm-falmcode"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[fmdb.AlmCode](/txt/ssimdb/fmdb/alm_code.md)|Base|
-
-#### lib_fm.FAlmObjtype - 
-<a href="#lib_fm-falmobjtype"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[fmdb.AlmObjtype](/txt/ssimdb/fmdb/alm_objtype.md)|Base|
-
-#### lib_fm.FDb - In-memory database for lib_fm
-<a href="#lib_fm-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|_db|lib_fm.FDb|Global|
-|alarm|lib_fm.FAlarm|Lary|
-|ind_alarm|lib_fm.FAlarm|Thash|
-|alm_code|lib_fm.FAlmCode|Lary|
-|ind_alm_code|lib_fm.FAlmCode|Thash|
-|object_prefix|algo.cstring|Val|
-|alm_objtype|lib_fm.FAlmObjtype|Lary|
-|ind_alm_objtype|lib_fm.FAlmObjtype|Thash|
-|h_alarm|lib_fm.FAlarm|Hook|
-
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
@@ -396,8 +361,23 @@ void lib_fm::UpdateFromMsg(fm::AlarmMsg &msg)
 void lib_fm::DumpAlarms() 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_fm` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|Alarm resource type|
+|[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)||
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -409,12 +389,191 @@ The following source files are part of this tool:
 |[include/gen/lib_fm_gen.inl.h](/include/gen/lib_fm_gen.inl.h)||
 |[include/lib_fm.h](/include/lib_fm.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`lib_fm` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|Alarm resource type|
-|[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)||
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+|[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_fm` generated code creates the tables below.
+All allocations are done through global `lib_fm::_db` [lib_fm.FDb](#lib_fm-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_fm.FAlarm](#lib_fm-falarm)|[fmdb.alarm](/txt/ssimdb/fmdb/alarm.md)|FDb.alarm (Lary)|alarm (Lary, by rowid)|ind_alarm (Thash, hash field alarm)|h_alarm (Hook)|
+|[lib_fm.FAlmCode](#lib_fm-falmcode)|[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)|FDb.alm_code (Lary)|alm_code (Lary, by rowid)|ind_alm_code (Thash, hash field alm_code)|
+|[lib_fm.FAlmObjtype](#lib_fm-falmobjtype)|[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|FDb.alm_objtype (Lary)|alm_objtype (Lary, by rowid)|ind_alm_objtype (Thash, hash field alm_objtype)|
+|[lib_fm.FDb](#lib_fm-fdb)||FDb._db (Global)|
+
+#### lib_fm.FAlarm - 
+<a href="#lib_fm-falarm"></a>
+
+#### lib_fm.FAlarm Fields
+<a href="#lib_fm-falarm-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_fm.FAlarm.base|[fmdb.Alarm](/txt/ssimdb/fmdb/alarm.md)|[Base](/txt/ssimdb/fmdb/alarm.md)|||
+
+#### Struct FAlarm
+<a href="#struct-falarm"></a>
+*Note:* field ``lib_fm.FAlarm.base`` has reftype ``base`` so the fields of [fmdb.Alarm](/txt/ssimdb/fmdb/alarm.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_fm_gen.h](/include/gen/lib_fm_gen.h)
+```
+struct FAlarm { // lib_fm.FAlarm
+    algo::Smallstr200   alarm;             // Alarm identity: code@object
+    fm::Flag            flag;              // Flag: raised or cleared
+    fm::Severity        severity;          // Perceived severity
+    i32                 n_occurred;        //   0  How many times the alarm occurred since first_time
+    algo::UnTime        first_time;        // Time of first occurrence
+    algo::UnTime        last_time;         // Time of last occurrence
+    algo::UnTime        clear_time;        // Time when the alarm has beed cleared (only for cleared alarms
+    algo::UnTime        update_time;       // Time of last update
+    fm::Summary         objtype_summary;   // Object type explained
+    fm::Summary         summary;           // Alarm summary from inventory
+    fm::Description     description;       // Alarm message from object
+    fm::Source          source;            // Subsystem where alarm has been detected
+    lib_fm::FAlarm*     ind_alarm_next;    // hash next
+    // func:lib_fm.FAlarm..AssignOp
+    lib_fm::FAlarm&      operator =(const lib_fm::FAlarm &rhs) = delete;
+    // func:lib_fm.FAlarm..CopyCtor
+    FAlarm(const lib_fm::FAlarm &rhs) = delete;
+private:
+    // func:lib_fm.FAlarm..Ctor
+    inline               FAlarm() __attribute__((nothrow));
+    // func:lib_fm.FAlarm..Dtor
+    inline               ~FAlarm() __attribute__((nothrow));
+    friend lib_fm::FAlarm&      alarm_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_fm::FAlarm*      alarm_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 alarm_RemoveAll() __attribute__((nothrow));
+    friend void                 alarm_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_fm.FAlmCode - 
+<a href="#lib_fm-falmcode"></a>
+
+#### lib_fm.FAlmCode Fields
+<a href="#lib_fm-falmcode-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_fm.FAlmCode.base|[fmdb.AlmCode](/txt/ssimdb/fmdb/alm_code.md)|[Base](/txt/ssimdb/fmdb/alm_code.md)|||
+
+#### Struct FAlmCode
+<a href="#struct-falmcode"></a>
+*Note:* field ``lib_fm.FAlmCode.base`` has reftype ``base`` so the fields of [fmdb.AlmCode](/txt/ssimdb/fmdb/alm_code.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_fm_gen.h](/include/gen/lib_fm_gen.h)
+```
+struct FAlmCode { // lib_fm.FAlmCode
+    fm::Code            alm_code;            // Alarm code
+    fm::Severity        severity;            // Assigned severity
+    fm::Source          source;              //
+    fm::Summary         summary;             // Alarm summary (slogan)
+    lib_fm::FAlmCode*   ind_alm_code_next;   // hash next
+    // func:lib_fm.FAlmCode..AssignOp
+    inline lib_fm::FAlmCode& operator =(const lib_fm::FAlmCode &rhs) = delete;
+    // func:lib_fm.FAlmCode..CopyCtor
+    inline               FAlmCode(const lib_fm::FAlmCode &rhs) = delete;
+private:
+    // func:lib_fm.FAlmCode..Ctor
+    inline               FAlmCode() __attribute__((nothrow));
+    // func:lib_fm.FAlmCode..Dtor
+    inline               ~FAlmCode() __attribute__((nothrow));
+    friend lib_fm::FAlmCode&    alm_code_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_fm::FAlmCode*    alm_code_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 alm_code_RemoveAll() __attribute__((nothrow));
+    friend void                 alm_code_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_fm.FAlmObjtype - Alarm resource type
+<a href="#lib_fm-falmobjtype"></a>
+
+#### lib_fm.FAlmObjtype Fields
+<a href="#lib_fm-falmobjtype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_fm.FAlmObjtype.base|[fmdb.AlmObjtype](/txt/ssimdb/fmdb/alm_objtype.md)|[Base](/txt/ssimdb/fmdb/alm_objtype.md)|||
+
+#### Struct FAlmObjtype
+<a href="#struct-falmobjtype"></a>
+*Note:* field ``lib_fm.FAlmObjtype.base`` has reftype ``base`` so the fields of [fmdb.AlmObjtype](/txt/ssimdb/fmdb/alm_objtype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_fm_gen.h](/include/gen/lib_fm_gen.h)
+```
+struct FAlmObjtype { // lib_fm.FAlmObjtype
+    fm::Objtype            alm_objtype;            // Object type
+    fm::Summary            summary;                // Object type summary
+    lib_fm::FAlmObjtype*   ind_alm_objtype_next;   // hash next
+    // func:lib_fm.FAlmObjtype..AssignOp
+    inline lib_fm::FAlmObjtype& operator =(const lib_fm::FAlmObjtype &rhs) = delete;
+    // func:lib_fm.FAlmObjtype..CopyCtor
+    inline               FAlmObjtype(const lib_fm::FAlmObjtype &rhs) = delete;
+private:
+    // func:lib_fm.FAlmObjtype..Ctor
+    inline               FAlmObjtype() __attribute__((nothrow));
+    // func:lib_fm.FAlmObjtype..Dtor
+    inline               ~FAlmObjtype() __attribute__((nothrow));
+    friend lib_fm::FAlmObjtype& alm_objtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_fm::FAlmObjtype* alm_objtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 alm_objtype_RemoveAll() __attribute__((nothrow));
+    friend void                 alm_objtype_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_fm.FDb - In-memory database for lib_fm
+<a href="#lib_fm-fdb"></a>
+
+#### lib_fm.FDb Fields
+<a href="#lib_fm-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_fm.FDb._db|[lib_fm.FDb](/txt/lib/lib_fm/README.md#lib_fm-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_fm.FDb.alarm|[lib_fm.FAlarm](/txt/lib/lib_fm/README.md#lib_fm-falarm)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_fm.FDb.ind_alarm|[lib_fm.FAlarm](/txt/lib/lib_fm/README.md#lib_fm-falarm)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_fm.FDb.alm_code|[lib_fm.FAlmCode](/txt/lib/lib_fm/README.md#lib_fm-falmcode)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_fm.FDb.ind_alm_code|[lib_fm.FAlmCode](/txt/lib/lib_fm/README.md#lib_fm-falmcode)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_fm.FDb.object_prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_fm.FDb.alm_objtype|[lib_fm.FAlmObjtype](/txt/lib/lib_fm/README.md#lib_fm-falmobjtype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_fm.FDb.ind_alm_objtype|[lib_fm.FAlmObjtype](/txt/lib/lib_fm/README.md#lib_fm-falmobjtype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_fm.FDb.h_alarm|[lib_fm.FAlarm](/txt/lib/lib_fm/README.md#lib_fm-falarm)|[Hook](/txt/exe/amc/reftypes.md#hook)|||
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_fm_gen.h](/include/gen/lib_fm_gen.h)
+```
+struct FDb { // lib_fm.FDb: In-memory database for lib_fm
+    lib_fm::FAlarm*            alarm_lary[32];                  // level array
+    i32                        alarm_n;                         // number of elements in array
+    lib_fm::FAlarm**           ind_alarm_buckets_elems;         // pointer to bucket array
+    i32                        ind_alarm_buckets_n;             // number of elements in bucket array
+    i32                        ind_alarm_n;                     // number of elements in the hash table
+    lib_fm::FAlmCode*          alm_code_lary[32];               // level array
+    i32                        alm_code_n;                      // number of elements in array
+    lib_fm::FAlmCode**         ind_alm_code_buckets_elems;      // pointer to bucket array
+    i32                        ind_alm_code_buckets_n;          // number of elements in bucket array
+    i32                        ind_alm_code_n;                  // number of elements in the hash table
+    algo::cstring              object_prefix;                   //
+    lib_fm::FAlmObjtype*       alm_objtype_lary[32];            // level array
+    i32                        alm_objtype_n;                   // number of elements in array
+    lib_fm::FAlmObjtype**      ind_alm_objtype_buckets_elems;   // pointer to bucket array
+    i32                        ind_alm_objtype_buckets_n;       // number of elements in bucket array
+    i32                        ind_alm_objtype_n;               // number of elements in the hash table
+    lib_fm::_db_h_alarm_hook   h_alarm;                         //   NULL  Pointer to a function
+    u64                        h_alarm_ctx;                     //   0  Callback context
+    lib_fm::trace              trace;                           //
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 

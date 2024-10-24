@@ -23,8 +23,8 @@
 #include "include/lib_ctype.h"
 #include "include/lib_sqlite.h"
 
-void lib_sqlite::Open(lib_sqlite::FConn& conn) {
-    vrfyeq(sqlite3_open(algo::Zeroterm(conn.name), &conn.db), 0, sqlite3_errmsg(conn.db));
+int lib_sqlite::Open(lib_sqlite::FConn& conn) {
+    return sqlite3_open(algo::Zeroterm(conn.name), &conn.db);
 }
 
 void lib_sqlite::db_Cleanup(lib_sqlite::FConn &parent) {

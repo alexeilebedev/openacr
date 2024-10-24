@@ -3,13 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [src_lim - Internals](/txt/exe/src_lim/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 src_lim: Enforce line length, function length, and indentation limits
 Usage: src_lim [options]
@@ -30,9 +34,12 @@ Usage: src_lim [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -57,27 +64,20 @@ Usage: src_lim [options]
 #### -badline -- Check badline (acr badline)
 <a href="#-badline"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/src_lim_gen.cpp](/cpp/gen/src_lim_gen.cpp)||
-|[cpp/src_lim/lim.cpp](/cpp/src_lim/lim.cpp)||
-|[include/gen/src_lim_gen.h](/include/gen/src_lim_gen.h)||
-|[include/gen/src_lim_gen.inl.h](/include/gen/src_lim_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `src_lim` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dev.linelim](/txt/ssimdb/dev/linelim.md)||
 |[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
 |[dev.badline](/txt/ssimdb/dev/badline.md)|Regex of a dubious source code line|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

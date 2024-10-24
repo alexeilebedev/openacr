@@ -14,16 +14,23 @@ This is a very commonly used trick to structure processes.
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Hook
 
 * file:[data/dmmeta/hook.ssim](/data/dmmeta/hook.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||The field|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||The field|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FHook
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FHook](/txt/exe/amc/internals.md#amc-fhook)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

@@ -30,7 +30,7 @@
 //#pragma endinclude
 namespace atf { // gen:ns_print_proto
     // func:atf...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- atf.FieldId.value.ToCstr

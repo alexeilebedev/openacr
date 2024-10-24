@@ -85,6 +85,26 @@ void ssimfilt::PrintSsim(algo::Tuple &tuple) {
 
 // -----------------------------------------------------------------------------
 
+void ssimfilt::PrintStable(algo::strptr line, algo::Tuple &tuple) {
+    bool filtered=false;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ind_unstablefld_Find(tempstr()<<tuple.head<<"."<<attr.name)) {
+            attr.value="***";
+            filtered=true;
+        }
+    }ind_end;
+    algo::StringIter iter(line);
+    iter.Ws();
+    if (filtered) {
+        prlog_(FirstN(line,iter.index));
+        PrintSsim(tuple);
+    } else {
+        prlog(line);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Print selected fields one by one
 void ssimfilt::PrintField(algo::Tuple &tuple) {
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -226,12 +246,7 @@ void ssimfilt::PrintCsv(algo::Tuple &tuple) {
 void ssimfilt::Table_Save(algo::Tuple &tuple) {
     // flush when input type changes
     if (tuple_N()>0) {
-        auto& header = tuple_qFind(0);
-        auto flush = header.head.name == ""
-            ? header.head.value != tuple.head.value
-            : header.head.name != tuple.head.name;
-        flush |= attrs_N(tuple) != attrs_N(header);
-        if (flush) {
+        if (tuple_qFind(0).head != tuple.head) {
             Table_Flush();
         }
     }
@@ -241,6 +256,13 @@ void ssimfilt::Table_Save(algo::Tuple &tuple) {
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         attrs_Alloc(saved)=attr;
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+void ssimfilt::MDTable_Save(algo::Tuple &tuple) {
+    ssimfilt::_db.markdown=true;
+    Table_Save(tuple);
 }
 
 // -----------------------------------------------------------------------------
@@ -277,7 +299,7 @@ void ssimfilt::Table_Flush() {
         }ind_end;
     }ind_end;
     tempstr out;
-    FTxttbl_Print(txttbl,out);
+    ssimfilt::_db.markdown ? FTxttbl_Markdown(txttbl,out) : FTxttbl_Print(txttbl,out);
     prlog(out);
     tuple_RemoveAll();
 }
@@ -307,22 +329,25 @@ void ssimfilt::Main() {
     if (_db.cmdline.cmd != "") {
         _db.cmdline.format = command_ssimfilt_format_cmd;
     }
+    bool needtuple = !(_db.cmdline.format == command_ssimfilt_format_stablefld);
     ind_beg(algo::FileLine_curs,line,algo::Fildes(0)) {
         algo::Tuple tuple;
-        if (Tuple_ReadStrptr(tuple,line,false) && (attrs_N(tuple) || tuple.head.value != "")) {
-            if (MatchInputTuple(tuple)) {
-                switch(_db.cmdline.format) {
-                    break; case command_ssimfilt_format_ssim: PrintSsim(tuple);
-                    break; case command_ssimfilt_format_csv: PrintCsv(tuple);
-                    break; case command_ssimfilt_format_field: PrintField(tuple);
-                    break; case command_ssimfilt_format_table: Table_Save(tuple);
-                    break; case command_ssimfilt_format_cmd: PrintCmd(tuple);
-                    break; case command_ssimfilt_format_json: PrintJson(tuple);
-                }
+        bool tupleok = Tuple_ReadStrptr(tuple,line,false) && attrs_N(tuple);
+        if ((tupleok && MatchInputTuple(tuple)) || !needtuple) {
+            switch(_db.cmdline.format) {
+                break; case command_ssimfilt_format_ssim: PrintSsim(tuple);
+                break; case command_ssimfilt_format_csv: PrintCsv(tuple);
+                break; case command_ssimfilt_format_field: PrintField(tuple);
+                break; case command_ssimfilt_format_table: Table_Save(tuple);
+                break; case command_ssimfilt_format_mdtable: MDTable_Save(tuple);
+                break; case command_ssimfilt_format_cmd: PrintCmd(tuple);
+                break; case command_ssimfilt_format_json: PrintJson(tuple);
+                break; case command_ssimfilt_format_stablefld: PrintStable(line,tuple);
             }
         }
     }ind_end;
-    if (_db.cmdline.format == command_ssimfilt_format_table) {
+    if (_db.cmdline.format == command_ssimfilt_format_table
+        || _db.cmdline.format == command_ssimfilt_format_mdtable) {
         Table_Flush();
     }
 }

@@ -8,3 +8,4 @@ dmmeta.lenfld  field:atf_amc.VarlenAlloc.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenExtern.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenH.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenK.length  extra:0
+dmmeta.lenfld  field:samp_meng.MsgHeader.length  extra:0

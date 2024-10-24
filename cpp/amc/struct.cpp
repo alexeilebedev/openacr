@@ -19,14 +19,15 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/struct.cpp
+// Source: cpp/amc/struct.cpp -- C++ struct output
 //
 
 #include "include/amc.h"
 
 // -----------------------------------------------------------------------------
 
-static bool PassFieldViaArgQ(amc::FField &field, amc::FCtype &ctype) {
+// True if the field can be passed via constructor
+bool amc::PassFieldViaArgQ(amc::FField &field, amc::FCtype &ctype) {
     bool ok = ((!PadQ(field) && amc::ValQ(field))
                || field.reftype == dmmeta_Reftype_reftype_Ptr
                || field.reftype == dmmeta_Reftype_reftype_Upptr)
@@ -35,118 +36,6 @@ static bool PassFieldViaArgQ(amc::FField &field, amc::FCtype &ctype) {
         && !FldfuncQ(field)
         && (&field != ctype.c_varlenfld);// stack constructor doesn't accept varlen or optional fields
     return ok;
-}
-
-// -----------------------------------------------------------------------------
-
-static void GenStruct_Ctor(amc::FCtype &ctype) {
-    algo_lib::Replscope R;
-    Set(R, "$Name", name_Get(ctype));
-    Set(R, "$Cpptype",    ctype.cpp_type);
-    Subst(R,"$Cpptype");// mark used
-    Subst(R,"$Name");// mark used
-    amc::FNs &ns = *ctype.p_ns;
-    tempstr argstr;    // generate field-wise constructor
-    int n_args = 0;
-    amc::FField *single_arg=NULL;
-    algo::ListSep ls("\n        ,");
-    tempstr initstr;
-    strptr ls2 = strptr(":");
-    ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
-        argstr << ls;
-        strptr_PrintPadRight(Argtype(field), argstr,  30);
-        argstr << " in_" << name_Get(field);
-        ++n_args;
-        single_arg = &field;
-        if (!FixaryQ(field) && !field.c_fbigend) {
-            Set(R, "$ls", ls2);
-            Set(R, "$name", name_Get(field));
-            Ins(&R, initstr, "    $ls $name(in_$name)");
-            ls2 = strptr(",");
-        }
-    }ind_end;
-    if (n_args > 0) {
-        Set(R, "$Args", argstr);
-        Set(R, "$initstr", initstr);
-        Ins(&R, *ns.hdr, "    explicit $Name($Args);");
-        Ins(&R, *ns.inl, "inline $Cpptype::$Name($Args)");
-        Ins(&R, *ns.inl, "$initstr{");
-        ind_beg(amc::ctype_c_field_curs, fld,ctype) {
-            bool val = ValQ(fld);
-            amc::FLenfld *lenfld=GetLenfld(fld);
-            if (val && (FixaryQ(fld) || fld.c_tary) && !PadQ(fld)) {
-                vrfy_(!fld.c_fbigend);
-                Set(R, "$name", name_Get(fld));
-                Ins(&R, *ns.inl, "    $name_Setary(*this, in_$name);");
-            } else if (val && fld.c_typefld && ctype.c_msgtype) {
-                Set(R, "$Msgtype", ctype.c_msgtype->type.value);
-                Set(R, "$assign", amc::AssignExpr(fld, "*this", "$Msgtype", true));
-                Ins(&R, *ns.inl, "    $assign;");
-            } else if (val && lenfld && ctype.c_msgtype) {
-                Set(R, "$extralen", tempstr() << lenfld->extra);
-                Set(R, "$assign", amc::AssignExpr(fld, "*this", "ssizeof(*this) + ($extralen)", true));
-                Ins(&R, *ns.inl, "    $assign;");
-            } else if (fld.c_fbigend) {
-                Set(R, "$name", name_Get(fld));
-                Ins(&R, *ns.inl, "    $name_Set(*this,in_$name);");
-            }
-        }ind_end;
-        Ins(&R, *ns.inl, "}");
-    }
-    // generate implicit constructor (non-string types only)
-    if (single_arg && n_args == 1 && c_fconst_N(*single_arg) && !FieldStringQ(*single_arg)) {
-        Set(R, "$implicittype", Enumtype(*single_arg));
-        Set(R, "$Set", AssignExpr(*single_arg, "*this", "arg", true));
-        Ins(&R, *ns.hdr, "    $Name($implicittype arg);");
-        Ins(&R, *ns.inl, "inline $Cpptype::$Name($implicittype arg) { $Set; }");
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-static void GenStruct_Cstring(algo_lib::Replscope &R, amc::FCtype &ctype) {
-    amc::FNs &ns = *ctype.p_ns;
-
-    Ins(&R, *ns.hdr, "    cstring& operator =(const algo::strptr &t);");
-    Ins(&R, *ns.hdr, "    cstring(const cstring &t);");
-    Ins(&R, *ns.hdr, "    cstring& operator =(const cstring &s);");
-    Ins(&R, *ns.hdr, "    explicit cstring(const algo::strptr &s);");
-    Ins(&R, *ns.hdr, "    cstring(const tempstr &rhs);");
-
-    Ins(&R, *ns.cpp, "algo::cstring& algo::cstring::operator =(const algo::strptr &rhs) {");
-    Ins(&R, *ns.cpp, "    algo::ch_Setary(*this, rhs);");
-    Ins(&R, *ns.cpp, "    return *this;");
-    Ins(&R, *ns.cpp, "}");
-    Ins(&R, *ns.cpp, "");
-
-    Ins(&R, *ns.cpp, "algo::cstring::cstring(const algo::cstring &rhs) {");
-    Ins(&R, *ns.cpp, "    cstring_Init(*this);");
-    Ins(&R, *ns.cpp, "    algo::ch_Setary(*this, (algo::cstring&)rhs);");
-    Ins(&R, *ns.cpp, "}");
-    Ins(&R, *ns.cpp, "");
-
-    Ins(&R, *ns.inl, "inline cstring& cstring::operator =(const cstring &rhs) {");
-    Ins(&R, *ns.inl, "    algo::ch_Setary(*this, (algo::cstring&)rhs);");
-    Ins(&R, *ns.inl, "    return *this;");
-    Ins(&R, *ns.inl, "}");
-    Ins(&R, *ns.inl, "");
-
-    Ins(&R, *ns.inl, "inline  cstring::cstring(const algo::strptr &rhs) {");
-    Ins(&R, *ns.inl, "    algo::cstring_Init(*this);");
-    Ins(&R, *ns.inl, "    algo::ch_Addary(*this, aryptr<char>((char*)rhs.elems, rhs.n_elems));");
-    Ins(&R, *ns.inl, "}");
-    Ins(&R, *ns.inl, "");
-
-    Ins(&R, *ns.inl, "inline cstring::cstring(const tempstr &rhs) {");
-    Ins(&R, *ns.inl, "    ch_elems = rhs.ch_elems;");
-    Ins(&R, *ns.inl, "    ch_n     = rhs.ch_n;");
-    Ins(&R, *ns.inl, "    ch_max   = rhs.ch_max;");
-    Ins(&R, *ns.inl, "    cstring &r  = (cstring&) rhs;");
-    Ins(&R, *ns.inl, "    r.ch_elems     = 0;");
-    Ins(&R, *ns.inl, "    r.ch_n   = 0;");
-    Ins(&R, *ns.inl, "    r.ch_max = 0;");
-    Ins(&R, *ns.inl, "}");
-    Ins(&R, *ns.inl, "");
 }
 
 // -----------------------------------------------------------------------------
@@ -161,8 +50,18 @@ static tempstr ShowAccessPaths(amc::FCtype &ctype) {
         }
     }ind_end;
     ind_beg(amc::ctype_zd_access_curs, inst, ctype) {
-        if (inst.p_ctype->p_ns == ctype.p_ns && !inst.p_reftype->isval && GlobalQ(*inst.p_ctype)) {
-            str_glob << "// global access: " << name_Get(inst) << " ("<< inst.reftype<<")"<<eol;
+        if (inst.p_ctype->p_ns == ctype.p_ns && (!inst.p_reftype->isval || inst.reftype == dmmeta_Reftype_reftype_Lary) && GlobalQ(*inst.p_ctype)) {
+            str_glob << "// global access: " << name_Get(inst) << " ("<< inst.reftype;
+            if (inst.reftype == dmmeta_Reftype_reftype_Lary) {
+                str_glob << ", by rowid";
+            }
+            if (inst.c_thash) {
+                str_glob << ", hash field "<<name_Get(*inst.c_thash->p_hashfld);
+            }
+            if (inst.c_sortfld) {
+                str_glob << ", sort field "<<name_Get(*inst.c_sortfld->p_sortfld);
+            }
+            str_glob <<")"<<eol;
         }
     }ind_end;
     ind_beg(amc::ctype_zd_access_curs, inst, ctype) {
@@ -187,161 +86,46 @@ static tempstr ShowAccessPaths(amc::FCtype &ctype) {
 
 static void GenStruct_Ctor2(algo_lib::Replscope &R, amc::FCtype &ctype) {
     amc::FNs &ns = *ctype.p_ns;
-    amc::FFunc *init = amc::ind_func_Find(tempstr() << ctype.ctype << "..Init");
-    amc::FFunc *uninit = amc::ind_func_Find(tempstr() << ctype.ctype << "..Uninit");
-    bool pooled = PoolHasAllocQ(ctype);
-    bool priv_ctor = pooled;
+    // keeps track of which section we're in (public or private)
+    bool cur_priv=false;
 
-    // We are inside a struct
-    // Print declarations of member functions
-    ind_beg(amc::ctype_c_field_curs,field,ctype) {
-        ind_beg(amc::field_c_ffunc_curs,func,field) {
-            if (func.member) {
+    // print member function prototypes, first public then private
+    for (int priv=0; priv<2; priv++) {
+        // field-attached functions
+        ind_beg(amc::ctype_c_field_curs,field,ctype) {
+            ind_beg(amc::field_c_ffunc_curs,func,field) if (func.member && func.isprivate==priv) {
+                if (bool_Update(cur_priv, func.isprivate)) {
+                    Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
+                }
                 tempstr proto;
                 PrintFuncProto(func,&ctype,proto);
                 algo::InsertIndent(*ns.hdr, proto,1);
-            }
-        }ind_end;
-    }ind_end;
-
-    // default constructor
-    if (priv_ctor) {
-        Ins(&R, *ns.hdr, "private:");
-        ind_beg(amc::ctype_zd_inst_curs,inst,ctype) if (inst.p_reftype->hasalloc) {
-            ind_beg(amc::field_c_ffunc_curs,func,inst) if (func.isalloc) {
-                tempstr proto;
-                PrintFuncProto(func,&ctype,proto);
-                algo::InsertIndent(*ns.hdr,proto,1);
             }ind_end;
         }ind_end;
-    }
-
-    Ins(&R, *ns.hdr, "    $Name();");
-    Ins(&R, *ns.inl, "inline $Cpptype::$Name() {");
-    // call init function
-    if (init) {
-        Ins(&R, *ns.inl, "    $ns::$Name_Init(*this);");
-    }
-    // produce coverity annotation for intentionally uninitialized fields
-    ind_beg(amc::ctype_c_field_curs,field,ctype) {
-        bool has_uninitfld = false;
-        has_uninitfld     |= field.reftype == dmmeta_Reftype_reftype_Fbuf;
-        has_uninitfld     |= field.reftype == dmmeta_Reftype_reftype_Inlary
-            && field.c_inlary->max > field.c_inlary->min;
-        if (has_uninitfld) {
-            Set(R,"$field",field.field);
-            Set(R,"$reftype",field.reftype);
-            Ins(&R, *ns.inl, "    // added because $field ($reftype) does not need initialization");
-            Ins(&R, *ns.inl, "    // coverity[uninit_member]"); // applies to '}', should be last
-            break;
-        }
-    }ind_end;
-    Ins(&R, *ns.inl, "}\n");
-    // generate destructor -- if the uninit function was generated.
-    if (uninit) {
-        Ins(&R, *ns.hdr, "    ~$Name();");
-        Ins(&R, *ns.inl, "inline $ns::$Name::~$Name() {");
-        Ins(&R, *ns.inl, "    $ns::$Name_Uninit(*this);");
-        Ins(&R, *ns.inl, "}\n");
-    }
-    // make copy constructor private if:
-    // - any x-references exist for this ctype
-    // - copy_priv is requested
-    if (ctype.n_xref > 0 || CopyPrivQ(ctype)) {
-        if (!priv_ctor) {
-            Ins(&R, *ns.hdr, "private:");
-        }
-        int n=0;
-        ind_beg(Line_curs,line,ctype.copy_priv_reason) {
-            if (ch_N(line)) {
-                Ins(&R, *ns.hdr, tempstr()<<"    // "<<line);
+        // ctype-attached functions
+        // TODO: create an empty field with reftype:Ctype
+        // so that this code doesn't need to be repeated
+        ind_beg(amc::ctype_c_ffunc_curs,func,ctype) if (func.member && func.isprivate==priv) {
+            if (bool_Update(cur_priv, func.isprivate)) {
+                Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
             }
-            if (++n >= 3) {
-                Ins(&R, *ns.hdr, tempstr()<<"    // ... and several other reasons");
-                break;
-            }
+            tempstr proto;
+            PrintFuncProto(func,&ctype,proto);
+            algo::InsertIndent(*ns.hdr,proto,1);
         }ind_end;
-        Ins(&R, *ns.hdr, "    $Name(const $Name&){ /*disallow copy constructor */}");
-        Ins(&R, *ns.hdr, "    void operator =(const $Name&){ /*disallow direct assignment */}");
     }
-    // make main cosntructor private if:
-    // there is a creation path, but no Cppstack access path!
-}
 
-// -----------------------------------------------------------------------------
-
-static bool HasCcmpOpQ(amc::FCtype &ctype) {
-    return ctype.c_ccmp && ctype.c_ccmp->genop;
-}
-
-// -----------------------------------------------------------------------------
-
-static void GenStruct_Op(algo_lib::Replscope &R, amc::FCtype& ctype) {
-    amc::FNs& ns = *ctype.p_ns;
-    bool gen_cmpop = HasCcmpOpQ(ctype);
-    bool eq = false;
-    if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..Eq")) {
-        eq = true;
-        // operator ==
-        Ins(&R, *ns.hdr, "    bool operator ==(const $Cpptype &rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator ==(const $Cpptype &rhs) const {");
-        Ins(&R, *ns.inl, "    return $Cpptype_Eq(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
-        Ins(&R, *ns.inl, "}");
-
-        // operator !=
-        Ins(&R, *ns.hdr, "    bool operator !=(const $Cpptype &rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator !=(const $Cpptype &rhs) const {");
-        Ins(&R, *ns.inl, "    return !$Cpptype_Eq(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
-        Ins(&R, *ns.inl, "}");
-    }
-    if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..EqStrptr")) {
-        eq = true;
-        Ins(&R, *ns.hdr, "    bool operator ==(const algo::strptr &rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator ==(const algo::strptr &rhs) const {");
-        Ins(&R, *ns.inl, "    return $Cpptype_EqStrptr(const_cast<$Cpptype&>(*this),rhs);");
-        Ins(&R, *ns.inl, "}");
-    }
-    if (gen_cmpop && amc::ind_func_Find(tempstr()<<ctype.ctype<<"..Lt")) {
-        Ins(&R, *ns.hdr, "    bool operator <(const $Cpptype &rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator <(const $Cpptype &rhs) const {");
-        Ins(&R, *ns.inl, "    return $Cpptype_Lt(const_cast<$Cpptype&>(*this),const_cast<$Cpptype&>(rhs));");
-        Ins(&R, *ns.inl, "}");
-
-        Ins(&R, *ns.hdr, "    bool operator >(const $Cpptype &rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator >(const $Cpptype &rhs) const {");
-        Ins(&R, *ns.inl, "    return rhs < *this;");
-        Ins(&R, *ns.inl, "}");
-
-        if (eq) {
-            Ins(&R, *ns.hdr, "    bool operator <=(const $Cpptype &rhs) const;");
-            Ins(&R, *ns.inl, "");
-            Ins(&R, *ns.inl, "inline bool $Cpptype::operator <=(const $Cpptype &rhs) const {");
-            Ins(&R, *ns.inl, "    return !(rhs < *this);");
-            Ins(&R, *ns.inl, "}");
-
-            Ins(&R, *ns.hdr, "    bool operator >=(const $Cpptype &rhs) const;");
-            Ins(&R, *ns.inl, "");
-            Ins(&R, *ns.inl, "inline bool $Cpptype::operator >=(const $Cpptype &rhs) const {");
-            Ins(&R, *ns.inl, "    return !(*this < rhs);");
-            Ins(&R, *ns.inl, "}");
-
-        }
-    }
-    // If enum comparison exists, then generate operator for it.
-    // Ignore cmpop setting here
-    if (amc::ind_func_Find(tempstr()<<ctype.ctype<<"..EqEnum")) {
-        Set(R, "$Type", Enumtype(*c_datafld_Find(ctype,0)));
-        Ins(&R, *ns.hdr, "    bool operator ==($Type rhs) const;");
-        Ins(&R, *ns.inl, "");
-        Ins(&R, *ns.inl, "inline bool $Cpptype::operator ==($Type rhs) const {");
-        Ins(&R, *ns.inl, "    return $Cpptype_EqEnum(const_cast<$Cpptype&>(*this),rhs);");
-        Ins(&R, *ns.inl, "}");
-    }
+    // print friend functions
+    ind_beg(amc::ctype_zd_inst_curs,inst,ctype) if (inst.p_reftype->hasalloc) {
+        ind_beg(amc::field_c_ffunc_curs,func,inst) if (func.isalloc) {
+            if (bool_Update(cur_priv, true)) {
+                Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
+            }
+            tempstr proto;
+            PrintFuncProto(func,&ctype,proto);
+            algo::InsertIndent(*ns.hdr,proto,1);
+        }ind_end;
+    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
@@ -389,16 +173,6 @@ void amc::GenStruct(amc::FNs& ns, amc::FCtype& ctype) {// print struct contents
     Ins(&R, *ns.hdr, "struct $Name { // $comment");
     (void)ChunkyTabulated;
     algo::InsertIndent(*ns.hdr, Tabulated(ctype.body, "\t", "ll", 2), 1);
-    bool gen_ctor = ctype.c_cpptype && ctype.c_cpptype->ctor;
-    if (gen_ctor) {
-        GenStruct_Ctor(ctype);
-    }
-    if (ctype.ctype == "algo.cstring") {
-        GenStruct_Cstring(R,ctype);
-    }
-    if (true) {
-        GenStruct_Op(R,ctype);
-    }
     if (!GlobalQ(ctype)) {
         GenStruct_Ctor2(R,ctype);
     }

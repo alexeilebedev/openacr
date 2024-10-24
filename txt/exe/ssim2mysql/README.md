@@ -3,13 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [ssim2mysql - Internals](/txt/exe/ssim2mysql/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 ssim2mysql: Ssim -> mysql
 Usage: ssim2mysql [options]
@@ -33,9 +37,12 @@ Usage: ssim2mysql [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -url -- URL of mysql server. user:pass@hostb or sock://filename; Empty -> stdout
 <a href="#-url"></a>
 
@@ -69,22 +76,13 @@ Usage: ssim2mysql [options]
 #### -fkey -- Enable foreign key constraints (uses InnoDB storage engine)
 <a href="#-fkey"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/ssim2mysql_gen.cpp](/cpp/gen/ssim2mysql_gen.cpp)||
-|[cpp/ssim2mysql.cpp](/cpp/ssim2mysql.cpp)||
-|[include/gen/ssim2mysql_gen.h](/include/gen/ssim2mysql_gen.h)||
-|[include/gen/ssim2mysql_gen.inl.h](/include/gen/ssim2mysql_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `ssim2mysql` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
@@ -93,4 +91,6 @@ The following source files are part of this tool:
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

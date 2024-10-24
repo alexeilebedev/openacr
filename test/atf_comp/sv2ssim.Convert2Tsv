@@ -7,9 +7,9 @@ Joan "the bone", Anne	Jet	9th, at Terrace plc	Desert City	CO	00123
 sv2ssim.report  n_line:6  n_nonempty_line:6  n_field:6  n_wideline:1
 dmmeta.ctype  ctype:a.B  comment:""
 dmmeta.cfmt  cfmt:a.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-dmmeta.field  field:a.B.field0  arg:algo.Smallstr25  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field1  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field2  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field3  arg:algo.Smallstr25  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field4  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field5  arg:u32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B.field0  arg:algo.Smallstr25  reftype:Val  dflt:""  comment:field0
+dmmeta.field  field:a.B.field1  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:field1
+dmmeta.field  field:a.B.field2  arg:u32  reftype:Val  dflt:""  comment:field2
+dmmeta.field  field:a.B.field3  arg:algo.Smallstr25  reftype:Val  dflt:""  comment:field3
+dmmeta.field  field:a.B.field4  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:field4
+dmmeta.field  field:a.B.field5  arg:u32  reftype:Val  dflt:""  comment:field5

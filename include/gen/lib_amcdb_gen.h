@@ -46,19 +46,23 @@ namespace lib_amcdb { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // lib_amcdb.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_amcdb_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_amcdb_FieldIdEnum arg);
-    FieldId();
+    // func:lib_amcdb.FieldId.value.Cast
+    inline               operator lib_amcdb_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_amcdb.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_amcdb.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_amcdb.FieldId..EnumCtor
+    inline               FieldId(lib_amcdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_amcdb.FieldId.value.GetEnum
-lib_amcdb_FieldIdEnum value_GetEnum(const lib_amcdb::FieldId& parent) __attribute__((nothrow));
+inline lib_amcdb_FieldIdEnum value_GetEnum(const lib_amcdb::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_amcdb.FieldId.value.SetEnum
-void                 value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_amcdb.FieldId.value.ToCstr
@@ -86,7 +90,7 @@ bool                 value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::str
 bool                 FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_amcdb.FieldId..Init
-void                 FieldId_Init(lib_amcdb::FieldId& parent);
+inline void          FieldId_Init(lib_amcdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_amcdb.FieldId.String  printfmt:Raw
 // func:lib_amcdb.FieldId..Print

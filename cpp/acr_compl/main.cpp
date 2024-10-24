@@ -172,12 +172,14 @@ bool acr_compl::UniqueCompletionQ() {
 
 // Read source data for completions from file FNAME into global table _db.complsource
 void acr_compl::LoadComplsource(strptr fname) {
-    // fd closed upon destruction
-    algo_lib::FFildes in;
-    in.fd= fname == "-" ? Fildes(dup(0)) : OpenRead(fname, algo::FileFlags());
-    ind_beg(algo::FileLine_curs,line,in.fd) {
-        Tuple_ReadStrptr(complsource_Alloc().tuple, line, false);
-    }ind_end;
+    if (fname != "-") {
+        // fd closed upon destruction
+        algo_lib::FFildes in;
+        in.fd = OpenRead(fname, algo::FileFlags());
+        ind_beg(algo::FileLine_curs,line,in.fd) {
+            Tuple_ReadStrptr(complsource_Alloc().tuple, line, false);
+        }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -556,6 +558,7 @@ void acr_compl::Main_Line() {
                 }
             }ind_end;
         }
+
         // command.acr.query is special
         if (cur_field->field == "command.acr.query") {
             Main_Line_Acr(cur_field, _db.value, compl_prefix);
@@ -684,23 +687,39 @@ void acr_compl::Main() {
             _db.cmdline.point << ch_N(_db.cmdline.line);
         }
     }
+    dbglog(_db.cmdline);
+    // load schema and/or data from stdin
+    if (_db.cmdline.schema == "-" || _db.cmdline.data == "-") {
+        // read from stdin
+        ind_beg(algo::FileLine_curs,line,algo::Fildes(0)) {
+            if (_db.cmdline.schema == "-") {
+                algo_lib::InsertStrptrMaybe(line);
+                acr_compl::InsertStrptrMaybe(line);
+            }
+            if (_db.cmdline.data == "-") {
+                Tuple_ReadStrptr(complsource_Alloc().tuple, line, false);
+            }
+        }ind_end;
+    }
+    // load schema from file or dir
+    if (_db.cmdline.schema != "-") {
+        vrfy(LoadTuplesMaybe(_db.cmdline.schema,true), algo_lib::_db.errtext);
+    }
+    // load data from file or dir
     _db.is_data_dir = DirectoryQ(_db.cmdline.data);
     if (!_db.is_data_dir) {
         // load tuples once
         acr_compl::LoadComplsource(_db.cmdline.data);
-    }
-    dbglog(_db.cmdline);
-    // load schema
-    vrfy(LoadTuplesMaybe(_db.cmdline.schema,true), algo_lib::_db.errtext);
-    if (!_db.is_data_dir) {
         // due to the way acr_compl works,
         // the list of ssimfiles from schema dir must be present
         // in the completions list
-        ind_beg(_db_ssimfile_curs,ssimfile,_db) {
-            dmmeta::Ssimfile rec;
-            ssimfile_CopyOut(ssimfile,rec);
-            Tuple_ReadStrptrMaybe(complsource_Alloc().tuple,tempstr()<<rec);
-        }ind_end;
+        if (_db.cmdline.schema != _db.cmdline.data) {
+            ind_beg(_db_ssimfile_curs,ssimfile,_db) {
+                dmmeta::Ssimfile rec;
+                ssimfile_CopyOut(ssimfile,rec);
+                Tuple_ReadStrptrMaybe(complsource_Alloc().tuple,tempstr()<<rec);
+            }ind_end;
+        }
     }
     if (_db.cmdline.install) {
         Main_Install(algo_lib::_db.argv[0]);
@@ -710,7 +729,8 @@ void acr_compl::Main() {
     }
     if (!_db.cmdline.install && !ch_N(_db.cmdline.line)) {
         prerr("You seem to be calling acr_compl interactively.");
-        prerr("Normally, acr_compl is implicitly by bash, with COMP_LINE or COMP_POINT environment variables set.");
+        prerr("Normally, acr_compl is invoked implicitly by bash,");
+        prerr("with COMP_LINE or COMP_POINT environment variables set.");
         prerr("Suggestion: Use acr_compl -install to generate an installation script");
     }
 }

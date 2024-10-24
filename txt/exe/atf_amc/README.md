@@ -3,13 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_amc - Internals](/txt/exe/atf_amc/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_amc: Unit tests for amc (see amctest table)
 Usage: atf_amc [[-amctest:]<regx>] [options]
@@ -26,9 +30,12 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -41,58 +48,15 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
 #### -q -- Quiet mode
 <a href="#-q"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/atf_amc/atree.cpp](/cpp/atf_amc/atree.cpp)||
-|[cpp/atf_amc/bheap.cpp](/cpp/atf_amc/bheap.cpp)||
-|[cpp/atf_amc/bigend.cpp](/cpp/atf_amc/bigend.cpp)||
-|[cpp/atf_amc/bitfld.cpp](/cpp/atf_amc/bitfld.cpp)||
-|[cpp/atf_amc/bitset.cpp](/cpp/atf_amc/bitset.cpp)||
-|[cpp/atf_amc/cascdel.cpp](/cpp/atf_amc/cascdel.cpp)||
-|[cpp/atf_amc/cdlist.cpp](/cpp/atf_amc/cdlist.cpp)||
-|[cpp/atf_amc/cleanup.cpp](/cpp/atf_amc/cleanup.cpp)||
-|[cpp/atf_amc/cmp.cpp](/cpp/atf_amc/cmp.cpp)||
-|[cpp/atf_amc/cslist.cpp](/cpp/atf_amc/cslist.cpp)||
-|[cpp/atf_amc/delptr.cpp](/cpp/atf_amc/delptr.cpp)||
-|[cpp/atf_amc/dispatch.cpp](/cpp/atf_amc/dispatch.cpp)||
-|[cpp/atf_amc/exec.cpp](/cpp/atf_amc/exec.cpp)||
-|[cpp/atf_amc/fbuf.cpp](/cpp/atf_amc/fbuf.cpp)||
-|[cpp/atf_amc/fconst.cpp](/cpp/atf_amc/fconst.cpp)||
-|[cpp/atf_amc/fstep.cpp](/cpp/atf_amc/fstep.cpp)||
-|[cpp/atf_amc/gsymbol.cpp](/cpp/atf_amc/gsymbol.cpp)||
-|[cpp/atf_amc/hook.cpp](/cpp/atf_amc/hook.cpp)||
-|[cpp/atf_amc/inlary.cpp](/cpp/atf_amc/inlary.cpp)||
-|[cpp/atf_amc/lary.cpp](/cpp/atf_amc/lary.cpp)||
-|[cpp/atf_amc/lineiter.cpp](/cpp/atf_amc/lineiter.cpp)||
-|[cpp/atf_amc/lpool.cpp](/cpp/atf_amc/lpool.cpp)||
-|[cpp/atf_amc/main.cpp](/cpp/atf_amc/main.cpp)||
-|[cpp/atf_amc/msgcurs.cpp](/cpp/atf_amc/msgcurs.cpp)||
-|[cpp/atf_amc/numstr.cpp](/cpp/atf_amc/numstr.cpp)||
-|[cpp/atf_amc/opt.cpp](/cpp/atf_amc/opt.cpp)||
-|[cpp/atf_amc/pmask.cpp](/cpp/atf_amc/pmask.cpp)||
-|[cpp/atf_amc/ptrary.cpp](/cpp/atf_amc/ptrary.cpp)||
-|[cpp/atf_amc/readstr.cpp](/cpp/atf_amc/readstr.cpp)||
-|[cpp/atf_amc/sort.cpp](/cpp/atf_amc/sort.cpp)||
-|[cpp/atf_amc/strconv.cpp](/cpp/atf_amc/strconv.cpp)||
-|[cpp/atf_amc/tary.cpp](/cpp/atf_amc/tary.cpp)||
-|[cpp/atf_amc/thash.cpp](/cpp/atf_amc/thash.cpp)||
-|[cpp/atf_amc/varlen.cpp](/cpp/atf_amc/varlen.cpp)||
-|[cpp/atf_amc/zdlist.cpp](/cpp/atf_amc/zdlist.cpp)||
-|[cpp/atf_amc/zslist.cpp](/cpp/atf_amc/zslist.cpp)||
-|[cpp/gen/atf_amc_gen.cpp](/cpp/gen/atf_amc_gen.cpp)||
-|[include/atf_amc.h](/include/atf_amc.h)||
-|[include/gen/atf_amc_gen.h](/include/gen/atf_amc_gen.h)||
-|[include/gen/atf_amc_gen.inl.h](/include/gen/atf_amc_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_amc` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

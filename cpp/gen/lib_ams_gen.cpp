@@ -59,38 +59,38 @@ namespace lib_ams { // gen:ns_print_proto
     static void          cd_fdin_eof_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:lib_ams.FDb.cd_fdin_eof.UpdateCycles
-    static void          cd_fdin_eof_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_fdin_eof_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.cd_fdin_eof.Call
-    static void          cd_fdin_eof_Call() __attribute__((nothrow));
+    inline static void   cd_fdin_eof_Call() __attribute__((nothrow));
     // First element of index changed.
     // func:lib_ams.FDb.cd_fdin_read.FirstChanged
     static void          cd_fdin_read_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:lib_ams.FDb.cd_fdin_read.UpdateCycles
-    static void          cd_fdin_read_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_fdin_read_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.cd_fdin_read.Call
-    static void          cd_fdin_read_Call() __attribute__((nothrow));
+    inline static void   cd_fdin_read_Call() __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
     // func:lib_ams.FDb._db.InitReflection
     static void          InitReflection();
     // Update cycles count from previous clock capture
     // func:lib_ams.FDb.zd_flush.UpdateCycles
-    static void          zd_flush_UpdateCycles() __attribute__((nothrow));
+    inline static void   zd_flush_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.zd_flush.Call
-    static void          zd_flush_Call() __attribute__((nothrow));
+    inline static void   zd_flush_Call() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:lib_ams.FDb.cd_stream_hb.UpdateCycles
-    static void          cd_stream_hb_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_stream_hb_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.cd_stream_hb.Call
-    static void          cd_stream_hb_Call() __attribute__((nothrow));
+    inline static void   cd_stream_hb_Call() __attribute__((nothrow));
     // First element of index changed.
     // func:lib_ams.FDb.cd_poll_read.FirstChanged
     static void          cd_poll_read_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:lib_ams.FDb.cd_poll_read.UpdateCycles
-    static void          cd_poll_read_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_poll_read_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.cd_poll_read.Call
-    static void          cd_poll_read_Call() __attribute__((nothrow));
+    inline static void   cd_poll_read_Call() __attribute__((nothrow));
     // func:lib_ams.FDb.streamtype.LoadStatic
     static void          streamtype_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
@@ -98,17 +98,17 @@ namespace lib_ams { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:lib_ams.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Internal function to scan for a message
     //
-    // func:lib_ams.FFdin.in.Scanmsg
-    static void          in_Scanmsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
+    // func:lib_ams.FFdin.in.ScanMsg
+    static void          in_ScanMsg(lib_ams::FFdin& fdin) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:lib_ams.FFdin.in.Shift
     static void          in_Shift(lib_ams::FFdin& fdin) __attribute__((nothrow));
     // func:lib_ams...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_ams.CtlConnCase.value.ToCstr
@@ -2354,11 +2354,11 @@ void lib_ams::in_EndRead(lib_ams::FFdin& fdin) {
 algo::aryptr<char> lib_ams::in_GetMsg(lib_ams::FFdin& fdin) {
     algo::aryptr<char> ret;
     if (!fdin.in_msgvalid) {
-        in_Scanmsg(fdin);
+        in_ScanMsg(fdin);
         if (!fdin.in_msgvalid) {
             bool readable = in_Refill(fdin);
             if (readable) {
-                in_Scanmsg(fdin);
+                in_ScanMsg(fdin);
             }
         }
     }
@@ -2411,13 +2411,12 @@ void lib_ams::in_RemoveAll(lib_ams::FFdin& fdin) {
     fdin.in_start    = 0;
     fdin.in_end      = 0;
     fdin.in_msgvalid = false;
-    fdin.in_msglen   = 0; // reset message length -- important for delimited streams
 }
 
-// --- lib_ams.FFdin.in.Scanmsg
+// --- lib_ams.FFdin.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void lib_ams::in_Scanmsg(lib_ams::FFdin& fdin) {
+static void lib_ams::in_ScanMsg(lib_ams::FFdin& fdin) {
     char *hdr = (char*)(fdin.in_elems + fdin.in_start);
     i32 avail = in_N(fdin);
     i32 msglen;
@@ -2461,6 +2460,7 @@ void lib_ams::in_SkipBytes(lib_ams::FFdin& fdin, int n) {
     int avail = fdin.in_end - fdin.in_start;
     n = i32_Min(n,avail);
     fdin.in_start += n;
+    fdin.in_msgvalid = false;
 }
 
 // --- lib_ams.FFdin.in.SkipMsg
@@ -3107,6 +3107,41 @@ void lib_ams::FReadfile_Print(lib_ams::FReadfile& row, algo::cstring& str) {
         name << ind_curs(offset).index;
         PrintAttrSpaceReset(str, name, temp);
     }ind_end;
+}
+
+// --- lib_ams.FReadfile..AssignOp
+lib_ams::FReadfile& lib_ams::FReadfile::operator =(const lib_ams::FReadfile &rhs) {
+    filename = rhs.filename;
+    fd = rhs.fd;
+    eof = rhs.eof;
+    fail = rhs.fail;
+    buf_Setary(*this, buf_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
+    cbuf_Setary(*this, cbuf_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
+    block = rhs.block;
+    offset_Setary(*this, offset_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
+    return *this;
+}
+
+// --- lib_ams.FReadfile..CopyCtor
+ lib_ams::FReadfile::FReadfile(const lib_ams::FReadfile &rhs)
+    : filename(rhs.filename)
+    , fd(rhs.fd)
+    , eof(rhs.eof)
+    , fail(rhs.fail)
+    , block(rhs.block)
+ {
+    buf_elems 	= 0; // (lib_ams.FReadfile.buf)
+    buf_n     	= 0; // (lib_ams.FReadfile.buf)
+    buf_max   	= 0; // (lib_ams.FReadfile.buf)
+    buf_Setary(*this, buf_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
+    cbuf_elems 	= 0; // (lib_ams.FReadfile.cbuf)
+    cbuf_n     	= 0; // (lib_ams.FReadfile.cbuf)
+    cbuf_max   	= 0; // (lib_ams.FReadfile.cbuf)
+    cbuf_Setary(*this, cbuf_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
+    offset_elems 	= 0; // (lib_ams.FReadfile.offset)
+    offset_n     	= 0; // (lib_ams.FReadfile.offset)
+    offset_max   	= 0; // (lib_ams.FReadfile.offset)
+    offset_Setary(*this, offset_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
 }
 
 // --- lib_ams.FStream.zd_member_bystream.Insert

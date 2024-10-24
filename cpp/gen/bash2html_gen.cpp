@@ -61,9 +61,9 @@ namespace bash2html { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:bash2html.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:bash2html...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- bash2html.trace..Print
@@ -352,11 +352,6 @@ inline static i32 bash2html::trace_N() {
 void bash2html::FDb_Init() {
 
     bash2html::InitReflection();
-}
-
-// --- bash2html.FDb..Uninit
-void bash2html::FDb_Uninit() {
-    bash2html::FDb &row = _db; (void)row;
 }
 
 // --- bash2html.FieldId.value.ToCstr

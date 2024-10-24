@@ -69,9 +69,9 @@ namespace samp_regx { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:samp_regx.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:samp_regx...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- samp_regx.trace..Print
@@ -383,11 +383,6 @@ inline static i32 samp_regx::trace_N() {
 void samp_regx::FDb_Init() {
 
     samp_regx::InitReflection();
-}
-
-// --- samp_regx.FDb..Uninit
-void samp_regx::FDb_Uninit() {
-    samp_regx::FDb &row = _db; (void)row;
 }
 
 // --- samp_regx.FieldId.value.ToCstr

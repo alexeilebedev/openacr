@@ -3,20 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- TOC_BEG AUTO -->
-* [algo - Basic types and functions](/txt/protocol/algo/README.md)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
+&#128193; [algo - Basic types and functions](/txt/protocol/algo/README.md)<br/>
+&#128193; [ams - Algo Messaging System protocol](/txt/protocol/ams/README.md)<br/>
+&#128193; [atf - Algo Testing Framework](/txt/protocol/atf/README.md)<br/>
+&#128193; [command - Command line descriptions](/txt/protocol/command/README.md)<br/>
+&#128193; [fm - Fault management types](/txt/protocol/fm/README.md)<br/>
+&#128193; [ietf - Some IETF structs](/txt/protocol/ietf/README.md)<br/>
+&#128193; [report - Command reports](/txt/protocol/report/README.md)<br/>
 
-* [ams - Algo Messaging System protocol](/txt/protocol/ams/README.md)
+<!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
 
-* [atf - Algo Testing Framework](/txt/protocol/atf/README.md)
-
-* [command - Command line descriptions](/txt/protocol/command/README.md)
-
-* [fm - Fault management types](/txt/protocol/fm/README.md)
-
-* [ietf - Some IETF structs](/txt/protocol/ietf/README.md)
-
-* [report - Command reports](/txt/protocol/report/README.md)
-
-<!-- TOC_END AUTO -->
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 

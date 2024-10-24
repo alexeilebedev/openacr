@@ -40,28 +40,28 @@ The following functions are generated for a circular linked list:
 inline-command: amc atf_amc.FDb.cd_typed.% -proto -report:N
 // Return true if index is empty
 // func:atf_amc.FDb.cd_typed.EmptyQ
-bool                 cd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          cd_typed_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:atf_amc.FDb.cd_typed.First
-atf_amc::FTypeD*     cd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_amc::FTypeD* cd_typed_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:atf_amc.FDb.cd_typed.InLlistQ
-bool                 cd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          cd_typed_InLlistQ(atf_amc::FTypeD& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:atf_amc.FDb.cd_typed.Insert
 void                 cd_typed_Insert(atf_amc::FTypeD& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:atf_amc.FDb.cd_typed.Last
-atf_amc::FTypeD*     cd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_amc::FTypeD* cd_typed_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:atf_amc.FDb.cd_typed.N
-i32                  cd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cd_typed_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:atf_amc.FDb.cd_typed.Next
-atf_amc::FTypeD*     cd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeD* cd_typed_Next(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:atf_amc.FDb.cd_typed.Prev
-atf_amc::FTypeD*     cd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeD* cd_typed_Prev(atf_amc::FTypeD &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_amc.FDb.cd_typed.Remove
 void                 cd_typed_Remove(atf_amc::FTypeD& row) __attribute__((nothrow));
@@ -77,25 +77,34 @@ atf_amc::FTypeD*     cd_typed_RemoveFirst() __attribute__((nothrow));
 atf_amc::FTypeD*     cd_typed_RotateFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_amc.FDb.cd_typed.qLast
-atf_amc::FTypeD&     cd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline atf_amc::FTypeD& cd_typed_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 ```
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Llist
 
 * file:[data/dmmeta/llist.ssim](/data/dmmeta/llist.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *listtype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||Index in question|
-|havetail|bool|Val|true|Generate 'tail' field|
-|havecount|bool|Val|false|Generate count of elements|
-|listtype|[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)|Pkey||<br>.RR_LL of field|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Index in question|
+|havetail|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Generate 'tail' field|
+|havecount|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Generate count of elements|
+|*listtype*|*[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.RR_LL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FLlist
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FLlist](/txt/exe/amc/internals.md#amc-fllist)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

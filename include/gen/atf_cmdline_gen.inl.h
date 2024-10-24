@@ -25,18 +25,15 @@
 #pragma once
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline atf_cmdline::trace::trace() {
+
+// --- atf_cmdline.trace..Ctor
+inline  atf_cmdline::trace::trace() {
 }
 
-inline atf_cmdline::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- atf_cmdline.FDb..Uninit
+inline void atf_cmdline::FDb_Uninit() {
+    atf_cmdline::FDb &row = _db; (void)row;
 }
-inline atf_cmdline::FieldId::FieldId(atf_cmdline_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_cmdline::FieldId::FieldId() {
-    atf_cmdline::FieldId_Init(*this);
-}
-
 
 // --- atf_cmdline.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -51,7 +48,7 @@ inline void atf_cmdline::value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline
 }
 
 // --- atf_cmdline.FieldId.value.Cast
-inline atf_cmdline::FieldId::operator atf_cmdline_FieldIdEnum () const {
+inline  atf_cmdline::FieldId::operator atf_cmdline_FieldIdEnum() const {
     return atf_cmdline_FieldIdEnum((*this).value);
 }
 
@@ -59,6 +56,22 @@ inline atf_cmdline::FieldId::operator atf_cmdline_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void atf_cmdline::FieldId_Init(atf_cmdline::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_cmdline.FieldId..Ctor
+inline  atf_cmdline::FieldId::FieldId() {
+    atf_cmdline::FieldId_Init(*this);
+}
+
+// --- atf_cmdline.FieldId..FieldwiseCtor
+inline  atf_cmdline::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_cmdline.FieldId..EnumCtor
+inline  atf_cmdline::FieldId::FieldId(atf_cmdline_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_cmdline::trace &row) {// cfmt:atf_cmdline.trace.String

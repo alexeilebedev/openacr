@@ -1,4 +1,4 @@
-## AMC Cross-References (xrefs)
+## amc Cross-References (xrefs)
 <a href="#amc-cross-references--xrefs-"></a>
 
 Cross-reference or an `xref` is an index formed to keep track of all references to a given record.

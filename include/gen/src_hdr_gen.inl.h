@@ -28,14 +28,6 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-inline src_hdr::FCopyline::FCopyline() {
-    src_hdr::FCopyline_Init(*this);
-}
-
-inline src_hdr::FCopyline::~FCopyline() {
-    src_hdr::FCopyline_Uninit(*this);
-}
-
 
 // --- src_hdr.FCopyline..Init
 // Set all fields to initial values.
@@ -43,14 +35,16 @@ inline void src_hdr::FCopyline_Init(src_hdr::FCopyline& fcopyline) {
     fcopyline.fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.fcopyline) not-in-tpool's freelist
     fcopyline.ind_fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.ind_fcopyline) not-in-hash
 }
-inline src_hdr::FCopyright::FCopyright() {
-    src_hdr::FCopyright_Init(*this);
+
+// --- src_hdr.FCopyline..Ctor
+inline  src_hdr::FCopyline::FCopyline() {
+    src_hdr::FCopyline_Init(*this);
 }
 
-inline src_hdr::FCopyright::~FCopyright() {
-    src_hdr::FCopyright_Uninit(*this);
+// --- src_hdr.FCopyline..Dtor
+inline  src_hdr::FCopyline::~FCopyline() {
+    src_hdr::FCopyline_Uninit(*this);
 }
-
 
 // --- src_hdr.FCopyright..Init
 // Set all fields to initial values.
@@ -60,9 +54,20 @@ inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& copyright) {
     copyright.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
     copyright.bh_copyright_idx = -1; // (src_hdr.FDb.bh_copyright) not-in-heap
 }
-inline src_hdr::trace::trace() {
+
+// --- src_hdr.FCopyright..Ctor
+inline  src_hdr::FCopyright::FCopyright() {
+    src_hdr::FCopyright_Init(*this);
 }
 
+// --- src_hdr.FCopyright..Dtor
+inline  src_hdr::FCopyright::~FCopyright() {
+    src_hdr::FCopyright_Uninit(*this);
+}
+
+// --- src_hdr.trace..Ctor
+inline  src_hdr::trace::trace() {
+}
 
 // --- src_hdr.FDb.targsrc.EmptyQ
 // Return true if index is empty
@@ -654,28 +659,22 @@ inline src_hdr::FCopyright& src_hdr::_db_bh_copyright_curs_Access(_db_bh_copyrig
 inline bool src_hdr::_db_bh_copyright_curs_ValidQ(_db_bh_copyright_curs &curs) {
     return curs.temp_n > 0;
 }
-inline src_hdr::FLicense::FLicense() {
-    src_hdr::FLicense_Init(*this);
-}
-
-inline src_hdr::FLicense::~FLicense() {
-    src_hdr::FLicense_Uninit(*this);
-}
-
 
 // --- src_hdr.FLicense..Init
 // Set all fields to initial values.
 inline void src_hdr::FLicense_Init(src_hdr::FLicense& license) {
     license.ind_license_next = (src_hdr::FLicense*)-1; // (src_hdr.FDb.ind_license) not-in-hash
 }
-inline src_hdr::FNs::FNs() {
-    src_hdr::FNs_Init(*this);
+
+// --- src_hdr.FLicense..Ctor
+inline  src_hdr::FLicense::FLicense() {
+    src_hdr::FLicense_Init(*this);
 }
 
-inline src_hdr::FNs::~FNs() {
-    src_hdr::FNs_Uninit(*this);
+// --- src_hdr.FLicense..Dtor
+inline  src_hdr::FLicense::~FLicense() {
+    src_hdr::FLicense_Uninit(*this);
 }
-
 
 // --- src_hdr.FNs.c_nsx.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -704,14 +703,16 @@ inline void src_hdr::FNs_Init(src_hdr::FNs& ns) {
     ns.p_license = NULL;
     ns.ind_ns_next = (src_hdr::FNs*)-1; // (src_hdr.FDb.ind_ns) not-in-hash
 }
-inline src_hdr::FNsx::FNsx() {
-    src_hdr::FNsx_Init(*this);
+
+// --- src_hdr.FNs..Ctor
+inline  src_hdr::FNs::FNs() {
+    src_hdr::FNs_Init(*this);
 }
 
-inline src_hdr::FNsx::~FNsx() {
-    src_hdr::FNsx_Uninit(*this);
+// --- src_hdr.FNs..Dtor
+inline  src_hdr::FNs::~FNs() {
+    src_hdr::FNs_Uninit(*this);
 }
-
 
 // --- src_hdr.FNsx..Init
 // Set all fields to initial values.
@@ -721,28 +722,32 @@ inline void src_hdr::FNsx_Init(src_hdr::FNsx& nsx) {
     nsx.sortxref = bool(false);
     nsx.pack = bool(false);
 }
-inline src_hdr::FScriptfile::FScriptfile() {
-    src_hdr::FScriptfile_Init(*this);
+
+// --- src_hdr.FNsx..Ctor
+inline  src_hdr::FNsx::FNsx() {
+    src_hdr::FNsx_Init(*this);
 }
 
+// --- src_hdr.FNsx..Dtor
+inline  src_hdr::FNsx::~FNsx() {
+    src_hdr::FNsx_Uninit(*this);
+}
 
 // --- src_hdr.FScriptfile..Init
 // Set all fields to initial values.
 inline void src_hdr::FScriptfile_Init(src_hdr::FScriptfile& scriptfile) {
     scriptfile.p_license = NULL;
 }
-inline src_hdr::FSrc::FSrc() {
+
+// --- src_hdr.FScriptfile..Ctor
+inline  src_hdr::FScriptfile::FScriptfile() {
+    src_hdr::FScriptfile_Init(*this);
+}
+
+// --- src_hdr.FSrc..Ctor
+inline  src_hdr::FSrc::FSrc() {
     src_hdr::FSrc_Init(*this);
 }
-
-inline src_hdr::FTarget::FTarget() {
-    src_hdr::FTarget_Init(*this);
-}
-
-inline src_hdr::FTarget::~FTarget() {
-    src_hdr::FTarget_Uninit(*this);
-}
-
 
 // --- src_hdr.FTarget.c_targsrc.EmptyQ
 // Return true if index is empty
@@ -836,14 +841,16 @@ inline void src_hdr::target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) {
 inline src_hdr::FTargsrc& src_hdr::target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline src_hdr::FTargsrc::FTargsrc() {
-    src_hdr::FTargsrc_Init(*this);
+
+// --- src_hdr.FTarget..Ctor
+inline  src_hdr::FTarget::FTarget() {
+    src_hdr::FTarget_Init(*this);
 }
 
-inline src_hdr::FTargsrc::~FTargsrc() {
-    src_hdr::FTargsrc_Uninit(*this);
+// --- src_hdr.FTarget..Dtor
+inline  src_hdr::FTarget::~FTarget() {
+    src_hdr::FTarget_Uninit(*this);
 }
-
 
 // --- src_hdr.FTargsrc..Init
 // Set all fields to initial values.
@@ -852,15 +859,16 @@ inline void src_hdr::FTargsrc_Init(src_hdr::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
     targsrc.target_c_targsrc_in_ary = bool(false);
 }
-inline src_hdr::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_hdr::FieldId::FieldId(src_hdr_FieldIdEnum arg) { this->value = i32(arg); }
-inline src_hdr::FieldId::FieldId() {
-    src_hdr::FieldId_Init(*this);
+
+// --- src_hdr.FTargsrc..Ctor
+inline  src_hdr::FTargsrc::FTargsrc() {
+    src_hdr::FTargsrc_Init(*this);
 }
 
+// --- src_hdr.FTargsrc..Dtor
+inline  src_hdr::FTargsrc::~FTargsrc() {
+    src_hdr::FTargsrc_Uninit(*this);
+}
 
 // --- src_hdr.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -875,7 +883,7 @@ inline void src_hdr::value_SetEnum(src_hdr::FieldId& parent, src_hdr_FieldIdEnum
 }
 
 // --- src_hdr.FieldId.value.Cast
-inline src_hdr::FieldId::operator src_hdr_FieldIdEnum () const {
+inline  src_hdr::FieldId::operator src_hdr_FieldIdEnum() const {
     return src_hdr_FieldIdEnum((*this).value);
 }
 
@@ -884,15 +892,22 @@ inline src_hdr::FieldId::operator src_hdr_FieldIdEnum () const {
 inline void src_hdr::FieldId_Init(src_hdr::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline src_hdr::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline src_hdr::TableId::TableId(src_hdr_TableIdEnum arg) { this->value = i32(arg); }
-inline src_hdr::TableId::TableId() {
-    src_hdr::TableId_Init(*this);
+
+// --- src_hdr.FieldId..Ctor
+inline  src_hdr::FieldId::FieldId() {
+    src_hdr::FieldId_Init(*this);
 }
 
+// --- src_hdr.FieldId..FieldwiseCtor
+inline  src_hdr::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_hdr.FieldId..EnumCtor
+inline  src_hdr::FieldId::FieldId(src_hdr_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- src_hdr.TableId.value.GetEnum
 // Get value of field as enum type
@@ -907,7 +922,7 @@ inline void src_hdr::value_SetEnum(src_hdr::TableId& parent, src_hdr_TableIdEnum
 }
 
 // --- src_hdr.TableId.value.Cast
-inline src_hdr::TableId::operator src_hdr_TableIdEnum () const {
+inline  src_hdr::TableId::operator src_hdr_TableIdEnum() const {
     return src_hdr_TableIdEnum((*this).value);
 }
 
@@ -915,6 +930,22 @@ inline src_hdr::TableId::operator src_hdr_TableIdEnum () const {
 // Set all fields to initial values.
 inline void src_hdr::TableId_Init(src_hdr::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- src_hdr.TableId..Ctor
+inline  src_hdr::TableId::TableId() {
+    src_hdr::TableId_Init(*this);
+}
+
+// --- src_hdr.TableId..FieldwiseCtor
+inline  src_hdr::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- src_hdr.TableId..EnumCtor
+inline  src_hdr::TableId::TableId(src_hdr_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const src_hdr::trace &row) {// cfmt:src_hdr.trace.String

@@ -206,12 +206,8 @@ namespace acr { // gen:ns_print_struct
 struct AttrRegx { // acr.AttrRegx: Filters that must match input key/value pairs
     algo_lib::Regx   name;    // Acr Regx
     algo_lib::Regx   value;   // Acr Regx
-    AttrRegx();
-private:
-    // reftype Regx of acr.AttrRegx.name prohibits copy
-    // reftype Regx of acr.AttrRegx.value prohibits copy
-    AttrRegx(const AttrRegx&){ /*disallow copy constructor */}
-    void operator =(const AttrRegx&){ /*disallow direct assignment */}
+    // func:acr.AttrRegx..Ctor
+    inline               AttrRegx() __attribute__((nothrow));
 };
 
 // Print back to string
@@ -231,29 +227,36 @@ void                 AttrRegx_Print(acr::AttrRegx& row, algo::cstring& str) __at
 struct CtypeTopoKey { // acr.CtypeTopoKey: Key for sorting print-line records
     i32   alldep;   //   0  # Unresolved references
     i32   rowid;    //   0  Rowid of original record
-    bool operator ==(const acr::CtypeTopoKey &rhs) const;
-    bool operator !=(const acr::CtypeTopoKey &rhs) const;
-    bool operator <(const acr::CtypeTopoKey &rhs) const;
-    bool operator >(const acr::CtypeTopoKey &rhs) const;
-    bool operator <=(const acr::CtypeTopoKey &rhs) const;
-    bool operator >=(const acr::CtypeTopoKey &rhs) const;
-    CtypeTopoKey();
+    // func:acr.CtypeTopoKey..EqOp
+    inline bool          operator ==(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..NeOp
+    inline bool          operator !=(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..LtOp
+    inline bool          operator <(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..GtOp
+    inline bool          operator >(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..LeOp
+    inline bool          operator <=(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..GeOp
+    inline bool          operator >=(const acr::CtypeTopoKey &rhs) const __attribute__((nothrow));
+    // func:acr.CtypeTopoKey..Ctor
+    inline               CtypeTopoKey() __attribute__((nothrow));
 };
 
 // func:acr.CtypeTopoKey..Hash
-u32                  CtypeTopoKey_Hash(u32 prev, const acr::CtypeTopoKey & rhs) __attribute__((nothrow));
+inline u32           CtypeTopoKey_Hash(u32 prev, const acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // func:acr.CtypeTopoKey..Lt
-bool                 CtypeTopoKey_Lt(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
+inline bool          CtypeTopoKey_Lt(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // func:acr.CtypeTopoKey..Cmp
-i32                  CtypeTopoKey_Cmp(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
+inline i32           CtypeTopoKey_Cmp(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.CtypeTopoKey..Init
-void                 CtypeTopoKey_Init(acr::CtypeTopoKey& parent);
+inline void          CtypeTopoKey_Init(acr::CtypeTopoKey& parent);
 // func:acr.CtypeTopoKey..Eq
-bool                 CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
+inline bool          CtypeTopoKey_Eq(acr::CtypeTopoKey& lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.CtypeTopoKey..Update
-bool                 CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
+inline bool          CtypeTopoKey_Update(acr::CtypeTopoKey &lhs, acr::CtypeTopoKey& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr.CtypeTopoKey.String  printfmt:Tuple
 // func:acr.CtypeTopoKey..Print
@@ -267,12 +270,13 @@ struct Err { // acr.Err
     algo::cstring   text;    // Error text
     acr::FRec*      rec;     // Parent record. optional pointer
     acr::FField*    fld;     // Parent field. optional pointer
-    Err();
+    // func:acr.Err..Ctor
+    inline               Err() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:acr.Err..Init
-void                 Err_Init(acr::Err& parent);
+inline void          Err_Init(acr::Err& parent);
 // print string representation of ROW to string STR
 // cfmt:acr.Err.String  printfmt:Tuple
 // func:acr.Err..Print
@@ -280,13 +284,15 @@ void                 Err_Print(acr::Err& row, algo::cstring& str) __attribute__(
 
 // --- acr.FAnonfld
 // create: acr.FDb.anonfld (Lary)
+// global access: anonfld (Lary, by rowid)
 struct FAnonfld { // acr.FAnonfld
     algo::Smallstr100   field;   //
 private:
+    // func:acr.FAnonfld..Ctor
+    inline               FAnonfld() __attribute__((nothrow));
     friend acr::FAnonfld&       anonfld_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FAnonfld*       anonfld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 anonfld_RemoveLast() __attribute__((nothrow));
-    FAnonfld();
 };
 
 // Copy fields out of row
@@ -299,20 +305,25 @@ void                 anonfld_CopyIn(acr::FAnonfld &row, dmmeta::Anonfld &in) __a
 
 // --- acr.FBltin
 // create: acr.FDb.bltin (Lary)
+// global access: bltin (Lary, by rowid)
 // access: acr.FCtype.c_bltin (Ptr)
 struct FBltin { // acr.FBltin
     algo::Smallstr100   ctype;      //
     bool                likeu64;    //   false
     bool                bigendok;   //   false
     bool                issigned;   //   false
+    // func:acr.FBltin..AssignOp
+    inline acr::FBltin&  operator =(const acr::FBltin &rhs) = delete;
+    // func:acr.FBltin..CopyCtor
+    inline               FBltin(const acr::FBltin &rhs) = delete;
 private:
+    // func:acr.FBltin..Ctor
+    inline               FBltin() __attribute__((nothrow));
+    // func:acr.FBltin..Dtor
+    inline               ~FBltin() __attribute__((nothrow));
     friend acr::FBltin&         bltin_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FBltin*         bltin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 bltin_RemoveLast() __attribute__((nothrow));
-    FBltin();
-    ~FBltin();
-    FBltin(const FBltin&){ /*disallow copy constructor */}
-    void operator =(const FBltin&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -324,12 +335,13 @@ void                 bltin_CopyIn(acr::FBltin &row, amcdb::Bltin &in) __attribut
 
 // Set all fields to initial values.
 // func:acr.FBltin..Init
-void                 FBltin_Init(acr::FBltin& bltin);
+inline void          FBltin_Init(acr::FBltin& bltin);
 // func:acr.FBltin..Uninit
 void                 FBltin_Uninit(acr::FBltin& bltin) __attribute__((nothrow));
 
 // --- acr.FCdflt
 // create: acr.FDb.cdflt (Lary)
+// global access: cdflt (Lary, by rowid)
 // access: acr.FCtype.c_cdflt (Ptr)
 struct FCdflt { // acr.FCdflt
     algo::Smallstr100   ctype;      //
@@ -337,14 +349,18 @@ struct FCdflt { // acr.FCdflt
     algo::CppExpr       cppdflt;    //
     algo::Smallstr50    ssimdflt;   //
     algo::Smallstr50    jsdflt;     //
+    // func:acr.FCdflt..AssignOp
+    inline acr::FCdflt&  operator =(const acr::FCdflt &rhs) = delete;
+    // func:acr.FCdflt..CopyCtor
+    inline               FCdflt(const acr::FCdflt &rhs) = delete;
 private:
+    // func:acr.FCdflt..Ctor
+    inline               FCdflt() __attribute__((nothrow));
+    // func:acr.FCdflt..Dtor
+    inline               ~FCdflt() __attribute__((nothrow));
     friend acr::FCdflt&         cdflt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FCdflt*         cdflt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cdflt_RemoveLast() __attribute__((nothrow));
-    FCdflt();
-    ~FCdflt();
-    FCdflt(const FCdflt&){ /*disallow copy constructor */}
-    void operator =(const FCdflt&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -368,24 +384,27 @@ struct FCheck { // acr.FCheck: Function to check for consistency
     algo::cstring*   ary_name_elems;    // pointer to elements
     u32              ary_name_n;        // number of elements in array
     u32              ary_name_max;      // max. capacity of array before realloc
-    FCheck();
-    ~FCheck();
-private:
     // reftype Ptrary of acr.FCheck.c_bad_rec prohibits copy
-    // reftype Tary of acr.FCheck.ary_name prohibits copy
-    FCheck(const FCheck&){ /*disallow copy constructor */}
-    void operator =(const FCheck&){ /*disallow direct assignment */}
+    // func:acr.FCheck..AssignOp
+    acr::FCheck&         operator =(const acr::FCheck &rhs) = delete;
+    // func:acr.FCheck..Ctor
+    inline               FCheck() __attribute__((nothrow));
+    // func:acr.FCheck..Dtor
+    inline               ~FCheck() __attribute__((nothrow));
+    // reftype Ptrary of acr.FCheck.c_bad_rec prohibits copy
+    // func:acr.FCheck..CopyCtor
+    FCheck(const acr::FCheck &rhs) = delete;
 };
 
 // Return true if index is empty
 // func:acr.FCheck.c_bad_rec.EmptyQ
-bool                 c_bad_rec_EmptyQ(acr::FCheck& check) __attribute__((nothrow));
+inline bool          c_bad_rec_EmptyQ(acr::FCheck& check) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FCheck.c_bad_rec.Find
-acr::FRec*           c_bad_rec_Find(acr::FCheck& check, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    c_bad_rec_Find(acr::FCheck& check, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FCheck.c_bad_rec.Getary
-algo::aryptr<acr::FRec*> c_bad_rec_Getary(acr::FCheck& check) __attribute__((nothrow));
+inline algo::aryptr<acr::FRec*> c_bad_rec_Getary(acr::FCheck& check) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FCheck.c_bad_rec.Insert
@@ -398,22 +417,22 @@ void                 c_bad_rec_Insert(acr::FCheck& check, acr::FRec& row) __attr
 bool                 c_bad_rec_ScanInsertMaybe(acr::FCheck& check, acr::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FCheck.c_bad_rec.N
-i32                  c_bad_rec_N(const acr::FCheck& check) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_bad_rec_N(const acr::FCheck& check) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FCheck.c_bad_rec.Remove
 void                 c_bad_rec_Remove(acr::FCheck& check, acr::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FCheck.c_bad_rec.RemoveAll
-void                 c_bad_rec_RemoveAll(acr::FCheck& check) __attribute__((nothrow));
+inline void          c_bad_rec_RemoveAll(acr::FCheck& check) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FCheck.c_bad_rec.Reserve
 void                 c_bad_rec_Reserve(acr::FCheck& check, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FCheck.c_bad_rec.qFind
-acr::FRec&           c_bad_rec_qFind(acr::FCheck& check, u32 idx) __attribute__((nothrow));
+inline acr::FRec&    c_bad_rec_qFind(acr::FCheck& check, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FCheck.c_bad_rec.qLast
-acr::FRec&           c_bad_rec_qLast(acr::FCheck& check) __attribute__((nothrow));
+inline acr::FRec&    c_bad_rec_qLast(acr::FCheck& check) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -433,22 +452,22 @@ algo::cstring&       ary_name_AllocAt(acr::FCheck& check, int at) __attribute__(
 algo::aryptr<algo::cstring> ary_name_AllocN(acr::FCheck& check, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FCheck.ary_name.EmptyQ
-bool                 ary_name_EmptyQ(acr::FCheck& check) __attribute__((nothrow));
+inline bool          ary_name_EmptyQ(acr::FCheck& check) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FCheck.ary_name.Find
-algo::cstring*       ary_name_Find(acr::FCheck& check, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* ary_name_Find(acr::FCheck& check, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:acr.FCheck.ary_name.Getary
-algo::aryptr<algo::cstring> ary_name_Getary(const acr::FCheck& check) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> ary_name_Getary(const acr::FCheck& check) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FCheck.ary_name.Last
-algo::cstring*       ary_name_Last(acr::FCheck& check) __attribute__((nothrow, pure));
+inline algo::cstring* ary_name_Last(acr::FCheck& check) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:acr.FCheck.ary_name.Max
-i32                  ary_name_Max(acr::FCheck& check) __attribute__((nothrow));
+inline i32           ary_name_Max(acr::FCheck& check) __attribute__((nothrow));
 // Return number of items in the array
 // func:acr.FCheck.ary_name.N
-i32                  ary_name_N(const acr::FCheck& check) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ary_name_N(const acr::FCheck& check) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:acr.FCheck.ary_name.Remove
 void                 ary_name_Remove(acr::FCheck& check, u32 i) __attribute__((nothrow));
@@ -459,7 +478,7 @@ void                 ary_name_RemoveAll(acr::FCheck& check) __attribute__((nothr
 void                 ary_name_RemoveLast(acr::FCheck& check) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:acr.FCheck.ary_name.Reserve
-void                 ary_name_Reserve(acr::FCheck& check, int n) __attribute__((nothrow));
+inline void          ary_name_Reserve(acr::FCheck& check, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:acr.FCheck.ary_name.AbsReserve
 void                 ary_name_AbsReserve(acr::FCheck& check, int n) __attribute__((nothrow));
@@ -472,13 +491,13 @@ void                 ary_name_Setary(acr::FCheck& check, acr::FCheck &rhs) __att
 void                 ary_name_Setary(acr::FCheck& check, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FCheck.ary_name.qFind
-algo::cstring&       ary_name_qFind(acr::FCheck& check, u64 t) __attribute__((nothrow));
+inline algo::cstring& ary_name_qFind(acr::FCheck& check, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:acr.FCheck.ary_name.qLast
-algo::cstring&       ary_name_qLast(acr::FCheck& check) __attribute__((nothrow));
+inline algo::cstring& ary_name_qLast(acr::FCheck& check) __attribute__((nothrow));
 // Return row id of specified element
 // func:acr.FCheck.ary_name.rowid_Get
-u64                  ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem) __attribute__((nothrow));
+inline u64           ary_name_rowid_Get(acr::FCheck& check, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr.FCheck.ary_name.AllocNVal
 algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -489,46 +508,48 @@ algo::aryptr<algo::cstring> ary_name_AllocNVal(acr::FCheck& check, int n_elems, 
 bool                 ary_name_ReadStrptrMaybe(acr::FCheck& check, algo::strptr in_str) __attribute__((nothrow));
 
 // func:acr.FCheck.c_bad_rec_curs.Reset
-void                 check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
+inline void          check_c_bad_rec_curs_Reset(check_c_bad_rec_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCheck.c_bad_rec_curs.ValidQ
-bool                 check_c_bad_rec_curs_ValidQ(check_c_bad_rec_curs &curs) __attribute__((nothrow));
+inline bool          check_c_bad_rec_curs_ValidQ(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCheck.c_bad_rec_curs.Next
-void                 check_c_bad_rec_curs_Next(check_c_bad_rec_curs &curs) __attribute__((nothrow));
+inline void          check_c_bad_rec_curs_Next(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCheck.c_bad_rec_curs.Access
-acr::FRec&           check_c_bad_rec_curs_Access(check_c_bad_rec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    check_c_bad_rec_curs_Access(check_c_bad_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCheck.ary_name_curs.Next
-void                 check_ary_name_curs_Next(check_ary_name_curs &curs) __attribute__((nothrow));
+inline void          check_ary_name_curs_Next(check_ary_name_curs &curs) __attribute__((nothrow));
 // func:acr.FCheck.ary_name_curs.Reset
-void                 check_ary_name_curs_Reset(check_ary_name_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
+inline void          check_ary_name_curs_Reset(check_ary_name_curs &curs, acr::FCheck &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCheck.ary_name_curs.ValidQ
-bool                 check_ary_name_curs_ValidQ(check_ary_name_curs &curs) __attribute__((nothrow));
+inline bool          check_ary_name_curs_ValidQ(check_ary_name_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCheck.ary_name_curs.Access
-algo::cstring&       check_ary_name_curs_Access(check_ary_name_curs &curs) __attribute__((nothrow));
+inline algo::cstring& check_ary_name_curs_Access(check_ary_name_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FCheck..Init
-void                 FCheck_Init(acr::FCheck& check);
+inline void          FCheck_Init(acr::FCheck& check);
 // func:acr.FCheck..Uninit
 void                 FCheck_Uninit(acr::FCheck& check) __attribute__((nothrow));
 
 // --- acr.FCppfunc
 // create: acr.FDb.cppfunc (Lary)
+// global access: cppfunc (Lary, by rowid)
 struct FCppfunc { // acr.FCppfunc
     algo::Smallstr100   field;   //
     algo::CppExpr       expr;    //
     bool                print;   //   false
     bool                set;     //   false
 private:
+    // func:acr.FCppfunc..Ctor
+    inline               FCppfunc() __attribute__((nothrow));
     friend acr::FCppfunc&       cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FCppfunc*       cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cppfunc_RemoveAll() __attribute__((nothrow));
     friend void                 cppfunc_RemoveLast() __attribute__((nothrow));
-    FCppfunc();
 };
 
 // Copy fields out of row
@@ -540,13 +561,14 @@ void                 cppfunc_CopyIn(acr::FCppfunc &row, dmmeta::Cppfunc &in) __a
 
 // Set all fields to initial values.
 // func:acr.FCppfunc..Init
-void                 FCppfunc_Init(acr::FCppfunc& cppfunc);
+inline void          FCppfunc_Init(acr::FCppfunc& cppfunc);
 
 // --- acr.FCtype
 // create: acr.FDb.ctype (Lary)
-// global access: ind_ctype (Thash)
+// global access: ctype (Lary, by rowid)
+// global access: ind_ctype (Thash, hash field ctype)
 // global access: zd_sel_ctype (Llist)
-// global access: bh_ctype_topo (Bheap)
+// global access: bh_ctype_topo (Bheap, sort field topokey)
 // global access: c_field_ctype (Ptr)
 // global access: c_ssimfile_ctype (Ptr)
 // global access: c_ctype_front (Ptrary)
@@ -598,14 +620,38 @@ struct FCtype { // acr.FCtype
     acr::FCtype*        zd_sel_ctype_next;             // zslist link; -1 means not-in-list
     acr::FCtype*        zd_sel_ctype_prev;             // previous element
     i32                 bh_ctype_topo_idx;             // index in heap; -1 means not-in-heap
+    // reftype Ptrary of acr.FCtype.c_field prohibits copy
+    // x-reference on acr.FCtype.c_cdflt prevents copy
+    // x-reference on acr.FCtype.c_ssimfile prevents copy
+    // reftype Llist of acr.FCtype.zd_ctype_rec prohibits copy
+    // reftype Thash of acr.FCtype.ind_ctype_rec prohibits copy
+    // reftype Llist of acr.FCtype.zd_ctype_selrec prohibits copy
+    // reftype Ptrary of acr.FCtype.c_child prohibits copy
+    // x-reference on acr.FCtype.c_bltin prevents copy
+    // reftype Llist of acr.FCtype.zd_arg prohibits copy
+    // reftype Ptrary of acr.FCtype.c_ssimreq prohibits copy
+    // func:acr.FCtype..AssignOp
+    acr::FCtype&         operator =(const acr::FCtype &rhs) = delete;
+    // reftype Ptrary of acr.FCtype.c_field prohibits copy
+    // x-reference on acr.FCtype.c_cdflt prevents copy
+    // x-reference on acr.FCtype.c_ssimfile prevents copy
+    // reftype Llist of acr.FCtype.zd_ctype_rec prohibits copy
+    // reftype Thash of acr.FCtype.ind_ctype_rec prohibits copy
+    // reftype Llist of acr.FCtype.zd_ctype_selrec prohibits copy
+    // reftype Ptrary of acr.FCtype.c_child prohibits copy
+    // x-reference on acr.FCtype.c_bltin prevents copy
+    // reftype Llist of acr.FCtype.zd_arg prohibits copy
+    // reftype Ptrary of acr.FCtype.c_ssimreq prohibits copy
+    // func:acr.FCtype..CopyCtor
+    FCtype(const acr::FCtype &rhs) = delete;
 private:
+    // func:acr.FCtype..Ctor
+    inline               FCtype() __attribute__((nothrow));
+    // func:acr.FCtype..Dtor
+    inline               ~FCtype() __attribute__((nothrow));
     friend acr::FCtype&         ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FCtype*         ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
-    FCtype();
-    ~FCtype();
-    FCtype(const FCtype&){ /*disallow copy constructor */}
-    void operator =(const FCtype&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -623,13 +669,13 @@ algo::Smallstr100    name_Get(acr::FCtype& ctype) __attribute__((__warn_unused_r
 
 // Return true if index is empty
 // func:acr.FCtype.c_field.EmptyQ
-bool                 c_field_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FCtype.c_field.Find
-acr::FField*         c_field_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FField*  c_field_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FCtype.c_field.Getary
-algo::aryptr<acr::FField*> c_field_Getary(acr::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr::FField*> c_field_Getary(acr::FCtype& ctype) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FCtype.c_field.Insert
@@ -641,61 +687,61 @@ void                 c_field_Insert(acr::FCtype& ctype, acr::FField& row) __attr
 bool                 c_field_InsertMaybe(acr::FCtype& ctype, acr::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FCtype.c_field.N
-i32                  c_field_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_field_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FCtype.c_field.Remove
 void                 c_field_Remove(acr::FCtype& ctype, acr::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FCtype.c_field.RemoveAll
-void                 c_field_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
+inline void          c_field_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FCtype.c_field.Reserve
 void                 c_field_Reserve(acr::FCtype& ctype, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FCtype.c_field.qFind
-acr::FField&         c_field_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline acr::FField&  c_field_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr.FCtype.c_field.InAryQ
-bool                 ctype_c_field_InAryQ(acr::FField& row) __attribute__((nothrow));
+inline bool          ctype_c_field_InAryQ(acr::FField& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FCtype.c_field.qLast
-acr::FField&         c_field_qLast(acr::FCtype& ctype) __attribute__((nothrow));
+inline acr::FField&  c_field_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FCtype.c_cdflt.InsertMaybe
-bool                 c_cdflt_InsertMaybe(acr::FCtype& ctype, acr::FCdflt& row) __attribute__((nothrow));
+inline bool          c_cdflt_InsertMaybe(acr::FCtype& ctype, acr::FCdflt& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.c_cdflt.Remove
-void                 c_cdflt_Remove(acr::FCtype& ctype, acr::FCdflt& row) __attribute__((nothrow));
+inline void          c_cdflt_Remove(acr::FCtype& ctype, acr::FCdflt& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FCtype.c_ssimfile.InsertMaybe
-bool                 c_ssimfile_InsertMaybe(acr::FCtype& ctype, acr::FSsimfile& row) __attribute__((nothrow));
+inline bool          c_ssimfile_InsertMaybe(acr::FCtype& ctype, acr::FSsimfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.c_ssimfile.Remove
-void                 c_ssimfile_Remove(acr::FCtype& ctype, acr::FSsimfile& row) __attribute__((nothrow));
+inline void          c_ssimfile_Remove(acr::FCtype& ctype, acr::FSsimfile& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FCtype.zd_ctype_rec.EmptyQ
-bool                 zd_ctype_rec_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_ctype_rec_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FCtype.zd_ctype_rec.First
-acr::FRec*           zd_ctype_rec_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_ctype_rec_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FCtype.zd_ctype_rec.InLlistQ
-bool                 zd_ctype_rec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_ctype_rec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FCtype.zd_ctype_rec.Insert
 void                 zd_ctype_rec_Insert(acr::FCtype& ctype, acr::FRec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FCtype.zd_ctype_rec.Last
-acr::FRec*           zd_ctype_rec_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_ctype_rec_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FCtype.zd_ctype_rec.Next
-acr::FRec*           zd_ctype_rec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_ctype_rec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FCtype.zd_ctype_rec.Prev
-acr::FRec*           zd_ctype_rec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_ctype_rec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.zd_ctype_rec.Remove
 void                 zd_ctype_rec_Remove(acr::FCtype& ctype, acr::FRec& row) __attribute__((nothrow));
@@ -707,17 +753,17 @@ void                 zd_ctype_rec_RemoveAll(acr::FCtype& ctype) __attribute__((n
 acr::FRec*           zd_ctype_rec_RemoveFirst(acr::FCtype& ctype) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FCtype.zd_ctype_rec.qLast
-acr::FRec&           zd_ctype_rec_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec&    zd_ctype_rec_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if hash is empty
 // func:acr.FCtype.ind_ctype_rec.EmptyQ
-bool                 ind_ctype_rec_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
+inline bool          ind_ctype_rec_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FCtype.ind_ctype_rec.Find
 acr::FRec*           ind_ctype_rec_Find(acr::FCtype& ctype, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FCtype.ind_ctype_rec.N
-i32                  ind_ctype_rec_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_ctype_rec_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FCtype.ind_ctype_rec.InsertMaybe
 bool                 ind_ctype_rec_InsertMaybe(acr::FCtype& ctype, acr::FRec& row) __attribute__((nothrow));
@@ -730,25 +776,25 @@ void                 ind_ctype_rec_Reserve(acr::FCtype& ctype, int n) __attribut
 
 // Return true if index is empty
 // func:acr.FCtype.zd_ctype_selrec.EmptyQ
-bool                 zd_ctype_selrec_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_ctype_selrec_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FCtype.zd_ctype_selrec.First
-acr::FRec*           zd_ctype_selrec_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_ctype_selrec_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FCtype.zd_ctype_selrec.InLlistQ
-bool                 zd_ctype_selrec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_ctype_selrec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FCtype.zd_ctype_selrec.Insert
 void                 zd_ctype_selrec_Insert(acr::FCtype& ctype, acr::FRec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FCtype.zd_ctype_selrec.Last
-acr::FRec*           zd_ctype_selrec_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_ctype_selrec_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FCtype.zd_ctype_selrec.Next
-acr::FRec*           zd_ctype_selrec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_ctype_selrec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FCtype.zd_ctype_selrec.Prev
-acr::FRec*           zd_ctype_selrec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_ctype_selrec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.zd_ctype_selrec.Remove
 void                 zd_ctype_selrec_Remove(acr::FCtype& ctype, acr::FRec& row) __attribute__((nothrow));
@@ -760,17 +806,17 @@ void                 zd_ctype_selrec_RemoveAll(acr::FCtype& ctype) __attribute__
 acr::FRec*           zd_ctype_selrec_RemoveFirst(acr::FCtype& ctype) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FCtype.zd_ctype_selrec.qLast
-acr::FRec&           zd_ctype_selrec_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec&    zd_ctype_selrec_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr.FCtype.c_child.EmptyQ
-bool                 c_child_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_child_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FCtype.c_child.Find
-acr::FCtype*         c_child_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype*  c_child_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FCtype.c_child.Getary
-algo::aryptr<acr::FCtype*> c_child_Getary(acr::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr::FCtype*> c_child_Getary(acr::FCtype& ctype) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FCtype.c_child.Insert
@@ -783,54 +829,54 @@ void                 c_child_Insert(acr::FCtype& ctype, acr::FCtype& row) __attr
 bool                 c_child_ScanInsertMaybe(acr::FCtype& ctype, acr::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FCtype.c_child.N
-i32                  c_child_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_child_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FCtype.c_child.Remove
 void                 c_child_Remove(acr::FCtype& ctype, acr::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FCtype.c_child.RemoveAll
-void                 c_child_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
+inline void          c_child_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FCtype.c_child.Reserve
 void                 c_child_Reserve(acr::FCtype& ctype, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FCtype.c_child.qFind
-acr::FCtype&         c_child_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline acr::FCtype&  c_child_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FCtype.c_child.qLast
-acr::FCtype&         c_child_qLast(acr::FCtype& ctype) __attribute__((nothrow));
+inline acr::FCtype&  c_child_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FCtype.c_bltin.InsertMaybe
-bool                 c_bltin_InsertMaybe(acr::FCtype& ctype, acr::FBltin& row) __attribute__((nothrow));
+inline bool          c_bltin_InsertMaybe(acr::FCtype& ctype, acr::FBltin& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.c_bltin.Remove
-void                 c_bltin_Remove(acr::FCtype& ctype, acr::FBltin& row) __attribute__((nothrow));
+inline void          c_bltin_Remove(acr::FCtype& ctype, acr::FBltin& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FCtype.zd_arg.EmptyQ
-bool                 zd_arg_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_arg_EmptyQ(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FCtype.zd_arg.First
-acr::FField*         zd_arg_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FField*  zd_arg_First(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FCtype.zd_arg.InLlistQ
-bool                 zd_arg_InLlistQ(acr::FField& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_arg_InLlistQ(acr::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FCtype.zd_arg.Insert
 void                 zd_arg_Insert(acr::FCtype& ctype, acr::FField& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FCtype.zd_arg.Last
-acr::FField*         zd_arg_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FField*  zd_arg_Last(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr.FCtype.zd_arg.N
-i32                  zd_arg_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_arg_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FCtype.zd_arg.Next
-acr::FField*         zd_arg_Next(acr::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FField*  zd_arg_Next(acr::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FCtype.zd_arg.Prev
-acr::FField*         zd_arg_Prev(acr::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FField*  zd_arg_Prev(acr::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FCtype.zd_arg.Remove
 void                 zd_arg_Remove(acr::FCtype& ctype, acr::FField& row) __attribute__((nothrow));
@@ -842,24 +888,24 @@ void                 zd_arg_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow
 acr::FField*         zd_arg_RemoveFirst(acr::FCtype& ctype) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FCtype.zd_arg.qLast
-acr::FField&         zd_arg_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FField&  zd_arg_qLast(acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:acr.FCtype.topokey.Lt
-bool                 topokey_Lt(acr::FCtype& ctype, acr::FCtype &rhs) __attribute__((nothrow));
+inline bool          topokey_Lt(acr::FCtype& ctype, acr::FCtype &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:acr.FCtype.topokey.Cmp
-i32                  topokey_Cmp(acr::FCtype& ctype, acr::FCtype &rhs) __attribute__((nothrow));
+inline i32           topokey_Cmp(acr::FCtype& ctype, acr::FCtype &rhs) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FCtype.c_ssimreq.EmptyQ
-bool                 c_ssimreq_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
+inline bool          c_ssimreq_EmptyQ(acr::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FCtype.c_ssimreq.Find
-acr::FSsimreq*       c_ssimreq_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FSsimreq* c_ssimreq_Find(acr::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FCtype.c_ssimreq.Getary
-algo::aryptr<acr::FSsimreq*> c_ssimreq_Getary(acr::FCtype& ctype) __attribute__((nothrow));
+inline algo::aryptr<acr::FSsimreq*> c_ssimreq_Getary(acr::FCtype& ctype) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FCtype.c_ssimreq.Insert
@@ -871,106 +917,106 @@ void                 c_ssimreq_Insert(acr::FCtype& ctype, acr::FSsimreq& row) __
 bool                 c_ssimreq_InsertMaybe(acr::FCtype& ctype, acr::FSsimreq& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FCtype.c_ssimreq.N
-i32                  c_ssimreq_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_ssimreq_N(const acr::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FCtype.c_ssimreq.Remove
 void                 c_ssimreq_Remove(acr::FCtype& ctype, acr::FSsimreq& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FCtype.c_ssimreq.RemoveAll
-void                 c_ssimreq_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
+inline void          c_ssimreq_RemoveAll(acr::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FCtype.c_ssimreq.Reserve
 void                 c_ssimreq_Reserve(acr::FCtype& ctype, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FCtype.c_ssimreq.qFind
-acr::FSsimreq&       c_ssimreq_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline acr::FSsimreq& c_ssimreq_qFind(acr::FCtype& ctype, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr.FCtype.c_ssimreq.InAryQ
-bool                 ctype_c_ssimreq_InAryQ(acr::FSsimreq& row) __attribute__((nothrow));
+inline bool          ctype_c_ssimreq_InAryQ(acr::FSsimreq& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FCtype.c_ssimreq.qLast
-acr::FSsimreq&       c_ssimreq_qLast(acr::FCtype& ctype) __attribute__((nothrow));
+inline acr::FSsimreq& c_ssimreq_qLast(acr::FCtype& ctype) __attribute__((nothrow));
 
 // func:acr.FCtype.c_field_curs.Reset
-void                 ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_field_curs.ValidQ
-bool                 ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
+inline bool          ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_field_curs.Next
-void                 ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
+inline void          ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_field_curs.Access
-acr::FField&         ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
+inline acr::FField&  ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_rec_curs.Reset
-void                 ctype_zd_ctype_rec_curs_Reset(ctype_zd_ctype_rec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_zd_ctype_rec_curs_Reset(ctype_zd_ctype_rec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_rec_curs.ValidQ
-bool                 ctype_zd_ctype_rec_curs_ValidQ(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
+inline bool          ctype_zd_ctype_rec_curs_ValidQ(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_ctype_rec_curs.Next
-void                 ctype_zd_ctype_rec_curs_Next(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
+inline void          ctype_zd_ctype_rec_curs_Next(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_ctype_rec_curs.Access
-acr::FRec&           ctype_zd_ctype_rec_curs_Access(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    ctype_zd_ctype_rec_curs_Access(ctype_zd_ctype_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.ind_ctype_rec_curs.Reset
 void                 ctype_ind_ctype_rec_curs_Reset(ctype_ind_ctype_rec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.ind_ctype_rec_curs.ValidQ
-bool                 ctype_ind_ctype_rec_curs_ValidQ(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
+inline bool          ctype_ind_ctype_rec_curs_ValidQ(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.ind_ctype_rec_curs.Next
-void                 ctype_ind_ctype_rec_curs_Next(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
+inline void          ctype_ind_ctype_rec_curs_Next(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.ind_ctype_rec_curs.Access
-acr::FRec&           ctype_ind_ctype_rec_curs_Access(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    ctype_ind_ctype_rec_curs_Access(ctype_ind_ctype_rec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_selrec_curs.Reset
-void                 ctype_zd_ctype_selrec_curs_Reset(ctype_zd_ctype_selrec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_zd_ctype_selrec_curs_Reset(ctype_zd_ctype_selrec_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_ctype_selrec_curs.ValidQ
-bool                 ctype_zd_ctype_selrec_curs_ValidQ(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
+inline bool          ctype_zd_ctype_selrec_curs_ValidQ(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_ctype_selrec_curs.Next
-void                 ctype_zd_ctype_selrec_curs_Next(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
+inline void          ctype_zd_ctype_selrec_curs_Next(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_ctype_selrec_curs.Access
-acr::FRec&           ctype_zd_ctype_selrec_curs_Access(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    ctype_zd_ctype_selrec_curs_Access(ctype_zd_ctype_selrec_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.c_child_curs.Reset
-void                 ctype_c_child_curs_Reset(ctype_c_child_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_c_child_curs_Reset(ctype_c_child_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_child_curs.ValidQ
-bool                 ctype_c_child_curs_ValidQ(ctype_c_child_curs &curs) __attribute__((nothrow));
+inline bool          ctype_c_child_curs_ValidQ(ctype_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_child_curs.Next
-void                 ctype_c_child_curs_Next(ctype_c_child_curs &curs) __attribute__((nothrow));
+inline void          ctype_c_child_curs_Next(ctype_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_child_curs.Access
-acr::FCtype&         ctype_c_child_curs_Access(ctype_c_child_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  ctype_c_child_curs_Access(ctype_c_child_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_arg_curs.Reset
-void                 ctype_zd_arg_curs_Reset(ctype_zd_arg_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_zd_arg_curs_Reset(ctype_zd_arg_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.zd_arg_curs.ValidQ
-bool                 ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs) __attribute__((nothrow));
+inline bool          ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.zd_arg_curs.Next
-void                 ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs) __attribute__((nothrow));
+inline void          ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.zd_arg_curs.Access
-acr::FField&         ctype_zd_arg_curs_Access(ctype_zd_arg_curs &curs) __attribute__((nothrow));
+inline acr::FField&  ctype_zd_arg_curs_Access(ctype_zd_arg_curs &curs) __attribute__((nothrow));
 // func:acr.FCtype.c_ssimreq_curs.Reset
-void                 ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
+inline void          ctype_c_ssimreq_curs_Reset(ctype_c_ssimreq_curs &curs, acr::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FCtype.c_ssimreq_curs.ValidQ
-bool                 ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
+inline bool          ctype_c_ssimreq_curs_ValidQ(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FCtype.c_ssimreq_curs.Next
-void                 ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
+inline void          ctype_c_ssimreq_curs_Next(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FCtype.c_ssimreq_curs.Access
-acr::FSsimreq&       ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
+inline acr::FSsimreq& ctype_c_ssimreq_curs_Access(ctype_c_ssimreq_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FCtype..Init
 void                 FCtype_Init(acr::FCtype& ctype);
@@ -980,7 +1026,8 @@ void                 FCtype_Uninit(acr::FCtype& ctype) __attribute__((nothrow));
 // --- acr.trace
 #pragma pack(push,1)
 struct trace { // acr.trace
-    trace();
+    // func:acr.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -1161,25 +1208,25 @@ bool                 pdep_XrefMaybe(acr::FPdep &row);
 void                 zd_pline_Cascdel() __attribute__((nothrow));
 // Return true if index is empty
 // func:acr.FDb.zd_pline.EmptyQ
-bool                 zd_pline_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_pline_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zd_pline.First
-acr::FPline*         zd_pline_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPline*  zd_pline_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zd_pline.InLlistQ
-bool                 zd_pline_InLlistQ(acr::FPline& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_pline_InLlistQ(acr::FPline& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zd_pline.Insert
 void                 zd_pline_Insert(acr::FPline& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zd_pline.Last
-acr::FPline*         zd_pline_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPline*  zd_pline_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zd_pline.Next
-acr::FPline*         zd_pline_Next(acr::FPline &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPline*  zd_pline_Next(acr::FPline &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FDb.zd_pline.Prev
-acr::FPline*         zd_pline_Prev(acr::FPline &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPline*  zd_pline_Prev(acr::FPline &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FDb.zd_pline.Remove
 void                 zd_pline_Remove(acr::FPline& row) __attribute__((nothrow));
@@ -1191,32 +1238,32 @@ void                 zd_pline_RemoveAll() __attribute__((nothrow));
 acr::FPline*         zd_pline_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zd_pline.qLast
-acr::FPline&         zd_pline_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPline&  zd_pline_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Delete all elements in the linked list.
 // func:acr.FDb.zd_pdep.Cascdel
 void                 zd_pdep_Cascdel() __attribute__((nothrow));
 // Return true if index is empty
 // func:acr.FDb.zd_pdep.EmptyQ
-bool                 zd_pdep_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_pdep_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zd_pdep.First
-acr::FPdep*          zd_pdep_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPdep*   zd_pdep_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zd_pdep.InLlistQ
-bool                 zd_pdep_InLlistQ(acr::FPdep& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_pdep_InLlistQ(acr::FPdep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zd_pdep.Insert
 void                 zd_pdep_Insert(acr::FPdep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zd_pdep.Last
-acr::FPdep*          zd_pdep_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPdep*   zd_pdep_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zd_pdep.Next
-acr::FPdep*          zd_pdep_Next(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep*   zd_pdep_Next(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FDb.zd_pdep.Prev
-acr::FPdep*          zd_pdep_Prev(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep*   zd_pdep_Prev(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FDb.zd_pdep.Remove
 void                 zd_pdep_Remove(acr::FPdep& row) __attribute__((nothrow));
@@ -1228,7 +1275,7 @@ void                 zd_pdep_RemoveAll() __attribute__((nothrow));
 acr::FPdep*          zd_pdep_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zd_pdep.qLast
-acr::FPdep&          zd_pdep_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep&   zd_pdep_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1246,22 +1293,22 @@ acr::FCtype*         ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__
 void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.ctype.EmptyQ
-bool                 ctype_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ctype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.ctype.Find
-acr::FCtype*         ctype_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCtype*  ctype_Find(i32 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.ctype.Last
-acr::FCtype*         ctype_Last() __attribute__((nothrow, pure));
+inline acr::FCtype*  ctype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.ctype.N
-i32                  ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.ctype.RemoveLast
 void                 ctype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.ctype.qFind
-acr::FCtype&         ctype_qFind(i32 t) __attribute__((nothrow, pure));
+inline acr::FCtype&  ctype_qFind(i32 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.ctype.XrefMaybe
@@ -1317,22 +1364,22 @@ acr::FAnonfld*       anonfld_InsertMaybe(const dmmeta::Anonfld &value) __attribu
 void*                anonfld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.anonfld.EmptyQ
-bool                 anonfld_EmptyQ() __attribute__((nothrow, pure));
+inline bool          anonfld_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.anonfld.Find
-acr::FAnonfld*       anonfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FAnonfld* anonfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.anonfld.Last
-acr::FAnonfld*       anonfld_Last() __attribute__((nothrow, pure));
+inline acr::FAnonfld* anonfld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.anonfld.N
-i32                  anonfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           anonfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.anonfld.RemoveLast
 void                 anonfld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.anonfld.qFind
-acr::FAnonfld&       anonfld_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FAnonfld& anonfld_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.anonfld.XrefMaybe
@@ -1354,22 +1401,22 @@ acr::FCdflt*         cdflt_InsertMaybe(const dmmeta::Cdflt &value) __attribute__
 void*                cdflt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.cdflt.EmptyQ
-bool                 cdflt_EmptyQ() __attribute__((nothrow, pure));
+inline bool          cdflt_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.cdflt.Find
-acr::FCdflt*         cdflt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCdflt*  cdflt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.cdflt.Last
-acr::FCdflt*         cdflt_Last() __attribute__((nothrow, pure));
+inline acr::FCdflt*  cdflt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.cdflt.N
-i32                  cdflt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cdflt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.cdflt.RemoveLast
 void                 cdflt_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.cdflt.qFind
-acr::FCdflt&         cdflt_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FCdflt&  cdflt_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.cdflt.XrefMaybe
@@ -1481,22 +1528,22 @@ acr::FField*         field_InsertMaybe(const dmmeta::Field &value) __attribute__
 void*                field_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.field.EmptyQ
-bool                 field_EmptyQ() __attribute__((nothrow, pure));
+inline bool          field_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.field.Find
-acr::FField*         field_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FField*  field_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.field.Last
-acr::FField*         field_Last() __attribute__((nothrow, pure));
+inline acr::FField*  field_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.field.N
-i32                  field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.field.RemoveLast
 void                 field_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.field.qFind
-acr::FField&         field_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FField&  field_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.field.XrefMaybe
@@ -1514,16 +1561,16 @@ acr::FFile*          file_AllocMaybe() __attribute__((__warn_unused_result__, no
 void*                file_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.file.EmptyQ
-bool                 file_EmptyQ() __attribute__((nothrow, pure));
+inline bool          file_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.file.Find
-acr::FFile*          file_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FFile*   file_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.file.Last
-acr::FFile*          file_Last() __attribute__((nothrow, pure));
+inline acr::FFile*   file_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.file.N
-i32                  file_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           file_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr.FDb.file.RemoveAll
 void                 file_RemoveAll() __attribute__((nothrow));
@@ -1532,7 +1579,7 @@ void                 file_RemoveAll() __attribute__((nothrow));
 void                 file_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.file.qFind
-acr::FFile&          file_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FFile&   file_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.file.XrefMaybe
@@ -1585,13 +1632,13 @@ bool                 _db_XrefMaybe();
 
 // Return true if hash is empty
 // func:acr.FDb.ind_ctype.EmptyQ
-bool                 ind_ctype_EmptyQ() __attribute__((nothrow));
+inline bool          ind_ctype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_ctype.Find
 acr::FCtype*         ind_ctype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_ctype.N
-i32                  ind_ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_ctype.InsertMaybe
 bool                 ind_ctype_InsertMaybe(acr::FCtype& row) __attribute__((nothrow));
@@ -1604,13 +1651,13 @@ void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr.FDb.ind_field.EmptyQ
-bool                 ind_field_EmptyQ() __attribute__((nothrow));
+inline bool          ind_field_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_field.Find
 acr::FField*         ind_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_field.N
-i32                  ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_field.InsertMaybe
 bool                 ind_field_InsertMaybe(acr::FField& row) __attribute__((nothrow));
@@ -1623,7 +1670,7 @@ void                 ind_field_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr.FDb.ind_file.EmptyQ
-bool                 ind_file_EmptyQ() __attribute__((nothrow));
+inline bool          ind_file_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_file.Find
 acr::FFile*          ind_file_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1632,7 +1679,7 @@ acr::FFile*          ind_file_Find(const algo::strptr& key) __attribute__((__war
 acr::FFile&          ind_file_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_file.N
-i32                  ind_file_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_file_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_file.InsertMaybe
 bool                 ind_file_InsertMaybe(acr::FFile& row) __attribute__((nothrow));
@@ -1645,28 +1692,28 @@ void                 ind_file_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FDb.zd_all_selrec.EmptyQ
-bool                 zd_all_selrec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_all_selrec_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zd_all_selrec.First
-acr::FRec*           zd_all_selrec_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_all_selrec_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zd_all_selrec.InLlistQ
-bool                 zd_all_selrec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_all_selrec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zd_all_selrec.Insert
 void                 zd_all_selrec_Insert(acr::FRec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zd_all_selrec.Last
-acr::FRec*           zd_all_selrec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_all_selrec_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr.FDb.zd_all_selrec.N
-i32                  zd_all_selrec_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_all_selrec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zd_all_selrec.Next
-acr::FRec*           zd_all_selrec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_all_selrec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FDb.zd_all_selrec.Prev
-acr::FRec*           zd_all_selrec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_all_selrec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FDb.zd_all_selrec.Remove
 void                 zd_all_selrec_Remove(acr::FRec& row) __attribute__((nothrow));
@@ -1678,32 +1725,32 @@ void                 zd_all_selrec_RemoveAll() __attribute__((nothrow));
 acr::FRec*           zd_all_selrec_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zd_all_selrec.qLast
-acr::FRec&           zd_all_selrec_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec&    zd_all_selrec_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr.FDb.zd_all_err.EmptyQ
-bool                 zd_all_err_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_all_err_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zd_all_err.First
-acr::FErr*           zd_all_err_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FErr*    zd_all_err_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zd_all_err.InLlistQ
-bool                 zd_all_err_InLlistQ(acr::FErr& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_all_err_InLlistQ(acr::FErr& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zd_all_err.Insert
 void                 zd_all_err_Insert(acr::FErr& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zd_all_err.Last
-acr::FErr*           zd_all_err_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FErr*    zd_all_err_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:acr.FDb.zd_all_err.N
-i32                  zd_all_err_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_all_err_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zd_all_err.Next
-acr::FErr*           zd_all_err_Next(acr::FErr &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FErr*    zd_all_err_Next(acr::FErr &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FDb.zd_all_err.Prev
-acr::FErr*           zd_all_err_Prev(acr::FErr &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FErr*    zd_all_err_Prev(acr::FErr &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FDb.zd_all_err.Remove
 void                 zd_all_err_Remove(acr::FErr& row) __attribute__((nothrow));
@@ -1715,29 +1762,29 @@ void                 zd_all_err_RemoveAll() __attribute__((nothrow));
 acr::FErr*           zd_all_err_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zd_all_err.qLast
-acr::FErr&           zd_all_err_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FErr&    zd_all_err_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:acr.FDb.zd_sel_ctype.EmptyQ
-bool                 zd_sel_ctype_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_sel_ctype_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zd_sel_ctype.First
-acr::FCtype*         zd_sel_ctype_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCtype*  zd_sel_ctype_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zd_sel_ctype.InLlistQ
-bool                 zd_sel_ctype_InLlistQ(acr::FCtype& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_sel_ctype_InLlistQ(acr::FCtype& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zd_sel_ctype.Insert
 void                 zd_sel_ctype_Insert(acr::FCtype& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zd_sel_ctype.Last
-acr::FCtype*         zd_sel_ctype_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCtype*  zd_sel_ctype_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zd_sel_ctype.Next
-acr::FCtype*         zd_sel_ctype_Next(acr::FCtype &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype*  zd_sel_ctype_Next(acr::FCtype &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FDb.zd_sel_ctype.Prev
-acr::FCtype*         zd_sel_ctype_Prev(acr::FCtype &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype*  zd_sel_ctype_Prev(acr::FCtype &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FDb.zd_sel_ctype.Remove
 void                 zd_sel_ctype_Remove(acr::FCtype& row) __attribute__((nothrow));
@@ -1749,26 +1796,26 @@ void                 zd_sel_ctype_RemoveAll() __attribute__((nothrow));
 acr::FCtype*         zd_sel_ctype_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zd_sel_ctype.qLast
-acr::FCtype&         zd_sel_ctype_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype&  zd_sel_ctype_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:acr.FDb.bh_pline.Dealloc
 void                 bh_pline_Dealloc() __attribute__((nothrow));
 // Return true if index is empty
 // func:acr.FDb.bh_pline.EmptyQ
-bool                 bh_pline_EmptyQ() __attribute__((nothrow));
+inline bool          bh_pline_EmptyQ() __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.bh_pline.First
-acr::FPline*         bh_pline_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPline*  bh_pline_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:acr.FDb.bh_pline.InBheapQ
-bool                 bh_pline_InBheapQ(acr::FPline& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          bh_pline_InBheapQ(acr::FPline& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:acr.FDb.bh_pline.Insert
 void                 bh_pline_Insert(acr::FPline& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:acr.FDb.bh_pline.N
-i32                  bh_pline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_pline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:acr.FDb.bh_pline.Reheap
@@ -1809,22 +1856,22 @@ acr::FSubstr*        substr_InsertMaybe(const dmmeta::Substr &value) __attribute
 void*                substr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.substr.EmptyQ
-bool                 substr_EmptyQ() __attribute__((nothrow, pure));
+inline bool          substr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.substr.Find
-acr::FSubstr*        substr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.substr.Last
-acr::FSubstr*        substr_Last() __attribute__((nothrow, pure));
+inline acr::FSubstr* substr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.substr.N
-i32                  substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.substr.RemoveLast
 void                 substr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.substr.qFind
-acr::FSubstr&        substr_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.substr.XrefMaybe
@@ -1846,22 +1893,22 @@ acr::FSsimfile*      ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) __attri
 void*                ssimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.ssimfile.EmptyQ
-bool                 ssimfile_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ssimfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.ssimfile.Find
-acr::FSsimfile*      ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.ssimfile.Last
-acr::FSsimfile*      ssimfile_Last() __attribute__((nothrow, pure));
+inline acr::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.ssimfile.N
-i32                  ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.ssimfile.qFind
-acr::FSsimfile&      ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSsimfile& ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.ssimfile.XrefMaybe
@@ -1879,16 +1926,16 @@ acr::FTempkey*       tempkey_AllocMaybe() __attribute__((__warn_unused_result__,
 void*                tempkey_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.tempkey.EmptyQ
-bool                 tempkey_EmptyQ() __attribute__((nothrow, pure));
+inline bool          tempkey_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.tempkey.Find
-acr::FTempkey*       tempkey_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FTempkey* tempkey_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.tempkey.Last
-acr::FTempkey*       tempkey_Last() __attribute__((nothrow, pure));
+inline acr::FTempkey* tempkey_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.tempkey.N
-i32                  tempkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           tempkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr.FDb.tempkey.RemoveAll
 void                 tempkey_RemoveAll() __attribute__((nothrow));
@@ -1897,7 +1944,7 @@ void                 tempkey_RemoveAll() __attribute__((nothrow));
 void                 tempkey_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.tempkey.qFind
-acr::FTempkey&       tempkey_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FTempkey& tempkey_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.tempkey.XrefMaybe
@@ -1905,7 +1952,7 @@ bool                 tempkey_XrefMaybe(acr::FTempkey &row);
 
 // Return true if hash is empty
 // func:acr.FDb.ind_tempkey.EmptyQ
-bool                 ind_tempkey_EmptyQ() __attribute__((nothrow));
+inline bool          ind_tempkey_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_tempkey.Find
 acr::FTempkey*       ind_tempkey_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1914,7 +1961,7 @@ acr::FTempkey*       ind_tempkey_Find(const algo::strptr& key) __attribute__((__
 acr::FTempkey&       ind_tempkey_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_tempkey.N
-i32                  ind_tempkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_tempkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_tempkey.InsertMaybe
 bool                 ind_tempkey_InsertMaybe(acr::FTempkey& row) __attribute__((nothrow));
@@ -1927,13 +1974,13 @@ void                 ind_tempkey_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr.FDb.ind_ssimfile.EmptyQ
-bool                 ind_ssimfile_EmptyQ() __attribute__((nothrow));
+inline bool          ind_ssimfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_ssimfile.Find
 acr::FSsimfile*      ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_ssimfile.N
-i32                  ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_ssimfile.InsertMaybe
 bool                 ind_ssimfile_InsertMaybe(acr::FSsimfile& row) __attribute__((nothrow));
@@ -1976,22 +2023,22 @@ bool                 printattr_XrefMaybe(acr::FPrintAttr &row);
 
 // Return true if index is empty
 // func:acr.FDb.zs_query.EmptyQ
-bool                 zs_query_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zs_query_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.zs_query.First
-acr::FQuery*         zs_query_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FQuery*  zs_query_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FDb.zs_query.InLlistQ
-bool                 zs_query_InLlistQ(acr::FQuery& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zs_query_InLlistQ(acr::FQuery& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FDb.zs_query.Insert
 void                 zs_query_Insert(acr::FQuery& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FDb.zs_query.Last
-acr::FQuery*         zs_query_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FQuery*  zs_query_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FDb.zs_query.Next
-acr::FQuery*         zs_query_Next(acr::FQuery &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FQuery*  zs_query_Next(acr::FQuery &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:acr.FDb.zs_query.Remove
@@ -2004,7 +2051,7 @@ void                 zs_query_RemoveAll() __attribute__((nothrow));
 acr::FQuery*         zs_query_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FDb.zs_query.qLast
-acr::FQuery&         zs_query_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline acr::FQuery&  zs_query_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -2027,22 +2074,22 @@ acr::FSsimsort*      ssimsort_InsertMaybe(const dmmeta::Ssimsort &value) __attri
 void*                ssimsort_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.ssimsort.EmptyQ
-bool                 ssimsort_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ssimsort_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.ssimsort.Find
-acr::FSsimsort*      ssimsort_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSsimsort* ssimsort_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.ssimsort.Last
-acr::FSsimsort*      ssimsort_Last() __attribute__((nothrow, pure));
+inline acr::FSsimsort* ssimsort_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.ssimsort.N
-i32                  ssimsort_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ssimsort_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.ssimsort.RemoveLast
 void                 ssimsort_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.ssimsort.qFind
-acr::FSsimsort&      ssimsort_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSsimsort& ssimsort_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.ssimsort.XrefMaybe
@@ -2050,13 +2097,13 @@ bool                 ssimsort_XrefMaybe(acr::FSsimsort &row);
 
 // Return true if hash is empty
 // func:acr.FDb.ind_ssimsort.EmptyQ
-bool                 ind_ssimsort_EmptyQ() __attribute__((nothrow));
+inline bool          ind_ssimsort_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_ssimsort.Find
 acr::FSsimsort*      ind_ssimsort_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_ssimsort.N
-i32                  ind_ssimsort_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_ssimsort_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_ssimsort.InsertMaybe
 bool                 ind_ssimsort_InsertMaybe(acr::FSsimsort& row) __attribute__((nothrow));
@@ -2088,22 +2135,22 @@ acr::FSmallstr*      smallstr_InsertMaybe(const dmmeta::Smallstr &value) __attri
 void*                smallstr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.smallstr.EmptyQ
-bool                 smallstr_EmptyQ() __attribute__((nothrow, pure));
+inline bool          smallstr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.smallstr.Find
-acr::FSmallstr*      smallstr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSmallstr* smallstr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.smallstr.Last
-acr::FSmallstr*      smallstr_Last() __attribute__((nothrow, pure));
+inline acr::FSmallstr* smallstr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.smallstr.N
-i32                  smallstr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           smallstr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.smallstr.RemoveLast
 void                 smallstr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.smallstr.qFind
-acr::FSmallstr&      smallstr_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSmallstr& smallstr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.smallstr.XrefMaybe
@@ -2125,22 +2172,22 @@ acr::FFunique*       funique_InsertMaybe(const dmmeta::Funique &value) __attribu
 void*                funique_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.funique.EmptyQ
-bool                 funique_EmptyQ() __attribute__((nothrow, pure));
+inline bool          funique_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.funique.Find
-acr::FFunique*       funique_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FFunique* funique_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.funique.Last
-acr::FFunique*       funique_Last() __attribute__((nothrow, pure));
+inline acr::FFunique* funique_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.funique.N
-i32                  funique_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           funique_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.funique.RemoveLast
 void                 funique_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.funique.qFind
-acr::FFunique&       funique_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FFunique& funique_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.funique.XrefMaybe
@@ -2148,7 +2195,7 @@ bool                 funique_XrefMaybe(acr::FFunique &row);
 
 // Return true if hash is empty
 // func:acr.FDb.ind_uniqueattr.EmptyQ
-bool                 ind_uniqueattr_EmptyQ() __attribute__((nothrow));
+inline bool          ind_uniqueattr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_uniqueattr.Find
 acr::FUniqueattr*    ind_uniqueattr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2157,7 +2204,7 @@ acr::FUniqueattr*    ind_uniqueattr_Find(const algo::strptr& key) __attribute__(
 acr::FUniqueattr&    ind_uniqueattr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_uniqueattr.N
-i32                  ind_uniqueattr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_uniqueattr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_uniqueattr.InsertMaybe
 bool                 ind_uniqueattr_InsertMaybe(acr::FUniqueattr& row) __attribute__((nothrow));
@@ -2184,22 +2231,22 @@ acr::FBltin*         bltin_InsertMaybe(const amcdb::Bltin &value) __attribute__(
 void*                bltin_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.bltin.EmptyQ
-bool                 bltin_EmptyQ() __attribute__((nothrow, pure));
+inline bool          bltin_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.bltin.Find
-acr::FBltin*         bltin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FBltin*  bltin_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.bltin.Last
-acr::FBltin*         bltin_Last() __attribute__((nothrow, pure));
+inline acr::FBltin*  bltin_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.bltin.N
-i32                  bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr.FDb.bltin.RemoveLast
 void                 bltin_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.bltin.qFind
-acr::FBltin&         bltin_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FBltin&  bltin_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.bltin.XrefMaybe
@@ -2210,19 +2257,19 @@ bool                 bltin_XrefMaybe(acr::FBltin &row);
 void                 bh_ctype_topo_Dealloc() __attribute__((nothrow));
 // Return true if index is empty
 // func:acr.FDb.bh_ctype_topo.EmptyQ
-bool                 bh_ctype_topo_EmptyQ() __attribute__((nothrow));
+inline bool          bh_ctype_topo_EmptyQ() __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FDb.bh_ctype_topo.First
-acr::FCtype*         bh_ctype_topo_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCtype*  bh_ctype_topo_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in index, false otherwise
 // func:acr.FDb.bh_ctype_topo.InBheapQ
-bool                 bh_ctype_topo_InBheapQ(acr::FCtype& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          bh_ctype_topo_InBheapQ(acr::FCtype& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 // func:acr.FDb.bh_ctype_topo.Insert
 void                 bh_ctype_topo_Insert(acr::FCtype& row) __attribute__((nothrow));
 // Return number of items in the heap
 // func:acr.FDb.bh_ctype_topo.N
-i32                  bh_ctype_topo_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           bh_ctype_topo_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // func:acr.FDb.bh_ctype_topo.Reheap
@@ -2263,16 +2310,16 @@ acr::FCppfunc*       cppfunc_InsertMaybe(const dmmeta::Cppfunc &value) __attribu
 void*                cppfunc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.cppfunc.EmptyQ
-bool                 cppfunc_EmptyQ() __attribute__((nothrow, pure));
+inline bool          cppfunc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.cppfunc.Find
-acr::FCppfunc*       cppfunc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FCppfunc* cppfunc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.cppfunc.Last
-acr::FCppfunc*       cppfunc_Last() __attribute__((nothrow, pure));
+inline acr::FCppfunc* cppfunc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.cppfunc.N
-i32                  cppfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           cppfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr.FDb.cppfunc.RemoveAll
 void                 cppfunc_RemoveAll() __attribute__((nothrow));
@@ -2281,7 +2328,7 @@ void                 cppfunc_RemoveAll() __attribute__((nothrow));
 void                 cppfunc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.cppfunc.qFind
-acr::FCppfunc&       cppfunc_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FCppfunc& cppfunc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.cppfunc.XrefMaybe
@@ -2303,16 +2350,16 @@ acr::FSsimreq*       ssimreq_InsertMaybe(const dmmeta::Ssimreq &value) __attribu
 void*                ssimreq_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.ssimreq.EmptyQ
-bool                 ssimreq_EmptyQ() __attribute__((nothrow, pure));
+inline bool          ssimreq_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.ssimreq.Find
-acr::FSsimreq*       ssimreq_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSsimreq* ssimreq_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.ssimreq.Last
-acr::FSsimreq*       ssimreq_Last() __attribute__((nothrow, pure));
+inline acr::FSsimreq* ssimreq_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.ssimreq.N
-i32                  ssimreq_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ssimreq_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr.FDb.ssimreq.RemoveAll
 void                 ssimreq_RemoveAll() __attribute__((nothrow));
@@ -2321,7 +2368,7 @@ void                 ssimreq_RemoveAll() __attribute__((nothrow));
 void                 ssimreq_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.ssimreq.qFind
-acr::FSsimreq&       ssimreq_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSsimreq& ssimreq_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.ssimreq.XrefMaybe
@@ -2329,13 +2376,13 @@ bool                 ssimreq_XrefMaybe(acr::FSsimreq &row);
 
 // Return true if index is empty
 // func:acr.FDb.c_ssimreq_rec.EmptyQ
-bool                 c_ssimreq_rec_EmptyQ() __attribute__((nothrow));
+inline bool          c_ssimreq_rec_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.c_ssimreq_rec.Find
-acr::FRec*           c_ssimreq_rec_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    c_ssimreq_rec_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FDb.c_ssimreq_rec.Getary
-algo::aryptr<acr::FRec*> c_ssimreq_rec_Getary() __attribute__((nothrow));
+inline algo::aryptr<acr::FRec*> c_ssimreq_rec_Getary() __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FDb.c_ssimreq_rec.Insert
@@ -2347,35 +2394,35 @@ void                 c_ssimreq_rec_Insert(acr::FRec& row) __attribute__((nothrow
 bool                 c_ssimreq_rec_InsertMaybe(acr::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FDb.c_ssimreq_rec.N
-i32                  c_ssimreq_rec_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_ssimreq_rec_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FDb.c_ssimreq_rec.Remove
 void                 c_ssimreq_rec_Remove(acr::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FDb.c_ssimreq_rec.RemoveAll
-void                 c_ssimreq_rec_RemoveAll() __attribute__((nothrow));
+inline void          c_ssimreq_rec_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FDb.c_ssimreq_rec.Reserve
 void                 c_ssimreq_rec_Reserve(u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FDb.c_ssimreq_rec.qFind
-acr::FRec&           c_ssimreq_rec_qFind(u32 idx) __attribute__((nothrow));
+inline acr::FRec&    c_ssimreq_rec_qFind(u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr.FDb.c_ssimreq_rec.InAryQ
-bool                 c_ssimreq_rec_InAryQ(acr::FRec& row) __attribute__((nothrow));
+inline bool          c_ssimreq_rec_InAryQ(acr::FRec& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FDb.c_ssimreq_rec.qLast
-acr::FRec&           c_ssimreq_rec_qLast() __attribute__((nothrow));
+inline acr::FRec&    c_ssimreq_rec_qLast() __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FDb.c_ctype_front.EmptyQ
-bool                 c_ctype_front_EmptyQ() __attribute__((nothrow));
+inline bool          c_ctype_front_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.c_ctype_front.Find
-acr::FCtype*         c_ctype_front_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype*  c_ctype_front_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FDb.c_ctype_front.Getary
-algo::aryptr<acr::FCtype*> c_ctype_front_Getary() __attribute__((nothrow));
+inline algo::aryptr<acr::FCtype*> c_ctype_front_Getary() __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FDb.c_ctype_front.Insert
@@ -2387,25 +2434,25 @@ void                 c_ctype_front_Insert(acr::FCtype& row) __attribute__((nothr
 bool                 c_ctype_front_InsertMaybe(acr::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FDb.c_ctype_front.N
-i32                  c_ctype_front_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_ctype_front_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FDb.c_ctype_front.Remove
 void                 c_ctype_front_Remove(acr::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FDb.c_ctype_front.RemoveAll
-void                 c_ctype_front_RemoveAll() __attribute__((nothrow));
+inline void          c_ctype_front_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FDb.c_ctype_front.Reserve
 void                 c_ctype_front_Reserve(u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FDb.c_ctype_front.qFind
-acr::FCtype&         c_ctype_front_qFind(u32 idx) __attribute__((nothrow));
+inline acr::FCtype&  c_ctype_front_qFind(u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:acr.FDb.c_ctype_front.InAryQ
-bool                 c_ctype_front_InAryQ(acr::FCtype& row) __attribute__((nothrow));
+inline bool          c_ctype_front_InAryQ(acr::FCtype& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FDb.c_ctype_front.qLast
-acr::FCtype&         c_ctype_front_qLast() __attribute__((nothrow));
+inline acr::FCtype&  c_ctype_front_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2419,16 +2466,16 @@ acr::FSortkey*       sortkey_AllocMaybe() __attribute__((__warn_unused_result__,
 void*                sortkey_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FDb.sortkey.EmptyQ
-bool                 sortkey_EmptyQ() __attribute__((nothrow, pure));
+inline bool          sortkey_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FDb.sortkey.Find
-acr::FSortkey*       sortkey_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FSortkey* sortkey_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FDb.sortkey.Last
-acr::FSortkey*       sortkey_Last() __attribute__((nothrow, pure));
+inline acr::FSortkey* sortkey_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:acr.FDb.sortkey.N
-i32                  sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:acr.FDb.sortkey.RemoveAll
 void                 sortkey_RemoveAll() __attribute__((nothrow));
@@ -2437,7 +2484,7 @@ void                 sortkey_RemoveAll() __attribute__((nothrow));
 void                 sortkey_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FDb.sortkey.qFind
-acr::FSortkey&       sortkey_qFind(u64 t) __attribute__((nothrow, pure));
+inline acr::FSortkey& sortkey_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr.FDb.sortkey.XrefMaybe
@@ -2445,7 +2492,7 @@ bool                 sortkey_XrefMaybe(acr::FSortkey &row);
 
 // Return true if hash is empty
 // func:acr.FDb.ind_sortkey.EmptyQ
-bool                 ind_sortkey_EmptyQ() __attribute__((nothrow));
+inline bool          ind_sortkey_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FDb.ind_sortkey.Find
 acr::FSortkey*       ind_sortkey_Find(const acr::RecSortkey& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2454,7 +2501,7 @@ acr::FSortkey*       ind_sortkey_Find(const acr::RecSortkey& key) __attribute__(
 acr::FSortkey&       ind_sortkey_GetOrCreate(const acr::RecSortkey& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:acr.FDb.ind_sortkey.N
-i32                  ind_sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_sortkey_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FDb.ind_sortkey.InsertMaybe
 bool                 ind_sortkey_InsertMaybe(acr::FSortkey& row) __attribute__((nothrow));
@@ -2467,136 +2514,136 @@ void                 ind_sortkey_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr.FDb.zd_pline_curs.Reset
-void                 _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_pline_curs_Reset(_db_zd_pline_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pline_curs.ValidQ
-bool                 _db_zd_pline_curs_ValidQ(_db_zd_pline_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_pline_curs_ValidQ(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_pline_curs.Next
-void                 _db_zd_pline_curs_Next(_db_zd_pline_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_pline_curs_Next(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_pline_curs.Access
-acr::FPline&         _db_zd_pline_curs_Access(_db_zd_pline_curs &curs) __attribute__((nothrow));
+inline acr::FPline&  _db_zd_pline_curs_Access(_db_zd_pline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pdep_curs.Reset
-void                 _db_zd_pdep_curs_Reset(_db_zd_pdep_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_pdep_curs_Reset(_db_zd_pdep_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_pdep_curs.ValidQ
-bool                 _db_zd_pdep_curs_ValidQ(_db_zd_pdep_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_pdep_curs_ValidQ(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_pdep_curs.Next
-void                 _db_zd_pdep_curs_Next(_db_zd_pdep_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_pdep_curs_Next(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_pdep_curs.Access
-acr::FPdep&          _db_zd_pdep_curs_Access(_db_zd_pdep_curs &curs) __attribute__((nothrow));
+inline acr::FPdep&   _db_zd_pdep_curs_Access(_db_zd_pdep_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ctype_curs.Reset
-void                 _db_ctype_curs_Reset(_db_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ctype_curs.ValidQ
-bool                 _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
+inline bool          _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ctype_curs.Next
-void                 _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
+inline void          _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ctype_curs.Access
-acr::FCtype&         _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.anonfld_curs.Reset
-void                 _db_anonfld_curs_Reset(_db_anonfld_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_anonfld_curs_Reset(_db_anonfld_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.anonfld_curs.ValidQ
-bool                 _db_anonfld_curs_ValidQ(_db_anonfld_curs &curs) __attribute__((nothrow));
+inline bool          _db_anonfld_curs_ValidQ(_db_anonfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.anonfld_curs.Next
-void                 _db_anonfld_curs_Next(_db_anonfld_curs &curs) __attribute__((nothrow));
+inline void          _db_anonfld_curs_Next(_db_anonfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.anonfld_curs.Access
-acr::FAnonfld&       _db_anonfld_curs_Access(_db_anonfld_curs &curs) __attribute__((nothrow));
+inline acr::FAnonfld& _db_anonfld_curs_Access(_db_anonfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cdflt_curs.Reset
-void                 _db_cdflt_curs_Reset(_db_cdflt_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_cdflt_curs_Reset(_db_cdflt_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cdflt_curs.ValidQ
-bool                 _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs) __attribute__((nothrow));
+inline bool          _db_cdflt_curs_ValidQ(_db_cdflt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.cdflt_curs.Next
-void                 _db_cdflt_curs_Next(_db_cdflt_curs &curs) __attribute__((nothrow));
+inline void          _db_cdflt_curs_Next(_db_cdflt_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.cdflt_curs.Access
-acr::FCdflt&         _db_cdflt_curs_Access(_db_cdflt_curs &curs) __attribute__((nothrow));
+inline acr::FCdflt&  _db_cdflt_curs_Access(_db_cdflt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.field_curs.Reset
-void                 _db_field_curs_Reset(_db_field_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_field_curs_Reset(_db_field_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.field_curs.ValidQ
-bool                 _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
+inline bool          _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.field_curs.Next
-void                 _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
+inline void          _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.field_curs.Access
-acr::FField&         _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
+inline acr::FField&  _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.file_curs.Reset
-void                 _db_file_curs_Reset(_db_file_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_file_curs_Reset(_db_file_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.file_curs.ValidQ
-bool                 _db_file_curs_ValidQ(_db_file_curs &curs) __attribute__((nothrow));
+inline bool          _db_file_curs_ValidQ(_db_file_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.file_curs.Next
-void                 _db_file_curs_Next(_db_file_curs &curs) __attribute__((nothrow));
+inline void          _db_file_curs_Next(_db_file_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.file_curs.Access
-acr::FFile&          _db_file_curs_Access(_db_file_curs &curs) __attribute__((nothrow));
+inline acr::FFile&   _db_file_curs_Access(_db_file_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_curs.Reset
-void                 _db_zd_all_selrec_curs_Reset(_db_zd_all_selrec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_all_selrec_curs_Reset(_db_zd_all_selrec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_curs.ValidQ
-bool                 _db_zd_all_selrec_curs_ValidQ(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_all_selrec_curs_ValidQ(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_selrec_curs.Next
-void                 _db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_all_selrec_curs_Next(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_selrec_curs.Access
-acr::FRec&           _db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    _db_zd_all_selrec_curs_Access(_db_zd_all_selrec_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_delcurs.Reset
-void                 _db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_all_selrec_delcurs_Reset(_db_zd_all_selrec_delcurs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_selrec_delcurs.ValidQ
-bool                 _db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
+inline bool          _db_zd_all_selrec_delcurs_ValidQ(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_selrec_delcurs.Next
-void                 _db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
+inline void          _db_zd_all_selrec_delcurs_Next(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_selrec_delcurs.Access
-acr::FRec&           _db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
+inline acr::FRec&    _db_zd_all_selrec_delcurs_Access(_db_zd_all_selrec_delcurs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_err_curs.Reset
-void                 _db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_all_err_curs_Reset(_db_zd_all_err_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_all_err_curs.ValidQ
-bool                 _db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_all_err_curs_ValidQ(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_all_err_curs.Next
-void                 _db_zd_all_err_curs_Next(_db_zd_all_err_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_all_err_curs_Next(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_all_err_curs.Access
-acr::FErr&           _db_zd_all_err_curs_Access(_db_zd_all_err_curs &curs) __attribute__((nothrow));
+inline acr::FErr&    _db_zd_all_err_curs_Access(_db_zd_all_err_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_sel_ctype_curs.Reset
-void                 _db_zd_sel_ctype_curs_Reset(_db_zd_sel_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_sel_ctype_curs_Reset(_db_zd_sel_ctype_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zd_sel_ctype_curs.ValidQ
-bool                 _db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zd_sel_ctype_curs.Next
-void                 _db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zd_sel_ctype_curs.Access
-acr::FCtype&         _db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  _db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.bh_pline_curs.Reserve
 void                 _db_bh_pline_curs_Reserve(_db_bh_pline_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -2607,106 +2654,106 @@ void                 _db_bh_pline_curs_Reset(_db_bh_pline_curs &curs, acr::FDb &
 void                 _db_bh_pline_curs_Next(_db_bh_pline_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:acr.FDb.bh_pline_curs.Access
-acr::FPline&         _db_bh_pline_curs_Access(_db_bh_pline_curs &curs) __attribute__((nothrow));
+inline acr::FPline&  _db_bh_pline_curs_Access(_db_bh_pline_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:acr.FDb.bh_pline_curs.ValidQ
-bool                 _db_bh_pline_curs_ValidQ(_db_bh_pline_curs &curs) __attribute__((nothrow));
+inline bool          _db_bh_pline_curs_ValidQ(_db_bh_pline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_substr_curs_Reset(_db_substr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
+inline bool          _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
+inline void          _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.substr_curs.Access
-acr::FSubstr&        _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
+inline acr::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimfile_curs.Reset
-void                 _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimfile_curs.ValidQ
-bool                 _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
+inline bool          _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimfile_curs.Next
-void                 _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
+inline void          _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimfile_curs.Access
-acr::FSsimfile&      _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
+inline acr::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.tempkey_curs.Reset
-void                 _db_tempkey_curs_Reset(_db_tempkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_tempkey_curs_Reset(_db_tempkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.tempkey_curs.ValidQ
-bool                 _db_tempkey_curs_ValidQ(_db_tempkey_curs &curs) __attribute__((nothrow));
+inline bool          _db_tempkey_curs_ValidQ(_db_tempkey_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.tempkey_curs.Next
-void                 _db_tempkey_curs_Next(_db_tempkey_curs &curs) __attribute__((nothrow));
+inline void          _db_tempkey_curs_Next(_db_tempkey_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.tempkey_curs.Access
-acr::FTempkey&       _db_tempkey_curs_Access(_db_tempkey_curs &curs) __attribute__((nothrow));
+inline acr::FTempkey& _db_tempkey_curs_Access(_db_tempkey_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zs_query_curs.Reset
-void                 _db_zs_query_curs_Reset(_db_zs_query_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_zs_query_curs_Reset(_db_zs_query_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.zs_query_curs.ValidQ
-bool                 _db_zs_query_curs_ValidQ(_db_zs_query_curs &curs) __attribute__((nothrow));
+inline bool          _db_zs_query_curs_ValidQ(_db_zs_query_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.zs_query_curs.Next
-void                 _db_zs_query_curs_Next(_db_zs_query_curs &curs) __attribute__((nothrow));
+inline void          _db_zs_query_curs_Next(_db_zs_query_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.zs_query_curs.Access
-acr::FQuery&         _db_zs_query_curs_Access(_db_zs_query_curs &curs) __attribute__((nothrow));
+inline acr::FQuery&  _db_zs_query_curs_Access(_db_zs_query_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimsort_curs.Reset
-void                 _db_ssimsort_curs_Reset(_db_ssimsort_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_ssimsort_curs_Reset(_db_ssimsort_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimsort_curs.ValidQ
-bool                 _db_ssimsort_curs_ValidQ(_db_ssimsort_curs &curs) __attribute__((nothrow));
+inline bool          _db_ssimsort_curs_ValidQ(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimsort_curs.Next
-void                 _db_ssimsort_curs_Next(_db_ssimsort_curs &curs) __attribute__((nothrow));
+inline void          _db_ssimsort_curs_Next(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimsort_curs.Access
-acr::FSsimsort&      _db_ssimsort_curs_Access(_db_ssimsort_curs &curs) __attribute__((nothrow));
+inline acr::FSsimsort& _db_ssimsort_curs_Access(_db_ssimsort_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.smallstr_curs.Reset
-void                 _db_smallstr_curs_Reset(_db_smallstr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_smallstr_curs_Reset(_db_smallstr_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.smallstr_curs.ValidQ
-bool                 _db_smallstr_curs_ValidQ(_db_smallstr_curs &curs) __attribute__((nothrow));
+inline bool          _db_smallstr_curs_ValidQ(_db_smallstr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.smallstr_curs.Next
-void                 _db_smallstr_curs_Next(_db_smallstr_curs &curs) __attribute__((nothrow));
+inline void          _db_smallstr_curs_Next(_db_smallstr_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.smallstr_curs.Access
-acr::FSmallstr&      _db_smallstr_curs_Access(_db_smallstr_curs &curs) __attribute__((nothrow));
+inline acr::FSmallstr& _db_smallstr_curs_Access(_db_smallstr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.funique_curs.Reset
-void                 _db_funique_curs_Reset(_db_funique_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_funique_curs_Reset(_db_funique_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.funique_curs.ValidQ
-bool                 _db_funique_curs_ValidQ(_db_funique_curs &curs) __attribute__((nothrow));
+inline bool          _db_funique_curs_ValidQ(_db_funique_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.funique_curs.Next
-void                 _db_funique_curs_Next(_db_funique_curs &curs) __attribute__((nothrow));
+inline void          _db_funique_curs_Next(_db_funique_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.funique_curs.Access
-acr::FFunique&       _db_funique_curs_Access(_db_funique_curs &curs) __attribute__((nothrow));
+inline acr::FFunique& _db_funique_curs_Access(_db_funique_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.bltin_curs.Reset
-void                 _db_bltin_curs_Reset(_db_bltin_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_bltin_curs_Reset(_db_bltin_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.bltin_curs.ValidQ
-bool                 _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
+inline bool          _db_bltin_curs_ValidQ(_db_bltin_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.bltin_curs.Next
-void                 _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
+inline void          _db_bltin_curs_Next(_db_bltin_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.bltin_curs.Access
-acr::FBltin&         _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
+inline acr::FBltin&  _db_bltin_curs_Access(_db_bltin_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.bh_ctype_topo_curs.Reserve
 void                 _db_bh_ctype_topo_curs_Reserve(_db_bh_ctype_topo_curs &curs, int n);
 // Reset cursor. If HEAP is non-empty, add its top element to CURS.
@@ -2717,68 +2764,68 @@ void                 _db_bh_ctype_topo_curs_Reset(_db_bh_ctype_topo_curs &curs, 
 void                 _db_bh_ctype_topo_curs_Next(_db_bh_ctype_topo_curs &curs);
 // Access current element. If not more elements, return NULL
 // func:acr.FDb.bh_ctype_topo_curs.Access
-acr::FCtype&         _db_bh_ctype_topo_curs_Access(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  _db_bh_ctype_topo_curs_Access(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
 // Return true if Access() will return non-NULL.
 // func:acr.FDb.bh_ctype_topo_curs.ValidQ
-bool                 _db_bh_ctype_topo_curs_ValidQ(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
+inline bool          _db_bh_ctype_topo_curs_ValidQ(_db_bh_ctype_topo_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cppfunc_curs.Reset
-void                 _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.cppfunc_curs.ValidQ
-bool                 _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) __attribute__((nothrow));
+inline bool          _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.cppfunc_curs.Next
-void                 _db_cppfunc_curs_Next(_db_cppfunc_curs &curs) __attribute__((nothrow));
+inline void          _db_cppfunc_curs_Next(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.cppfunc_curs.Access
-acr::FCppfunc&       _db_cppfunc_curs_Access(_db_cppfunc_curs &curs) __attribute__((nothrow));
+inline acr::FCppfunc& _db_cppfunc_curs_Access(_db_cppfunc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimreq_curs.Reset
-void                 _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_ssimreq_curs_Reset(_db_ssimreq_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.ssimreq_curs.ValidQ
-bool                 _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) __attribute__((nothrow));
+inline bool          _db_ssimreq_curs_ValidQ(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.ssimreq_curs.Next
-void                 _db_ssimreq_curs_Next(_db_ssimreq_curs &curs) __attribute__((nothrow));
+inline void          _db_ssimreq_curs_Next(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.ssimreq_curs.Access
-acr::FSsimreq&       _db_ssimreq_curs_Access(_db_ssimreq_curs &curs) __attribute__((nothrow));
+inline acr::FSsimreq& _db_ssimreq_curs_Access(_db_ssimreq_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.c_ssimreq_rec_curs.Reset
-void                 _db_c_ssimreq_rec_curs_Reset(_db_c_ssimreq_rec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_c_ssimreq_rec_curs_Reset(_db_c_ssimreq_rec_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.c_ssimreq_rec_curs.ValidQ
-bool                 _db_c_ssimreq_rec_curs_ValidQ(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
+inline bool          _db_c_ssimreq_rec_curs_ValidQ(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.c_ssimreq_rec_curs.Next
-void                 _db_c_ssimreq_rec_curs_Next(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
+inline void          _db_c_ssimreq_rec_curs_Next(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.c_ssimreq_rec_curs.Access
-acr::FRec&           _db_c_ssimreq_rec_curs_Access(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    _db_c_ssimreq_rec_curs_Access(_db_c_ssimreq_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FDb.c_ctype_front_curs.Reset
-void                 _db_c_ctype_front_curs_Reset(_db_c_ctype_front_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_c_ctype_front_curs_Reset(_db_c_ctype_front_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.c_ctype_front_curs.ValidQ
-bool                 _db_c_ctype_front_curs_ValidQ(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
+inline bool          _db_c_ctype_front_curs_ValidQ(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.c_ctype_front_curs.Next
-void                 _db_c_ctype_front_curs_Next(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
+inline void          _db_c_ctype_front_curs_Next(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.c_ctype_front_curs.Access
-acr::FCtype&         _db_c_ctype_front_curs_Access(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  _db_c_ctype_front_curs_Access(_db_c_ctype_front_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.sortkey_curs.Reset
-void                 _db_sortkey_curs_Reset(_db_sortkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
+inline void          _db_sortkey_curs_Reset(_db_sortkey_curs &curs, acr::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FDb.sortkey_curs.ValidQ
-bool                 _db_sortkey_curs_ValidQ(_db_sortkey_curs &curs) __attribute__((nothrow));
+inline bool          _db_sortkey_curs_ValidQ(_db_sortkey_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FDb.sortkey_curs.Next
-void                 _db_sortkey_curs_Next(_db_sortkey_curs &curs) __attribute__((nothrow));
+inline void          _db_sortkey_curs_Next(_db_sortkey_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FDb.sortkey_curs.Access
-acr::FSortkey&       _db_sortkey_curs_Access(_db_sortkey_curs &curs) __attribute__((nothrow));
+inline acr::FSortkey& _db_sortkey_curs_Access(_db_sortkey_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FDb..Init
 void                 FDb_Init();
@@ -2797,14 +2844,18 @@ struct FErr { // acr.FErr
     algo::cstring   text;              // Error text
     acr::FRec*      rec;               // Parent record. optional pointer
     acr::FField*    fld;               // Parent field. optional pointer
+    // func:acr.FErr..AssignOp
+    inline acr::FErr&    operator =(const acr::FErr &rhs) = delete;
+    // func:acr.FErr..CopyCtor
+    inline               FErr(const acr::FErr &rhs) = delete;
 private:
+    // func:acr.FErr..Ctor
+    inline               FErr() __attribute__((nothrow));
+    // func:acr.FErr..Dtor
+    inline               ~FErr() __attribute__((nothrow));
     friend acr::FErr&           err_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FErr*           err_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 err_Delete(acr::FErr &row) __attribute__((nothrow));
-    FErr();
-    ~FErr();
-    FErr(const FErr&){ /*disallow copy constructor */}
-    void operator =(const FErr&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -2816,7 +2867,7 @@ void                 err_CopyIn(acr::FErr &row, acr::Err &in) __attribute__((not
 
 // Set all fields to initial values.
 // func:acr.FErr..Init
-void                 FErr_Init(acr::FErr& err);
+inline void          FErr_Init(acr::FErr& err);
 // func:acr.FErr..Uninit
 void                 FErr_Uninit(acr::FErr& err) __attribute__((nothrow));
 
@@ -2828,22 +2879,20 @@ struct FEvalattr { // acr.FEvalattr
     algo::Attr*       attr;        // (out) Tuple attribute. optional pointer
     algo::cstring     value;       // (out) Resulting value
     algo::i32_Range   val_range;   // (out) Range in attribute corresponding to value
-    explicit FEvalattr(bool                           in_pick_dflt
-        ,bool                           in_normalize
-        ,acr::FField*                   in_field
-        ,algo::Attr*                    in_attr
-        ,const algo::strptr&            in_value
-        ,const algo::i32_Range&         in_val_range);
-    FEvalattr();
+    // func:acr.FEvalattr..Ctor
+    inline               FEvalattr() __attribute__((nothrow));
+    // func:acr.FEvalattr..FieldwiseCtor
+    explicit inline               FEvalattr(bool in_pick_dflt, bool in_normalize, acr::FField* in_field, algo::Attr* in_attr, const algo::strptr& in_value, const algo::i32_Range& in_val_range) __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:acr.FEvalattr..Init
-void                 FEvalattr_Init(acr::FEvalattr& parent);
+inline void          FEvalattr_Init(acr::FEvalattr& parent);
 
 // --- acr.FField
 // create: acr.FDb.field (Lary)
-// global access: ind_field (Thash)
+// global access: field (Lary, by rowid)
+// global access: ind_field (Thash, hash field field)
 // access: acr.Err.fld (Ptr)
 // access: acr.FCtype.c_field (Ptrary)
 // access: acr.FCtype.zd_arg (Llist)
@@ -2869,14 +2918,24 @@ struct FField { // acr.FField
     bool                anon;                   //   false
     bool                unique;                 //   false
     bool                ctype_c_field_in_ary;   //   false  membership flag
+    // x-reference on acr.FField.p_ctype prevents copy
+    // x-reference on acr.FField.p_arg prevents copy
+    // x-reference on acr.FField.c_substr prevents copy
+    // func:acr.FField..AssignOp
+    acr::FField&         operator =(const acr::FField &rhs) = delete;
+    // x-reference on acr.FField.p_ctype prevents copy
+    // x-reference on acr.FField.p_arg prevents copy
+    // x-reference on acr.FField.c_substr prevents copy
+    // func:acr.FField..CopyCtor
+    FField(const acr::FField &rhs) = delete;
 private:
+    // func:acr.FField..Ctor
+    inline               FField() __attribute__((nothrow));
+    // func:acr.FField..Dtor
+    inline               ~FField() __attribute__((nothrow));
     friend acr::FField&         field_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FField*         field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 field_RemoveLast() __attribute__((nothrow));
-    FField();
-    ~FField();
-    FField(const FField&){ /*disallow copy constructor */}
-    void operator =(const FField&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -2897,10 +2956,10 @@ algo::Smallstr50     name_Get(acr::FField& field) __attribute__((__warn_unused_r
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FField.c_substr.InsertMaybe
-bool                 c_substr_InsertMaybe(acr::FField& field, acr::FSubstr& row) __attribute__((nothrow));
+inline bool          c_substr_InsertMaybe(acr::FField& field, acr::FSubstr& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FField.c_substr.Remove
-void                 c_substr_Remove(acr::FField& field, acr::FSubstr& row) __attribute__((nothrow));
+inline void          c_substr_Remove(acr::FField& field, acr::FSubstr& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr.FField..Init
@@ -2910,7 +2969,8 @@ void                 FField_Uninit(acr::FField& field) __attribute__((nothrow));
 
 // --- acr.FFile
 // create: acr.FDb.file (Lary)
-// global access: ind_file (Thash)
+// global access: file (Lary, by rowid)
+// global access: ind_file (Thash, hash field file)
 // access: acr.FRec.p_outfile (Upptr)
 // access: acr.FRec.p_infile (Upptr)
 // access: acr.FSsimfile.c_file (Ptr)
@@ -2925,38 +2985,44 @@ struct FFile { // acr.FFile
     acr::FRec*      zd_frec_tail;    // pointer to last element
     algo::UnTime    modtime;         // File modification time at time of loading
     bool            autoloaded;      //   false  File was pulled in implicitly: loaded records are not 'inserted'
+    // reftype Llist of acr.FFile.zd_frec prohibits copy
+    // func:acr.FFile..AssignOp
+    inline acr::FFile&   operator =(const acr::FFile &rhs) = delete;
+    // reftype Llist of acr.FFile.zd_frec prohibits copy
+    // func:acr.FFile..CopyCtor
+    inline               FFile(const acr::FFile &rhs) = delete;
 private:
+    // func:acr.FFile..Ctor
+    inline               FFile() __attribute__((nothrow));
+    // func:acr.FFile..Dtor
+    inline               ~FFile() __attribute__((nothrow));
     friend acr::FFile&          file_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FFile*          file_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 file_RemoveAll() __attribute__((nothrow));
     friend void                 file_RemoveLast() __attribute__((nothrow));
-    FFile();
-    ~FFile();
-    FFile(const FFile&){ /*disallow copy constructor */}
-    void operator =(const FFile&){ /*disallow direct assignment */}
 };
 
 // Return true if index is empty
 // func:acr.FFile.zd_frec.EmptyQ
-bool                 zd_frec_EmptyQ(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_frec_EmptyQ(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FFile.zd_frec.First
-acr::FRec*           zd_frec_First(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_frec_First(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FFile.zd_frec.InLlistQ
-bool                 zd_frec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_frec_InLlistQ(acr::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FFile.zd_frec.Insert
 void                 zd_frec_Insert(acr::FFile& file, acr::FRec& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FFile.zd_frec.Last
-acr::FRec*           zd_frec_Last(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FRec*    zd_frec_Last(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FFile.zd_frec.Next
-acr::FRec*           zd_frec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_frec_Next(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FFile.zd_frec.Prev
-acr::FRec*           zd_frec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    zd_frec_Prev(acr::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FFile.zd_frec.Remove
 void                 zd_frec_Remove(acr::FFile& file, acr::FRec& row) __attribute__((nothrow));
@@ -2968,35 +3034,37 @@ void                 zd_frec_RemoveAll(acr::FFile& file) __attribute__((nothrow)
 acr::FRec*           zd_frec_RemoveFirst(acr::FFile& file) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FFile.zd_frec.qLast
-acr::FRec&           zd_frec_qLast(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec&    zd_frec_qLast(acr::FFile& file) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr.FFile..Init
-void                 FFile_Init(acr::FFile& file);
+inline void          FFile_Init(acr::FFile& file);
 // cursor points to valid item
 // func:acr.FFile.zd_frec_curs.Reset
-void                 file_zd_frec_curs_Reset(file_zd_frec_curs &curs, acr::FFile &parent) __attribute__((nothrow));
+inline void          file_zd_frec_curs_Reset(file_zd_frec_curs &curs, acr::FFile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FFile.zd_frec_curs.ValidQ
-bool                 file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs) __attribute__((nothrow));
+inline bool          file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FFile.zd_frec_curs.Next
-void                 file_zd_frec_curs_Next(file_zd_frec_curs &curs) __attribute__((nothrow));
+inline void          file_zd_frec_curs_Next(file_zd_frec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FFile.zd_frec_curs.Access
-acr::FRec&           file_zd_frec_curs_Access(file_zd_frec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    file_zd_frec_curs_Access(file_zd_frec_curs &curs) __attribute__((nothrow));
 // func:acr.FFile..Uninit
 void                 FFile_Uninit(acr::FFile& file) __attribute__((nothrow));
 
 // --- acr.FFunique
 // create: acr.FDb.funique (Lary)
+// global access: funique (Lary, by rowid)
 struct FFunique { // acr.FFunique
     algo::Smallstr100   field;   //
 private:
+    // func:acr.FFunique..Ctor
+    inline               FFunique() __attribute__((nothrow));
     friend acr::FFunique&       funique_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FFunique*       funique_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 funique_RemoveLast() __attribute__((nothrow));
-    FFunique();
 };
 
 // Copy fields out of row
@@ -3021,19 +3089,23 @@ struct FPdep { // acr.FPdep: Dependency between two print-line records
     i32            lindex;          //   0  Index of child referencing attr
     acr::FPdep*    zd_child_next;   // zslist link; -1 means not-in-list
     acr::FPdep*    zd_child_prev;   // previous element
+    // func:acr.FPdep..AssignOp
+    inline acr::FPdep&   operator =(const acr::FPdep &rhs) = delete;
+    // func:acr.FPdep..CopyCtor
+    inline               FPdep(const acr::FPdep &rhs) = delete;
 private:
+    // func:acr.FPdep..Ctor
+    inline               FPdep() __attribute__((nothrow));
+    // func:acr.FPdep..Dtor
+    inline               ~FPdep() __attribute__((nothrow));
     friend acr::FPdep&          pdep_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FPdep*          pdep_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 pdep_Delete(acr::FPdep &row) __attribute__((nothrow));
-    FPdep();
-    ~FPdep();
-    FPdep(const FPdep&){ /*disallow copy constructor */}
-    void operator =(const FPdep&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:acr.FPdep..Init
-void                 FPdep_Init(acr::FPdep& pdep);
+inline void          FPdep_Init(acr::FPdep& pdep);
 // func:acr.FPdep..Uninit
 void                 FPdep_Uninit(acr::FPdep& pdep) __attribute__((nothrow));
 
@@ -3043,29 +3115,36 @@ struct RecSortkey { // acr.RecSortkey: One record
     double              num;     //   0.0  Numeric key (if present)
     algo::cstring       str;     // String key (sort key)
     float               rowid;   //   0.f  row id
-    bool operator ==(const acr::RecSortkey &rhs) const;
-    bool operator !=(const acr::RecSortkey &rhs) const;
-    bool operator <(const acr::RecSortkey &rhs) const;
-    bool operator >(const acr::RecSortkey &rhs) const;
-    bool operator <=(const acr::RecSortkey &rhs) const;
-    bool operator >=(const acr::RecSortkey &rhs) const;
-    RecSortkey();
+    // func:acr.RecSortkey..EqOp
+    inline bool          operator ==(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..NeOp
+    inline bool          operator !=(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..LtOp
+    inline bool          operator <(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..GtOp
+    inline bool          operator >(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..LeOp
+    inline bool          operator <=(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..GeOp
+    inline bool          operator >=(const acr::RecSortkey &rhs) const __attribute__((nothrow));
+    // func:acr.RecSortkey..Ctor
+    inline               RecSortkey() __attribute__((nothrow));
 };
 
 // func:acr.RecSortkey..Hash
-u32                  RecSortkey_Hash(u32 prev, const acr::RecSortkey & rhs) __attribute__((nothrow));
+inline u32           RecSortkey_Hash(u32 prev, const acr::RecSortkey& rhs) __attribute__((nothrow));
 // func:acr.RecSortkey..Lt
-bool                 RecSortkey_Lt(acr::RecSortkey& lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
+inline bool          RecSortkey_Lt(acr::RecSortkey& lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
 // func:acr.RecSortkey..Cmp
 i32                  RecSortkey_Cmp(acr::RecSortkey& lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.RecSortkey..Init
-void                 RecSortkey_Init(acr::RecSortkey& parent);
+inline void          RecSortkey_Init(acr::RecSortkey& parent);
 // func:acr.RecSortkey..Eq
 bool                 RecSortkey_Eq(acr::RecSortkey& lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.RecSortkey..Update
-bool                 RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
+inline bool          RecSortkey_Update(acr::RecSortkey &lhs, acr::RecSortkey& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr.RecSortkey.String  printfmt:Tuple
 // func:acr.RecSortkey..Print
@@ -3077,29 +3156,36 @@ struct PlineKey { // acr.PlineKey: Key for sorting print-line records
     i32               negdepth;     //   0  Minus tree depth for depth-first print
     i32               ctype_rank;   //   0  Topological key for ctype
     acr::RecSortkey   sortkey;      // Sort key of original record
-    bool operator ==(const acr::PlineKey &rhs) const;
-    bool operator !=(const acr::PlineKey &rhs) const;
-    bool operator <(const acr::PlineKey &rhs) const;
-    bool operator >(const acr::PlineKey &rhs) const;
-    bool operator <=(const acr::PlineKey &rhs) const;
-    bool operator >=(const acr::PlineKey &rhs) const;
-    PlineKey();
+    // func:acr.PlineKey..EqOp
+    inline bool          operator ==(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..NeOp
+    inline bool          operator !=(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..LtOp
+    inline bool          operator <(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..GtOp
+    inline bool          operator >(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..LeOp
+    inline bool          operator <=(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..GeOp
+    inline bool          operator >=(const acr::PlineKey &rhs) const __attribute__((nothrow));
+    // func:acr.PlineKey..Ctor
+    inline               PlineKey() __attribute__((nothrow));
 };
 
 // func:acr.PlineKey..Hash
-u32                  PlineKey_Hash(u32 prev, const acr::PlineKey & rhs) __attribute__((nothrow));
+inline u32           PlineKey_Hash(u32 prev, const acr::PlineKey& rhs) __attribute__((nothrow));
 // func:acr.PlineKey..Lt
-bool                 PlineKey_Lt(acr::PlineKey& lhs, acr::PlineKey& rhs) __attribute__((nothrow));
+inline bool          PlineKey_Lt(acr::PlineKey& lhs, acr::PlineKey& rhs) __attribute__((nothrow));
 // func:acr.PlineKey..Cmp
 i32                  PlineKey_Cmp(acr::PlineKey& lhs, acr::PlineKey& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.PlineKey..Init
-void                 PlineKey_Init(acr::PlineKey& parent);
+inline void          PlineKey_Init(acr::PlineKey& parent);
 // func:acr.PlineKey..Eq
 bool                 PlineKey_Eq(acr::PlineKey& lhs, acr::PlineKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:acr.PlineKey..Update
-bool                 PlineKey_Update(acr::PlineKey &lhs, acr::PlineKey& rhs) __attribute__((nothrow));
+inline bool          PlineKey_Update(acr::PlineKey &lhs, acr::PlineKey& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr.PlineKey.String  printfmt:Tuple
 // func:acr.PlineKey..Print
@@ -3108,7 +3194,7 @@ void                 PlineKey_Print(acr::PlineKey& row, algo::cstring& str) __at
 // --- acr.FPline
 // create: acr.FDb.pline (Tpool)
 // global access: zd_pline (Llist)
-// global access: bh_pline (Bheap)
+// global access: bh_pline (Bheap, sort field key)
 // access: acr.FPdep.p_parent (Upptr)
 // access: acr.FPdep.p_child (Upptr)
 // access: acr.FPrint.c_pline (Ptrary)
@@ -3122,44 +3208,50 @@ struct FPline { // acr.FPline: Print-line
     acr::FRec*      p_rec;           // reference to parent row
     acr::FPdep*     zd_child_head;   // zero-terminated doubly linked list
     acr::FPdep*     zd_child_tail;   // pointer to last element
+    // reftype Llist of acr.FPline.zd_child prohibits copy
+    // func:acr.FPline..AssignOp
+    inline acr::FPline&  operator =(const acr::FPline &rhs) = delete;
+    // reftype Llist of acr.FPline.zd_child prohibits copy
+    // func:acr.FPline..CopyCtor
+    inline               FPline(const acr::FPline &rhs) = delete;
 private:
+    // func:acr.FPline..Ctor
+    inline               FPline() __attribute__((nothrow));
+    // func:acr.FPline..Dtor
+    inline               ~FPline() __attribute__((nothrow));
     friend acr::FPline&         pline_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FPline*         pline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 pline_Delete(acr::FPline &row) __attribute__((nothrow));
-    FPline();
-    ~FPline();
-    FPline(const FPline&){ /*disallow copy constructor */}
-    void operator =(const FPline&){ /*disallow direct assignment */}
 };
 
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 // func:acr.FPline.key.Lt
-bool                 key_Lt(acr::FPline& pline, acr::FPline &rhs) __attribute__((nothrow));
+inline bool          key_Lt(acr::FPline& pline, acr::FPline &rhs) __attribute__((nothrow));
 // Compare two fields.
 // func:acr.FPline.key.Cmp
-i32                  key_Cmp(acr::FPline& pline, acr::FPline &rhs) __attribute__((nothrow));
+inline i32           key_Cmp(acr::FPline& pline, acr::FPline &rhs) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FPline.zd_child.EmptyQ
-bool                 zd_child_EmptyQ(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_child_EmptyQ(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:acr.FPline.zd_child.First
-acr::FPdep*          zd_child_First(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPdep*   zd_child_First(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr.FPline.zd_child.InLlistQ
-bool                 zd_child_InLlistQ(acr::FPdep& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_child_InLlistQ(acr::FPdep& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr.FPline.zd_child.Insert
 void                 zd_child_Insert(acr::FPline& pline, acr::FPdep& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:acr.FPline.zd_child.Last
-acr::FPdep*          zd_child_Last(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
+inline acr::FPdep*   zd_child_Last(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr.FPline.zd_child.Next
-acr::FPdep*          zd_child_Next(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep*   zd_child_Next(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr.FPline.zd_child.Prev
-acr::FPdep*          zd_child_Prev(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep*   zd_child_Prev(acr::FPdep &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FPline.zd_child.Remove
 void                 zd_child_Remove(acr::FPline& pline, acr::FPdep& row) __attribute__((nothrow));
@@ -3171,23 +3263,23 @@ void                 zd_child_RemoveAll(acr::FPline& pline) __attribute__((nothr
 acr::FPdep*          zd_child_RemoveFirst(acr::FPline& pline) __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:acr.FPline.zd_child.qLast
-acr::FPdep&          zd_child_qLast(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPdep&   zd_child_qLast(acr::FPline& pline) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:acr.FPline..Init
-void                 FPline_Init(acr::FPline& pline);
+inline void          FPline_Init(acr::FPline& pline);
 // cursor points to valid item
 // func:acr.FPline.zd_child_curs.Reset
-void                 pline_zd_child_curs_Reset(pline_zd_child_curs &curs, acr::FPline &parent) __attribute__((nothrow));
+inline void          pline_zd_child_curs_Reset(pline_zd_child_curs &curs, acr::FPline &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FPline.zd_child_curs.ValidQ
-bool                 pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs) __attribute__((nothrow));
+inline bool          pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FPline.zd_child_curs.Next
-void                 pline_zd_child_curs_Next(pline_zd_child_curs &curs) __attribute__((nothrow));
+inline void          pline_zd_child_curs_Next(pline_zd_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FPline.zd_child_curs.Access
-acr::FPdep&          pline_zd_child_curs_Access(pline_zd_child_curs &curs) __attribute__((nothrow));
+inline acr::FPdep&   pline_zd_child_curs_Access(pline_zd_child_curs &curs) __attribute__((nothrow));
 // func:acr.FPline..Uninit
 void                 FPline_Uninit(acr::FPline& pline) __attribute__((nothrow));
 
@@ -3214,13 +3306,10 @@ struct FPrint { // acr.FPrint: Print function
     i32                 skip_line;                     //   0
     i32                 this_depth;                    //   0
     i32                 prev_depth;                    //   0
-    FPrint();
-    ~FPrint();
-private:
-    // reftype Thash of acr.FPrint.ind_printattr prohibits copy
-    // reftype Ptrary of acr.FPrint.c_pline prohibits copy
-    FPrint(const FPrint&){ /*disallow copy constructor */}
-    void operator =(const FPrint&){ /*disallow direct assignment */}
+    // func:acr.FPrint..Ctor
+    inline               FPrint() __attribute__((nothrow));
+    // func:acr.FPrint..Dtor
+    inline               ~FPrint() __attribute__((nothrow));
 };
 
 // Delete all rows reachable through the hash index
@@ -3228,13 +3317,13 @@ private:
 void                 ind_printattr_Cascdel(acr::FPrint& print) __attribute__((nothrow));
 // Return true if hash is empty
 // func:acr.FPrint.ind_printattr.EmptyQ
-bool                 ind_printattr_EmptyQ(acr::FPrint& print) __attribute__((nothrow));
+inline bool          ind_printattr_EmptyQ(acr::FPrint& print) __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:acr.FPrint.ind_printattr.Find
 acr::FPrintAttr*     ind_printattr_Find(acr::FPrint& print, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:acr.FPrint.ind_printattr.N
-i32                  ind_printattr_N(const acr::FPrint& print) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_printattr_N(const acr::FPrint& print) __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:acr.FPrint.ind_printattr.InsertMaybe
 bool                 ind_printattr_InsertMaybe(acr::FPrint& print, acr::FPrintAttr& row) __attribute__((nothrow));
@@ -3247,13 +3336,13 @@ void                 ind_printattr_Reserve(acr::FPrint& print, int n) __attribut
 
 // Return true if index is empty
 // func:acr.FPrint.c_pline.EmptyQ
-bool                 c_pline_EmptyQ(acr::FPrint& print) __attribute__((nothrow));
+inline bool          c_pline_EmptyQ(acr::FPrint& print) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FPrint.c_pline.Find
-acr::FPline*         c_pline_Find(acr::FPrint& print, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FPline*  c_pline_Find(acr::FPrint& print, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FPrint.c_pline.Getary
-algo::aryptr<acr::FPline*> c_pline_Getary(acr::FPrint& print) __attribute__((nothrow));
+inline algo::aryptr<acr::FPline*> c_pline_Getary(acr::FPrint& print) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FPrint.c_pline.Insert
@@ -3266,34 +3355,34 @@ void                 c_pline_Insert(acr::FPrint& print, acr::FPline& row) __attr
 bool                 c_pline_ScanInsertMaybe(acr::FPrint& print, acr::FPline& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FPrint.c_pline.N
-i32                  c_pline_N(const acr::FPrint& print) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_pline_N(const acr::FPrint& print) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FPrint.c_pline.Remove
 void                 c_pline_Remove(acr::FPrint& print, acr::FPline& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FPrint.c_pline.RemoveAll
-void                 c_pline_RemoveAll(acr::FPrint& print) __attribute__((nothrow));
+inline void          c_pline_RemoveAll(acr::FPrint& print) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FPrint.c_pline.Reserve
 void                 c_pline_Reserve(acr::FPrint& print, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FPrint.c_pline.qFind
-acr::FPline&         c_pline_qFind(acr::FPrint& print, u32 idx) __attribute__((nothrow));
+inline acr::FPline&  c_pline_qFind(acr::FPrint& print, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FPrint.c_pline.qLast
-acr::FPline&         c_pline_qLast(acr::FPrint& print) __attribute__((nothrow));
+inline acr::FPline&  c_pline_qLast(acr::FPrint& print) __attribute__((nothrow));
 
 // func:acr.FPrint.c_pline_curs.Reset
-void                 print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent) __attribute__((nothrow));
+inline void          print_c_pline_curs_Reset(print_c_pline_curs &curs, acr::FPrint &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FPrint.c_pline_curs.ValidQ
-bool                 print_c_pline_curs_ValidQ(print_c_pline_curs &curs) __attribute__((nothrow));
+inline bool          print_c_pline_curs_ValidQ(print_c_pline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FPrint.c_pline_curs.Next
-void                 print_c_pline_curs_Next(print_c_pline_curs &curs) __attribute__((nothrow));
+inline void          print_c_pline_curs_Next(print_c_pline_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FPrint.c_pline_curs.Access
-acr::FPline&         print_c_pline_curs_Access(print_c_pline_curs &curs) __attribute__((nothrow));
+inline acr::FPline&  print_c_pline_curs_Access(print_c_pline_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FPrint..Init
 void                 FPrint_Init(acr::FPrint& print);
@@ -3308,37 +3397,45 @@ struct FPrintAttr { // acr.FPrintAttr
     acr::FPrint*        p_print;              // reference to parent row
     algo::Smallstr100   field;                //   0
     u32                 width;                //   0  Name width
+    // func:acr.FPrintAttr..AssignOp
+    inline acr::FPrintAttr& operator =(const acr::FPrintAttr &rhs) = delete;
+    // func:acr.FPrintAttr..CopyCtor
+    inline               FPrintAttr(const acr::FPrintAttr &rhs) = delete;
 private:
+    // func:acr.FPrintAttr..Ctor
+    inline               FPrintAttr() __attribute__((nothrow));
+    // func:acr.FPrintAttr..Dtor
+    inline               ~FPrintAttr() __attribute__((nothrow));
     friend acr::FPrintAttr&     printattr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FPrintAttr*     printattr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 printattr_Delete(acr::FPrintAttr &row) __attribute__((nothrow));
-    FPrintAttr();
-    ~FPrintAttr();
-    FPrintAttr(const FPrintAttr&){ /*disallow copy constructor */}
-    void operator =(const FPrintAttr&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:acr.FPrintAttr..Init
-void                 FPrintAttr_Init(acr::FPrintAttr& printattr);
+inline void          FPrintAttr_Init(acr::FPrintAttr& printattr);
 // func:acr.FPrintAttr..Uninit
 void                 FPrintAttr_Uninit(acr::FPrintAttr& printattr) __attribute__((nothrow));
 
 // --- acr.Queryop
 struct Queryop { // acr.Queryop: Operation to perform
     u8   value;   //   0
-    inline operator acr_Queryop_value_Enum() const;
-    explicit Queryop(u8                             in_value);
-    Queryop(acr_Queryop_value_Enum arg);
-    Queryop();
+    // func:acr.Queryop.value.Cast
+    inline               operator acr_Queryop_value_Enum() const __attribute__((nothrow));
+    // func:acr.Queryop..Ctor
+    inline               Queryop() __attribute__((nothrow));
+    // func:acr.Queryop..FieldwiseCtor
+    explicit inline               Queryop(u8 in_value) __attribute__((nothrow));
+    // func:acr.Queryop..EnumCtor
+    inline               Queryop(acr_Queryop_value_Enum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:acr.Queryop.value.GetEnum
-acr_Queryop_value_Enum value_GetEnum(const acr::Queryop& parent) __attribute__((nothrow));
+inline acr_Queryop_value_Enum value_GetEnum(const acr::Queryop& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:acr.Queryop.value.SetEnum
-void                 value_SetEnum(acr::Queryop& parent, acr_Queryop_value_Enum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(acr::Queryop& parent, acr_Queryop_value_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:acr.Queryop.value.ToCstr
@@ -3359,7 +3456,7 @@ void                 value_SetStrptr(acr::Queryop& parent, algo::strptr rhs, acr
 
 // Set all fields to initial values.
 // func:acr.Queryop..Init
-void                 Queryop_Init(acr::Queryop& parent);
+inline void          Queryop_Init(acr::Queryop& parent);
 // print string representation of ROW to string STR
 // cfmt:acr.Queryop.String  printfmt:Raw
 // func:acr.Queryop..Print
@@ -3392,16 +3489,31 @@ struct FQuery { // acr.FQuery
     i32              n_visit_field;   //   0  Number of fields visited
     i32              n_visit_ctype;   //   0  Number of ctypes visited
     i32              n_mod_rec;       //   0  Number of records modified
+    // reftype Ptrary of acr.FQuery.c_ctype prohibits copy
+    // reftype Ptrary of acr.FQuery.c_field prohibits copy
+    // reftype Ptrary of acr.FQuery.c_rec prohibits copy
+    // func:acr.FQuery..AssignOp
+    acr::FQuery&         operator =(const acr::FQuery &rhs) = delete;
+    // reftype Ptrary of acr.FQuery.c_ctype prohibits copy
+    // reftype Ptrary of acr.FQuery.c_field prohibits copy
+    // reftype Ptrary of acr.FQuery.c_rec prohibits copy
+    // func:acr.FQuery..CopyCtor
+    FQuery(const acr::FQuery &rhs) = delete;
 private:
+    // func:acr.FQuery..Ctor
+    inline               FQuery() __attribute__((nothrow));
+    // func:acr.FQuery..Dtor
+    inline               ~FQuery() __attribute__((nothrow));
     friend acr::FQuery&         query_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FQuery*         query_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 query_Delete(acr::FQuery &row) __attribute__((nothrow));
-    FQuery();
-    ~FQuery();
-    FQuery(const FQuery&){ /*disallow copy constructor */}
-    void operator =(const FQuery&){ /*disallow direct assignment */}
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr.FQuery.where.Addary
+algo::aryptr<acr::AttrRegx> where_Addary(acr::FQuery& query, algo::aryptr<acr::AttrRegx> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr.FQuery.where.Alloc
@@ -3415,22 +3527,22 @@ acr::AttrRegx&       where_AllocAt(acr::FQuery& query, int at) __attribute__((__
 algo::aryptr<acr::AttrRegx> where_AllocN(acr::FQuery& query, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr.FQuery.where.EmptyQ
-bool                 where_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
+inline bool          where_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FQuery.where.Find
-acr::AttrRegx*       where_Find(acr::FQuery& query, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::AttrRegx* where_Find(acr::FQuery& query, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:acr.FQuery.where.Getary
-algo::aryptr<acr::AttrRegx> where_Getary(const acr::FQuery& query) __attribute__((nothrow));
+inline algo::aryptr<acr::AttrRegx> where_Getary(const acr::FQuery& query) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr.FQuery.where.Last
-acr::AttrRegx*       where_Last(acr::FQuery& query) __attribute__((nothrow, pure));
+inline acr::AttrRegx* where_Last(acr::FQuery& query) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:acr.FQuery.where.Max
-i32                  where_Max(acr::FQuery& query) __attribute__((nothrow));
+inline i32           where_Max(acr::FQuery& query) __attribute__((nothrow));
 // Return number of items in the array
 // func:acr.FQuery.where.N
-i32                  where_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           where_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:acr.FQuery.where.Remove
 void                 where_Remove(acr::FQuery& query, u32 i) __attribute__((nothrow));
@@ -3441,19 +3553,29 @@ void                 where_RemoveAll(acr::FQuery& query) __attribute__((nothrow)
 void                 where_RemoveLast(acr::FQuery& query) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:acr.FQuery.where.Reserve
-void                 where_Reserve(acr::FQuery& query, int n) __attribute__((nothrow));
+inline void          where_Reserve(acr::FQuery& query, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:acr.FQuery.where.AbsReserve
 void                 where_AbsReserve(acr::FQuery& query, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:acr.FQuery.where.Setary
+void                 where_Setary(acr::FQuery& query, acr::FQuery &rhs) __attribute__((nothrow));
+// Copy specified array into where, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:acr.FQuery.where.Setary2
+void                 where_Setary(acr::FQuery& query, const algo::aryptr<acr::AttrRegx> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr.FQuery.where.qFind
-acr::AttrRegx&       where_qFind(acr::FQuery& query, u64 t) __attribute__((nothrow));
+inline acr::AttrRegx& where_qFind(acr::FQuery& query, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:acr.FQuery.where.qLast
-acr::AttrRegx&       where_qLast(acr::FQuery& query) __attribute__((nothrow));
+inline acr::AttrRegx& where_qLast(acr::FQuery& query) __attribute__((nothrow));
 // Return row id of specified element
 // func:acr.FQuery.where.rowid_Get
-u64                  where_rowid_Get(acr::FQuery& query, acr::AttrRegx &elem) __attribute__((nothrow));
+inline u64           where_rowid_Get(acr::FQuery& query, acr::AttrRegx &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr.FQuery.where.AllocNVal
+algo::aryptr<acr::AttrRegx> where_AllocNVal(acr::FQuery& query, int n_elems, const acr::AttrRegx& val) __attribute__((nothrow));
 
 // Print back to string
 // func:acr.FQuery.ssimfile.Print
@@ -3461,13 +3583,13 @@ void                 ssimfile_Print(acr::FQuery& query, algo::cstring &out) __at
 
 // Return true if index is empty
 // func:acr.FQuery.c_ctype.EmptyQ
-bool                 c_ctype_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
+inline bool          c_ctype_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FQuery.c_ctype.Find
-acr::FCtype*         c_ctype_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FCtype*  c_ctype_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FQuery.c_ctype.Getary
-algo::aryptr<acr::FCtype*> c_ctype_Getary(acr::FQuery& query) __attribute__((nothrow));
+inline algo::aryptr<acr::FCtype*> c_ctype_Getary(acr::FQuery& query) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FQuery.c_ctype.Insert
@@ -3480,32 +3602,32 @@ void                 c_ctype_Insert(acr::FQuery& query, acr::FCtype& row) __attr
 bool                 c_ctype_ScanInsertMaybe(acr::FQuery& query, acr::FCtype& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FQuery.c_ctype.N
-i32                  c_ctype_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_ctype_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FQuery.c_ctype.Remove
 void                 c_ctype_Remove(acr::FQuery& query, acr::FCtype& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FQuery.c_ctype.RemoveAll
-void                 c_ctype_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
+inline void          c_ctype_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FQuery.c_ctype.Reserve
 void                 c_ctype_Reserve(acr::FQuery& query, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FQuery.c_ctype.qFind
-acr::FCtype&         c_ctype_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
+inline acr::FCtype&  c_ctype_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FQuery.c_ctype.qLast
-acr::FCtype&         c_ctype_qLast(acr::FQuery& query) __attribute__((nothrow));
+inline acr::FCtype&  c_ctype_qLast(acr::FQuery& query) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FQuery.c_field.EmptyQ
-bool                 c_field_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
+inline bool          c_field_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FQuery.c_field.Find
-acr::FField*         c_field_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FField*  c_field_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FQuery.c_field.Getary
-algo::aryptr<acr::FField*> c_field_Getary(acr::FQuery& query) __attribute__((nothrow));
+inline algo::aryptr<acr::FField*> c_field_Getary(acr::FQuery& query) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FQuery.c_field.Insert
@@ -3518,32 +3640,32 @@ void                 c_field_Insert(acr::FQuery& query, acr::FField& row) __attr
 bool                 c_field_ScanInsertMaybe(acr::FQuery& query, acr::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FQuery.c_field.N
-i32                  c_field_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_field_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FQuery.c_field.Remove
 void                 c_field_Remove(acr::FQuery& query, acr::FField& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FQuery.c_field.RemoveAll
-void                 c_field_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
+inline void          c_field_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FQuery.c_field.Reserve
 void                 c_field_Reserve(acr::FQuery& query, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FQuery.c_field.qFind
-acr::FField&         c_field_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
+inline acr::FField&  c_field_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FQuery.c_field.qLast
-acr::FField&         c_field_qLast(acr::FQuery& query) __attribute__((nothrow));
+inline acr::FField&  c_field_qLast(acr::FQuery& query) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr.FQuery.c_rec.EmptyQ
-bool                 c_rec_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
+inline bool          c_rec_EmptyQ(acr::FQuery& query) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FQuery.c_rec.Find
-acr::FRec*           c_rec_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    c_rec_Find(acr::FQuery& query, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FQuery.c_rec.Getary
-algo::aryptr<acr::FRec*> c_rec_Getary(acr::FQuery& query) __attribute__((nothrow));
+inline algo::aryptr<acr::FRec*> c_rec_Getary(acr::FQuery& query) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FQuery.c_rec.Insert
@@ -3556,70 +3678,70 @@ void                 c_rec_Insert(acr::FQuery& query, acr::FRec& row) __attribut
 bool                 c_rec_ScanInsertMaybe(acr::FQuery& query, acr::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FQuery.c_rec.N
-i32                  c_rec_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_rec_N(const acr::FQuery& query) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FQuery.c_rec.Remove
 void                 c_rec_Remove(acr::FQuery& query, acr::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FQuery.c_rec.RemoveAll
-void                 c_rec_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
+inline void          c_rec_RemoveAll(acr::FQuery& query) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FQuery.c_rec.Reserve
 void                 c_rec_Reserve(acr::FQuery& query, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FQuery.c_rec.qFind
-acr::FRec&           c_rec_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
+inline acr::FRec&    c_rec_qFind(acr::FQuery& query, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FQuery.c_rec.qLast
-acr::FRec&           c_rec_qLast(acr::FQuery& query) __attribute__((nothrow));
+inline acr::FRec&    c_rec_qLast(acr::FQuery& query) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr.FQuery..Init
 void                 FQuery_Init(acr::FQuery& query);
 // proceed to next item
 // func:acr.FQuery.where_curs.Next
-void                 query_where_curs_Next(query_where_curs &curs) __attribute__((nothrow));
+inline void          query_where_curs_Next(query_where_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.where_curs.Reset
-void                 query_where_curs_Reset(query_where_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
+inline void          query_where_curs_Reset(query_where_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.where_curs.ValidQ
-bool                 query_where_curs_ValidQ(query_where_curs &curs) __attribute__((nothrow));
+inline bool          query_where_curs_ValidQ(query_where_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.where_curs.Access
-acr::AttrRegx&       query_where_curs_Access(query_where_curs &curs) __attribute__((nothrow));
+inline acr::AttrRegx& query_where_curs_Access(query_where_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_ctype_curs.Reset
-void                 query_c_ctype_curs_Reset(query_c_ctype_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
+inline void          query_c_ctype_curs_Reset(query_c_ctype_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_ctype_curs.ValidQ
-bool                 query_c_ctype_curs_ValidQ(query_c_ctype_curs &curs) __attribute__((nothrow));
+inline bool          query_c_ctype_curs_ValidQ(query_c_ctype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_ctype_curs.Next
-void                 query_c_ctype_curs_Next(query_c_ctype_curs &curs) __attribute__((nothrow));
+inline void          query_c_ctype_curs_Next(query_c_ctype_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_ctype_curs.Access
-acr::FCtype&         query_c_ctype_curs_Access(query_c_ctype_curs &curs) __attribute__((nothrow));
+inline acr::FCtype&  query_c_ctype_curs_Access(query_c_ctype_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_field_curs.Reset
-void                 query_c_field_curs_Reset(query_c_field_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
+inline void          query_c_field_curs_Reset(query_c_field_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_field_curs.ValidQ
-bool                 query_c_field_curs_ValidQ(query_c_field_curs &curs) __attribute__((nothrow));
+inline bool          query_c_field_curs_ValidQ(query_c_field_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_field_curs.Next
-void                 query_c_field_curs_Next(query_c_field_curs &curs) __attribute__((nothrow));
+inline void          query_c_field_curs_Next(query_c_field_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_field_curs.Access
-acr::FField&         query_c_field_curs_Access(query_c_field_curs &curs) __attribute__((nothrow));
+inline acr::FField&  query_c_field_curs_Access(query_c_field_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery.c_rec_curs.Reset
-void                 query_c_rec_curs_Reset(query_c_rec_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
+inline void          query_c_rec_curs_Reset(query_c_rec_curs &curs, acr::FQuery &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FQuery.c_rec_curs.ValidQ
-bool                 query_c_rec_curs_ValidQ(query_c_rec_curs &curs) __attribute__((nothrow));
+inline bool          query_c_rec_curs_ValidQ(query_c_rec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FQuery.c_rec_curs.Next
-void                 query_c_rec_curs_Next(query_c_rec_curs &curs) __attribute__((nothrow));
+inline void          query_c_rec_curs_Next(query_c_rec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FQuery.c_rec_curs.Access
-acr::FRec&           query_c_rec_curs_Access(query_c_rec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    query_c_rec_curs_Access(query_c_rec_curs &curs) __attribute__((nothrow));
 // func:acr.FQuery..Uninit
 void                 FQuery_Uninit(acr::FQuery& query) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -3667,14 +3789,22 @@ struct FRec { // acr.FRec
     acr::FCtype*      p_ctype;                    // reference to parent row
     i32               lineno;                     //   0
     bool              _db_c_ssimreq_rec_in_ary;   //   false  membership flag
+    // reftype Delptr of acr.FRec.oldpkey prohibits copy
+    // x-reference on acr.FRec.c_pline prevents copy
+    // func:acr.FRec..AssignOp
+    acr::FRec&           operator =(const acr::FRec &rhs) = delete;
+    // reftype Delptr of acr.FRec.oldpkey prohibits copy
+    // x-reference on acr.FRec.c_pline prevents copy
+    // func:acr.FRec..CopyCtor
+    FRec(const acr::FRec &rhs) = delete;
 private:
+    // func:acr.FRec..Ctor
+    inline               FRec() __attribute__((nothrow));
+    // func:acr.FRec..Dtor
+    inline               ~FRec() __attribute__((nothrow));
     friend acr::FRec&           rec_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FRec*           rec_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 rec_Delete(acr::FRec &row) __attribute__((nothrow));
-    FRec();
-    ~FRec();
-    FRec(const FRec&){ /*disallow copy constructor */}
-    void operator =(const FRec&){ /*disallow direct assignment */}
 };
 
 // Get or Create
@@ -3687,10 +3817,10 @@ void                 oldpkey_Delete(acr::FRec& rec) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FRec.c_pline.InsertMaybe
-bool                 c_pline_InsertMaybe(acr::FRec& rec, acr::FPline& row) __attribute__((nothrow));
+inline bool          c_pline_InsertMaybe(acr::FRec& rec, acr::FPline& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FRec.c_pline.Remove
-void                 c_pline_Remove(acr::FRec& rec, acr::FPline& row) __attribute__((nothrow));
+inline void          c_pline_Remove(acr::FRec& rec, acr::FPline& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr.FRec..Init
@@ -3704,6 +3834,7 @@ void                 FRec_Print(acr::FRec& row, algo::cstring& str) __attribute_
 
 // --- acr.FSmallstr
 // create: acr.FDb.smallstr (Lary)
+// global access: smallstr (Lary, by rowid)
 struct FSmallstr { // acr.FSmallstr
     algo::Smallstr100   field;     //
     i32                 length;    //   0  Maximum characters in the string
@@ -3711,10 +3842,11 @@ struct FSmallstr { // acr.FSmallstr
     algo::CppExpr       pad;       // Pad character (if applicable)
     bool                strict;    //   false
 private:
+    // func:acr.FSmallstr..Ctor
+    inline               FSmallstr() __attribute__((nothrow));
     friend acr::FSmallstr&      smallstr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSmallstr*      smallstr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 smallstr_RemoveLast() __attribute__((nothrow));
-    FSmallstr();
 };
 
 // Copy fields out of row
@@ -3729,35 +3861,41 @@ algo::Smallstr100    ctype_Get(acr::FSmallstr& smallstr) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:acr.FSmallstr..Init
-void                 FSmallstr_Init(acr::FSmallstr& smallstr);
+inline void          FSmallstr_Init(acr::FSmallstr& smallstr);
 
 // --- acr.FSortkey
 // create: acr.FDb.sortkey (Lary)
-// global access: ind_sortkey (Thash)
+// global access: sortkey (Lary, by rowid)
+// global access: ind_sortkey (Thash, hash field sortkey)
 struct FSortkey { // acr.FSortkey: Keep track of next rowid for each sortkey
     acr::FSortkey*    ind_sortkey_next;   // hash next
     acr::RecSortkey   sortkey;            // Sort key
     double            next_rowid;         //   0
+    // func:acr.FSortkey..AssignOp
+    inline acr::FSortkey& operator =(const acr::FSortkey &rhs) = delete;
+    // func:acr.FSortkey..CopyCtor
+    inline               FSortkey(const acr::FSortkey &rhs) = delete;
 private:
+    // func:acr.FSortkey..Ctor
+    inline               FSortkey() __attribute__((nothrow));
+    // func:acr.FSortkey..Dtor
+    inline               ~FSortkey() __attribute__((nothrow));
     friend acr::FSortkey&       sortkey_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSortkey*       sortkey_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 sortkey_RemoveAll() __attribute__((nothrow));
     friend void                 sortkey_RemoveLast() __attribute__((nothrow));
-    FSortkey();
-    ~FSortkey();
-    FSortkey(const FSortkey&){ /*disallow copy constructor */}
-    void operator =(const FSortkey&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:acr.FSortkey..Init
-void                 FSortkey_Init(acr::FSortkey& sortkey);
+inline void          FSortkey_Init(acr::FSortkey& sortkey);
 // func:acr.FSortkey..Uninit
 void                 FSortkey_Uninit(acr::FSortkey& sortkey) __attribute__((nothrow));
 
 // --- acr.FSsimfile
 // create: acr.FDb.ssimfile (Lary)
-// global access: ind_ssimfile (Thash)
+// global access: ssimfile (Lary, by rowid)
+// global access: ind_ssimfile (Thash, hash field ssimfile)
 // access: acr.FCtype.c_ssimfile (Ptr)
 // access: acr.FSsimreq.p_child_ssimfile (Upptr)
 struct FSsimfile { // acr.FSsimfile: One full table
@@ -3767,14 +3905,22 @@ struct FSsimfile { // acr.FSsimfile: One full table
     acr::FFile*         c_file;              // optional!. optional pointer
     acr::FCtype*        p_ctype;             // reference to parent row
     acr::FSsimsort*     c_ssimsort;          // Optional sort order. optional pointer
+    // x-reference on acr.FSsimfile.p_ctype prevents copy
+    // x-reference on acr.FSsimfile.c_ssimsort prevents copy
+    // func:acr.FSsimfile..AssignOp
+    inline acr::FSsimfile& operator =(const acr::FSsimfile &rhs) = delete;
+    // x-reference on acr.FSsimfile.p_ctype prevents copy
+    // x-reference on acr.FSsimfile.c_ssimsort prevents copy
+    // func:acr.FSsimfile..CopyCtor
+    inline               FSsimfile(const acr::FSsimfile &rhs) = delete;
 private:
+    // func:acr.FSsimfile..Ctor
+    inline               FSsimfile() __attribute__((nothrow));
+    // func:acr.FSsimfile..Dtor
+    inline               ~FSsimfile() __attribute__((nothrow));
     friend acr::FSsimfile&      ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSsimfile*      ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
-    FSsimfile();
-    ~FSsimfile();
-    FSsimfile(const FSsimfile&){ /*disallow copy constructor */}
-    void operator =(const FSsimfile&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3795,19 +3941,20 @@ algo::Smallstr50     name_Get(acr::FSsimfile& ssimfile) __attribute__((__warn_un
 
 // Insert row into pointer index. Return final membership status.
 // func:acr.FSsimfile.c_ssimsort.InsertMaybe
-bool                 c_ssimsort_InsertMaybe(acr::FSsimfile& ssimfile, acr::FSsimsort& row) __attribute__((nothrow));
+inline bool          c_ssimsort_InsertMaybe(acr::FSsimfile& ssimfile, acr::FSsimsort& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr.FSsimfile.c_ssimsort.Remove
-void                 c_ssimsort_Remove(acr::FSsimfile& ssimfile, acr::FSsimsort& row) __attribute__((nothrow));
+inline void          c_ssimsort_Remove(acr::FSsimfile& ssimfile, acr::FSsimsort& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr.FSsimfile..Init
-void                 FSsimfile_Init(acr::FSsimfile& ssimfile);
+inline void          FSsimfile_Init(acr::FSsimfile& ssimfile);
 // func:acr.FSsimfile..Uninit
 void                 FSsimfile_Uninit(acr::FSsimfile& ssimfile) __attribute__((nothrow));
 
 // --- acr.FSsimreq
 // create: acr.FDb.ssimreq (Lary)
+// global access: ssimreq (Lary, by rowid)
 // access: acr.FCtype.c_ssimreq (Ptrary)
 struct FSsimreq { // acr.FSsimreq
     algo::Smallstr100   ssimreq;                  //
@@ -3820,15 +3967,25 @@ struct FSsimreq { // acr.FSsimreq
     acr::FField*        p_parent_field;           // reference to parent row
     algo_lib::Regx      regx_value;               // Sql Regx
     bool                ctype_c_ssimreq_in_ary;   //   false  membership flag
+    // x-reference on acr.FSsimreq.p_ctype prevents copy
+    // x-reference on acr.FSsimreq.p_child_ssimfile prevents copy
+    // x-reference on acr.FSsimreq.p_parent_field prevents copy
+    // func:acr.FSsimreq..AssignOp
+    acr::FSsimreq&       operator =(const acr::FSsimreq &rhs) = delete;
+    // x-reference on acr.FSsimreq.p_ctype prevents copy
+    // x-reference on acr.FSsimreq.p_child_ssimfile prevents copy
+    // x-reference on acr.FSsimreq.p_parent_field prevents copy
+    // func:acr.FSsimreq..CopyCtor
+    FSsimreq(const acr::FSsimreq &rhs) = delete;
 private:
+    // func:acr.FSsimreq..Ctor
+    inline               FSsimreq() __attribute__((nothrow));
+    // func:acr.FSsimreq..Dtor
+    inline               ~FSsimreq() __attribute__((nothrow));
     friend acr::FSsimreq&       ssimreq_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSsimreq*       ssimreq_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimreq_RemoveAll() __attribute__((nothrow));
     friend void                 ssimreq_RemoveLast() __attribute__((nothrow));
-    FSsimreq();
-    ~FSsimreq();
-    FSsimreq(const FSsimreq&){ /*disallow copy constructor */}
-    void operator =(const FSsimreq&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3865,20 +4022,25 @@ void                 FSsimreq_Uninit(acr::FSsimreq& ssimreq) __attribute__((noth
 
 // --- acr.FSsimsort
 // create: acr.FDb.ssimsort (Lary)
-// global access: ind_ssimsort (Thash)
+// global access: ssimsort (Lary, by rowid)
+// global access: ind_ssimsort (Thash, hash field ssimfile)
 // access: acr.FSsimfile.c_ssimsort (Ptr)
 struct FSsimsort { // acr.FSsimsort
     acr::FSsimsort*     ind_ssimsort_next;   // hash next
     algo::Smallstr50    ssimfile;            //
     algo::Smallstr100   sortfld;             //
+    // func:acr.FSsimsort..AssignOp
+    inline acr::FSsimsort& operator =(const acr::FSsimsort &rhs) = delete;
+    // func:acr.FSsimsort..CopyCtor
+    inline               FSsimsort(const acr::FSsimsort &rhs) = delete;
 private:
+    // func:acr.FSsimsort..Ctor
+    inline               FSsimsort() __attribute__((nothrow));
+    // func:acr.FSsimsort..Dtor
+    inline               ~FSsimsort() __attribute__((nothrow));
     friend acr::FSsimsort&      ssimsort_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSsimsort*      ssimsort_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimsort_RemoveLast() __attribute__((nothrow));
-    FSsimsort();
-    ~FSsimsort();
-    FSsimsort(const FSsimsort&){ /*disallow copy constructor */}
-    void operator =(const FSsimsort&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3890,25 +4052,30 @@ void                 ssimsort_CopyIn(acr::FSsimsort &row, dmmeta::Ssimsort &in) 
 
 // Set all fields to initial values.
 // func:acr.FSsimsort..Init
-void                 FSsimsort_Init(acr::FSsimsort& ssimsort);
+inline void          FSsimsort_Init(acr::FSsimsort& ssimsort);
 // func:acr.FSsimsort..Uninit
 void                 FSsimsort_Uninit(acr::FSsimsort& ssimsort) __attribute__((nothrow));
 
 // --- acr.FSubstr
 // create: acr.FDb.substr (Lary)
+// global access: substr (Lary, by rowid)
 // access: acr.FField.c_substr (Ptr)
 struct FSubstr { // acr.FSubstr
     algo::Smallstr100   field;      //
     algo::CppExpr       expr;       //
     algo::Smallstr100   srcfield;   //
+    // func:acr.FSubstr..AssignOp
+    inline acr::FSubstr& operator =(const acr::FSubstr &rhs) = delete;
+    // func:acr.FSubstr..CopyCtor
+    inline               FSubstr(const acr::FSubstr &rhs) = delete;
 private:
+    // func:acr.FSubstr..Ctor
+    inline               FSubstr() __attribute__((nothrow));
+    // func:acr.FSubstr..Dtor
+    inline               ~FSubstr() __attribute__((nothrow));
     friend acr::FSubstr&        substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FSubstr*        substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 substr_RemoveLast() __attribute__((nothrow));
-    FSubstr();
-    ~FSubstr();
-    FSubstr(const FSubstr&){ /*disallow copy constructor */}
-    void operator =(const FSubstr&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3923,47 +4090,56 @@ void                 FSubstr_Uninit(acr::FSubstr& substr) __attribute__((nothrow
 
 // --- acr.FTempkey
 // create: acr.FDb.tempkey (Lary)
-// global access: ind_tempkey (Thash)
+// global access: tempkey (Lary, by rowid)
+// global access: ind_tempkey (Thash, hash field tempkey)
 struct FTempkey { // acr.FTempkey
     acr::FTempkey*   ind_tempkey_next;   // hash next
     algo::cstring    tempkey;            //
+    // func:acr.FTempkey..AssignOp
+    inline acr::FTempkey& operator =(const acr::FTempkey &rhs) = delete;
+    // func:acr.FTempkey..CopyCtor
+    inline               FTempkey(const acr::FTempkey &rhs) = delete;
 private:
+    // func:acr.FTempkey..Ctor
+    inline               FTempkey() __attribute__((nothrow));
+    // func:acr.FTempkey..Dtor
+    inline               ~FTempkey() __attribute__((nothrow));
     friend acr::FTempkey&       tempkey_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FTempkey*       tempkey_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 tempkey_RemoveAll() __attribute__((nothrow));
     friend void                 tempkey_RemoveLast() __attribute__((nothrow));
-    FTempkey();
-    ~FTempkey();
-    FTempkey(const FTempkey&){ /*disallow copy constructor */}
-    void operator =(const FTempkey&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:acr.FTempkey..Init
-void                 FTempkey_Init(acr::FTempkey& tempkey);
+inline void          FTempkey_Init(acr::FTempkey& tempkey);
 // func:acr.FTempkey..Uninit
 void                 FTempkey_Uninit(acr::FTempkey& tempkey) __attribute__((nothrow));
 
 // --- acr.FUniqueattr
 // create: acr.FDb.uniqueattr (Tpool)
-// global access: ind_uniqueattr (Thash)
+// global access: ind_uniqueattr (Thash, hash field uniqueattr)
 struct FUniqueattr { // acr.FUniqueattr
     acr::FUniqueattr*   uniqueattr_next;       // Pointer to next free element int tpool
     acr::FUniqueattr*   ind_uniqueattr_next;   // hash next
     algo::cstring       uniqueattr;            // Data
+    // func:acr.FUniqueattr..AssignOp
+    inline acr::FUniqueattr& operator =(const acr::FUniqueattr &rhs) = delete;
+    // func:acr.FUniqueattr..CopyCtor
+    inline               FUniqueattr(const acr::FUniqueattr &rhs) = delete;
 private:
+    // func:acr.FUniqueattr..Ctor
+    inline               FUniqueattr() __attribute__((nothrow));
+    // func:acr.FUniqueattr..Dtor
+    inline               ~FUniqueattr() __attribute__((nothrow));
     friend acr::FUniqueattr&    uniqueattr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend acr::FUniqueattr*    uniqueattr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 uniqueattr_Delete(acr::FUniqueattr &row) __attribute__((nothrow));
-    FUniqueattr();
-    ~FUniqueattr();
-    FUniqueattr(const FUniqueattr&){ /*disallow copy constructor */}
-    void operator =(const FUniqueattr&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:acr.FUniqueattr..Init
-void                 FUniqueattr_Init(acr::FUniqueattr& uniqueattr);
+inline void          FUniqueattr_Init(acr::FUniqueattr& uniqueattr);
 // func:acr.FUniqueattr..Uninit
 void                 FUniqueattr_Uninit(acr::FUniqueattr& uniqueattr) __attribute__((nothrow));
 
@@ -3973,23 +4149,21 @@ struct FWrite { // acr.FWrite: Print function
     acr::FRec**   c_cmtrec_elems;   // array of pointers
     u32           c_cmtrec_n;       // array of pointers
     u32           c_cmtrec_max;     // capacity of allocated array
-    FWrite();
-    ~FWrite();
-private:
-    // reftype Ptrary of acr.FWrite.c_cmtrec prohibits copy
-    FWrite(const FWrite&){ /*disallow copy constructor */}
-    void operator =(const FWrite&){ /*disallow direct assignment */}
+    // func:acr.FWrite..Ctor
+    inline               FWrite() __attribute__((nothrow));
+    // func:acr.FWrite..Dtor
+    inline               ~FWrite() __attribute__((nothrow));
 };
 
 // Return true if index is empty
 // func:acr.FWrite.c_cmtrec.EmptyQ
-bool                 c_cmtrec_EmptyQ(acr::FWrite& write) __attribute__((nothrow));
+inline bool          c_cmtrec_EmptyQ(acr::FWrite& write) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr.FWrite.c_cmtrec.Find
-acr::FRec*           c_cmtrec_Find(acr::FWrite& write, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr::FRec*    c_cmtrec_Find(acr::FWrite& write, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:acr.FWrite.c_cmtrec.Getary
-algo::aryptr<acr::FRec*> c_cmtrec_Getary(acr::FWrite& write) __attribute__((nothrow));
+inline algo::aryptr<acr::FRec*> c_cmtrec_Getary(acr::FWrite& write) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:acr.FWrite.c_cmtrec.Insert
@@ -4002,22 +4176,22 @@ void                 c_cmtrec_Insert(acr::FWrite& write, acr::FRec& row) __attri
 bool                 c_cmtrec_ScanInsertMaybe(acr::FWrite& write, acr::FRec& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:acr.FWrite.c_cmtrec.N
-i32                  c_cmtrec_N(const acr::FWrite& write) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_cmtrec_N(const acr::FWrite& write) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:acr.FWrite.c_cmtrec.Remove
 void                 c_cmtrec_Remove(acr::FWrite& write, acr::FRec& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:acr.FWrite.c_cmtrec.RemoveAll
-void                 c_cmtrec_RemoveAll(acr::FWrite& write) __attribute__((nothrow));
+inline void          c_cmtrec_RemoveAll(acr::FWrite& write) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:acr.FWrite.c_cmtrec.Reserve
 void                 c_cmtrec_Reserve(acr::FWrite& write, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:acr.FWrite.c_cmtrec.qFind
-acr::FRec&           c_cmtrec_qFind(acr::FWrite& write, u32 idx) __attribute__((nothrow));
+inline acr::FRec&    c_cmtrec_qFind(acr::FWrite& write, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:acr.FWrite.c_cmtrec.qLast
-acr::FRec&           c_cmtrec_qLast(acr::FWrite& write) __attribute__((nothrow));
+inline acr::FRec&    c_cmtrec_qLast(acr::FWrite& write) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:acr.FWrite.c_cmtrec.SortedQ
 bool                 c_cmtrec_SortedQ(acr::FWrite& write) __attribute__((nothrow));
@@ -4032,19 +4206,19 @@ void                 c_cmtrec_HeapSort(acr::FWrite& write) __attribute__((nothro
 void                 c_cmtrec_QuickSort(acr::FWrite& write) __attribute__((nothrow));
 
 // func:acr.FWrite.c_cmtrec_curs.Reset
-void                 write_c_cmtrec_curs_Reset(write_c_cmtrec_curs &curs, acr::FWrite &parent) __attribute__((nothrow));
+inline void          write_c_cmtrec_curs_Reset(write_c_cmtrec_curs &curs, acr::FWrite &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr.FWrite.c_cmtrec_curs.ValidQ
-bool                 write_c_cmtrec_curs_ValidQ(write_c_cmtrec_curs &curs) __attribute__((nothrow));
+inline bool          write_c_cmtrec_curs_ValidQ(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr.FWrite.c_cmtrec_curs.Next
-void                 write_c_cmtrec_curs_Next(write_c_cmtrec_curs &curs) __attribute__((nothrow));
+inline void          write_c_cmtrec_curs_Next(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr.FWrite.c_cmtrec_curs.Access
-acr::FRec&           write_c_cmtrec_curs_Access(write_c_cmtrec_curs &curs) __attribute__((nothrow));
+inline acr::FRec&    write_c_cmtrec_curs_Access(write_c_cmtrec_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FWrite..Init
-void                 FWrite_Init(acr::FWrite& write);
+inline void          FWrite_Init(acr::FWrite& write);
 // func:acr.FWrite..Uninit
 void                 FWrite_Uninit(acr::FWrite& write) __attribute__((nothrow));
 
@@ -4052,19 +4226,23 @@ void                 FWrite_Uninit(acr::FWrite& write) __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // acr.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator acr_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(acr_FieldIdEnum arg);
-    FieldId();
+    // func:acr.FieldId.value.Cast
+    inline               operator acr_FieldIdEnum() const __attribute__((nothrow));
+    // func:acr.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:acr.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:acr.FieldId..EnumCtor
+    inline               FieldId(acr_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:acr.FieldId.value.GetEnum
-acr_FieldIdEnum      value_GetEnum(const acr::FieldId& parent) __attribute__((nothrow));
+inline acr_FieldIdEnum value_GetEnum(const acr::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:acr.FieldId.value.SetEnum
-void                 value_SetEnum(acr::FieldId& parent, acr_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(acr::FieldId& parent, acr_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:acr.FieldId.value.ToCstr
@@ -4092,7 +4270,7 @@ bool                 value_ReadStrptrMaybe(acr::FieldId& parent, algo::strptr rh
 bool                 FieldId_ReadStrptrMaybe(acr::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.FieldId..Init
-void                 FieldId_Init(acr::FieldId& parent);
+inline void          FieldId_Init(acr::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:acr.FieldId.String  printfmt:Raw
 // func:acr.FieldId..Print
@@ -4101,18 +4279,22 @@ void                 FieldId_Print(acr::FieldId& row, algo::cstring& str) __attr
 // --- acr.ReadMode
 struct ReadMode { // acr.ReadMode
     u8   read_mode;   //   0
-    inline operator acr_ReadModeEnum() const;
-    explicit ReadMode(u8                             in_read_mode);
-    ReadMode(acr_ReadModeEnum arg);
-    ReadMode();
+    // func:acr.ReadMode.read_mode.Cast
+    inline               operator acr_ReadModeEnum() const __attribute__((nothrow));
+    // func:acr.ReadMode..Ctor
+    inline               ReadMode() __attribute__((nothrow));
+    // func:acr.ReadMode..FieldwiseCtor
+    explicit inline               ReadMode(u8 in_read_mode) __attribute__((nothrow));
+    // func:acr.ReadMode..EnumCtor
+    inline               ReadMode(acr_ReadModeEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:acr.ReadMode.read_mode.GetEnum
-acr_ReadModeEnum     read_mode_GetEnum(const acr::ReadMode& parent) __attribute__((nothrow));
+inline acr_ReadModeEnum read_mode_GetEnum(const acr::ReadMode& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:acr.ReadMode.read_mode.SetEnum
-void                 read_mode_SetEnum(acr::ReadMode& parent, acr_ReadModeEnum rhs) __attribute__((nothrow));
+inline void          read_mode_SetEnum(acr::ReadMode& parent, acr_ReadModeEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:acr.ReadMode.read_mode.ToCstr
@@ -4132,12 +4314,12 @@ bool                 read_mode_SetStrptrMaybe(acr::ReadMode& parent, algo::strpt
 void                 read_mode_SetStrptr(acr::ReadMode& parent, algo::strptr rhs, acr_ReadModeEnum dflt) __attribute__((nothrow));
 
 // func:acr.ReadMode..Cmp
-i32                  ReadMode_Cmp(acr::ReadMode& lhs, acr::ReadMode& rhs) __attribute__((nothrow));
+inline i32           ReadMode_Cmp(acr::ReadMode& lhs, acr::ReadMode& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.ReadMode..Init
-void                 ReadMode_Init(acr::ReadMode& parent);
+inline void          ReadMode_Init(acr::ReadMode& parent);
 // func:acr.ReadMode..Eq
-bool                 ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) __attribute__((nothrow));
+inline bool          ReadMode_Eq(acr::ReadMode& lhs, acr::ReadMode& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:acr.ReadMode.String  printfmt:Raw
 // func:acr.ReadMode..Print
@@ -4146,18 +4328,22 @@ void                 ReadMode_Print(acr::ReadMode& row, algo::cstring& str) __at
 // --- acr.TableId
 struct TableId { // acr.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator acr_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(acr_TableIdEnum arg);
-    TableId();
+    // func:acr.TableId.value.Cast
+    inline               operator acr_TableIdEnum() const __attribute__((nothrow));
+    // func:acr.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:acr.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:acr.TableId..EnumCtor
+    inline               TableId(acr_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:acr.TableId.value.GetEnum
-acr_TableIdEnum      value_GetEnum(const acr::TableId& parent) __attribute__((nothrow));
+inline acr_TableIdEnum value_GetEnum(const acr::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:acr.TableId.value.SetEnum
-void                 value_SetEnum(acr::TableId& parent, acr_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(acr::TableId& parent, acr_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:acr.TableId.value.ToCstr
@@ -4185,7 +4371,7 @@ bool                 value_ReadStrptrMaybe(acr::TableId& parent, algo::strptr rh
 bool                 TableId_ReadStrptrMaybe(acr::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr.TableId..Init
-void                 TableId_Init(acr::TableId& parent);
+inline void          TableId_Init(acr::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:acr.TableId.String  printfmt:Raw
 // func:acr.TableId..Print

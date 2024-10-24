@@ -36,7 +36,7 @@ namespace atf_ci { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/acr_ed.cpp
+    // cpp/atf_ci/acr_ed.cpp
     //
 
     // Runs in sandbox
@@ -50,7 +50,7 @@ namespace atf_ci { // update-hdr
     // void citest_acr_ed_target();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/apm.cpp
+    // cpp/atf_ci/apm.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void citest_apm();
@@ -58,7 +58,7 @@ namespace atf_ci { // update-hdr
     // void citest_apm_reinstall();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/bootstrap.cpp
+    // cpp/atf_ci/bootstrap.cpp
     //
 
     // Create a bootstrap file for each build dir
@@ -66,7 +66,7 @@ namespace atf_ci { // update-hdr
     // void citest_bootstrap();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/cppcheck.cpp
+    // cpp/atf_ci/cppcheck.cpp
     //
 
     // Run static code analyzer
@@ -75,7 +75,7 @@ namespace atf_ci { // update-hdr
     // void citest_cppcheck();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/main.cpp
+    // cpp/atf_ci/main.cpp
     //
 
     // Check that a list of directories specified with DIRS is clean
@@ -94,6 +94,7 @@ namespace atf_ci { // update-hdr
     // void citest_atf_comp_mem();
     // void citest_normalize_amc_vis();
     // void citest_gitfile();
+    // void citest_scanreadme();
 
     // Compare contents of file `outfname` with the reference file.
     // Any difference = error
@@ -108,7 +109,7 @@ namespace atf_ci { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/src.cpp -- source file (cpp/, include/) normalizations including amc
+    // cpp/atf_ci/src.cpp -- source file (cpp/, include/) normalizations including amc
     //
 
     // indent any source files modified in the last commit
@@ -135,7 +136,7 @@ namespace atf_ci { // update-hdr
     // void citest_non_copyrighted();
 
     // -------------------------------------------------------------------
-    // cpp/atf/ci/ssim.cpp -- ssim database normalizations
+    // cpp/atf_ci/ssim.cpp -- ssim database normalizations
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void citest_normalize_acr();

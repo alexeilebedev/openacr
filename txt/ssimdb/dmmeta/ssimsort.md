@@ -10,18 +10,25 @@ in a structure is not lexicographical.
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Ssimsort
 
 * file:[data/dmmeta/ssimsort.ssim](/data/dmmeta/ssimsort.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|Pkey|
-|sortfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|comment|algo.Comment|Val|
+|ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|sortfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [acr](/txt/exe/acr/README.md) as acr.FSsimsort
-* [amc](/txt/exe/amc/README.md) as amc.FSsimsort
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [acr](/txt/exe/acr/internals.md) as [acr.FSsimsort](/txt/exe/acr/internals.md#acr-fssimsort)
+* [amc](/txt/exe/amc/internals.md) as [amc.FSsimsort](/txt/exe/amc/internals.md#amc-fssimsort)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

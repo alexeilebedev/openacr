@@ -24,9 +24,9 @@ Process types are registered in table `amsdb.proctype`. The standard types are:
 
 ```
 inline-command: acr proctype | ssimfilt ^ -t
-PROCTYPE  ID  COMMENT
-0         0   No process
-amstest   5   Ams testing
+PROCTYPE  ID  NS            COMMENT
+0         0                 No process
+amstest   5   ams_sendtest  Ams testing
 
 ```
 
@@ -52,20 +52,24 @@ output stream. The `ctl` output stream is different from standard output because
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [AMS Library](#ams-library)
-* [List of AMS Messages](#list-of-ams-messages)
-* [`ams.ProcAdd`: Create process](#-ams-procadd--create-process)
-* [`ams.ProcRemove`: Destroy process](#-ams-procremove--destroy-process)
-* [`ams.Seqmsg`: A sequenced message](#-ams-seqmsg--a-sequenced-message)
-* [`ams.OpenMsg`: Open stream for reading/writing](#-ams-openmsg--open-stream-for-reading-writing)
-* [`ams.StreamHb`: Stream heartbeat](#-ams-streamhb--stream-heartbeat)
-* [In-memory stream format; Flow control](#in-memory-stream-format--flow-control)
-* [Performance](#performance)
-* [AMS Stream Tracing](#ams-stream-tracing)
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [AMS Library](#ams-library)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [List of AMS Messages](#list-of-ams-messages)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [`ams.ProcAdd`: Create process](#-ams-procadd--create-process)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [`ams.ProcRemove`: Destroy process](#-ams-procremove--destroy-process)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [`ams.Seqmsg`: A sequenced message](#-ams-seqmsg--a-sequenced-message)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [`ams.OpenMsg`: Open stream for reading/writing](#-ams-openmsg--open-stream-for-reading-writing)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [`ams.StreamHb`: Stream heartbeat](#-ams-streamhb--stream-heartbeat)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In-memory stream format; Flow control](#in-memory-stream-format--flow-control)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Performance](#performance)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [AMS Stream Tracing](#ams-stream-tracing)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ## AMS Library
 <a href="#ams-library"></a>
@@ -290,147 +294,9 @@ Examples of ams stream trace expressions:
 - %/%.md-0,w                       all messages written to md-0 stream
 - (bbox-0/bbox-0.out-0,r|...)      explicit list
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_ams.FDb - In-memory database for lib_ams
-<a href="#lib_ams-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|fdin|lib_ams.FFdin|Lary||ams control messages on stdin|
-|cd_fdin_eof|lib_ams.FFdin|Llist||End reading from stdin|
-|cd_fdin_read|lib_ams.FFdin|Llist||Read next message from file descriptor|
-|_db|lib_ams.FDb|Global|
-|writefile|lib_ams.FWritefile|Cppstack||Provides default name for variables of this type|
-|zd_flush|lib_ams.FWritefile|Llist|
-|stream|lib_ams.FStream|Lary||Table of streams|
-|ind_stream|lib_ams.FStream|Thash||Index of streams by stream id|
-|cd_stream_hb|lib_ams.FStream|Llist|
-|proc_id|ams.ProcId|Val||Process id, e.g. amstest-0|
-|shmem_size|i32|Val|32768|Default stream shared memory size|
-|max_msg_size|i32|Val|4096|Maximum message size|
-|cd_poll_read|lib_ams.FStream|Llist||Hot poll input stream for reading|
-|file_prefix|algo.cstring|Val|""|File prefix for all streams|
-|proc|lib_ams.FProc|Tpool|
-|ind_proc|lib_ams.FProc|Thash|
-|member|lib_ams.FMember|Tpool|
-|ind_member|lib_ams.FMember|Thash|
-|streamtype|lib_ams.FStreamType|Lary|
-|ind_streamtype|lib_ams.FStreamType|Thash|
-|zd_ctlin|lib_ams.FStream|Llist|
-|stream_files_cleaned|bool|Val|
-|shmem_mode|bool|Val|
-|fdin_buf|algo.ByteAry|Val|
-|dflt_stream_id|ams.StreamId|Val|
-|zd_proc|lib_ams.FProc|Llist|
-|c_stream_ctl|lib_ams.FStream|Ptr||Ctl output stream (process events)|
-|expect_buf|algo.cstring|Val||Buffer containing outputs produced since last input|
-|expect_str|algo.cstring|Val||If non-empty, pause reading inputs until this string is non-empty|
-|th_expect|algo_lib.FTimehook|Val||Timeout for expect message|
-|expect_pos|i32|Val||Match position within expect buf|
-|expect_timeout|double|Val|10.0|Default expect timeout|
-|fmt_buf|algo.ByteAry|Val|
-|regx_trace|algo.cstring|RegxSql||Regx of streams to trace|
-|c_stream_out|lib_ams.FStream|Ptr||Output stream|
-
-#### lib_ams.FFdin - FD input (normally stdin)
-<a href="#lib_ams-ffdin"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|iohook|algo_lib.FIohook|Val|
-|in|char|Fbuf|'\n'|
-
-#### lib_ams.FMember - 
-<a href="#lib_ams-fmember"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|member|ams.Member|Val|
-|pos|ams.StreamPos|Val|
-|last_hb|algo.UnTime|Val||Time last heartbeat received|
-|budget|u32|Val|
-|p_stream|lib_ams.FStream|Upptr|
-|p_proc|lib_ams.FProc|Upptr|
-
-#### lib_ams.FProc - 
-<a href="#lib_ams-fproc"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|proc_id|ams.ProcId|Val|
-|zd_member_byproc|lib_ams.FMember|Llist|
-|pid|i32|Val|
-|status|i32|Val|
-|logbuf|algo.cstring|Val|
-|hbtimeout|u32|Val|
-|critical|bool|Val|
-|realtime|bool|Val|
-
-#### lib_ams.FReadfile - 
-<a href="#lib_ams-freadfile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|filename|algo.cstring|Val|
-|fd|algo.Fildes|Val|
-|eof|bool|Val||EOF flag|
-|fail|bool|Val||Failure flag|
-|buf|u8|Tary||Message buffer|
-|cbuf|u8|Tary||Compressed buffer|
-|block|ams.MsgBlock|Val|
-|offset|u32|Tary|
-
-#### lib_ams.FStream - Stream record
-<a href="#lib_ams-fstream"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|stream_id|ams.StreamId|Val||Stream ID (primary key)|
-|filename|algo.cstring|Val||Name of the file (if opened)|
-|shm_file|algo_lib.FFildes|Val||Associated file|
-|flags|ams.StreamFlags|Val||Is stream open for writing|
-|byteary|algo.ByteAry|Val||Substitute for shm_region|
-|shm_handle|u8|Ptr||Associated memory segment handle (windows only)|
-|rpos|ams.StreamPos|Val||Read position|
-|wpos|ams.StreamPos|Val||Write position|
-|shm_region|algo.memptr|Val||Shared memory region|
-|limit|u64|Val||Updated with ackoff, limit for nextoff|
-|offset_mask|u64|Val||Mask for byte eof|
-|cur_msg|ams.Seqmsg|Ptr||Current message|
-|h_msg|ams.MsgHeader|Hook||Message processing hook|
-|h_msg_orig|ams.MsgHeader|Hook||Saved message processing hook (EXPECT)|
-|zd_member_bystream|lib_ams.FMember|Llist|
-|next_ackoff|u64|Val|1023|Force StreamHb after reaching this offset|
-|p_streamtype|lib_ams.FStreamType|Upptr|
-|n_write_block|u32|Val|
-|burst|i32|Val|20|Max number of messages processed at once|
-|writer_error|bool|Val||Writer error was detected|
-
-#### lib_ams.FStreamType - 
-<a href="#lib_ams-fstreamtype"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[amsdb.StreamType](/txt/ssimdb/amsdb/streamtype.md)|Base|
-
-#### lib_ams.FWritefile - 
-<a href="#lib_ams-fwritefile"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|filename|algo.cstring|Val|
-|fd|algo.Fildes|Val|
-|fail|bool|Val||Failure flag|
-|buf|u8|Tary||Message buffer|
-|cbuf|u8|Tary||Compressed buffer|
-|buf_thr|u32|Val|1024*64|Buffer write threshold|
-|block|ams.MsgBlock|Val|
-
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
@@ -647,13 +513,6 @@ void lib_ams::CleanOldStreamFiles()
 ```
 
 ```c++
-// TODO remove: There is no simple way to do it on Win
-// Scan stream/ directory for existing streams
-// Create a stream record for each.
-void lib_ams::DiscoverStreams() 
-```
-
-```c++
 // return TRUE if shared memory region is attached to stream STREAM.
 bool lib_ams::ShmemOpenQ(lib_ams::FStream &stream) 
 ```
@@ -735,6 +594,10 @@ void lib_ams::SkipMsg(lib_ams::FStream &stream)
 ```
 
 ```c++
+int lib_ams::WriteBudget(lib_ams::FStream &stream) 
+```
+
+```c++
 // Send heartbeat to control stream
 // Update
 void lib_ams::SendHb(lib_ams::FStream &stream) 
@@ -808,7 +671,7 @@ void lib_ams::shm_file_Cleanup(lib_ams::FStream &stream)
 ```
 
 ```c++
-// (This message could be unnecessary)
+// Process joined the group
 void lib_ams::CtlMsg_ProcAddMsg(ams::ProcAddMsg &msg) 
 ```
 
@@ -851,7 +714,15 @@ lib_ams::FStream &lib_ams::ind_stream_GetOrCreate(ams::StreamId stream_id)
 ```
 
 ```c++
-void lib_ams::DumpStreamTable() 
+void lib_ams::DumpStreamTableDflt() 
+```
+
+```c++
+void lib_ams::DumpStreamTableVisual() 
+```
+
+```c++
+void lib_ams::DumpStreamTable(int format = 0) 
 ```
 
 ```c++
@@ -915,8 +786,21 @@ void lib_ams::ApplyTraceV(algo::strptr what, bool enable)
 void lib_ams::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str) 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_ams` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -930,10 +814,519 @@ The following source files are part of this tool:
 |[include/gen/lib_ams_gen.inl.h](/include/gen/lib_ams_gen.inl.h)||
 |[include/lib_ams.h](/include/lib_ams.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`lib_ams` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+|[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_ams` generated code creates the tables below.
+All allocations are done through global `lib_ams::_db` [lib_ams.FDb](#lib_ams-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_ams.FDb](#lib_ams-fdb)||FDb._db (Global)|
+|[lib_ams.FFdin](#lib_ams-ffdin)||FDb.fdin (Lary)|fdin (Lary, by rowid)|cd_fdin_eof (Llist)|cd_fdin_read (Llist)|
+|[lib_ams.FMember](#lib_ams-fmember)||FDb.member (Tpool)|ind_member (Thash, hash field member)|
+||||FProc.zd_member_byproc (Llist)|
+||||FStream.zd_member_bystream (Llist)|
+|[lib_ams.FProc](#lib_ams-fproc)||FDb.proc (Tpool)|ind_proc (Thash, hash field proc_id)|zd_proc (Llist)|
+||||FMember.p_proc (Upptr)|
+|[lib_ams.FReadfile](#lib_ams-freadfile)||
+|[lib_ams.FStream](#lib_ams-fstream)||FDb.stream (Lary)|stream (Lary, by rowid)|ind_stream (Thash, hash field stream_id)|cd_stream_hb (Llist)|cd_poll_read (Llist)|zd_ctlin (Llist)|c_stream_ctl (Ptr)|c_stream_out (Ptr)|
+||||FMember.p_stream (Upptr)|
+|[lib_ams.FStreamType](#lib_ams-fstreamtype)|[amsdb.streamtype](/txt/ssimdb/amsdb/streamtype.md)|FDb.streamtype (Lary)|**static**|streamtype (Lary, by rowid)|ind_streamtype (Thash, hash field id)|
+||||FStream.p_streamtype (Upptr)|
+|[lib_ams.FWritefile](#lib_ams-fwritefile)||FDb.writefile (Cppstack)|zd_flush (Llist)|
+
+#### lib_ams.FDb - In-memory database for lib_ams
+<a href="#lib_ams-fdb"></a>
+
+#### lib_ams.FDb Fields
+<a href="#lib_ams-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FDb.fdin|[lib_ams.FFdin](/txt/lib/lib_ams/README.md#lib_ams-ffdin)|[Lary](/txt/exe/amc/reftypes.md#lary)||ams control messages on stdin|
+|lib_ams.FDb.cd_fdin_eof|[lib_ams.FFdin](/txt/lib/lib_ams/README.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftypes.md#llist)||End reading from stdin|
+|lib_ams.FDb.cd_fdin_read|[lib_ams.FFdin](/txt/lib/lib_ams/README.md#lib_ams-ffdin)|[Llist](/txt/exe/amc/reftypes.md#llist)||Read next message from file descriptor|
+|lib_ams.FDb._db|[lib_ams.FDb](/txt/lib/lib_ams/README.md#lib_ams-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_ams.FDb.writefile|[lib_ams.FWritefile](/txt/lib/lib_ams/README.md#lib_ams-fwritefile)|[Cppstack](/txt/exe/amc/reftypes.md#cppstack)||Provides default name for variables of this type|
+|lib_ams.FDb.zd_flush|[lib_ams.FWritefile](/txt/lib/lib_ams/README.md#lib_ams-fwritefile)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FDb.stream|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Lary](/txt/exe/amc/reftypes.md#lary)||Table of streams|
+|lib_ams.FDb.ind_stream|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Thash](/txt/exe/amc/reftypes.md#thash)||Index of streams by stream id|
+|lib_ams.FDb.cd_stream_hb|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FDb.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftypes.md#val)||Process id, e.g. amstest-0|
+|lib_ams.FDb.shmem_size|i32|[Val](/txt/exe/amc/reftypes.md#val)|32768|Default stream shared memory size|
+|lib_ams.FDb.max_msg_size|i32|[Val](/txt/exe/amc/reftypes.md#val)|4096|Maximum message size|
+|lib_ams.FDb.cd_poll_read|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Llist](/txt/exe/amc/reftypes.md#llist)||Hot poll input stream for reading|
+|lib_ams.FDb.file_prefix|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|File prefix for all streams|
+|lib_ams.FDb.proc|[lib_ams.FProc](/txt/lib/lib_ams/README.md#lib_ams-fproc)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|lib_ams.FDb.ind_proc|[lib_ams.FProc](/txt/lib/lib_ams/README.md#lib_ams-fproc)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_ams.FDb.member|[lib_ams.FMember](/txt/lib/lib_ams/README.md#lib_ams-fmember)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|lib_ams.FDb.ind_member|[lib_ams.FMember](/txt/lib/lib_ams/README.md#lib_ams-fmember)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_ams.FDb.streamtype|[lib_ams.FStreamType](/txt/lib/lib_ams/README.md#lib_ams-fstreamtype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|lib_ams.FDb.ind_streamtype|[lib_ams.FStreamType](/txt/lib/lib_ams/README.md#lib_ams-fstreamtype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_ams.FDb.zd_ctlin|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FDb.stream_files_cleaned|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FDb.shmem_mode|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FDb.fdin_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FDb.dflt_stream_id|[ams.StreamId](/txt/protocol/ams/StreamId.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FDb.zd_proc|[lib_ams.FProc](/txt/lib/lib_ams/README.md#lib_ams-fproc)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FDb.c_stream_ctl|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Ctl output stream (process events)|
+|lib_ams.FDb.expect_buf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Buffer containing outputs produced since last input|
+|lib_ams.FDb.expect_str|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||If non-empty, pause reading inputs until this string is non-empty|
+|lib_ams.FDb.th_expect|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftypes.md#val)||Timeout for expect message|
+|lib_ams.FDb.expect_pos|i32|[Val](/txt/exe/amc/reftypes.md#val)||Match position within expect buf|
+|lib_ams.FDb.expect_timeout|double|[Val](/txt/exe/amc/reftypes.md#val)|10.0|Default expect timeout|
+|lib_ams.FDb.fmt_buf|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FDb.regx_trace|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)||Regx of streams to trace|
+|lib_ams.FDb.c_stream_out|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Output stream|
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FDb { // lib_ams.FDb: In-memory database for lib_ams
+    lib_ams::FFdin*          fdin_lary[32];                  // level array
+    i32                      fdin_n;                         // number of elements in array
+    lib_ams::FFdin*          cd_fdin_eof_head;               // zero-terminated doubly linked list
+    i32                      cd_fdin_eof_n;                  // zero-terminated doubly linked list
+    lib_ams::FFdin*          cd_fdin_read_head;              // zero-terminated doubly linked list
+    i32                      cd_fdin_read_n;                 // zero-terminated doubly linked list
+    lib_ams::FWritefile*     zd_flush_head;                  // zero-terminated doubly linked list
+    i32                      zd_flush_n;                     // zero-terminated doubly linked list
+    lib_ams::FWritefile*     zd_flush_tail;                  // pointer to last element
+    algo::SchedTime          zd_flush_next;                  // lib_ams.FDb.zd_flush                                               Next invocation time
+    algo::SchedTime          zd_flush_delay;                 // lib_ams.FDb.zd_flush                                               Delay between invocations
+    lib_ams::FStream*        stream_lary[32];                // level array
+    i32                      stream_n;                       // number of elements in array
+    lib_ams::FStream**       ind_stream_buckets_elems;       // pointer to bucket array
+    i32                      ind_stream_buckets_n;           // number of elements in bucket array
+    i32                      ind_stream_n;                   // number of elements in the hash table
+    lib_ams::FStream*        cd_stream_hb_head;              // zero-terminated doubly linked list
+    i32                      cd_stream_hb_n;                 // zero-terminated doubly linked list
+    algo::SchedTime          cd_stream_hb_next;              // lib_ams.FDb.cd_stream_hb                                           Next invocation time
+    algo::SchedTime          cd_stream_hb_delay;             // lib_ams.FDb.cd_stream_hb                                           Delay between invocations
+    ams::ProcId              proc_id;                        // Process id, e.g. amstest-0
+    i32                      shmem_size;                     //   32768  Default stream shared memory size
+    i32                      max_msg_size;                   //   4096  Maximum message size
+    lib_ams::FStream*        cd_poll_read_head;              // zero-terminated doubly linked list
+    i32                      cd_poll_read_n;                 // zero-terminated doubly linked list
+    algo::cstring            file_prefix;                    //   ""  File prefix for all streams
+    u64                      proc_blocksize;                 // # bytes per block
+    lib_ams::FProc*          proc_free;                      //
+    lib_ams::FProc**         ind_proc_buckets_elems;         // pointer to bucket array
+    i32                      ind_proc_buckets_n;             // number of elements in bucket array
+    i32                      ind_proc_n;                     // number of elements in the hash table
+    u64                      member_blocksize;               // # bytes per block
+    lib_ams::FMember*        member_free;                    //
+    lib_ams::FMember**       ind_member_buckets_elems;       // pointer to bucket array
+    i32                      ind_member_buckets_n;           // number of elements in bucket array
+    i32                      ind_member_n;                   // number of elements in the hash table
+    lib_ams::FStreamType*    streamtype_lary[32];            // level array
+    i32                      streamtype_n;                   // number of elements in array
+    lib_ams::FStreamType**   ind_streamtype_buckets_elems;   // pointer to bucket array
+    i32                      ind_streamtype_buckets_n;       // number of elements in bucket array
+    i32                      ind_streamtype_n;               // number of elements in the hash table
+    lib_ams::FStream*        zd_ctlin_head;                  // zero-terminated doubly linked list
+    i32                      zd_ctlin_n;                     // zero-terminated doubly linked list
+    lib_ams::FStream*        zd_ctlin_tail;                  // pointer to last element
+    bool                     stream_files_cleaned;           //   false
+    bool                     shmem_mode;                     //   false
+    algo::ByteAry            fdin_buf;                       //
+    ams::StreamId            dflt_stream_id;                 //
+    lib_ams::FProc*          zd_proc_head;                   // zero-terminated doubly linked list
+    i32                      zd_proc_n;                      // zero-terminated doubly linked list
+    lib_ams::FProc*          zd_proc_tail;                   // pointer to last element
+    lib_ams::FStream*        c_stream_ctl;                   // Ctl output stream (process events). optional pointer
+    algo::cstring            expect_buf;                     // Buffer containing outputs produced since last input
+    algo::cstring            expect_str;                     // If non-empty, pause reading inputs until this string is non-empty
+    algo_lib::FTimehook      th_expect;                      // Timeout for expect message
+    i32                      expect_pos;                     //   0  Match position within expect buf
+    double                   expect_timeout;                 //   10.0  Default expect timeout
+    algo::ByteAry            fmt_buf;                        //
+    algo_lib::Regx           regx_trace;                     // Sql Regx
+    lib_ams::FStream*        c_stream_out;                   // Output stream. optional pointer
+    lib_ams::trace           trace;                          //
+};
+```
+
+#### lib_ams.FFdin - FD input (normally stdin)
+<a href="#lib_ams-ffdin"></a>
+
+#### lib_ams.FFdin Fields
+<a href="#lib_ams-ffdin-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FFdin.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/README.md#algo_lib-fiohook)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FFdin.in|char|[Fbuf](/txt/exe/amc/reftypes.md#fbuf)|'\n'||
+
+#### Struct FFdin
+<a href="#struct-ffdin"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FFdin { // lib_ams.FFdin: FD input (normally stdin)
+    lib_ams::FFdin*     cd_fdin_eof_next;    // zslist link; -1 means not-in-list
+    lib_ams::FFdin*     cd_fdin_eof_prev;    // previous element
+    lib_ams::FFdin*     cd_fdin_read_next;   // zslist link; -1 means not-in-list
+    lib_ams::FFdin*     cd_fdin_read_prev;   // previous element
+    algo_lib::FIohook   iohook;              //
+    u8                  in_elems[8192];      // pointer to elements of inline array
+    i32                 in_start;            // beginning of valid bytes (in bytes)
+    i32                 in_end;              // end of valid bytes (in bytes)
+    bool                in_eof;              // no more data will be written to buffer
+    algo::Errcode       in_err;              // system error code
+    bool                in_msgvalid;         // current message is valid
+    i32                 in_msglen;           // current message length
+    algo_lib::FIohook   in_iohook;           // edge-triggered hook for refilling buffer
+    bool                in_epoll_enable;     // use epoll?
+    enum { in_max = 8192 };
+    // value field lib_ams.FFdin.iohook is not copiable
+    // field lib_ams.FFdin.in prevents copy
+    // func:lib_ams.FFdin..AssignOp
+    inline lib_ams::FFdin& operator =(const lib_ams::FFdin &rhs) = delete;
+    // value field lib_ams.FFdin.iohook is not copiable
+    // field lib_ams.FFdin.in prevents copy
+    // func:lib_ams.FFdin..CopyCtor
+    inline               FFdin(const lib_ams::FFdin &rhs) = delete;
+private:
+    // func:lib_ams.FFdin..Ctor
+    inline               FFdin() __attribute__((nothrow));
+    // func:lib_ams.FFdin..Dtor
+    inline               ~FFdin() __attribute__((nothrow));
+    friend lib_ams::FFdin&      fdin_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ams::FFdin*      fdin_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fdin_RemoveAll() __attribute__((nothrow));
+    friend void                 fdin_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FMember - 
+<a href="#lib_ams-fmember"></a>
+
+#### lib_ams.FMember Fields
+<a href="#lib_ams-fmember-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FMember.member|[ams.Member](/txt/protocol/ams/Member.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FMember.pos|[ams.StreamPos](/txt/protocol/ams/StreamPos.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FMember.last_hb|[algo.UnTime](/txt/protocol/algo/UnTime.md)|[Val](/txt/exe/amc/reftypes.md#val)||Time last heartbeat received|
+|lib_ams.FMember.budget|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FMember.p_stream|[lib_ams.FStream](/txt/lib/lib_ams/README.md#lib_ams-fstream)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|lib_ams.FMember.p_proc|[lib_ams.FProc](/txt/lib/lib_ams/README.md#lib_ams-fproc)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+
+#### Struct FMember
+<a href="#struct-fmember"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FMember { // lib_ams.FMember
+    lib_ams::FMember*   member_next;               // Pointer to next free element int tpool
+    lib_ams::FMember*   ind_member_next;           // hash next
+    ams::Member         member;                    //
+    ams::StreamPos      pos;                       //
+    algo::UnTime        last_hb;                   // Time last heartbeat received
+    u32                 budget;                    //   0
+    lib_ams::FStream*   p_stream;                  // reference to parent row
+    lib_ams::FProc*     p_proc;                    // reference to parent row
+    lib_ams::FMember*   zd_member_byproc_next;     // zslist link; -1 means not-in-list
+    lib_ams::FMember*   zd_member_byproc_prev;     // previous element
+    lib_ams::FMember*   zd_member_bystream_next;   // zslist link; -1 means not-in-list
+    lib_ams::FMember*   zd_member_bystream_prev;   // previous element
+    // x-reference on lib_ams.FMember.p_stream prevents copy
+    // x-reference on lib_ams.FMember.p_proc prevents copy
+    // func:lib_ams.FMember..AssignOp
+    inline lib_ams::FMember& operator =(const lib_ams::FMember &rhs) = delete;
+    // x-reference on lib_ams.FMember.p_stream prevents copy
+    // x-reference on lib_ams.FMember.p_proc prevents copy
+    // func:lib_ams.FMember..CopyCtor
+    inline               FMember(const lib_ams::FMember &rhs) = delete;
+private:
+    // func:lib_ams.FMember..Ctor
+    inline               FMember() __attribute__((nothrow));
+    // func:lib_ams.FMember..Dtor
+    inline               ~FMember() __attribute__((nothrow));
+    friend lib_ams::FMember&    member_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ams::FMember*    member_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 member_Delete(lib_ams::FMember &row) __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FProc - 
+<a href="#lib_ams-fproc"></a>
+
+#### lib_ams.FProc Fields
+<a href="#lib_ams-fproc-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FProc.proc_id|[ams.ProcId](/txt/protocol/ams/ProcId.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.zd_member_byproc|[lib_ams.FMember](/txt/lib/lib_ams/README.md#lib_ams-fmember)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FProc.pid|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.status|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.logbuf|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.hbtimeout|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.critical|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FProc.realtime|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FProc
+<a href="#struct-fproc"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FProc { // lib_ams.FProc
+    lib_ams::FProc*     proc_next;               // Pointer to next free element int tpool
+    lib_ams::FProc*     ind_proc_next;           // hash next
+    lib_ams::FProc*     zd_proc_next;            // zslist link; -1 means not-in-list
+    lib_ams::FProc*     zd_proc_prev;            // previous element
+    ams::ProcId         proc_id;                 //
+    lib_ams::FMember*   zd_member_byproc_head;   // zero-terminated doubly linked list
+    i32                 zd_member_byproc_n;      // zero-terminated doubly linked list
+    lib_ams::FMember*   zd_member_byproc_tail;   // pointer to last element
+    i32                 pid;                     //   0
+    i32                 status;                  //   0
+    algo::cstring       logbuf;                  //
+    u32                 hbtimeout;               //   0
+    bool                critical;                //   false
+    bool                realtime;                //   false
+    // reftype Llist of lib_ams.FProc.zd_member_byproc prohibits copy
+    // func:lib_ams.FProc..AssignOp
+    inline lib_ams::FProc& operator =(const lib_ams::FProc &rhs) = delete;
+    // reftype Llist of lib_ams.FProc.zd_member_byproc prohibits copy
+    // func:lib_ams.FProc..CopyCtor
+    inline               FProc(const lib_ams::FProc &rhs) = delete;
+private:
+    // func:lib_ams.FProc..Ctor
+    inline               FProc() __attribute__((nothrow));
+    // func:lib_ams.FProc..Dtor
+    inline               ~FProc() __attribute__((nothrow));
+    friend lib_ams::FProc&      proc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ams::FProc*      proc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 proc_Delete(lib_ams::FProc &row) __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FReadfile - 
+<a href="#lib_ams-freadfile"></a>
+
+#### lib_ams.FReadfile Fields
+<a href="#lib_ams-freadfile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FReadfile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FReadfile.fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FReadfile.eof|bool|[Val](/txt/exe/amc/reftypes.md#val)||EOF flag|
+|lib_ams.FReadfile.fail|bool|[Val](/txt/exe/amc/reftypes.md#val)||Failure flag|
+|lib_ams.FReadfile.buf|u8|[Tary](/txt/exe/amc/reftypes.md#tary)||Message buffer|
+|lib_ams.FReadfile.cbuf|u8|[Tary](/txt/exe/amc/reftypes.md#tary)||Compressed buffer|
+|lib_ams.FReadfile.block|[ams.MsgBlock](/txt/protocol/ams/MsgBlock.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FReadfile.offset|u32|[Tary](/txt/exe/amc/reftypes.md#tary)|||
+
+#### Struct FReadfile
+<a href="#struct-freadfile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FReadfile { // lib_ams.FReadfile
+    algo::cstring   filename;       //
+    algo::Fildes    fd;             //
+    bool            eof;            //   false  EOF flag
+    bool            fail;           //   false  Failure flag
+    u8*             buf_elems;      // pointer to elements
+    u32             buf_n;          // number of elements in array
+    u32             buf_max;        // max. capacity of array before realloc
+    u8*             cbuf_elems;     // pointer to elements
+    u32             cbuf_n;         // number of elements in array
+    u32             cbuf_max;       // max. capacity of array before realloc
+    ams::MsgBlock   block;          //
+    u32*            offset_elems;   // pointer to elements
+    u32             offset_n;       // number of elements in array
+    u32             offset_max;     // max. capacity of array before realloc
+    // func:lib_ams.FReadfile..AssignOp
+    lib_ams::FReadfile&  operator =(const lib_ams::FReadfile &rhs) __attribute__((nothrow));
+    // func:lib_ams.FReadfile..Ctor
+    inline               FReadfile() __attribute__((nothrow));
+    // func:lib_ams.FReadfile..Dtor
+    inline               ~FReadfile() __attribute__((nothrow));
+    // func:lib_ams.FReadfile..CopyCtor
+    FReadfile(const lib_ams::FReadfile &rhs) __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FStream - Stream record
+<a href="#lib_ams-fstream"></a>
+
+#### lib_ams.FStream Fields
+<a href="#lib_ams-fstream-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FStream.stream_id|[ams.StreamId](/txt/protocol/ams/StreamId.md)|[Val](/txt/exe/amc/reftypes.md#val)||Stream ID (primary key)|
+|lib_ams.FStream.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Name of the file (if opened)|
+|lib_ams.FStream.shm_file|[algo_lib.FFildes](/txt/lib/algo_lib/README.md#algo_lib-ffildes)|[Val](/txt/exe/amc/reftypes.md#val)||Associated file|
+|lib_ams.FStream.flags|[ams.StreamFlags](/txt/protocol/ams/StreamFlags.md)|[Val](/txt/exe/amc/reftypes.md#val)||Is stream open for writing|
+|lib_ams.FStream.byteary|[algo.ByteAry](/txt/protocol/algo/README.md#algo-byteary)|[Val](/txt/exe/amc/reftypes.md#val)||Substitute for shm_region|
+|lib_ams.FStream.shm_handle|u8|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Associated memory segment handle (windows only)|
+|lib_ams.FStream.rpos|[ams.StreamPos](/txt/protocol/ams/StreamPos.md)|[Val](/txt/exe/amc/reftypes.md#val)||Read position|
+|lib_ams.FStream.wpos|[ams.StreamPos](/txt/protocol/ams/StreamPos.md)|[Val](/txt/exe/amc/reftypes.md#val)||Write position|
+|lib_ams.FStream.shm_region|[algo.memptr](/txt/protocol/algo/memptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Shared memory region|
+|lib_ams.FStream.limit|u64|[Val](/txt/exe/amc/reftypes.md#val)||Updated with ackoff, limit for nextoff|
+|lib_ams.FStream.offset_mask|u64|[Val](/txt/exe/amc/reftypes.md#val)||Mask for byte eof|
+|lib_ams.FStream.cur_msg|[ams.Seqmsg](/txt/protocol/ams/Seqmsg.md)|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Current message|
+|lib_ams.FStream.h_msg|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftypes.md#hook)||Message processing hook|
+|lib_ams.FStream.h_msg_orig|[ams.MsgHeader](/txt/protocol/ams/MsgHeader.md)|[Hook](/txt/exe/amc/reftypes.md#hook)||Saved message processing hook (EXPECT)|
+|lib_ams.FStream.zd_member_bystream|[lib_ams.FMember](/txt/lib/lib_ams/README.md#lib_ams-fmember)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|lib_ams.FStream.next_ackoff|u64|[Val](/txt/exe/amc/reftypes.md#val)|1023|Force StreamHb after reaching this offset|
+|lib_ams.FStream.p_streamtype|[lib_ams.FStreamType](/txt/lib/lib_ams/README.md#lib_ams-fstreamtype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|lib_ams.FStream.n_write_block|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FStream.burst|i32|[Val](/txt/exe/amc/reftypes.md#val)|20|Max number of messages processed at once|
+|lib_ams.FStream.writer_error|bool|[Val](/txt/exe/amc/reftypes.md#val)||Writer error was detected|
+
+#### Struct FStream
+<a href="#struct-fstream"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FStream { // lib_ams.FStream: Stream record
+    lib_ams::FStream*                 ind_stream_next;           // hash next
+    lib_ams::FStream*                 cd_stream_hb_next;         // zslist link; -1 means not-in-list
+    lib_ams::FStream*                 cd_stream_hb_prev;         // previous element
+    lib_ams::FStream*                 cd_poll_read_next;         // zslist link; -1 means not-in-list
+    lib_ams::FStream*                 cd_poll_read_prev;         // previous element
+    lib_ams::FStream*                 zd_ctlin_next;             // zslist link; -1 means not-in-list
+    lib_ams::FStream*                 zd_ctlin_prev;             // previous element
+    ams::StreamId                     stream_id;                 // Stream ID (primary key)
+    algo::cstring                     filename;                  // Name of the file (if opened)
+    algo_lib::FFildes                 shm_file;                  // Associated file
+    ams::StreamFlags                  flags;                     // Is stream open for writing
+    algo::ByteAry                     byteary;                   // Substitute for shm_region
+    u8*                               shm_handle;                // Associated memory segment handle (windows only). optional pointer
+    ams::StreamPos                    rpos;                      // Read position
+    ams::StreamPos                    wpos;                      // Write position
+    algo::memptr                      shm_region;                // Shared memory region
+    u64                               limit;                     //   0  Updated with ackoff, limit for nextoff
+    u64                               offset_mask;               //   0  Mask for byte eof
+    ams::Seqmsg*                      cur_msg;                   // Current message. optional pointer
+    lib_ams::stream_h_msg_hook        h_msg;                     //   NULL  Pointer to a function
+    u64                               h_msg_ctx;                 //   0  Callback context
+    lib_ams::stream_h_msg_orig_hook   h_msg_orig;                //   NULL  Pointer to a function
+    u64                               h_msg_orig_ctx;            //   0  Callback context
+    lib_ams::FMember*                 zd_member_bystream_head;   // zero-terminated doubly linked list
+    i32                               zd_member_bystream_n;      // zero-terminated doubly linked list
+    lib_ams::FMember*                 zd_member_bystream_tail;   // pointer to last element
+    u64                               next_ackoff;               //   1023  Force StreamHb after reaching this offset
+    lib_ams::FStreamType*             p_streamtype;              // reference to parent row
+    u32                               n_write_block;             //   0
+    i32                               burst;                     //   20  Max number of messages processed at once
+    bool                              writer_error;              //   false  Writer error was detected
+    // user-defined fcleanup on lib_ams.FStream.shm_handle prevents copy
+    // reftype Hook of lib_ams.FStream.h_msg prohibits copy
+    // reftype Hook of lib_ams.FStream.h_msg_orig prohibits copy
+    // reftype Llist of lib_ams.FStream.zd_member_bystream prohibits copy
+    // x-reference on lib_ams.FStream.p_streamtype prevents copy
+    // func:lib_ams.FStream..AssignOp
+    lib_ams::FStream&    operator =(const lib_ams::FStream &rhs) = delete;
+    // user-defined fcleanup on lib_ams.FStream.shm_handle prevents copy
+    // reftype Hook of lib_ams.FStream.h_msg prohibits copy
+    // reftype Hook of lib_ams.FStream.h_msg_orig prohibits copy
+    // reftype Llist of lib_ams.FStream.zd_member_bystream prohibits copy
+    // x-reference on lib_ams.FStream.p_streamtype prevents copy
+    // func:lib_ams.FStream..CopyCtor
+    FStream(const lib_ams::FStream &rhs) = delete;
+private:
+    // func:lib_ams.FStream..Ctor
+    inline               FStream() __attribute__((nothrow));
+    // func:lib_ams.FStream..Dtor
+    inline               ~FStream() __attribute__((nothrow));
+    friend lib_ams::FStream&    stream_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ams::FStream*    stream_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 stream_RemoveAll() __attribute__((nothrow));
+    friend void                 stream_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FStreamType - 
+<a href="#lib_ams-fstreamtype"></a>
+
+#### lib_ams.FStreamType Fields
+<a href="#lib_ams-fstreamtype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FStreamType.base|[amsdb.StreamType](/txt/ssimdb/amsdb/streamtype.md)|[Base](/txt/ssimdb/amsdb/streamtype.md)|||
+
+#### Struct FStreamType
+<a href="#struct-fstreamtype"></a>
+*Note:* field ``lib_ams.FStreamType.base`` has reftype ``base`` so the fields of [amsdb.StreamType](/txt/ssimdb/amsdb/streamtype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FStreamType { // lib_ams.FStreamType
+    lib_ams::FStreamType*   ind_streamtype_next;   // hash next
+    algo::Smallstr50        streamtype;            //
+    ams::StreamType         id;                    //
+    algo::Comment           comment;               //
+    // func:lib_ams.FStreamType..AssignOp
+    inline lib_ams::FStreamType& operator =(const lib_ams::FStreamType &rhs) = delete;
+    // func:lib_ams.FStreamType..CopyCtor
+    inline               FStreamType(const lib_ams::FStreamType &rhs) = delete;
+private:
+    // func:lib_ams.FStreamType..Ctor
+    inline               FStreamType() __attribute__((nothrow));
+    // func:lib_ams.FStreamType..Dtor
+    inline               ~FStreamType() __attribute__((nothrow));
+    friend lib_ams::FStreamType& streamtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_ams::FStreamType* streamtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 streamtype_RemoveAll() __attribute__((nothrow));
+    friend void                 streamtype_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_ams.FWritefile - 
+<a href="#lib_ams-fwritefile"></a>
+
+#### lib_ams.FWritefile Fields
+<a href="#lib_ams-fwritefile-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_ams.FWritefile.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FWritefile.fd|[algo.Fildes](/txt/protocol/algo/Fildes.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_ams.FWritefile.fail|bool|[Val](/txt/exe/amc/reftypes.md#val)||Failure flag|
+|lib_ams.FWritefile.buf|u8|[Tary](/txt/exe/amc/reftypes.md#tary)||Message buffer|
+|lib_ams.FWritefile.cbuf|u8|[Tary](/txt/exe/amc/reftypes.md#tary)||Compressed buffer|
+|lib_ams.FWritefile.buf_thr|u32|[Val](/txt/exe/amc/reftypes.md#val)|1024*64|Buffer write threshold|
+|lib_ams.FWritefile.block|[ams.MsgBlock](/txt/protocol/ams/MsgBlock.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FWritefile
+<a href="#struct-fwritefile"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ams_gen.h](/include/gen/lib_ams_gen.h)
+```
+struct FWritefile { // lib_ams.FWritefile
+    lib_ams::FWritefile*   zd_flush_next;   // zslist link; -1 means not-in-list
+    lib_ams::FWritefile*   zd_flush_prev;   // previous element
+    algo::cstring          filename;        //
+    algo::Fildes           fd;              //
+    bool                   fail;            //   false  Failure flag
+    u8*                    buf_elems;       // pointer to elements
+    u32                    buf_n;           // number of elements in array
+    u32                    buf_max;         // max. capacity of array before realloc
+    u8*                    cbuf_elems;      // pointer to elements
+    u32                    cbuf_n;          // number of elements in array
+    u32                    cbuf_max;        // max. capacity of array before realloc
+    u32                    buf_thr;         //   1024*64  Buffer write threshold
+    ams::MsgBlock          block;           //
+    // func:lib_ams.FWritefile..AssignOp
+    lib_ams::FWritefile& operator =(const lib_ams::FWritefile &rhs) = delete;
+    // func:lib_ams.FWritefile..Ctor
+    inline               FWritefile() __attribute__((nothrow));
+    // func:lib_ams.FWritefile..Dtor
+    inline               ~FWritefile() __attribute__((nothrow));
+    // func:lib_ams.FWritefile..CopyCtor
+    FWritefile(const lib_ams::FWritefile &rhs) = delete;
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 
