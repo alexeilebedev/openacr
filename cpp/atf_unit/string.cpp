@@ -114,8 +114,7 @@ void atf_unit::unittest_algo_lib_CString() {
         x<<b;
         cstring a(x);
         vrfy_(a=="bbbbb");
-        vrfy_(x=="")// stolen!
-            }
+    }
 
     {
         strptr x("xxx");

@@ -22,14 +22,6 @@
 //
 
 
-inline pad_byte::pad_byte(u8                             in_value)
-    : value(in_value)
-{
-}
-inline pad_byte::pad_byte() {
-    ::pad_byte_Init(*this);
-}
-
 
 // --- pad_byte..Init
 // Set all fields to initial values.

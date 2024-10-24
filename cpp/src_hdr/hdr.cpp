@@ -152,8 +152,8 @@ static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
 //    1998,2001,2014-2016
 //
 static void UpdateCopyrightYear(algo::cstring &years, int year) {
-    strptr prior_ranges = Pathcomp(years,",RL");
-    strptr last_range = Pathcomp(years,",RR");
+    strptr prior_ranges = Trimmed(Pathcomp(years,",RL"));
+    strptr last_range = Trimmed(Pathcomp(years,",RR"));
     strptr first_year = Pathcomp(last_range,"-RL");
     strptr last_year = Pathcomp(last_range,"-RR");
     i32 last_year_num = ParseU32(last_year,0);
@@ -164,7 +164,7 @@ static void UpdateCopyrightYear(algo::cstring &years, int year) {
         }
         if (last_year_num+1 == year) {
             new_years << (ch_N(first_year)? first_year: last_year)<< "-";
-        } else {
+        } else if (last_range != "") {
             new_years << last_range << ",";
         }
         new_years << year;
@@ -274,6 +274,9 @@ void src_hdr::Main() {
     vrfy (!src_hdr::_db.cmdline.update_copyright || src_hdr::_db.c_dflt_copyright,
           "src_hdr: default copyright not defined (please update dev.copyright table");
     (void)Regx_ReadStrptrMaybe(exclude,"(include/gen/%|cpp/gen/%|extern/%|bin/bootstrap/%)");
+    if (_db.cmdline.update_copyright) {
+        _db.cmdline.write=true;
+    }
     ind_beg(src_hdr::_db_targsrc_curs,targsrc,src_hdr::_db) {
         if (Regx_Match(_db.cmdline.targsrc,targsrc.targsrc) && !Regx_Match(exclude,src_Get(targsrc))) {
             src_hdr::FSrc src;

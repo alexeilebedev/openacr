@@ -1,4 +1,4 @@
-## AMC Runtime
+## amc Runtime
 <a href="#amc-runtime"></a>
 AMC offers many ways to structure RAM (into pools, records, indexes, etc). The other dimension
 of a program is *time*. Here, AMC doesn't have as much to say; The user implements their

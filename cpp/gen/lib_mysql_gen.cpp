@@ -37,9 +37,9 @@ namespace lib_mysql { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:lib_mysql.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:lib_mysql...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_mysql.trace..Print
@@ -187,12 +187,6 @@ void lib_mysql::FDb_Init() {
     lib_mysql::InitReflection();
 }
 
-// --- lib_mysql.FDb..Uninit
-void lib_mysql::FDb_Uninit() {
-    lib_mysql::FDb &row = _db; (void)row;
-    mysql_Cleanup(); // dmmeta.fcleanup:lib_mysql.FDb.mysql
-}
-
 // --- lib_mysql.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -267,12 +261,6 @@ bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr
 // cfmt:lib_mysql.FieldId.String  printfmt:Raw
 void lib_mysql::FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) {
     lib_mysql::value_Print(row, str);
-}
-
-// --- lib_mysql.Res..Uninit
-void lib_mysql::Res_Uninit(lib_mysql::Res& res) {
-    lib_mysql::Res &row = res; (void)row;
-    res_Cleanup(res); // dmmeta.fcleanup:lib_mysql.Res.res
 }
 
 // --- lib_mysql...SizeCheck

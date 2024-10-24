@@ -32,7 +32,7 @@ namespace atf_comp { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/atf/comp/edit.cpp -- Edit comptest
+    // cpp/atf_comp/edit.cpp -- Edit comptest
     //
 
     // Open selected testcases in an editor
@@ -40,7 +40,7 @@ namespace atf_comp { // update-hdr
     void Main_EditSelected();
 
     // -------------------------------------------------------------------
-    // cpp/atf/comp/main.cpp
+    // cpp/atf_comp/main.cpp
     //
 
     // Compute component directory depending on config given on command line
@@ -124,7 +124,7 @@ namespace atf_comp { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/atf/comp/read.cpp -- Read comptest from input
+    // cpp/atf_comp/read.cpp -- Read comptest from input
     //
 
     // Read FD, create testcases based on the following mini-language

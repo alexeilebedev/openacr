@@ -38,6 +38,7 @@ namespace ssimfilt { // update-hdr
 
     // Select attrs to display and print as ssim
     void PrintSsim(algo::Tuple &tuple);
+    void PrintStable(algo::strptr line, algo::Tuple &tuple);
 
     // Print selected fields one by one
     void PrintField(algo::Tuple &tuple);
@@ -53,6 +54,7 @@ namespace ssimfilt { // update-hdr
     void PrintJson(algo::Tuple &tuple);
     void PrintCsv(algo::Tuple &tuple);
     void Table_Save(algo::Tuple &tuple);
+    void MDTable_Save(algo::Tuple &tuple);
     void Table_Flush();
     void Main();
 }

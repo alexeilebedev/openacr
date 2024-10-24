@@ -1,3 +1,4 @@
 You seem to be calling acr_compl interactively.
-Normally, acr_compl is implicitly by bash, with COMP_LINE or COMP_POINT environment variables set.
+Normally, acr_compl is invoked implicitly by bash,
+with COMP_LINE or COMP_POINT environment variables set.
 Suggestion: Use acr_compl -install to generate an installation script

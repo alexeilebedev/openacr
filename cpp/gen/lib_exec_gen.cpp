@@ -50,7 +50,7 @@ namespace lib_exec { // gen:ns_print_proto
     // func:lib_exec.FDb.bh_syscmd.Upheap
     static int           bh_syscmd_Upheap(lib_exec::FSyscmd& row, int idx) __attribute__((nothrow));
     // func:lib_exec.FDb.bh_syscmd.ElemLt
-    static bool          bh_syscmd_ElemLt(lib_exec::FSyscmd &a, lib_exec::FSyscmd &b) __attribute__((nothrow));
+    inline static bool   bh_syscmd_ElemLt(lib_exec::FSyscmd &a, lib_exec::FSyscmd &b) __attribute__((nothrow));
     // func:lib_exec.FDb.bh_syscmd_curs.Add
     static void          _db_bh_syscmd_curs_Add(_db_bh_syscmd_curs &curs, lib_exec::FSyscmd& row);
     // find trace by row id (used to implement reflection)
@@ -58,9 +58,9 @@ namespace lib_exec { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:lib_exec.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:lib_exec...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- lib_exec.Cmdline..ReadFieldMaybe

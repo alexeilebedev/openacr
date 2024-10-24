@@ -37,6 +37,9 @@ acr.insert  dev.gitfile  gitfile:include/samp_tut3.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/README.md
   acr.insert  dev.readme  gitfile:txt/exe/samp_tut3/README.md      inl:N   sandbox:N   filter:""  comment:""
 
+acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/internals.md
+  acr.insert  dev.readme  gitfile:txt/exe/samp_tut3/internals.md  inl:N   sandbox:N   filter:""  comment:""
+
 acr.insert  dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
   acr.insert  dev.target  target:samp_tut3
     acr.insert  dev.targdep  targdep:samp_tut3.algo_lib  comment:""
@@ -61,13 +64,12 @@ acr.insert  dmmeta.ctype  ctype:command.samp_tut3  comment:""
     acr.insert  dmmeta.floadtuples  field:command.samp_tut3.in  comment:""
 
   acr.insert  dmmeta.cfmt  cfmt:command.samp_tut3.Argv  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-report.acr  ***
-report.amc  ***
-abt.config  config:Linux-g++.release-x86_64  cache:***  out_dir:build/release
-abt.outofdate  ***
-report.abt  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
-report.amc  ***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Run:
@@ -128,8 +130,8 @@ acr.insert  dmmeta.ctype  ctype:samp_tut3.Value  comment:""
   acr.insert  dmmeta.field  field:samp_tut3.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
 
 acr.insert  dmmeta.field  field:samp_tut3.FDb.value  arg:samp_tut3.Value  reftype:Tpool  dflt:""  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -139,8 +141,8 @@ acr.insert  dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  ref
   acr.insert  dmmeta.llist  field:samp_tut3.FDb.zd_value  havetail:Y  havecount:Y  comment:""
   acr.insert  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
   acr.insert  dmmeta.xref  field:samp_tut3.FDb.zd_value  inscond:true  via:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 The above commands, which are best practiced interactively, add the following records to our database:
@@ -159,7 +161,7 @@ dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  
   dmmeta.llist  field:samp_tut3.FDb.zd_value  havetail:Y  havecount:Y  comment:""
   dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
   dmmeta.xref  field:samp_tut3.FDb.zd_value  inscond:true  via:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 To summarize:
@@ -195,9 +197,8 @@ void samp_tut3::Main() {
 
 ```
 inline-command: ai samp_tut3
-abt.config  config:Linux-g++.release-x86_64  cache:***  out_dir:build/release
-abt.outofdate  ***
-report.abt  ***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
 ```
@@ -235,7 +236,7 @@ void samp_tut3::MainLoop() {
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
-report.amc  ***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 We see that `samp_tut3::Step` is now called. That's because we defined the `fstep` record on `zd_value`.
@@ -253,7 +254,7 @@ void samp_tut3::Step() {
 // this function is 'extrn' and implemented by user
 void                 zd_value_Step() __attribute__((nothrow));
 
-report.amc  ***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Almost nothing interesting here... Let's check `zd_value_Call`:
@@ -270,7 +271,7 @@ inline static void samp_tut3::zd_value_Call() {
     }
 }
 
-report.amc  ***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Finally, the interesting bit. We see that the main `Step` checks to see if `zd_value` is empty.

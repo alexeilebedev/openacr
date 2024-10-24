@@ -46,19 +46,23 @@ namespace lib_prot { // gen:ns_print_struct
 #pragma pack(push,1)
 struct FieldId { // lib_prot.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_prot_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_prot_FieldIdEnum arg);
-    FieldId();
+    // func:lib_prot.FieldId.value.Cast
+    inline               operator lib_prot_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_prot.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_prot.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_prot.FieldId..EnumCtor
+    inline               FieldId(lib_prot_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_prot.FieldId.value.GetEnum
-lib_prot_FieldIdEnum value_GetEnum(const lib_prot::FieldId& parent) __attribute__((nothrow));
+inline lib_prot_FieldIdEnum value_GetEnum(const lib_prot::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_prot.FieldId.value.SetEnum
-void                 value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_prot.FieldId.value.ToCstr
@@ -86,7 +90,7 @@ bool                 value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_prot.FieldId..Init
-void                 FieldId_Init(lib_prot::FieldId& parent);
+inline void          FieldId_Init(lib_prot::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_prot.FieldId.String  printfmt:Raw
 // func:lib_prot.FieldId..Print

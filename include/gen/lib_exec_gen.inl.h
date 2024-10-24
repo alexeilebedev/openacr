@@ -27,10 +27,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
-inline lib_exec::Cmdline::Cmdline() {
-    lib_exec::Cmdline_Init(*this);
-}
-
 
 // --- lib_exec.Cmdline..Init
 // Set all fields to initial values.
@@ -41,9 +37,15 @@ inline void lib_exec::Cmdline_Init(lib_exec::Cmdline& parent) {
     parent.complooo = bool(false);
     parent.merge_output = bool(false);
 }
-inline lib_exec::trace::trace() {
+
+// --- lib_exec.Cmdline..Ctor
+inline  lib_exec::Cmdline::Cmdline() {
+    lib_exec::Cmdline_Init(*this);
 }
 
+// --- lib_exec.trace..Ctor
+inline  lib_exec::trace::trace() {
+}
 
 // --- lib_exec.FDb.syscmddep.EmptyQ
 // Return true if index is empty
@@ -313,14 +315,6 @@ inline void lib_exec::_db_zd_started_curs_Next(_db_zd_started_curs &curs) {
 inline lib_exec::FSyscmd& lib_exec::_db_zd_started_curs_Access(_db_zd_started_curs &curs) {
     return *curs.row;
 }
-inline lib_exec::FSyscmd::FSyscmd() {
-    lib_exec::FSyscmd_Init(*this);
-}
-
-inline lib_exec::FSyscmd::~FSyscmd() {
-    lib_exec::FSyscmd_Uninit(*this);
-}
-
 
 // --- lib_exec.FSyscmd.c_prior.EmptyQ
 // Return true if index is empty
@@ -487,14 +481,16 @@ inline void lib_exec::syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) {
 inline lib_exec::FSyscmddep& lib_exec::syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline lib_exec::FSyscmddep::FSyscmddep() {
-    lib_exec::FSyscmddep_Init(*this);
+
+// --- lib_exec.FSyscmd..Ctor
+inline  lib_exec::FSyscmd::FSyscmd() {
+    lib_exec::FSyscmd_Init(*this);
 }
 
-inline lib_exec::FSyscmddep::~FSyscmddep() {
-    lib_exec::FSyscmddep_Uninit(*this);
+// --- lib_exec.FSyscmd..Dtor
+inline  lib_exec::FSyscmd::~FSyscmd() {
+    lib_exec::FSyscmd_Uninit(*this);
 }
-
 
 // --- lib_exec.FSyscmddep..Init
 // Set all fields to initial values.
@@ -506,15 +502,16 @@ inline void lib_exec::FSyscmddep_Init(lib_exec::FSyscmddep& syscmddep) {
     syscmddep.syscmd_c_next_in_ary = bool(false);
     syscmddep.syscmd_c_prior_in_ary = bool(false);
 }
-inline lib_exec::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_exec::FieldId::FieldId(lib_exec_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_exec::FieldId::FieldId() {
-    lib_exec::FieldId_Init(*this);
+
+// --- lib_exec.FSyscmddep..Ctor
+inline  lib_exec::FSyscmddep::FSyscmddep() {
+    lib_exec::FSyscmddep_Init(*this);
 }
 
+// --- lib_exec.FSyscmddep..Dtor
+inline  lib_exec::FSyscmddep::~FSyscmddep() {
+    lib_exec::FSyscmddep_Uninit(*this);
+}
 
 // --- lib_exec.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -529,7 +526,7 @@ inline void lib_exec::value_SetEnum(lib_exec::FieldId& parent, lib_exec_FieldIdE
 }
 
 // --- lib_exec.FieldId.value.Cast
-inline lib_exec::FieldId::operator lib_exec_FieldIdEnum () const {
+inline  lib_exec::FieldId::operator lib_exec_FieldIdEnum() const {
     return lib_exec_FieldIdEnum((*this).value);
 }
 
@@ -537,6 +534,22 @@ inline lib_exec::FieldId::operator lib_exec_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void lib_exec::FieldId_Init(lib_exec::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_exec.FieldId..Ctor
+inline  lib_exec::FieldId::FieldId() {
+    lib_exec::FieldId_Init(*this);
+}
+
+// --- lib_exec.FieldId..FieldwiseCtor
+inline  lib_exec::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_exec.FieldId..EnumCtor
+inline  lib_exec::FieldId::FieldId(lib_exec_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_exec::trace &row) {// cfmt:lib_exec.trace.String

@@ -27,14 +27,6 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline ssim2mysql::FCmd::FCmd() {
-    ssim2mysql::FCmd_Init(*this);
-}
-
-inline ssim2mysql::FCmd::~FCmd() {
-    ssim2mysql::FCmd_Uninit(*this);
-}
-
 
 // --- ssim2mysql.FCmd..Init
 // Set all fields to initial values.
@@ -42,14 +34,16 @@ inline void ssim2mysql::FCmd_Init(ssim2mysql::FCmd& cmd) {
     cmd.cmd_next = (ssim2mysql::FCmd*)-1; // (ssim2mysql.FDb.cmd) not-in-tpool's freelist
     cmd.zs_cmd_next = (ssim2mysql::FCmd*)-1; // (ssim2mysql.FDb.zs_cmd) not-in-list
 }
-inline ssim2mysql::FColumn::FColumn() {
-    ssim2mysql::FColumn_Init(*this);
+
+// --- ssim2mysql.FCmd..Ctor
+inline  ssim2mysql::FCmd::FCmd() {
+    ssim2mysql::FCmd_Init(*this);
 }
 
-inline ssim2mysql::FColumn::~FColumn() {
-    ssim2mysql::FColumn_Uninit(*this);
+// --- ssim2mysql.FCmd..Dtor
+inline  ssim2mysql::FCmd::~FCmd() {
+    ssim2mysql::FCmd_Uninit(*this);
 }
-
 
 // --- ssim2mysql.FColumn..Init
 // Set all fields to initial values.
@@ -60,14 +54,16 @@ inline void ssim2mysql::FColumn_Init(ssim2mysql::FColumn& column) {
     column.ssimfile_c_column_in_ary = bool(false);
     column.ind_column_next = (ssim2mysql::FColumn*)-1; // (ssim2mysql.FDb.ind_column) not-in-hash
 }
-inline ssim2mysql::FCtype::FCtype() {
-    ssim2mysql::FCtype_Init(*this);
+
+// --- ssim2mysql.FColumn..Ctor
+inline  ssim2mysql::FColumn::FColumn() {
+    ssim2mysql::FColumn_Init(*this);
 }
 
-inline ssim2mysql::FCtype::~FCtype() {
-    ssim2mysql::FCtype_Uninit(*this);
+// --- ssim2mysql.FColumn..Dtor
+inline  ssim2mysql::FColumn::~FColumn() {
+    ssim2mysql::FColumn_Uninit(*this);
 }
-
 
 // --- ssim2mysql.FCtype.c_sqltype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -203,10 +199,16 @@ inline void ssim2mysql::FCtype_Init(ssim2mysql::FCtype& ctype) {
     ctype.c_ssimfile = NULL;
     ctype.ind_ctype_next = (ssim2mysql::FCtype*)-1; // (ssim2mysql.FDb.ind_ctype) not-in-hash
 }
-inline ssim2mysql::trace::trace() {
-    ssim2mysql::trace_Init(*this);
+
+// --- ssim2mysql.FCtype..Ctor
+inline  ssim2mysql::FCtype::FCtype() {
+    ssim2mysql::FCtype_Init(*this);
 }
 
+// --- ssim2mysql.FCtype..Dtor
+inline  ssim2mysql::FCtype::~FCtype() {
+    ssim2mysql::FCtype_Uninit(*this);
+}
 
 // --- ssim2mysql.trace..Init
 // Set all fields to initial values.
@@ -215,6 +217,11 @@ inline void ssim2mysql::trace_Init(ssim2mysql::trace& parent) {
     parent.step_zs_cmd_cycles = u64(0);
     parent.step_cd_input_line = u64(0);
     parent.step_cd_input_line_cycles = u64(0);
+}
+
+// --- ssim2mysql.trace..Ctor
+inline  ssim2mysql::trace::trace() {
+    ssim2mysql::trace_Init(*this);
 }
 
 // --- ssim2mysql.FDb.ind_column.EmptyQ
@@ -968,14 +975,6 @@ inline void ssim2mysql::_db_cd_input_line_curs_Next(_db_cd_input_line_curs &curs
 inline ssim2mysql::FInput& ssim2mysql::_db_cd_input_line_curs_Access(_db_cd_input_line_curs &curs) {
     return *curs.row;
 }
-inline ssim2mysql::FField::FField() {
-    ssim2mysql::FField_Init(*this);
-}
-
-inline ssim2mysql::FField::~FField() {
-    ssim2mysql::FField_Uninit(*this);
-}
-
 
 // --- ssim2mysql.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -996,16 +995,16 @@ inline void ssim2mysql::c_substr_Remove(ssim2mysql::FField& field, ssim2mysql::F
         field.c_substr = NULL;
     }
 }
-inline ssim2mysql::FInput::FInput() {
-    ssim2mysql::FInput_Init(*this);
-    // added because ssim2mysql.FInput.in_buf (Fbuf) does not need initialization
-    // coverity[uninit_member]
+
+// --- ssim2mysql.FField..Ctor
+inline  ssim2mysql::FField::FField() {
+    ssim2mysql::FField_Init(*this);
 }
 
-inline ssim2mysql::FInput::~FInput() {
-    ssim2mysql::FInput_Uninit(*this);
+// --- ssim2mysql.FField..Dtor
+inline  ssim2mysql::FField::~FField() {
+    ssim2mysql::FField_Uninit(*this);
 }
-
 
 // --- ssim2mysql.FInput.in_buf.Max
 // Return max. number of bytes in the buffer.
@@ -1019,14 +1018,18 @@ inline i32 ssim2mysql::in_buf_Max(ssim2mysql::FInput& input) {
 inline i32 ssim2mysql::in_buf_N(ssim2mysql::FInput& input) {
     return input.in_buf_end - input.in_buf_start;
 }
-inline ssim2mysql::FNs::FNs() {
-    ssim2mysql::FNs_Init(*this);
+
+// --- ssim2mysql.FInput..Ctor
+inline  ssim2mysql::FInput::FInput() {
+    ssim2mysql::FInput_Init(*this);
+    // added because ssim2mysql.FInput.in_buf (Fbuf) does not need initialization
+    // coverity[uninit_member]
 }
 
-inline ssim2mysql::FNs::~FNs() {
-    ssim2mysql::FNs_Uninit(*this);
+// --- ssim2mysql.FInput..Dtor
+inline  ssim2mysql::FInput::~FInput() {
+    ssim2mysql::FInput_Uninit(*this);
 }
-
 
 // --- ssim2mysql.FNs.c_ssimfile.EmptyQ
 // Return true if index is empty
@@ -1119,21 +1122,25 @@ inline void ssim2mysql::ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) {
 inline ssim2mysql::FSsimfile& ssim2mysql::ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline ssim2mysql::FSqltype::FSqltype() {
+
+// --- ssim2mysql.FNs..Ctor
+inline  ssim2mysql::FNs::FNs() {
+    ssim2mysql::FNs_Init(*this);
 }
 
-inline ssim2mysql::FSqltype::~FSqltype() {
+// --- ssim2mysql.FNs..Dtor
+inline  ssim2mysql::FNs::~FNs() {
+    ssim2mysql::FNs_Uninit(*this);
+}
+
+// --- ssim2mysql.FSqltype..Ctor
+inline  ssim2mysql::FSqltype::FSqltype() {
+}
+
+// --- ssim2mysql.FSqltype..Dtor
+inline  ssim2mysql::FSqltype::~FSqltype() {
     ssim2mysql::FSqltype_Uninit(*this);
 }
-
-inline ssim2mysql::FSsimfile::FSsimfile() {
-    ssim2mysql::FSsimfile_Init(*this);
-}
-
-inline ssim2mysql::FSsimfile::~FSsimfile() {
-    ssim2mysql::FSsimfile_Uninit(*this);
-}
-
 
 // --- ssim2mysql.FSsimfile.c_column.EmptyQ
 // Return true if index is empty
@@ -1217,29 +1224,32 @@ inline void ssim2mysql::ssimfile_c_column_curs_Next(ssimfile_c_column_curs &curs
 inline ssim2mysql::FColumn& ssim2mysql::ssimfile_c_column_curs_Access(ssimfile_c_column_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline ssim2mysql::FSubstr::FSubstr() {
-    ssim2mysql::FSubstr_Init(*this);
+
+// --- ssim2mysql.FSsimfile..Ctor
+inline  ssim2mysql::FSsimfile::FSsimfile() {
+    ssim2mysql::FSsimfile_Init(*this);
 }
 
-inline ssim2mysql::FSubstr::~FSubstr() {
-    ssim2mysql::FSubstr_Uninit(*this);
+// --- ssim2mysql.FSsimfile..Dtor
+inline  ssim2mysql::FSsimfile::~FSsimfile() {
+    ssim2mysql::FSsimfile_Uninit(*this);
 }
-
 
 // --- ssim2mysql.FSubstr..Init
 // Set all fields to initial values.
 inline void ssim2mysql::FSubstr_Init(ssim2mysql::FSubstr& substr) {
     substr.p_field = NULL;
 }
-inline ssim2mysql::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ssim2mysql::FieldId::FieldId(ssim2mysql_FieldIdEnum arg) { this->value = i32(arg); }
-inline ssim2mysql::FieldId::FieldId() {
-    ssim2mysql::FieldId_Init(*this);
+
+// --- ssim2mysql.FSubstr..Ctor
+inline  ssim2mysql::FSubstr::FSubstr() {
+    ssim2mysql::FSubstr_Init(*this);
 }
 
+// --- ssim2mysql.FSubstr..Dtor
+inline  ssim2mysql::FSubstr::~FSubstr() {
+    ssim2mysql::FSubstr_Uninit(*this);
+}
 
 // --- ssim2mysql.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1254,7 +1264,7 @@ inline void ssim2mysql::value_SetEnum(ssim2mysql::FieldId& parent, ssim2mysql_Fi
 }
 
 // --- ssim2mysql.FieldId.value.Cast
-inline ssim2mysql::FieldId::operator ssim2mysql_FieldIdEnum () const {
+inline  ssim2mysql::FieldId::operator ssim2mysql_FieldIdEnum() const {
     return ssim2mysql_FieldIdEnum((*this).value);
 }
 
@@ -1263,15 +1273,22 @@ inline ssim2mysql::FieldId::operator ssim2mysql_FieldIdEnum () const {
 inline void ssim2mysql::FieldId_Init(ssim2mysql::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline ssim2mysql::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ssim2mysql::TableId::TableId(ssim2mysql_TableIdEnum arg) { this->value = i32(arg); }
-inline ssim2mysql::TableId::TableId() {
-    ssim2mysql::TableId_Init(*this);
+
+// --- ssim2mysql.FieldId..Ctor
+inline  ssim2mysql::FieldId::FieldId() {
+    ssim2mysql::FieldId_Init(*this);
 }
 
+// --- ssim2mysql.FieldId..FieldwiseCtor
+inline  ssim2mysql::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ssim2mysql.FieldId..EnumCtor
+inline  ssim2mysql::FieldId::FieldId(ssim2mysql_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- ssim2mysql.TableId.value.GetEnum
 // Get value of field as enum type
@@ -1286,7 +1303,7 @@ inline void ssim2mysql::value_SetEnum(ssim2mysql::TableId& parent, ssim2mysql_Ta
 }
 
 // --- ssim2mysql.TableId.value.Cast
-inline ssim2mysql::TableId::operator ssim2mysql_TableIdEnum () const {
+inline  ssim2mysql::TableId::operator ssim2mysql_TableIdEnum() const {
     return ssim2mysql_TableIdEnum((*this).value);
 }
 
@@ -1294,6 +1311,22 @@ inline ssim2mysql::TableId::operator ssim2mysql_TableIdEnum () const {
 // Set all fields to initial values.
 inline void ssim2mysql::TableId_Init(ssim2mysql::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- ssim2mysql.TableId..Ctor
+inline  ssim2mysql::TableId::TableId() {
+    ssim2mysql::TableId_Init(*this);
+}
+
+// --- ssim2mysql.TableId..FieldwiseCtor
+inline  ssim2mysql::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ssim2mysql.TableId..EnumCtor
+inline  ssim2mysql::TableId::TableId(ssim2mysql_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssim2mysql::FCmd &row) {// cfmt:ssim2mysql.FCmd.String

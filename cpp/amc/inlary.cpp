@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/inlary.cpp
+// Source: cpp/amc/inlary.cpp -- Inline array
 //
 
 #include "include/amc.h"
@@ -85,27 +85,24 @@ void amc::tclass_Inlary() {
     Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
     inlary.max = i64_Max(inlary.max, c_static_N(*field.p_arg));
     vrfy(inlary.max > 0, "unknown size of inline array: set width or add gstatic");
-    Set(R, "$max_pool_items", tempstr() << inlary.max);
-
-    Set(R, "$lenexpr", fixed ? strptr(tempstr() << inlary.max) : "$parname.$name_n");
+    Set(R, "$min", tempstr() << inlary.min);
+    Set(R, "$max", tempstr() << inlary.max);
+    Set(R, "$lenexpr", fixed ? "$max" : "$parname.$name_n");
+    Set(R, "$dflt"   , strptr(field.dflt.value));
+    Set(R, "$parelems", fixed ? "$parname.$name_elems" : "reinterpret_cast<$Cpptype*>($parname.$name_data)");
 
     if (fixed) {
         vrfy(!FldfuncQ(field), "computed field not allowed here");
-        Set(R, "$dflt"   , strptr(field.dflt.value));
-        Set(R, "$width"  , "$lenexpr");
-        Set(R, "$name"   , name_Get(field));
         InsVar(R, field.p_ctype, "$Cpptype", "$name_elems[$lenexpr]", strptr(field.dflt.value), "fixed array");
-        Set(R, "$parelems", "$parname.$name_elems");
     } else {
         GenTclass(amc_tclass_Pool);
         if (PackQ(*field.p_arg)) {
-            InsVar(R, field.p_ctype, "u8", "$name_data[sizeof($Cpptype) * $max_pool_items]", "", "place for data");
+            InsVar(R, field.p_ctype, "u8", "$name_data[sizeof($Cpptype) * $max]", "", "place for data");
         } else {
-            InsVar(R, field.p_ctype, "u128", "$name_data[sizeu128($Cpptype,$max_pool_items)]", "", "place for data");
+            InsVar(R, field.p_ctype, "u128", "$name_data[sizeu128($Cpptype,$max)]", "", "place for data");
         }
         InsVar(R, field.p_ctype, "i32", "$name_n", "", "number of elems current in existence");
-        InsStruct(R, field.p_ctype, "enum { $name_max = $max_pool_items };");
-        Set(R, "$parelems", "reinterpret_cast<$Cpptype*>($parname.$name_data)");
+        InsStruct(R, field.p_ctype, "enum { $name_max = $max };");
     }
 }
 
@@ -123,7 +120,7 @@ void amc::tfunc_Inlary_AllocMem() {
         Ins(&R, allocmem.ret  , "void*", false);
         Ins(&R, allocmem.proto, "$name_AllocMem($Parent)", false);
         Ins(&R, allocmem.body, "void *row = $parelems + $parname.$name_n;");
-        Ins(&R, allocmem.body, "if ($parname.$name_n == $max_pool_items) row = NULL;");
+        Ins(&R, allocmem.body, "if ($parname.$name_n == $max) row = NULL;");
         Ins(&R, allocmem.body, "if (row) $parname.$name_n++;");
         Ins(&R, allocmem.body, "return row;");
     }
@@ -265,14 +262,13 @@ void amc::tfunc_Inlary_Cmp() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     if (field.p_ctype->c_ccmp && field.arg != "pad_byte") {
-        Set(R, "$width", tempstr() << WidthMax(field));
         Set(R, "$Fldtype", field.cpp_type);
         amc::FFunc& opeq = amc::CreateCurFunc();
         opeq.inl = WidthMax(field)<6;
         Ins(&R, opeq.proto, "$name_Cmp($Parent, $Partype &rhs)", false);
         Ins(&R, opeq.ret, "int", false);
         if (amc::FixaryQ(field)) {
-            Ins(&R, opeq.body, "int len = $width;");
+            Ins(&R, opeq.body, "int len = $max;");
         } else {
             Ins(&R, opeq.body, "int len = i32_Min($name_N($pararg), $name_N(rhs));");
         }
@@ -302,13 +298,13 @@ void amc::tfunc_Inlary_Max() {
     if (!fixed) {
         amc::FFunc& maxitems = amc::CreateCurFunc();
         maxitems.inl = true;
-        Ins(&R, maxitems.comment, "Return constant $max_pool_items -- max. number of items in the pool");
+        Ins(&R, maxitems.comment, "Return constant $max -- max. number of items in the pool");
         Ins(&R, maxitems.ret  , "i32", false);
         Ins(&R, maxitems.proto, "$name_Max($Parent)", false);
         if (!GlobalQ(*field.p_ctype)) {
             Ins(&R, maxitems.body, "(void)$pararg;");
         }
-        Ins(&R, maxitems.body, "return $max_pool_items;");
+        Ins(&R, maxitems.body, "return $max;");
     }
     if (fixed) {
         // max items -- same as N, but semantically different.
@@ -320,7 +316,7 @@ void amc::tfunc_Inlary_Max() {
         if (!GlobalQ(*field.p_ctype)) {
             Ins(&R, max.body, "(void)$pararg;");
         }
-        Ins(&R, max.body, "return $width;");
+        Ins(&R, max.body, "return $max;");
     }
 }
 
@@ -413,17 +409,22 @@ void amc::tfunc_Inlary_Setary() {
     algo_lib::Replscope &R          = amc::_db.genctx.R;
     amc::FField         &field      = *amc::_db.genctx.p_field;
     amc::FInlary&        inlary     = *field.c_inlary;
-    bool                 fixed      = inlary.max == inlary.min;
-
-    if (fixed && !PadQ(field) && field.p_arg->n_xref==0 && !CopyPrivQ(*field.p_arg)) {
+    if (!PadQ(field) && field.p_arg->n_xref==0 && !CopyPrivQ(*field.p_arg)) {
         amc::FFunc& setary = amc::CreateCurFunc();
         setary.inl=true;
         Ins(&R, setary.ret  , "void", false);
         Ins(&R, setary.proto, "$name_Setary($Parent, const algo::aryptr<$Cpptype> &rhs)", false);
-        Ins(&R, setary.body, "int n = $width < rhs.n_elems ? $width : rhs.n_elems;");
-        Ins(&R, setary.body, "for (int i = 0; i < n; i++) {");
-        Ins(&R, setary.body, "    $parelems[i] = rhs[i];");
-        Ins(&R, setary.body, "}");
+        Ins(&R, setary.body, "int n = i32_Min($max, rhs.n_elems);");
+        if (field.p_arg->plaindata) {
+            Ins(&R, setary.body, "memcpy($parelems, rhs.elems, sizeof($Cpptype)*n);");
+        } else {
+            Ins(&R, setary.body, "for (int i = 0; i < n; i++) {");
+            Ins(&R, setary.body, "    $parelems[i] = rhs[i];");
+            Ins(&R, setary.body, "}");
+        }
+        if (inlary.min > 0 && inlary.min < inlary.max) {
+            Ins(&R, setary.body, "$parname.$name_n = i32_Max(n,$min);");
+        }
     }
 }
 
@@ -517,7 +518,7 @@ void amc::tfunc_Inlary_curs() {
             Ins(&R, curs_validq.ret  , "bool", false);
             Ins(&R, curs_validq.proto, "$Parname_$name_curs_ValidQ($Parname_$name_curs &curs)", false);
             if (fixed) {
-                Ins(&R, curs_validq.body, "return u64(curs.index) < u64($width);");
+                Ins(&R, curs_validq.body, "return u64(curs.index) < u64($max);");
             } else {
                 Ins(&R, curs_validq.body, "return u64(curs.index) < u64(curs.parent->$name_n);");
             }
@@ -574,7 +575,7 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
         AddRetval(func, "bool", "retval", "true");
         AddProtoArg(func, "algo::strptr", "in_str");
         if (field.arg == "char" || field.arg == "u8") {
-            Ins(&R, func.body , "i32 newlen = i32_Min(in_str.n_elems, $max_pool_items);");
+            Ins(&R, func.body , "i32 newlen = i32_Min(in_str.n_elems, $max);");
             Ins(&R, func.body , "memcpy($parelems, in_str.elems, newlen);");
             if (!FixedQ(field)) {
                 Ins(&R, func.body , "$pararg.$name_n = newlen;");
@@ -586,7 +587,7 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
             if (!FixedQ(field)) {
                 Ins(&R, func.body, "$name_RemoveAll($pararg);");
             }
-            Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $max_pool_items; i++) {");
+            Ins(&R, func.body , "for (int i=0; in_str != \"\" && i < $max; i++) {");
             Ins(&R, func.body , "    algo::strptr token;");
             Ins(&R, func.body , "    algo::NextSep(in_str, $sep, token);");
             if (!FixedQ(field)) {
@@ -604,11 +605,11 @@ void amc::tfunc_Inlary_ReadStrptrMaybe() {
             Ins(&R, func.body , "    }");
             Ins(&R, func.body , "}");
         } else if (FixedQ(field)) {
-            Ins(&R, func.body , "if ($max_pool_items>0) {");
+            Ins(&R, func.body , "if ($max>0) {");
             Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe($parelems[0], in_str);");
             Ins(&R, func.body , "}");
         } else {
-            Ins(&R, func.body , "retval = $name_N($pararg) < $max_pool_items;");
+            Ins(&R, func.body , "retval = $name_N($pararg) < $max;");
             Ins(&R, func.body , "if (retval) {");
             Ins(&R, func.body , "    $Cpptype &elem = $name_Alloc($pararg);");
             Ins(&R, func.body , "    retval = $Cpptype_ReadStrptrMaybe(elem, in_str);");
@@ -653,6 +654,8 @@ void amc::tfunc_Inlary_Print() {
             Ins(&R, func.body, "    }");
             Ins(&R, func.body, "    $Cpptype_Print($name_elem, rhs);");
             Ins(&R, func.body, "}ind_end;");
+        } else {
+            Ins(&R, func.body, "// unable to print inlary");
         }
     }
 }

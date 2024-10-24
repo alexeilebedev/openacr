@@ -7,23 +7,27 @@ The list of sandboxes is in `dev.sandbox`.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Operation](#operation)
-* [Tools that use sandbox:](#tools-that-use-sandbox)
-* [Example: create a new sandbox](#example-create-a-new-sandbox)
-* [Example: run command in sandbox](#example-run-command-in-sandbox)
-* [Example: show difference from baseline](#example-show-difference-from-baseline)
-* [Example: list sandboxes and their current state](#example-list-sandboxes-and-their-current-state)
-* [Example: reset all sandboxes](#example-reset-all-sandboxes)
-* [Example: test amc changes inside sandbox](#example-test-amc-changes-inside-sandbox)
-* [Example: run interactive shell inside sandbox](#example-run-interactive-shell-inside-sandbox)
-* [Example: run sandbox inside sandbox](#example-run-sandbox-inside-sandbox)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Tools that use sandbox:](#tools-that-use-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: create a new sandbox](#example-create-a-new-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: run command in sandbox](#example-run-command-in-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: show difference from baseline](#example-show-difference-from-baseline)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list sandboxes and their current state](#example-list-sandboxes-and-their-current-state)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: reset all sandboxes](#example-reset-all-sandboxes)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: test amc changes inside sandbox](#example-test-amc-changes-inside-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: run interactive shell inside sandbox](#example-run-interactive-shell-inside-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: run sandbox inside sandbox](#example-run-sandbox-inside-sandbox)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [sandbox - Internals](/txt/exe/sandbox/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 sandbox: Sandbox - sandbox management tool
 Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
@@ -50,50 +54,7 @@ Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -name -- Sandbox name
-<a href="#-name"></a>
-
-#### -create -- Create new sandbox and register in dev.sandbox
-<a href="#-create"></a>
-
-#### -list -- List existing sandboxes
-<a href="#-list"></a>
-
-#### -reset -- Reset sandbox to match current directory
-<a href="#-reset"></a>
-
-#### -clean -- Remove sandbox contents to save space
-<a href="#-clean"></a>
-
-#### -shell -- Open interactive shell inside sandbox
-<a href="#-shell"></a>
-
-#### -del -- Permanently delete sandbox
-<a href="#-del"></a>
-
-#### -gc -- Run git gc in target dir
-<a href="#-gc"></a>
-
-#### -cmd -- Command to execute in sandbox
-<a href="#-cmd"></a>
-
-#### -diff -- Show diff after running command
-<a href="#-diff"></a>
-
-#### -files -- Shell regx to diff
-<a href="#-files"></a>
-
-#### -refs -- Refs to fetch into sandbox
-<a href="#-refs"></a>
-
-#### -q -- Quiet mode
-<a href="#-q"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Operation
 <a href="#operation"></a>
@@ -205,25 +166,63 @@ the mode) will corrupt the original git directory.
 $ sandbox test -create "sandbox test2 -create 'command'" -del
 ```
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/gen/sandbox_gen.cpp](/cpp/gen/sandbox_gen.cpp)||
-|[cpp/sandbox.cpp](/cpp/sandbox.cpp)||
-|[include/gen/sandbox_gen.h](/include/gen/sandbox_gen.h)||
-|[include/gen/sandbox_gen.inl.h](/include/gen/sandbox_gen.inl.h)||
-|[include/sandbox.h](/include/sandbox.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -name -- Sandbox name
+<a href="#-name"></a>
+
+#### -create -- Create new sandbox and register in dev.sandbox
+<a href="#-create"></a>
+
+#### -list -- List existing sandboxes
+<a href="#-list"></a>
+
+#### -reset -- Reset sandbox to match current directory
+<a href="#-reset"></a>
+
+#### -clean -- Remove sandbox contents to save space
+<a href="#-clean"></a>
+
+#### -shell -- Open interactive shell inside sandbox
+<a href="#-shell"></a>
+
+#### -del -- Permanently delete sandbox
+<a href="#-del"></a>
+
+#### -gc -- Run git gc in target dir
+<a href="#-gc"></a>
+
+#### -cmd -- Command to execute in sandbox
+<a href="#-cmd"></a>
+
+#### -diff -- Show diff after running command
+<a href="#-diff"></a>
+
+#### -files -- Shell regx to diff
+<a href="#-files"></a>
+
+#### -refs -- Refs to fetch into sandbox
+<a href="#-refs"></a>
+
+#### -q -- Quiet mode
+<a href="#-q"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `sandbox` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 |[dev.sandbox](/txt/ssimdb/dev/sandbox.md)|Registered sandbox|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

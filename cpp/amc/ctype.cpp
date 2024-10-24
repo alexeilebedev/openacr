@@ -32,95 +32,90 @@ void amc::tclass_Ctype() {
 
 // -----------------------------------------------------------------------------
 
+// Generate de-initialization function:
+// - cascdel fields
+// - remove record from all indexes
+// - user-defined cleanup for all fields
+// - un-init fields (frees memory)
+// All fields are scanned in reverse order
 void amc::tfunc_Ctype_Uninit() {
-    // de-initialization order:
-    // - cascdel fields  in reverse order
-    // - any unred_body text created by generators.
-    // - unref fields in reverse order (remove x-references)
-    // - user-specified cleanup in reverse order
-    // - un-init fields in reverse order
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    amc::FField *inst = FirstInst(ctype);
+    if (!ctype.c_cextern) {
+        amc::FNs &ns = *ctype.p_ns;
+        tempstr refname = amc::Refname(ctype);
+        amc::FFunc& uninit = amc::CreateCurFunc(false);
+        Ins(&R, uninit.proto, "$Name_Uninit()", false);
+        AddProtoArg(uninit, Refto(ctype.cpp_type), refname, !GlobalQ(ctype));
+        AddRetval(uninit, "void", "", "");
+        Ins(&R, uninit.body, "$Partype &row = $parname; (void)row;");
+        uninit.inl = c_field_N(ctype)<10;
+        int naction=0;
 
-    tempstr uninit_text;
-    tempstr unref_text;
-    tempstr refname = amc::Refname(ctype);
-    bool inl = true;
-    bool glob = GlobalQ(ctype);
-    Set(R, "$Ctype"  , ctype.ctype);
-
-    // Cascade-delete fields
-    amc::c_tempfield_RemoveAll();
-    ind_beg(ctype_c_field_curs,field,ctype) {
-        c_tempfield_Insert(field);
-    }ind_end;
-    rrep_(i, amc::c_tempfield_N()) {
-        amc::FField &field = *amc::c_tempfield_Find(i);
-        if (field.c_cascdel) {
-            Set(R, "$field", field.field);
-            Set(R, "$name", name_Get(field));
-            Set(R, "$pararg", glob ? strptr("") : refname);
-            Ins(&R, unref_text, "$name_Cascdel($pararg); // dmmeta.cascdel:$field");
-        }
-    }
-
-    // Grab parent's Unref text
-    if (amc::FFunc* unref = amc::ind_func_Find(Subst(R,"$Ctype..Unref"))) {
-        unref_text << unref->body;
-    }
-
-    // Unref fields in reverse order
-    rrep_(i, amc::c_tempfield_N()) {
-        amc::FField &field = *c_tempfield_Find(i);
-        if (field.c_fcleanup) {
-            Set(R, "$field", field.field);
-            Set(R, "$name", name_Get(field));
-            Set(R, "$pararg", glob ? strptr("") : refname);
-            Ins(&R, unref_text, "$name_Cleanup($pararg); // dmmeta.fcleanup:$field");
-        }
-        if (amc::FFunc *func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Unref"))) {
-            if (ch_N(func->body)) {
+        // cascdel fields
+        rrep_(i, amc::c_field_N(ctype)) {
+            amc::FField &field = *amc::c_field_Find(ctype,i);
+            if (field.c_cascdel) {
                 Set(R, "$field", field.field);
-                Ins(&R, unref_text, "");
-                Ins(&R, unref_text, tempstr()<<"// $field.Unref ("<<field.reftype<<")  //"<<field.comment);
-                unref_text << func->body;
-                inl = inl && func->inl;
+                Set(R, "$name", name_Get(field));
+                Ins(&R, uninit.body, "$name_Cascdel($pararg); // dmmeta.cascdel:$field");
+                naction++;
             }
         }
-    }
 
-    // Uninit fields in reverse order (release memory) -- ALL after user-specified cleanup
-    rrep_(i, amc::c_tempfield_N()) {
-        amc::FField &field = *c_tempfield_Find(i);
-        if (amc::FFunc *func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Uninit"))) {
-            if (ch_N(func->body)) {
+        // remove this record from all indexes
+        if (inst && ns.c_globfld) {
+            amc::FGenXref frame;
+            Set(R, "$inst"  , inst->field);
+            Set(R, "$name" , name_Get(*inst));
+            ind_beg(amc::ctype_zs_xref_curs, xref, ctype) if (xref.p_field->reftype != dmmeta_Reftype_reftype_Upptr) {
+                Set(R, "$xrefname", name_Get(xref));
+                if (ns.c_globfld && xref.p_field->p_ctype == ns.c_globfld->p_ctype) {
+                    Ins(&R, uninit.body, "$xrefname_Remove(row); // remove $name from index $xrefname");
+                } else {
+                    ComputeAccess(R,ctype,xref,uninit,frame, false);
+                    Ins(&R, uninit.body, "if (p_$parent)  {");
+                    Ins(&R, uninit.body, "    $xrefname_Remove(*p_$parent, row);// remove $name from index $xrefname");
+                    Ins(&R, uninit.body, "}");
+                }
+                uninit.inl=false;// the operation isn't fast anyway, so uninline the function
+                naction++;
+            }ind_end;
+        }
+
+        // call user-defined cleanup
+        rrep_(i, amc::c_field_N(ctype)) {
+            amc::FField &field = *c_field_Find(ctype,i);
+            if (field.c_fcleanup) {
                 Set(R, "$field", field.field);
-                Ins(&R, uninit_text, "");
-                Ins(&R, uninit_text, tempstr()<<"// $field.Uninit ("<<field.reftype<<")  //"<<field.comment);
-                uninit_text << func->body;
-                inl = inl && func->inl;
+                Set(R, "$name", name_Get(field));
+                Ins(&R, uninit.body, "$name_Cleanup($pararg); // dmmeta.fcleanup:$field");
+                naction++;
             }
         }
-    }
 
-    if (ch_N(unref_text)) {
-        inl = false;
-    }
+        // uninit fields (release memory)
+        rrep_(i, amc::c_field_N(ctype)) {
+            amc::FField &field = *c_field_Find(ctype,i);
+            if (amc::FFunc *func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Uninit"))) {
+                if (ch_N(func->body)) {
+                    Set(R, "$field", field.field);
+                    Ins(&R, uninit.body, "");
+                    Ins(&R, uninit.body, tempstr()<<"// $field.Uninit ("<<field.reftype<<")  //"<<field.comment);
+                    uninit.body << func->body;
+                    uninit.inl = uninit.inl && func->inl;
+                    naction++;
+                }
+            }
+        }
 
-    if (ch_N(uninit_text) || ch_N(unref_text) || glob) {
-        Set(R, "$thisparname", glob ? strptr("_db") : refname);
-        Set(R, "$Parent" , glob ? strptr("")    : strptr(tempstr() << ctype.cpp_type << "& " << refname));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name"   , name_Get(ctype));
-        amc::FFunc& uninit = amc::CreateCurFunc();
-        Ins(&R, uninit.ret  , "void", false);
-        Ins(&R, uninit.proto, "$Name_Uninit($Parent)", false);
-        Ins(&R, uninit.body, "$Cpptype &row = $thisparname; (void)row;");
-        // init function MUST be inline at the moment.
-        uninit.inl = inl && (!ctype.c_init || ctype.c_init->inl) && c_tempfield_N() < 10;
-        uninit.body << unref_text;
-        uninit.body << uninit_text;
-    };
+        // nothing generated -- disable function
+        // but not for FDb
+        if (naction==0 && !GlobalQ(ctype)) {
+            uninit.disable=true;
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -179,7 +174,7 @@ static void ComputeAccess_CheckNull(algo_lib::Replscope &R, amc::FCtype &ctype, 
 
 // Introduce local variable that points to the parent side of XREF
 // by evaluating the path provided by xref + xreffld + xrefvia records.
-static bool ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null) {
+bool amc::ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null) {
     bool retval=false;
     amc::FField *keyfld = GetKeyfld(xref);
     amc::FField *viafld = GetViafld(xref);
@@ -226,137 +221,83 @@ static bool ProcessXrefQ(amc::FXref &xref, int iter, bool sort_xrefs) {
 
 // -----------------------------------------------------------------------------
 
-static void Ctype_Xref(amc::FCtype &ctype) {
-    algo_lib::Replscope R;
-    amc::FNs &ns = *ctype.p_ns;
-    amc::FField &inst = *FirstInst(ctype);
-    amc::FGenXref frame;
-    Set(R, "$Cpptype"  , ctype.cpp_type);
-    Set(R, "$inst"  , inst.field);
-    Set(R, "$name" , name_Get(inst));
-    Set(R, "$Name" , name_Get(ctype));
-    Set(R, "$Ctype" , ctype.ctype);
-    // xref function for parent field??
-    amc::FFunc& xrefmaybe = amc::ind_func_GetOrCreate(Subst(R,"$inst.XrefMaybe"));
-    Ins(&R, xrefmaybe.comment, "Insert row into all appropriate indices. If error occurs, store error");
-    Ins(&R, xrefmaybe.comment, "in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.");
-    Ins(&R, xrefmaybe.ret  , "bool", false);
-    Ins(&R, xrefmaybe.body , "bool retval = true;");
-    if (!GlobalQ(ctype)) {
-        Ins(&R, xrefmaybe.body , "(void)row;");
-    }
-    Ins(&R, xrefmaybe.proto, (GlobalQ(ctype) ? "$name_XrefMaybe()" : "$name_XrefMaybe($Cpptype &row)"), false);
-    bool sort_xrefs = ns.c_nsx && ns.c_nsx->sortxref;
-
-    frep_(iter,2) {
-        ind_beg(amc::ctype_zs_xref_curs, xref, ctype) if (xref.inscond.value != "false" && ProcessXrefQ(xref,iter,sort_xrefs)) {
-            amc::FField *keyfld = GetKeyfld(xref);
-            bool upptr = xref.p_field->reftype == dmmeta_Reftype_reftype_Upptr;
-            Set(R, "$xrefname", name_Get(xref));
-            Set(R, "$xrefkey", xref.field);
-            Set(R, "$ns"  , ns.ns);
-            ComputeAccess(R,ctype,xref,xrefmaybe,frame,true);
-            Set(R, "$inscond", xref.inscond.value);
-            bool glob2 = xref.p_field->p_ctype == ns.c_globfld->p_ctype;
-            Set(R, "$thisparname", glob2 || !keyfld ? strptr() : strptr(tempstr() << "*p_"<<name_Get(*keyfld)));
-            if (upptr) {
-                Ins(&R, xrefmaybe.body    , "// $name: save pointer to $parent");
-            } else {
-                Ins(&R, xrefmaybe.body    , "// insert $name into index $xrefname");
-            }
-            Ins(&R, xrefmaybe.body    , "if ($inscond) { // user-defined insert condition");
-            // check if reftype has an InsertMaybe function that checks for duplicates
-            if (xref.p_field->reftype == dmmeta_Reftype_reftype_Thash || xref.p_field->reftype == dmmeta_Reftype_reftype_Ptr) {
-                Ins(&R, xrefmaybe.body, "    bool success = $xrefname_InsertMaybe($thisparname, row);");
-                Ins(&R, xrefmaybe.body, "    if (UNLIKELY(!success)) {");
-                Ins(&R, xrefmaybe.body, "        ch_RemoveAll(algo_lib::_db.errtext);");
-                Ins(&R, xrefmaybe.body, "        algo_lib::_db.errtext << \"$ns.duplicate_key  xref:$xrefkey\"; // check for duplicate key");
-                Ins(&R, xrefmaybe.body, "        return false;");
-                Ins(&R, xrefmaybe.body, "    }");
-            } else if (upptr) {
-                Ins(&R, xrefmaybe.body, "    row.$xrefname = p_$parent;");
-            } else {
-                Ins(&R, xrefmaybe.body, "    $xrefname_Insert($thisparname, row);");
-            }
-            Ins(&R, xrefmaybe.body    , "}");
-        }ind_end;
-    }
-    Ins(&R, xrefmaybe.body, "return retval;");
-}
-
-// -----------------------------------------------------------------------------
-
-static void Ctype_Unref(amc::FCtype &ctype) {
-    algo_lib::Replscope R;
-    amc::FNs &ns = *ctype.p_ns;
-    amc::FField &inst = *FirstInst(ctype);
-    amc::FGenXref frame;
-    Set(R, "$Cpptype"  , ctype.cpp_type);
-    Set(R, "$inst"  , inst.field);
-    Set(R, "$name" , name_Get(inst));
-    Set(R, "$Name" , name_Get(ctype));
-    Set(R, "$Ctype" , ctype.ctype);
-    amc::FFunc& unref = amc::ind_func_GetOrCreate(Subst(R,"$Ctype..Unref"));
-    unref.priv =true;
-    unref.ismacro=true;
-    Ins(&R, unref.comment, "Remove row from all global and cross-reference indices");
-    Ins(&R, unref.comment, "Row may be only partially x-referenced with any parents.");
-    Ins(&R, unref.ret  , "void", false);
-    Ins(&R, unref.proto, "$Name_Unref($Cpptype &row)", false);
-    ind_beg(amc::ctype_zs_xref_curs, xref, ctype) if (xref.p_field->reftype != dmmeta_Reftype_reftype_Upptr) {
-        Set(R, "$xrefname", name_Get(xref));
-        if (ns.c_globfld && xref.p_field->p_ctype == ns.c_globfld->p_ctype) {
-            Ins(&R, unref.body, "$xrefname_Remove(row); // remove $name from index $xrefname");
-        } else {
-            ComputeAccess(R,ctype,xref,unref,frame, false);
-            Ins(&R, unref.body, "if (p_$parent)  {");
-            Ins(&R, unref.body, "    $xrefname_Remove(*p_$parent, row);// remove $name from index $xrefname");
-            Ins(&R, unref.body, "}");
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
 void amc::tfunc_Ctype_XrefMaybe() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
     if (FirstInst(ctype) && ns.c_globfld) {
-        Ctype_Xref(ctype);
+        amc::FField &inst = *FirstInst(ctype);
+        amc::FGenXref frame;
+        Set(R, "$inst"  , inst.field);
+        Set(R, "$name" , name_Get(inst));
+        // xref function for parent field??
+        amc::FFunc& xrefmaybe = amc::ind_func_GetOrCreate(Subst(R,"$inst.XrefMaybe"));
+        Ins(&R, xrefmaybe.comment, "Insert row into all appropriate indices. If error occurs, store error");
+        Ins(&R, xrefmaybe.comment, "in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.");
+        AddRetval(xrefmaybe, "bool", "retval", "true");
+        if (!GlobalQ(ctype)) {
+            Ins(&R, xrefmaybe.body , "(void)row;");
+        }
+        Ins(&R, xrefmaybe.proto, (GlobalQ(ctype) ? "$name_XrefMaybe()" : "$name_XrefMaybe($Partype &row)"), false);
+        bool sort_xrefs = ns.c_nsx && ns.c_nsx->sortxref;
+
+        frep_(iter,2) {
+            ind_beg(amc::ctype_zs_xref_curs, xref, ctype) if (xref.inscond.value != "false" && ProcessXrefQ(xref,iter,sort_xrefs)) {
+                amc::FField *keyfld = GetKeyfld(xref);
+                bool upptr = xref.p_field->reftype == dmmeta_Reftype_reftype_Upptr;
+                Set(R, "$xrefname", name_Get(xref));
+                Set(R, "$xrefkey", xref.field);
+                Set(R, "$ns"  , ns.ns);
+                ComputeAccess(R,ctype,xref,xrefmaybe,frame,true);
+                Set(R, "$inscond", xref.inscond.value);
+                bool glob2 = xref.p_field->p_ctype == ns.c_globfld->p_ctype;
+                Set(R, "$thisparname", glob2 || !keyfld ? strptr() : strptr(tempstr() << "*p_"<<name_Get(*keyfld)));
+                if (upptr) {
+                    Ins(&R, xrefmaybe.body    , "// $name: save pointer to $parent");
+                } else {
+                    Ins(&R, xrefmaybe.body    , "// insert $name into index $xrefname");
+                }
+                Ins(&R, xrefmaybe.body    , "if ($inscond) { // user-defined insert condition");
+                // check if reftype has an InsertMaybe function that checks for duplicates
+                if (xref.p_field->reftype == dmmeta_Reftype_reftype_Thash || xref.p_field->reftype == dmmeta_Reftype_reftype_Ptr) {
+                    Ins(&R, xrefmaybe.body, "    bool success = $xrefname_InsertMaybe($thisparname, row);");
+                    Ins(&R, xrefmaybe.body, "    if (UNLIKELY(!success)) {");
+                    Ins(&R, xrefmaybe.body, "        ch_RemoveAll(algo_lib::_db.errtext);");
+                    Ins(&R, xrefmaybe.body, "        algo_lib::_db.errtext << \"$ns.duplicate_key  xref:$xrefkey\"; // check for duplicate key");
+                    Ins(&R, xrefmaybe.body, "        return false;");
+                    Ins(&R, xrefmaybe.body, "    }");
+                } else if (upptr) {
+                    Ins(&R, xrefmaybe.body, "    row.$xrefname = p_$parent;");
+                } else {
+                    Ins(&R, xrefmaybe.body, "    $xrefname_Insert($thisparname, row);");
+                }
+                Ins(&R, xrefmaybe.body    , "}");
+            }ind_end;
+        }
     }
 }
 
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_Unref() {
-    algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
-    amc::FNs &ns = *ctype.p_ns;
-
-    if (FirstInst(ctype) && ns.c_globfld) {
-        Ctype_Unref(ctype);
-    }
 }
 
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Ctype_Hash() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
     if (ctype.c_chash) {
         vrfy(!ctype.c_varlenfld,tempstr()<< "hash function of varlength records is not supported ("<<ctype.ctype<<")");
-        Set(R, "$Cpptype", (ctype.c_cpptype && ctype.c_cpptype->cheap_copy ? strptr(ctype.cpp_type) : strptr(tempstr() << "const " <<  ctype.cpp_type << " &")));
-        Set(R, "$Ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
+        Set(R, "$ByvalArgtype", ByvalArgtype(ctype,true));
         ns.nhash++;
 
         amc::FFunc& hash = amc::CreateCurFunc();
         Ins(&R, hash.ret  , "u32", false);
-        Ins(&R, hash.proto, "$Name_Hash(u32 prev, $Cpptype rhs)", false);
+        Ins(&R, hash.proto, "$Name_Hash(u32 prev, $ByvalArgtype rhs)", false);
         hash.extrn = ctype.c_chash->hashtype == dmmeta_Hashtype_hashtype_Extern;
         hash.inl = c_datafld_N(ctype) < 5;
         ind_beg(amc::ctype_c_field_curs, field, ctype) {
@@ -394,14 +335,11 @@ void amc::tfunc_Ctype_Hash() {
 // for the purposes of comparison within some ctype
 // That's why the Cmp function for ctype does not call out fo
 void amc::tfunc_Ctype_Cmp() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp) {
         vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
 
         amc::FFunc& cmp = amc::CreateCurFunc();
         Ins(&R, cmp.ret  , "i32", false);
@@ -491,7 +429,6 @@ void amc::tfunc_Ctype_Lt() {
 
     if (ctype.c_ccmp && ctype.c_ccmp->order) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Ctype", ctype.ctype);
         Set(R, "$Name", name_Get(ctype));
 
         amc::FFunc& oplt = amc::CreateCurFunc();
@@ -512,12 +449,10 @@ void amc::tfunc_Ctype_Lt() {
 }
 
 void amc::tfunc_Ctype_Init() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
-    Set(R, "$ns", ns_Get(ctype));
 
     tempstr text;
-    tempstr refname = amc::Refname(ctype);
     bool glob = GlobalQ(ctype);
     ch_RemoveAll(text);
     bool inl = true;
@@ -532,7 +467,6 @@ void amc::tfunc_Ctype_Init() {
         }
         if (field.c_fuserinit) {
             Set(R, "$field", field.field);
-            Set(R, "$pararg", refname);
             Set(R, "$name", name_Get(field));
             if (glob) {
                 Ins(&R, text, "Userinit(); // dmmeta.fuserinit:$field");
@@ -557,15 +491,13 @@ void amc::tfunc_Ctype_Init() {
 }
 
 void amc::tfunc_Ctype_Update() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->order) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.ret  , "bool", false);
-        Ins(&R, func.proto, "$Name_Update($Cpptype &lhs, $ByvalArgtype rhs)", false);
+        Ins(&R, func.proto, "$Name_Update($Partype &lhs, $ByvalArgtype rhs)", false);
         Ins(&R, func.body, "bool ret = !$Name_Eq(lhs, rhs); // compare values");
         Ins(&R, func.body, "if (ret) {");
         Ins(&R, func.body, "    lhs = rhs; // update");
@@ -575,43 +507,37 @@ void amc::tfunc_Ctype_Update() {
 }
 
 void amc::tfunc_Ctype_Min() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.ret  , "$Cpptype", false);
+        Ins(&R, func.ret  , "$Partype", false);
         Ins(&R, func.proto, "$Name_Min($ByvalArgtype lhs, $ByvalArgtype rhs)", false);
         Ins(&R, func.body, "return lhs < rhs ? lhs : rhs;");
     }
 }
 
 void amc::tfunc_Ctype_Max() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.ret  , "$Cpptype", false);
+        Ins(&R, func.ret  , "$Partype", false);
         Ins(&R, func.proto, "$Name_Max($ByvalArgtype lhs, $ByvalArgtype rhs)", false);
         Ins(&R, func.body, "return rhs < lhs ? lhs : rhs;");
     }
 }
 
 void amc::tfunc_Ctype_UpdateMin() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.ret  , "bool", false);
-        Ins(&R, func.proto, "$Name_UpdateMin($Cpptype &lhs, $ByvalArgtype rhs)", false);
+        Ins(&R, func.proto, "$Name_UpdateMin($Partype &lhs, $ByvalArgtype rhs)", false);
         Ins(&R, func.body, "bool retval = rhs < lhs;");
         Ins(&R, func.body, "if (retval) {");
         Ins(&R, func.body, "    lhs = rhs;");
@@ -621,15 +547,13 @@ void amc::tfunc_Ctype_UpdateMin() {
 }
 
 void amc::tfunc_Ctype_UpdateMax() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp && ctype.c_ccmp->minmax) {
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.ret  , "bool", false);
-        Ins(&R, func.proto, "$Name_UpdateMax($Cpptype &lhs, $ByvalArgtype rhs)", false);
+        Ins(&R, func.proto, "$Name_UpdateMax($Partype &lhs, $ByvalArgtype rhs)", false);
         Ins(&R, func.body, "bool retval = lhs < rhs;");
         Ins(&R, func.body, "if (retval) {");
         Ins(&R, func.body, "    lhs = rhs;");
@@ -695,13 +619,11 @@ static bool GenSmallstrEq(algo_lib::Replscope &R, amc::FField &field, cstring &o
 // - if no custom Eq function is defined on a field, but the field's type has an Eq function, it is used
 // - for all other fields, c++ operator "==" is used. it better be defined
 void amc::tfunc_Ctype_Eq() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     if (ctype.c_ccmp) {
         vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$Ctype", ctype.ctype);
         amc::FFunc& opeq = amc::CreateCurFunc(true);
         AddRetval(opeq,"bool","retval","true");
         AddProtoArg(opeq, ByvalArgtype(ctype,false), "lhs");
@@ -751,31 +673,8 @@ void amc::tfunc_Ctype_Eq() {
     }
 }
 
-
-void amc::tfunc_Ctype_EqStrptr() {
-    algo_lib::Replscope R;
-    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
-
-    bool single_smallstr = c_datafld_N(ctype)==1 && c_datafld_Find(ctype,0)->reftype==dmmeta_Reftype_reftype_Smallstr;
-
-    if (ctype.c_ccmp && single_smallstr) {
-        amc::FFunc& func = amc::CreateCurFunc(true);
-        AddRetval(func,"bool","","");
-        AddProtoArg(func, ByvalArgtype(ctype,true), "lhs");
-        AddProtoArg(func, "const algo::strptr&", "rhs");
-        ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
-            if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
-                Set(R, "$name", name_Get(field));
-                Ins(&R, func.body, "return algo::strptr_Eq($name_Getary(lhs), rhs);");
-            } else {
-                vrfy(0,"error");
-            }
-        }ind_end;
-    }
-}
-
 void amc::tfunc_Ctype_ToCmdline() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     bool has_print = false;
@@ -784,7 +683,6 @@ void amc::tfunc_Ctype_ToCmdline() {
     }ind_end;
 
     if (has_print) {
-        Set(R, "$Name", name_Get(ctype));
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddRetval(func, "tempstr", "ret", "");
         AddProtoArg(func, ByvalArgtype(ctype), "row");
@@ -806,7 +704,7 @@ void amc::tfunc_Ctype_ToCmdline() {
 
 // Used with command lines
 void amc::tfunc_Ctype_NArgs() {
-    algo_lib::Replscope R;
+    algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     bool has_read = false;
@@ -817,9 +715,6 @@ void amc::tfunc_Ctype_NArgs() {
         }
     }ind_end;
     if (has_read) {
-        Set(R, "$Name", name_Get(ctype));
-        Set(R, "$ns", ns_Get(ctype));
-
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Return # of command-line arguments that must follow this argument");
         Ins(&R, func.comment, "If FIELD is invalid, return -1");
@@ -889,32 +784,23 @@ void amc::tfunc_Ctype_Read() {
 void amc::tfunc_Ctype_EqEnum() {
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FField *field = c_datafld_N(ctype) == 1 ? c_datafld_Find(ctype,0) : NULL;
-    // always generate EqEnum function if field has fconsts.
-    // TODO: generate EqEnum for field, then promote to a ctype-wide EqEnum
-    // if only one exists.
-    // NOTE: do not look for ccmp; comparison with enum is generated because the
-    // enum exists.
     bool doit = field
         && c_fconst_N(*field)
         && !amc::FieldStringQ(*field)
         && (ctype.c_ccmp && ctype.c_ccmp->genop);
     if (doit) {
-        algo_lib::Replscope R;
-        Set(R, "$Get", FieldvalExpr(&ctype,*field,"lhs"));
-        Set(R, "$ByvalArgtype", amc::ByvalArgtype(ctype));
-        Set(R, "$Ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
-
+        algo_lib::Replscope &R = amc::_db.genctx.R;
+        Set(R, "$Get", FieldvalExpr(&ctype,*field,""));
         Set(R, "$Enumtype", Enumtype(*c_datafld_Find(ctype,0)));
-        amc::FFunc& opeqenum = amc::CreateCurFunc();
-        opeqenum.comment = "define enum comparison operator to avoid ambiguity";
-        Ins(&R, opeqenum.ret  , "bool", false);
-        Ins(&R, opeqenum.proto, "$Name_EqEnum($ByvalArgtype lhs, $Enumtype rhs)", false);
-        opeqenum.glob = true;
-        opeqenum.inl = true;
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl = true;
+        func.member=true;
+        func.comment = "define enum comparison operator to avoid ambiguity";
+        Ins(&R, func.ret  , "bool", false);
+        Ins(&R, func.proto, "operator ==($Enumtype rhs) const", false);
         // field type may be unsigned, in which case signed<>unsigned comparison
         // warning fires. insert an extra cast to Enumtype to avoid it.
-        Ins(&R, opeqenum.body, "return $Enumtype($Get) == rhs;");
+        Ins(&R, func.body, "return $Enumtype($Get) == rhs;");
     }
 }
 
@@ -931,13 +817,10 @@ void amc::tfunc_Ctype_GetAnon() {
 
     int n_anon = c_anonfld_N(ctype);
     if (need_anon && n_anon > 0) {
-        algo_lib::Replscope R;
-        Set(R, "$Ctype", ctype.ctype);
-        Set(R, "$Name", name_Get(ctype));
-        Set(R, "$Cpptype", ctype.cpp_type);
+        algo_lib::Replscope &R = amc::_db.genctx.R;
         amc::FFunc& getanon = amc::CreateCurFunc();
         Ins(&R, getanon.ret  , "algo::strptr", false);
-        Ins(&R, getanon.proto, "$Name_GetAnon($Cpptype &parent, i32 idx)",false);
+        Ins(&R, getanon.proto, "$Name_GetAnon($Partype &parent, i32 idx)",false);
         MaybeUnused(getanon, "parent");//must call before "return"
         Ins(&R, getanon.body   , "switch(idx) {");
         int idx=0;
@@ -969,8 +852,7 @@ void amc::tfunc_Ctype_GetMsgLength() {
         AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "parent");
         AddRetval(func, "i32", "", "");
         func.glob = true;
-        Set(R, "$Cpptype", ctype.cpp_type);
-        Set(R, "$LenExpr", LengthExpr(ctype,"const_cast<$Cpptype&>(parent)"));
+        Set(R, "$LenExpr", LengthExpr(ctype,"const_cast<$Partype&>(parent)"));
         Ins(&R, func.body , "return $LenExpr;");
     }
 }
@@ -985,9 +867,373 @@ void amc::tfunc_Ctype_GetMsgMemptr() {
             AddProtoArg(func, amc::ConstRefto(ctype.cpp_type)<<" ", "row");
             AddRetval(func, "algo::memptr", "", "");
             func.glob = true;
-            Set(R, "$Cpptype", ctype.cpp_type);
-            Set(R, "$LenExpr", LengthExpr(ctype,"const_cast<$Cpptype&>(row)"));
+            Set(R, "$LenExpr", LengthExpr(ctype,"const_cast<$Partype&>(row)"));
             Ins(&R, func.body , "return algo::memptr((u8*)&row, $LenExpr);");
         }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tclass_Ctype2() {
+}
+
+// -----------------------------------------------------------------------------
+
+// Generate constructor.
+void amc::tfunc_Ctype2_Ctor() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    // global variables are initialized separately, the order must be
+    // controlled.
+    if (!GlobalQ(ctype) && !ctype.c_cextern) {
+        amc::FFunc *init = amc::ind_func_Find(tempstr() << ctype.ctype << "..Init");
+        amc::FFunc &ctor = amc::CreateCurFunc();
+        ctor.member=true;
+        ctor.isprivate = PoolHasAllocQ(ctype);
+        ctor.inl=true;
+
+        Ins(&R, ctor.proto, "$Name()", false);
+        // call init function
+        if (init) {
+            Ins(&R, ctor.body, "$ns::$Name_Init(*this);");
+        }
+        // produce coverity annotation for intentionally uninitialized fields
+        ind_beg(amc::ctype_c_field_curs,field,ctype) {
+            bool has_uninitfld = false;
+            has_uninitfld     |= field.reftype == dmmeta_Reftype_reftype_Fbuf;
+            has_uninitfld     |= field.reftype == dmmeta_Reftype_reftype_Inlary
+                && field.c_inlary->max > field.c_inlary->min;
+            if (has_uninitfld) {
+                Set(R,"$field",field.field);
+                Set(R,"$reftype",field.reftype);
+                Ins(&R, ctor.body, "    // added because $field ($reftype) does not need initialization");
+                Ins(&R, ctor.body, "    // coverity[uninit_member]"); // applies to '}', should be last
+                break;
+            }
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Ctype2_FieldwiseCtor() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    int nfield = 0;
+    ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
+        nfield++;
+    }ind_end;
+    if (nfield > 0 && ctype.c_cpptype && ctype.c_cpptype->ctor) {
+        int n_args = 0;
+        amc::FFunc &func = amc::CreateCurFunc();
+        Ins(&R, func.proto, "$Name()", false);
+        func.isexplicit=true;
+        func.member=true;
+        func.inl=true;
+        ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
+            AddProtoArg(func, Argtype(field), tempstr()<<"in_"<<name_Get(field));
+            ++n_args;
+            if (!FixaryQ(field) && !field.c_fbigend) {
+                Set(R, "$name", name_Get(field));
+                ary_Alloc(func.initializer) << Subst(R,"$name(in_$name)");
+            }
+        }ind_end;
+        ind_beg(amc::ctype_c_field_curs, fld,ctype) {
+            bool val = ValQ(fld);
+            amc::FLenfld *lenfld=GetLenfld(fld);
+            if (val && (FixaryQ(fld) || fld.c_tary) && !PadQ(fld)) {
+                vrfy_(!fld.c_fbigend);
+                Set(R, "$name", name_Get(fld));
+                Ins(&R, func.body, "    $name_Setary(*this, in_$name);");
+            } else if (val && fld.c_typefld && ctype.c_msgtype) {
+                Set(R, "$Msgtype", ctype.c_msgtype->type.value);
+                Set(R, "$assign", amc::AssignExpr(fld, "*this", "$Msgtype", true));
+                Ins(&R, func.body, "    $assign;");
+            } else if (val && lenfld && ctype.c_msgtype) {
+                Set(R, "$extralen", tempstr() << lenfld->extra);
+                Set(R, "$assign", amc::AssignExpr(fld, "*this", "ssizeof(*this) + ($extralen)", true));
+                Ins(&R, func.body, "    $assign;");
+            } else if (fld.c_fbigend) {
+                Set(R, "$name", name_Get(fld));
+                Ins(&R, func.body, "    $name_Set(*this,in_$name);");
+            }
+        }ind_end;
+    }
+}
+
+void amc::tfunc_Ctype2_EnumCtor() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    int n_args = 0;
+    amc::FField *single_arg=NULL;
+    ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
+        ++n_args;
+        single_arg = &field;
+    }ind_end;
+    if (n_args == 1 && c_fconst_N(*single_arg) && !FieldStringQ(*single_arg)) {
+        amc::FFunc &func = amc::CreateCurFunc();
+        Ins(&R, func.proto, "$Name()", false);
+        AddProtoArg(func, Enumtype(*single_arg), "arg");
+        func.member=true;
+        func.inl=true;
+        Ins(&R, func.body, tempstr() << AssignExpr(*single_arg, "*this", "arg", true) << ";");
+    }
+}
+
+// Generator copy constructor or assignment operator
+// (the two functions are very similar)
+void amc::GenCopyCtorOrAssignOp(bool copyctor) {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (!ctype.c_cextern) {
+        bool cancopy = !GlobalQ(ctype) && !ctype.c_cextern && ctype.n_xref==0;
+        bool needcopy = ctype.n_xref>0;
+        bool hasholes = false;
+        int n_tary = 0;
+        cstring reason;
+        ind_beg(amc::ctype_c_field_curs, fld,ctype) {
+            if ((fld.c_inlary && fld.c_inlary->min < fld.c_inlary->max)) {
+                hasholes=true;
+            }
+            if (fld.c_smallstr) {
+                needcopy=true;
+            }
+            if (fld.c_smallstr && fld.c_smallstr->strtype == dmmeta_Strtype_strtype_rpascal) {
+                hasholes=true;
+            }
+            if (fld.c_tary) {
+                n_tary++;
+            }
+            // only need copy the struct if it has arrays
+            if (!amc::FixaryQ(fld) && (fld.reftype == dmmeta_Reftype_reftype_Tary || fld.reftype == dmmeta_Reftype_reftype_Inlary)) {
+                needcopy=true;
+            }
+            if (fld.c_fbuf != NULL || fld.reftype == dmmeta_Reftype_reftype_Varlen || fld.reftype == dmmeta_Reftype_reftype_Opt) {
+                cancopy=false;
+                reason<<"field "<<fld.field<<" prevents copy" << eol;
+            } else if (fld.p_reftype->isval) {
+                if (CopyPrivQ(*fld.p_arg)) {
+                    cancopy=false;
+                    reason <<"value field "<<fld.field<<" is not copiable"<<eol;
+                }
+            } else if (fld.reftype == dmmeta_Reftype_reftype_Regx || fld.reftype == dmmeta_Reftype_reftype_RegxSql) {
+            } else if (!fld.p_reftype->cancopy) {
+                cancopy = false;
+                reason<<"reftype "<<fld.reftype<<" of "<<fld.field<<" prohibits copy" << eol;
+            } else if (fld.c_xref != NULL) {
+                cancopy=false;
+                reason<<"x-reference on "<<fld.field<<" prevents copy" << eol;
+            } else if (fld.c_cascdel != NULL) {
+                cancopy=false;;
+                reason<<"cascdel on "<<fld.field<<" prevents copy" << eol;
+            } else if (fld.c_fcleanup != NULL) {
+                cancopy=false;
+                reason<<"user-defined fcleanup on "<<fld.field<<" prevents copy" << eol;
+            } else if (fld.c_fuserinit != NULL) {
+                cancopy = false;
+                reason<<"user-defined fuserinit on "<<fld.field<<" prevents copy" << eol;
+            }
+        }ind_end;
+        // don't memcpy large structs with holes in them
+        if (hasholes) {
+            needcopy=true;
+        }
+        if (needcopy) {
+            amc::FFunc &func = amc::CreateCurFunc();
+            func.member=true;
+            func.inl=c_field_N(ctype)<10 && n_tary==0;
+            if (copyctor) {
+                Ins(&R, func.proto, "$Name(const $Partype &rhs)", false);
+            } else {
+                Ins(&R, func.proto, "operator =(const $Partype &rhs)", false);
+                AddRetval(func, Subst(R,"$Partype&"), "", "");
+            }
+            if (!cancopy) {
+                if (!GlobalQ(ctype)) {
+                    func.comment << reason;
+                }
+                func.deleted=true;
+            } else if (ctype.plaindata && !hasholes) {
+                Ins(&R, func.body, "// type is plaindata, with no holes, copying as memory");
+                Ins(&R, func.body, "memcpy(this,&rhs,sizeof($Partype));");
+            } else {
+                ind_beg(amc::ctype_c_field_curs, fld,ctype) if (!FldfuncQ(fld)) {
+                    Set(R, "$name", name_Get(fld));
+                    if (PadQ(fld)) {
+                        // ignore
+                    } else if (fld.reftype == dmmeta_Reftype_reftype_Base) {
+                        // nothing to do
+                    } else if (fld.c_fbigend) {
+                        if (copyctor) {
+                            Ins(&R, ary_Alloc(func.initializer), "$name_be(rhs.$name_be)",false);
+                        } else {
+                            Ins(&R, func.body, "$name = rhs.$name;");
+                        }
+                    } else if (fld.reftype == dmmeta_Reftype_reftype_Val
+                               || fld.reftype == dmmeta_Reftype_reftype_Ptr
+                               || fld.reftype == dmmeta_Reftype_reftype_Upptr
+                               || fld.reftype == dmmeta_Reftype_reftype_Regx
+                               || fld.reftype == dmmeta_Reftype_reftype_RegxSql) {
+                        if (copyctor) {
+                            Ins(&R, ary_Alloc(func.initializer), "$name(rhs.$name)",false);
+                        } else {
+                            Ins(&R, func.body, "$name = rhs.$name;");
+                        }
+                    } else if (fld.c_smallstr) {
+                        if (fld.c_smallstr->strtype == dmmeta_Strtype_strtype_rpascal) {
+                            Ins(&R, func.body, "memcpy($name, rhs.$name, rhs.n_$name);");
+                            Ins(&R, func.body, "n_$name = rhs.n_$name;");
+                        } else {
+                            Set(R,"$max_length",tempstr()<<fld.c_smallstr->length);
+                            Ins(&R, func.body, "memcpy($name, rhs.$name, $max_length);");
+                        }
+                    } else if (fld.c_inlary || fld.c_tary) {
+                        // use field's Init function to initialize it before copying
+                        if (copyctor) {
+                            if (amc::FFunc *init = amc::ind_func_Find(tempstr() << fld.field << ".Init")) {
+                                if (init->ismacro) {
+                                    cstring body = init->body;
+                                    Replace(body,Subst(R,"$parname."),"");
+                                    func.body << body;
+                                } else {
+                                    Ins(&R, func.body, "$name_Init(*this);");
+                                }
+                            }
+                        }
+                        Ins(&R, func.body, "$name_Setary(*this, $name_Getary(const_cast<$Partype&>(rhs)));");
+                    } else {
+                        vrfy(0,tempstr()<<"failed to generate copy constructor, field="<<fld.field);
+                    }
+                }ind_end;
+            }
+            if (!copyctor) {
+                Ins(&R, func.body, "return *this;");
+            }
+            MaybeUnused(func, "rhs");
+        }
+    }
+}
+
+void amc::tfunc_Ctype2_CopyCtor() {
+    GenCopyCtorOrAssignOp(true);
+}
+
+void amc::tfunc_Ctype_AssignOp() {
+    GenCopyCtorOrAssignOp(false);
+}
+
+void amc::tfunc_Ctype2_Dtor() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    amc::FFunc *uninit = amc::ind_func_Find(tempstr()<<ctype.ctype<<"..Uninit");
+    // global variables are initialized separately, the order must be
+    // controlled.
+    if (!GlobalQ(ctype) && !ctype.c_cextern && uninit && !uninit->disable) {
+        amc::FFunc &func = amc::CreateCurFunc();
+        func.member=true;
+        // can we make this private?
+        func.isprivate = PoolHasAllocQ(ctype);
+        func.inl=true;
+
+        Ins(&R, func.proto, "~$Name()", false);
+        Ins(&R, func.body, "$ns::$Name_Uninit(*this);");
+    }
+}
+
+void amc::tfunc_Ctype_EqOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator ==(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return $Partype_Eq(const_cast<$Partype&>(*this),const_cast<$Partype&>(rhs));");
+    }
+}
+
+void amc::tfunc_Ctype_NeOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator !=(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return !$Partype_Eq(const_cast<$Partype&>(*this),const_cast<$Partype&>(rhs));");
+    }
+}
+
+void amc::tfunc_Ctype_LtOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop && ctype.c_ccmp->order) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator <(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return $Partype_Lt(const_cast<$Partype&>(*this),const_cast<$Partype&>(rhs));");
+    }
+}
+
+void amc::tfunc_Ctype_GtOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop && ctype.c_ccmp->order) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator >(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return $Partype_Lt(const_cast<$Partype&>(rhs),const_cast<$Partype&>(*this));");
+    }
+}
+
+void amc::tfunc_Ctype_LeOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop && ctype.c_ccmp->order) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator <=(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return !$Partype_Lt(const_cast<$Partype&>(rhs),const_cast<$Partype&>(*this));");
+    }
+}
+
+void amc::tfunc_Ctype_GeOp() {
+    algo_lib::Replscope &R          = amc::_db.genctx.R;
+    amc::FCtype &ctype      = *amc::_db.genctx.p_ctype;
+    if (ctype.c_ccmp && ctype.c_ccmp->genop && ctype.c_ccmp->order) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.proto, "operator >=(const $Partype &rhs) const", false);
+        AddRetval(func, "bool", "", "");
+        Ins(&R, func.body, "return !$Partype_Lt(const_cast<$Partype&>(*this),const_cast<$Partype&>(rhs));");
+    }
+}
+
+void amc::tfunc_Ctype_EqOpAryptr() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    bool single_smallstr = c_datafld_N(ctype)==1 && c_datafld_Find(ctype,0)->reftype==dmmeta_Reftype_reftype_Smallstr;
+    if (ctype.c_ccmp && single_smallstr) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        AddRetval(func,"bool","","");
+        Ins(&R, func.proto, "operator ==(const algo::aryptr<char> &rhs) const", false);
+        ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
+            if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {
+                Set(R, "$name", name_Get(field));
+                Ins(&R, func.body, "return algo::strptr_Eq($name_Getary(*this), rhs);");
+            }
+        }ind_end;
     }
 }

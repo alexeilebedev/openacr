@@ -3,17 +3,20 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Test cases](#test-cases)
-* [Examples](#examples)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Test cases](#test-cases)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [sv2ssim - Internals](/txt/exe/sv2ssim/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 sv2ssim: sv2ssim - Separated Value file processor
 Usage: sv2ssim [-fname:]<string> [options]
@@ -38,8 +41,11 @@ Usage: sv2ssim [-fname:]<string> [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 sv2ssim is a tool for extracting schema from tab-,comma-, and other delimiter-separated files (sv-files).
 The tool can process files with and without a header line (`-header`), extract schema by observing
@@ -72,44 +78,7 @@ dmmeta.svtype  ctype:u32               maxwid:32          fixedwid1:0  fixedwid2
 dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2:0  comment:""
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -fname -- Input file, use - for stdin
-<a href="#-fname"></a>
-
-#### -separator -- Input field separator
-<a href="#-separator"></a>
-
-#### -outseparator -- Output separator. Default: ssim
-<a href="#-outseparator"></a>
-
-#### -header -- File has header line
-<a href="#-header"></a>
-
-#### -ctype -- Type tag for output tuples
-<a href="#-ctype"></a>
-
-#### -ssimfile -- (with -schema) Create ssimfile definition
-<a href="#-ssimfile"></a>
-
-#### -schema -- (output)Generate schema from input file
-<a href="#-schema"></a>
-
-#### -field -- (output) Print selected fields
-<a href="#-field"></a>
-
-#### -data -- (output) Convert input file to ssim tuples
-<a href="#-data"></a>
-
-#### -report -- Print final report
-<a href="#-report"></a>
-
-#### -prefer_signed -- Prefer signed types when given a choice
-<a href="#-prefer_signed"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Test cases
 <a href="#test-cases"></a>
@@ -158,43 +127,63 @@ a.B  Month:DEC  _1958:337  _1959:405  _1960:432
 sv2ssim.report  n_line:13  n_nonempty_line:13  n_field:4  n_wideline:1
 dmmeta.ctype  ctype:a.B  comment:""
 dmmeta.cfmt  cfmt:a.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-dmmeta.field  field:a.B.Month  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1958  arg:i32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1959  arg:i32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B.Month  arg:algo.Smallstr10  reftype:Val  dflt:""  comment:Month
+dmmeta.field  field:a.B._1958  arg:i32  reftype:Val  dflt:""  comment:_1958
+dmmeta.field  field:a.B._1959  arg:i32  reftype:Val  dflt:""  comment:_1959
+dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 ```
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/gen/sv2ssim_gen.cpp](/cpp/gen/sv2ssim_gen.cpp)||
-|[cpp/sv2ssim.cpp](/cpp/sv2ssim.cpp)||
-|[include/gen/sv2ssim_gen.h](/include/gen/sv2ssim_gen.h)||
-|[include/gen/sv2ssim_gen.inl.h](/include/gen/sv2ssim_gen.inl.h)||
-|[include/sv2ssim.h](/include/sv2ssim.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -fname -- Input file, use - for stdin
+<a href="#-fname"></a>
+
+#### -separator -- Input field separator
+<a href="#-separator"></a>
+
+#### -outseparator -- Output separator. Default: ssim
+<a href="#-outseparator"></a>
+
+#### -header -- File has header line
+<a href="#-header"></a>
+
+#### -ctype -- Type tag for output tuples
+<a href="#-ctype"></a>
+
+#### -ssimfile -- (with -schema) Create ssimfile definition
+<a href="#-ssimfile"></a>
+
+#### -schema -- (output)Generate schema from input file
+<a href="#-schema"></a>
+
+#### -field -- (output) Print selected fields
+<a href="#-field"></a>
+
+#### -data -- (output) Convert input file to ssim tuples
+<a href="#-data"></a>
+
+#### -report -- Print final report
+<a href="#-report"></a>
+
+#### -prefer_signed -- Prefer signed types when given a choice
+<a href="#-prefer_signed"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `sv2ssim` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.svtype](/txt/ssimdb/dmmeta/svtype.md)|Table for determining ctype from separated value file|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `sv2ssim`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|sv2ssim.Convert1||
-|sv2ssim.Convert1Signed||
-|sv2ssim.Convert2||
-|sv2ssim.Convert2Tsv||
-|sv2ssim.UniqueFieldName||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -18,11 +18,46 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/tclass.cpp
+// Source: cpp/amc/tclass.cpp -- Driver for tfuncs
 //
 
 #include "include/amc.h"
 
+// -----------------------------------------------------------------------------
+
+void amc::ResetVars(amc::Genctx &ctx) {
+    algo_lib::Replscope &R = ctx.R;
+    amc::FNs &ns = *ctx.p_ns;
+    amc::FCtype *parent = ctx.p_ctype;
+    amc::FField *field = ctx.p_field;
+    ind_replvar_Cascdel(R);
+    Set(R, "$ns", ns.ns);
+
+    if (parent) {
+        tempstr parname = Refname(*parent);// _db or pool name, or the word 'parent'
+        amc::FField *pool=FirstInst(*parent);
+        bool glob = GlobalQ(*parent);
+
+        Set(R, "$Partype"  , parent->cpp_type); // parent's c++ type, e.g. abt::FTarget
+        Set(R, "$Name"     , name_Get(*parent)); // name without namespace, e.g. FTarget
+        Set(R, "$Parname"  , (pool ? strptr(name_Get(*pool)) : strptr(name_Get(*parent)))); // target or FTarget
+        Set(R, "$parname"  , parname); // target
+        Set(R, "$pararg"   , glob ? strptr("") : parname); // target, or empty string -- parent's name when passed as argument to function
+        Set(R, "$Parent"   , glob ? strptr("") : strptr("$Partype& $parname")); // abt::FTarget& target
+        Set(R, "$Cparent"  , glob ? strptr("") : "const $Parent");
+
+        if (field) {
+            Set(R, "$field"    , field->field);
+            Set(R, "$name"     , name_Get(*field));
+            Set(R, "$Cpptype"  , field->p_arg->cpp_type);
+            Set(R, "$Ctype"    , name_Get(*field->p_arg));
+            if (field->p_reftype->usebasepool) {
+                amc::FField* basepool=GetBasepool(*field);
+                Set(R, "$basepool", tempstr() << ns_Get(*basepool->p_ctype) << "::" << name_Get(*basepool));
+            }
+        }
+    }
+}
 // -----------------------------------------------------------------------------
 
 // Call tclass, tfunc, and cursor generators for this template
@@ -87,35 +122,6 @@ amc::FField *amc::GetBasepool(amc::FField &field) {
 
 // Call all applicable generators for specified field
 static void GenTclass_Field(amc::FField &field) {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FNs &ns = *field.p_ctype->p_ns;
-    bool glob = GlobalQ(*field.p_ctype);
-    amc::FCtype& parent = *field.p_ctype;
-    tempstr parname = Refname(parent);// _db or pool name, or the word 'parent'
-    amc::FField *pool=FirstInst(parent);
-
-    // algo_lib::Replscope's Ins function automatically strips trailing . and ', ' after replacing
-    // an empty string.
-    // depending on syntactic context, either _db or empty string are used.
-    Set(R, "$ns"       , ns.ns);
-    Set(R, "$name"     , name_Get(field));
-    Set(R, "$field"    , field.field);
-    // name with which we refer to the parent.
-    Set(R, "$parname"  , parname);
-    Set(R, "$pararg"   , glob ? strptr("")    : parname);
-    Set(R, "$Parent"   , glob ? strptr("")    : strptr(tempstr() << parent.cpp_type << "& " << parname));
-    Set(R, "$Cparent"  , glob ? strptr("")    : strptr(tempstr() << "const "<<parent.cpp_type << "& " << parname));
-    // same as $parname, but use ctype name instead of the word 'parent'
-    Set(R, "$Parname"  , (pool ? strptr(name_Get(*pool)) : strptr(name_Get(parent))));
-    Set(R, "$Partype"  , parent.cpp_type);
-    Set(R, "$Cpptype"  , field.p_arg->cpp_type);
-    Set(R, "$Ctype"    , name_Get(*field.p_arg));
-
-    if (field.p_reftype->usebasepool) {
-        amc::FField* basepool=GetBasepool(field);
-        Set(R, "$basepool", tempstr() << ns_Get(*basepool->p_ctype) << "::" << name_Get(*basepool));
-    }
-
     GenTclass(amc_tclass_Field);
 
     if (c_pmaskfld_N(*field.p_ctype)) {
@@ -175,8 +181,8 @@ void amc::gen_ns_tclass_field() {
         ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
             amc::_db.genctx.p_ctype = &ctype;
             ind_beg(amc::ctype_c_field_curs, field,ctype) {
-                ind_replvar_Cascdel(amc::_db.genctx.R);
                 amc::_db.genctx.p_field = &field;
+                ResetVars(amc::_db.genctx);
                 GenTclass_Field(field);
                 field.processed=true;
             }ind_end;
@@ -198,7 +204,10 @@ void amc::gen_ns_tclass_ctype() {
     amc::_db.genctx.p_field = NULL;
     ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
         amc::_db.genctx.p_ctype = &ctype;
+        ResetVars(amc::_db.genctx);
         GenTclass(amc_tclass_Ctype);
+        // 2nd pass
+        GenTclass(amc_tclass_Ctype2);
     }ind_end;
     amc::_db.genctx.p_ctype = NULL;
 }
@@ -211,6 +220,7 @@ void amc::gen_ns_tclass_ns() {
     amc::_db.genctx.p_ctype = NULL;
     amc::_db.genctx.p_field = NULL;
     if (ns.ns != "") {
+        ResetVars(amc::_db.genctx);
         GenTclass(amc_tclass_Ns);
     }
 }

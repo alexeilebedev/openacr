@@ -92,13 +92,14 @@ namespace lib_json { // gen:ns_print_struct
 struct trace { // lib_json.trace
     u64   alloc__db_node;   //   0
     u64   del__db_node;     //   0
-    trace();
+    // func:lib_json.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Set all fields to initial values.
 // func:lib_json.trace..Init
-void                 trace_Init(lib_json::trace& parent);
+inline void          trace_Init(lib_json::trace& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_json.trace.String  printfmt:Tuple
 // func:lib_json.trace..Print
@@ -207,13 +208,13 @@ bool                 node_XrefMaybe(lib_json::FNode &row);
 
 // Return true if hash is empty
 // func:lib_json.FDb.ind_objfld.EmptyQ
-bool                 ind_objfld_EmptyQ() __attribute__((nothrow));
+inline bool          ind_objfld_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_json.FDb.ind_objfld.Find
 lib_json::FNode*     ind_objfld_Find(const lib_json::FldKey& key) __attribute__((__warn_unused_result__, nothrow));
 // Return number of items in the hash
 // func:lib_json.FDb.ind_objfld.N
-i32                  ind_objfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_objfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_json.FDb.ind_objfld.InsertMaybe
 bool                 ind_objfld_InsertMaybe(lib_json::FNode& row) __attribute__((nothrow));
@@ -225,10 +226,10 @@ void                 ind_objfld_Remove(lib_json::FNode& row) __attribute__((noth
 void                 ind_objfld_Reserve(int n) __attribute__((nothrow));
 
 // func:lib_json.FDb.JsonNumChar.Match
-bool                 JsonNumCharQ(u32 ch) __attribute__((nothrow));
+inline bool          JsonNumCharQ(u32 ch) __attribute__((nothrow));
 
 // func:lib_json.FDb.JsonFirstNumChar.Match
-bool                 JsonFirstNumCharQ(u32 ch) __attribute__((nothrow));
+inline bool          JsonFirstNumCharQ(u32 ch) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_json.FDb..Init
@@ -240,31 +241,38 @@ void                 FDb_Uninit() __attribute__((nothrow));
 struct FldKey { // lib_json.FldKey
     lib_json::FNode*   object;   // optional pointer
     algo::strptr       field;    //
-    explicit FldKey(lib_json::FNode*               in_object
-        ,algo::strptr                   in_field);
-    bool operator ==(const lib_json::FldKey &rhs) const;
-    bool operator !=(const lib_json::FldKey &rhs) const;
-    bool operator <(const lib_json::FldKey &rhs) const;
-    bool operator >(const lib_json::FldKey &rhs) const;
-    bool operator <=(const lib_json::FldKey &rhs) const;
-    bool operator >=(const lib_json::FldKey &rhs) const;
-    FldKey();
+    // func:lib_json.FldKey..EqOp
+    inline bool          operator ==(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..NeOp
+    inline bool          operator !=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..LtOp
+    inline bool          operator <(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..GtOp
+    inline bool          operator >(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..LeOp
+    inline bool          operator <=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..GeOp
+    inline bool          operator >=(const lib_json::FldKey &rhs) const __attribute__((nothrow));
+    // func:lib_json.FldKey..Ctor
+    inline               FldKey() __attribute__((nothrow));
+    // func:lib_json.FldKey..FieldwiseCtor
+    explicit inline               FldKey(lib_json::FNode* in_object, algo::strptr in_field) __attribute__((nothrow));
 };
 
 // func:lib_json.FldKey..Hash
-u32                  FldKey_Hash(u32 prev, const lib_json::FldKey & rhs) __attribute__((nothrow));
+inline u32           FldKey_Hash(u32 prev, const lib_json::FldKey& rhs) __attribute__((nothrow));
 // func:lib_json.FldKey..Lt
-bool                 FldKey_Lt(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
+inline bool          FldKey_Lt(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
 // func:lib_json.FldKey..Cmp
-i32                  FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
+inline i32           FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_json.FldKey..Init
-void                 FldKey_Init(lib_json::FldKey& parent);
+inline void          FldKey_Init(lib_json::FldKey& parent);
 // func:lib_json.FldKey..Eq
-bool                 FldKey_Eq(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
+inline bool          FldKey_Eq(lib_json::FldKey& lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:lib_json.FldKey..Update
-bool                 FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
+inline bool          FldKey_Update(lib_json::FldKey &lhs, lib_json::FldKey& rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:lib_json.FldKey.String  printfmt:Tuple
 // func:lib_json.FldKey..Print
@@ -272,7 +280,7 @@ void                 FldKey_Print(lib_json::FldKey& row, algo::cstring& str) __a
 
 // --- lib_json.FNode
 // create: lib_json.FDb.node (Tpool)
-// global access: ind_objfld (Thash)
+// global access: ind_objfld (Thash, hash field fldkey)
 // access: lib_json.FNode.p_parent (Upptr)
 // access: lib_json.FNode.c_child (Ptrary)
 // access: lib_json.FParser.node (Ptr)
@@ -288,14 +296,20 @@ struct FNode { // lib_json.FNode
     u32                 type;                  //   0
     algo::cstring       value;                 //
     bool                node_c_child_in_ary;   //   false  membership flag
+    // reftype Ptrary of lib_json.FNode.c_child prohibits copy
+    // func:lib_json.FNode..AssignOp
+    inline lib_json::FNode& operator =(const lib_json::FNode &rhs) = delete;
+    // reftype Ptrary of lib_json.FNode.c_child prohibits copy
+    // func:lib_json.FNode..CopyCtor
+    inline               FNode(const lib_json::FNode &rhs) = delete;
 private:
+    // func:lib_json.FNode..Ctor
+    inline               FNode() __attribute__((nothrow));
+    // func:lib_json.FNode..Dtor
+    inline               ~FNode() __attribute__((nothrow));
     friend lib_json::FNode&     node_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_json::FNode*     node_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 node_Delete(lib_json::FNode &row) __attribute__((nothrow));
-    FNode();
-    ~FNode();
-    FNode(const FNode&){ /*disallow copy constructor */}
-    void operator =(const FNode&){ /*disallow direct assignment */}
 };
 
 // Delete all elements pointed to by the index.
@@ -303,13 +317,13 @@ private:
 void                 c_child_Cascdel(lib_json::FNode& node) __attribute__((nothrow));
 // Return true if index is empty
 // func:lib_json.FNode.c_child.EmptyQ
-bool                 c_child_EmptyQ(lib_json::FNode& node) __attribute__((nothrow));
+inline bool          c_child_EmptyQ(lib_json::FNode& node) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_json.FNode.c_child.Find
-lib_json::FNode*     c_child_Find(lib_json::FNode& node, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_json::FNode* c_child_Find(lib_json::FNode& node, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_json.FNode.c_child.Getary
-algo::aryptr<lib_json::FNode*> c_child_Getary(lib_json::FNode& node) __attribute__((nothrow));
+inline algo::aryptr<lib_json::FNode*> c_child_Getary(lib_json::FNode& node) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:lib_json.FNode.c_child.Insert
@@ -321,32 +335,32 @@ void                 c_child_Insert(lib_json::FNode& node, lib_json::FNode& row)
 bool                 c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_json.FNode.c_child.N
-i32                  c_child_N(const lib_json::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_child_N(const lib_json::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_json.FNode.c_child.Remove
 void                 c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:lib_json.FNode.c_child.RemoveAll
-void                 c_child_RemoveAll(lib_json::FNode& node) __attribute__((nothrow));
+inline void          c_child_RemoveAll(lib_json::FNode& node) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_json.FNode.c_child.Reserve
 void                 c_child_Reserve(lib_json::FNode& node, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_json.FNode.c_child.qFind
-lib_json::FNode&     c_child_qFind(lib_json::FNode& node, u32 idx) __attribute__((nothrow));
+inline lib_json::FNode& c_child_qFind(lib_json::FNode& node, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_json.FNode.c_child.InAryQ
-bool                 node_c_child_InAryQ(lib_json::FNode& row) __attribute__((nothrow));
+inline bool          node_c_child_InAryQ(lib_json::FNode& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:lib_json.FNode.c_child.qLast
-lib_json::FNode&     c_child_qLast(lib_json::FNode& node) __attribute__((nothrow));
+inline lib_json::FNode& c_child_qLast(lib_json::FNode& node) __attribute__((nothrow));
 
 // Get value of field as enum type
 // func:lib_json.FNode.type.GetEnum
-lib_json_FNode_type_Enum type_GetEnum(const lib_json::FNode& node) __attribute__((nothrow));
+inline lib_json_FNode_type_Enum type_GetEnum(const lib_json::FNode& node) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_json.FNode.type.SetEnum
-void                 type_SetEnum(lib_json::FNode& node, lib_json_FNode_type_Enum rhs) __attribute__((nothrow));
+inline void          type_SetEnum(lib_json::FNode& node, lib_json_FNode_type_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_json.FNode.type.ToCstr
@@ -371,18 +385,18 @@ lib_json::FldKey     fldkey_Get(lib_json::FNode& node) __attribute__((__warn_unu
 
 // Set all fields to initial values.
 // func:lib_json.FNode..Init
-void                 FNode_Init(lib_json::FNode& node);
+inline void          FNode_Init(lib_json::FNode& node);
 // func:lib_json.FNode.c_child_curs.Reset
-void                 node_c_child_curs_Reset(node_c_child_curs &curs, lib_json::FNode &parent) __attribute__((nothrow));
+inline void          node_c_child_curs_Reset(node_c_child_curs &curs, lib_json::FNode &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_json.FNode.c_child_curs.ValidQ
-bool                 node_c_child_curs_ValidQ(node_c_child_curs &curs) __attribute__((nothrow));
+inline bool          node_c_child_curs_ValidQ(node_c_child_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_json.FNode.c_child_curs.Next
-void                 node_c_child_curs_Next(node_c_child_curs &curs) __attribute__((nothrow));
+inline void          node_c_child_curs_Next(node_c_child_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_json.FNode.c_child_curs.Access
-lib_json::FNode&     node_c_child_curs_Access(node_c_child_curs &curs) __attribute__((nothrow));
+inline lib_json::FNode& node_c_child_curs_Access(node_c_child_curs &curs) __attribute__((nothrow));
 // func:lib_json.FNode..Uninit
 void                 FNode_Uninit(lib_json::FNode& node) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -406,12 +420,10 @@ struct FParser { // lib_json.FParser
     u32                uesc_value;   //   0
     u8                 uesc_need;    //   0
     algo::cstring      value;        //
-    FParser();
-    ~FParser();
-private:
-    // user-defined fcleanup on lib_json.FParser.root_node prevents copy
-    FParser(const FParser&){ /*disallow copy constructor */}
-    void operator =(const FParser&){ /*disallow direct assignment */}
+    // func:lib_json.FParser..Ctor
+    inline               FParser() __attribute__((nothrow));
+    // func:lib_json.FParser..Dtor
+    inline               ~FParser() __attribute__((nothrow));
 };
 
 // Declaration for user-defined cleanup function
@@ -422,10 +434,10 @@ void                 root_node_Cleanup(lib_json::FParser& parent) __attribute__(
 
 // Get value of field as enum type
 // func:lib_json.FParser.state.GetEnum
-lib_json_FParser_state_Enum state_GetEnum(const lib_json::FParser& parent) __attribute__((nothrow));
+inline lib_json_FParser_state_Enum state_GetEnum(const lib_json::FParser& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_json.FParser.state.SetEnum
-void                 state_SetEnum(lib_json::FParser& parent, lib_json_FParser_state_Enum rhs) __attribute__((nothrow));
+inline void          state_SetEnum(lib_json::FParser& parent, lib_json_FParser_state_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_json.FParser.state.ToCstr
@@ -458,19 +470,23 @@ void                 FParser_Print(lib_json::FParser& row, algo::cstring& str) _
 #pragma pack(push,1)
 struct FieldId { // lib_json.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_json_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_json_FieldIdEnum arg);
-    FieldId();
+    // func:lib_json.FieldId.value.Cast
+    inline               operator lib_json_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_json.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_json.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_json.FieldId..EnumCtor
+    inline               FieldId(lib_json_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_json.FieldId.value.GetEnum
-lib_json_FieldIdEnum value_GetEnum(const lib_json::FieldId& parent) __attribute__((nothrow));
+inline lib_json_FieldIdEnum value_GetEnum(const lib_json::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_json.FieldId.value.SetEnum
-void                 value_SetEnum(lib_json::FieldId& parent, lib_json_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_json::FieldId& parent, lib_json_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_json.FieldId.value.ToCstr
@@ -498,7 +514,7 @@ bool                 value_ReadStrptrMaybe(lib_json::FieldId& parent, algo::strp
 bool                 FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_json.FieldId..Init
-void                 FieldId_Init(lib_json::FieldId& parent);
+inline void          FieldId_Init(lib_json::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_json.FieldId.String  printfmt:Raw
 // func:lib_json.FieldId..Print

@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/global.cpp
+// Source: cpp/amc/global.cpp -- Global (FDb)
 //
 
 #include "include/amc.h"
@@ -380,6 +380,7 @@ void amc::tfunc_Global_main() {
                 Ins(&R, main.body, tempstr()<<"    "<<parentns.c_globfld->p_arg->cpp_type<<"_Uninit();");
             }
         }
+
         Ins(&R, main.body    , "} catch(algo_lib::ErrorX &) {");
         Ins(&R, main.body    , "    // don't print anything, might crash");
         Ins(&R, main.body    , "    algo_lib::_db.exit_code = 1;");

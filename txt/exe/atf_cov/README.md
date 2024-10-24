@@ -3,30 +3,34 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Test coverage](#test-coverage)
-* [Code coverage](#code-coverage)
-* [Line coverage](#line-coverage)
-* [One-liner](#one-liner)
-* [Changing directory to store coverage data](#changing-directory-to-store-coverage-data)
-* [Running instrumented executable](#running-instrumented-executable)
-* [Redirecting log to a file](#redirecting-log-to-a-file)
-* [Running Gcov](#running-gcov)
-* [Treating source files as infeasible](#treating-source-files-as-infeasible)
-* [Generating coverage reports](#generating-coverage-reports)
-* [Writing out in-memory coverage database to files](#writing-out-in-memory-coverage-database-to-files)
-* [Merging data from multiple runs](#merging-data-from-multiple-runs)
-* [Loading ssim coverage data from prevous run](#loading-ssim-coverage-data-from-prevous-run)
-* [Checking and capturing coverage](#checking-and-capturing-coverage)
-* [Viewing coverage summary](#viewing-coverage-summary)
-* [Output files](#output-files)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Test coverage](#test-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Code coverage](#code-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Line coverage](#line-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [One-liner](#one-liner)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Changing directory to store coverage data](#changing-directory-to-store-coverage-data)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Running instrumented executable](#running-instrumented-executable)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Redirecting log to a file](#redirecting-log-to-a-file)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Running Gcov](#running-gcov)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Treating source files as infeasible](#treating-source-files-as-infeasible)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Generating coverage reports](#generating-coverage-reports)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Writing out in-memory coverage database to files](#writing-out-in-memory-coverage-database-to-files)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Merging data from multiple runs](#merging-data-from-multiple-runs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Loading ssim coverage data from prevous run](#loading-ssim-coverage-data-from-prevous-run)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Checking and capturing coverage](#checking-and-capturing-coverage)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Viewing coverage summary](#viewing-coverage-summary)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Output files](#output-files)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_cov - Internals](/txt/exe/atf_cov/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_cov: Line coverage
 Usage: atf_cov [options]
@@ -52,54 +56,17 @@ Usage: atf_cov [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Atf_cov is a coverage measurement tool, which is aimed at measuring test coverage for source code lines.
 It runs instrumented executable, gathers and processes coverage data, and produces coverage reports.
 Atf_cov provides a utility for GNU Gcov-based code coverage measurement.
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -covdir -- Output directory to save coverage data
-<a href="#-covdir"></a>
-
-#### -logfile -- Log file
-<a href="#-logfile"></a>
-
-#### -runcmd -- command to run
-<a href="#-runcmd"></a>
-
-#### -exclude -- Exclude gitfiles (external, generated)
-<a href="#-exclude"></a>
-
-#### -mergepath -- colon-separated dir list to load .cov.ssim files from
-<a href="#-mergepath"></a>
-
-#### -gcov -- run gcov
-<a href="#-gcov"></a>
-
-#### -ssim -- write out ssim files
-<a href="#-ssim"></a>
-
-#### -report -- write out all reports
-<a href="#-report"></a>
-
-#### -capture -- Write coverage information into tgtcov table
-<a href="#-capture"></a>
-
-#### -xmlpretty -- Generate pretty-formatted XML
-<a href="#-xmlpretty"></a>
-
-#### -summary -- Show summary figures
-<a href="#-summary"></a>
-
-#### -check -- Check coverage information against tgtcov table
-<a href="#-check"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Test coverage
 <a href="#test-coverage"></a>
@@ -431,30 +398,65 @@ Atf_cov generates output files on `-covdata` directory;
 - summary.txt - summary figures in txt format
 - cobertura.xml - coverage report in cobertura xml format
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/atf/atf_cov.cpp](/cpp/atf/atf_cov.cpp)||
-|[cpp/gen/atf_cov_gen.cpp](/cpp/gen/atf_cov_gen.cpp)||
-|[include/atf_cov.h](/include/atf_cov.h)||
-|[include/gen/atf_cov_gen.h](/include/gen/atf_cov_gen.h)||
-|[include/gen/atf_cov_gen.inl.h](/include/gen/atf_cov_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -covdir -- Output directory to save coverage data
+<a href="#-covdir"></a>
+
+#### -logfile -- Log file
+<a href="#-logfile"></a>
+
+#### -runcmd -- command to run
+<a href="#-runcmd"></a>
+
+#### -exclude -- Exclude gitfiles (external, generated)
+<a href="#-exclude"></a>
+
+#### -mergepath -- colon-separated dir list to load .cov.ssim files from
+<a href="#-mergepath"></a>
+
+#### -gcov -- run gcov
+<a href="#-gcov"></a>
+
+#### -ssim -- write out ssim files
+<a href="#-ssim"></a>
+
+#### -report -- write out all reports
+<a href="#-report"></a>
+
+#### -capture -- Write coverage information into tgtcov table
+<a href="#-capture"></a>
+
+#### -xmlpretty -- Generate pretty-formatted XML
+<a href="#-xmlpretty"></a>
+
+#### -summary -- Show summary figures
+<a href="#-summary"></a>
+
+#### -check -- Check coverage information against tgtcov table
+<a href="#-check"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_cov` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.tgtcov](/txt/ssimdb/dev/tgtcov.md)|Captured line coverate information by target|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dev.covtarget](/txt/ssimdb/dev/covtarget.md)||
 |[dev.covline](/txt/ssimdb/dev/covline.md)||
 |[dev.covfile](/txt/ssimdb/dev/covfile.md)||
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

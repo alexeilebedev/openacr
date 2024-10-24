@@ -50,7 +50,8 @@ namespace samp_regx { // gen:ns_print_struct
 // --- samp_regx.trace
 #pragma pack(push,1)
 struct trace { // samp_regx.trace
-    trace();
+    // func:samp_regx.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -115,25 +116,29 @@ bool                 _db_XrefMaybe();
 // func:samp_regx.FDb..Init
 void                 FDb_Init();
 // func:samp_regx.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- samp_regx.FieldId
 #pragma pack(push,1)
 struct FieldId { // samp_regx.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator samp_regx_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(samp_regx_FieldIdEnum arg);
-    FieldId();
+    // func:samp_regx.FieldId.value.Cast
+    inline               operator samp_regx_FieldIdEnum() const __attribute__((nothrow));
+    // func:samp_regx.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:samp_regx.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:samp_regx.FieldId..EnumCtor
+    inline               FieldId(samp_regx_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:samp_regx.FieldId.value.GetEnum
-samp_regx_FieldIdEnum value_GetEnum(const samp_regx::FieldId& parent) __attribute__((nothrow));
+inline samp_regx_FieldIdEnum value_GetEnum(const samp_regx::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:samp_regx.FieldId.value.SetEnum
-void                 value_SetEnum(samp_regx::FieldId& parent, samp_regx_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(samp_regx::FieldId& parent, samp_regx_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:samp_regx.FieldId.value.ToCstr
@@ -161,7 +166,7 @@ bool                 value_ReadStrptrMaybe(samp_regx::FieldId& parent, algo::str
 bool                 FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:samp_regx.FieldId..Init
-void                 FieldId_Init(samp_regx::FieldId& parent);
+inline void          FieldId_Init(samp_regx::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:samp_regx.FieldId.String  printfmt:Raw
 // func:samp_regx.FieldId..Print

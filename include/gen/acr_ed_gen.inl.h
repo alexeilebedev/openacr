@@ -46,14 +46,6 @@ static acr_ed::FEdaction &acr_ed_edaction_Rename_Field      = ((acr_ed::FEdactio
 static acr_ed::FEdaction &acr_ed_edaction_Rename_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[15];
 static acr_ed::FEdaction &acr_ed_edaction_Rename_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[16];
 static acr_ed::FEdaction &acr_ed_edaction_Rename_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[17];
-inline acr_ed::FCfmt::FCfmt() {
-    acr_ed::FCfmt_Init(*this);
-}
-
-inline acr_ed::FCfmt::~FCfmt() {
-    acr_ed::FCfmt_Uninit(*this);
-}
-
 
 // --- acr_ed.FCfmt..Init
 // Set all fields to initial values.
@@ -62,14 +54,16 @@ inline void acr_ed::FCfmt_Init(acr_ed::FCfmt& cfmt) {
     cfmt.print = bool(false);
     cfmt.genop = bool(false);
 }
-inline acr_ed::FCpptype::FCpptype() {
-    acr_ed::FCpptype_Init(*this);
+
+// --- acr_ed.FCfmt..Ctor
+inline  acr_ed::FCfmt::FCfmt() {
+    acr_ed::FCfmt_Init(*this);
 }
 
-inline acr_ed::FCpptype::~FCpptype() {
-    acr_ed::FCpptype_Uninit(*this);
+// --- acr_ed.FCfmt..Dtor
+inline  acr_ed::FCfmt::~FCfmt() {
+    acr_ed::FCfmt_Uninit(*this);
 }
-
 
 // --- acr_ed.FCpptype..Init
 // Set all fields to initial values.
@@ -78,28 +72,32 @@ inline void acr_ed::FCpptype_Init(acr_ed::FCpptype& cpptype) {
     cpptype.dtor = bool(true);
     cpptype.cheap_copy = bool(false);
 }
-inline acr_ed::FCstr::FCstr() {
-    acr_ed::FCstr_Init(*this);
+
+// --- acr_ed.FCpptype..Ctor
+inline  acr_ed::FCpptype::FCpptype() {
+    acr_ed::FCpptype_Init(*this);
 }
 
-inline acr_ed::FCstr::~FCstr() {
-    acr_ed::FCstr_Uninit(*this);
+// --- acr_ed.FCpptype..Dtor
+inline  acr_ed::FCpptype::~FCpptype() {
+    acr_ed::FCpptype_Uninit(*this);
 }
-
 
 // --- acr_ed.FCstr..Init
 // Set all fields to initial values.
 inline void acr_ed::FCstr_Init(acr_ed::FCstr& cstr) {
     cstr.strequiv = bool(false);
 }
-inline acr_ed::FCtype::FCtype() {
-    acr_ed::FCtype_Init(*this);
+
+// --- acr_ed.FCstr..Ctor
+inline  acr_ed::FCstr::FCstr() {
+    acr_ed::FCstr_Init(*this);
 }
 
-inline acr_ed::FCtype::~FCtype() {
-    acr_ed::FCtype_Uninit(*this);
+// --- acr_ed.FCstr..Dtor
+inline  acr_ed::FCstr::~FCstr() {
+    acr_ed::FCstr_Uninit(*this);
 }
-
 
 // --- acr_ed.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -356,14 +354,16 @@ inline void acr_ed::ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) {
 inline acr_ed::FCfmt& acr_ed::ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline acr_ed::FEdaction::FEdaction() {
-    acr_ed::FEdaction_Init(*this);
+
+// --- acr_ed.FCtype..Ctor
+inline  acr_ed::FCtype::FCtype() {
+    acr_ed::FCtype_Init(*this);
 }
 
-inline acr_ed::FEdaction::~FEdaction() {
-    acr_ed::FEdaction_Uninit(*this);
+// --- acr_ed.FCtype..Dtor
+inline  acr_ed::FCtype::~FCtype() {
+    acr_ed::FCtype_Uninit(*this);
 }
-
 
 // --- acr_ed.FEdaction.step.Call
 // Invoke function by pointer
@@ -379,9 +379,20 @@ inline void acr_ed::FEdaction_Init(acr_ed::FEdaction& edaction) {
     edaction.step = NULL;
     edaction.ind_edaction_next = (acr_ed::FEdaction*)-1; // (acr_ed.FDb.ind_edaction) not-in-hash
 }
-inline acr_ed::trace::trace() {
+
+// --- acr_ed.FEdaction..Ctor
+inline  acr_ed::FEdaction::FEdaction() {
+    acr_ed::FEdaction_Init(*this);
 }
 
+// --- acr_ed.FEdaction..Dtor
+inline  acr_ed::FEdaction::~FEdaction() {
+    acr_ed::FEdaction_Uninit(*this);
+}
+
+// --- acr_ed.trace..Ctor
+inline  acr_ed::trace::trace() {
+}
 
 // --- acr_ed.FDb.ns.EmptyQ
 // Return true if index is empty
@@ -1734,39 +1745,36 @@ inline void acr_ed::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
 inline acr_ed::FGitfile& acr_ed::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
     return gitfile_qFind(u64(curs.index));
 }
-inline acr_ed::FField::FField() {
+
+// --- acr_ed.FField..Ctor
+inline  acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
 }
 
-inline acr_ed::FField::~FField() {
+// --- acr_ed.FField..Dtor
+inline  acr_ed::FField::~FField() {
     acr_ed::FField_Uninit(*this);
 }
-
-inline acr_ed::FFprefix::FFprefix() {
-    acr_ed::FFprefix_Init(*this);
-}
-
-inline acr_ed::FFprefix::~FFprefix() {
-    acr_ed::FFprefix_Uninit(*this);
-}
-
 
 // --- acr_ed.FFprefix..Init
 // Set all fields to initial values.
 inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& fprefix) {
     fprefix.ind_fprefix_next = (acr_ed::FFprefix*)-1; // (acr_ed.FDb.ind_fprefix) not-in-hash
 }
-inline acr_ed::FGitfile::FGitfile() {
+
+// --- acr_ed.FFprefix..Ctor
+inline  acr_ed::FFprefix::FFprefix() {
+    acr_ed::FFprefix_Init(*this);
 }
 
-inline acr_ed::FListtype::FListtype() {
-    acr_ed::FListtype_Init(*this);
+// --- acr_ed.FFprefix..Dtor
+inline  acr_ed::FFprefix::~FFprefix() {
+    acr_ed::FFprefix_Uninit(*this);
 }
 
-inline acr_ed::FListtype::~FListtype() {
-    acr_ed::FListtype_Uninit(*this);
+// --- acr_ed.FGitfile..Ctor
+inline  acr_ed::FGitfile::FGitfile() {
 }
-
 
 // --- acr_ed.FListtype..Init
 // Set all fields to initial values.
@@ -1776,52 +1784,61 @@ inline void acr_ed::FListtype_Init(acr_ed::FListtype& listtype) {
     listtype.instail = bool(false);
     listtype.ind_listtype_next = (acr_ed::FListtype*)-1; // (acr_ed.FDb.ind_listtype) not-in-hash
 }
-inline acr_ed::FNs::FNs() {
-    acr_ed::FNs_Init(*this);
+
+// --- acr_ed.FListtype..Ctor
+inline  acr_ed::FListtype::FListtype() {
+    acr_ed::FListtype_Init(*this);
 }
 
-inline acr_ed::FNs::~FNs() {
-    acr_ed::FNs_Uninit(*this);
+// --- acr_ed.FListtype..Dtor
+inline  acr_ed::FListtype::~FListtype() {
+    acr_ed::FListtype_Uninit(*this);
 }
-
 
 // --- acr_ed.FNs..Init
 // Set all fields to initial values.
 inline void acr_ed::FNs_Init(acr_ed::FNs& ns) {
     ns.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
 }
-inline acr_ed::FNsdb::FNsdb() {
-    acr_ed::FNsdb_Init(*this);
+
+// --- acr_ed.FNs..Ctor
+inline  acr_ed::FNs::FNs() {
+    acr_ed::FNs_Init(*this);
 }
 
-inline acr_ed::FNsdb::~FNsdb() {
-    acr_ed::FNsdb_Uninit(*this);
+// --- acr_ed.FNs..Dtor
+inline  acr_ed::FNs::~FNs() {
+    acr_ed::FNs_Uninit(*this);
 }
-
 
 // --- acr_ed.FNsdb..Init
 // Set all fields to initial values.
 inline void acr_ed::FNsdb_Init(acr_ed::FNsdb& nsdb) {
     nsdb.ind_nsdb_next = (acr_ed::FNsdb*)-1; // (acr_ed.FDb.ind_nsdb) not-in-hash
 }
-inline acr_ed::FPack::FPack() {
+
+// --- acr_ed.FNsdb..Ctor
+inline  acr_ed::FNsdb::FNsdb() {
+    acr_ed::FNsdb_Init(*this);
 }
 
-inline acr_ed::FPack::~FPack() {
+// --- acr_ed.FNsdb..Dtor
+inline  acr_ed::FNsdb::~FNsdb() {
+    acr_ed::FNsdb_Uninit(*this);
+}
+
+// --- acr_ed.FPack..Ctor
+inline  acr_ed::FPack::FPack() {
+}
+
+// --- acr_ed.FPack..Dtor
+inline  acr_ed::FPack::~FPack() {
     acr_ed::FPack_Uninit(*this);
 }
 
-inline acr_ed::FSbpath::FSbpath() {
+// --- acr_ed.FSbpath..Ctor
+inline  acr_ed::FSbpath::FSbpath() {
 }
-
-inline acr_ed::FSsimfile::FSsimfile() {
-    acr_ed::FSsimfile_Init(*this);
-}
-
-inline acr_ed::FSsimfile::~FSsimfile() {
-    acr_ed::FSsimfile_Uninit(*this);
-}
-
 
 // --- acr_ed.FSsimfile..Init
 // Set all fields to initial values.
@@ -1830,14 +1847,16 @@ inline void acr_ed::FSsimfile_Init(acr_ed::FSsimfile& ssimfile) {
     ssimfile.p_ns = NULL;
     ssimfile.ind_ssimfile_next = (acr_ed::FSsimfile*)-1; // (acr_ed.FDb.ind_ssimfile) not-in-hash
 }
-inline acr_ed::FTarget::FTarget() {
-    acr_ed::FTarget_Init(*this);
+
+// --- acr_ed.FSsimfile..Ctor
+inline  acr_ed::FSsimfile::FSsimfile() {
+    acr_ed::FSsimfile_Init(*this);
 }
 
-inline acr_ed::FTarget::~FTarget() {
-    acr_ed::FTarget_Uninit(*this);
+// --- acr_ed.FSsimfile..Dtor
+inline  acr_ed::FSsimfile::~FSsimfile() {
+    acr_ed::FSsimfile_Uninit(*this);
 }
-
 
 // --- acr_ed.FTarget.zd_targsrc.EmptyQ
 // Return true if index is empty
@@ -1930,14 +1949,16 @@ inline void acr_ed::target_zd_targsrc_curs_Next(target_zd_targsrc_curs &curs) {
 inline acr_ed::FTargsrc& acr_ed::target_zd_targsrc_curs_Access(target_zd_targsrc_curs &curs) {
     return *curs.row;
 }
-inline acr_ed::FTargsrc::FTargsrc() {
-    acr_ed::FTargsrc_Init(*this);
+
+// --- acr_ed.FTarget..Ctor
+inline  acr_ed::FTarget::FTarget() {
+    acr_ed::FTarget_Init(*this);
 }
 
-inline acr_ed::FTargsrc::~FTargsrc() {
-    acr_ed::FTargsrc_Uninit(*this);
+// --- acr_ed.FTarget..Dtor
+inline  acr_ed::FTarget::~FTarget() {
+    acr_ed::FTarget_Uninit(*this);
 }
-
 
 // --- acr_ed.FTargsrc..Init
 // Set all fields to initial values.
@@ -1946,22 +1967,25 @@ inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& targsrc) {
     targsrc.zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
     targsrc.zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
 }
-inline acr_ed::FTypefld::FTypefld() {
+
+// --- acr_ed.FTargsrc..Ctor
+inline  acr_ed::FTargsrc::FTargsrc() {
+    acr_ed::FTargsrc_Init(*this);
 }
 
-inline acr_ed::FTypefld::~FTypefld() {
+// --- acr_ed.FTargsrc..Dtor
+inline  acr_ed::FTargsrc::~FTargsrc() {
+    acr_ed::FTargsrc_Uninit(*this);
+}
+
+// --- acr_ed.FTypefld..Ctor
+inline  acr_ed::FTypefld::FTypefld() {
+}
+
+// --- acr_ed.FTypefld..Dtor
+inline  acr_ed::FTypefld::~FTypefld() {
     acr_ed::FTypefld_Uninit(*this);
 }
-
-inline acr_ed::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_ed::FieldId::FieldId(acr_ed_FieldIdEnum arg) { this->value = i32(arg); }
-inline acr_ed::FieldId::FieldId() {
-    acr_ed::FieldId_Init(*this);
-}
-
 
 // --- acr_ed.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1976,7 +2000,7 @@ inline void acr_ed::value_SetEnum(acr_ed::FieldId& parent, acr_ed_FieldIdEnum rh
 }
 
 // --- acr_ed.FieldId.value.Cast
-inline acr_ed::FieldId::operator acr_ed_FieldIdEnum () const {
+inline  acr_ed::FieldId::operator acr_ed_FieldIdEnum() const {
     return acr_ed_FieldIdEnum((*this).value);
 }
 
@@ -1985,15 +2009,22 @@ inline acr_ed::FieldId::operator acr_ed_FieldIdEnum () const {
 inline void acr_ed::FieldId_Init(acr_ed::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline acr_ed::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline acr_ed::TableId::TableId(acr_ed_TableIdEnum arg) { this->value = i32(arg); }
-inline acr_ed::TableId::TableId() {
-    acr_ed::TableId_Init(*this);
+
+// --- acr_ed.FieldId..Ctor
+inline  acr_ed::FieldId::FieldId() {
+    acr_ed::FieldId_Init(*this);
 }
 
+// --- acr_ed.FieldId..FieldwiseCtor
+inline  acr_ed::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_ed.FieldId..EnumCtor
+inline  acr_ed::FieldId::FieldId(acr_ed_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- acr_ed.TableId.value.GetEnum
 // Get value of field as enum type
@@ -2008,7 +2039,7 @@ inline void acr_ed::value_SetEnum(acr_ed::TableId& parent, acr_ed_TableIdEnum rh
 }
 
 // --- acr_ed.TableId.value.Cast
-inline acr_ed::TableId::operator acr_ed_TableIdEnum () const {
+inline  acr_ed::TableId::operator acr_ed_TableIdEnum() const {
     return acr_ed_TableIdEnum((*this).value);
 }
 
@@ -2016,6 +2047,22 @@ inline acr_ed::TableId::operator acr_ed_TableIdEnum () const {
 // Set all fields to initial values.
 inline void acr_ed::TableId_Init(acr_ed::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- acr_ed.TableId..Ctor
+inline  acr_ed::TableId::TableId() {
+    acr_ed::TableId_Init(*this);
+}
+
+// --- acr_ed.TableId..FieldwiseCtor
+inline  acr_ed::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- acr_ed.TableId..EnumCtor
+inline  acr_ed::TableId::TableId(acr_ed_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_ed::trace &row) {// cfmt:acr_ed.trace.String

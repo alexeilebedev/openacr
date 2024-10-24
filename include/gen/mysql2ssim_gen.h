@@ -55,7 +55,8 @@ namespace mysql2ssim { // gen:ns_print_struct
 // --- mysql2ssim.trace
 #pragma pack(push,1)
 struct trace { // mysql2ssim.trace
-    trace();
+    // func:mysql2ssim.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -141,22 +142,22 @@ algo::cstring&       table_names_AllocAt(int at) __attribute__((__warn_unused_re
 algo::aryptr<algo::cstring> table_names_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FDb.table_names.EmptyQ
-bool                 table_names_EmptyQ() __attribute__((nothrow));
+inline bool          table_names_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:mysql2ssim.FDb.table_names.Find
-algo::cstring*       table_names_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* table_names_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:mysql2ssim.FDb.table_names.Getary
-algo::aryptr<algo::cstring> table_names_Getary() __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> table_names_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mysql2ssim.FDb.table_names.Last
-algo::cstring*       table_names_Last() __attribute__((nothrow, pure));
+inline algo::cstring* table_names_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:mysql2ssim.FDb.table_names.Max
-i32                  table_names_Max() __attribute__((nothrow));
+inline i32           table_names_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:mysql2ssim.FDb.table_names.N
-i32                  table_names_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           table_names_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:mysql2ssim.FDb.table_names.Remove
 void                 table_names_Remove(u32 i) __attribute__((nothrow));
@@ -167,19 +168,19 @@ void                 table_names_RemoveAll() __attribute__((nothrow));
 void                 table_names_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:mysql2ssim.FDb.table_names.Reserve
-void                 table_names_Reserve(int n) __attribute__((nothrow));
+inline void          table_names_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:mysql2ssim.FDb.table_names.AbsReserve
 void                 table_names_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mysql2ssim.FDb.table_names.qFind
-algo::cstring&       table_names_qFind(u64 t) __attribute__((nothrow));
+inline algo::cstring& table_names_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:mysql2ssim.FDb.table_names.qLast
-algo::cstring&       table_names_qLast() __attribute__((nothrow));
+inline algo::cstring& table_names_qLast() __attribute__((nothrow));
 // Return row id of specified element
 // func:mysql2ssim.FDb.table_names.rowid_Get
-u64                  table_names_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+inline u64           table_names_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.table_names.AllocNVal
 algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -207,22 +208,22 @@ algo::cstring&       in_tables_AllocAt(int at) __attribute__((__warn_unused_resu
 algo::aryptr<algo::cstring> in_tables_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FDb.in_tables.EmptyQ
-bool                 in_tables_EmptyQ() __attribute__((nothrow));
+inline bool          in_tables_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:mysql2ssim.FDb.in_tables.Find
-algo::cstring*       in_tables_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* in_tables_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:mysql2ssim.FDb.in_tables.Getary
-algo::aryptr<algo::cstring> in_tables_Getary() __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> in_tables_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mysql2ssim.FDb.in_tables.Last
-algo::cstring*       in_tables_Last() __attribute__((nothrow, pure));
+inline algo::cstring* in_tables_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:mysql2ssim.FDb.in_tables.Max
-i32                  in_tables_Max() __attribute__((nothrow));
+inline i32           in_tables_Max() __attribute__((nothrow));
 // Return number of items in the array
 // func:mysql2ssim.FDb.in_tables.N
-i32                  in_tables_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           in_tables_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:mysql2ssim.FDb.in_tables.Remove
 void                 in_tables_Remove(u32 i) __attribute__((nothrow));
@@ -233,19 +234,19 @@ void                 in_tables_RemoveAll() __attribute__((nothrow));
 void                 in_tables_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:mysql2ssim.FDb.in_tables.Reserve
-void                 in_tables_Reserve(int n) __attribute__((nothrow));
+inline void          in_tables_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:mysql2ssim.FDb.in_tables.AbsReserve
 void                 in_tables_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mysql2ssim.FDb.in_tables.qFind
-algo::cstring&       in_tables_qFind(u64 t) __attribute__((nothrow));
+inline algo::cstring& in_tables_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:mysql2ssim.FDb.in_tables.qLast
-algo::cstring&       in_tables_qLast() __attribute__((nothrow));
+inline algo::cstring& in_tables_qLast() __attribute__((nothrow));
 // Return row id of specified element
 // func:mysql2ssim.FDb.in_tables.rowid_Get
-u64                  in_tables_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+inline u64           in_tables_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.in_tables.AllocNVal
 algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -257,26 +258,26 @@ bool                 in_tables_ReadStrptrMaybe(algo::strptr in_str) __attribute_
 
 // proceed to next item
 // func:mysql2ssim.FDb.table_names_curs.Next
-void                 _db_table_names_curs_Next(_db_table_names_curs &curs) __attribute__((nothrow));
+inline void          _db_table_names_curs_Next(_db_table_names_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FDb.table_names_curs.Reset
-void                 _db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FDb.table_names_curs.ValidQ
-bool                 _db_table_names_curs_ValidQ(_db_table_names_curs &curs) __attribute__((nothrow));
+inline bool          _db_table_names_curs_ValidQ(_db_table_names_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FDb.table_names_curs.Access
-algo::cstring&       _db_table_names_curs_Access(_db_table_names_curs &curs) __attribute__((nothrow));
+inline algo::cstring& _db_table_names_curs_Access(_db_table_names_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:mysql2ssim.FDb.in_tables_curs.Next
-void                 _db_in_tables_curs_Next(_db_in_tables_curs &curs) __attribute__((nothrow));
+inline void          _db_in_tables_curs_Next(_db_in_tables_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FDb.in_tables_curs.Reset
-void                 _db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
+inline void          _db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FDb.in_tables_curs.ValidQ
-bool                 _db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) __attribute__((nothrow));
+inline bool          _db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FDb.in_tables_curs.Access
-algo::cstring&       _db_in_tables_curs_Access(_db_in_tables_curs &curs) __attribute__((nothrow));
+inline algo::cstring& _db_in_tables_curs_Access(_db_in_tables_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FDb..Init
 void                 FDb_Init();
@@ -290,12 +291,14 @@ struct FTobltin { // mysql2ssim.FTobltin
     algo::cstring*   vals_elems;   // pointer to elements
     u32              vals_n;       // number of elements in array
     u32              vals_max;     // max. capacity of array before realloc
-    FTobltin();
-    ~FTobltin();
-private:
-    // reftype Tary of mysql2ssim.FTobltin.vals prohibits copy
-    FTobltin(const FTobltin&){ /*disallow copy constructor */}
-    void operator =(const FTobltin&){ /*disallow direct assignment */}
+    // func:mysql2ssim.FTobltin..AssignOp
+    mysql2ssim::FTobltin& operator =(const mysql2ssim::FTobltin &rhs) __attribute__((nothrow));
+    // func:mysql2ssim.FTobltin..Ctor
+    inline               FTobltin() __attribute__((nothrow));
+    // func:mysql2ssim.FTobltin..Dtor
+    inline               ~FTobltin() __attribute__((nothrow));
+    // func:mysql2ssim.FTobltin..CopyCtor
+    FTobltin(const mysql2ssim::FTobltin &rhs) __attribute__((nothrow));
 };
 
 // Reserve space (this may move memory). Insert N element at the end.
@@ -316,22 +319,22 @@ algo::cstring&       vals_AllocAt(mysql2ssim::FTobltin& parent, int at) __attrib
 algo::aryptr<algo::cstring> vals_AllocN(mysql2ssim::FTobltin& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FTobltin.vals.EmptyQ
-bool                 vals_EmptyQ(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
+inline bool          vals_EmptyQ(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:mysql2ssim.FTobltin.vals.Find
-algo::cstring*       vals_Find(mysql2ssim::FTobltin& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* vals_Find(mysql2ssim::FTobltin& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:mysql2ssim.FTobltin.vals.Getary
-algo::aryptr<algo::cstring> vals_Getary(const mysql2ssim::FTobltin& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> vals_Getary(const mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:mysql2ssim.FTobltin.vals.Last
-algo::cstring*       vals_Last(mysql2ssim::FTobltin& parent) __attribute__((nothrow, pure));
+inline algo::cstring* vals_Last(mysql2ssim::FTobltin& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:mysql2ssim.FTobltin.vals.Max
-i32                  vals_Max(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
+inline i32           vals_Max(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:mysql2ssim.FTobltin.vals.N
-i32                  vals_N(const mysql2ssim::FTobltin& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           vals_N(const mysql2ssim::FTobltin& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:mysql2ssim.FTobltin.vals.Remove
 void                 vals_Remove(mysql2ssim::FTobltin& parent, u32 i) __attribute__((nothrow));
@@ -342,7 +345,7 @@ void                 vals_RemoveAll(mysql2ssim::FTobltin& parent) __attribute__(
 void                 vals_RemoveLast(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:mysql2ssim.FTobltin.vals.Reserve
-void                 vals_Reserve(mysql2ssim::FTobltin& parent, int n) __attribute__((nothrow));
+inline void          vals_Reserve(mysql2ssim::FTobltin& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:mysql2ssim.FTobltin.vals.AbsReserve
 void                 vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) __attribute__((nothrow));
@@ -355,13 +358,13 @@ void                 vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobl
 void                 vals_Setary(mysql2ssim::FTobltin& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:mysql2ssim.FTobltin.vals.qFind
-algo::cstring&       vals_qFind(mysql2ssim::FTobltin& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& vals_qFind(mysql2ssim::FTobltin& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:mysql2ssim.FTobltin.vals.qLast
-algo::cstring&       vals_qLast(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
+inline algo::cstring& vals_qLast(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:mysql2ssim.FTobltin.vals.rowid_Get
-u64                  vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FTobltin.vals.AllocNVal
 algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -373,18 +376,18 @@ bool                 vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::st
 
 // proceed to next item
 // func:mysql2ssim.FTobltin.vals_curs.Next
-void                 FTobltin_vals_curs_Next(FTobltin_vals_curs &curs) __attribute__((nothrow));
+inline void          FTobltin_vals_curs_Next(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // func:mysql2ssim.FTobltin.vals_curs.Reset
-void                 FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent) __attribute__((nothrow));
+inline void          FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:mysql2ssim.FTobltin.vals_curs.ValidQ
-bool                 FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs) __attribute__((nothrow));
+inline bool          FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // item access
 // func:mysql2ssim.FTobltin.vals_curs.Access
-algo::cstring&       FTobltin_vals_curs_Access(FTobltin_vals_curs &curs) __attribute__((nothrow));
+inline algo::cstring& FTobltin_vals_curs_Access(FTobltin_vals_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FTobltin..Init
-void                 FTobltin_Init(mysql2ssim::FTobltin& parent);
+inline void          FTobltin_Init(mysql2ssim::FTobltin& parent);
 // func:mysql2ssim.FTobltin..Uninit
 void                 FTobltin_Uninit(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
 
@@ -392,19 +395,23 @@ void                 FTobltin_Uninit(mysql2ssim::FTobltin& parent) __attribute__
 #pragma pack(push,1)
 struct FieldId { // mysql2ssim.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator mysql2ssim_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(mysql2ssim_FieldIdEnum arg);
-    FieldId();
+    // func:mysql2ssim.FieldId.value.Cast
+    inline               operator mysql2ssim_FieldIdEnum() const __attribute__((nothrow));
+    // func:mysql2ssim.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:mysql2ssim.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:mysql2ssim.FieldId..EnumCtor
+    inline               FieldId(mysql2ssim_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:mysql2ssim.FieldId.value.GetEnum
-mysql2ssim_FieldIdEnum value_GetEnum(const mysql2ssim::FieldId& parent) __attribute__((nothrow));
+inline mysql2ssim_FieldIdEnum value_GetEnum(const mysql2ssim::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:mysql2ssim.FieldId.value.SetEnum
-void                 value_SetEnum(mysql2ssim::FieldId& parent, mysql2ssim_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(mysql2ssim::FieldId& parent, mysql2ssim_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:mysql2ssim.FieldId.value.ToCstr
@@ -432,7 +439,7 @@ bool                 value_ReadStrptrMaybe(mysql2ssim::FieldId& parent, algo::st
 bool                 FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:mysql2ssim.FieldId..Init
-void                 FieldId_Init(mysql2ssim::FieldId& parent);
+inline void          FieldId_Init(mysql2ssim::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:mysql2ssim.FieldId.String  printfmt:Raw
 // func:mysql2ssim.FieldId..Print

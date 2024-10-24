@@ -28,9 +28,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
-inline gcli::trace::trace() {
-}
 
+// --- gcli.trace..Ctor
+inline  gcli::trace::trace() {
+}
 
 // --- gcli.FDb.gtype.EmptyQ
 // Return true if index is empty
@@ -2521,28 +2522,22 @@ inline void gcli::_db_gact_curs_Next(_db_gact_curs &curs) {
 inline gcli::FGact& gcli::_db_gact_curs_Access(_db_gact_curs &curs) {
     return gact_qFind(u64(curs.index));
 }
-inline gcli::FGact::FGact() {
-    gcli::FGact_Init(*this);
-}
-
-inline gcli::FGact::~FGact() {
-    gcli::FGact_Uninit(*this);
-}
-
 
 // --- gcli.FGact..Init
 // Set all fields to initial values.
 inline void gcli::FGact_Init(gcli::FGact& gact) {
     gact.ind_gact_next = (gcli::FGact*)-1; // (gcli.FDb.ind_gact) not-in-hash
 }
-inline gcli::FGclicmd::FGclicmd() {
-    gcli::FGclicmd_Init(*this);
+
+// --- gcli.FGact..Ctor
+inline  gcli::FGact::FGact() {
+    gcli::FGact_Init(*this);
 }
 
-inline gcli::FGclicmd::~FGclicmd() {
-    gcli::FGclicmd_Uninit(*this);
+// --- gcli.FGact..Dtor
+inline  gcli::FGact::~FGact() {
+    gcli::FGact_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmd.c_tuples.EmptyQ
 // Return true if index is empty
@@ -2873,14 +2868,16 @@ inline void gcli::gclicmd_c_gclicmdf2j_curs_Next(gclicmd_c_gclicmdf2j_curs &curs
 inline gcli::FGclicmdf2j& gcli::gclicmd_c_gclicmdf2j_curs_Access(gclicmd_c_gclicmdf2j_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGclicmdarg::FGclicmdarg() {
-    gcli::FGclicmdarg_Init(*this);
+
+// --- gcli.FGclicmd..Ctor
+inline  gcli::FGclicmd::FGclicmd() {
+    gcli::FGclicmd_Init(*this);
 }
 
-inline gcli::FGclicmdarg::~FGclicmdarg() {
-    gcli::FGclicmdarg_Uninit(*this);
+// --- gcli.FGclicmd..Dtor
+inline  gcli::FGclicmd::~FGclicmd() {
+    gcli::FGclicmd_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdarg..Init
 // Set all fields to initial values.
@@ -2888,14 +2885,16 @@ inline void gcli::FGclicmdarg_Init(gcli::FGclicmdarg& gclicmdarg) {
     gclicmdarg.gclicmd_c_gclicmdarg_in_ary = bool(false);
     gclicmdarg.ind_gclicmdarg_next = (gcli::FGclicmdarg*)-1; // (gcli.FDb.ind_gclicmdarg) not-in-hash
 }
-inline gcli::FGclicmdc::FGclicmdc() {
-    gcli::FGclicmdc_Init(*this);
+
+// --- gcli.FGclicmdarg..Ctor
+inline  gcli::FGclicmdarg::FGclicmdarg() {
+    gcli::FGclicmdarg_Init(*this);
 }
 
-inline gcli::FGclicmdc::~FGclicmdc() {
-    gcli::FGclicmdc_Uninit(*this);
+// --- gcli.FGclicmdarg..Dtor
+inline  gcli::FGclicmdarg::~FGclicmdarg() {
+    gcli::FGclicmdarg_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdc.c_gclicmdf.EmptyQ
 // Return true if index is empty
@@ -2989,14 +2988,16 @@ inline void gcli::gclicmdc_c_gclicmdf_curs_Next(gclicmdc_c_gclicmdf_curs &curs) 
 inline gcli::FGclicmdf& gcli::gclicmdc_c_gclicmdf_curs_Access(gclicmdc_c_gclicmdf_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGclicmdf::FGclicmdf() {
-    gcli::FGclicmdf_Init(*this);
+
+// --- gcli.FGclicmdc..Ctor
+inline  gcli::FGclicmdc::FGclicmdc() {
+    gcli::FGclicmdc_Init(*this);
 }
 
-inline gcli::FGclicmdf::~FGclicmdf() {
-    gcli::FGclicmdf_Uninit(*this);
+// --- gcli.FGclicmdc..Dtor
+inline  gcli::FGclicmdc::~FGclicmdc() {
+    gcli::FGclicmdc_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdf..Init
 // Set all fields to initial values.
@@ -3004,14 +3005,16 @@ inline void gcli::FGclicmdf_Init(gcli::FGclicmdf& gclicmdf) {
     gclicmdf.gclicmdc_c_gclicmdf_in_ary = bool(false);
     gclicmdf.ind_gclicmdf_next = (gcli::FGclicmdf*)-1; // (gcli.FDb.ind_gclicmdf) not-in-hash
 }
-inline gcli::FGclicmdf2j::FGclicmdf2j() {
-    gcli::FGclicmdf2j_Init(*this);
+
+// --- gcli.FGclicmdf..Ctor
+inline  gcli::FGclicmdf::FGclicmdf() {
+    gcli::FGclicmdf_Init(*this);
 }
 
-inline gcli::FGclicmdf2j::~FGclicmdf2j() {
-    gcli::FGclicmdf2j_Uninit(*this);
+// --- gcli.FGclicmdf..Dtor
+inline  gcli::FGclicmdf::~FGclicmdf() {
+    gcli::FGclicmdf_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdf2j..Init
 // Set all fields to initial values.
@@ -3020,14 +3023,16 @@ inline void gcli::FGclicmdf2j_Init(gcli::FGclicmdf2j& gclicmdf2j) {
     gclicmdf2j.p_gclicmd = NULL;
     gclicmdf2j.gclicmd_c_gclicmdf2j_in_ary = bool(false);
 }
-inline gcli::FGclicmdj2f::FGclicmdj2f() {
-    gcli::FGclicmdj2f_Init(*this);
+
+// --- gcli.FGclicmdf2j..Ctor
+inline  gcli::FGclicmdf2j::FGclicmdf2j() {
+    gcli::FGclicmdf2j_Init(*this);
 }
 
-inline gcli::FGclicmdj2f::~FGclicmdj2f() {
-    gcli::FGclicmdj2f_Uninit(*this);
+// --- gcli.FGclicmdf2j..Dtor
+inline  gcli::FGclicmdf2j::~FGclicmdf2j() {
+    gcli::FGclicmdf2j_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.EmptyQ
 // Return true if index is empty
@@ -3112,14 +3117,16 @@ inline void gcli::gclicmdj2f_c_gclicmdf_curs_Next(gclicmdj2f_c_gclicmdf_curs &cu
 inline gcli::FGclicmdf& gcli::gclicmdj2f_c_gclicmdf_curs_Access(gclicmdj2f_c_gclicmdf_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGclicmdt::FGclicmdt() {
-    gcli::FGclicmdt_Init(*this);
+
+// --- gcli.FGclicmdj2f..Ctor
+inline  gcli::FGclicmdj2f::FGclicmdj2f() {
+    gcli::FGclicmdj2f_Init(*this);
 }
 
-inline gcli::FGclicmdt::~FGclicmdt() {
-    gcli::FGclicmdt_Uninit(*this);
+// --- gcli.FGclicmdj2f..Dtor
+inline  gcli::FGclicmdj2f::~FGclicmdj2f() {
+    gcli::FGclicmdj2f_Uninit(*this);
 }
-
 
 // --- gcli.FGclicmdt..Init
 // Set all fields to initial values.
@@ -3129,14 +3136,16 @@ inline void gcli::FGclicmdt_Init(gcli::FGclicmdt& gclicmdt) {
     gclicmdt.p_gtype = NULL;
     gclicmdt.ind_gclicmdt_next = (gcli::FGclicmdt*)-1; // (gcli.FDb.ind_gclicmdt) not-in-hash
 }
-inline gcli::FGfld::FGfld() {
-    gcli::FGfld_Init(*this);
+
+// --- gcli.FGclicmdt..Ctor
+inline  gcli::FGclicmdt::FGclicmdt() {
+    gcli::FGclicmdt_Init(*this);
 }
 
-inline gcli::FGfld::~FGfld() {
-    gcli::FGfld_Uninit(*this);
+// --- gcli.FGclicmdt..Dtor
+inline  gcli::FGclicmdt::~FGclicmdt() {
+    gcli::FGclicmdt_Uninit(*this);
 }
-
 
 // --- gcli.FGfld.c_gtblactfld.EmptyQ
 // Return true if index is empty
@@ -3230,28 +3239,32 @@ inline void gcli::gfld_c_gtblactfld_curs_Next(gfld_c_gtblactfld_curs &curs) {
 inline gcli::FGtblactfld& gcli::gfld_c_gtblactfld_curs_Access(gfld_c_gtblactfld_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGithost::FGithost() {
-    gcli::FGithost_Init(*this);
+
+// --- gcli.FGfld..Ctor
+inline  gcli::FGfld::FGfld() {
+    gcli::FGfld_Init(*this);
 }
 
-inline gcli::FGithost::~FGithost() {
-    gcli::FGithost_Uninit(*this);
+// --- gcli.FGfld..Dtor
+inline  gcli::FGfld::~FGfld() {
+    gcli::FGfld_Uninit(*this);
 }
-
 
 // --- gcli.FGithost..Init
 // Set all fields to initial values.
 inline void gcli::FGithost_Init(gcli::FGithost& githost) {
     githost.ind_githost_next = (gcli::FGithost*)-1; // (gcli.FDb.ind_githost) not-in-hash
 }
-inline gcli::FGmethod::FGmethod() {
-    gcli::FGmethod_Init(*this);
+
+// --- gcli.FGithost..Ctor
+inline  gcli::FGithost::FGithost() {
+    gcli::FGithost_Init(*this);
 }
 
-inline gcli::FGmethod::~FGmethod() {
-    gcli::FGmethod_Uninit(*this);
+// --- gcli.FGithost..Dtor
+inline  gcli::FGithost::~FGithost() {
+    gcli::FGithost_Uninit(*this);
 }
-
 
 // --- gcli.FGmethod..Init
 // Set all fields to initial values.
@@ -3259,64 +3272,74 @@ inline void gcli::FGmethod_Init(gcli::FGmethod& gmethod) {
     gmethod.val = u32(0);
     gmethod.ind_gmethod_next = (gcli::FGmethod*)-1; // (gcli.FDb.ind_gmethod) not-in-hash
 }
-inline gcli::FGrepo::FGrepo() {
+
+// --- gcli.FGmethod..Ctor
+inline  gcli::FGmethod::FGmethod() {
+    gcli::FGmethod_Init(*this);
+}
+
+// --- gcli.FGmethod..Dtor
+inline  gcli::FGmethod::~FGmethod() {
+    gcli::FGmethod_Uninit(*this);
+}
+
+// --- gcli.FGrepo..Ctor
+inline  gcli::FGrepo::FGrepo() {
     gcli::FGrepo_Init(*this);
 }
 
-inline gcli::FGrepo::~FGrepo() {
+// --- gcli.FGrepo..Dtor
+inline  gcli::FGrepo::~FGrepo() {
     gcli::FGrepo_Uninit(*this);
 }
-
-inline gcli::FGrepogitport::FGrepogitport() {
-    gcli::FGrepogitport_Init(*this);
-}
-
-inline gcli::FGrepogitport::~FGrepogitport() {
-    gcli::FGrepogitport_Uninit(*this);
-}
-
 
 // --- gcli.FGrepogitport..Init
 // Set all fields to initial values.
 inline void gcli::FGrepogitport_Init(gcli::FGrepogitport& grepogitport) {
     grepogitport.ind_grepogitport_next = (gcli::FGrepogitport*)-1; // (gcli.FDb.ind_grepogitport) not-in-hash
 }
-inline gcli::FGrepossh::FGrepossh() {
-    gcli::FGrepossh_Init(*this);
+
+// --- gcli.FGrepogitport..Ctor
+inline  gcli::FGrepogitport::FGrepogitport() {
+    gcli::FGrepogitport_Init(*this);
 }
 
-inline gcli::FGrepossh::~FGrepossh() {
-    gcli::FGrepossh_Uninit(*this);
+// --- gcli.FGrepogitport..Dtor
+inline  gcli::FGrepogitport::~FGrepogitport() {
+    gcli::FGrepogitport_Uninit(*this);
 }
-
 
 // --- gcli.FGrepossh..Init
 // Set all fields to initial values.
 inline void gcli::FGrepossh_Init(gcli::FGrepossh& grepossh) {
     grepossh.ind_grepossh_next = (gcli::FGrepossh*)-1; // (gcli.FDb.ind_grepossh) not-in-hash
 }
-inline gcli::FGstatet::FGstatet() {
-    gcli::FGstatet_Init(*this);
+
+// --- gcli.FGrepossh..Ctor
+inline  gcli::FGrepossh::FGrepossh() {
+    gcli::FGrepossh_Init(*this);
 }
 
-inline gcli::FGstatet::~FGstatet() {
-    gcli::FGstatet_Uninit(*this);
+// --- gcli.FGrepossh..Dtor
+inline  gcli::FGrepossh::~FGrepossh() {
+    gcli::FGrepossh_Uninit(*this);
 }
-
 
 // --- gcli.FGstatet..Init
 // Set all fields to initial values.
 inline void gcli::FGstatet_Init(gcli::FGstatet& gstatet) {
     gstatet.ind_gstatet_next = (gcli::FGstatet*)-1; // (gcli.FDb.ind_gstatet) not-in-hash
 }
-inline gcli::FGtbl::FGtbl() {
-    gcli::FGtbl_Init(*this);
+
+// --- gcli.FGstatet..Ctor
+inline  gcli::FGstatet::FGstatet() {
+    gcli::FGstatet_Init(*this);
 }
 
-inline gcli::FGtbl::~FGtbl() {
-    gcli::FGtbl_Uninit(*this);
+// --- gcli.FGstatet..Dtor
+inline  gcli::FGstatet::~FGstatet() {
+    gcli::FGstatet_Uninit(*this);
 }
-
 
 // --- gcli.FGtbl.c_gtblact.EmptyQ
 // Return true if index is empty
@@ -3411,14 +3434,16 @@ inline void gcli::gtbl_c_gtblact_curs_Next(gtbl_c_gtblact_curs &curs) {
 inline gcli::FGtblact& gcli::gtbl_c_gtblact_curs_Access(gtbl_c_gtblact_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGtblact::FGtblact() {
-    gcli::FGtblact_Init(*this);
+
+// --- gcli.FGtbl..Ctor
+inline  gcli::FGtbl::FGtbl() {
+    gcli::FGtbl_Init(*this);
 }
 
-inline gcli::FGtblact::~FGtblact() {
-    gcli::FGtblact_Uninit(*this);
+// --- gcli.FGtbl..Dtor
+inline  gcli::FGtbl::~FGtbl() {
+    gcli::FGtbl_Uninit(*this);
 }
-
 
 // --- gcli.FGtblact.step.Call
 // Invoke function by pointer
@@ -3510,22 +3535,26 @@ inline void gcli::gtblact_c_gtblactfld_curs_Next(gtblact_c_gtblactfld_curs &curs
 inline gcli::FGtblactfld& gcli::gtblact_c_gtblactfld_curs_Access(gtblact_c_gtblactfld_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGtblactfld::FGtblactfld() {
+
+// --- gcli.FGtblact..Ctor
+inline  gcli::FGtblact::FGtblact() {
+    gcli::FGtblact_Init(*this);
+}
+
+// --- gcli.FGtblact..Dtor
+inline  gcli::FGtblact::~FGtblact() {
+    gcli::FGtblact_Uninit(*this);
+}
+
+// --- gcli.FGtblactfld..Ctor
+inline  gcli::FGtblactfld::FGtblactfld() {
     gcli::FGtblactfld_Init(*this);
 }
 
-inline gcli::FGtblactfld::~FGtblactfld() {
+// --- gcli.FGtblactfld..Dtor
+inline  gcli::FGtblactfld::~FGtblactfld() {
     gcli::FGtblactfld_Uninit(*this);
 }
-
-inline gcli::FGtype::FGtype() {
-    gcli::FGtype_Init(*this);
-}
-
-inline gcli::FGtype::~FGtype() {
-    gcli::FGtype_Uninit(*this);
-}
-
 
 // --- gcli.FGtype.c_gtypeh.EmptyQ
 // Return true if index is empty
@@ -3704,28 +3733,32 @@ inline void gcli::gtype_c_gtypeprefix_curs_Next(gtype_c_gtypeprefix_curs &curs) 
 inline gcli::FGtypeprefix& gcli::gtype_c_gtypeprefix_curs_Access(gtype_c_gtypeprefix_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FGtypeh::FGtypeh() {
-    gcli::FGtypeh_Init(*this);
+
+// --- gcli.FGtype..Ctor
+inline  gcli::FGtype::FGtype() {
+    gcli::FGtype_Init(*this);
 }
 
-inline gcli::FGtypeh::~FGtypeh() {
-    gcli::FGtypeh_Uninit(*this);
+// --- gcli.FGtype..Dtor
+inline  gcli::FGtype::~FGtype() {
+    gcli::FGtype_Uninit(*this);
 }
-
 
 // --- gcli.FGtypeh..Init
 // Set all fields to initial values.
 inline void gcli::FGtypeh_Init(gcli::FGtypeh& gtypeh) {
     gtypeh.gtype_c_gtypeh_in_ary = bool(false);
 }
-inline gcli::FGtypeprefix::FGtypeprefix() {
-    gcli::FGtypeprefix_Init(*this);
+
+// --- gcli.FGtypeh..Ctor
+inline  gcli::FGtypeh::FGtypeh() {
+    gcli::FGtypeh_Init(*this);
 }
 
-inline gcli::FGtypeprefix::~FGtypeprefix() {
-    gcli::FGtypeprefix_Uninit(*this);
+// --- gcli.FGtypeh..Dtor
+inline  gcli::FGtypeh::~FGtypeh() {
+    gcli::FGtypeh_Uninit(*this);
 }
-
 
 // --- gcli.FGtypeprefix..Init
 // Set all fields to initial values.
@@ -3733,14 +3766,16 @@ inline void gcli::FGtypeprefix_Init(gcli::FGtypeprefix& gtypeprefix) {
     gtypeprefix.p_gtype = NULL;
     gtypeprefix.gtype_c_gtypeprefix_in_ary = bool(false);
 }
-inline gcli::FHttp::FHttp() {
-    gcli::FHttp_Init(*this);
+
+// --- gcli.FGtypeprefix..Ctor
+inline  gcli::FGtypeprefix::FGtypeprefix() {
+    gcli::FGtypeprefix_Init(*this);
 }
 
-inline gcli::FHttp::~FHttp() {
-    gcli::FHttp_Uninit(*this);
+// --- gcli.FGtypeprefix..Dtor
+inline  gcli::FGtypeprefix::~FGtypeprefix() {
+    gcli::FGtypeprefix_Uninit(*this);
 }
-
 
 // --- gcli.FHttp.request_method.GetEnum
 // Get value of field as enum type
@@ -3846,14 +3881,16 @@ inline bool gcli::FHttp_response_header_curs_ValidQ(FHttp_response_header_curs &
 inline algo::cstring& gcli::FHttp_response_header_curs_Access(FHttp_response_header_curs &curs) {
     return curs.elems[curs.index];
 }
-inline gcli::FIssue::FIssue() {
-    gcli::FIssue_Init(*this);
+
+// --- gcli.FHttp..Ctor
+inline  gcli::FHttp::FHttp() {
+    gcli::FHttp_Init(*this);
 }
 
-inline gcli::FIssue::~FIssue() {
-    gcli::FIssue_Uninit(*this);
+// --- gcli.FHttp..Dtor
+inline  gcli::FHttp::~FHttp() {
+    gcli::FHttp_Uninit(*this);
 }
-
 
 // --- gcli.FIssue.c_mrjob.EmptyQ
 // Return true if index is empty
@@ -4020,14 +4057,16 @@ inline void gcli::issue_c_issuenote_curs_Next(issue_c_issuenote_curs &curs) {
 inline gcli::FIssuenote& gcli::issue_c_issuenote_curs_Access(issue_c_issuenote_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FIssuenote::FIssuenote() {
-    gcli::FIssuenote_Init(*this);
+
+// --- gcli.FIssue..Ctor
+inline  gcli::FIssue::FIssue() {
+    gcli::FIssue_Init(*this);
 }
 
-inline gcli::FIssuenote::~FIssuenote() {
-    gcli::FIssuenote_Uninit(*this);
+// --- gcli.FIssue..Dtor
+inline  gcli::FIssue::~FIssue() {
+    gcli::FIssue_Uninit(*this);
 }
-
 
 // --- gcli.FIssuenote..Init
 // Set all fields to initial values.
@@ -4036,14 +4075,16 @@ inline void gcli::FIssuenote_Init(gcli::FIssuenote& issuenote) {
     issuenote.issue_c_issuenote_in_ary = bool(false);
     issuenote.ind_issuenote_next = (gcli::FIssuenote*)-1; // (gcli.FDb.ind_issuenote) not-in-hash
 }
-inline gcli::FMilestone::FMilestone() {
-    gcli::FMilestone_Init(*this);
+
+// --- gcli.FIssuenote..Ctor
+inline  gcli::FIssuenote::FIssuenote() {
+    gcli::FIssuenote_Init(*this);
 }
 
-inline gcli::FMilestone::~FMilestone() {
-    gcli::FMilestone_Uninit(*this);
+// --- gcli.FIssuenote..Dtor
+inline  gcli::FIssuenote::~FIssuenote() {
+    gcli::FIssuenote_Uninit(*this);
 }
-
 
 // --- gcli.FMilestone..Init
 // Set all fields to initial values.
@@ -4051,14 +4092,16 @@ inline void gcli::FMilestone_Init(gcli::FMilestone& milestone) {
     milestone.select = bool(false);
     milestone.ind_milestone_next = (gcli::FMilestone*)-1; // (gcli.FDb.ind_milestone) not-in-hash
 }
-inline gcli::FMr::FMr() {
-    gcli::FMr_Init(*this);
+
+// --- gcli.FMilestone..Ctor
+inline  gcli::FMilestone::FMilestone() {
+    gcli::FMilestone_Init(*this);
 }
 
-inline gcli::FMr::~FMr() {
-    gcli::FMr_Uninit(*this);
+// --- gcli.FMilestone..Dtor
+inline  gcli::FMilestone::~FMilestone() {
+    gcli::FMilestone_Uninit(*this);
 }
-
 
 // --- gcli.FMr.c_mrnote.EmptyQ
 // Return true if index is empty
@@ -4225,22 +4268,26 @@ inline void gcli::mr_c_mrjob_curs_Next(mr_c_mrjob_curs &curs) {
 inline gcli::FMrjob& gcli::mr_c_mrjob_curs_Access(mr_c_mrjob_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline gcli::FMrjob::FMrjob() {
+
+// --- gcli.FMr..Ctor
+inline  gcli::FMr::FMr() {
+    gcli::FMr_Init(*this);
+}
+
+// --- gcli.FMr..Dtor
+inline  gcli::FMr::~FMr() {
+    gcli::FMr_Uninit(*this);
+}
+
+// --- gcli.FMrjob..Ctor
+inline  gcli::FMrjob::FMrjob() {
     gcli::FMrjob_Init(*this);
 }
 
-inline gcli::FMrjob::~FMrjob() {
+// --- gcli.FMrjob..Dtor
+inline  gcli::FMrjob::~FMrjob() {
     gcli::FMrjob_Uninit(*this);
 }
-
-inline gcli::FMrnote::FMrnote() {
-    gcli::FMrnote_Init(*this);
-}
-
-inline gcli::FMrnote::~FMrnote() {
-    gcli::FMrnote_Uninit(*this);
-}
-
 
 // --- gcli.FMrnote..Init
 // Set all fields to initial values.
@@ -4249,17 +4296,20 @@ inline void gcli::FMrnote_Init(gcli::FMrnote& mrnote) {
     mrnote.mr_c_mrnote_in_ary = bool(false);
     mrnote.ind_mrnote_next = (gcli::FMrnote*)-1; // (gcli.FDb.ind_mrnote) not-in-hash
 }
-inline gcli::FTuples::FTuples() {
+
+// --- gcli.FMrnote..Ctor
+inline  gcli::FMrnote::FMrnote() {
+    gcli::FMrnote_Init(*this);
 }
 
-inline gcli::FUser::FUser() {
-    gcli::FUser_Init(*this);
+// --- gcli.FMrnote..Dtor
+inline  gcli::FMrnote::~FMrnote() {
+    gcli::FMrnote_Uninit(*this);
 }
 
-inline gcli::FUser::~FUser() {
-    gcli::FUser_Uninit(*this);
+// --- gcli.FTuples..Ctor
+inline  gcli::FTuples::FTuples() {
 }
-
 
 // --- gcli.FUser..Init
 // Set all fields to initial values.
@@ -4268,15 +4318,16 @@ inline void gcli::FUser_Init(gcli::FUser& user) {
     user.select = bool(false);
     user.ind_user_next = (gcli::FUser*)-1; // (gcli.FDb.ind_user) not-in-hash
 }
-inline gcli::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline gcli::FieldId::FieldId(gcli_FieldIdEnum arg) { this->value = i32(arg); }
-inline gcli::FieldId::FieldId() {
-    gcli::FieldId_Init(*this);
+
+// --- gcli.FUser..Ctor
+inline  gcli::FUser::FUser() {
+    gcli::FUser_Init(*this);
 }
 
+// --- gcli.FUser..Dtor
+inline  gcli::FUser::~FUser() {
+    gcli::FUser_Uninit(*this);
+}
 
 // --- gcli.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -4291,7 +4342,7 @@ inline void gcli::value_SetEnum(gcli::FieldId& parent, gcli_FieldIdEnum rhs) {
 }
 
 // --- gcli.FieldId.value.Cast
-inline gcli::FieldId::operator gcli_FieldIdEnum () const {
+inline  gcli::FieldId::operator gcli_FieldIdEnum() const {
     return gcli_FieldIdEnum((*this).value);
 }
 
@@ -4300,15 +4351,22 @@ inline gcli::FieldId::operator gcli_FieldIdEnum () const {
 inline void gcli::FieldId_Init(gcli::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline gcli::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline gcli::TableId::TableId(gcli_TableIdEnum arg) { this->value = i32(arg); }
-inline gcli::TableId::TableId() {
-    gcli::TableId_Init(*this);
+
+// --- gcli.FieldId..Ctor
+inline  gcli::FieldId::FieldId() {
+    gcli::FieldId_Init(*this);
 }
 
+// --- gcli.FieldId..FieldwiseCtor
+inline  gcli::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- gcli.FieldId..EnumCtor
+inline  gcli::FieldId::FieldId(gcli_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- gcli.TableId.value.GetEnum
 // Get value of field as enum type
@@ -4323,7 +4381,7 @@ inline void gcli::value_SetEnum(gcli::TableId& parent, gcli_TableIdEnum rhs) {
 }
 
 // --- gcli.TableId.value.Cast
-inline gcli::TableId::operator gcli_TableIdEnum () const {
+inline  gcli::TableId::operator gcli_TableIdEnum() const {
     return gcli_TableIdEnum((*this).value);
 }
 
@@ -4331,6 +4389,22 @@ inline gcli::TableId::operator gcli_TableIdEnum () const {
 // Set all fields to initial values.
 inline void gcli::TableId_Init(gcli::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- gcli.TableId..Ctor
+inline  gcli::TableId::TableId() {
+    gcli::TableId_Init(*this);
+}
+
+// --- gcli.TableId..FieldwiseCtor
+inline  gcli::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- gcli.TableId..EnumCtor
+inline  gcli::TableId::TableId(gcli_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gcli::trace &row) {// cfmt:gcli.trace.String

@@ -32,7 +32,7 @@
 //#pragma endinclude
 namespace fmdb { // gen:ns_print_proto
     // func:fmdb...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- fmdb.Alarm.code.Get

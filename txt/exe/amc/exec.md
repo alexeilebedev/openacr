@@ -1,4 +1,4 @@
-## AMC Subprocess Invocation
+## amc Subprocess Invocation
 <a href="#amc-subprocess-invocation"></a>
 
 Using field `reftype:Exec` allows you to generate a subprocess control structure
@@ -20,13 +20,10 @@ struct amc_proc { // command.amc_proc: Subprocess: Algo Model Compiler: generate
     pid_t           pid;       //   0  pid of running child process
     i32             timeout;   //   0  optional timeout for child process
     i32             status;    //   0  last exit status of child process
-    amc_proc();
-    ~amc_proc();
-private:
-    // reftype Exec of command.amc_proc.amc prohibits copy
-    // value field command.amc_proc.cmd is not copiable
-    amc_proc(const amc_proc&){ /*disallow copy constructor */}
-    void operator =(const amc_proc&){ /*disallow direct assignment */}
+    // func:command.amc_proc..Ctor
+    inline               amc_proc() __attribute__((nothrow));
+    // func:command.amc_proc..Dtor
+    inline               ~amc_proc() __attribute__((nothrow));
 };
 ```
 

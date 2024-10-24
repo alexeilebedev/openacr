@@ -3,13 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [atf_unit - Internals](/txt/exe/atf_unit/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 atf_unit: Unit tests (see unittest table)
 Usage: atf_unit [[-unittest:]<regx>] [options]
@@ -32,9 +36,12 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -unittest -- SQL regex, selecting test to run
 <a href="#-unittest"></a>
 
@@ -65,44 +72,17 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
 #### -check_untracked -- Check for untracked file before allowing test to run
 <a href="#-check_untracked"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/atf_unit/acr.cpp](/cpp/atf_unit/acr.cpp)||
-|[cpp/atf_unit/algo_fmt.cpp](/cpp/atf_unit/algo_fmt.cpp)||
-|[cpp/atf_unit/algo_lib.cpp](/cpp/atf_unit/algo_lib.cpp)||
-|[cpp/atf_unit/ams.cpp](/cpp/atf_unit/ams.cpp)||
-|[cpp/atf_unit/bash.cpp](/cpp/atf_unit/bash.cpp)||
-|[cpp/atf_unit/charset.cpp](/cpp/atf_unit/charset.cpp)||
-|[cpp/atf_unit/decimal.cpp](/cpp/atf_unit/decimal.cpp)||
-|[cpp/atf_unit/fm.cpp](/cpp/atf_unit/fm.cpp)||
-|[cpp/atf_unit/lib_ams.cpp](/cpp/atf_unit/lib_ams.cpp)||
-|[cpp/atf_unit/lib_exec.cpp](/cpp/atf_unit/lib_exec.cpp)||
-|[cpp/atf_unit/lib_json.cpp](/cpp/atf_unit/lib_json.cpp)||
-|[cpp/atf_unit/lib_sql.cpp](/cpp/atf_unit/lib_sql.cpp)||
-|[cpp/atf_unit/line.cpp](/cpp/atf_unit/line.cpp)||
-|[cpp/atf_unit/lockfile.cpp](/cpp/atf_unit/lockfile.cpp)||
-|[cpp/atf_unit/main.cpp](/cpp/atf_unit/main.cpp)||
-|[cpp/atf_unit/parsenum.cpp](/cpp/atf_unit/parsenum.cpp)||
-|[cpp/atf_unit/regx.cpp](/cpp/atf_unit/regx.cpp)||
-|[cpp/atf_unit/string.cpp](/cpp/atf_unit/string.cpp)||
-|[cpp/atf_unit/time.cpp](/cpp/atf_unit/time.cpp)||
-|[cpp/atf_unit/tuple.cpp](/cpp/atf_unit/tuple.cpp)||
-|[cpp/gen/atf_unit_gen.cpp](/cpp/gen/atf_unit_gen.cpp)||
-|[include/atf_unit.h](/include/atf_unit.h)||
-|[include/gen/atf_unit_gen.h](/include/gen/atf_unit_gen.h)||
-|[include/gen/atf_unit_gen.inl.h](/include/gen/atf_unit_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `atf_unit` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|Alarm resource type|
 |[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)||
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -68,20 +68,26 @@ namespace lib_sqlite { // gen:ns_print_struct
 
 // --- lib_sqlite.FConn
 // create: lib_sqlite.FDb.conn (Tpool)
-// global access: ind_conn (Thash)
+// global access: ind_conn (Thash, hash field name)
 struct FConn { // lib_sqlite.FConn
     algo::cstring        name;            //
     sqlite3*             db;              // optional pointer
     lib_sqlite::FConn*   conn_next;       // Pointer to next free element int tpool
     lib_sqlite::FConn*   ind_conn_next;   // hash next
+    // user-defined fcleanup on lib_sqlite.FConn.db prevents copy
+    // func:lib_sqlite.FConn..AssignOp
+    inline lib_sqlite::FConn& operator =(const lib_sqlite::FConn &rhs) = delete;
+    // user-defined fcleanup on lib_sqlite.FConn.db prevents copy
+    // func:lib_sqlite.FConn..CopyCtor
+    inline               FConn(const lib_sqlite::FConn &rhs) = delete;
 private:
+    // func:lib_sqlite.FConn..Ctor
+    inline               FConn() __attribute__((nothrow));
+    // func:lib_sqlite.FConn..Dtor
+    inline               ~FConn() __attribute__((nothrow));
     friend lib_sqlite::FConn&   conn_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_sqlite::FConn*   conn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 conn_Delete(lib_sqlite::FConn &row) __attribute__((nothrow));
-    FConn();
-    ~FConn();
-    FConn(const FConn&){ /*disallow copy constructor */}
-    void operator =(const FConn&){ /*disallow direct assignment */}
 };
 
 // Declaration for user-defined cleanup function
@@ -92,14 +98,15 @@ void                 db_Cleanup(lib_sqlite::FConn& conn) __attribute__((nothrow)
 
 // Set all fields to initial values.
 // func:lib_sqlite.FConn..Init
-void                 FConn_Init(lib_sqlite::FConn& conn);
+inline void          FConn_Init(lib_sqlite::FConn& conn);
 // func:lib_sqlite.FConn..Uninit
 void                 FConn_Uninit(lib_sqlite::FConn& conn) __attribute__((nothrow));
 
 // --- lib_sqlite.trace
 #pragma pack(push,1)
 struct trace { // lib_sqlite.trace
-    trace();
+    // func:lib_sqlite.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -182,7 +189,7 @@ bool                 conn_XrefMaybe(lib_sqlite::FConn &row);
 
 // Return true if hash is empty
 // func:lib_sqlite.FDb.ind_conn.EmptyQ
-bool                 ind_conn_EmptyQ() __attribute__((nothrow));
+inline bool          ind_conn_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:lib_sqlite.FDb.ind_conn.Find
 lib_sqlite::FConn*   ind_conn_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -194,7 +201,7 @@ lib_sqlite::FConn&   ind_conn_FindX(const algo::strptr& key);
 lib_sqlite::FConn&   ind_conn_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_sqlite.FDb.ind_conn.N
-i32                  ind_conn_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_conn_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:lib_sqlite.FDb.ind_conn.InsertMaybe
 bool                 ind_conn_InsertMaybe(lib_sqlite::FConn& row) __attribute__((nothrow));
@@ -221,16 +228,16 @@ lib_sqlite::FSubstr* substr_InsertMaybe(const dmmeta::Substr &value) __attribute
 void*                substr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:lib_sqlite.FDb.substr.EmptyQ
-bool                 substr_EmptyQ() __attribute__((nothrow, pure));
+inline bool          substr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:lib_sqlite.FDb.substr.Find
-lib_sqlite::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline lib_sqlite::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:lib_sqlite.FDb.substr.Last
-lib_sqlite::FSubstr* substr_Last() __attribute__((nothrow, pure));
+inline lib_sqlite::FSubstr* substr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_sqlite.FDb.substr.N
-i32                  substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_sqlite.FDb.substr.RemoveAll
 void                 substr_RemoveAll() __attribute__((nothrow));
@@ -239,7 +246,7 @@ void                 substr_RemoveAll() __attribute__((nothrow));
 void                 substr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:lib_sqlite.FDb.substr.qFind
-lib_sqlite::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
+inline lib_sqlite::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_sqlite.FDb.substr.XrefMaybe
@@ -247,16 +254,16 @@ bool                 substr_XrefMaybe(lib_sqlite::FSubstr &row);
 
 // cursor points to valid item
 // func:lib_sqlite.FDb.substr_curs.Reset
-void                 _db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+inline void          _db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:lib_sqlite.FDb.substr_curs.ValidQ
-bool                 _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
+inline bool          _db_substr_curs_ValidQ(_db_substr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:lib_sqlite.FDb.substr_curs.Next
-void                 _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
+inline void          _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((nothrow));
 // item access
 // func:lib_sqlite.FDb.substr_curs.Access
-lib_sqlite::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
+inline lib_sqlite::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.FDb..Init
 void                 FDb_Init();
@@ -265,16 +272,18 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_sqlite.FSubstr
 // create: lib_sqlite.FDb.substr (Lary)
+// global access: substr (Lary, by rowid)
 struct FSubstr { // lib_sqlite.FSubstr
     algo::Smallstr100   field;      //
     algo::CppExpr       expr;       //
     algo::Smallstr100   srcfield;   //
 private:
+    // func:lib_sqlite.FSubstr..Ctor
+    inline               FSubstr() __attribute__((nothrow));
     friend lib_sqlite::FSubstr& substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_sqlite::FSubstr* substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 substr_RemoveAll() __attribute__((nothrow));
     friend void                 substr_RemoveLast() __attribute__((nothrow));
-    FSubstr();
 };
 
 // Copy fields out of row
@@ -289,19 +298,23 @@ void                 substr_CopyIn(lib_sqlite::FSubstr &row, dmmeta::Substr &in)
 #pragma pack(push,1)
 struct FieldId { // lib_sqlite.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_sqlite_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_sqlite_FieldIdEnum arg);
-    FieldId();
+    // func:lib_sqlite.FieldId.value.Cast
+    inline               operator lib_sqlite_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_sqlite.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_sqlite.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_sqlite.FieldId..EnumCtor
+    inline               FieldId(lib_sqlite_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_sqlite.FieldId.value.GetEnum
-lib_sqlite_FieldIdEnum value_GetEnum(const lib_sqlite::FieldId& parent) __attribute__((nothrow));
+inline lib_sqlite_FieldIdEnum value_GetEnum(const lib_sqlite::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_sqlite.FieldId.value.SetEnum
-void                 value_SetEnum(lib_sqlite::FieldId& parent, lib_sqlite_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_sqlite::FieldId& parent, lib_sqlite_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_sqlite.FieldId.value.ToCstr
@@ -329,7 +342,7 @@ bool                 value_ReadStrptrMaybe(lib_sqlite::FieldId& parent, algo::st
 bool                 FieldId_ReadStrptrMaybe(lib_sqlite::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.FieldId..Init
-void                 FieldId_Init(lib_sqlite::FieldId& parent);
+inline void          FieldId_Init(lib_sqlite::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.FieldId.String  printfmt:Raw
 // func:lib_sqlite.FieldId..Print
@@ -338,18 +351,22 @@ void                 FieldId_Print(lib_sqlite::FieldId& row, algo::cstring& str)
 // --- lib_sqlite.TableId
 struct TableId { // lib_sqlite.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator lib_sqlite_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(lib_sqlite_TableIdEnum arg);
-    TableId();
+    // func:lib_sqlite.TableId.value.Cast
+    inline               operator lib_sqlite_TableIdEnum() const __attribute__((nothrow));
+    // func:lib_sqlite.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:lib_sqlite.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:lib_sqlite.TableId..EnumCtor
+    inline               TableId(lib_sqlite_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:lib_sqlite.TableId.value.GetEnum
-lib_sqlite_TableIdEnum value_GetEnum(const lib_sqlite::TableId& parent) __attribute__((nothrow));
+inline lib_sqlite_TableIdEnum value_GetEnum(const lib_sqlite::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_sqlite.TableId.value.SetEnum
-void                 value_SetEnum(lib_sqlite::TableId& parent, lib_sqlite_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_sqlite::TableId& parent, lib_sqlite_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_sqlite.TableId.value.ToCstr
@@ -377,7 +394,7 @@ bool                 value_ReadStrptrMaybe(lib_sqlite::TableId& parent, algo::st
 bool                 TableId_ReadStrptrMaybe(lib_sqlite::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.TableId..Init
-void                 TableId_Init(lib_sqlite::TableId& parent);
+inline void          TableId_Init(lib_sqlite::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.TableId.String  printfmt:Raw
 // func:lib_sqlite.TableId..Print
@@ -389,12 +406,13 @@ struct Vtab { // lib_sqlite.Vtab: An instance of the virtual table
     algo::cstring           filename;     //
     lib_ctype::FSsimfile*   c_ssimfile;   // optional pointer
     lib_ctype::FCtype*      p_ctype;      // optional pointer
-    Vtab();
+    // func:lib_sqlite.Vtab..Ctor
+    inline               Vtab() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:lib_sqlite.Vtab..Init
-void                 Vtab_Init(lib_sqlite::Vtab& parent);
+inline void          Vtab_Init(lib_sqlite::Vtab& parent);
 
 // --- lib_sqlite.VtabCurs
 struct VtabCurs { // lib_sqlite.VtabCurs: A cursor for the virtual table
@@ -404,17 +422,13 @@ struct VtabCurs { // lib_sqlite.VtabCurs: A cursor for the virtual table
     i32                    i;      //   0  current line number
     bool                   eof;    //   false
     algo::Tuple            row;    // Parsed row
-    VtabCurs();
-private:
-    // value field lib_sqlite.VtabCurs.file is not copiable
-    // value field lib_sqlite.VtabCurs.row is not copiable
-    VtabCurs(const VtabCurs&){ /*disallow copy constructor */}
-    void operator =(const VtabCurs&){ /*disallow direct assignment */}
+    // func:lib_sqlite.VtabCurs..Ctor
+    inline               VtabCurs() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:lib_sqlite.VtabCurs..Init
-void                 VtabCurs_Init(lib_sqlite::VtabCurs& parent);
+inline void          VtabCurs_Init(lib_sqlite::VtabCurs& parent);
 } // gen:ns_print_struct
 namespace lib_sqlite { // gen:ns_curstext
 

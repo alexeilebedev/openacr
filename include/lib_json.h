@@ -123,12 +123,13 @@ namespace lib_json { // update-hdr
     // PATH      dot-separated list of field keys
     lib_json::FNode* node_GetArray(lib_json::FNode* parent, strptr path);
 
-    // Get node value as u32, EXCEPTION on any error
+    // Get node value as u32
+    // If the path is not found, or the value is malformatted, DFLT is returned.
     // true/false is converted to 0/1
     //
     // PARENT    node to start from
     // PATH      dot-separated list of field keys
-    u32 u32_Get(lib_json::FNode* parent, strptr path);
+    u32 u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
     lib_json::FldKey fldkey_Get(lib_json::FNode &node);
 
     // -------------------------------------------------------------------

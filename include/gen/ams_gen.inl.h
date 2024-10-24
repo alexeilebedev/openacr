@@ -26,16 +26,6 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/ietf_gen.inl.h"
 //#pragma endinclude
-inline ams::AlarmSyncMsg::AlarmSyncMsg(algo::UnTime                   in_updated_after)
-    : updated_after(in_updated_after)
-{
-    this->type = u32(18);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::AlarmSyncMsg::AlarmSyncMsg() {
-    ams::AlarmSyncMsg_Init(*this);
-}
-
 
 // --- ams.AlarmSyncMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of AlarmSyncMsg by checking the type field
@@ -71,27 +61,19 @@ inline void ams::AlarmSyncMsg_Init(ams::AlarmSyncMsg& parent) {
     parent.type = u32(18);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::ProcType::ProcType(u8                             in_value)
-    : value(in_value)
-{
-}
-inline ams::ProcType::ProcType(ams_ProcTypeEnum arg) { this->value = u8(arg); }
 
-inline bool ams::ProcType::operator ==(const ams::ProcType &rhs) const {
-    return ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
+// --- ams.AlarmSyncMsg..Ctor
+inline  ams::AlarmSyncMsg::AlarmSyncMsg() {
+    ams::AlarmSyncMsg_Init(*this);
 }
 
-inline bool ams::ProcType::operator !=(const ams::ProcType &rhs) const {
-    return !ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
+// --- ams.AlarmSyncMsg..FieldwiseCtor
+inline  ams::AlarmSyncMsg::AlarmSyncMsg(algo::UnTime in_updated_after)
+    : updated_after(in_updated_after)
+ {
+    this->type = u32(18);
+    this->length = u32(ssizeof(*this) + (0));
 }
-
-inline bool ams::ProcType::operator ==(ams_ProcTypeEnum rhs) const {
-    return ams::ProcType_EqEnum(const_cast<ams::ProcType&>(*this),rhs);
-}
-inline ams::ProcType::ProcType() {
-    ams::ProcType_Init(*this);
-}
-
 
 // --- ams.ProcType.value.GetEnum
 // Get value of field as enum type
@@ -109,6 +91,16 @@ inline void ams::value_SetEnum(ams::ProcType& parent, ams_ProcTypeEnum rhs) {
 inline u32 ams::ProcType_Hash(u32 prev, ams::ProcType rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- ams.ProcType..EqOp
+inline bool ams::ProcType::operator ==(const ams::ProcType &rhs) const {
+    return ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
+}
+
+// --- ams.ProcType..NeOp
+inline bool ams::ProcType::operator !=(const ams::ProcType &rhs) const {
+    return !ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
 }
 
 // --- ams.ProcType..Cmp
@@ -133,33 +125,41 @@ inline bool ams::ProcType_Eq(ams::ProcType lhs, ams::ProcType rhs) {
 
 // --- ams.ProcType..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool ams::ProcType_EqEnum(ams::ProcType lhs, ams_ProcTypeEnum rhs) {
-    return ams_ProcTypeEnum(lhs.value) == rhs;
-}
-inline ams::ProcId::ProcId(ams::ProcType                  in_proc_type
-        ,u8                             in_procidx)
-    : proc_type(in_proc_type)
-    , procidx(in_procidx)
-{
+inline bool ams::ProcType::operator ==(ams_ProcTypeEnum rhs) const {
+    return ams_ProcTypeEnum(value) == rhs;
 }
 
-inline bool ams::ProcId::operator ==(const ams::ProcId &rhs) const {
-    return ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
+// --- ams.ProcType..Ctor
+inline  ams::ProcType::ProcType() {
+    ams::ProcType_Init(*this);
 }
 
-inline bool ams::ProcId::operator !=(const ams::ProcId &rhs) const {
-    return !ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
-}
-inline ams::ProcId::ProcId() {
-    ams::ProcId_Init(*this);
+// --- ams.ProcType..FieldwiseCtor
+inline  ams::ProcType::ProcType(u8 in_value)
+    : value(in_value)
+ {
 }
 
+// --- ams.ProcType..EnumCtor
+inline  ams::ProcType::ProcType(ams_ProcTypeEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- ams.ProcId..Hash
 inline u32 ams::ProcId_Hash(u32 prev, ams::ProcId rhs) {
     prev = ProcType_Hash(prev, rhs.proc_type);
     prev = u8_Hash(prev, rhs.procidx);
     return prev;
+}
+
+// --- ams.ProcId..EqOp
+inline bool ams::ProcId::operator ==(const ams::ProcId &rhs) const {
+    return ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
+}
+
+// --- ams.ProcId..NeOp
+inline bool ams::ProcId::operator !=(const ams::ProcId &rhs) const {
+    return !ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
 }
 
 // --- ams.ProcId..Cmp
@@ -189,27 +189,18 @@ inline bool ams::ProcId_Eq(ams::ProcId lhs, ams::ProcId rhs) {
     retval = u8_Eq(lhs.procidx, rhs.procidx);
     return retval;
 }
-inline ams::StreamType::StreamType(u8                             in_value)
-    : value(in_value)
-{
-}
-inline ams::StreamType::StreamType(ams_StreamTypeEnum arg) { this->value = u8(arg); }
 
-inline bool ams::StreamType::operator ==(const ams::StreamType &rhs) const {
-    return ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
+// --- ams.ProcId..Ctor
+inline  ams::ProcId::ProcId() {
+    ams::ProcId_Init(*this);
 }
 
-inline bool ams::StreamType::operator !=(const ams::StreamType &rhs) const {
-    return !ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
+// --- ams.ProcId..FieldwiseCtor
+inline  ams::ProcId::ProcId(ams::ProcType in_proc_type, u8 in_procidx)
+    : proc_type(in_proc_type)
+    , procidx(in_procidx)
+ {
 }
-
-inline bool ams::StreamType::operator ==(ams_StreamTypeEnum rhs) const {
-    return ams::StreamType_EqEnum(const_cast<ams::StreamType&>(*this),rhs);
-}
-inline ams::StreamType::StreamType() {
-    ams::StreamType_Init(*this);
-}
-
 
 // --- ams.StreamType.value.GetEnum
 // Get value of field as enum type
@@ -227,6 +218,16 @@ inline void ams::value_SetEnum(ams::StreamType& parent, ams_StreamTypeEnum rhs) 
 inline u32 ams::StreamType_Hash(u32 prev, ams::StreamType rhs) {
     prev = u8_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- ams.StreamType..EqOp
+inline bool ams::StreamType::operator ==(const ams::StreamType &rhs) const {
+    return ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
+}
+
+// --- ams.StreamType..NeOp
+inline bool ams::StreamType::operator !=(const ams::StreamType &rhs) const {
+    return !ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
 }
 
 // --- ams.StreamType..Cmp
@@ -251,29 +252,25 @@ inline bool ams::StreamType_Eq(ams::StreamType lhs, ams::StreamType rhs) {
 
 // --- ams.StreamType..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool ams::StreamType_EqEnum(ams::StreamType lhs, ams_StreamTypeEnum rhs) {
-    return ams_StreamTypeEnum(lhs.value) == rhs;
-}
-inline ams::StreamId::StreamId(ams::ProcId                    in_proc_id
-        ,ams::StreamType                in_stream_type
-        ,u8                             in_streamidx)
-    : proc_id(in_proc_id)
-    , stream_type(in_stream_type)
-    , streamidx(in_streamidx)
-{
+inline bool ams::StreamType::operator ==(ams_StreamTypeEnum rhs) const {
+    return ams_StreamTypeEnum(value) == rhs;
 }
 
-inline bool ams::StreamId::operator ==(const ams::StreamId &rhs) const {
-    return ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
+// --- ams.StreamType..Ctor
+inline  ams::StreamType::StreamType() {
+    ams::StreamType_Init(*this);
 }
 
-inline bool ams::StreamId::operator !=(const ams::StreamId &rhs) const {
-    return !ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
-}
-inline ams::StreamId::StreamId() {
-    ams::StreamId_Init(*this);
+// --- ams.StreamType..FieldwiseCtor
+inline  ams::StreamType::StreamType(u8 in_value)
+    : value(in_value)
+ {
 }
 
+// --- ams.StreamType..EnumCtor
+inline  ams::StreamType::StreamType(ams_StreamTypeEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- ams.StreamId..Hash
 inline u32 ams::StreamId_Hash(u32 prev, ams::StreamId rhs) {
@@ -281,6 +278,16 @@ inline u32 ams::StreamId_Hash(u32 prev, ams::StreamId rhs) {
     prev = StreamType_Hash(prev, rhs.stream_type);
     prev = u8_Hash(prev, rhs.streamidx);
     return prev;
+}
+
+// --- ams.StreamId..EqOp
+inline bool ams::StreamId::operator ==(const ams::StreamId &rhs) const {
+    return ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
+}
+
+// --- ams.StreamId..NeOp
+inline bool ams::StreamId::operator !=(const ams::StreamId &rhs) const {
+    return !ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
 }
 
 // --- ams.StreamId..Cmp
@@ -318,16 +325,19 @@ inline bool ams::StreamId_Eq(ams::StreamId lhs, ams::StreamId rhs) {
     retval = u8_Eq(lhs.streamidx, rhs.streamidx);
     return retval;
 }
-inline ams::DfltStream::DfltStream(ams::StreamId                  in_stream_id)
-    : stream_id(in_stream_id)
-{
-    this->type = u32(21);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::DfltStream::DfltStream() {
-    ams::DfltStream_Init(*this);
+
+// --- ams.StreamId..Ctor
+inline  ams::StreamId::StreamId() {
+    ams::StreamId_Init(*this);
 }
 
+// --- ams.StreamId..FieldwiseCtor
+inline  ams::StreamId::StreamId(ams::ProcId in_proc_id, ams::StreamType in_stream_type, u8 in_streamidx)
+    : proc_id(in_proc_id)
+    , stream_type(in_stream_type)
+    , streamidx(in_streamidx)
+ {
+}
 
 // --- ams.DfltStream.base.Castdown
 // Check if ams::MsgHeader is an instance of DfltStream by checking the type field
@@ -363,16 +373,19 @@ inline void ams::DfltStream_Init(ams::DfltStream& parent) {
     parent.type = u32(21);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::DumpStreamTableMsg::DumpStreamTableMsg(ams::ProcId                    in_proc_id)
-    : proc_id(in_proc_id)
-{
-    this->type = u32(12);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::DumpStreamTableMsg::DumpStreamTableMsg() {
-    ams::DumpStreamTableMsg_Init(*this);
+
+// --- ams.DfltStream..Ctor
+inline  ams::DfltStream::DfltStream() {
+    ams::DfltStream_Init(*this);
 }
 
+// --- ams.DfltStream..FieldwiseCtor
+inline  ams::DfltStream::DfltStream(ams::StreamId in_stream_id)
+    : stream_id(in_stream_id)
+ {
+    this->type = u32(21);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.DumpStreamTableMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of DumpStreamTableMsg by checking the type field
@@ -408,10 +421,19 @@ inline void ams::DumpStreamTableMsg_Init(ams::DumpStreamTableMsg& parent) {
     parent.type = u32(12);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::ExpectMsg::ExpectMsg() {
-    ams::ExpectMsg_Init(*this);
+
+// --- ams.DumpStreamTableMsg..Ctor
+inline  ams::DumpStreamTableMsg::DumpStreamTableMsg() {
+    ams::DumpStreamTableMsg_Init(*this);
 }
 
+// --- ams.DumpStreamTableMsg..FieldwiseCtor
+inline  ams::DumpStreamTableMsg::DumpStreamTableMsg(ams::ProcId in_proc_id)
+    : proc_id(in_proc_id)
+ {
+    this->type = u32(12);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.ExpectMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of ExpectMsg by checking the type field
@@ -484,15 +506,11 @@ inline void ams::ExpectMsg_Init(ams::ExpectMsg& parent) {
     parent.type = u32(395);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline ams::FieldId::FieldId(ams_FieldIdEnum arg) { this->value = i32(arg); }
-inline ams::FieldId::FieldId() {
-    ams::FieldId_Init(*this);
-}
 
+// --- ams.ExpectMsg..Ctor
+inline  ams::ExpectMsg::ExpectMsg() {
+    ams::ExpectMsg_Init(*this);
+}
 
 // --- ams.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -507,7 +525,7 @@ inline void ams::value_SetEnum(ams::FieldId& parent, ams_FieldIdEnum rhs) {
 }
 
 // --- ams.FieldId.value.Cast
-inline ams::FieldId::operator ams_FieldIdEnum () const {
+inline  ams::FieldId::operator ams_FieldIdEnum() const {
     return ams_FieldIdEnum((*this).value);
 }
 
@@ -516,16 +534,22 @@ inline ams::FieldId::operator ams_FieldIdEnum () const {
 inline void ams::FieldId_Init(ams::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline ams::HeartbeatMsg::HeartbeatMsg(algo::UnTime                   in_time)
-    : time(in_time)
-{
-    this->type = u32(16);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::HeartbeatMsg::HeartbeatMsg() {
-    ams::HeartbeatMsg_Init(*this);
+
+// --- ams.FieldId..Ctor
+inline  ams::FieldId::FieldId() {
+    ams::FieldId_Init(*this);
 }
 
+// --- ams.FieldId..FieldwiseCtor
+inline  ams::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams.FieldId..EnumCtor
+inline  ams::FieldId::FieldId(ams_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- ams.HeartbeatMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of HeartbeatMsg by checking the type field
@@ -561,10 +585,19 @@ inline void ams::HeartbeatMsg_Init(ams::HeartbeatMsg& parent) {
     parent.type = u32(16);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::InputLineMsg::InputLineMsg() {
-    ams::InputLineMsg_Init(*this);
+
+// --- ams.HeartbeatMsg..Ctor
+inline  ams::HeartbeatMsg::HeartbeatMsg() {
+    ams::HeartbeatMsg_Init(*this);
 }
 
+// --- ams.HeartbeatMsg..FieldwiseCtor
+inline  ams::HeartbeatMsg::HeartbeatMsg(algo::UnTime in_time)
+    : time(in_time)
+ {
+    this->type = u32(16);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.InputLineMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of InputLineMsg by checking the type field
@@ -637,18 +670,11 @@ inline void ams::InputLineMsg_Init(ams::InputLineMsg& parent) {
     parent.type = u32(22);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::LogMsg::LogMsg(const algo::strptr&            in_logcat
-        ,algo::SchedTime                in_tstamp)
-    : logcat(in_logcat)
-    , tstamp(in_tstamp)
-{
-    this->type = u32(6);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::LogMsg::LogMsg() {
-    ams::LogMsg_Init(*this);
-}
 
+// --- ams.InputLineMsg..Ctor
+inline  ams::InputLineMsg::InputLineMsg() {
+    ams::InputLineMsg_Init(*this);
+}
 
 // --- ams.LogMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of LogMsg by checking the type field
@@ -721,26 +747,20 @@ inline void ams::LogMsg_Init(ams::LogMsg& parent) {
     parent.type = u32(6);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::Member::Member(ams::ProcId                    in_proc_id
-        ,ams::StreamId                  in_stream_id
-        ,u8                             in_mode)
-    : proc_id(in_proc_id)
-    , stream_id(in_stream_id)
-    , mode(in_mode)
-{
+
+// --- ams.LogMsg..Ctor
+inline  ams::LogMsg::LogMsg() {
+    ams::LogMsg_Init(*this);
 }
 
-inline bool ams::Member::operator ==(const ams::Member &rhs) const {
-    return ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
+// --- ams.LogMsg..FieldwiseCtor
+inline  ams::LogMsg::LogMsg(const algo::strptr& in_logcat, algo::SchedTime in_tstamp)
+    : logcat(in_logcat)
+    , tstamp(in_tstamp)
+ {
+    this->type = u32(6);
+    this->length = u32(ssizeof(*this) + (0));
 }
-
-inline bool ams::Member::operator !=(const ams::Member &rhs) const {
-    return !ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
-}
-inline ams::Member::Member() {
-    ams::Member_Init(*this);
-}
-
 
 // --- ams.Member.mode.GetEnum
 // Get value of field as enum type
@@ -760,6 +780,16 @@ inline u32 ams::Member_Hash(u32 prev, ams::Member rhs) {
     prev = StreamId_Hash(prev, rhs.stream_id);
     prev = u8_Hash(prev, rhs.mode);
     return prev;
+}
+
+// --- ams.Member..EqOp
+inline bool ams::Member::operator ==(const ams::Member &rhs) const {
+    return ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
+}
+
+// --- ams.Member..NeOp
+inline bool ams::Member::operator !=(const ams::Member &rhs) const {
+    return !ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
 }
 
 // --- ams.Member..Cmp
@@ -797,10 +827,19 @@ inline bool ams::Member_Eq(ams::Member lhs, ams::Member rhs) {
     retval = u8_Eq(lhs.mode, rhs.mode);
     return retval;
 }
-inline ams::MsgBlock::MsgBlock() {
-    ams::MsgBlock_Init(*this);
+
+// --- ams.Member..Ctor
+inline  ams::Member::Member() {
+    ams::Member_Init(*this);
 }
 
+// --- ams.Member..FieldwiseCtor
+inline  ams::Member::Member(ams::ProcId in_proc_id, ams::StreamId in_stream_id, u8 in_mode)
+    : proc_id(in_proc_id)
+    , stream_id(in_stream_id)
+    , mode(in_mode)
+ {
+}
 
 // --- ams.MsgBlock.header.Castdown
 // Check if ams::MsgHeader is an instance of MsgBlock by checking the type field
@@ -876,16 +915,11 @@ inline void ams::MsgBlock_Init(ams::MsgBlock& parent) {
     parent.n_messages = u32(0);
     parent.original_length = u32(0);
 }
-inline ams::MsgHeader::MsgHeader(u32                            in_type
-        ,u32                            in_length)
-    : type(in_type)
-    , length(in_length)
-{
-}
-inline ams::MsgHeader::MsgHeader() {
-    ams::MsgHeader_Init(*this);
-}
 
+// --- ams.MsgBlock..Ctor
+inline  ams::MsgBlock::MsgBlock() {
+    ams::MsgBlock_Init(*this);
+}
 
 // --- ams.MsgHeader.type.GetEnum
 // Get value of field as enum type
@@ -917,15 +951,18 @@ inline void ams::MsgHeader_Init(ams::MsgHeader& data) {
     data.type = u32(0);
     data.length = u32(0);
 }
-inline ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase(ams_MsgHeaderMsgsCaseEnum arg) { this->value = u32(arg); }
-inline ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase() {
-    ams::MsgHeaderMsgsCase_Init(*this);
+
+// --- ams.MsgHeader..Ctor
+inline  ams::MsgHeader::MsgHeader() {
+    ams::MsgHeader_Init(*this);
 }
 
+// --- ams.MsgHeader..FieldwiseCtor
+inline  ams::MsgHeader::MsgHeader(u32 in_type, u32 in_length)
+    : type(in_type)
+    , length(in_length)
+ {
+}
 
 // --- ams.MsgHeaderMsgsCase.value.GetEnum
 // Get value of field as enum type
@@ -940,7 +977,7 @@ inline void ams::value_SetEnum(ams::MsgHeaderMsgsCase& parent, ams_MsgHeaderMsgs
 }
 
 // --- ams.MsgHeaderMsgsCase.value.Cast
-inline ams::MsgHeaderMsgsCase::operator ams_MsgHeaderMsgsCaseEnum () const {
+inline  ams::MsgHeaderMsgsCase::operator ams_MsgHeaderMsgsCaseEnum() const {
     return ams_MsgHeaderMsgsCaseEnum((*this).value);
 }
 
@@ -949,10 +986,22 @@ inline ams::MsgHeaderMsgsCase::operator ams_MsgHeaderMsgsCaseEnum () const {
 inline void ams::MsgHeaderMsgsCase_Init(ams::MsgHeaderMsgsCase& parent) {
     parent.value = u32(0);
 }
-inline ams::MsgHeader_curs::MsgHeader_curs() {
-    ams::MsgHeader_curs_Init(*this);
+
+// --- ams.MsgHeaderMsgsCase..Ctor
+inline  ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase() {
+    ams::MsgHeaderMsgsCase_Init(*this);
 }
 
+// --- ams.MsgHeaderMsgsCase..FieldwiseCtor
+inline  ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams.MsgHeaderMsgsCase..EnumCtor
+inline  ams::MsgHeaderMsgsCase::MsgHeaderMsgsCase(ams_MsgHeaderMsgsCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- ams.MsgHeader_curs..ValidQ
 inline bool ams::MsgHeader_curs_ValidQ(ams::MsgHeader_curs& curs) {
@@ -1006,16 +1055,11 @@ inline void ams::MsgHeader_curs_Init(ams::MsgHeader_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline ams::StreamPos::StreamPos(u64                            in_seq
-        ,u64                            in_off)
-    : seq(in_seq)
-    , off(in_off)
-{
-}
-inline ams::StreamPos::StreamPos() {
-    ams::StreamPos_Init(*this);
-}
 
+// --- ams.MsgHeader_curs..Ctor
+inline  ams::MsgHeader_curs::MsgHeader_curs() {
+    ams::MsgHeader_curs_Init(*this);
+}
 
 // --- ams.StreamPos..Init
 // Set all fields to initial values.
@@ -1023,18 +1067,18 @@ inline void ams::StreamPos_Init(ams::StreamPos& parent) {
     parent.seq = u64(1);
     parent.off = u64(0);
 }
-inline ams::OpenMsg::OpenMsg(ams::Member                    in_member
-        ,ams::StreamPos                 in_pos)
-    : member(in_member)
-    , pos(in_pos)
-{
-    this->type = u32(7);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::OpenMsg::OpenMsg() {
-    ams::OpenMsg_Init(*this);
+
+// --- ams.StreamPos..Ctor
+inline  ams::StreamPos::StreamPos() {
+    ams::StreamPos_Init(*this);
 }
 
+// --- ams.StreamPos..FieldwiseCtor
+inline  ams::StreamPos::StreamPos(u64 in_seq, u64 in_off)
+    : seq(in_seq)
+    , off(in_off)
+ {
+}
 
 // --- ams.OpenMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of OpenMsg by checking the type field
@@ -1070,10 +1114,20 @@ inline void ams::OpenMsg_Init(ams::OpenMsg& parent) {
     parent.type = u32(7);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::PrlogMsg::PrlogMsg() {
-    ams::PrlogMsg_Init(*this);
+
+// --- ams.OpenMsg..Ctor
+inline  ams::OpenMsg::OpenMsg() {
+    ams::OpenMsg_Init(*this);
 }
 
+// --- ams.OpenMsg..FieldwiseCtor
+inline  ams::OpenMsg::OpenMsg(ams::Member in_member, ams::StreamPos in_pos)
+    : member(in_member)
+    , pos(in_pos)
+ {
+    this->type = u32(7);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.PrlogMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of PrlogMsg by checking the type field
@@ -1125,16 +1179,11 @@ inline void ams::PrlogMsg_Init(ams::PrlogMsg& parent) {
     parent.type = u32(229);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::ProcAddMsg::ProcAddMsg(ams::ProcId                    in_proc_id)
-    : proc_id(in_proc_id)
-{
-    this->type = u32(4);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::ProcAddMsg::ProcAddMsg() {
-    ams::ProcAddMsg_Init(*this);
-}
 
+// --- ams.PrlogMsg..Ctor
+inline  ams::PrlogMsg::PrlogMsg() {
+    ams::PrlogMsg_Init(*this);
+}
 
 // --- ams.ProcAddMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of ProcAddMsg by checking the type field
@@ -1170,16 +1219,19 @@ inline void ams::ProcAddMsg_Init(ams::ProcAddMsg& parent) {
     parent.type = u32(4);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::ProcRemoveMsg::ProcRemoveMsg(ams::ProcId                    in_proc_id)
-    : proc_id(in_proc_id)
-{
-    this->type = u32(5);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::ProcRemoveMsg::ProcRemoveMsg() {
-    ams::ProcRemoveMsg_Init(*this);
+
+// --- ams.ProcAddMsg..Ctor
+inline  ams::ProcAddMsg::ProcAddMsg() {
+    ams::ProcAddMsg_Init(*this);
 }
 
+// --- ams.ProcAddMsg..FieldwiseCtor
+inline  ams::ProcAddMsg::ProcAddMsg(ams::ProcId in_proc_id)
+    : proc_id(in_proc_id)
+ {
+    this->type = u32(4);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.ProcRemoveMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of ProcRemoveMsg by checking the type field
@@ -1215,18 +1267,19 @@ inline void ams::ProcRemoveMsg_Init(ams::ProcRemoveMsg& parent) {
     parent.type = u32(5);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::SeqmsgId::SeqmsgId(ams::StreamId                  in_stream_id
-        ,u64                            in_seq
-        ,u32                            in_off)
-    : stream_id(in_stream_id)
-    , seq(in_seq)
-    , off(in_off)
-{
-}
-inline ams::SeqmsgId::SeqmsgId() {
-    ams::SeqmsgId_Init(*this);
+
+// --- ams.ProcRemoveMsg..Ctor
+inline  ams::ProcRemoveMsg::ProcRemoveMsg() {
+    ams::ProcRemoveMsg_Init(*this);
 }
 
+// --- ams.ProcRemoveMsg..FieldwiseCtor
+inline  ams::ProcRemoveMsg::ProcRemoveMsg(ams::ProcId in_proc_id)
+    : proc_id(in_proc_id)
+ {
+    this->type = u32(5);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.SeqmsgId..Init
 // Set all fields to initial values.
@@ -1234,18 +1287,19 @@ inline void ams::SeqmsgId_Init(ams::SeqmsgId& parent) {
     parent.seq = u64(1);
     parent.off = u32(0);
 }
-inline ams::Seqmsg::Seqmsg(ams::SeqmsgId                  in_seqmsg_id
-        ,u64                            in_tsc)
-    : seqmsg_id(in_seqmsg_id)
-    , tsc(in_tsc)
-{
-    this->type = u32(10);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::Seqmsg::Seqmsg() {
-    ams::Seqmsg_Init(*this);
+
+// --- ams.SeqmsgId..Ctor
+inline  ams::SeqmsgId::SeqmsgId() {
+    ams::SeqmsgId_Init(*this);
 }
 
+// --- ams.SeqmsgId..FieldwiseCtor
+inline  ams::SeqmsgId::SeqmsgId(ams::StreamId in_stream_id, u64 in_seq, u32 in_off)
+    : stream_id(in_stream_id)
+    , seq(in_seq)
+    , off(in_off)
+ {
+}
 
 // --- ams.Seqmsg.base.Castdown
 // Check if ams::MsgHeader is an instance of Seqmsg by checking the type field
@@ -1298,22 +1352,20 @@ inline void ams::Seqmsg_Init(ams::Seqmsg& parent) {
     parent.length = u32(ssizeof(parent) + (0));
     parent.tsc = u64(0);
 }
-inline ams::SeqmsgTrace::SeqmsgTrace(ams::ProcId                    in_proc_id
-        ,u8                             in_mode
-        ,ams::SeqmsgId                  in_seqmsg_id
-        ,u64                            in_tsc)
-    : proc_id(in_proc_id)
-    , mode(in_mode)
-    , seqmsg_id(in_seqmsg_id)
-    , tsc(in_tsc)
-{
-    this->type = u32(11);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::SeqmsgTrace::SeqmsgTrace() {
-    ams::SeqmsgTrace_Init(*this);
+
+// --- ams.Seqmsg..Ctor
+inline  ams::Seqmsg::Seqmsg() {
+    ams::Seqmsg_Init(*this);
 }
 
+// --- ams.Seqmsg..FieldwiseCtor
+inline  ams::Seqmsg::Seqmsg(ams::SeqmsgId in_seqmsg_id, u64 in_tsc)
+    : seqmsg_id(in_seqmsg_id)
+    , tsc(in_tsc)
+ {
+    this->type = u32(10);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.SeqmsgTrace.base.Castdown
 // Check if ams::MsgHeader is an instance of SeqmsgTrace by checking the type field
@@ -1379,15 +1431,22 @@ inline void ams::SeqmsgTrace_Init(ams::SeqmsgTrace& parent) {
     parent.mode = u8(0);
     parent.tsc = u64(0);
 }
-inline ams::StreamFlags::StreamFlags(u8                             in_value)
-    : value(in_value)
-{
-}
-inline ams::StreamFlags::StreamFlags(ams_StreamFlagsEnum arg) { this->value = u8(arg); }
-inline ams::StreamFlags::StreamFlags() {
-    ams::StreamFlags_Init(*this);
+
+// --- ams.SeqmsgTrace..Ctor
+inline  ams::SeqmsgTrace::SeqmsgTrace() {
+    ams::SeqmsgTrace_Init(*this);
 }
 
+// --- ams.SeqmsgTrace..FieldwiseCtor
+inline  ams::SeqmsgTrace::SeqmsgTrace(ams::ProcId in_proc_id, u8 in_mode, ams::SeqmsgId in_seqmsg_id, u64 in_tsc)
+    : proc_id(in_proc_id)
+    , mode(in_mode)
+    , seqmsg_id(in_seqmsg_id)
+    , tsc(in_tsc)
+ {
+    this->type = u32(11);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.StreamFlags.write.Get
 // Retrieve bitfield from value of field value
@@ -1506,20 +1565,22 @@ inline void ams::trace_text_Set(ams::StreamFlags& parent, bool rhs) {
 inline void ams::StreamFlags_Init(ams::StreamFlags& parent) {
     parent.value = u8(0);
 }
-inline ams::StreamHbMsg::StreamHbMsg(ams::Member                    in_member
-        ,ams::StreamPos                 in_pos
-        ,u32                            in_wbudget)
-    : member(in_member)
-    , pos(in_pos)
-    , wbudget(in_wbudget)
-{
-    this->type = u32(3);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::StreamHbMsg::StreamHbMsg() {
-    ams::StreamHbMsg_Init(*this);
+
+// --- ams.StreamFlags..Ctor
+inline  ams::StreamFlags::StreamFlags() {
+    ams::StreamFlags_Init(*this);
 }
 
+// --- ams.StreamFlags..FieldwiseCtor
+inline  ams::StreamFlags::StreamFlags(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams.StreamFlags..EnumCtor
+inline  ams::StreamFlags::StreamFlags(ams_StreamFlagsEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- ams.StreamHbMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of StreamHbMsg by checking the type field
@@ -1556,10 +1617,21 @@ inline void ams::StreamHbMsg_Init(ams::StreamHbMsg& parent) {
     parent.length = u32(ssizeof(parent) + (0));
     parent.wbudget = u32(0);
 }
-inline ams::TerminateMsg::TerminateMsg() {
-    ams::TerminateMsg_Init(*this);
+
+// --- ams.StreamHbMsg..Ctor
+inline  ams::StreamHbMsg::StreamHbMsg() {
+    ams::StreamHbMsg_Init(*this);
 }
 
+// --- ams.StreamHbMsg..FieldwiseCtor
+inline  ams::StreamHbMsg::StreamHbMsg(ams::Member in_member, ams::StreamPos in_pos, u32 in_wbudget)
+    : member(in_member)
+    , pos(in_pos)
+    , wbudget(in_wbudget)
+ {
+    this->type = u32(3);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.TerminateMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of TerminateMsg by checking the type field
@@ -1595,20 +1667,11 @@ inline void ams::TerminateMsg_Init(ams::TerminateMsg& parent) {
     parent.type = u32(352);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::Trace2Msg::Trace2Msg(ams::ProcId                    in_proc
-        ,u8                             in_trace
-        ,algo::UnTime                   in_tstamp)
-    : proc(in_proc)
-    , trace(in_trace)
-    , tstamp(in_tstamp)
-{
-    this->type = u32(108);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::Trace2Msg::Trace2Msg() {
-    ams::Trace2Msg_Init(*this);
-}
 
+// --- ams.TerminateMsg..Ctor
+inline  ams::TerminateMsg::TerminateMsg() {
+    ams::TerminateMsg_Init(*this);
+}
 
 // --- ams.Trace2Msg.base.Castdown
 // Check if ams::MsgHeader is an instance of Trace2Msg by checking the type field
@@ -1682,22 +1745,21 @@ inline void ams::Trace2Msg_Init(ams::Trace2Msg& parent) {
     parent.length = u32(ssizeof(parent) + (0));
     parent.trace = u8(0);
 }
-inline ams::TraceInfo2Msg::TraceInfo2Msg(ams::ProcId                    in_proc
-        ,u8                             in_trace
-        ,algo::UnTime                   in_tstamp
-        ,u8                             in_part)
+
+// --- ams.Trace2Msg..Ctor
+inline  ams::Trace2Msg::Trace2Msg() {
+    ams::Trace2Msg_Init(*this);
+}
+
+// --- ams.Trace2Msg..FieldwiseCtor
+inline  ams::Trace2Msg::Trace2Msg(ams::ProcId in_proc, u8 in_trace, algo::UnTime in_tstamp)
     : proc(in_proc)
     , trace(in_trace)
     , tstamp(in_tstamp)
-    , part(in_part)
-{
-    this->type = u32(109);
+ {
+    this->type = u32(108);
     this->length = u32(ssizeof(*this) + (0));
 }
-inline ams::TraceInfo2Msg::TraceInfo2Msg() {
-    ams::TraceInfo2Msg_Init(*this);
-}
-
 
 // --- ams.TraceInfo2Msg.base.Castdown
 // Check if ams::MsgHeader is an instance of TraceInfo2Msg by checking the type field
@@ -1772,20 +1834,22 @@ inline void ams::TraceInfo2Msg_Init(ams::TraceInfo2Msg& parent) {
     parent.trace = u8(0);
     parent.part = u8(0);
 }
-inline ams::TraceInfoMsg::TraceInfoMsg(ams::ProcId                    in_proc
-        ,algo::UnTime                   in_tstamp
-        ,u8                             in_part)
-    : proc(in_proc)
-    , tstamp(in_tstamp)
-    , part(in_part)
-{
-    this->type = u32(9);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::TraceInfoMsg::TraceInfoMsg() {
-    ams::TraceInfoMsg_Init(*this);
+
+// --- ams.TraceInfo2Msg..Ctor
+inline  ams::TraceInfo2Msg::TraceInfo2Msg() {
+    ams::TraceInfo2Msg_Init(*this);
 }
 
+// --- ams.TraceInfo2Msg..FieldwiseCtor
+inline  ams::TraceInfo2Msg::TraceInfo2Msg(ams::ProcId in_proc, u8 in_trace, algo::UnTime in_tstamp, u8 in_part)
+    : proc(in_proc)
+    , trace(in_trace)
+    , tstamp(in_tstamp)
+    , part(in_part)
+ {
+    this->type = u32(109);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.TraceInfoMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of TraceInfoMsg by checking the type field
@@ -1859,18 +1923,21 @@ inline void ams::TraceInfoMsg_Init(ams::TraceInfoMsg& parent) {
     parent.length = u32(ssizeof(parent) + (0));
     parent.part = u8(0);
 }
-inline ams::TraceMsg::TraceMsg(ams::ProcId                    in_proc
-        ,algo::UnTime                   in_tstamp)
-    : proc(in_proc)
-    , tstamp(in_tstamp)
-{
-    this->type = u32(8);
-    this->length = u32(ssizeof(*this) + (0));
-}
-inline ams::TraceMsg::TraceMsg() {
-    ams::TraceMsg_Init(*this);
+
+// --- ams.TraceInfoMsg..Ctor
+inline  ams::TraceInfoMsg::TraceInfoMsg() {
+    ams::TraceInfoMsg_Init(*this);
 }
 
+// --- ams.TraceInfoMsg..FieldwiseCtor
+inline  ams::TraceInfoMsg::TraceInfoMsg(ams::ProcId in_proc, algo::UnTime in_tstamp, u8 in_part)
+    : proc(in_proc)
+    , tstamp(in_tstamp)
+    , part(in_part)
+ {
+    this->type = u32(9);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.TraceMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of TraceMsg by checking the type field
@@ -1943,10 +2010,20 @@ inline void ams::TraceMsg_Init(ams::TraceMsg& parent) {
     parent.type = u32(8);
     parent.length = u32(ssizeof(parent) + (0));
 }
-inline ams::UdpFrame::UdpFrame() {
-    ams::UdpFrame_Init(*this);
+
+// --- ams.TraceMsg..Ctor
+inline  ams::TraceMsg::TraceMsg() {
+    ams::TraceMsg_Init(*this);
 }
 
+// --- ams.TraceMsg..FieldwiseCtor
+inline  ams::TraceMsg::TraceMsg(ams::ProcId in_proc, algo::UnTime in_tstamp)
+    : proc(in_proc)
+    , tstamp(in_tstamp)
+ {
+    this->type = u32(8);
+    this->length = u32(ssizeof(*this) + (0));
+}
 
 // --- ams.UdpFrame.header.Castdown
 // Check if ams::MsgHeader is an instance of UdpFrame by checking the type field
@@ -2020,6 +2097,11 @@ inline void ams::UdpFrame_Init(ams::UdpFrame& parent) {
     parent.length = u32(ssizeof(parent) + (0));
     parent.src_port = u16(0);
     parent.dst_port = u16(0);
+}
+
+// --- ams.UdpFrame..Ctor
+inline  ams::UdpFrame::UdpFrame() {
+    ams::UdpFrame_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::AlarmSyncMsg &row) {// cfmt:ams.AlarmSyncMsg.String

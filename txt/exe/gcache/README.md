@@ -6,22 +6,26 @@ detects and uses it.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Enable and disable](#enable-and-disable)
-* [Invocation](#invocation)
-* [Precompiled header support](#precompiled-header-support)
-* [Hash algorithm](#hash-algorithm)
-* [Directory structure](#directory-structure)
-* [Garbage collection](#garbage-collection)
-* [Debugging](#debugging)
-* [Logging](#logging)
-* [Privacy](#privacy)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Enable and disable](#enable-and-disable)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Invocation](#invocation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Precompiled header support](#precompiled-header-support)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Hash algorithm](#hash-algorithm)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Directory structure](#directory-structure)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Garbage collection](#garbage-collection)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Debugging](#debugging)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Logging](#logging)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Privacy](#privacy)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [gcache - Internals](/txt/exe/gcache/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 gcache: Compiler cache
 Usage: gcache [[-cmd:]<string>] [options]
@@ -47,47 +51,7 @@ Usage: gcache [[-cmd:]<string>] [options]
 
 ```
 
-### Options
-<a href="#options"></a>
-
-#### -in -- Input directory or filename, - for stdin
-<a href="#-in"></a>
-
-#### -cmd -- Command to execute
-<a href="#-cmd"></a>
-
-#### -install -- Create gcache directory and enable gcache
-<a href="#-install"></a>
-
-#### -stats -- Show cache stats
-<a href="#-stats"></a>
-
-#### -enable -- Create .gcache link to enable gcache use
-<a href="#-enable"></a>
-
-#### -disable -- Remove .gcache link to disable gcache
-<a href="#-disable"></a>
-
-#### -gc -- Clean old files from .gcache
-<a href="#-gc"></a>
-
-#### -clean -- Clean the entire cache
-<a href="#-clean"></a>
-
-#### -dir -- (With -install,-enable) cache directory
-<a href="#-dir"></a>
-
-#### -hitrate -- Report hit rate (specify start time with -after)
-<a href="#-hitrate"></a>
-
-#### -after -- Start time for reporting
-<a href="#-after"></a>
-
-#### -report -- Show end-of-run report
-<a href="#-report"></a>
-
-#### -force -- Force recompile and update cache
-<a href="#-force"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Enable and disable
 <a href="#enable-and-disable"></a>
@@ -226,23 +190,58 @@ By default, the cache is kept in /tmp/gcache. This means that any user on the cu
 can read and modify the cached files. Also, the log file includes source file names.
 If you are concerned about privacy, use `gcache -install -dir ~/.gcache` to keep the information local to your home directory.
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
+### Options
+<a href="#options"></a>
 
-|Source File|Comment|
-|---|---|
-|[cpp/gcache/gcache.cpp](/cpp/gcache/gcache.cpp)||
-|[cpp/gen/gcache_gen.cpp](/cpp/gen/gcache_gen.cpp)||
-|[include/gcache.h](/include/gcache.h)||
-|[include/gen/gcache_gen.h](/include/gen/gcache_gen.h)||
-|[include/gen/gcache_gen.inl.h](/include/gen/gcache_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -in -- Input directory or filename, - for stdin
+<a href="#-in"></a>
+
+#### -cmd -- Command to execute
+<a href="#-cmd"></a>
+
+#### -install -- Create gcache directory and enable gcache
+<a href="#-install"></a>
+
+#### -stats -- Show cache stats
+<a href="#-stats"></a>
+
+#### -enable -- Create .gcache link to enable gcache use
+<a href="#-enable"></a>
+
+#### -disable -- Remove .gcache link to disable gcache
+<a href="#-disable"></a>
+
+#### -gc -- Clean old files from .gcache
+<a href="#-gc"></a>
+
+#### -clean -- Clean the entire cache
+<a href="#-clean"></a>
+
+#### -dir -- (With -install,-enable) cache directory
+<a href="#-dir"></a>
+
+#### -hitrate -- Report hit rate (specify start time with -after)
+<a href="#-hitrate"></a>
+
+#### -after -- Start time for reporting
+<a href="#-after"></a>
+
+#### -report -- Show end-of-run report
+<a href="#-report"></a>
+
+#### -force -- Force recompile and update cache
+<a href="#-force"></a>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `gcache` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

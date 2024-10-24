@@ -179,24 +179,6 @@ void algo_lib::fd_Cleanup(algo_lib::FFildes &fildes) {
     }
 }
 
-bool algo::Tuple_EqualQ(Tuple &t1, Tuple &t2) {
-    bool ret = true;
-    if (!(t1.head == t2.head)) {
-        ret = false;
-    } else if (attrs_N(t1) != attrs_N(t2)) {
-        ret = false;
-    } else {
-        ind_beg(Tuple_attrs_curs,attr1,t1) {
-            Attr &attr2 = attrs_qFind(t2, ind_curs(attr1).index);
-            if (!(attr1 == attr2)) {
-                ret = false;
-                break;
-            }
-        }ind_end;
-    }
-    return ret;
-}
-
 Attr* algo::attr_Find(Tuple &tuple, strptr name, int occurence DFLTVAL(0)) {
     Attr *ret = NULL;
     frep_(i,attrs_N(tuple)) {

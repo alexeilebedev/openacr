@@ -82,6 +82,11 @@ void acr_ed::edaction_Create_Target() {
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$nstype/$target/README.md  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$nstype/$target/README.md  comment:''");
 
+    if (is_exe) {
+        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$nstype/$target/internals.md  comment:''");
+        Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$nstype/$target/internals.md  comment:''");
+    }
+
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/gen/$target_gen.cpp  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.h  comment:''");
     Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.inl.h  comment:''");

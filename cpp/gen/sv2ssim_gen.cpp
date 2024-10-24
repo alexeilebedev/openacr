@@ -83,9 +83,9 @@ namespace sv2ssim { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:sv2ssim.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:sv2ssim...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- sv2ssim.FBltin.base.CopyOut
@@ -1247,6 +1247,7 @@ void sv2ssim::FDb_Init() {
         FatalErrorExit("out of memory"); // (sv2ssim.FDb.ind_bltin)
     }
     memset(_db.ind_bltin_buckets_elems, 0, sizeof(sv2ssim::FBltin*)*_db.ind_bltin_buckets_n); // (sv2ssim.FDb.ind_bltin)
+    _db.cmt2fld_ok = bool(false);
 
     sv2ssim::InitReflection();
 }

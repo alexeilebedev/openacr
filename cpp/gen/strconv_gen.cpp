@@ -64,9 +64,9 @@ namespace strconv { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:strconv.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:strconv...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- strconv.trace..Print
@@ -378,11 +378,6 @@ inline static i32 strconv::trace_N() {
 void strconv::FDb_Init() {
 
     strconv::InitReflection();
-}
-
-// --- strconv.FDb..Uninit
-void strconv::FDb_Uninit() {
-    strconv::FDb &row = _db; (void)row;
 }
 
 // --- strconv.FieldId.value.ToCstr

@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/lary.cpp
+// Source: cpp/amc/lary.cpp -- Level array with permanent pointers
 //
 
 #include "include/amc.h"

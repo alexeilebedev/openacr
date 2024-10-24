@@ -22,13 +22,13 @@ inline-command: amc atf_amc.BitfldType1.bits5.% -proto -report:N
 // Retrieve bitfield from value of field value
 //    10 bits starting at bit 5.
 // func:atf_amc.BitfldType1.bits5.Get
-u64                  bits5_Get(const atf_amc::BitfldType1& parent) __attribute__((__warn_unused_result__, nothrow));
+inline u64           bits5_Get(const atf_amc::BitfldType1& parent) __attribute__((__warn_unused_result__, nothrow));
 // Set bitfield in value of field 'value'
 //    10 bits starting at bit 5.
 // func:atf_amc.BitfldType1.bits5.Set
-void                 bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
+inline void          bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) __attribute__((nothrow));
 // func:atf_amc.BitfldType1.bits5.ReadStrptrMaybe
-static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+inline static bool   bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
 
 ```
 
@@ -48,20 +48,29 @@ special enum constants are generated for bitfld when its width is `1` and the fi
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Bitfld
 
 * file:[data/dmmeta/bitfld.ssim](/data/dmmeta/bitfld.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|name|algo.Smallstr50|Val||<br>.RR of field|
-|offset|i32|Val||Offset, in bits, within parent field|
-|width|i32|Val||Width, in bits, within parent field.|
-|srcfield|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*<br>.RR of field*|
+|offset|i32|[Val](/txt/exe/amc/reftypes.md#val)||Offset, in bits, within parent field|
+|width|i32|[Val](/txt/exe/amc/reftypes.md#val)||Width, in bits, within parent field.|
+|srcfield|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FBitfld
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FBitfld](/txt/exe/amc/internals.md#amc-fbitfld)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 
